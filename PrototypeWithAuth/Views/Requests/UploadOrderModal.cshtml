@@ -37,7 +37,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
-                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel);}
+                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors", Model.TempRequestListViewModel);}
                 
                 @Html.HiddenFor(model => model.ParentRequest.ApplicationUserID)
                 @Html.HiddenFor(model => model.ParentRequest.OrderNumber)
@@ -165,7 +165,9 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
+                    alert("Page Type: " + $("#RequestIndexObject_OrderType").attr("value"));
                     if ($("#RequestIndexObject_OrderType").val() == "SaveOperations" || $("#RequestIndexObject_OrderType").val() == "AlreadyPurchased") {
+                        alert("opening terms modal");
                         $.fn.OpenModal("termsModal", "terms", data);
                     }
                     else {

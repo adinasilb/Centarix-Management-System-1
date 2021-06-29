@@ -633,14 +633,7 @@ namespace PrototypeWithAuth.Controllers
 
                                             comment.RequestID = request.RequestID;
 
-                                            //if (!isInTempRequestJson)
-                                            //{
-                                            //    _context.Add(comment);
-                                            //}
-                                            //else
-                                            //{
                                             trvm.Comments.Add(comment);
-                                            //}
                                         }
                                     }
                                 }
@@ -669,13 +662,14 @@ namespace PrototypeWithAuth.Controllers
                                     {
                                         trvm.Emails.Add(e);
                                     }
-
                                 }
-                                TempRequestJson trj = CreateTempRequestJson(requestItemViewModel.TempRequestListViewModel.GUID);
-                                await SetTempRequestAsync(trj,
-                                    new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() { trvm } });
-                                saveItemTransaction.CommitAsync();
-
+                                if (OrderType != AppUtility.OrderTypeEnum.AddToCart)
+                                {
+                                    TempRequestJson trj = CreateTempRequestJson(requestItemViewModel.TempRequestListViewModel.GUID);
+                                    await SetTempRequestAsync(trj,
+                                        new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() { trvm } });
+                                    saveItemTransaction.CommitAsync();
+                                }
                             }
                             catch (Exception ex)
                             {
@@ -719,7 +713,7 @@ namespace PrototypeWithAuth.Controllers
                     return new RedirectToActionResult("UploadQuoteModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
                 //return new RedirectToActionResult("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                 case AppUtility.OrderTypeEnum.AddToCart:
-                    return new RedirectToActionResult("UploadQuoteModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
+                    return new RedirectToActionResult("Index", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
                 //return new RedirectToActionResult("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                 case AppUtility.OrderTypeEnum.SaveOperations:
                     return new RedirectToActionResult("UploadOrderModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
@@ -897,13 +891,13 @@ namespace PrototypeWithAuth.Controllers
                             trvm = await OrderNow(newRequest, isInBudget, tempRequestListViewModel);
                             break;
                         case AppUtility.OrderTypeEnum.RequestPriceQuote:
-                            await RequestItem(newRequest, isInBudget);
+                            trvm = await RequestItem(newRequest, isInBudget);
                             break;
                         case AppUtility.OrderTypeEnum.Save:
-                            await SaveItem(newRequest);
+                            trvm = await SaveItem(newRequest);
                             break;
                         case AppUtility.OrderTypeEnum.SaveOperations:
-                            await SaveOperationsItem(newRequest, requestNum, tempRequestListViewModel);
+                            trvm = await SaveOperationsItem(newRequest, requestNum, tempRequestListViewModel);
                             break;
                     }
 
@@ -934,16 +928,19 @@ namespace PrototypeWithAuth.Controllers
                         request.RequestStatusID = 1;
                     }
                     request.OrderType = AppUtility.OrderTypeEnum.AddToCart.ToString();
-                    tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
-                    TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
-                    //TempRequestJson tempRequestJson = new TempRequestJson()
-                    //{
-                    //    CookieGUID = tempRequestListViewModel.GUID,
-                    //    ApplicationUserID = _userManager.GetUserId(User),
-                    //    IsOriginal = true,
-                    //    IsCurrent = true
-                    //};
-                    await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
+
+                    _context.Entry(request.Product).State = EntityState.Added;
+                    _context.Entry(request).State = EntityState.Added;
+                    if (tempRequestListViewModel.TempRequestViewModels?[0].Comments != null)
+                    {
+                        foreach (var comment in tempRequestListViewModel.TempRequestViewModels[0].Comments)
+                        {
+                            comment.RequestID = request.RequestID;
+                            _context.Add(comment);
+                        }
+                    }
+
+                    await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
@@ -968,10 +965,8 @@ namespace PrototypeWithAuth.Controllers
                     request.ParentQuoteID = null;
                     request.OrderType = AppUtility.OrderTypeEnum.AlreadyPurchased.ToString();
 
-                    tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel()
-                    {
-                        Request = request
-                    });
+                    tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>() { new TempRequestViewModel() { Request = request } };
+
                     TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
                     //TempRequestJson tempRequestJson = new TempRequestJson()
                     //{
@@ -989,10 +984,7 @@ namespace PrototypeWithAuth.Controllers
                     throw ex;
                 }
             }
-            return new TempRequestViewModel()
-            {
-                Request = request
-            };
+            return tempRequestListViewModel.TempRequestViewModels.FirstOrDefault();
         }
         private async Task<TempRequestViewModel> OrderNow(Request request, bool isInBudget, TempRequestListViewModel tempRequestListViewModel)
         {
@@ -1030,7 +1022,7 @@ namespace PrototypeWithAuth.Controllers
                 Request = request
             };
         }
-        private async Task RequestItem(Request newRequest, bool isInBudget)
+        private async Task<TempRequestViewModel> RequestItem(Request newRequest, bool isInBudget)
         {
 
             using (var transaction = _context.Database.BeginTransaction())
@@ -1064,12 +1056,12 @@ namespace PrototypeWithAuth.Controllers
                     throw ex;
                 }
             }
-            //return new TempRequestViewModel()
-            //{
-            //    Request = request
-            //};
+            return new TempRequestViewModel()
+            {
+                Request = newRequest
+            };
         }
-        private async Task SaveItem(Request newRequest)
+        private async Task<TempRequestViewModel> SaveItem(Request newRequest)
         {
 
             using (var transaction = _context.Database.BeginTransaction())
@@ -1111,8 +1103,9 @@ namespace PrototypeWithAuth.Controllers
                     throw ex;
                 }
             }
+            return new TempRequestViewModel() { Request = newRequest };
         }
-        private async Task SaveOperationsItem(Request request, int requestNum, TempRequestListViewModel tempRequestListViewModel)
+        private async Task<TempRequestViewModel> SaveOperationsItem(Request request, int requestNum, TempRequestListViewModel tempRequestListViewModel)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -1131,7 +1124,7 @@ namespace PrototypeWithAuth.Controllers
                     request.UnitTypeID = 5;
                     request.OrderType = AppUtility.OrderTypeEnum.SaveOperations.ToString();
 
-                    tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
+                    tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>() { new TempRequestViewModel() { Request = request } };
                     TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
                     //TempRequestJson tempRequestJson = new TempRequestJson()
                     //{
@@ -1153,6 +1146,7 @@ namespace PrototypeWithAuth.Controllers
                     await transaction.RollbackAsync();
                     throw ex;
                 }
+                return tempRequestListViewModel.TempRequestViewModels[0];
             }
         }
         public TempRequestJson CreateTempRequestJson(Guid guid)
@@ -2690,7 +2684,7 @@ namespace PrototypeWithAuth.Controllers
             //{
             //    temprequest.Request.Product.Vendor = _context.Vendors
             //}
-            foreach(var r in newTRLVM.TempRequestViewModels)
+            foreach (var r in newTRLVM.TempRequestViewModels)
             {
                 r.Request.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == r.Request.Product.ProductSubcategoryID).FirstOrDefault();
                 r.Request.Product.ProductSubcategory.ParentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryID == r.Request.Product.ProductSubcategory.ParentCategoryID).FirstOrDefault();
@@ -4833,10 +4827,10 @@ namespace PrototypeWithAuth.Controllers
 
                             var action = "_IndexTableData";
                             var controller = "Requests";
-                            if (uploadQuoteOrderViewModel.TempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
+                            if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                             {
                                 action = "_IndexTableWithCounts";
-                                return RedirectToAction(action, "Requests", uploadQuoteOrderViewModel.TempRequestListViewModel.RequestIndexObject);
+                                return RedirectToAction(action, "Requests", tempRequestListViewModel.RequestIndexObject);
                             }
                             else if (uploadQuoteOrderViewModel.TempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                             {
@@ -4886,8 +4880,13 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadOrderModal(TempRequestListViewModel tempRequestListViewModel)
+        public async Task<IActionResult> UploadOrderModal(RequestIndexObject requestIndexObject)
         {
+            var uploadQuoteViewModel = new UploadQuoteViewModel();
+
+            uploadQuoteViewModel.OrderTypeEnum = requestIndexObject.OrderType;
+            uploadQuoteViewModel.TempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
+
             int lastParentRequestOrderNum = 0;
             var prs = _context.ParentRequests;
             if (_context.ParentRequests.Any())
@@ -4900,7 +4899,8 @@ namespace PrototypeWithAuth.Controllers
                 OrderNumber = lastParentRequestOrderNum + 1,
                 OrderDate = DateTime.Now
             };
-            var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, TempRequestListViewModel = tempRequestListViewModel };
+            uploadQuoteViewModel.TempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
+            var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, TempRequestListViewModel = uploadQuoteViewModel.TempRequestListViewModel };
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, "0");
@@ -4923,17 +4923,17 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadQuoteOrderViewModel, bool isCancel = false)
+        public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadQuoteOrderViewModel, TempRequestListViewModel tempRequestListViewModel, bool isCancel = false)
         {
             if (isCancel)
             {
-                await RemoveTempRequestAsync(uploadQuoteOrderViewModel.TempRequestListViewModel.GUID);
+                await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
                 DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
                 return PartialView("Default");
             }
             try
             {
-                var oldTempRequestJson = await GetTempRequestAsync(uploadQuoteOrderViewModel.TempRequestListViewModel.GUID);
+                var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
                 var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
 
                 var deserializedTempRequestListViewModel = new TempRequestListViewModel()
@@ -4952,33 +4952,34 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 await SetTempRequestAsync(newTempRequestJson, deserializedTempRequestListViewModel);
-                await KeepTempRequestJsonCurrentAsOriginal(newTempRequestJson.GuidID); //do we need this current/original here??
-                                                                                       //var requests = new List<Request>();
-                                                                                       //var isRequests = true;
-                                                                                       //var RequestNum = 1;
-                                                                                       //while (isRequests)
-                                                                                       //{
-                                                                                       //    var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                                                                                       //    var req = _httpContextAccessor.HttpContext.Session.GetObject<Request>(requestName);
-                                                                                       //    if (req != null)
-                                                                                       //    {
-                                                                                       //        if (uploadQuoteOrderViewModel.ExpectedSupplyDays != null)
-                                                                                       //        {
-                                                                                       //            req.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
-                                                                                       //        }
-                                                                                       //        requests.Add(req);
-                                                                                       //    }
-                                                                                       //    else
-                                                                                       //    {
-                                                                                       //        isRequests = false;
-                                                                                       //    }
-                                                                                       //    RequestNum++;
-                                                                                       //}
-                                                                                       //RequestNum = 1;
-                                                                                       //foreach (var request in requests)
-                                                                                       //{
-                                                                                       //    request.ParentRequest = uploadQuoteOrderViewModel.ParentRequest;
-                                                                                       //    request.ParentQuote = null;
+                await KeepTempRequestJsonCurrentAsOriginal(newTempRequestJson.GuidID);
+                //do we need this current/original here??
+                //var requests = new List<Request>();
+                //var isRequests = true;
+                //var RequestNum = 1;
+                //while (isRequests)
+                //{
+                //    var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+                //    var req = _httpContextAccessor.HttpContext.Session.GetObject<Request>(requestName);
+                //    if (req != null)
+                //    {
+                //        if (uploadQuoteOrderViewModel.ExpectedSupplyDays != null)
+                //        {
+                //            req.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
+                //        }
+                //        requests.Add(req);
+                //    }
+                //    else
+                //    {
+                //        isRequests = false;
+                //    }
+                //    RequestNum++;
+                //}
+                //RequestNum = 1;
+                //foreach (var request in requests)
+                //{
+                //    request.ParentRequest = uploadQuoteOrderViewModel.ParentRequest;
+                //    request.ParentQuote = null;
 
                 //    var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
 
@@ -4986,18 +4987,19 @@ namespace PrototypeWithAuth.Controllers
                 //    RequestNum++;
                 //}
                 string action;
-                if (uploadQuoteOrderViewModel.TempRequestListViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased || uploadQuoteOrderViewModel.TempRequestListViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.SaveOperations)
+                tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
+                if (tempRequestListViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased || tempRequestListViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.SaveOperations)
                 {
                     action = "TermsModal";
                 }
                 else
                 {
                     await RemoveTempRequestAsync(newTempRequestJson.GuidID);
-                    action = "_IndexTableData";
-                    return await RedirectRequestsToShared(action, uploadQuoteOrderViewModel.TempRequestListViewModel.RequestIndexObject);
+                    action = "_IndexTableWithCounts";
+                    return await RedirectRequestsToShared(action, tempRequestListViewModel.RequestIndexObject);
                 }
                 Response.StatusCode = 200;
-                return RedirectToAction(action, uploadQuoteOrderViewModel.TempRequestListViewModel.RequestIndexObject);
+                return RedirectToAction(action, tempRequestListViewModel.RequestIndexObject);
             }
             catch (Exception ex)
             {
