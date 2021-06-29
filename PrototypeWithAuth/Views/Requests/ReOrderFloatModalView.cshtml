@@ -43,7 +43,7 @@
             </button>
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding reorderForm">
 
-                @{ await Html.RenderPartialAsync("_TempRequestsHiddenFors.cshtml", Model.RequestItemViewModel.TempRequestListViewModel); }
+                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.RequestItemViewModel.TempRequestListViewModel); }
                 @*
                     NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
                         they need the hiddenfors that are right underneath it
