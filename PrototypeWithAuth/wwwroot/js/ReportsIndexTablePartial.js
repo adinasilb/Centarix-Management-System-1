@@ -31,6 +31,8 @@
 			cache: false,
 			success: function (data) {
 				$(".render-body").html(data)
+				console.log("focus")
+				$(".start-div").trigger("focus")
 			}
 		});
     })
