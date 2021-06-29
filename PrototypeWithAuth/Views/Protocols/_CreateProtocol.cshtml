@@ -1,5 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.CreateProtocolsViewModel
 @using PrototypeWithAuth.ViewModels
+@using PrototypeWithAuth.AppData
+
 @{
     string theory = "";
     string material = "";
@@ -17,6 +19,16 @@
             break;
 
     }
+
+    var saveProtocolClass = "saveProtocol";
+    if(Model.ModalType == AppUtility.ProtocolModalType.CheckListMode || Model.ModalType == AppUtility.ProtocolModalType.Summary ||  Model.ModalType == AppUtility.ProtocolModalType.SummaryFloat)
+    {
+        saveProtocolClass = "";
+    }
+    var checkListMode = AppUtility.ProtocolModalType.CheckListMode;
+    var editMode = AppUtility.ProtocolModalType.Edit;
+    var summaryMode = AppUtility.ProtocolModalType.Summary;
+    var createMode = AppUtility.ProtocolModalType.Create;
 }
 
 <form action="" id="myForm" class=" on-form-modal protocol-form createProtocolForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
@@ -32,37 +44,49 @@
                 </a>
             </li>
             <li class="list-inline-item m-0 nav-item">
-                <a data-toggle="tab" href="#Materials@(Model.ModalType)" class="next-tab nav-link new-button Materials saveProtocol new-protocols-button protocol-tab @material">
+                <a data-toggle="tab" href="#Materials@(Model.ModalType)" class="next-tab nav-link new-button Materials @saveProtocolClass new-protocols-button protocol-tab @material">
                     <i class=" new-icon icon-centarix-icons-03"></i>
                     <label class="new-button-text">Material</label>
                 </a>
             </li>
             <li class="list-inline-item m-0 nav-item">
-                <a data-toggle="tab" href="#Protocol@(Model.ModalType)" class="next-tab nav-link new-button new-protocols-button protocol-tab lines-tab saveProtocol @protocols">
+                <a data-toggle="tab" href="#Protocol@(Model.ModalType)" class="next-tab nav-link new-button new-protocols-button protocol-tab lines-tab @saveProtocolClass @protocols">
                     <i class="new-icon icon-protocol-tab-24px"></i>
                     <label class="new-button-text">Protocols</label>
                 </a>
             </li>
-            <li class="only-protocol-tab li-function-bar  d-none">
+            <li class="list-inline-item m-0 nav-item @checkListMode has-modal-type d-none">
+                <a data-toggle="tab" href="#Results@(Model.ModalType)" class="next-tab nav-link new-button new-protocols-button protocol-tab lines-tab  ">
+                    <i class="new-icon icon-protocol-tab-24px"></i>
+                    <label class="new-button-text">Results</label>
+                </a>
+            </li>
+            <li class="only-protocol-tab li-function-bar  @editMode @createMode d-none">
                 <div class=" function-bar">
                     @foreach (var type in Model.FunctionTypes)
                     {
-                        <button class="function" type="button" typeID="@type.FunctionTypeID"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
+                        <button class="function" type="button" typeID="@type.FunctionTypeID" modalType="@Model.ModalType"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
                     }
                 </div>
             </li>
-            <li class="only-protocol-tab  d-none li-function-bar">
+            <li class="only-protocol-tab @editMode @createMode  d-none li-function-bar">
                 <div class="h-100 d-flex ml-6" style=" align-items: center;">
                     <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveLines" value="Save">Save</button>
                 </div>
             </li>
-            <li class="only-protocol-tab saving-spinner  d-none">
+            <li class="only-protocol-tab saving-spinner @editMode @createMode d-none">
                 <div class="spinner-border protocols-color" role="status">
                     <span class="sr-only"></span>Saving...
                 </div>
             </li>
-            <li class="only-protocol-tab saving-done  d-none">
+            <li class="only-protocol-tab saving-done @editMode @createMode d-none">
                 <span class="protocols-color pt-3"> Saved</span>
+            </li>
+
+            <li class="only-protocol-tab   d-none li-function-bar @summaryMode">
+                <div class="h-100 d-flex ml-6" style=" align-items: center;">
+                    <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin start-protocol-fx " value="@Model.Protocol.ProtocolID">Start</button>
+                </div>
             </li>
         </ul>
     </div>

@@ -44,10 +44,10 @@
                                     <div class="table-icon-div">
                                         <ul class="list-unstyled p-0 m-0">
                                             <li>
-                                                <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" value="@(col.AjaxID + "more")">
+                                                <a href="#" tabindex="0" role="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" value="@(col.AjaxID + "more")">
                                                     <i class="@icon.IconClass hover-bold px-1" style="font-size:2rem;">
                                                     </i>
-                                                </button>
+                                                </a>
                                             </li>
                                             <li>
                                                 <div style="display:none;" id="@(col.AjaxID + "more")">
@@ -77,12 +77,22 @@
                                 }
                                 else
                                 {
-                                    <div class="table-icon-div">
-                                        <a class="btn p-0 m-0 no-box-shadow requests @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
-                                           title="@icon.TooltipTitle" value="@col.AjaxID">
-                                            <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
-                                        </a>
-                                    </div>
+                                    if (icon.IconClass?.Equals("UpdateResults") ?? false)
+                                    {
+                                        <div class="">
+                                            <button class="btn btn-link p-0 update-results protocols-color" value="@col.AjaxID">Update Results</button>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="table-icon-div">
+                                            <a class="btn p-0 m-0 no-box-shadow requests @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                               title="@icon.TooltipTitle" value="@col.AjaxID">
+                                                <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                            </a>
+                                        </div>
+                                    }
+
                                 }
                             }
                         </div>

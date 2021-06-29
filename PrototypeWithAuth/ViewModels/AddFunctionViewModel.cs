@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
@@ -22,5 +23,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<Protocol> Protocols { get; set; }
         public List<DocumentFolder> DocumentsInfo { get; set; }
         public bool IsRemove { get; set; }
+        public AppUtility.ProtocolModalType ModalType { get; set; }
     }
 }

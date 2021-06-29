@@ -20,7 +20,7 @@
     }
 
     var theoryContainerStyle = "width:50%";
-    if (Model.ModalType == AppUtility.ProtocolModalType.Summary)
+    if (Model.ModalType == AppUtility.ProtocolModalType.SummaryFloat)
     {
         theoryContainerStyle = "";
     }
@@ -28,12 +28,13 @@
 
 }
 <div id="Theory@(Model.ModalType)" class="tab-pane fade in @theory">
-    <div class="container-fluid  m-0" style="@theoryContainerStyle">
+    <div class="container-fluid theory-container m-0" style="@theoryContainerStyle">
         <input type="hidden" class="createProtocolMasterProtocolID" value="@Model.Protocol.ProtocolID" />
         <input type="hidden" asp-for="Tab" class="selectedTab" />
         <input type="hidden" asp-for="Protocol.ProtocolID" value="@Model.Protocol.ProtocolID" />
-        <input type="hidden" asp-for="ModalType" />
+        <input type="hidden" asp-for="ModalType" class="modalType" />
         <input type="hidden" asp-for="Protocol.CreationDate" />
+        <input type="hidden" asp-for="ProtocolInstance.ProtocolInstanceID" class="protocolInstanceID" />
         <div class="row under-row-margin">
             <div class="col-4">
                 <label asp-for="Protocol.Name" class="control-label"></label>
@@ -61,7 +62,7 @@ Model.ProtocolCategories,
 "ProtocolCategoryTypeID",
 "ProtocolCategoryDescription"
 ), "Select Category",
-new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolParentList", @searchable = "Select Category" })
+new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "protocolParentList", @searchable = "Select Category" })
             </div>
             <div class="col-4">
                 <label class="control-label">Sub Category</label>
@@ -71,7 +72,7 @@ Model.ProtocolSubCategories,
 "ProtocolSubCategoryTypeID",
 "ProtocolSubCategoryTypeDescription"
 ), "Select Category",
-new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolSubList", @searchable = "Select Category" })
+new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "protocolSubList", @searchable = "Select Category" })
             </div>
             @*<div class="col-4">
                     <label asp-for="Tags" class="control-label"></label>
@@ -176,6 +177,8 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
     @{ await Html.RenderPartialAsync("_MaterialTab", new MaterialTabViewModel { Materials = Model.Protocol.Materials.ToList(), MaterialCategories = Model.MaterialCategories, Folders = Model.MaterialDocuments, ModalType = Model.ModalType });
     }
 </div>
+
+
 <div id="Protocol@(Model.ModalType)" class="tab-pane fade in @protocols">
 
     <div class="lines">
@@ -186,6 +189,9 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
 
 
     </div>
+</div>
+<div id="Results@(Model.ModalType)" class="tab-pane fade in @AppUtility.ProtocolModalType.CheckListMode d-none">
+
 </div>
 <script src="~/js/Validation/CreateProtocolValidation.js"></script>
 <script src="~/js/validate.js"></script>

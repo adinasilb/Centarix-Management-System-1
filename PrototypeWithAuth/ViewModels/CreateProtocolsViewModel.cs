@@ -11,6 +11,7 @@ namespace PrototypeWithAuth.ViewModels
     public class CreateProtocolsViewModel : ViewModelBase
     {
         public Protocol Protocol { get; set; }
+        public ProtocolInstance ProtocolInstance { get; set;}
         public List<String> Tags { get; set; }
         public IEnumerable<ProtocolCategory> ProtocolCategories { get; set; }
         public IEnumerable<ProtocolSubCategory> ProtocolSubCategories { get; set; }
