@@ -85,7 +85,9 @@ $(function () {
 		});
 
 	});
-
+	$('[data-toggle = "tooltip"]').off('click').on("click", function (e) {
+		e.preventDefault();
+	});
 	//$("body").off("click", ".share-request").on("click", ".share-request", function (e) {
 	//	alert("share request");
 	//	var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
