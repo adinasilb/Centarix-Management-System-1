@@ -59,7 +59,7 @@ $(".load-protocol").click(function(e){
 
 $(".update-results").click(function(e){
 	var val = $(this).val();
-    $.fn.StartProtocol(val, true);
+    $.fn.StartProtocol(val, true, 4);
 });
 
 var protocolFavoritesHasRun = false; //This is preventing the double click
@@ -185,7 +185,7 @@ $(".popover-more").off('click').click(function (e) {
 	});
 	$(".popover .start-protocol-fx").click(function (e) {
 		e.preventDefault();
-		$.fn.StartProtocol($(this).attr("data-route-request"), false);
+		$.fn.StartProtocol($(this).attr("data-route-request"), false, 3);
 	});
 });
 

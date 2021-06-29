@@ -80,7 +80,7 @@ namespace PrototypeWithAuth.Controllers
         {
             IQueryable<Protocol> ProtocolsPassedIn = Enumerable.Empty<Protocol>().AsQueryable();
             IQueryable<Protocol> fullProtocolsList = _context.Protocols.Include(p => p.ApplicationUserCreator).Include(p => p.ProtocolSubCategory)
-                .ThenInclude(p => p.ProtocolCategoryType).Include(p => p.ProtocolType).Include(p=>p.ProtocolInstance);
+                .ThenInclude(p => p.ProtocolCategoryType).Include(p => p.ProtocolType);
             var user = await _userManager.GetUserAsync(User);
             switch (protocolsIndexObject.PageType)
             {
@@ -103,7 +103,7 @@ namespace PrototypeWithAuth.Controllers
                             fullProtocolsList = fullProtocolsList.Where(frl => shareProtocols.Contains(frl.ProtocolID));
                             break;
                         case AppUtility.SidebarEnum.LastProtocol:
-                            fullProtocolsList = fullProtocolsList.Where(p => p.ProtocolInstance != null && p.ProtocolInstance.IsFinished && !p.ProtocolInstance.ResultsReported);
+                          //  fullProtocolsList = fullProtocolsList.Where(p => p.ProtocolInstance != null && p.ProtocolInstance.IsFinished && !p.ProtocolInstance.ResultsReported);
                             break;
                     }
                     break;
@@ -219,10 +219,10 @@ namespace PrototypeWithAuth.Controllers
                                      )).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 25); 
                             break;
                         case AppUtility.SidebarEnum.LastProtocol:
-                            iconList.Add(updateResultsIcon);
-                            onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate)
-.Select(p => new ProtocolsIndexPartialRowViewModel(p, p.ProtocolType, p.ProtocolSubCategory, p.ApplicationUserCreator, protocolsIndexObject,  iconList, user, p.ProtocolInstance                  
-                                     )).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 25);
+//                            iconList.Add(updateResultsIcon);
+//                            onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate)
+//.Select(p => new ProtocolsIndexPartialRowViewModel(p, p.ProtocolType, p.ProtocolSubCategory, p.ApplicationUserCreator, protocolsIndexObject,  iconList, user                 
+//                                     )).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 25);
 
                             break;
                     }
@@ -410,10 +410,11 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> StartProtocol(int ID, int protocolInstanceID, bool isContinue)
+        public async Task<IActionResult> StartProtocol(int ID, int protocolInstanceID, bool isContinue, int tab=3)
         {
             var user = await _userManager.GetUserAsync(User);
             CreateProtocolsViewModel viewmodel = new CreateProtocolsViewModel();
+            viewmodel.Tab = tab;
             Protocol protocol = null;
             if(isContinue)
             {

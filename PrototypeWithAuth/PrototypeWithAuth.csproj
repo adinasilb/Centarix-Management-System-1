@@ -375,6 +375,8 @@
     <Compile Remove="Data\Migrations\20210610055638_TestMerge.Designer.cs" />
     <Compile Remove="Data\Migrations\20210616055936_resourcesreceived.cs" />
     <Compile Remove="Data\Migrations\20210616055936_resourcesreceived.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210629101846_WorkFlowRealted.cs" />
+    <Compile Remove="Data\Migrations\20210629101846_WorkFlowRealted.Designer.cs" />
   </ItemGroup>
 
 

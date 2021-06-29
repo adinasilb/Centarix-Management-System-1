@@ -104,7 +104,7 @@ namespace PrototypeWithAuth.ViewModels
                 Title = "",
                 Width = 10,
                 Icons = iconList,
-                AjaxID = p.ProtocolInstance.ProtocolInstanceID
+                AjaxID =protocolInstance.ProtocolInstanceID
             };
         }
 

@@ -647,8 +647,8 @@
 
         }
 
-        $.fn.StartProtocol = function (id, isContinue) {
-            var url = "/Protocols/StartProtocol?ID=" +id+"&IsContinue="+isContinue;
+        $.fn.StartProtocol = function (id, isContinue, tab) {
+            var url = "/Protocols/StartProtocol?ID=" +id+"&IsContinue="+isContinue+"&tab="+tab;
             $.ajax({
                 async: true,
                 url: url,
@@ -656,8 +656,11 @@
                 type: "GET",
                 cache: false,
                 success: function (data) {
+                    
                     $("._IndexTable").html(data);
+                    var modalType=$(".modalType").val();
                     $.fn.ProtocolsMarkReadonly("_IndexTable");
+                    $("."+modalType).removeClass("d-none");
                     return false;
                 }
             });

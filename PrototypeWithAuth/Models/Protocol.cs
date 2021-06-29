@@ -29,6 +29,6 @@ namespace PrototypeWithAuth.Models
         public int ProtocolTypeID { get; set; }
         public ProtocolType ProtocolType { get; set; }
         public DateTime CreationDate { get; set; }
-        public ProtocolInstance ProtocolInstance { get; set; }
+        public IEnumerable<ProtocolInstance> ProtocolInstances { get; set; }
     }
 }
