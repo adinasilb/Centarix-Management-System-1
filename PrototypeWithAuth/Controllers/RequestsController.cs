@@ -2455,12 +2455,12 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReOrderFloatModalView(ReorderViewModel reorderViewModel, AppUtility.OrderTypeEnum OrderTypeEnum, bool isCancel = false)
+        public async Task<IActionResult> ReOrderFloatModalView(ReorderViewModel reorderViewModel, TempRequestListViewModel tempRequestListViewModel, AppUtility.OrderTypeEnum OrderTypeEnum, bool isCancel = false)
         {
             if (isCancel)
             {
                 DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
-                await RemoveTempRequestAsync(reorderViewModel.RequestItemViewModel.TempRequestListViewModel.GUID);
+                await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
                 return PartialView("Default");
             }
             else
@@ -2500,14 +2500,14 @@ namespace PrototypeWithAuth.Controllers
                     {
                         try
                         {
-                            var oldTempRequestJson = await GetTempRequestAsync(reorderViewModel.RequestItemViewModel.TempRequestListViewModel.GUID);
+                            var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
                             var deserializedTempLists = oldTempRequestJson.DeserializeJson<List<TempRequestViewModel>>();
                             TempRequestListViewModel deserializedTemp = new TempRequestListViewModel()
                             {
                                 TempRequestViewModels = deserializedTempLists
                             };
-                            deserializedTemp.GUID = reorderViewModel.RequestItemViewModel.TempRequestListViewModel.GUID;
-                            deserializedTemp.RequestIndexObject = reorderViewModel.RequestItemViewModel.TempRequestListViewModel.RequestIndexObject;
+                            deserializedTemp.GUID = tempRequestListViewModel.GUID;
+                            deserializedTemp.RequestIndexObject = tempRequestListViewModel.RequestIndexObject;
 
                             await AddItemAccordingToOrderType(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), OrderTypeEnum, isInBudget, deserializedTemp);
 
@@ -2523,12 +2523,12 @@ namespace PrototypeWithAuth.Controllers
                         catch (Exception ex)
                         {
                             transaction.Rollback();
-                            await RemoveTempRequestAsync(reorderViewModel.RequestItemViewModel.TempRequestListViewModel.GUID);
+                            await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
                             throw new Exception(AppUtility.GetExceptionMessage(ex)); ;
                         }
                     }
 
-                    var action = reorderViewModel.RequestItemViewModel.TempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary ? "IndexInventory" : "Index";
+                    var action = tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary ? "IndexInventory" : "Index";
                     switch (OrderTypeEnum)
                     {
                         case AppUtility.OrderTypeEnum.AlreadyPurchased:
@@ -2539,13 +2539,14 @@ namespace PrototypeWithAuth.Controllers
                             action = "UploadQuoteModal";
                             break;
                     }
-                    reorderViewModel.RequestItemViewModel.TempRequestListViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
-                    reorderViewModel.RequestItemViewModel.TempRequestListViewModel.RequestIndexObject.IsReorder = true;
-                    return RedirectToAction(action, "Requests", reorderViewModel.RequestItemViewModel.TempRequestListViewModel.RequestIndexObject);
+                    tempRequestListViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
+                    tempRequestListViewModel.RequestIndexObject.IsReorder = true;
+                    tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
+                    return RedirectToAction(action, "Requests", tempRequestListViewModel.RequestIndexObject);
                 }
                 catch (Exception ex)
                 {
-                    await RollbackCurrentTempAsync(reorderViewModel.RequestItemViewModel.TempRequestListViewModel.GUID);
+                    await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
                     reorderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     Response.StatusCode = 500;
                     var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
