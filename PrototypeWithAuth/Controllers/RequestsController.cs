@@ -2501,7 +2501,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         try
                         {
-                            var oldTempRequestJson = await GetTempRequestAsync(reorderViewModel.RequestItemViewModel.TempRequestListViewModel.GUID);
+                            var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
                             var deserializedTempLists = oldTempRequestJson.DeserializeJson<List<TempRequestViewModel>>();
                             TempRequestListViewModel deserializedTemp = new TempRequestListViewModel()
                             {
