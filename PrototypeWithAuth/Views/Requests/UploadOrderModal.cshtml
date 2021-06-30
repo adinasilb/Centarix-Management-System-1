@@ -151,6 +151,7 @@
             }
         }
         else {
+            alert("Page Type: " + $("#RequestIndexObject_OrderType").attr("value"));
             $('.activeSubmit').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($(".uploadQuoteForm")[0]);
@@ -165,7 +166,6 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    alert("Page Type: " + $("#RequestIndexObject_OrderType").attr("value"));
                     if ($("#RequestIndexObject_OrderType").val() == "SaveOperations" || $("#RequestIndexObject_OrderType").val() == "AlreadyPurchased") {
                         alert("opening terms modal");
                         $.fn.OpenModal("termsModal", "terms", data);

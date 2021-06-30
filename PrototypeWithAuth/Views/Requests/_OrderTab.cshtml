@@ -59,14 +59,14 @@
             <span class="small-text">If you want to order multiple items</span>
         </div>
         <div class="col-5">
-            <button type="submit" asp-action="AddItemView" asp-controller="Requests" asp-route-OrderType="@AppUtility.OrderTypeEnum.AddToCart.ToString()"
+            @*<button type="submit" asp-action="AddItemView" asp-controller="Requests" asp-route-OrderType="@AppUtility.OrderTypeEnum.AddToCart.ToString()"
+                        class="text w-100 custom-order-inv custom-button float-right">
+                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
+                </button>*@
+            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart"
                     class="text w-100 custom-order-inv custom-button float-right submitOrder ">
                 @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
             </button>
-            @*<button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart"
-                        class="text w-100 custom-order-inv custom-button float-right submitOrder ">
-                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
-                </button>*@
 
         </div>
     </div>
@@ -143,7 +143,12 @@
             success: function (data) {
                 console.log("in success of ajax call ");
                 alert("in success of ajax call");
-                $.fn.OpenModal('modalStep1', 'step-1', data)
+                if (orderType == "AddToCart") {
+                    $(".outer-add-item-view").html(data);
+                }
+                else {
+                    $.fn.OpenModal('modalStep1', 'step-1', data)
+                }
                 $("#loading").hide();
                 return true;
             },
