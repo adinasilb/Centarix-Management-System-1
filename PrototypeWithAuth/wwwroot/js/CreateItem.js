@@ -204,7 +204,7 @@
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
        
     })
-    $('body').off('click', 'remove-item').on('click','.remove-item', function (e) {
+    $('body').off('click', '.remove-item').on('click','.remove-item', function (e) {
         var index = $(this).attr('data-val');
         var items = $('.partial-item-tab').length
         if (items > 1) {

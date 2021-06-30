@@ -98,9 +98,9 @@ $('.ordersItemForm').validate({
 });
 
 
-$("body, .modal").off("change", '#vendorList').on("change", '#vendorList' , function(){
-	//alert("in change vendor")
-	//$('#Request_0__Product_CatalogNumber').valid();
+	$("body, .modal").off("change", '#vendorList').on("change", '#vendorList' , function(){
+		//console.log("in change vendor")
+		//$('#Request_0__Product_CatalogNumber').valid();
 		$('.error').addClass("beforeCallValid");
 		$('.catalog-number').valid();
 		$(".error:not(.beforeCallValid)").addClass("afterCallValid")
@@ -110,7 +110,7 @@ $("body, .modal").off("change", '#vendorList').on("change", '#vendorList' , func
 		$(".afterCallValid").removeClass('error')
 		$(".afterCallValid").removeClass('afterCallValid')
 
-});
+	});
 	
 });
 

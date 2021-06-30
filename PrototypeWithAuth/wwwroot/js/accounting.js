@@ -73,11 +73,6 @@
 		console.log("in share payments fx site.js");
 	};
 
-	$("body").on("click", "#share-payment", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		console.log("in share payments body fx site.js");
-	});
 
 	/*--------------------------------Accounting Payment Notifications--------------------------------*/
 	$(".payments-pay-now").off("click").on("click", function (e) {
