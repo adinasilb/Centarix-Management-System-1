@@ -31,7 +31,7 @@
 				$(".report-text").trigger("change");
 			}
 			else {
-				$.fn.OpenDocumentsModal($foldername, $objectId, $isEdittable, $SectionType, $showSwitch, $parentfoldername, dontAllowMultipleFiles);
+				$.fn.OpenDocumentsModal(true, $foldername, $objectId, $isEdittable, $SectionType, $showSwitch, $parentfoldername, dontAllowMultipleFiles);
 			}
 			//$.fn.ChangeColorsOfDocs($foldername);
 			$(".document-name").text('')

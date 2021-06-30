@@ -311,7 +311,7 @@ $(function () {
 		var parentFolder = $(".active-document-modal").attr("parentfolder");
 		var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
 		console.log(dontAllowMultipleFiles)
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles);
+		$.fn.OpenDocumentsModal(false, enumString, requestId, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles);
 		return true;
 	});
 

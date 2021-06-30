@@ -1874,7 +1874,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [Authorize(Roles = "Protocols")]
         public ActionResult DocumentsModal(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
-    AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Protocols, bool dontAllowMultipleFiles = true)
+    AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Protocols, bool dontAllowMultipleFiles = false)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
@@ -1890,6 +1890,28 @@ namespace PrototypeWithAuth.Controllers
             base.FillDocumentsViewModel(documentsModalViewModel);
             return PartialView(documentsModalViewModel);
         }
+
+
+        [HttpGet]
+        [Authorize(Roles = "Protocols")]
+        public ActionResult _DocumentsModalData(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+  AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Protocols, bool dontAllowMultipleFiles = false)
+        {
+            DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
+            {
+                FolderName = RequestFolderNameEnum,
+                ParentFolderName = parentFolderName,
+                ObjectID = id == "" ? "0" : id,
+                SectionType = SectionType,
+                IsEdittable = IsEdittable,
+                DontAllowMultiple = dontAllowMultipleFiles,
+                ShowSwitch = showSwitch
+            };
+
+            base.FillDocumentsViewModel(documentsModalViewModel);
+            return PartialView(documentsModalViewModel);
+        }
+
 
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> Search()
@@ -2237,8 +2259,6 @@ namespace PrototypeWithAuth.Controllers
                 FunctionReport = functionReport,
                 ClosingTags = closingTags
             };
-            string uploadReportsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Reports.ToString());
-            string uploadReportsFolder2 = Path.Combine(uploadReportsFolder, functionReport.ID.ToString());
 
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
             {
@@ -2257,8 +2277,18 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddFile:
                     DeleteTemporaryDocuments(AppUtility.ParentFolderName.Reports);
-                    viewmodel.DocumentsInfo = new List<DocumentFolder>();
-                    base.GetExistingFileStrings(viewmodel.DocumentsInfo, AppUtility.FolderNamesEnum.Files, uploadReportsFolder2);
+                    DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
+                    {
+                        FolderName = AppUtility.FolderNamesEnum.Files,
+                        ParentFolderName = AppUtility.ParentFolderName.Reports,
+                        ObjectID = functionReport.ID.ToString(),
+                        SectionType = AppUtility.MenuItems.Protocols,
+                        IsEdittable = true,
+                        DontAllowMultiple = false,
+                        ShowSwitch = false
+                    };
+                    base.FillDocumentsViewModel(documentsModalViewModel);
+                    viewmodel.DocumentsModalViewModel = documentsModalViewModel;
                     break;
             }
             return PartialView(viewmodel);

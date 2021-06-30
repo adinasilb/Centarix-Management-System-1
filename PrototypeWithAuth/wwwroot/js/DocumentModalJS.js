@@ -6,17 +6,9 @@
 		return false;
 	});
 
-	$(".file-select").on("change", function (e) {
+	$(".file-select").off("change").on("change", function (e) {
 		e.preventDefault();
-		e.stopPropagation();
-		if(window.stop !== undefined) 
-		{
-			window.stop();
-		}
-		else if(document.execCommand !== undefined)
-		{
-			document.execCommand("Stop", false);
-		}
+		e.stopImmediatePropagation();
 		console.log("upload file submitted");
 		var dontAllowMultipleFiles = $("#DontAllowMultiple").val();
 		if (dontAllowMultipleFiles == false) {
@@ -50,15 +42,22 @@
 		//alert($isEdittable)
 		var $showSwitch =  $('.active-document-modal').attr("showSwitch");
 		console.log("url : " + url);
-		var formData = new FormData($(".documentModalForm")[0]);
+	    var formData = new FormData($(".documentModalForm")[0]);
+		for(var i=0; i< $(this).get(0).files.length; i++)
+		{
+			formData.append("FilesToSave", $(this).get(0).files[i])
+		}
+
+		console.log(...formData)
 		$.ajax({
 			url: url,
 			method: 'POST',
 			data: formData,
 			success: (partialResult) => {
+		
 				//this.options.noteModalElement.modal('hide');
 				$(".carousel-item").remove();
-				$("#documentsModal").replaceWith('');
+				
 
 				var $enumString = $(".open-document-modal.active-document-modal").data("string");
 				var $requestId = $(".open-document-modal.active-document-modal").data("id");
@@ -71,7 +70,7 @@
 				}
 				$.fn.ChangeColorsOfModal($enumString, section);
 				var parentFolder = $(".active-document-modal").attr("parentfolder");
-				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles);
+				$.fn.OpenDocumentsModal(true, $enumString, $requestId, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles);
 				return true;
 			},
 			processData: false,
@@ -101,7 +100,7 @@
 		var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
 		console.log(dontAllowMultipleFiles)
 		var parentFolder = $(".active-document-modal").attr("parentFolder");
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles);
+		$.fn.OpenDocumentsModal(false,enumString, requestId, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles);
 		return true;
 	});
 

@@ -1104,20 +1104,22 @@
         }
 
 
-        $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles) {
+
+        $.fn.OpenDocumentsModal = function (isReopen, enumString, requestId, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles) {
             $('#loading').show();
             //alert("in documents modal in document modal js")
             //$(".modal-backdrop").first().removeClass();
             //alert(parentFolder)
-            var urltogo = $("#documentSubmit").attr("url");
-            if (urltogo == "") {
-                urltogo = "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
-	        }
-            else {
-                //var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
-                console.log("urltogo: " + urltogo);
-                urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
+            if(isReopen)
+            {
+                urltogo = "_DocumentsModalData?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
             }
+            else
+            {
+                urltogo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
+            }
+           
+
             console.log(urltogo);
             $.ajax({
                 async: true,
@@ -1126,7 +1128,16 @@
                 cache: false,
                 success: function (data) {
                     $('#loading').hide();
-                    $.fn.OpenModal('documentsModal', 'documents', data)
+                    if(isReopen)
+                    {
+                        alert("._DocumentsModalData")
+                        $("._DocumentsModalData").html(data);
+                    }
+                    else {
+                        alert("open doucment modal");
+                        $.fn.OpenModal('documentsModal', 'documents', data)
+                    }
+                    
                     var numCards = $(".documentsModal .card.document-border").length;
                     console.log("numcards: " + numCards);
                     if (numCards < 1) {
