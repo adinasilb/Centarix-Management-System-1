@@ -713,7 +713,7 @@ namespace PrototypeWithAuth.Controllers
                     return new RedirectToActionResult("UploadQuoteModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
                 //return new RedirectToActionResult("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                 case AppUtility.OrderTypeEnum.AddToCart:
-                    return new RedirectToActionResult("Index", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
+                    return new RedirectToActionResult("_IndexTableWithCounts", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
                 //return new RedirectToActionResult("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                 case AppUtility.OrderTypeEnum.SaveOperations:
                     return new RedirectToActionResult("UploadOrderModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
@@ -1882,9 +1882,8 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> AddItemView(TempRequestListViewModel tempRequestListViewModel, RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
+        public async Task<IActionResult> AddItemView(AppUtility.OrderTypeEnum OrderType, TempRequestListViewModel tempRequestListViewModel, RequestItemViewModel requestItemViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             requestItemViewModel.TempRequestListViewModel = tempRequestListViewModel;
             var redirectToActionResult = SaveAddItemView(requestItemViewModel, OrderType, receivedModalVisualViewModel).Result;
