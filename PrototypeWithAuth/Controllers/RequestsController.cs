@@ -1415,7 +1415,7 @@ namespace PrototypeWithAuth.Controllers
 
                                 await _context.SaveChangesAsync();
 
-                                if (tempRequest.Comments.Any()) //do we need this check?
+                                if (tempRequest.Comments != null && tempRequest.Comments.Any()) //do we need this check?
                                 {
                                     foreach (var comment in tempRequest.Comments)
                                     {
@@ -1461,7 +1461,7 @@ namespace PrototypeWithAuth.Controllers
                             //foreach (var tempRequest in newTRLVM.TempRequestViewModels)
                             for (int n = 0; n < newTRLVM.TempRequestViewModels.Count; n++)
                             {
-                                var additionalRequests = n < newTRLVM.TempRequestViewModels.Count ? true : false;
+                                var additionalRequests = n + 1 < newTRLVM.TempRequestViewModels.Count ? true : false;
                                 MoveDocumentsOutOfTempFolder(newTRLVM.TempRequestViewModels[n].Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests);
                                 newTRLVM.TempRequestViewModels[n].Request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == newTRLVM.TempRequestViewModels[n].Request.Product.VendorID).FirstOrDefault();
                                 if (!needsToBeApproved)
@@ -1485,7 +1485,8 @@ namespace PrototypeWithAuth.Controllers
                             await transaction.CommitAsync();
 
                             await RemoveTempRequestAsync(newTRLVM.GUID);
-                            if (!needsToBeApproved) { return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("Index", controller, termsViewModel.TempRequestListViewModel.RequestIndexObject) }; };
+                            tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
+                            if (!needsToBeApproved) { return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("Index", controller, tempRequestListViewModel.RequestIndexObject) }; };
                         }
 
                     }

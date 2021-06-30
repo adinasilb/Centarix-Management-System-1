@@ -139,6 +139,7 @@
 <script src="~/js/validate.js"></script>
 <script>
     $(".submit-order").off('click').on("click", function (e) {
+        alert("Page Type: " + $("#RequestIndexObject_OrderType").attr("value"));
         e.preventDefault();
         console.log("submit order doc");
         //alert("validate form");
@@ -151,7 +152,6 @@
             }
         }
         else {
-            alert("Page Type: " + $("#RequestIndexObject_OrderType").attr("value"));
             $('.activeSubmit').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($(".uploadQuoteForm")[0]);

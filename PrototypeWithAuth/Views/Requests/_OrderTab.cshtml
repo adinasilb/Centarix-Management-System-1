@@ -141,6 +141,7 @@
             type: "POST",
             cache: false,
             success: function (data) {
+                $(".temprequesthiddenfors").html(''); //remove hidden fors so don't conflict further down the line
                 console.log("in success of ajax call ");
                 alert("in success of ajax call");
                 if (orderType == "AddToCart") {
