@@ -22,7 +22,7 @@ namespace PrototypeWithAuth.AppData
             var jsonstring = JsonConvert.SerializeObject(value, Newtonsoft.Json.Formatting.Indented,
                 new JsonSerializerSettings()
                 {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                    ReferenceLoopHandling = ReferenceLoopHandling.Serialize
                 });
             jsonRequest.RequestJson = jsonstring;
         }

@@ -270,6 +270,7 @@ namespace PrototypeWithAuth.AppData
             decimal rate = 0.0m;
             try //try is b/c sometimes the api is down
             {
+                //throw new Exception();
                 dynamic tmp = JsonConvert.DeserializeObject(response.Content);
                 String stringRate = (string)tmp.quotes.USDILS;
                 stringRate = stringRate.Replace("{", "");

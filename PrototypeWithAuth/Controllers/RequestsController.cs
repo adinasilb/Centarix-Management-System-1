@@ -2501,16 +2501,11 @@ namespace PrototypeWithAuth.Controllers
                     {
                         try
                         {
-                            var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
-                            var deserializedTempLists = oldTempRequestJson.DeserializeJson<List<TempRequestViewModel>>();
-                            TempRequestListViewModel deserializedTemp = new TempRequestListViewModel()
-                            {
-                                TempRequestViewModels = deserializedTempLists
-                            };
-                            deserializedTemp.GUID = tempRequestListViewModel.GUID;
-                            deserializedTemp.RequestIndexObject = tempRequestListViewModel.RequestIndexObject;
+                            TempRequestViewModel newTrvm =  await AddItemAccordingToOrderType(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), OrderTypeEnum, isInBudget, tempRequestListViewModel);
 
-                            await AddItemAccordingToOrderType(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), OrderTypeEnum, isInBudget, deserializedTemp);
+                            TempRequestJson trj = CreateTempRequestJson(tempRequestListViewModel.GUID);
+                            await SetTempRequestAsync(trj,
+                            new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() {  newTrvm} });
 
                             await transaction.CommitAsync(); //IF SAVEITEM OR REQUEST ITEM
 
