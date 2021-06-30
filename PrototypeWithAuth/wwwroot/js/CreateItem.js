@@ -197,6 +197,7 @@
                 data: formData,
                 cache: false,
                 success: function (data) {
+                    $(".temprequesthiddenfors").html(''); //remove hidden fors so don't conflict further down the line
                     $.fn.OpenModal('modal', 'step-1', data)
                 }
             });
