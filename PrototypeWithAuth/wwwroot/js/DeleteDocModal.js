@@ -49,6 +49,7 @@ $.fn.RemoveColorsOfDocs = function ($foldername) {
 	$("#" + $foldername + " i").removeClass('oper-filter');
 	$("#" + $foldername + " i").removeClass('order-inv-filter')
 	$("#" + $foldername + " i").removeClass('lab-man-filter')
+	$("#" + $foldername + " i").removeClass('protocols-filter')
 	$(".active-document-modal .material-image-icon").removeClass("protocols-filter");
 	$(".active-document-modal .material-image-icon").addClass("disabled-text");
 	$("#" + $foldername + " i").addClass('opac87');

@@ -80,31 +80,6 @@
 
 	})
 
-	
-	//seems to not be used. only diff is that other one has $(".open-document-modal").removeClass("active-document-modal");
-	$(".open-document-modal").off('click').on("click", function (e) {
-
-		e.preventDefault();
-		e.stopPropagation();
-		console.log("clicked open doc modal 1");
-		var section = $("#masterSectionType").val();
-		console.log("section"+section)
-		$(this).addClass("active-document-modal");
-		var enumString = $(this).data("string");
-		console.log("enumString: " + enumString);
-		var requestId = $(this).data("id");
-		console.log("requestId: " + requestId);
-		var isEdittable = $(".active-document-modal").attr("data-val");
-		console.log($("#masterSidebarType").val())
-		var showSwitch = $(".active-document-modal").attr("showSwitch");
-		var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
-		console.log(dontAllowMultipleFiles)
-		var parentFolder = $(".active-document-modal").attr("parentFolder");
-		$.fn.OpenDocumentsModal(false,enumString, requestId, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles);
-		return true;
-	});
-
-
 	$(".file-select").on("change", function (e) {
 		console.log("file was changed");
 		$cardDiv = $(this).closest("div.card");

@@ -96,10 +96,7 @@
         <input type="hidden" asp-for="IsEdittable" class="@markDisabled isEdittable" />
         @if (Model.FileStrings != null && Model.FileStrings?.Count > 0)
         {
-            <div id="carousel-example-multi" class="carousel slide carousel-multi-item v-2" data-ride="carousel">
-                @{
-                    string action = Context.Request.Path;
-                }
+            <div id="carousel-example-multi" class="carousel slide carousel-multi-item v-2" data-ride="carousel">          
 
 
                 <div class="row">
