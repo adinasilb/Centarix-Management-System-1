@@ -1522,7 +1522,8 @@ namespace PrototypeWithAuth.Controllers
                 Response.StatusCode = 500;
                 var termsList = new List<SelectListItem>() { };
                 await _context.PaymentStatuses.ForEachAsync(ps => termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription }));
-                termsList = termsList;
+                termsViewModel.TermsList = termsList;
+                termsViewModel.TempRequestListViewModel = tempRequestListViewModel;
                 return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("", "", ""), TermsViewModel = termsViewModel };
             }
         }
