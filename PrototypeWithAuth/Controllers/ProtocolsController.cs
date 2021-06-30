@@ -80,7 +80,7 @@ namespace PrototypeWithAuth.Controllers
         {
             IQueryable<Protocol> ProtocolsPassedIn = Enumerable.Empty<Protocol>().AsQueryable();
             IQueryable<Protocol> fullProtocolsList = _context.Protocols.Include(p => p.ApplicationUserCreator).Include(p => p.ProtocolSubCategory)
-                .ThenInclude(p => p.ProtocolCategoryType).Include(p => p.ProtocolType);
+                .ThenInclude(p => p.ProtocolCategoryType).Include(p => p.ProtocolType).Include(p=>p.ProtocolInstances);
             var user = await _userManager.GetUserAsync(User);
             switch (protocolsIndexObject.PageType)
             {
@@ -103,7 +103,7 @@ namespace PrototypeWithAuth.Controllers
                             fullProtocolsList = fullProtocolsList.Where(frl => shareProtocols.Contains(frl.ProtocolID));
                             break;
                         case AppUtility.SidebarEnum.LastProtocol:
-                          //  fullProtocolsList = fullProtocolsList.Where(p => p.ProtocolInstance != null && p.ProtocolInstance.IsFinished && !p.ProtocolInstance.ResultsReported);
+                           fullProtocolsList = fullProtocolsList.Where(p => p.ProtocolInstances.Count()>0);
                             break;
                     }
                     break;
@@ -219,10 +219,23 @@ namespace PrototypeWithAuth.Controllers
                                      )).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 25); 
                             break;
                         case AppUtility.SidebarEnum.LastProtocol:
-//                            iconList.Add(updateResultsIcon);
-//                            onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate)
-//.Select(p => new ProtocolsIndexPartialRowViewModel(p, p.ProtocolType, p.ProtocolSubCategory, p.ApplicationUserCreator, protocolsIndexObject,  iconList, user                 
-//                                     )).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 25);
+                            iconList.Add(updateResultsIcon);
+                            var protocolList = new List<ProtocolProtocolInstance>() { };
+
+                            foreach (var protocol in ProtocolPassedInWithInclude)
+                            {
+                                var currentProtocolInstances = protocol.ProtocolInstances.Where(pi => !pi.ResultsReported && pi.IsFinished).ToList();
+                                 if (currentProtocolInstances.Count() > 0)
+                                {
+                                    for (var i = 0; i < currentProtocolInstances.Count(); i++)
+                                    {
+                                        protocolList.Add(new ProtocolProtocolInstance { Protocol = protocol, ProtocolInstance = currentProtocolInstances.ElementAt(i) });
+                                    }
+                                }
+                            }
+                            onePageOfProtocols = await protocolList.OrderByDescending(p => p.ProtocolInstance.EndDate)
+.Select(p => new ProtocolsIndexPartialRowViewModel(p.Protocol, p.Protocol.ProtocolType, p.Protocol.ProtocolSubCategory, p.Protocol.ApplicationUserCreator, protocolsIndexObject, iconList, user, p.ProtocolInstance
+                                     )).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 25);
 
                             break;
                     }
@@ -429,7 +442,6 @@ namespace PrototypeWithAuth.Controllers
                 await _context.SaveChangesAsync();
             }
             viewmodel.ModalType = AppUtility.ProtocolModalType.CheckListMode;
-            viewmodel.Tab = 3;
             await FillCreateProtocolsViewModel(viewmodel, protocol.ProtocolTypeID, protocol.ProtocolID);         
             return PartialView("_IndexTableWithEditProtocol", viewmodel);
         }
@@ -442,7 +454,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 if(isLast)
                 {
-                    protocolInstance.IsFinished = true;                 
+                    protocolInstance.IsFinished = true;
+                    protocolInstance.EndDate = DateTime.Now;
                 }
                 else
                 {
