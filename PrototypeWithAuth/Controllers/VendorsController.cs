@@ -353,6 +353,7 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
+        [Authorize(Roles = "Accounting, LabManagement")]
         public async Task<IActionResult> Edit(int? id, AppUtility.MenuItems SectionType)
         {
             return await editFunction(id, SectionType);
@@ -362,6 +363,16 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> EditPartial(int? id, AppUtility.MenuItems SectionType, int? Tab)
         {
             return await editFunction(id, SectionType, Tab);
+        }
+
+        [Authorize(Roles = "Accounting, LabManagement")]
+        public async Task<IActionResult> _VendorHeader(int? id, AppUtility.MenuItems SectionType)
+        {
+            var createSupplierViewModel = new CreateSupplierViewModel()
+            {
+                Vendor = await _context.Vendors.Include(v => v.VendorCategoryTypes).Where(v => v.VendorID == id).FirstOrDefaultAsync()
+            };
+            return PartialView(createSupplierViewModel);
         }
         public async Task<IActionResult> editFunction(int? id, AppUtility.MenuItems SectionType, int? Tab = 0)
         {

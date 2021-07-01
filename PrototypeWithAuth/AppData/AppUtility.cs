@@ -753,5 +753,12 @@ namespace PrototypeWithAuth.AppData
                 return "";
             }
         }
+        public static T DeepClone<T>(T obj)
+        {
+            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
+        }
     }
 }

@@ -52,13 +52,8 @@
                                     <img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" />
                                 </button>
                             </div>
-                            <div class="row modal-title-line">
-                                <div class="modal-product-title" @*style="width: 80%;"*@>
-                                    <input type="hidden" asp-for="Vendor.VendorID" />
-                                    <input asp-for="Vendor.VendorEnName" class="form-control-plaintext heading-1 border-bottom mark-readonly name" disabled />
-                                    <span asp-validation-for="Vendor.VendorEnName" class="text-danger-centarix"></span>
-                                </div>
-
+                            <div class=" col _VendorHeader">
+                                @{ await Html.RenderPartialAsync("_VendorHeader", Model);}
                             </div>
                             <div class="row">
                                 <div class="col-12 px-0">

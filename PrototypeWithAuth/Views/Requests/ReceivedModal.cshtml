@@ -20,7 +20,7 @@
 <script src="~/js/customDropdown.js"></script>
 <div class="modal modal-view on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog-centered mx-auto  modal-lg" role="document" style="max-height:100%; max-width:90rem; overflow-y:auto;">
+    <div class="modal-dialog-centered mx-auto elixir-modal-xl" role="document" style="max-height:100%; max-width:90rem; overflow-y:auto;">
 
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow">
             <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('received-item'); $.fn.removeOpenPopovers();">
@@ -63,7 +63,7 @@
             $("#loading").show();
             var formData = new FormData($("#myForm")[0]);
             //console.log(...formData)
-            ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/ReceivedModal/", "._IndexTableWithCounts", "POST", formData, "received-item");
+            $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/ReceivedModal/", "._IndexTableWithCounts", "POST", formData, "received-item");
         }
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 
