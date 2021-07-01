@@ -1148,7 +1148,7 @@
                         $.fn.OpenModal('documentsModal', 'documents', data)
                     }
                     
-                    var numCards = $(".documentsModal .card.document-border").length;
+                    var numCards = $("._DocumentsModalData .card.document-border").length;
                     console.log("numcards: " + numCards);
                     if (numCards < 1) {
                         $.fn.RemoveColorsOfDocs(enumString);
@@ -1159,6 +1159,11 @@
                         $(".upload-file").addClass('disabled-background-color')   
                         $(".upload-file").removeClass('protocols-background-color')  
                         $(".file-select").attr('disabled', true)
+                    }
+                    if ($(".addFunctionForm").length >0)
+                    {
+                        $(".upload-file").addClass("d-none");
+                        $(".saveFunction").removeClass("d-none");
                     }
                     return true;
                 }

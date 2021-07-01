@@ -38,15 +38,15 @@
 		//var url = $("#documentModalForm").data('string');
 		console.log("input button: " + inputButton);
 		var url = inputButton.attr("href");
-		var $isEdittable = $('.active-document-modal').data("val");
+		var $isEdittable = $('.isEdittable').val();
 		//alert($isEdittable)
-		var $showSwitch =  $('.active-document-modal').attr("showSwitch");
+		var $showSwitch =  $('.showSwitch').val();
 		console.log("url : " + url);
 	    var formData = new FormData($(".documentModalForm")[0]);
-		for(var i=0; i< $(this).get(0).files.length; i++)
-		{
-			formData.append("FilesToSave", $(this).get(0).files[i])
-		}
+		//for(var i=0; i< $(this).get(0).files.length; i++)
+		//{
+		//	formData.append("FilesToSave", $(this).get(0).files[i])
+		//}
 
 		console.log(...formData)
 		$.ajax({
@@ -59,8 +59,8 @@
 				$(".carousel-item").remove();
 				
 
-				var $enumString = $(".open-document-modal.active-document-modal").data("string");
-				var $requestId = $(".open-document-modal.active-document-modal").data("id");
+				var $enumString =  $('.folderName').val();
+				var $requestId =  $('.objectID').val();
 				var section = $("#masterSectionType").val();
 				
 				if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
@@ -69,7 +69,7 @@
 					section = "LabManagement"
 				}
 				$.fn.ChangeColorsOfModal($enumString, section);
-				var parentFolder = $(".active-document-modal").attr("parentfolder");
+				var parentFolder =  $('.parentFolderName').val();
 				$.fn.OpenDocumentsModal(true, $enumString, $requestId, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles);
 				return true;
 			},

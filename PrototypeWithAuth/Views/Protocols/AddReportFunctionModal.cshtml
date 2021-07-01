@@ -9,7 +9,7 @@
             <button type="button" class="close modal-close-padding modal-close-style"  aria-label="Close" onclick="$.fn.CloseModal('add-function');">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form addFunctionForm on-form-modal">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form addFunctionForm documentModalForm on-form-modal">
                 <input type="hidden" asp-for="ReportID" />
                 <input type="hidden" asp-for="FunctionReport.FunctionTypeID" />
                 <input type="hidden" asp-for="FunctionReport.ID" class="function-reportID" />
@@ -31,7 +31,8 @@
                     {
                         case AppUtility.ProtocolFunctionTypes.AddFile:
                             <div class="_DocumentsModalData">
-                                @{await Html.RenderPartialAsync("_DocumentsModalData", Model.DocumentsModalViewModel);
+                                @{
+                                    await Html.RenderPartialAsync("_DocumentsModalData", Model.DocumentsModalViewModel);
                                 }
                                 </div>
                                 break;
@@ -185,7 +186,7 @@
                                                 dnone = "d-none";
                                         <div class="upload-btn-wrapper between-button-margin">
                                             <button class="custom-button custom-button-font protocols-background-color upload-file document-modal-buttons" data-string="@AppUtility.FolderNamesEnum.Files">Upload A File</button>
-                                            <input type="file" asp-for="FileName" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" />
+                                            <input type="file" name="FilesToSave" id="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" />
                                         </div>
                                         
                                     }

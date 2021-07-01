@@ -2284,7 +2284,7 @@ namespace PrototypeWithAuth.Controllers
                         ObjectID = functionReport.ID.ToString(),
                         SectionType = AppUtility.MenuItems.Protocols,
                         IsEdittable = true,
-                        DontAllowMultiple = false,
+                        DontAllowMultiple = true,
                         ShowSwitch = false
                     };
                     base.FillDocumentsViewModel(documentsModalViewModel);

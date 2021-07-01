@@ -81,18 +81,17 @@
 
 
 
-    <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding documentModalForm" id="myForm">
+    
         <input type="submit" value="Save" id="save-documents" href="@Url.Action("DocumentsModal")" class="btn btn-block inv-button save-document-files" style="display: none;" />
-        <input type="hidden" asp-for="FolderName" />
-        <input type="hidden" asp-for="DontAllowMultiple" />
-        <input type="hidden" asp-for="ParentFolderName" />
-        <input type="hidden" asp-for="SectionType" />
-        <input type="hidden" asp-for="ObjectID" />
+        <input type="hidden" asp-for="FolderName" class="folderName" />
+        <input type="hidden" asp-for="DontAllowMultiple" class="dontAllowMultiple" />
+        <input type="hidden" asp-for="ParentFolderName" class="parentFolderName" />
+        <input type="hidden" asp-for="SectionType" class="sectionType" />
+        <input type="hidden" asp-for="ObjectID" class="objectID"/>
         @*edittable options*@
         <input type="hidden" id="bcColor" class="@bcColor" />
         <input type="hidden" id="color" class="@color" />
-        <input type="hidden" asp-for="ShowSwitch" />
-        <input type="hidden" asp-for="DontAllowMultiple" />
+        <input type="hidden" asp-for="ShowSwitch" class="showSwitch" />
         <input type="hidden" asp-for="IsEdittable" class="@markDisabled isEdittable" />
         @if (Model.FileStrings != null && Model.FileStrings?.Count > 0)
         {
@@ -209,7 +208,7 @@
                 </div>
             </div>
         }
-    </form>
+
     <script>
         $('.close-document-modal').click(function (e) {
             $.fn.CloseModal("documents");
