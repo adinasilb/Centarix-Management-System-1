@@ -92,6 +92,15 @@
                     <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin start-protocol-fx " value="@Model.Protocol.ProtocolID">Start</button>
                 </div>
             </li>
+            <li class="@editMode @summaryMode d-none">
+                <div class="switch col-12 switch-margin">
+                    <label>
+                        <label class="edit-mode-switch-description">Edit Mode Off</label>
+                        <input type="checkbox" class="turn-edit-on-off protocols" value="@Model.Protocol.ProtocolID" name="details" >
+                        <span class="lever"></span>
+                    </label>
+                </div>
+            </li>
         </ul>
     </div>
     <div class="tab-content _CreateProtocolTabs">

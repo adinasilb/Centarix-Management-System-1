@@ -2495,6 +2495,16 @@ span.caret {
     border: .5px solid #f3f3f3 !important;
 }
 
+.protocol-form .switch label input[type="checkbox"]:checked + .lever:after {
+    background-color: var(--protocol-color) !important;
+}
+
+.protocol-form .switch label input[type="checkbox"]:checked + .lever {
+    background-color: var(--protocols-25) !important;
+    opacity: 50 !important;
+    border: .5px solid #f3f3f3 !important;
+}
+
 .select-wrapper input.select-dropdown:disabled {
     color: var(--black-87) !important;
 }
