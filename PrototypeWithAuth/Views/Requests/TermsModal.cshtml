@@ -1,7 +1,17 @@
 ﻿@model PrototypeWithAuth.ViewModels.TermsViewModel;
 @using PrototypeWithAuth.AppData
 
-
+@{ 
+    var bcColor = "order-inv-background-color";
+    if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
+    {
+        bcColor = "oper-background-color";
+    }
+    else if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.LabManagement)
+    {
+        bcColor = "lab-man-background-color";
+    }
+}
 <div class="modal modal-view termsModal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9100">
     <div class="modal-dialog-centered modal-xl mx-auto on-form-modal order-inv-form" role="document" style="max-height:100%; max-width:60rem; ">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow " style="width:60rem;">
@@ -13,7 +23,7 @@
                 @{ await Html.RenderPartialAsync("_TermsModal", Model);}
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
-                        <input type="submit" asp value="Save" class="custom-button custom-button-font order-inv-background-color between-button-margin submitTerms" />
+                        <input type="submit" asp value="Save" class="custom-button custom-button-font @bcColor between-button-margin submitTerms" />
                         <button type="button" class="custom-button custom-cancel" @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('terms');">Cancel</button>
                     </div>
                 </div>

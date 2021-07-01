@@ -1280,17 +1280,19 @@ namespace PrototypeWithAuth.Controllers
                 if (tempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Cart)
                 {
                     reqsFromDB = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-          .Where(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString() && r.ParentQuote.QuoteStatusID == 4)
-          .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
-                .Include(r => r.Product).ThenInclude(r => r.Vendor)
-                .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
+                          .Where(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString() 
+                          && r.ParentQuote.QuoteStatusID == 4)
+                          .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
+                          .Include(r => r.Product).ThenInclude(r => r.Vendor)
+                          .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
                 }
                 else if (tempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Orders)
                 {
                     reqsFromDB = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-          .Where(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString() && r.ParentQuote.QuoteStatusID == 4)
-                .Include(r => r.Product).ThenInclude(r => r.Vendor)
-                .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
+                      .Where(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString() 
+                      && r.ParentQuote.QuoteStatusID == 4)
+                    .Include(r => r.Product).ThenInclude(r => r.Vendor)
+                    .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
                 }
                 tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>();
                 foreach (var req in reqsFromDB)
@@ -1522,7 +1524,8 @@ namespace PrototypeWithAuth.Controllers
                 Response.StatusCode = 500;
                 var termsList = new List<SelectListItem>() { };
                 await _context.PaymentStatuses.ForEachAsync(ps => termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription }));
-                termsList = termsList;
+                termsViewModel.TermsList = termsList;
+                termsViewModel.TempRequestListViewModel = tempRequestListViewModel;
                 return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("", "", ""), TermsViewModel = termsViewModel };
             }
         }
@@ -4882,10 +4885,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadOrderModal(RequestIndexObject requestIndexObject)
         {
-            var uploadQuoteViewModel = new UploadQuoteViewModel();
+            var uploadOrderViewModel = new UploadOrderViewModel();
 
-            uploadQuoteViewModel.OrderTypeEnum = requestIndexObject.OrderType;
-            uploadQuoteViewModel.TempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
+            uploadOrderViewModel.TempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
 
             int lastParentRequestOrderNum = 0;
             var prs = _context.ParentRequests;
@@ -4899,8 +4901,8 @@ namespace PrototypeWithAuth.Controllers
                 OrderNumber = lastParentRequestOrderNum + 1,
                 OrderDate = DateTime.Now
             };
-            uploadQuoteViewModel.TempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
-            var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, TempRequestListViewModel = uploadQuoteViewModel.TempRequestListViewModel };
+            uploadOrderViewModel.TempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
+            uploadOrderViewModel.ParentRequest = pr;
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, "0");
@@ -4911,15 +4913,15 @@ namespace PrototypeWithAuth.Controllers
                 DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderOrders);
                 //searching for the partial file name in the directory
                 FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                UploadQuoteViewModel.FileStrings = new List<String>();
+                uploadOrderViewModel.FileStrings = new List<String>();
                 foreach (var orderfile in orderfilesfound)
                 {
                     string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
-                    UploadQuoteViewModel.FileStrings.Add(newFileString);
+                    uploadOrderViewModel.FileStrings.Add(newFileString);
                 }
             }
 
-            return PartialView(UploadQuoteViewModel);
+            return PartialView(uploadOrderViewModel);
         }
         [HttpPost]
         [Authorize(Roles = "Requests")]
