@@ -124,6 +124,7 @@ $("body").off("click").on("click", ".load-order-details", function (e) {
 	console.log("in order details");
 	e.preventDefault();
 	e.stopImmediatePropagation();
+	//e.stopPropagation();
 	$("#loading").show();
 	var section = $("#masterSectionType").val()
 	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
