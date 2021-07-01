@@ -245,6 +245,8 @@ namespace PrototypeWithAuth.Controllers
         }
         private async Task<ReportsIndexViewModel> GetReportsIndexViewModel(ReportsIndexObject reportsIndexObject)
         {
+            var currentWeek = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday);
+
             if (reportsIndexObject.Years.Count == 0)
             {
                 reportsIndexObject.Years.Add(DateTime.Now.Year);
@@ -255,7 +257,7 @@ namespace PrototypeWithAuth.Controllers
             }
             reportsIndexObject.ReportCategory = _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == reportsIndexObject.ReportCategoryID).FirstOrDefault();
             IQueryable<Report> ReportsPassedIn = Enumerable.Empty<Report>().AsQueryable();
-            IQueryable<Report> ReportsPassedInWithInclude = _context.Reports.Where(r => reportsIndexObject.Years.Contains(r.DateCreated.Year) && reportsIndexObject.Months.Contains(r.DateCreated.Month) && r.ReportCategoryID == reportsIndexObject.ReportCategoryID)
+            IQueryable<Report> ReportsPassedInWithInclude = _context.Reports.Where(r => r.ReportCategoryID == reportsIndexObject.ReportCategoryID)
                 .Include(r => r.ReportType);
 
             switch (reportsIndexObject.PageType)
@@ -288,7 +290,6 @@ namespace PrototypeWithAuth.Controllers
 
             reportsIndexViewModel.PagedList = onePageOfReports;
 
-            var currentWeek = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday);
             var currentWeekReport = _context.Reports.Where(r => r.WeekNumber == currentWeek && r.DateCreated.Year == DateTime.Now.Year && r.ReportCategoryID == reportsIndexObject.ReportCategoryID).FirstOrDefault();
             if (currentWeekReport != null)
             {
@@ -2355,6 +2356,10 @@ namespace PrototypeWithAuth.Controllers
                                     openingTags = "<" + tag + ">" + openingTags;
                                 }
                                 var addedText = closingTags + renderedView +" <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none text added-div start-div'></div>" + openingTags;
+                                if(createReportViewModel.Report.TemporaryReportText == null)
+                                {
+                                    createReportViewModel.Report.TemporaryReportText = "";
+                                }
                                 report.TemporaryReportText = createReportViewModel.Report.TemporaryReportText.Replace(replaceableText, addedText);
                                 _context.Update(report);
 

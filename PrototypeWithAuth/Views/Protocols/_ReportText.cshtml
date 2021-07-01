@@ -6,7 +6,7 @@
 
 <div class="col-12">
     <span role="textbox" contenteditable="false" class="editable-span report-text form-control-plaintext h-100 text-transform-none">
-        @if (Model.TemporaryReportText == null)
+        @if (Model.TemporaryReportText == null || Model.TemporaryReportText =="")
         {
             <div contenteditable="true" class="editable-span text form-control-plaintext text-transform-none start-div"><span class='focusedText'></span></div>
         }

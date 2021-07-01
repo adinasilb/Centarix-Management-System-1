@@ -431,6 +431,8 @@
     <Folder Include="wwwroot\Materials\" />
     <Folder Include="wwwroot\FunctionLine\" />
     <Folder Include="wwwroot\Protocols\" />
+    <Folder Include="wwwroot\Reports\" />
+    <Folder Include="wwwroot\Requests\" />
   </ItemGroup>
 
 
