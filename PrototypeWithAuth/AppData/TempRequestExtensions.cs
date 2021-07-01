@@ -13,7 +13,7 @@ namespace PrototypeWithAuth.AppData
     public static class TempRequestExtensions
     {
         public static void SerializeViewModel(this TempRequestJson jsonRequest, object value)
-        {
+         {
             //var jsonstring = JsonConvert.SerializeObject(value,
             //           Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings()
             //           {
@@ -22,7 +22,7 @@ namespace PrototypeWithAuth.AppData
             var jsonstring = JsonConvert.SerializeObject(value, Newtonsoft.Json.Formatting.Indented,
                 new JsonSerializerSettings()
                 {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                 });
             jsonRequest.RequestJson = jsonstring;
         }

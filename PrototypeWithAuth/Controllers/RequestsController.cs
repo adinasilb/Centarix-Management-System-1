@@ -1162,19 +1162,19 @@ namespace PrototypeWithAuth.Controllers
         }
         public async Task SetTempRequestAsync(TempRequestJson tempRequestJson, TempRequestListViewModel tempRequestListViewModel)
         {
-            foreach (var tempRequest in tempRequestListViewModel.TempRequestViewModels)
-            {
-                if (tempRequest.Request.Product.ProductSubcategory != null)
-                {
-                    tempRequest.Request.Product.ProductSubcategoryID = tempRequest.Request.Product.ProductSubcategory.ProductSubcategoryID;
-                    tempRequest.Request.Product.ProductSubcategory = null;
-                }
-                if (tempRequest.Request.Product.Vendor != null)
-                {
-                    tempRequest.Request.Product.VendorID = tempRequest.Request.Product.Vendor.VendorID;
-                    tempRequest.Request.Product.Vendor = null;
-                }
-            }
+            //foreach (var tempRequest in tempRequestListViewModel.TempRequestViewModels)
+            //{
+            //    if (tempRequest.Request.Product.ProductSubcategory != null)
+            //    {
+            //        tempRequest.Request.Product.ProductSubcategoryID = tempRequest.Request.Product.ProductSubcategory.ProductSubcategoryID;
+            //        tempRequest.Request.Product.ProductSubcategory = null;
+            //    }
+            //    if (tempRequest.Request.Product.Vendor != null)
+            //    {
+            //        tempRequest.Request.Product.VendorID = tempRequest.Request.Product.Vendor.VendorID;
+            //        tempRequest.Request.Product.Vendor = null;
+            //    }
+            //}
             //tempRequestListViewModel.TempRequestViewModels.ForEach(vm => vm.Request.Product.ProductSubcategory = null && vm.Request.Product.ProductSubcategoryID = vm.Request.Product.ProductSubcategory.ProductSubcategoryID);
             //tempRequestListViewModel.TempRequestViewModels.ForEach(vm => vm.Request.Product.Vendor = null && vm.Request.Product.VendorID = vm.Request.Product.Vendor.VendorID );
             tempRequestJson.SerializeViewModel(tempRequestListViewModel.TempRequestViewModels);
