@@ -392,6 +392,10 @@ namespace PrototypeWithAuth.AppData
             return newFileName;
         }
 
+        private static bool IsInThisMonth(DateTime dateCreated)
+        {
+            throw new NotImplementedException();
+        }
 
         public static DateTime ZeroSeconds(this DateTime value)
         {
