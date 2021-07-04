@@ -2018,6 +2018,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory = productSubcategory;
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory = productSubcategory.ParentCategory;
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategoryID = productSubcategory.ParentCategoryID;
+            requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategoryID = productSubcategoryId;
             requestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;
             requestItemViewModel.Requests.FirstOrDefault().Cost = 0;
 
@@ -2722,7 +2723,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     else
                     {
-                        tempRequest.Request.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == tempRequest.Request.Product.ProductSubcategoryID).Include(ps=>ps.ParentCategoryID).FirstOrDefault();
+                        tempRequest.Request.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == tempRequest.Request.Product.ProductSubcategoryID).Include(ps=>ps.ParentCategory).FirstOrDefault();
                         tempRequest.Request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == tempRequest.Request.Product.VendorID).FirstOrDefault();
                     }
                     allRequests.Add(tempRequest.Request);
