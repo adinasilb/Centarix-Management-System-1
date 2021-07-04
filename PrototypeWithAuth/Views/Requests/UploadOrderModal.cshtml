@@ -139,7 +139,6 @@
 <script src="~/js/validate.js"></script>
 <script>
     $(".submit-order").off('click').on("click", function (e) {
-        alert("Page Type: " + $("#RequestIndexObject_OrderType").attr("value"));
         e.preventDefault();
         console.log("submit order doc");
         //alert("validate form");
@@ -166,7 +165,8 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    if ($("#RequestIndexObject_OrderType").val() == "SaveOperations" || $("#RequestIndexObject_OrderType").val() == "AlreadyPurchased") {
+                    alert("Order Type: " + $("#TempRequestViewModels_0__Request_OrderType").attr("value"));
+                    if ($("#TempRequestViewModels_0__Request_OrderType").val() == "SaveOperations" || $("#TempRequestViewModels_0__Request_OrderType").val() == "AlreadyPurchased") {
                         alert("opening terms modal");
                         $.fn.OpenModal("termsModal", "terms", data);
                     }

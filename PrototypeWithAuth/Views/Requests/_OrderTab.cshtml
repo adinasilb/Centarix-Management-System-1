@@ -145,11 +145,14 @@
                 console.log("in success of ajax call ");
                 alert("in success of ajax call");
                 if (orderType == "AddToCart") {
+                    console.log("in add to cart try 2");
+                    $(".save-item").removeClass("save-item");
                     $(".outer-add-item-view").html(data);
                 }
                 else {
                     $.fn.OpenModal('modalStep1', 'step-1', data)
                 }
+                $("temprequesthiddenfors").remove();
                 $("#loading").hide();
                 return true;
             },
