@@ -388,14 +388,14 @@ namespace PrototypeWithAuth.Controllers
             //requestItemViewModel.SubProjects = subprojects;
             //may be able to do this together - combining the path for the orders folders
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-            string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Requests.FirstOrDefault().RequestID.ToString());
+            string requestId = requestItemViewModel.Requests.FirstOrDefault().RequestID.ToString();
             requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
 
             //the partial file name that we will search for (1- because we want the first one)
             //creating the directory from the path made earlier
             var productSubcategory = requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory;
 
-            FillDocumentsInfo(requestItemViewModel, uploadFolder2, productSubcategory);
+            FillDocumentsInfo(requestItemViewModel, productSubcategory, requestId);
 
             //locations:
             //get the list of requestLocationInstances in this request
@@ -577,7 +577,7 @@ namespace PrototypeWithAuth.Controllers
             return shareModalViewModel;
         }
 
-        protected void FillDocumentsInfo(RequestItemViewModel requestItemViewModel, ProductSubcategory productSubcategory, int? requestId = null, int? parentQuoteId = null)
+        protected void FillDocumentsInfo(RequestItemViewModel requestItemViewModel, ProductSubcategory productSubcategory, string requestId = null, string parentQuoteId = null)
         {
             requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
             string quoteFolder = "";

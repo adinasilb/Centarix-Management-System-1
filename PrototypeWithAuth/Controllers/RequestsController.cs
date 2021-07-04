@@ -2031,41 +2031,7 @@ namespace PrototypeWithAuth.Controllers
                 };
                 requestItemViewModel.RequestStatusID = 7;
             }
-            FillDocumentsInfo(requestItemViewModel, "", productSubcategory);
-            /* if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
-             {
-                 GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.S, "");
-             }
-             if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
-                 && productSubcategory.ProductSubcategoryDescription != "Cells")
-             {
-                 GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Info, "");
-             }
-             if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
-                 && productSubcategory.ProductSubcategoryDescription != "Cells" && productSubcategory.ProductSubcategoryDescription != "Probes")
-             {
-                 GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Map, "");
-             }
-         }
-         else if(requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID==2)
-         {
-             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Orders, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Invoices, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Details, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Quotes, "");
-         }
-         else
-         {
-             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Orders, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Invoices, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Shipments, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Quotes, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Info, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Pictures, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Returns, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Credits, "");
-         }
-        */
+            FillDocumentsInfo(requestItemViewModel, productSubcategory);
             base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
             return requestItemViewModel;
         }
@@ -2487,9 +2453,9 @@ namespace PrototypeWithAuth.Controllers
                     var categoryTypeId = requestItemViewModel.SectionType == AppUtility.MenuItems.Requests ? 1 : 2;
                     var productSubcategory = requestItemViewModel.Requests[0].Product.ProductSubcategory;
                     requestItemViewModel = await FillRequestDropdowns(requestItemViewModel, productSubcategory, categoryTypeId);
-                    int requestId = requestItemViewModel.Requests[0].RequestID;
-                    int parentQuoteId = (int) requestItemViewModel.Requests[0].ParentQuoteID;
-                    FillDocumentsInfo(requestItemViewModel, productSubcategory, requestId);
+                    string requestId = requestItemViewModel.Requests[0].RequestID.ToString();
+                    string parentQuoteId = requestItemViewModel.Requests[0].ParentQuoteID.ToString();
+                    FillDocumentsInfo(requestItemViewModel, productSubcategory, requestId, parentQuoteId);
                     requestItemViewModel.Comments = await _context.Comments.Include(r => r.ApplicationUser).Where(r => r.Request.RequestID == requestItemViewModel.Requests[0].RequestID).ToListAsync();
                     requestItemViewModel.ModalType = AppUtility.RequestModalType.Edit;
                     Response.StatusCode = 550;
