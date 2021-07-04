@@ -156,6 +156,8 @@ $("body").off("click").on("click", ".load-order-details", function (e) {
 	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
 	var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString()
 	$.fn.CallPageRequest($itemurl, "reorder");
+	console.log("after call page request");
+	$(".temprequesthiddenfors").html('');
 	return false;
 });
 

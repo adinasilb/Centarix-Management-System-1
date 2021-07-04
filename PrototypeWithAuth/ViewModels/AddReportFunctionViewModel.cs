@@ -11,5 +11,7 @@ namespace PrototypeWithAuth.ViewModels
         public int ReportID { get; set; }
         public string FileName { get; set; }
         public FunctionReport FunctionReport { get; set; }
+        public string ClosingTags { get; set; }
+        public DocumentsModalViewModel DocumentsModalViewModel { get; set; }
     }
 }

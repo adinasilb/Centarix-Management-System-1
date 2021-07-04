@@ -1,44 +1,49 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddFunctionViewModel
 @using PrototypeWithAuth.AppData
-
-@{ var filestring = "";}
+<script src="~/js/Validation/AddFunctionValidation.js"></script>
+<script src="~/js/validate.js"></script>
+@{  var filestring = "";
+    var containsFile = "";
+    var fileButtonText = "Select File";
+    var documentsDisabled = true;
+    var disabled = "";
+    if(Model.ModalType == AppUtility.ProtocolModalType.CheckListMode
+        || Model.ModalType == AppUtility.ProtocolModalType.Summary)
+    {
+        documentsDisabled = false;
+        disabled = " mark-readonly ";
+    }
+}
 @switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(Model.FunctionLine.FunctionType.DescriptionEnum))
 {
     case AppUtility.ProtocolFunctionTypes.AddComment:
     case AppUtility.ProtocolFunctionTypes.AddTip:
     case AppUtility.ProtocolFunctionTypes.AddWarning:
-        <textarea class="border form-control-plaintext " rows="6" asp-for="FunctionLine.Description"></textarea>
+        <textarea class="border form-control-plaintext @disabled " rows="6" asp-for="FunctionLine.Description"></textarea>
         break;
     case AppUtility.ProtocolFunctionTypes.AddFile:
-        <div class="col">
+        <div class="text-center"><div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Files.ToString()Input" name="@AppUtility.FolderNamesEnum.Files.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div></div>
+        <div class="col text-center">
+
             <button type="button" class="my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Files.ToString()"
                     data-id="@Model.FunctionLine.ID"
-                    id="@AppUtility.FolderNamesEnum.Pictures.ToString()" parentFolder="@AppUtility.ParentFolderName.FunctionLine" data-val="@true" show-switch="@false" no-multiple-files="true">
-                Select File
+                    id="@AppUtility.FolderNamesEnum.Pictures.ToString()" parentFolder="@AppUtility.ParentFolderName.FunctionLine" data-val="@documentsDisabled.ToString()" show-switch="@false" no-multiple-files="true">
+                  @fileButtonText
             </button>
-            @{
 
-                if ((Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.Count ?? 0) != 0)
-                {
-                    filestring = AppUtility.GetLastFiles(Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.FirstOrDefault(), 1);
-                }
-            }
             <span class="document-name pl-2">@filestring</span>
         </div>
         break;
     case AppUtility.ProtocolFunctionTypes.AddImage:
-        <div class="col">
+        <div class="text-center"><div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Pictures.ToString()Input" name="@AppUtility.FolderNamesEnum.Pictures.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div></div>
+        <div class="col text-center">
+
             <button type="button" class=" my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Pictures.ToString()"
                     data-id="@Model.FunctionLine.ID"
-                    id="@AppUtility.FolderNamesEnum.Pictures.ToString()" parentFolder="@AppUtility.ParentFolderName.FunctionLine" data-val="@true" show-switch="@false" no-multiple-files="true">
-                Select File
+                    id="@AppUtility.FolderNamesEnum.Pictures.ToString()" parentFolder="@AppUtility.ParentFolderName.FunctionLine" data-val="@documentsDisabled.ToString()" show-switch="@false" no-multiple-files="true">
+                   @fileButtonText
             </button>
-            @{
-                if ((Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.Count() ?? 0) != 0)
-                {
-                    filestring = AppUtility.GetLastFiles(Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.FirstOrDefault(), 1);
-                }
-            }
+
             <span class="document-name pl-2">@filestring</span>
         </div>
         break;
@@ -53,7 +58,7 @@
                  "ParentCategoryID",
                  "ParentCategoryDescription"
                  ), "Select Category",
-                 new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext parentCategory link-product-dropdown", @searchable = "Select Category", @dataStopRefresh = "true" })
+                 new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext parentCategory link-product-dropdown" + disabled, @searchable = "Select Category", @data_stop_refresh = "true" })
                 </div>
             </div>
             <div class="col-6">
@@ -65,7 +70,7 @@
                         dataValueField: "ProductSubcategoryID",
                         dataTextField: "ProductSubcategoryDescription"
                         ), "Select Sub Category",
-                        new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext subCategory link-product-dropdown", @searchable = "Select Sub Category", @dataStopRefresh = "true" })
+                        new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext subCategory link-product-dropdown" + disabled, @searchable = "Select Sub Category", @data_stop_refresh = "true"})
                 </div>
             </div>
         </div>
@@ -81,7 +86,7 @@
         dataTextField: "VendorEnName"),
         //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
         "Select a Vendor",
-        htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext vendor link-product-dropdown", @id = "vendorList", @size = 1, @searchable = "Select A Vendor", @dataStopRefresh = "true" }
+        htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext vendor link-product-dropdown" + disabled, @id = "vendorList", @size = 1, @searchable = "Select A Vendor", @data_stop_refresh = "true" }
         )
                 </div>
             </div>
@@ -96,7 +101,7 @@
         dataTextField: "ProductName"),
         //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
         "Select a Product",
-        htmlAttributes: new { @class = " productList mdb-select custom select-dropdown form-control-plaintext product mdb-select-sublist", @id = "productList", @size = 1, @searchable = "Select A Product", @dataStopRefresh = "true" }
+        htmlAttributes: new { @class = " productList mdb-select custom select-dropdown form-control-plaintext product object mdb-select-sublist" + disabled, @id = "productList", @size = 1, @searchable = "Select A Product", @data_stop_refresh = "true" }
         )
                 </div>
             </div>
@@ -104,7 +109,8 @@
         <div class="row">
             <div class="col-6">
                 <label asp-for="FunctionLine.Product.SerialNumber" class="control-label"></label>
-                <input class="border-bottom form-control-plaintext " rows="6" asp-for="FunctionLine.Product.SerialNumber" />
+
+                    <input class="border-bottom form-control-plaintext unique-number @disabled"  rows="6" asp-for="FunctionLine.Product.SerialNumber"  />
             </div>
         </div>
         break;
@@ -119,7 +125,7 @@
                  dataValueField: "ProtocolCategoryTypeID",
                  dataTextField: "ProtocolCategoryDescription"
                  ), "Select Category",
-                 new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext protocolParentCategory link-protocol-dropdown", @id = "protocol-categories", @searchable = "Select Category", @dataStopRefresh = "true" })
+                 new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext protocolParentCategory link-protocol-dropdown" + disabled, @id = "protocol-categories", @searchable = "Select Category", @data_stop_refresh = "true" })
                 </div>
             </div>
             <div class="col-6">
@@ -131,7 +137,7 @@
                         dataValueField: "ProtocolSubCategoryTypeID",
                         dataTextField: "ProtocolSubCategoryTypeDescription"
                         ), "Select Sub Category",
-                        new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext protocolSubCategory link-protocol-dropdown", @id = "protocol-subCategory", @searchable = "Select Sub Category", @dataStopRefresh = "true" })
+                        new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext protocolSubCategory link-protocol-dropdown" + disabled, @id = "protocol-subCategory", @searchable = "Select Sub Category", @data_stop_refresh = "true" })
                 </div>
             </div>
         </div>
@@ -144,7 +150,7 @@
        Model.Creators,
         //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
         "Select a Creator",
-        htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext  creator link-protocol-dropdown", @id = "creatorsList", @size = 1, @searchable = "Select A Creator", @dataStopRefresh = "true" }
+        htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext  creator link-protocol-dropdown" + disabled, @id = "creatorsList", @size = 1, @searchable = "Select A Creator", @data_stop_refresh = "true" }
         )
                 </div>
             </div>
@@ -159,7 +165,7 @@
         dataTextField: "Name"),
         //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
         "Select a Protocol",
-        htmlAttributes: new { @class = "  mdb-select custom select-dropdown form-control-plaintext protocol mdb-select-sublist", @id = "protocolList", @size = 1, @searchable = "Select A Protocol", @dataStopRefresh = "true" }
+        htmlAttributes: new { @class = "  mdb-select custom select-dropdown form-control-plaintext protocol object mdb-select-sublist"+disabled, @id = "protocolList", @size = 1, @searchable = "Select A Protocol", @data_stop_refresh = "true" }
         )
                 </div>
             </div>
@@ -167,7 +173,7 @@
         <div class="row">
             <div class="col-6">
                 <label asp-for="FunctionLine.Protocol.UniqueCode" class="control-label"></label>
-                <input class="border form-control-plaintext " rows="6" asp-for="FunctionLine.Protocol.UniqueCode" />
+                <input class="border-bottom form-control-plaintext unique-number @disabled" rows="6" asp-for="FunctionLine.Protocol.UniqueCode" />                
             </div>
         </div>
         break;
@@ -176,7 +182,7 @@
     case AppUtility.ProtocolFunctionTypes.AddTimer:
         <div class="row">
             <div class="col-4 offset-4">
-                <input class="border-bottom form-control-plaintext heading-1 " rows="6" asp-for="FunctionLine.Timer" />
+               <input class="border-bottom form-control-plaintext heading-1 @disabled" rows="6" asp-for="FunctionLine.Timer" />
             </div>
         </div>
         break;

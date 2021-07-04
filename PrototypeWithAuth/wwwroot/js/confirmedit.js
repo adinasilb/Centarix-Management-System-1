@@ -42,6 +42,10 @@
 				visualDiv = $(".visualView");
             //}
 		}
+		else if($('.turn-edit-on-off').hasClass('protocols')){
+			console.log("has class users");
+			url = "/Protocols/CreateProtocol";
+		}
 		else {
 			alert("didn't go into any edits");
 		}
@@ -125,6 +129,34 @@
 					} else if ($('.turn-edit-on-off').hasClass('orders')) {
 						$.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
 					}
+					else if ($('.turn-edit-on-off').hasClass('protocols')) {
+						var tab= $(".protocol-tab.active.show");
+						var selectedTab = tab.parent().index() +1;
+          
+						console.log(selectedTab);
+						$(".selectedTab").val(selectedTab);
+						var formData = new FormData($(".createProtocolForm")[0]);
+						$.ajax({
+							url: "/Protocols/CreateProtocol",
+							traditional: true,
+							data: formData,
+							contentType: false,
+							processData: false,
+							type: "POST",
+							success: function (data) {
+								$("._IndexTable").html(data)					
+								var modalType = $(".modalType").val();
+								$("."+modalType).removeClass("d-none")
+								$.fn.ProtocolsMarkReadonly("_IndexTable");   
+							},
+							error: function (jqxhr) {
+								if (jqxhr.status == 500) {
+									$("._CreateProtocol").html(jqxhr.responseText);						}
+								$(".mdb-select").materialSelect();
+								return true;
+							}
+						});
+					}
 				}
 				
 				//sets up error message if it has the setup in the view
@@ -143,7 +175,7 @@
                 }
 			}
 		});
-		$.fn.TurnToDetails();
+		$.fn.TurnToDetails("edits");
 	});
 
 

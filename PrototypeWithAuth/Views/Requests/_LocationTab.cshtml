@@ -20,7 +20,7 @@
 <div class="row modal-tab-name" style="margin-bottom:0px">
     <span class="heading-1 col-4">Location</span>
     @{
-        if (Model.ModalType == AppUtility.RequestModalType.Summary && Model.IsHistory == false && Model.Requests.FirstOrDefault().IsArchived == false)
+        if (Model.ModalType == AppUtility.RequestModalType.Summary && Model.IsHistory == false && Model.Requests.FirstOrDefault().IsArchived == false && Model.SectionType!= AppUtility.MenuItems.Protocols)
         {
             <div class="switch col-4 offset-4 switch-margin text-right">
                 <label>
