@@ -380,11 +380,9 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
         var valid = $(".reorderForm").valid();
         console.log("valid form: " + valid)
         if (!valid) {
-
             if (!$('.activeSubmit').hasClass('disabled-submit')) {
                 $('.activeSubmit').addClass('disabled-submit')
             }
-
         }
         else {
             $('.activeSubmit').removeClass('disabled-submit')
@@ -402,10 +400,10 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    console.log("OrderType: " + $("#TempRequestViewModels_0__Request_OrderType").val());
-                    console.log("OrderType: " + $("#TempRequestViewModels_0__Request_OrderType").attr("value"));
-                    if ($("#TempRequestViewModels_0__Request_OrderType").val() == 'AddToCart') {
+                    console.log("OrderType: " + orderType);
+                    if (orderType == 'AddToCart') {
                         $("_IndexTableData").html(data);
+                        $.fn.CloseModal('reorder-item');
                     }
                     else {
                         $.fn.OpenModal('modalStep1', 'step-1', data)
