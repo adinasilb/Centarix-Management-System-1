@@ -666,10 +666,18 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 if (OrderType != AppUtility.OrderTypeEnum.AddToCart)
                                 {
-                                    TempRequestJson trj = CreateTempRequestJson(requestItemViewModel.TempRequestListViewModel.GUID);
-                                    await SetTempRequestAsync(trj,
-                                        new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() { trvm } });
-                                    saveItemTransaction.CommitAsync();
+                                    if (isInBudget)
+                                    {
+                                        TempRequestJson trj = CreateTempRequestJson(requestItemViewModel.TempRequestListViewModel.GUID);
+                                        await SetTempRequestAsync(trj,
+                                            new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() { trvm } });
+                                        await saveItemTransaction.CommitAsync();
+                                    }
+                                    else
+                                    {
+                                        await SaveTempRequestAndCommentsAsync(trvm);
+                                        base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
+                                    }
                                 }
                             }
                             catch (Exception ex)
@@ -930,7 +938,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     request.OrderType = AppUtility.OrderTypeEnum.AddToCart.ToString();
 
-                    if(request.ProductID == 0 || request.ProductID == null)
+                    if (request.ProductID == 0 || request.ProductID == null)
                     {
                         _context.Entry(request.Product).State = EntityState.Added;
                     }
@@ -946,6 +954,7 @@ namespace PrototypeWithAuth.Controllers
 
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
+                    base.MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests);
                 }
                 catch (Exception ex)
                 {
@@ -994,21 +1003,21 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
+                request.OrderType = AppUtility.OrderTypeEnum.OrderNow.ToString();
                 if (isInBudget)
                 {
                     request.RequestStatusID = 6;
+                    tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>() {
+                    new TempRequestViewModel() {
+                    Request = request, Emails = new List<string>(){ request.Product.Vendor.OrdersEmail }
+                   } };
+                    TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
                 }
                 else
                 {
                     request.RequestStatusID = 1;
                 }
-                request.OrderType = AppUtility.OrderTypeEnum.OrderNow.ToString();
 
-                tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>() {
-                    new TempRequestViewModel() {
-                    Request = request, Emails = new List<string>(){ request.Product.Vendor.OrdersEmail }
-                   } };
-                TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
                 //TempRequestJson tempRequestJson = new TempRequestJson()
                 //{
                 //    CookieGUID = tempRequestListViewModel.GUID,
@@ -1163,6 +1172,34 @@ namespace PrototypeWithAuth.Controllers
                 IsOriginal = true
             };
         }
+
+        public async Task SaveTempRequestAndCommentsAsync(TempRequestViewModel tempRequest)
+        {
+            if (tempRequest.Request.Product.ProductID == 0)
+            {
+                _context.Entry(tempRequest.Request.Product).State = EntityState.Added;
+            }
+            else
+            {
+                _context.Entry(tempRequest.Request.Product).State = EntityState.Unchanged;
+            }
+            _context.Entry(tempRequest.Request).State = EntityState.Added;
+            _context.Entry(tempRequest.Request.ParentRequest).State = EntityState.Added;
+
+
+            await _context.SaveChangesAsync();
+
+            if (tempRequest.Comments != null && tempRequest.Comments.Any()) //do we need this check?
+            {
+                foreach (var comment in tempRequest.Comments)
+                {
+                    comment.RequestID = tempRequest.Request.RequestID;
+                    _context.Add(comment);
+                }
+                await _context.SaveChangesAsync();
+            }
+        }
+
         public async Task SetTempRequestAsync(TempRequestJson tempRequestJson, TempRequestListViewModel tempRequestListViewModel)
         {
             //foreach (var tempRequest in tempRequestListViewModel.TempRequestViewModels)
@@ -1407,29 +1444,7 @@ namespace PrototypeWithAuth.Controllers
                             tempRequest.Request.ParentRequest.Shipping = termsViewModel.ParentRequest.Shipping;
                             if (!SaveUsingTempRequest)
                             {
-                                if (tempRequest.Request.Product.ProductID == 0)
-                                {
-                                    _context.Entry(tempRequest.Request.Product).State = EntityState.Added;
-                                }
-                                else
-                                {
-                                    _context.Entry(tempRequest.Request.Product).State = EntityState.Unchanged;
-                                }
-                                _context.Entry(tempRequest.Request).State = EntityState.Added;
-                                _context.Entry(tempRequest.Request.ParentRequest).State = EntityState.Added;
-
-
-                                await _context.SaveChangesAsync();
-
-                                if (tempRequest.Comments != null && tempRequest.Comments.Any()) //do we need this check?
-                                {
-                                    foreach (var comment in tempRequest.Comments)
-                                    {
-                                        comment.RequestID = tempRequest.Request.RequestID;
-                                        _context.Add(comment);
-                                    }
-                                    await _context.SaveChangesAsync();
-                                }
+                                await SaveTempRequestAndCommentsAsync(tempRequest);
                             }
                             for (int i = 0; i < tempRequest.Request.Installments; i++)
                             {
