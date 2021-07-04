@@ -1,13 +1,15 @@
 ﻿@model PrototypeWithAuth.ViewModels.DeleteReportDocumentViewModel
 @using PrototypeWithAuth.AppData
 <script src="~/js/site.js"></script>
-<div class="modal modal-document fader" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+<script src="~/js/Validation/AddFunctionValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<div class="modal modal-document addFunctionModal fader" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class=" modal-dialog-centered mx-auto" style="width:30%">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('add-function');">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form deleteFunctionForm">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form deleteFunctionForm addFunctionForm">
                 <input type="hidden" asp-for="ReportID" />
                 <input type="hidden" asp-for="FunctionReport.FunctionTypeID" />
                 <input type="hidden" asp-for="FunctionReport.ID" class="function-reportID" />
@@ -25,38 +27,44 @@
                     @switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(Model.FunctionReport.FunctionType.DescriptionEnum))
                     {
                         case AppUtility.ProtocolFunctionTypes.AddFile:
-                    <div class="col-6 offset-3 text-center">
-                        <div class="card iframe-container document-border m-0 report-file-card" contenteditable="false">
-                            @{
-                                var rootPath = $"{Context.Request.Scheme}://{Context.Request.Host.Value}{Context.Request.PathBase.Value.ToString()}";
-                            }
-                            <div class="card-body responsive-iframe-container p-0">
-                                <iframe src="@rootPath\/@Model.DocumentsInfo.FirstOrDefault()?.FileStrings[0]" title="View" class="responsive-iframe" marginheight="0" frameborder="0" marginwidth="0"
-                                        scrolling="no"></iframe>
-                            </div>
-                            <div class="card-body d-flex text-center align-items-center justify-content-center p-0">
+                            <div class="col-6 offset-3 text-center">
+                                <div class="card iframe-container document-border m-0 report-file-card" contenteditable="false">
+                                    @{
+                                        var rootPath = $"{Context.Request.Scheme}://{Context.Request.Host.Value}{Context.Request.PathBase.Value.ToString()}";
+                                        var iframeFilestring = Model.DocumentsInfo.FirstOrDefault()?.FileStrings[0];
+                                        var ext = iframeFilestring.Split(".").Last();
+                                        if (ext == "pptx" || ext == "ppt")
+                                        {
+                                            iframeFilestring = "";
+                                        }
+                                    }
+                                    <div class="card-body responsive-iframe-container p-0">
+                                        <iframe src="@rootPath\/@iframeFilestring" title="View" class="responsive-iframe" marginheight="0" frameborder="0" marginwidth="0"
+                                                scrolling="no"></iframe>
+                                    </div>
+                                    <div class="card-body d-flex text-center align-items-center justify-content-center p-0">
 
-                                <a href="@rootPath\/@Model.DocumentsInfo.FirstOrDefault()?.FileStrings[0]" target="_blank" class="mx-1  view-img">
-                                    <i class="icon-centarix-icons-09 protocols-color" style="font-size:2rem"></i>
-                                </a>
+                                        <a href="@rootPath\/@Model.DocumentsInfo.FirstOrDefault()?.FileStrings[0]" target="_blank" class="mx-1  view-img">
+                                            <i class="icon-centarix-icons-09 protocols-color" style="font-size:2rem"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                @{
+                                    var filestring = "";
+                                    if ((Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.Count ?? 0) != 0)
+                                    {
+                                        filestring = AppUtility.GetLastFiles(Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.FirstOrDefault(), 1);
+                                    }
+                                }
+                                <span class="document-name justify-content-center">@filestring</span>
                             </div>
-                        </div>
-                        @{
-                            var filestring = "";
-                            if ((Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.Count ?? 0) != 0)
-                            {
-                                filestring = AppUtility.GetLastFiles(Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.FirstOrDefault(), 1);
-                            }
-                        }
-                        <span class="document-name justify-content-center">@filestring</span>
-                    </div>
                             break;
                     }
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
-                            <input type="button" class="custom-button custom-button-font protocols-background-color between-button-margin removeFunction" value="Remove" />
-                            <button type="button" class="custom-button custom-cancel " data-dismiss="modal" onclick="$.fn.CloseModal('add-function');">Cancel</button>
+                        <input type="button" class="custom-button custom-button-font protocols-background-color between-button-margin removeFunction" value="Remove" />
+                        <button type="button" class="custom-button custom-cancel " data-dismiss="modal" onclick="$.fn.CloseModal('add-function');">Cancel</button>
                     </div>
                 </div>
             </form>

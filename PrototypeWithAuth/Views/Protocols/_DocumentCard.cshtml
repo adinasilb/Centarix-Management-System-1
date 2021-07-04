@@ -1,27 +1,29 @@
-﻿@model PrototypeWithAuth.ViewModels.DocumentsModalViewModel 
+﻿@model PrototypeWithAuth.ViewModels.DocumentsModalViewModel
 
 <div class="report-function my-3" functionReportid="@Model.ObjectID">
     <div class="card iframe-container document-border m-0 report-file-card" contenteditable="false" style="width:90px; height:150px;">
         @{
             var rootPath = $"{Context.Request.Scheme}://{Context.Request.Host.Value}{Context.Request.PathBase.Value.ToString()}";
-        
+            var iframeFilestring = Model.FileStrings[0];
+            var ext = iframeFilestring.Split(".").Last();
+            if (ext == "pptx" || ext == "ppt")
+            {
+                iframeFilestring = "";
             }
+        }
         <div class="card-body responsive-iframe-container p-0">
-            <iframe src="@rootPath\/@Model.FileStrings[0]" title="View" class="responsive-iframe reports-iframe"
+            <iframe src="@rootPath\/@iframeFilestring" title="View" class="responsive-iframe reports-iframe"
                     scrolling="no" style="width:100%; height:90%;" target="_blank"></iframe>
         </div>
         <div class="card-body d-flex text-center align-items-center justify-content-center p-0">
 
-            <a href="@rootPath\/@Model.FileStrings[0]" formtarget="_blank" class="mx-1  view-img">
+            <a href="@rootPath\/@Model.FileStrings[0]" target="_blank" class="mx-1  view-img">
                 <i class="icon-centarix-icons-09 protocols-color" style="font-size:1.5rem"></i>
             </a>
-            @if (Model.ShowSwitch || Model.IsEdittable)
-            {
-                <a href="" class="remove-function report-file @Model.SectionType.ToString() mx-1" url="@Url.Action("DeleteReportDocumentModal", "Protocols", new { FunctionReportID = Model.ObjectID })">
-                    <i style="font-size:1.5rem;" class="icon-delete-24px documents-delete-icon hover-bold protocols-color"></i>
-                </a>
-            }
+            <a href="#" class="remove-function @Model.ObjectID report-file @Model.SectionType.ToString() mx-1" url="@Url.Action("DeleteReportDocumentModal", "Protocols", new { FunctionReportID = Model.ObjectID })">
+                <i style="font-size:1.5rem;" class="icon-delete-24px documents-delete-icon hover-bold protocols-color"></i>
+            </a>
         </div>
     </div>
-    <div class="small">@Model.FileStrings[0].Split("\\").Last()<br /></div>
+    <div contenteditable="false" class="small">@Model.FileStrings[0].Split("\\").Last()<br /></div>
 </div>

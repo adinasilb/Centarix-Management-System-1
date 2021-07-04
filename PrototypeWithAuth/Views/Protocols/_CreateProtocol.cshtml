@@ -1,9 +1,12 @@
 ﻿@model PrototypeWithAuth.ViewModels.CreateProtocolsViewModel
 @using PrototypeWithAuth.ViewModels
+@using PrototypeWithAuth.AppData
+
 @{
     string theory = "";
     string material = "";
     string protocols = "";
+    string results = "";
     switch (Model.Tab)
     {
         case 1:
@@ -15,9 +18,23 @@
         case 3:
             protocols = " active show ";
             break;
+        case 4:
+            results = " active show ";
+            break;
 
     }
+
+    var saveProtocolClass = "saveProtocol";
+    if(Model.ModalType == AppUtility.ProtocolModalType.CheckListMode || Model.ModalType == AppUtility.ProtocolModalType.Summary ||  Model.ModalType == AppUtility.ProtocolModalType.SummaryFloat)
+    {
+        saveProtocolClass = "";
+    }
+    var checkListMode = AppUtility.ProtocolModalType.CheckListMode;
+    var editMode = AppUtility.ProtocolModalType.Edit;
+    var summaryMode = AppUtility.ProtocolModalType.Summary;
+    var createMode = AppUtility.ProtocolModalType.Create;
 }
+
 <form action="" id="myForm" class=" on-form-modal protocol-form createProtocolForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
     <input type="hidden" asp-for="Protocol.ProtocolTypeID" />
     <div class="row text-danger-centarix error-message d-none"> @Model.ErrorMessage </div>
@@ -25,37 +42,43 @@
     <div class="item-table">
         <ul class=" pl-0 nav" style="">
             <li class="list-inline-item m-0 nav-item">
-                <a data-toggle="tab" href="#Theory" class="next-tab nav-link  new-button Theory new-protocols-button protocol-tab @theory">
+                <a data-toggle="tab" href="#Theory@(Model.ModalType)" class="next-tab nav-link  new-button Theory new-protocols-button protocol-tab @theory">
                     <i class="new-icon icon-theory-tab-24px"></i>
                     <label class="new-button-text">Theory</label>
                 </a>
             </li>
             <li class="list-inline-item m-0 nav-item">
-                <a data-toggle="tab" href="#Materials" class="next-tab nav-link new-button Materials saveProtocol new-protocols-button protocol-tab @material">
+                <a data-toggle="tab" href="#Materials@(Model.ModalType)" class="next-tab nav-link new-button Materials @saveProtocolClass new-protocols-button protocol-tab @material">
                     <i class=" new-icon icon-centarix-icons-03"></i>
                     <label class="new-button-text">Material</label>
                 </a>
             </li>
             <li class="list-inline-item m-0 nav-item">
-                <a data-toggle="tab" href="#Protocol" class="next-tab nav-link new-button new-protocols-button protocol-tab lines-tab saveProtocol @protocols">
+                <a data-toggle="tab" href="#Protocol@(Model.ModalType)" class="next-tab nav-link Protocols new-button new-protocols-button protocol-tab lines-tab @saveProtocolClass @protocols">
                     <i class="new-icon icon-protocol-tab-24px"></i>
                     <label class="new-button-text">Protocols</label>
                 </a>
             </li>
-            <li class="only-protocol-tab li-function-bar  d-none">
+            <li class="list-inline-item m-0 nav-item @checkListMode has-modal-type d-none">
+                <a data-toggle="tab" href="#Results@(Model.ModalType) " class="next-tab nav-link new-button new-protocols-button protocol-tab lines-tab @results ">
+                    <i class="new-icon icon-protocol-tab-24px"></i>
+                    <label class="new-button-text">Results</label>
+                </a>
+            </li>
+            <li class="only-protocol-tab li-function-bar  @editMode @createMode d-none">
                 <div class=" function-bar">
                     @foreach (var type in Model.FunctionTypes)
                     {
-                        <button class="function" type="button" typeID="@type.FunctionTypeID"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
+                        <button class="function" type="button" typeID="@type.FunctionTypeID" modalType="@Model.ModalType"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
                     }
                 </div>
             </li>
-            <li class="only-protocol-tab  d-none">
+            <li class="only-protocol-tab @editMode @createMode  d-none li-function-bar">
                 <div class="h-100 d-flex ml-6" style=" align-items: center;">
                     <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveLines" value="Save">Save</button>
                 </div>
             </li>
-            <li class="only-protocol-tab saving-spinner  d-none">
+            <li class="only-protocol-tab saving-spinner d-none">
                 <div class="spinner-border protocols-color" role="status">
                     <span class="sr-only"></span>Saving...
                 </div>
@@ -63,13 +86,24 @@
             <li class="only-protocol-tab saving-done  d-none">
                 <span class="protocols-color pt-3"> Saved</span>
             </li>
+
+            <li class="only-protocol-tab   d-none li-function-bar @summaryMode">
+                <div class="h-100 d-flex ml-6" style=" align-items: center;">
+                    <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin start-protocol-fx " value="@Model.Protocol.ProtocolID">Start</button>
+                </div>
+            </li>
+            <li class="@editMode @summaryMode d-none">
+                <div class="switch col-12 switch-margin">
+                    <label>
+                        <label class="edit-mode-switch-description">Edit Mode Off</label>
+                        <input type="checkbox" class="turn-edit-on-off protocols" value="@Model.Protocol.ProtocolID" name="details" >
+                        <span class="lever"></span>
+                    </label>
+                </div>
+            </li>
         </ul>
     </div>
     <div class="tab-content _CreateProtocolTabs">
         @{ await Html.RenderPartialAsync("_CreateProtocolTabs", Model);}
     </div>
 </form>
-
-<script src="~/js/Validation/CreateProtocolValidation.js"></script>
-<script src="~/js/validate.js"></script>
-<script src="~/js/function.js"></script>

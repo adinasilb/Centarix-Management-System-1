@@ -6,28 +6,29 @@
 
 <div class="col-12">
     <span role="textbox" contenteditable="false" class="editable-span report-text form-control-plaintext h-100 text-transform-none">
-    @if (Model.TemporaryReportText == null)
-    {
-        <div contenteditable="true" class="editable-span form-control-plaintext text-transform-none"><span class='focusedText'></span></div>
-    }
-    else
-    {
-        @Html.Raw(Model.TemporaryReportText)
-                <span class='focusedText'></span>
-    }
+        @if (Model.TemporaryReportText == null || Model.TemporaryReportText =="")
+        {
+            <div contenteditable="true" class="editable-span text form-control-plaintext text-transform-none start-div"><span class='focusedText'></span></div>
+        }
+        else
+        {
+            @Html.Raw(Model.TemporaryReportText)
+        }
     </span>
     <input type="hidden" id="TemporaryReportText" name="Report.TemporaryReportText" value="@Model.TemporaryReportText" />
+    <input type="hidden" id="closingTags" value="div" />
 </div>
 
 <script>
-    $(".report-text").on('change', function (e) {
-        $("#TemporaryReportText").val($(this).html())
-    })
-    $(".report-text").on('click', function (e) {
-        console.log("focus")
+    $(".report-text").on('change click', function (e) {
+        console.log("click")
+        var node = $.fn.GetCurrentPositionParents();
+        $('#closingTags').val(node ?? " ")
+        $(".focusedText").blur()
         $(".focusedText").remove()
         pasteHtmlAtCaret("<span class='focusedText'></span>")
-        $(".report-text").trigger("change")
+        $("#TemporaryReportText").val($(this).html())
+
     })
     function pasteHtmlAtCaret(html) {
         var sel, range;
@@ -48,22 +49,39 @@
                 }
                 range.insertNode(frag);
 
-                // Preserve the selection
-                if (lastNode) {
-                    range = range.cloneRange();
-                    range.setStartAfter(lastNode);
-                    range.collapse(true);
-                    sel.removeAllRanges();
-                    sel.addRange(range);
+                 //Preserve the selection
+                //if (lastNode) {
+                //    range = range.cloneRange();
+                //    range.setStartAfter(lastNode);
+                //    //range.collapse(false);
+                //    sel.removeAllRanges();
+                //    sel.addRange(range);
+                //}
+            }
+        } 
+    }
+    $.fn.GetCurrentPositionParents = function (e) {
+        var nodeString = "";
+            var target = null;
+        if (window.getSelection) {
+            if (window.getSelection().rangeCount > 0) {
+                target = window.getSelection().getRangeAt(0).commonAncestorContainer;
+                if (target.nodeType != 1) {
+                    target = target.parentNode;
+                }
+                else if (document.selection) {
+                    var target = document.selection.createRange().parentElement();
+                }
+                while (!$(target).hasClass('start-div') && target != null) {
+                    nodeString = nodeString + (target?.tagName?? "") + ",";
+                    target = target.parentNode
                 }
             }
-        } else if (document.selection && document.selection.type != "Control") {
-            // IE < 9
-            document.selection.createRange().pasteHTML(html);
         }
+        return nodeString + "div";
     }
     $(document).ready(function (e) {
-        $(".report-text").trigger("change")
+        //$(".report-text").trigger("change")
         $(".report-text").trigger("focus")
     })
     $('.reports-iframe').on("load", function () {

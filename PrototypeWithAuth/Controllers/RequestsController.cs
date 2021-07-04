@@ -3818,6 +3818,25 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(documentsModalViewModel);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public ActionResult _DocumentsModalData(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+          AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests)
+        {
+            DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
+            {
+                FolderName = RequestFolderNameEnum,
+                IsEdittable = IsEdittable,
+                ParentFolderName = parentFolderName,
+                ObjectID = id == "" ? "0" : id,
+                SectionType = SectionType,
+                ShowSwitch = showSwitch
+            };
+
+            FillDocumentsViewModel(documentsModalViewModel);
+            return PartialView(documentsModalViewModel);
+        }
+
         private void MarkLocationAvailable(int requestId, int locationInstanceID)
         {
             var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstanceID).FirstOrDefault();

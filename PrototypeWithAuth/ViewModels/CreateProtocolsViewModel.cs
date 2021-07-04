@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.AppData.UtilityModels;
+﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace PrototypeWithAuth.ViewModels
     public class CreateProtocolsViewModel : ViewModelBase
     {
         public Protocol Protocol { get; set; }
+        public ProtocolInstance ProtocolInstance { get; set;}
         public List<String> Tags { get; set; }
         public IEnumerable<ProtocolCategory> ProtocolCategories { get; set; }
         public IEnumerable<ProtocolSubCategory> ProtocolSubCategories { get; set; }
@@ -33,5 +35,6 @@ namespace PrototypeWithAuth.ViewModels
             }
             set { _Tab = value; }
         }
+        public AppUtility.ProtocolModalType ModalType { get; set; }
     }
 }

@@ -1,0 +1,33 @@
+{
+  "dependencies": {
+    "appInsights1": {
+      "type": "appInsights",
+      "connectionId": "",
+      "suggestion": "true",
+      "ignored": "true"
+    },
+    "mssql1": {
+      "type": "mssql.onprem",
+      "connectionId": "ElixirVM",
+      "secretStore": "AzureAppSettings"
+    },
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "DefaultConnection",
+      "suggestion": "true",
+      "ignored": "true"
+    },
+    "mssql3": {
+      "type": "mssql",
+      "connectionId": "ElixirAzureConnection",
+      "suggestion": "true",
+      "ignored": "true"
+    },
+    "mssql4": {
+      "type": "mssql",
+      "connectionId": "AdinaHome",
+      "suggestion": "true",
+      "ignored": "true"
+    }
+  }
+}

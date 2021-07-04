@@ -118,8 +118,10 @@
                 processData: false,
                 type: "POST",
                 success: function (data) {
-                    $("#Materials").html(data);
+                    $("._MaterialTab").html(data);
                     $.fn.CloseModal('add-material');
+                    $(".saveProtocol").bind("click");
+                    return true;
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {
@@ -130,6 +132,7 @@
             }); 
         }
         $('.materialForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+        return true;
     });
 
 </script>

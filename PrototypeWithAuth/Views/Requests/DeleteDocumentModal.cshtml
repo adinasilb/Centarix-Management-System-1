@@ -44,7 +44,14 @@
                             <div class="">
                                 <div class="card document-border m-0">
                                     <div class="card-body responsive-iframe-container">
-                                        <iframe src="/@Model.FileName" title="View" class="responsive-iframe" scrolling="no"></iframe>
+                                        @{var iframeFilestring = Model.FileName;
+                                            var ext = iframeFilestring.Split(".").Last();
+                                            if (ext == "pptx" || ext == "ppt")
+                                            {
+                                                iframeFilestring = "";
+                                            } 
+                                       }
+                                        <iframe src="/@iframeFilestring" title="View" class="responsive-iframe" scrolling="no"></iframe>
 
                                     </div>
                                     <div class="card-body text-center">
