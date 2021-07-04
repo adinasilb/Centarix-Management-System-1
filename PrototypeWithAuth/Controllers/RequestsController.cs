@@ -577,13 +577,12 @@ namespace PrototypeWithAuth.Controllers
                     categoryType = 2;
                     serialLetter = "P";
                 }
-                var productSubcategories = _context.ProductSubcategories.Include(ps => ps.ParentCategory).Where(ps => ps.ParentCategory.CategoryTypeID == categoryType).ToList();
                 //in case we need to return to the modal view
                 //requestItemViewModel.ParentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryID).FirstOrDefaultAsync();
 
                 //declared outside the if b/c it's used farther down too 
                 var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-                var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType).ToList().OrderBy(p => p.ProductCreationDate).LastOrDefault()?.SerialNumber ?? serialLetter + "0").Substring(1));
+                var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType).OrderBy(p => p.ProductCreationDate).LastOrDefault()?.SerialNumber ?? serialLetter + "0").Substring(1));
 
                 var RequestNum = 1;
                 var i = 1;
@@ -599,7 +598,7 @@ namespace PrototypeWithAuth.Controllers
                             request.Product.Vendor = vendor;
                         }
 
-                        request.Product.ProductSubcategory = productSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategory.ProductSubcategoryID);
+                        request.Product.ProductSubcategory = await _context.ProductSubcategories.Include(ps => ps.ParentCategory).Where(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategory.ProductSubcategoryID).FirstOrDefaultAsync();
                         request.CreationDate = DateTime.Now;
                         var isInBudget = false;
                         if (!request.Product.ProductSubcategory.ParentCategory.IsProprietary)
@@ -1217,7 +1216,9 @@ namespace PrototypeWithAuth.Controllers
             //}
             //tempRequestListViewModel.TempRequestViewModels.ForEach(vm => vm.Request.Product.ProductSubcategory = null && vm.Request.Product.ProductSubcategoryID = vm.Request.Product.ProductSubcategory.ProductSubcategoryID);
             //tempRequestListViewModel.TempRequestViewModels.ForEach(vm => vm.Request.Product.Vendor = null && vm.Request.Product.VendorID = vm.Request.Product.Vendor.VendorID );
+       
             tempRequestJson.SerializeViewModel(tempRequestListViewModel.TempRequestViewModels);
+            
             _context.Update(tempRequestJson);
             await _context.SaveChangesAsync();
         }
@@ -2665,6 +2666,7 @@ namespace PrototypeWithAuth.Controllers
             };
             TempRequestListViewModel newTRLVM = new TempRequestListViewModel();
             TempRequestJson updatedTempRequestJson = new TempRequestJson();
+            var allRequests = new List<Request>();
             if (id != 0) //already has terms, being sent from approve order button -- not in a temprequestjson
             {
                 var request = _context.Requests.Where(r => r.RequestID == id).FirstOrDefault();
@@ -2694,6 +2696,7 @@ namespace PrototypeWithAuth.Controllers
                 updatedTempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
                 await SetTempRequestAsync(updatedTempRequestJson, newTRLVM);
                 var payments = _context.Payments.Where(p => p.RequestID == id);
+                allRequests.Add(request);
             }
             else
             {
@@ -2712,36 +2715,15 @@ namespace PrototypeWithAuth.Controllers
                         pr.Shipping = tempRequest.Request.ParentRequest.Shipping;
                     }
                     tempRequest.Request.ParentRequest = pr;
-                    if (tempRequest.Request.Product == null)
-                    {
-                        tempRequest.Request.Product = _context.Products.Where(p => p.ProductID == tempRequest.Request.ProductID).Include(p => p.Vendor)
-                          .Include(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
-                    }
-                    else
-                    {
-                        tempRequest.Request.Product.ProductSubcategory = _context.ProductSubcategories.Where(pc => pc.ProductSubcategoryID == tempRequest.Request.Product.ProductSubcategoryID).FirstOrDefault();
-                        tempRequest.Request.Product.ProductSubcategory.ParentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryID == tempRequest.Request.Product.ProductSubcategory.ParentCategoryID).FirstOrDefault();
-                        tempRequest.Request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == tempRequest.Request.Product.VendorID).FirstOrDefault();
-                    }
+                    tempRequest.Request.Product = await _context.Products.Where(p => p.ProductID == tempRequest.Request.ProductID).Include(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(p => p.Vendor).FirstOrDefaultAsync();
 
-                    updatedTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
-                    await SetTempRequestAsync(updatedTempRequestJson, newTRLVM);
+                    allRequests.Add(tempRequest.Request);
                 }
-            }
-            var allRequests = new List<Request>();
-            //foreach (var temprequest in newTRLVM.TempRequestViewModels)
-            //{
-            //    temprequest.Request.Product.Vendor = _context.Vendors
-            //}
-            foreach (var r in newTRLVM.TempRequestViewModels)
-            {
-                r.Request.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == r.Request.Product.ProductSubcategoryID).FirstOrDefault();
-                r.Request.Product.ProductSubcategory.ParentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryID == r.Request.Product.ProductSubcategory.ParentCategoryID).FirstOrDefault();
-                r.Request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == r.Request.Product.VendorID).FirstOrDefault();
 
-                allRequests.Add(r.Request);
+                updatedTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
+                await SetTempRequestAsync(updatedTempRequestJson, newTRLVM);
             }
-            //newTRLVM.TempRequestViewModels.ForEach(tempRVM => allRequests.Add(tempRVM.Request));
+
             //IMPORTANT!!! Check that payments and comments are coming in
             newTRLVM.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
             ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
