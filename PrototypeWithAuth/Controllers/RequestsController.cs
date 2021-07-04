@@ -666,18 +666,18 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 if (OrderType != AppUtility.OrderTypeEnum.AddToCart)
                                 {
-                                    if (isInBudget)
-                                    {
-                                        TempRequestJson trj = CreateTempRequestJson(requestItemViewModel.TempRequestListViewModel.GUID);
-                                        await SetTempRequestAsync(trj,
-                                            new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() { trvm } });
-                                        await saveItemTransaction.CommitAsync();
-                                    }
-                                    else
-                                    {
-                                        await SaveTempRequestAndCommentsAsync(trvm);
-                                        base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
-                                    }
+                                    //if (isInBudget)
+                                    //{
+                                    TempRequestJson trj = CreateTempRequestJson(requestItemViewModel.TempRequestListViewModel.GUID);
+                                    await SetTempRequestAsync(trj,
+                                        new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() { trvm } });
+                                    await saveItemTransaction.CommitAsync();
+                                    //}
+                                    //else
+                                    //{
+                                    //    await SaveTempRequestAndCommentsAsync(trvm);
+                                    //    base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
+                                    //}
                                 }
                             }
                             catch (Exception ex)
@@ -1007,17 +1007,17 @@ namespace PrototypeWithAuth.Controllers
                 if (isInBudget)
                 {
                     request.RequestStatusID = 6;
-                    tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>() {
-                    new TempRequestViewModel() {
-                    Request = request, Emails = new List<string>(){ request.Product.Vendor.OrdersEmail }
-                   } };
-                    TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
                 }
                 else
                 {
                     request.RequestStatusID = 1;
                 }
 
+                tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>() {
+                    new TempRequestViewModel() {
+                    Request = request, Emails = new List<string>(){ request.Product.Vendor.OrdersEmail }
+                   } };
+                TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
                 //TempRequestJson tempRequestJson = new TempRequestJson()
                 //{
                 //    CookieGUID = tempRequestListViewModel.GUID,
