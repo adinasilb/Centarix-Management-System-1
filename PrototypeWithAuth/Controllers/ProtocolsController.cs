@@ -1335,8 +1335,14 @@ namespace PrototypeWithAuth.Controllers
                     }
                     await transaction.CommitAsync();
                     createProtocolsViewModel = await FillCreateProtocolsViewModel(createProtocolsViewModel, createProtocolsViewModel.Protocol.ProtocolTypeID, createProtocolsViewModel.Protocol.ProtocolID);
-
-                    return PartialView("_CreateProtocolTabs", createProtocolsViewModel);
+                    if(createProtocolsViewModel.ModalType == AppUtility.ProtocolModalType.Create)
+                    {
+                        return PartialView("_CreateProtocolTabs", createProtocolsViewModel);
+                    }
+                    else
+                    {
+                        return PartialView("_IndexTableWithEditProtocol", createProtocolsViewModel);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1345,7 +1351,14 @@ namespace PrototypeWithAuth.Controllers
                     Response.StatusCode = 500;
                     await transaction.RollbackAsync();
                     //todo: delete the newly added documents
-                    return PartialView("_CreateProtocol", createProtocolsViewModel);
+                    if (createProtocolsViewModel.ModalType == AppUtility.ProtocolModalType.Create)
+                    {
+                        return PartialView("_CreateProtocolTabs", createProtocolsViewModel);
+                    }
+                    else
+                    {
+                        return PartialView("_IndexTableWithEditProtocol", createProtocolsViewModel);
+                    }
                 }
 
             }

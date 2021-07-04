@@ -459,6 +459,25 @@
                 $.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
                 $.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
             }
+            if ($(element).hasClass('protocols')) {
+     
+                $(".mark-readonly").attr("disabled", false);
+                $("div.mark-readonly").attr("contenteditable", true);
+                $('.open-document-modal').attr("data-val", true);
+                $.fn.EnableMaterialSelect('#protocolParentList', 'select-options-protocolParentList');
+                $.fn.EnableMaterialSelect('#protocolSubList', 'select-options-protocolSubList');
+                $(".Material").addClass("saveProtocol");
+                $(".Protocols").addClass("saveProtocol"); 
+                var modalType = $(".modalType").val();
+                $("." + modalType).addClass("d-none")
+                var attrString = "[modaltype=" + modalType + "]";
+                console.log(attrString);
+                $("[modaltype = " + modalType + "]").attr("modaltype", "Edit");
+                $(".modalType").val("Edit");
+                modalType = $(".modalType").val();
+                $("." + modalType).removeClass("d-none")
+           
+            }
         }
 
 
@@ -567,6 +586,7 @@
             $("." + modalClass + " div.mark-readonly").attr("contenteditable", false);
             $("." + modalClass + " .button-mark-readonly").addClass("d-none");
             $("." + modalClass + ' .open-document-modal').attr("data-val", false);
+            $(".protocol-tab").removeClass("saveProtocol")
             $("." + modalClass + " .mdb-select").materialSelect();
         }
 

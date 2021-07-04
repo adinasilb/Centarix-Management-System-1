@@ -148,20 +148,14 @@
 							processData: false,
 							type: "POST",
 							success: function (data) {
-								$("._CreateProtocolTabs").html(data)
-								$(".mdb-select").materialSelect();
+								$("._IndexTable").html(data)					
 								var modalType = $(".modalType").val();
-								if (tab.hasClass("lines-tab")/* && $(".createProtocolMasterProtocolID").val()=="0"*/) {
-									$("."+modalType+".only-protocol-tab.li-function-bar").removeClass("d-none");
-								}
-								else {
-									$("."+modalType+".only-protocol-tab").addClass("d-none");
-								}                    
+								$("."+modalType).removeClass("d-none")
+								$.fn.ProtocolsMarkReadonly("_IndexTable");   
 							},
 							error: function (jqxhr) {
 								if (jqxhr.status == 500) {
-									$("._CreateProtocol").html(jqxhr.responseText)
-								}
+									$("._CreateProtocol").html(jqxhr.responseText);						}
 								$(".mdb-select").materialSelect();
 								return true;
 							}
