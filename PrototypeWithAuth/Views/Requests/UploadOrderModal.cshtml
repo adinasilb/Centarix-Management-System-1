@@ -155,6 +155,8 @@
             $("#loading").show();
             var formData = new FormData($(".uploadQuoteForm")[0]);
             //alert(...formData);
+            var orderType = $("#RequestIndexObject_OrderType").val();
+            alert("orderType: " + orderType);
             $.ajax({
                 contentType: false,
                 processData: false,
@@ -165,8 +167,7 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    alert("Order Type: " + $("#TempRequestViewModels_0__Request_OrderType").attr("value"));
-                    if ($("#TempRequestViewModels_0__Request_OrderType").val() == "SaveOperations" || $("#TempRequestViewModels_0__Request_OrderType").val() == "AlreadyPurchased") {
+                    if (orderType == "SaveOperations" || orderType == "AlreadyPurchased") {
                         alert("opening terms modal");
                         $.fn.OpenModal("termsModal", "terms", data);
                     }

@@ -157,7 +157,7 @@ $("body").off("click").on("click", ".load-order-details", function (e) {
 	var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString()
 	$.fn.CallPageRequest($itemurl, "reorder");
 	console.log("after call page request");
-	$(".temprequesthiddenfors").html('');
+	$(".temprequesthiddenfors").first().html('');
 	return false;
 });
 
