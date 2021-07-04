@@ -22,7 +22,7 @@ $('.ordersItemForm').validate({
 			},
 		},
 		"Requests[0].Product.ProductSubcategory.ParentCategoryID": "selectRequired",
-		"Requests[0].Product.ProductSubcategory.ProductSubcategoryID": "selectRequired",
+		"Requests[0].Product.ProductSubcategoryID": "selectRequired",
 		"Requests[0].Product.VendorID": {
 			"selectRequired" : true,				
 		},
