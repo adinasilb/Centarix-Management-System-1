@@ -44,7 +44,7 @@
                 processData: false,
                 type: "POST",
                 success: function (data) {
-                    $("#Materials").html(data);
+                    $("._MaterialTab").html(data);
                     $.fn.CloseModal('material-info');
                 },
                 error: function (jqxhr) {

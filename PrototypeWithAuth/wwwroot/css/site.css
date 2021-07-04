@@ -866,7 +866,7 @@ a.bold-hover-effects {
 }
 
 .text-transform-none {
-    text-transform: none;
+    text-transform: none !important;
 }
 
 a.bold-hover-effects:hover,
@@ -2494,6 +2494,16 @@ span.caret {
 
 .users-form .switch label input[type="checkbox"]:checked + .lever {
     background-color: var(--users-25) !important;
+    opacity: 50 !important;
+    border: .5px solid #f3f3f3 !important;
+}
+
+.protocol-form .switch label input[type="checkbox"]:checked + .lever:after {
+    background-color: var(--protocol-color) !important;
+}
+
+.protocol-form .switch label input[type="checkbox"]:checked + .lever {
+    background-color: var(--protocols-25) !important;
     opacity: 50 !important;
     border: .5px solid #f3f3f3 !important;
 }

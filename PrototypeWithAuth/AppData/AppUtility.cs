@@ -143,9 +143,10 @@ namespace PrototypeWithAuth.AppData
         public enum CategoryTypeEnum { Operations, Lab }
         public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusables, Equipment, Operation, Biological, Safety, General, Clinical }
         public enum RequestModalType { Create, Edit, Summary }
+        public enum ProtocolModalType { Create, CheckListMode, Summary, Edit , SummaryFloat}
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
-        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare }
+        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue }
         public enum PopoverEnum { None }
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
@@ -392,6 +393,10 @@ namespace PrototypeWithAuth.AppData
             return newFileName;
         }
 
+        private static bool IsInThisMonth(DateTime dateCreated)
+        {
+            throw new NotImplementedException();
+        }
 
         public static DateTime ZeroSeconds(this DateTime value)
         {
@@ -536,6 +541,11 @@ namespace PrototypeWithAuth.AppData
                 newCopy.Add(x);
             }
             return newCopy;
+        }
+
+        public static T DeepClone<T>(T obj)
+        {
+            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj));
         }
 
         public static List<String> GetAmountColumn(Request request, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType)

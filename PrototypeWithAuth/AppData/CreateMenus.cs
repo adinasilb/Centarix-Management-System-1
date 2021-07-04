@@ -1773,26 +1773,26 @@ namespace PrototypeWithAuth.AppData
             //    Classes = CurrentClasses,
             //    IconName = "icon-monetization_on-24px"
             //});
-            if (SidebarTitle == AppUtility.SidebarEnum.Favorites) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            SidebarMenuItems.Add(new MenuItems()
-            {
-                Description = "Favorites",
-                Controller = "Protocols",
-                Action = "ReportsFavorites",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                IconName = "icon-favorite_border-24px"
-            });
-            if (SidebarTitle == AppUtility.SidebarEnum.SharedWithMe) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            SidebarMenuItems.Add(new MenuItems()
-            {
-                Description = "Shared With Me",
-                Controller = "Protocols",
-                Action = "ReportsSharedWithMe",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                IconName = "icon-notification_shared-24px"
-            });
+            //if (SidebarTitle == AppUtility.SidebarEnum.Favorites) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            //SidebarMenuItems.Add(new MenuItems()
+            //{
+            //    Description = "Favorites",
+            //    Controller = "Protocols",
+            //    Action = "ReportsFavorites",
+            //    RouteValues = new RouteValueDictionary(),
+            //    Classes = CurrentClasses,
+            //    IconName = "icon-favorite_border-24px"
+            //});
+            //if (SidebarTitle == AppUtility.SidebarEnum.SharedWithMe) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            //SidebarMenuItems.Add(new MenuItems()
+            //{
+            //    Description = "Shared With Me",
+            //    Controller = "Protocols",
+            //    Action = "ReportsSharedWithMe",
+            //    RouteValues = new RouteValueDictionary(),
+            //    Classes = CurrentClasses,
+            //    IconName = "icon-notification_shared-24px"
+            //});
             
             return SidebarMenuItems;
 

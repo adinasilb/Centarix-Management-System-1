@@ -6,25 +6,19 @@
     }
     var url = "";
     if ($("#masterPageType").val() == "ProtocolsReports") {
-            url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val();
+            url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val() +"&closingTags="+$('#closingTags').val();
         	$.fn.CallPageRequest( url , "addFunction");
     }
 	/*if ($("#masterPageType").val() == "ProtocolsCreate")*/
     else {
 	    if(lineID != undefined)
 	    {
-		    url = "/Protocols/AddFunctionModal?FunctionTypeID=" + $(this).attr("typeID") + "&LineID=" + lineID+"&functionLineID="+$(this).attr("value");
+		    url = "/Protocols/AddFunctionModal?FunctionTypeID=" + $(this).attr("typeID") + "&LineID=" + lineID+"&functionLineID="+$(this).attr("value")+"&modalType="+$(this).attr("modaltype");
         	$.fn.CallPageRequest( url , "addFunction"); 
         }
 	}
 });
 
-$(".remove-function").click(function (e) {
-    e.preventDefault();
-    console.log("remove file")
-    url = $(this).attr("url");
-    $.fn.CallPageRequest(url, "addFunction"); 
-})
 
 $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".saveFunction, .removeFunction",function (e) {
     e.preventDefault();
@@ -45,7 +39,7 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
             changeToTriggerSelect=$("div.line-input[data-val="+$(".lineID").val()+"]")
          }
          var prev = functionSelect.prev();
-         var next = functionSelect.next();
+        var next = functionSelect.next();
         var html = prev.html() + next.html();
          prev.html(html);
          next.remove();
@@ -71,8 +65,18 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
     //}
     //else {
     //$('.activeSubmit').removeClass('disabled-submit')
+      $(".addFunctionForm").data("validator").settings.ignore = "";
+        var valid = $(".addFunctionForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid && !removing) {
 
-    var functionFormData = new FormData($(".addFunctionForm")[0]);
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
+            }
+           return;
+        }
+        else {
+            var functionFormData = new FormData($(".addFunctionForm")[0]);
     var reportFormData = new FormData($(".createReportForm")[0]);
     var protocolFormData = new FormData($(".createProtocolForm")[0]);
 
@@ -107,18 +111,24 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
                 $(".report-text-div").html(data);
                 if (!removing) {
                     var newDiv = $(".added-div");
-                    console.log(newDiv)
-                    console.log(newDiv.get(0))
 
-                    var newDivText = newDiv.next().html();
-                    if (newDivText == null && newDiv.get(0).nextSibling != null) {
-                        console.log("no div")
-                        newDivText = newDiv[0].nextSibling.textContent;
+                    var newDivText = newDiv.next()?.html()
+                    console.log(newDivText)
+                    if (newDivText == null) {
+                        if (newDiv.get(0).nextSibling != null) {
+                            console.log("no div")
+                            newDivText = newDiv[0].nextSibling.textContent;
+                        }
+                        else {
+                            newDivText = "";
+                        }
                     }
-                    newDiv.html(newDivText)
+                    newDiv.html(newDiv.html()+newDivText)
                     newDiv[0].nextSibling?.remove();
                     newDiv.removeClass("added-div");
+                    $('.report-text').trigger("change")
                 }
+                
                 //functionSelect.append(" <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none'></div>")
             }
             else {
@@ -133,8 +143,25 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
             return true;
         }
     });
+        }
+        $(".addFunctionForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';    
 
-    //}
-    //$('.materialForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 });
 
+$(".remove-function").click(function (e) {
+    e.preventDefault();
+
+    url = $(this).attr("url");
+    $.fn.CallPageRequest(url, "addFunction");
+});
+
+$("form").off("click", ".open-line-product").on("click", ".open-line-product", function (e) {
+	 e.preventDefault();
+	 var url="/Protocols/ProtocolsProductDetails?productID="+$(this).attr("value");
+	 $.fn.CallPageRequest(url, "summary");
+});
+$("form").off("click", ".open-line-protocol").on("click", ".open-line-protocol", function (e) {
+	 e.preventDefault();
+	 var url="/Protocols/ProtocolsDetailsFloatModal?protocolID="+$(this).attr("value");
+	 $.fn.CallPageRequest(url, "protocolFloatModal");
+});

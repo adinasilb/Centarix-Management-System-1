@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Models;
+﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,8 @@ namespace PrototypeWithAuth.ViewModels
         public string LineNumberString { get; set; }
         public List<LineType> LineTypes { get; set; }
         public IEnumerable<FunctionLine> Functions { get; set; }
+        public AppUtility.ProtocolModalType ModalType { get; set; }
+        public bool IsDone { get; set;}
+        public bool IsLast { get; set; }
     }
 }
