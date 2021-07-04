@@ -2715,8 +2715,16 @@ namespace PrototypeWithAuth.Controllers
                         pr.Shipping = tempRequest.Request.ParentRequest.Shipping;
                     }
                     tempRequest.Request.ParentRequest = pr;
-                    tempRequest.Request.Product = await _context.Products.Where(p => p.ProductID == tempRequest.Request.ProductID).Include(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(p => p.Vendor).FirstOrDefaultAsync();
-
+                    if (tempRequest.Request.Product == null)
+                    {
+                        tempRequest.Request.Product = _context.Products.Where(p => p.ProductID == tempRequest.Request.ProductID).Include(p => p.Vendor)
+                          .Include(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
+                    }
+                    else
+                    {
+                        tempRequest.Request.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == tempRequest.Request.Product.ProductSubcategoryID).Include(ps=>ps.ParentCategoryID).FirstOrDefault();
+                        tempRequest.Request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == tempRequest.Request.Product.VendorID).FirstOrDefault();
+                    }
                     allRequests.Add(tempRequest.Request);
                 }
 
