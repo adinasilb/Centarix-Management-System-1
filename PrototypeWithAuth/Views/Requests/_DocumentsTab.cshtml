@@ -51,7 +51,7 @@
                     hasFileClass = "hasFile";
                 }
             }
-            <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@Model.Requests[0].RequestID" id="@folder.FolderName.ToString()" data-val="@true" showSwitch="@false">
+            <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@Model.Requests[0].RequestID" id="@folder.FolderName.ToString()" data-val="@true" showSwitch="@false"parentFolder="@folder.ParentFolderName">
                 <div class="card document-border @hasFileClass ">
                     <div class="document-card text-center">
                         <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>

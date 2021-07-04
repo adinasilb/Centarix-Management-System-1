@@ -2469,9 +2469,9 @@ namespace PrototypeWithAuth.Controllers
                     var categoryTypeId = requestItemViewModel.SectionType == AppUtility.MenuItems.Requests ? 1 : 2;
                     var productSubcategory = requestItemViewModel.Requests[0].Product.ProductSubcategory;
                     requestItemViewModel = await FillRequestDropdowns(requestItemViewModel, productSubcategory, categoryTypeId);
-                    string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-                    string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Requests[0].RequestID.ToString());
-                    FillDocumentsInfo(requestItemViewModel, uploadFolder2, productSubcategory);
+                    int requestId = requestItemViewModel.Requests[0].RequestID;
+                    int parentQuoteId = (int) requestItemViewModel.Requests[0].ParentQuoteID;
+                    FillDocumentsInfo(requestItemViewModel, productSubcategory, requestId);
                     requestItemViewModel.Comments = await _context.Comments.Include(r => r.ApplicationUser).Where(r => r.Request.RequestID == requestItemViewModel.Requests[0].RequestID).ToListAsync();
                     requestItemViewModel.ModalType = AppUtility.RequestModalType.Edit;
                     Response.StatusCode = 550;
@@ -3778,14 +3778,14 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+        public ActionResult DocumentsModal(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch, AppUtility.ParentFolderName ParentFolder,
             AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
                 FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
-                ParentFolderName = AppUtility.ParentFolderName.Requests,
+                ParentFolderName = ParentFolder,
                 ObjectID = id == "" ? "0" : id,
                 SectionType = SectionType,
                 ShowSwitch = showSwitch
@@ -4043,7 +4043,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Update(request);
                             _context.SaveChanges();
                             //save file
-                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
                             string requestFolder = Path.Combine(uploadFolder, quote.RequestID.ToString());
                             string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Quotes.ToString());
                             Directory.CreateDirectory(folderPath);
@@ -4749,7 +4749,7 @@ namespace PrototypeWithAuth.Controllers
             //    TempRequestViewModels = oldJson.DeserializeJson<List<TempRequestViewModel>>()
             //};
 
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, "0");
             string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
 

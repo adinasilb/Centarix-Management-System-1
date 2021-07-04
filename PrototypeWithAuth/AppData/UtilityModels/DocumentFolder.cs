@@ -10,5 +10,6 @@ namespace PrototypeWithAuth.AppData.UtilityModels
         public AppUtility.FolderNamesEnum FolderName { get; set; }
         public List<string> FileStrings { get; set; }
         public string Icon { get; set; }
+        public AppUtility.ParentFolderName ParentFolderName { get; set; }
     }
 }
