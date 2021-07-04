@@ -598,7 +598,7 @@ namespace PrototypeWithAuth.Controllers
                             request.Product.Vendor = vendor;
                         }
 
-                        request.Product.ProductSubcategory = await _context.ProductSubcategories.Include(ps => ps.ParentCategory).Where(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategory.ProductSubcategoryID).FirstOrDefaultAsync();
+                        request.Product.ProductSubcategory = await _context.ProductSubcategories.Include(ps => ps.ParentCategory).Where(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategoryID).FirstOrDefaultAsync();
                         request.CreationDate = DateTime.Now;
                         var isInBudget = false;
                         if (!request.Product.ProductSubcategory.ParentCategory.IsProprietary)
