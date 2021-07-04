@@ -402,8 +402,16 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    $.fn.OpenModal('modalStep1', 'step-1', data)
+                    console.log("OrderType: " + $("#TempRequestViewModels_0__Request_OrderType").val());
+                    console.log("OrderType: " + $("#TempRequestViewModels_0__Request_OrderType").attr("value"));
+                    if ($("#TempRequestViewModels_0__Request_OrderType").val() == 'AddToCart') {
+                        $("_IndexTableData").html(data);
+                    }
+                    else {
+                        $.fn.OpenModal('modalStep1', 'step-1', data)
+                    }
                     $("#loading").hide();
+                    $("temprequesthiddenfors").html('');
                     return true;
                 },
                 error: function (jqxhr) {

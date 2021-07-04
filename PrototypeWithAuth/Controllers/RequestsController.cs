@@ -930,7 +930,10 @@ namespace PrototypeWithAuth.Controllers
                     }
                     request.OrderType = AppUtility.OrderTypeEnum.AddToCart.ToString();
 
-                    _context.Entry(request.Product).State = EntityState.Added;
+                    if(request.ProductID == 0 || request.ProductID == null)
+                    {
+                        _context.Entry(request.Product).State = EntityState.Added;
+                    }
                     _context.Entry(request).State = EntityState.Added;
                     if (tempRequestListViewModel.TempRequestViewModels?[0].Comments != null)
                     {
@@ -2523,12 +2526,15 @@ namespace PrototypeWithAuth.Controllers
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubUnit = oldRequest.SubUnit;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubSubUnit = oldRequest.SubSubUnit;
                     var isInBudget = checkIfInBudget(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), oldRequest.Product);
+
+
+
+                    TempRequestViewModel newTrvm = await AddItemAccordingToOrderType(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), OrderTypeEnum, isInBudget, tempRequestListViewModel);
+
                     using (var transaction = _context.Database.BeginTransaction())
                     {
                         try
                         {
-                            TempRequestViewModel newTrvm = await AddItemAccordingToOrderType(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), OrderTypeEnum, isInBudget, tempRequestListViewModel);
-
                             TempRequestJson trj = CreateTempRequestJson(tempRequestListViewModel.GUID);
                             await SetTempRequestAsync(trj,
                             new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() { newTrvm } });
@@ -2557,8 +2563,10 @@ namespace PrototypeWithAuth.Controllers
                             action = "UploadOrderModal";
                             break;
                         case AppUtility.OrderTypeEnum.OrderNow:
-                        case AppUtility.OrderTypeEnum.AddToCart:
                             action = "UploadQuoteModal";
+                            break;
+                        case AppUtility.OrderTypeEnum.AddToCart:
+                            action = "_IndexTableData";
                             break;
                     }
                     tempRequestListViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
