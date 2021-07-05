@@ -192,14 +192,14 @@
                                     </td>
                                     <td width="15%">
                                         <div class="input-group">
-                                            <input asp-for="@Model.Requests[i].Discount" class="form-control-plaintext border-bottom  expected-supply-days" />
+                                            <input asp-for="@Model.Requests[i].Discount" class="form-control-plaintext border-bottom" />
                                             <div class="input-group-text">%</div>
                                             <span asp-validation-for="@Model.Requests[i].Discount" class="text-danger-centarix"></span>
                                         </div>
                                     </td>
                                     <td width="15%">
                                         <div class="form-group">
-                                            <input asp-for="@Model.Requests[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom  expected-supply-days" />
+                                            <input asp-for="@Model.Requests[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom @i expected-supply-days" index="@i"/>
                                             <span asp-validation-for="@Model.Requests[i].ExpectedSupplyDays" class="text-danger-centarix"></span>
                                         </div>
                                     </td>
@@ -212,7 +212,7 @@
                                                     expectedSupplyDate = DateTime.Now.AddDays(Model.Requests[i].ExpectedSupplyDays ?? 0);
                                                 }
                                             }
-                                            <input class="form-control-plaintext border-bottom datepicker " type="text" name="expected-supply-days" id="expected-supply-date" value="@AppUtility.FormatDate(expectedSupplyDate)" />
+                                            <input class="form-control-plaintext border-bottom datepicker @i" type="text" name="expected-supply-days" index="@i" id="expected-supply-date" value="@AppUtility.FormatDate(expectedSupplyDate)" />
                                         </div>
                                     </td>
                                 </tr>
