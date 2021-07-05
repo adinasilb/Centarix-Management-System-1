@@ -1,0 +1,108 @@
+﻿@model PrototypeWithAuth.ViewModels.ProtocolsLineViewModel
+@using System
+@using PrototypeWithAuth.AppData
+@{
+    var dynamicID = "TempLines_" + Model.Index + "__";
+    var dynamicName = "TempLines[" + Model.Index + "].";
+
+    var moveToNextStepColor = "disabled-text";
+    if(Model.IsDone)
+    {
+        moveToNextStepColor = "protocols-color";
+    }
+}
+@if (Model.TempLine != null)
+{
+    <input name="@(dynamicName)LineID" id="@(dynamicID)LineID" value="@Model.TempLine.LineID" type="hidden" />
+    <input name="@(dynamicName)PermanentLineID" id="@(dynamicID)PermanentLineID" value="@Model.TempLine.PermanentLineID" type="hidden" />
+}
+<input type="hidden" name="@(dynamicName)IsDone" id="@(dynamicID)IsDone" value="@Model.IsDone"/>
+
+<div class="position-absolute" style="right:91%;">
+    <ul class="list-unstyled m-0">
+        <li>
+            @{
+                var dNone = "d-none";
+                if (Model.Index == 0 && (Model.ModalType != AppUtility.ProtocolModalType.CheckListMode && Model.ModalType != AppUtility.ProtocolModalType.Summary))
+                {
+                    dNone = "";
+                }
+            }
+            <a tabindex="0" role="button"  data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="@dNone no-box-shadow btn p-0 m-0 addLinePopover mark-readonly button-mark-readonly @(dynamicID)ContentLinePopoverButton" lineNumber="@Model.LineNumberString" value="line-content@(Model.Index)" parentLineID="@Model.TempLine?.ParentLineID" lineCount="@Model.Index">
+                <i class="protocols-color icon-add_circle-24px" style="  font-size: 3rem;"></i>
+            </a>
+        </li>
+        <div style="display:none; " id="line-content@(Model.Index)">
+            @foreach (var item in Model.LineTypes)
+            {
+                <div class="row px-2 comment-btn">
+                    <button type="button" value="@item.LineTypeID" current-line-id="@(Model.TempLine?.PermanentLineID??Model.TempLine?.LineID??0)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine mark-readonly w-100" style="font-size:1rem; font-weight:400;">
+                        @item.LineTypeDescription
+                    </button><hr class="m-0" />
+                </div>
+            }
+            @if(Model.Index!=0)
+            {
+                <div class="row px-2 comment-btn">
+                    <button type="button" value="-1" current-line-id="@(Model.TempLine?.PermanentLineID??Model.TempLine?.LineID??0)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine mark-readonly " style="font-size:1rem; font-weight:400;">
+                        Delete Current Line
+                    </button><hr class="m-0" />
+                </div>
+            }
+            
+        </div>
+    </ul>
+</div>
+@if (Model.TempLine != null)
+{
+    <input type="hidden" name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.TempLine.Content" />
+    var typeClass = "";
+    switch (Model.TempLine?.LineTypeID)
+    {
+        case 1:
+            typeClass = " line-header ";
+            break;
+        case 2:
+            typeClass = " line-subheader ml-4";
+            break;
+        case 3:
+            typeClass = " line-step ml-6 ";
+            break;
+    }
+<div class="d-flex line-div
+     @typeClass">
+
+    @if (Model.ModalType == AppUtility.ProtocolModalType.CheckListMode)
+    {
+        <div class=" d-flex align-items-center  mr-2 move-to-next-step pointer-event @moveToNextStepColor" nextLineID ='@("TempLines_"+(Model.Index+1)+"__PermanentLineID")' is-last='@(Model.IsLast.ToString())' > <span class=" checklist-mode-only"><i class="icon-done-24px"></i></span></div>
+        <div class=" d-flex align-items-center mr-2 ">  <span class="add-change checklist-mode-only"><i class="icon-sync-24px"></i></span></div>
+    }
+
+    <div class=" d-flex align-items-center  ">@Model.LineNumberString</div>
+    <div role='textbox'
+         contenteditable='false' line-id='@(dynamicID)Content' class='editable-span line input line-input text-transform-none p-0 mark-readonly' data-val='@Model.TempLine?.PermanentLineID'>
+        @if (Model.TempLine?.Content == null || Model.TempLine?.Content == "")
+        {
+            <div role='textbox'
+                 contenteditable class='editable-span line input line-input text-transform-none p-0 mark-readonly'>
+                &ensp;
+            </div>
+        }
+        else
+        {
+            @Html.Raw(Model.TempLine?.Content)
+        }
+
+    </div>
+         @if (Model.Functions != null)
+         {
+             foreach (var function in Model.Functions)
+             {
+                 <button class="function btn-link btn no-box-shadow p-0 m-0" type="button" typeID="@function.FunctionTypeID" value="@function.ID" lineID="@function.LineID" modalType="@Model.ModalType"> <div functionID="@function.FunctionTypeID" class="@function.FunctionType?.IconActionClass line-function" ><i class="@function.FunctionType?.Icon" data-toggle="popover" data-trigger="hover" data-placement="top" data-container="body" ></i></div></button>
+
+             }
+         }
+
+     </div>
+
+}

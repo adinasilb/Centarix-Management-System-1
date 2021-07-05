@@ -1,4 +1,4 @@
-﻿$(".load-confirm-delete").on("click", function (e) {
+﻿$("body").on("click", ".load-confirm-delete", function (e) {
     console.log("in confirm delete");
     e.preventDefault();
     e.stopPropagation();

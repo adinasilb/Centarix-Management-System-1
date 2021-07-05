@@ -1,0 +1,81 @@
+﻿@using PrototypeWithAuth.ViewModels;
+@model ProtocolsLinesViewModel
+
+
+@if (Model.ErrorMessage != null)
+{
+    <h6 class="text-danger-centarix">
+        @Model.ErrorMessage
+    </h6>
+    <br />
+}
+
+@foreach (var line in Model.Lines)
+{
+    await Html.RenderPartialAsync("_Line", line);
+}
+
+<script>
+    $(".addLinePopover").click(function (e) {
+        e.preventDefault()
+        var val = $(this).attr("value");
+        $('[data-toggle="popover"]').popover('dispose');
+        $(this).popover({
+            sanitize: false,
+            placement: 'bottom',
+            html: true,
+            content: function () {
+                return $('#' + val).html();
+            }
+        });
+        $(this).popover('toggle');
+        $(".popover").off("click").on("click", ".addLine", function () {
+            $.ajax({
+                processData: false,
+                contentType: false,
+                data: new FormData($("#myForm")[0]),
+                url: "/Protocols/_Lines?lineTypeID=" + $(this).val() +
+                    "&currentLineID=" + $(this).attr("current-line-id") + "&protocolID=" + $(".createProtocolMasterProtocolID").val(),
+                type: 'POST',
+                success: function (data) {
+                    $("._Lines").html(data);
+
+                },
+                error: function (jqxhr) {
+                    $("._Lines").html(jqxhr.responseText);
+                }
+            });
+        });
+    });
+    $(".line").click(function () {
+        var modalType = $("#ModalType").val();
+        if(modalType!="CheckListMode" && modalType !="Summary")
+        {
+            $(".addLinePopover").addClass("d-none");
+            $("." + $(this).attr("line-id") + "LinePopoverButton").removeClass("d-none");
+            $(".line").removeClass("focused-line");
+            $(this).addClass("focused-line");
+        }
+    });
+
+    $(".line").change(function () {
+        var html = $(this).html()
+        $("#" + $(this).attr("line-id")).val(html);
+    });
+
+    $(".move-to-next-step").click(function(){
+        $.ajax({
+            url: "/Protocols/MoveToNextLine?protocolInstanceID=" + $(".protocolInstanceID").val() +
+                "&nextLineID=" + $("#"+$(this).attr("nextLineID")).val()+"&IsLast="+$(this).attr("is-last"),
+            type: 'GET',
+            success: function (data) {
+                $("._Lines").html(data);
+            },
+            error: function (jqxhr) {
+                $("._Lines").html(jqxhr.responseText);
+            }
+        });
+    });
+
+</script>
+<script src="~/js/spanContentEditable.js"></script>

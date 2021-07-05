@@ -1,23 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Line
+    [Table("Lines")]
+    public class Line : LineBase
     {
-        [Key]
-        public int LineID { get; set; }
-        public string Content { get; set; }
-        public int ParentLineID { get; set; }
-        public Line ParentLine { get; set; }
-        public int LineTypeID { get; set; }
-        public LineType LineType { get; set; }
-        public int ProtocolID { get; set; }
-        public Protocol Protocol { get; set; }
-        public int LineNumber { get; set; }
-        public TimeSpan Timer { get; set; }
+        public  Line ParentLine { get; set; }
+        public TempLine TempLine { get; set; }
+        public bool IsTemporary { get; set; }
+        public bool IsTemporaryDeleted { get; set; }
     }
 }

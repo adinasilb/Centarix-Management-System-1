@@ -128,7 +128,7 @@
             <div class="row only-employee @hidden">
                 <div class="col-6  p-0 only-employee @hidden">
                     <label asp-for="NewEmployee.DOB" class="control-label only-employee"></label>
-                    <input asp-for="NewEmployee.DOB" type="text"  class="form-control-plaintext border-bottom only-employee mark-readonly datepicker" asp-format="{0:dd/MM/yyyy}" disabled />
+                    <input asp-for="NewEmployee.DOB" type="text"  class="form-control-plaintext border-bottom only-employee mark-readonly datepicker" asp-format="@AppUtility.AspDateFormatString" disabled />
                     <span asp-validation-for="NewEmployee.DOB" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-6 only-employee @hidden">
@@ -200,7 +200,7 @@
                 </div>
                 <div class="col-4 only-employee @hidden">
                     <label asp-for="NewEmployee.StartedWorking" class="control-label only-employee"></label>
-                    <input asp-for="NewEmployee.StartedWorking" type="text" class="form-control-plaintext border-bottom only-employee mark-readonly datepicker" disabled asp-format="{0:dd/MM/yyyy}"  />
+                    <input asp-for="NewEmployee.StartedWorking" type="text" class="form-control-plaintext border-bottom only-employee mark-readonly datepicker" disabled asp-format="@AppUtility.AspDateFormatString"  />
                     <span asp-validation-for="NewEmployee.StartedWorking" class="text-danger-centarix"></span>
                 </div>
             </div>
@@ -442,15 +442,11 @@
                         @for (var i = 0; i < Model.OrderRoles.Count(); i++)
                         {
                             @Html.HiddenFor(model => model.OrderRoles[i].MenuItemsID)
-                            @Html.HiddenFor(model => model.OrderRoles[i].Name)
+                            @Html.HiddenFor(model => model.OrderRoles[i].StringWithName.StringDefinition)
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="OrderRoles[i].Selected" disabled />
-                                <label class="form-check-label " asp-for="OrderRoles[i].Selected">@Model.OrderRoles[i].Name</label>
+                                <label class="form-check-label " asp-for="OrderRoles[i].Selected">@Model.OrderRoles[i].StringWithName.StringName</label>
                             </div>
-                            @*<div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input mark-readonly" asp-for="OrderRoles[i].Selected" disabled />
-                                    <label class="custom-control-label" asp-for="OrderRoles[i].Selected">@Model.OrderRoles[i].Name</label>
-                                </div>*@
                         }
                     </div>
                 </div>
@@ -466,11 +462,11 @@
                         @for (var i = 0; i < Model.ProtocolRoles.Count(); i++)
                         {
                             @Html.HiddenFor(model => model.ProtocolRoles[i].MenuItemsID)
-                            @Html.HiddenFor(model => model.ProtocolRoles[i].Name)
+                            @Html.HiddenFor(model => model.ProtocolRoles[i].StringWithName.StringDefinition)
 
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="ProtocolRoles[i].Selected" disabled />
-                                <label class="form-check-label " asp-for="ProtocolRoles[i].Selected">@Model.ProtocolRoles[i].Name</label>
+                                <label class="form-check-label " asp-for="ProtocolRoles[i].Selected">@Model.ProtocolRoles[i].StringWithName.StringName</label>
                             </div>
                         }
                     </div>
@@ -487,10 +483,10 @@
                         @for (var i = 0; i < Model.OperationRoles.Count(); i++)
                         {
                             @Html.HiddenFor(model => model.OperationRoles[i].MenuItemsID)
-                            @Html.HiddenFor(model => model.OperationRoles[i].Name)
+                            @Html.HiddenFor(model => model.OperationRoles[i].StringWithName.StringDefinition)
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="OperationRoles[i].Selected" disabled />
-                                <label class="form-check-label " asp-for="OperationRoles[i].Selected">@Model.OperationRoles[i].Name</label>
+                                <label class="form-check-label " asp-for="OperationRoles[i].Selected">@Model.OperationRoles[i].StringWithName.StringName</label>
                             </div>
                         }
                     </div>
@@ -507,10 +503,10 @@
                         @for (var i = 0; i < Model.BiomarkerRoles.Count(); i++)
                         {
                             @Html.HiddenFor(model => model.BiomarkerRoles[i].MenuItemsID)
-                            @Html.HiddenFor(model => model.BiomarkerRoles[i].Name)
+                            @Html.HiddenFor(model => model.BiomarkerRoles[i].StringWithName.StringDefinition)
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="BiomarkerRoles[i].Selected" disabled />
-                                <label class="form-check-label " asp-for="BiomarkerRoles[i].Selected">@Model.BiomarkerRoles[i].Name</label>
+                                <label class="form-check-label " asp-for="BiomarkerRoles[i].Selected">@Model.BiomarkerRoles[i].StringWithName.StringName</label>
                             </div>
                         }
                     </div>
@@ -527,10 +523,10 @@
                         @for (var i = 0; i < Model.TimekeeperRoles.Count(); i++)
                         {
                             @Html.HiddenFor(model => model.TimekeeperRoles[i].MenuItemsID)
-                            @Html.HiddenFor(model => model.TimekeeperRoles[i].Name)
+                            @Html.HiddenFor(model => model.TimekeeperRoles[i].StringWithName.StringDefinition)
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="TimekeeperRoles[i].Selected" disabled />
-                                <label class="form-check-label " asp-for="TimekeeperRoles[i].Selected">@Model.TimekeeperRoles[i].Name</label>
+                                <label class="form-check-label " asp-for="TimekeeperRoles[i].Selected">@Model.TimekeeperRoles[i].StringWithName.StringName</label>
                             </div>
                         }
                     </div>
@@ -547,10 +543,10 @@
                         @for (var i = 0; i < Model.LabManagementRoles.Count(); i++)
                         {
                             @Html.HiddenFor(model => model.LabManagementRoles[i].MenuItemsID)
-                            @Html.HiddenFor(model => model.LabManagementRoles[i].Name)
+                            @Html.HiddenFor(model => model.LabManagementRoles[i].StringWithName.StringDefinition)
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="LabManagementRoles[i].Selected" disabled />
-                                <label class="form-check-label " asp-for="LabManagementRoles[i].Selected">@Model.LabManagementRoles[i].Name</label>
+                                <label class="form-check-label " asp-for="LabManagementRoles[i].Selected">@Model.LabManagementRoles[i].StringWithName.StringName</label>
                             </div>
                         }
                     </div>
@@ -567,10 +563,10 @@
                         @for (var i = 0; i < Model.AccountingRoles.Count(); i++)
                         {
                             @Html.HiddenFor(model => model.AccountingRoles[i].MenuItemsID)
-                            @Html.HiddenFor(model => model.AccountingRoles[i].Name)
+                            @Html.HiddenFor(model => model.AccountingRoles[i].StringWithName.StringDefinition)
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="AccountingRoles[i].Selected" disabled />
-                                <label class="form-check-label " asp-for="AccountingRoles[i].Selected">@Model.AccountingRoles[i].Name</label>
+                                <label class="form-check-label " asp-for="AccountingRoles[i].Selected">@Model.AccountingRoles[i].StringWithName.StringName</label>
                             </div>
                         }
                     </div>
@@ -587,10 +583,10 @@
                         @for (var i = 0; i < Model.ExpenseesRoles.Count(); i++)
                         {
                             @Html.HiddenFor(model => model.ExpenseesRoles[i].MenuItemsID)
-                            @Html.HiddenFor(model => model.ExpenseesRoles[i].Name)
+                            @Html.HiddenFor(model => model.ExpenseesRoles[i].StringWithName.StringDefinition)
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="ExpenseesRoles[i].Selected" disabled />
-                                <label class="form-check-label " asp-for="ExpenseesRoles[i].Selected">@Model.ExpenseesRoles[i].Name</label>
+                                <label class="form-check-label " asp-for="ExpenseesRoles[i].Selected">@Model.ExpenseesRoles[i].StringWithName.StringDefinition</label>
                             </div>
                         }
                     </div>
@@ -607,35 +603,35 @@
                         @for (var i = 0; i < Model.IncomeRoles.Count(); i++)
                         {
                             @Html.HiddenFor(model => model.IncomeRoles[i].MenuItemsID)
-                            @Html.HiddenFor(model => model.IncomeRoles[i].Name)
+                            @Html.HiddenFor(model => model.IncomeRoles[i].StringWithName.StringDefinition)
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="IncomeRoles[i].Selected" disabled />
-                                <label class="form-check-label " asp-for="IncomeRoles[i].Selected">@Model.IncomeRoles[i].Name</label>
+                                <label class="form-check-label " asp-for="IncomeRoles[i].Selected">@Model.IncomeRoles[i].StringWithName.StringName</label>
                             </div>
                         }
                     </div>
                 </div>
             </div>
             <div class="users-list">
-                <div class="row h-100">
-                    <div class="col-12 my-auto  p-0">
-                        <a href="" class="back-to-main-permissions mr-5 my-auto opac87"><i class="icon-arrow_back_ios-24px-1"></i></a>
-                        <img src="~/images/css/usericons/users_dropdown@2x.png" class="my-auto" width="40" />
-                        <span class="my-auto" style="font-size: 1.2em;">Users</span>
-                    </div>
-                    <div class="col-3 offset-1 mt-4">
-                        @for (var i = 0; i < Model.UserRoles.Count(); i++)
-                        {
-                            @Html.HiddenFor(model => model.UserRoles[i].MenuItemsID)
-                            @Html.HiddenFor(model => model.UserRoles[i].Name)
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="UserRoles[i].Selected" disabled />
-                                <label class="form-check-label " asp-for="UserRoles[i].Selected">@Model.UserRoles[i].Name</label>
-                            </div>
-                        }
-                    </div>
+            <div class="row h-100">
+                <div class="col-12 my-auto  p-0">
+                    <a href="" class="back-to-main-permissions mr-5 my-auto opac87"><i class="icon-arrow_back_ios-24px-1"></i></a>
+                    <img src="~/images/css/usericons/users_dropdown@2x.png" class="my-auto" width="40" />
+                    <span class="my-auto" style="font-size: 1.2em;">Users</span>
+                </div>
+                <div class="col-3 offset-1 mt-4">
+                    @for (var i = 0; i < Model.UserRoles.Count(); i++)
+                    {
+                        @Html.HiddenFor(model => model.UserRoles[i].MenuItemsID)
+                        @Html.HiddenFor(model => model.UserRoles[i].StringWithName.StringDefinition)
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="UserRoles[i].Selected" disabled />
+                            <label class="form-check-label " asp-for="UserRoles[i].Selected">@Model.UserRoles[i].StringWithName.StringName</label>
+                        </div>
+                    }
                 </div>
             </div>
+        </div>
         </div>
         <div id="budget" class="tab-pane fade @showBudget">
             <div class="row pb-3"><strong>Lab</strong></div>

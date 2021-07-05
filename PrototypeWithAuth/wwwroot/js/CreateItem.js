@@ -6,7 +6,7 @@
             var subcategoryID = $("#sublist").val()
             var pageType = $("#masterPageType").val()
             var itemName = $("#Requests_0__Product_ProductName").val()
-            var isRequestQuote = $(".isRequest").is(":checked")
+            var isRequestQuote = false; //always false until put back in //$(".isRequest").is(":checked")
             console.log(isRequestQuote)
             console.log("subcategory " + subcategoryID)
             if (subcategoryID != "") {
@@ -219,7 +219,7 @@
             $("#" + deletedid).val("true");
         }
     })
-    $('body').off('click', '.include-vat-radio').on('click', '.include-vat-radio', function (e) {
+    $('body').off('change', '.include-vat-radio').on('change', '.include-vat-radio', function (e) {
         console.log("radio click")
         var index = $(this).attr("index");
         var vatInfoClass = ".vat-info";
@@ -262,5 +262,16 @@
         });
         $('#addRequestComment').popover('toggle');
 
+    });
+
+    $('.open-history-item-modal').off('click').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        //alert('here')
+        //highlight this
+        $(this).parents('tr').addClass('gray-background');
+        $(this).parents('tr').addClass('current-item');
+        var $itemurl = "/Requests/HistoryItemModal/?id=" + $(this).attr("value") + "&SectionType=" + $("#masterSectionType").val();
+        $.fn.CallPageRequest($itemurl, 'historyItem');
     });
 })

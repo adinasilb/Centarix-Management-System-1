@@ -1,4 +1,12 @@
-﻿@{
-    ViewData["Title"] = "Favorites";
+﻿@model PrototypeWithAuth.ViewModels.ResourcesListIndexViewModel;
+@using PrototypeWithAuth.AppData; 
+
+@{
+    ViewData["Title"] = "ResourcesFavorites";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
+
+<input type="hidden" id="SidebarEnum" value="@TempData[AppUtility.TempDataTypes.SidebarType.ToString()]" />
+<div class="resources-favorites-partial">
+    @{ await Html.RenderPartialAsync("_ResourcesListIndex", Model);}
+</div>

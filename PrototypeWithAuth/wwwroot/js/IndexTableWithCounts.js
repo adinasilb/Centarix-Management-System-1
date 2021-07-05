@@ -1,5 +1,5 @@
-﻿$('.countStatus').off('click').click( function(e){
-    $('#pricePopover').popover('dispose');
+﻿$('.countStatus').off('click').click(function (e) {
+    $('.open-price-popover').popover('dispose');
     e.preventDefault()
     $(".active").removeClass("active")
     $(this).addClass("active")
@@ -12,10 +12,14 @@
     $.fn.ClearFilter(sectionType, isProprietary);
     var pageType = $('#masterPageType').val();
     var viewClass = pageType != 'RequestSummary' ? '_IndexTableWithCounts' : '_IndexTableWithProprietaryTabs';
+    console.log("viewclass: " + viewClass);
     ajaxPartialIndexTable(requestStatusId, "/Requests/" + viewClass, "." + viewClass, "GET")
 });
 
-
+/*$('.view-archived-requests').off('click').on('click', function () {
+    $(".active").removeClass("active");
+    ajaxPartialIndexTable
+});*/
 //function ajaxCallToPartialTable(status) {
 //    var selectedPriceSort = [];
 //    $("#priceSortContent .priceSort:checked").each(function (e) {

@@ -33,6 +33,7 @@ namespace PrototypeWithAuth.ViewModels
         public bool Paid { get; set; }
         public bool PayNow { get; set; }
         public bool PayLater { get; set; }
+        public bool IsReorder { get; set; }
 
         public List<DocumentFolder> DocumentsInfo { get; set; }
         //public List<string> OrderFileStrings { get; set; }
@@ -53,7 +54,6 @@ namespace PrototypeWithAuth.ViewModels
         //public List<IFormFile> PictureFiles { get; set; }
         //public List<IFormFile> ReturnFiles { get; set; }
         //public List<IFormFile> CreditFiles { get; set; }
-
 
         public FileInfo[] OrderFilesFound { get; set; }
         public IEnumerable<Comment> OldComments { get; set; }
@@ -84,5 +84,7 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.RequestModalType ModalType { get; set; }
         public bool IsProprietary { get; set; }
         public bool IsRequestQuote { get; set; }
+        public bool IsHistory { get; set; }
+        public PricePopoverViewModel PricePopoverViewModel { get; set; }
     }
 }

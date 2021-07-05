@@ -114,7 +114,7 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Requests",
-                        Controller = "Requests",
+                        Controller = "Requests", //redo to operations
                         Action = "Index",
                         RouteValues = new RouteValueDictionary()
                         {
@@ -130,7 +130,7 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Inventory",
-                        Controller = "Requests",
+                        Controller = "Requests", //redo to operations
                         Action = "IndexInventory",
                         RouteValues = new RouteValueDictionary()
                         {
@@ -276,76 +276,76 @@ namespace PrototypeWithAuth.AppData
                     break;
                 case AppUtility.MenuItems.Protocols:
                     ActiveClasses = " text-dark protocols-filter";
-                    if (pageType == AppUtility.PageTypeEnum.ProtocolsWorkflow) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Workflow",
-                        Controller = "Protocols",
-                        Action = "CurrentProtocols",
-                        RouteValues = new RouteValueDictionary()
-                        {
-                        {"PageType", AppUtility.PageTypeEnum.ProtocolsWorkflow },
-                        {"SidebarType", AppUtility.SidebarEnum.CurrentProtocols }
-                        },
-                        Classes = AllClasses,
-                        ID = ""
-                    });
-                    if (pageType == AppUtility.PageTypeEnum.ProtocolsProtocols) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Protocols",
-                        Controller = "Protocols",
-                        Action = "Index",
-                        RouteValues = new RouteValueDictionary()
-                        {
-                        {"PageType", AppUtility.PageTypeEnum.ProtocolsProtocols },
-                        {"SidebarType", AppUtility.SidebarEnum.List }
-                        },
-                        Classes = AllClasses,
-                        ID = ""
-                    });
-                    if (pageType == AppUtility.PageTypeEnum.ProtocolsCreate) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Create",
-                        Controller = "Protocols",
-                        Action = "ResearchProtocol",
-                        RouteValues = new RouteValueDictionary()
-                        {
-                        {"PageType", AppUtility.PageTypeEnum.ProtocolsCreate},
-                        {"SidebarType", AppUtility.SidebarEnum.ResearchProtocol }
-                        },
-                        Classes = AllClasses,
-                        ID = ""
-                    });
+                    //if (pageType == AppUtility.PageTypeEnum.ProtocolsWorkflow) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    //MainMenuItems.Add(new MenuItems()
+                    //{
+                    //    Description = "Workflow",
+                    //    Controller = "Protocols",
+                    //    Action = "CurrentProtocols",
+                    //    RouteValues = new RouteValueDictionary()
+                    //    {
+                    //    {"PageType", AppUtility.PageTypeEnum.ProtocolsWorkflow },
+                    //    {"SidebarType", AppUtility.SidebarEnum.CurrentProtocols }
+                    //    },
+                    //    Classes = AllClasses,
+                    //    ID = ""
+                    //});
+                    //if (pageType == AppUtility.PageTypeEnum.ProtocolsProtocols) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    //MainMenuItems.Add(new MenuItems()
+                    //{
+                    //    Description = "Protocols",
+                    //    Controller = "Protocols",
+                    //    Action = "Index",
+                    //    RouteValues = new RouteValueDictionary()
+                    //    {
+                    //    {"PageType", AppUtility.PageTypeEnum.ProtocolsProtocols },
+                    //    {"SidebarType", AppUtility.SidebarEnum.List }
+                    //    },
+                    //    Classes = AllClasses,
+                    //    ID = ""
+                    //});
+                    //if (pageType == AppUtility.PageTypeEnum.ProtocolsCreate) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    //MainMenuItems.Add(new MenuItems()
+                    //{
+                    //    Description = "Create",
+                    //    Controller = "Protocols",
+                    //    Action = "ResearchProtocol",
+                    //    RouteValues = new RouteValueDictionary()
+                    //    {
+                    //    {"PageType", AppUtility.PageTypeEnum.ProtocolsCreate},
+                    //    {"SidebarType", AppUtility.SidebarEnum.ResearchProtocol }
+                    //    },
+                    //    Classes = AllClasses,
+                    //    ID = ""
+                    //});
                     if (pageType == AppUtility.PageTypeEnum.ProtocolsReports) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Report",
                         Controller = "Protocols",
-                        Action = "DailyReports",
+                        Action = "ReportsCategories",
                         RouteValues = new RouteValueDictionary()
                         {
                         {"PageType", AppUtility.PageTypeEnum.ProtocolsReports },
-                        {"SidebarType", AppUtility.SidebarEnum.DailyReports }
+                        {"SidebarType", AppUtility.SidebarEnum.WeeklyReports }
                         },
                         Classes = AllClasses,
                         ID = ""
                     });
-                    if (pageType == AppUtility.PageTypeEnum.ProtocolsResources) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Resources",
-                        Controller = "Protocols",
-                        Action = "Library",
-                        RouteValues = new RouteValueDictionary()
-                        {
-                        {"PageType", AppUtility.PageTypeEnum.ProtocolsResources },
-                        {"SidebarType", AppUtility.SidebarEnum.Library }
-                        },
-                        Classes = AllClasses,
-                        ID = ""
-                    });
+                    //if (pageType == AppUtility.PageTypeEnum.ProtocolsResources) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    //MainMenuItems.Add(new MenuItems()
+                    //{
+                    //    Description = "Resources",
+                    //    Controller = "Protocols",
+                    //    Action = "Library",
+                    //    RouteValues = new RouteValueDictionary()
+                    //    {
+                    //    {"PageType", AppUtility.PageTypeEnum.ProtocolsResources },
+                    //    {"SidebarType", AppUtility.SidebarEnum.Library }
+                    //    },
+                    //    Classes = AllClasses,
+                    //    ID = ""
+                    //});
                     break;
                 case AppUtility.MenuItems.Reports:
                     ActiveClasses = " text-dark expenses-filter";
@@ -1153,7 +1153,7 @@ namespace PrototypeWithAuth.AppData
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Last Item",
-                Controller = "Requests",
+                Controller = "Requests",//"Operations",
                 Action = "Index",
                 RouteValues = new RouteValueDictionary()
                         {
@@ -1170,7 +1170,7 @@ namespace PrototypeWithAuth.AppData
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Add Item",
-                Controller = "Requests",
+                Controller = "Requests",//"Operations",
                 Action = "AddItemView",
                 RouteValues = new RouteValueDictionary()
                 {
@@ -1180,7 +1180,7 @@ namespace PrototypeWithAuth.AppData
                 },
                 Classes = CurrentClasses,
                 IconName = "icon-add_circle_outline-24px1",
-                AjaxLink = "add-item-sidebar"               
+                AjaxLink = "add-item-sidebar"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Type) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1597,7 +1597,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "SharedProjects",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
-                IconName = "icon-monetization_on-24px"
+                IconName = "icon-notification_shared-24px"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Calendar) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1656,7 +1656,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "ProtocolsSharedWithMe",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
-                IconName = "icon-monetization_on-24px"
+                IconName = "icon-notification_shared-24px"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.LastProtocol) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1739,51 +1739,63 @@ namespace PrototypeWithAuth.AppData
             return SidebarMenuItems;
         }
         public static List<MenuItems> CreateProtocolsReportsSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses)
-            {
-                List<MenuItems> SidebarMenuItems = new List<MenuItems>();
-                string CurrentClasses = OrigClasses;
+        {
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
 
-                if (SidebarTitle == AppUtility.SidebarEnum.DailyReports) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-                SidebarMenuItems.Add(new MenuItems()
-                {
-                    Description = "Daily Reports",
-                    Controller = "Protocols",
-                    Action = "DailyReports",
-                    RouteValues = new RouteValueDictionary(),
-                    Classes = CurrentClasses,
-                    IconName = "icon-assignment_ind-24px-1"
-                });
-                if (SidebarTitle == AppUtility.SidebarEnum.WeeklyReports) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-                SidebarMenuItems.Add(new MenuItems()
-                {
-                    Description = "Weekly Reports",
-                    Controller = "Protocols",
-                    Action = "WeeklyReports",
-                    RouteValues = new RouteValueDictionary(),
-                    Classes = CurrentClasses,
-                    IconName = "icon-access_time-24px"
-                });
-                if (SidebarTitle == AppUtility.SidebarEnum.MonthlyReports) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-                SidebarMenuItems.Add(new MenuItems()
-                {
-                    Description = "Monthly Reports",
-                    Controller = "Protocols",
-                    Action = "MonthlyReports",
-                    RouteValues = new RouteValueDictionary(),
-                    Classes = CurrentClasses,
-                    IconName = "icon-monetization_on-24px"
-                });
-                if (SidebarTitle == AppUtility.SidebarEnum.SharedWithMe) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-                SidebarMenuItems.Add(new MenuItems()
-                {
-                    Description = "Shared With Me",
-                    Controller = "Protocols",
-                    Action = "ReportsSharedWithMe",
-                    RouteValues = new RouteValueDictionary(),
-                    Classes = CurrentClasses,
-                    IconName = "icon-monetization_on-24px"
-                });
-                return SidebarMenuItems;
+            //if (SidebarTitle == AppUtility.SidebarEnum.DailyReports) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            //SidebarMenuItems.Add(new MenuItems()
+            //{
+            //    Description = "Daily Reports",
+            //    Controller = "Protocols",
+            //    Action = "DailyReports",
+            //    RouteValues = new RouteValueDictionary(),
+            //    Classes = CurrentClasses,
+            //    IconName = "icon-assignment_ind-24px-1"
+            //});
+            if (SidebarTitle == AppUtility.SidebarEnum.WeeklyReports) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Weekly Reports",
+                Controller = "Protocols",
+                Action = "ReportsCategories",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-access_time-24px"
+            });
+            //if (SidebarTitle == AppUtility.SidebarEnum.MonthlyReports) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            //SidebarMenuItems.Add(new MenuItems()
+            //{
+            //    Description = "Monthly Reports",
+            //    Controller = "Protocols",
+            //    Action = "MonthlyReports",
+            //    RouteValues = new RouteValueDictionary(),
+            //    Classes = CurrentClasses,
+            //    IconName = "icon-monetization_on-24px"
+            //});
+            //if (SidebarTitle == AppUtility.SidebarEnum.Favorites) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            //SidebarMenuItems.Add(new MenuItems()
+            //{
+            //    Description = "Favorites",
+            //    Controller = "Protocols",
+            //    Action = "ReportsFavorites",
+            //    RouteValues = new RouteValueDictionary(),
+            //    Classes = CurrentClasses,
+            //    IconName = "icon-favorite_border-24px"
+            //});
+            //if (SidebarTitle == AppUtility.SidebarEnum.SharedWithMe) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            //SidebarMenuItems.Add(new MenuItems()
+            //{
+            //    Description = "Shared With Me",
+            //    Controller = "Protocols",
+            //    Action = "ReportsSharedWithMe",
+            //    RouteValues = new RouteValueDictionary(),
+            //    Classes = CurrentClasses,
+            //    IconName = "icon-notification_shared-24px"
+            //});
+            
+            return SidebarMenuItems;
+
         }
         public static List<MenuItems> CreateProtocolsResourcesSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses)
         {
@@ -1818,7 +1830,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "ResourcesSharedWithMe",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
-                IconName = "icon-monetization_on-24px"
+                IconName = "icon-notification_shared-24px"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Favorites) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1826,9 +1838,11 @@ namespace PrototypeWithAuth.AppData
                 Description = "Favorites",
                 Controller = "Protocols",
                 Action = "ResourcesFavorites",
-                RouteValues = new RouteValueDictionary(),
+                RouteValues = new RouteValueDictionary() {
+                    { "SidebarEnum" , AppUtility.SidebarEnum.Favorites }
+                },
                 Classes = CurrentClasses,
-                IconName = "icon-monetization_on-24px"
+                IconName = "icon-favorite_border-24px"
             });
             return SidebarMenuItems;
         }

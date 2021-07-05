@@ -6,8 +6,11 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PrototypeWithAuth.AppData;
@@ -20,17 +23,12 @@ namespace PrototypeWithAuth.Controllers
 {
     public class HomeController : SharedController
     {
-        private readonly ApplicationDbContext _context;
-        private readonly ILogger<HomeController> _logger;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly UrlEncoder _urlEncoder;
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
-        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, UrlEncoder urlEncoder):base(context)
+        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, UrlEncoder urlEncoder, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
+            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
-            _context = context;
-            _logger = logger;
-            _userManager = userManager;
             _urlEncoder = urlEncoder;
         }
 
@@ -267,7 +265,7 @@ namespace PrototypeWithAuth.Controllers
                     requestNotification.IsRead = false;
                     requestNotification.RequestName = request.Product.ProductName;
                     requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                    requestNotification.Description = "should have arrived " + request.ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).ToString("dd/MM/yyyy");
+                    requestNotification.Description = "should have arrived " + AppUtility.FormatDate(request.ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0));
                     requestNotification.NotificationStatusID = 1;
                     requestNotification.TimeStamp = DateTime.Now;
                     requestNotification.Controller = "Requests";
@@ -284,14 +282,15 @@ namespace PrototypeWithAuth.Controllers
         {
 
                 var eh = _context.EmployeeHours.Where(r => r.EmployeeID == user.Id).Where(r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null && r.TotalHours == null) || (r.Entry2 != null && r.Exit2 == null))
-                    .Where(r => r.Date.Date >=lastUpdate.Date && r.Date.Date < DateTime.Today);
+                    .Where(r => r.Date.Date >=lastUpdate.Date && r.Date.Date < DateTime.Today).Where(r => r.CompanyDayOffID==null)
+                    .Where(r => r.EmployeeHoursAwaitingApproval == null);
                 foreach (var e in eh)
                 {
                     TimekeeperNotification timekeeperNotification = new TimekeeperNotification();
                     timekeeperNotification.EmployeeHoursID = e.EmployeeHoursID;
                     timekeeperNotification.IsRead = false;
                     timekeeperNotification.ApplicationUserID = e.EmployeeID;
-                    timekeeperNotification.Description = "no hours reported for " + e.Date.ToString("dd/MM/yyyy");
+                    timekeeperNotification.Description = "no hours reported for " + AppUtility.FormatDate(e.Date);
                     timekeeperNotification.NotificationStatusID = 5;
                     timekeeperNotification.TimeStamp = DateTime.Now;
                     timekeeperNotification.Controller = "Timekeeper";

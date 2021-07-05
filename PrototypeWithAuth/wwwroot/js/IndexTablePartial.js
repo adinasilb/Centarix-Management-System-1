@@ -1,4 +1,6 @@
-﻿$(".more").off('click').click(function () {
+﻿//const { ajax } = require("jquery");
+
+$(".popover-more").off('click').click(function () {
 	var val = $(this).val();
 	$('[data-toggle="popover"]').popover('dispose');
 	$(this).popover({
@@ -10,9 +12,11 @@
 		}
 	});
 	$(this).popover('toggle');
-	$(".popover").off("click").on("click", ".share-request-fx", function () {
-		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
-		//alert("url: " + url);
+	$(".popover .share-request-fx").click(function (e) {
+		e.preventDefault();
+		//switch this to universal share request and the modelsenum send in
+		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?ID=" + $(this).attr("data-route-request") + "&ModelsEnum=Request";
+
 		$.ajax({
 			async: true,
 			url: url,
@@ -20,12 +24,41 @@
 			type: "GET",
 			cache: false,
 			success: function (data) {
-				$.fn.OpenModal("share-request-modal", "share-request", data)
-				$.fn.EnableMaterialSelect('#userlist', 'select-options-userlist')
+				$.fn.OpenModal("shared-modal", "share-modal", data)
+				$.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs')
 				$("#loading").hide();
 				return false;
 			}
 		})
+	});
+	$(".icon-more-popover").off("click").on("click", ".remove-share", function (e) {
+		var ControllersEnum = "";
+		var shareNum = "";
+		if ($(this).hasClass("requests")) { //THIS IF IS NOT WORKING
+			ControllersEnum = "Requests";
+		}
+		shareNum = $(this).attr("data-share-resource-id");
+		var url = "/" + ControllersEnum + "/RemoveShare?ID=" + shareNum + "&ModelsEnum=" + $("#masterSectionType").val();
+		
+		$.ajax({
+			async: true,
+			url: url,
+			type: 'GET',
+			cache: true,
+			success: function (e) {
+				if (!e) {
+					$.ajax({
+						async: true,
+						url: "/Requests/_IndexSharedTable",
+						type: 'GET',
+						cache: true,
+						success: function (data) {
+							$("._IndexSharedTable").html(data);
+						}
+					})
+				}
+			}
+		});
 	});
 
 });
@@ -86,15 +119,11 @@ $(".load-quote-details").on("click", function (e) {
 });
 
 
-$(".load-order-details").off('click').on("click", function (e) {
+$("body").off("click").on("click", ".load-order-details", function (e) {
 	console.log("in order details");
 	e.preventDefault();
 	e.stopPropagation();
 	$("#loading").show();
-	var selectedPriceSort = [];
-	$("#priceSortContent .priceSort:checked").each(function (e) {
-		selectedPriceSort.push($(this).attr("enum"));
-	})
 	var section = $("#masterSectionType").val()
 	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
 	var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString()
@@ -113,13 +142,16 @@ $(".load-product-details").off('click').on("click", function (e) {
 
 //$("body, .modal").off('click', ".load-product-details-summary").on("click", ".load-product-details-summary", function (e) {
 
-$(".load-product-details-summary").off('click').on("click", function (e) {
+$(".load-product-details-summary").off('click').on("click", function (e) { 
 
 	e.preventDefault();
 	e.stopPropagation();
 	$("#loading").show();
+	console.log('in load products details summary');
 	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
-	var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false" + "&SectionType=" + $("#masterSectionType").val();
+	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
+	var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false" + "&SectionType=" + $("#masterSectionType").val() + "&isProprietary=" + isProprietary;
+	/*alert("$itemurl: " + $itemurl);*/
 	$.fn.CallPageRequest($itemurl, "summary");
 	return false;
 });
@@ -147,9 +179,9 @@ $(".approve-order").off('click').on("click", function (e) {
 	var val = $(this).attr("value");
 	e.preventDefault();
 	$("#loading").show();
-	console.log(".order-type" + val)
+	console.log($(".order-type" + val).val())
 	if ($(".order-type" + val).val() == "1") {
-		console.log("terms")
+		console.log("confirm email")
 		$.ajax({
 			async: true,
 			url: "/Requests/Approve/?id=" + val,
@@ -157,7 +189,7 @@ $(".approve-order").off('click').on("click", function (e) {
 			type: "GET",
 			cache: false,
 			success: function (data) {
-				$.fn.OpenModal("termsModal", "terms", data)
+				$.fn.OpenModal("emailModal", "confirm-email", data)
 				$("#loading").hide();
 			}
 		})
@@ -182,57 +214,70 @@ $(".approve-order").off('click').on("click", function (e) {
 	return false;
 });
 
-$(".request-favorite").on("click", function (e) {
-	var emptyHeartClass = "icon-favorite_border-24px";
-	var fullHeartClass = "icon-favorite-24px";
-	var fav = "request-favorite";
-	var unfav = "request-unlike";
-	var title = "Like";
-	var requestFavorite = $(this);
-	var FavType = "favorite";
-	var sidebarType = $('#masterSidebarType').val();
-	if (requestFavorite.hasClass("request-unlike")) {
-		FavType = "unlike";
-		$.ajax({
-			async: true,
-			url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
-			traditional: true,
-			type: "GET",
-			cache: false,
-			success: function (data) {
-				requestFavorite.children("i").addClass(emptyHeartClass);
-				requestFavorite.children("i").removeClass(fullHeartClass);
-				requestFavorite.attr("data-original-title", title);
-				requestFavorite.removeClass(unfav);
-				$("#loading").hide();
-				if (sidebarType == 'Favorites') {
-					$('[data-toggle="tooltip"]').tooltip('dispose'); //is this the right syntax?
-					$('._IndexTable').html(data);
-				}
-			}
-		})
-	}
-	else {
-		title = "Unlike";
-		$.ajax({
-			async: true,
-			url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
-			traditional: true,
-			type: "GET",
-			cache: false,
-			success: function (data) {
-				requestFavorite.children("i").removeClass(emptyHeartClass);
-				requestFavorite.children("i").addClass(fullHeartClass);
-				requestFavorite.attr("data-original-title", title);
-				requestFavorite.addClass(unfav);
-				$("#loading").hide();
-				
-			}
-		})
-	}
 
+var requestFavoritesHasRun = false; //This is preventing the double click
+$(".request-favorite").off("click").on("click", function (e) {
+	//$(this).off("click");
+	//alert("in click fr");
+	if (!requestFavoritesHasRun) {
+		requestFavoritesHasRun = true;
+		$("#loading").show();
+		var requestFavorite = $(this);
+		//alert(" in favorite request fx");
+		var emptyHeartClass = "icon-favorite_border-24px";
+		var fullHeartClass = "icon-favorite-24px";
+		var unfav = "request-unlike";
+		var title = "Favorite";
+		var FavType = "favorite";
+		var sidebarType = $('#masterSidebarType').val();
+		if (requestFavorite.hasClass("request-unlike")) {
+			FavType = "unlike";
+			$.ajax({
+				async: true,
+				url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
+				traditional: true,
+				type: "GET",
+				cache: false,
+				success: function (data) {
+					requestFavoritesHasRun = false;
+					requestFavorite.children("i").addClass(emptyHeartClass);
+					requestFavorite.children("i").removeClass(fullHeartClass);
+					requestFavorite.attr("data-original-title", title);
+					requestFavorite.removeClass(unfav);
+					$("#loading").hide();
+					if (sidebarType == 'Favorites') {
+						$('[data-toggle="tooltip"]').tooltip('dispose'); //is this the right syntax?
+						$('._IndexTable').html(data);
+					}
+				}
+			})
+		}
+		else {
+			title = "Unfavorite";
+			$.ajax({
+				async: true,
+				url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
+				traditional: true,
+				type: "GET",
+				cache: false,
+				success: function (data) {
+					requestFavoritesHasRun = false;
+					requestFavorite.children("i").removeClass(emptyHeartClass);
+					requestFavorite.children("i").addClass(fullHeartClass);
+					requestFavorite.attr("data-original-title", title);
+					requestFavorite.addClass(unfav);
+					$("#loading").hide();
+
+				}
+			})
+		}
+		//$.fn.FavoriteRequests(requestFavorite);
+	}
 });
 
+$.fn.FavoriteRequests = function (requestFavorite) {
+
+};
 
 $(".create-calibration").off('click').on("click", function (e) {
 	e.preventDefault();
@@ -280,10 +325,10 @@ $(".load-terms-modal").on("click", function (e) {
 	return false;
 });
 
-function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "", months, years) {
+function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "", months, years, isArchive) {
 	console.log("in ajax partial index call" + url);
 	var selectedPriceSort = [];
-	$("#priceSortContent .priceSort:checked").each(function (e) {
+	$("#priceSortContent1 .priceSort:checked").each(function (e) {
 		selectedPriceSort.push($(this).attr("enum"));
 	})
 	var contentType = true;
@@ -302,7 +347,8 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClas
 			CategorySelected: $('#categorySortContent .select-category').is(":checked"),
 			SubCategorySelected: $('#categorySortContent .select-subcategory').is(":checked"),
 			months: months,
-			years: years
+			years: years,
+			IsArchive: isArchive
 		};
 		console.log(formdata);
 	}

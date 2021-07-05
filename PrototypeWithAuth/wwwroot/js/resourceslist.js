@@ -12,9 +12,10 @@
 		});
 	});
 
-	$(".favorite-protocol").on("click", function (e) {
-		var fullIcon = "icon-favorite-24px";
-		var emptyIcon = "icon-favorite_border-24px";
+	$(".resource-icons .favorite").on("click", function (e) {
+		var fullIcon = $(".FilledIn").attr("filled-value");
+		var emptyIcon = $(".Empty").attr("filled-value");
+		var reloadPageBool = $(this).attr("data-reload");
 		var url = "/Protocols/FavoriteResources?ResourceID=" + $(this).val() + "&Favorite=";
 		var icon = $(this).children("i");
 		if (icon.hasClass(emptyIcon)) {
@@ -29,15 +30,44 @@
 			type: 'GET',
 			cache: true,
 			success: function (data) {
-				if (icon.hasClass(emptyIcon)) {
-					icon.removeClass(emptyIcon);
-					icon.addClass(fullIcon);
+				if (reloadPageBool == "True") {
+					$.ajax({
+						async: true,
+						url: "/Protocols/_ResourcesListIndex?sidebarEnum=" + $("#SidebarEnum").val(),
+						type: 'GET',
+						cache: true,
+						success: function (results) {
+							$(".resources-favorites-partial").html(results);
+						}
+					});
 				}
 				else {
-					icon.addClass(emptyIcon);
-					icon.removeClass(fullIcon);
+					if (icon.hasClass(emptyIcon)) {
+						icon.removeClass(emptyIcon);
+						icon.addClass(fullIcon);
+					}
+					else {
+						icon.addClass(emptyIcon);
+						icon.removeClass(fullIcon);
+					}
 				}
 			}
 		});
 	});
+
+	$(".resource-icons .share").on("click", function (e) {
+		var url = "/Protocols/ShareModal?ID=" + $(this).val() + "&ModelsEnum=Resource"; 
+		$.ajax({
+			async: true,
+			url: url,
+			type: 'GET',
+			cache: true,
+			success: function (data) {
+				$.fn.OpenModal("shared-modal", "share-modal", data);
+				$.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs')
+			}
+		});
+	});
+
+	
 });

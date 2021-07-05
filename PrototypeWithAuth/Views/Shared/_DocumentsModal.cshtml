@@ -31,12 +31,19 @@
         color = "lab-man-filter";
         sectionType = AppUtility.MenuItems.LabManagement.ToString();
     }
+    else if (Model.SectionType == AppUtility.MenuItems.Accounting)
+    {
+        form = "accounting-form";
+        bcColor = "accounting-background-color";
+        color = "accounting-filter";
+        sectionType = AppUtility.MenuItems.Accounting.ToString();
+    }
     else if (Model.SectionType == AppUtility.MenuItems.Protocols)
     {
         form = "protocol-form";
         bcColor = "protocols-background-color";
         color = "protocols-color";
-        sectionType = AppUtility.MenuItems.LabManagement.ToString();
+        sectionType = AppUtility.MenuItems.Protocols.ToString();
     }
     var bcColorToUse = bcColor;
     var colorToUse = color;
@@ -75,7 +82,7 @@
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
 
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding documentModalForm" id="myForm">
-                
+
                 <button type="button" class="close modal-close-padding modal-close-style close-document-modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -84,7 +91,7 @@
             <input type="hidden" asp-for="Requests[x].RequestID" />
         }*@
                 <input type="hidden" asp-for="FolderName" />
-
+                <input type="hidden" asp-for="DontAllowMultiple" />
                 <input type="hidden" asp-for="ParentFolderName" />
                 <input type="hidden" asp-for="SectionType" />
                 <input type="hidden" asp-for="ObjectID" />
@@ -92,8 +99,9 @@
                 <input type="hidden" id="bcColor" class="@bcColor" />
                 <input type="hidden" id="color" class="@color" />
                 <input type="hidden" asp-for="ShowSwitch" />
+                <input type="hidden" asp-for="DontAllowMultiple" />
                 <input type="hidden" asp-for="IsEdittable" class="@markDisabled isEdittable" />
-                <a href="" class="open-document-modal active-document-modal  @sectionType  withinDocModal" data-string="@Model.FolderName" data-id="@Model.ObjectID" style="display: none;" data-val="@Model.IsEdittable" showSwitch="@Model.ShowSwitch"></a>
+
                 <div class="modal-header modal-header-padding">
                     <div class="container">
                         <div class="row">
@@ -113,7 +121,7 @@
                         @{
                             var switchDescription = Model.IsEdittable ? "Edit Mode On" : "Edit Mode Off";
                         }
-                        <label class="edit-mode-switch-description"> @switchDescription</label>
+                        <label class="edit-mode-switch-description disa"> @switchDescription</label>
                         <input type="checkbox" class="turn-edit-doc-on-off operations" @isChecked @*value="@Model.Request.RequestID"*@>
                         <span class="lever"></span>
                     </label>
@@ -166,13 +174,19 @@
                                                     <div class="col-12 col-md-4 m-0">
                                                         @if (ModelCount > i)
                                                         {
-                                                            <div class="card iframe-container document-border m-0">
+                                                            var iframeFilestring = Model.FileStrings[i];
+                                                            var ext = iframeFilestring.Split(".").Last();
+                                                            if ( ext== "pptx" || ext == "ppt")
+                                                            {
+                                                                iframeFilestring = "";
+                                                            }
+                                                                <div class="card iframe-container document-border m-0">
                                                                 <div class="card-body responsive-iframe-container">
                                                                     @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
 
                                                                     @*<a href="@Model.FileStrings[i]" class="linkwrap" target="_blank">
                                                             <div class="blocker"></div>*@
-                                                                    <iframe src="\@Model.FileStrings[i]" title="View" class="responsive-iframe" scrolling="no"></iframe>
+                                                                    <iframe src="\@iframeFilestring" title="View" class="responsive-iframe" scrolling="no" ></iframe>
 
                                                                     @*</a>*@
                                                                 </div>
@@ -240,13 +254,29 @@
                         {
                             <div class="upload-btn-wrapper between-button-margin">
                                 <button class="custom-button custom-button-font @bcColorToUse  upload-file document-modal-buttons" data-string="@Model.FolderName">Upload A File</button>
+
                                 @if (disabled)
                                 {
-                                    <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf .docx .doc" multiple disabled />
+                                    @if (Model.DontAllowMultiple)
+                                    {
+                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf .docx .doc" disabled />
+                                    }
+                                    else
+                                    {
+                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf .docx .doc" multiple disabled/>
+                                    }
                                 }
                                 else
                                 {
-                                    <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf" multiple />
+                                    @if (Model.DontAllowMultiple)
+                                    {
+
+                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" />
+                                    }
+                                    else
+                                    {
+                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" multiple />
+                                    }
                                 }
 
                             </div>
@@ -256,14 +286,19 @@
                         @{
                             var saveClass = "";
                             var cancelClass = "d-none";
+                            var saveButtonText = "Save";
                         }
                         @if (disabled)
                         {
                             saveClass = "d-none";
                             cancelClass = "";
                         }
+                         @if(Model.ParentFolderName == AppUtility.ParentFolderName.Reports)
+                         {
+                             saveButtonText = "Add";
+                         }
                         <button type="button" class="custom-button custom-button-font @bcColorToUse @saveClass document-modal-save document-modal-buttons close-document-modal" @*data-dismiss="modal"*@ aria-label="Close" @*onclick="$('.documents').html('');*@>
-                            Save
+                            @saveButtonText
                         </button>
                         <button type="button" class="custom-button custom-cancel @cancelClass  document-modal-cancel close-document-modal" @*data-dismiss="modal"*@ aria-label="Close" @*onclick="$('.documents').html('');*@>
                             Cancel

@@ -7,12 +7,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class FavoriteResource
+    public class FavoriteResource :FavoriteBase
     {
-        [Key]
-        public int FavoriteResourceID { get; set; }
         public int ResourceID { get; set; }
-        public string ApplicationUserID { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
+        public Resource Resource { get; set; }
     }
 }

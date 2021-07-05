@@ -107,7 +107,7 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<RequestNotification> RequestNotifications { get; set; }
         public string OrderType { get; set; }
 
-
+      
 
 
         //payment info
@@ -208,17 +208,10 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public bool Ignore { get; set; }
         public bool IsReceived { get; set; }
-        private bool? _IncludeVAT;
-        public bool? IncludeVAT { get
-            {
-                return _IncludeVAT!=null && _IncludeVAT==true;
-            }
-            set {
-                _IncludeVAT = value;
-            } 
-        }
+        public bool IncludeVAT { get; set; }
 
         public IEnumerable<ShareRequest> ShareRequests { get; set; }
         public IEnumerable<FavoriteRequest> FavoriteRequests { get; set; }
+        public bool IsArchived { get; set; }
     }
 }

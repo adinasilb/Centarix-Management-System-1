@@ -1,0 +1,204 @@
+﻿@model PrototypeWithAuth.ViewModels.ReceivedModalVisualViewModel
+
+@if (Model.DeleteTable == false)
+{
+    <script src="~/js/receivedmodal.js"></script>
+
+    //This is the current dynamically populated list sent into the controller:
+    var pCount = Model.LocationInstancePlaces?.Count ?? 0;
+    for (int p = 0; p < pCount; p++)
+    {
+        <input type="hidden" asp-for="LocationInstancePlaces[p].LocationInstanceId" />
+        <input type="hidden" asp-for="LocationInstancePlaces[p].Placed" value="@Model.LocationInstancePlaces[p].Placed.ToString().ToLower()" class="liid @Model.LocationInstancePlaces[p].LocationInstanceId" />
+    }
+
+<table class="table p-0 m-0 visual-locations">
+    @{
+        int z = -1;
+        var is12X12Class = "";
+        if (Model.ParentLocationInstance.Height == 12)
+        {
+            is12X12Class = "is12X12";
+        }
+    }
+    @{
+        var inReceivedModal = Model.RequestChildrenLocationInstances == null;
+        var disabledEdit = "";
+        if (Model.IsEditModalTable)
+        {
+            disabledEdit = "disabled mark-readonly";
+        }
+        var locationsList = Model.ChildrenLocationInstances?.ToList();
+        if (Model.ChildrenLocationInstances == null)
+        {
+            locationsList = Model.RequestChildrenLocationInstances.Select(r => r.LocationInstance).ToList();
+        }
+        @Html.HiddenFor(vm => vm.ParentLocationInstance.LocationInstanceID)
+        @Html.HiddenFor(vm => vm.IsEditModalTable)
+        @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
+        {
+            <tr class="p-0 m-0">
+                @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+                {
+                    z++;
+                    @if (locationsList.Count() > z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                    {
+                        if (Model.ChildrenLocationInstances == null)
+                        {
+                            @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceID)
+                            @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceParentID)
+                            @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceAbbrev)
+                            @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceName)
+                            @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.LocationTypeID)
+                            @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.IsFull)
+                            @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.IsEmptyShelf)
+                            @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].IsThisRequest)
+                        }
+                        else
+                        {
+                            @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID)
+                            @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceParentID)
+                            @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceAbbrev)
+                            @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceName)
+                        }
+                        @*@Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceName, @class="LocationInstanceName");*@
+                        @*<input type="hidden" asp-for="ChildrenLocationInstances[z].LocationInstanceName" class="LocationInstanceName" />*@
+
+                    var link = "";
+                    var classes = "css-checkbox " + locationsList[z].LocationInstanceID;
+                    var outerClass = "visual-shelf";
+                    var iconClass = "icon-add_circle_outline-24px1 add-location tga";
+                    var hideIcon = "";
+                    if(!inReceivedModal && !Model.ShowIcons)
+                    {
+                        hideIcon = "d-none";
+                    }
+                    var description = locationsList[z].LocationInstanceAbbrev;
+                    var id = "ChildrenLocationInstances_" + z;
+                    var name = "ChildrenLocationInstances[" + z + "]";
+                    if (Model.ChildrenLocationInstances == null)
+                    {
+                        id = "Request" + id + "__LocationInstance";
+                        name = "Request" + name + ".LocationInstance";
+                    }
+
+                    var liID = locationsList[z].LocationInstanceID;
+                    if (locationsList[z].LocationTypeID == 103 || locationsList[z].LocationTypeID == 204)
+                    {
+                        outerClass = "visual-box " + is12X12Class;
+                    }
+                    var labelClass = "tiny-label-font-size m-0";
+
+                    if (locationsList[z].IsEmptyShelf)
+                    {
+                        if (!inReceivedModal && Model.RequestChildrenLocationInstances[z].IsThisRequest)
+                        {
+                            outerClass += " location-selected";
+                            iconClass = "icon-delete-24px ";
+                            if (!Model.ShowIcons)
+                            {
+                                hideIcon = "d-none";
+                            }
+                        }
+                            <td class="@outerClass @disabledEdit" style="padding:0px;" id="@locationsList[z].LocationInstanceID">
+                                <div>
+                                    <input class="@classes " id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
+                                    <div class="row-1"><i class="@iconClass @hideIcon location-icon "></i></div>@*hide till edit on*@
+                                    <div class="row-2 text-left">
+                                        <label class="@labelClass">@locationsList[z].LocationInstanceAbbrev</label>
+                                    </div>
+                                </div>
+                            </td>
+                        }
+                        else if ((locationsList[z].LocationTypeID == 201 || locationsList[z].LocationTypeID == 502) && !locationsList[z].IsEmptyShelf)
+                        {
+                            <td class="@outerClass not-clickable" style="padding:0px;" id="@(id+".LocationInstanceID")">
+                                <div>
+                                    <input class="@classes disabled" id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
+                                    <div class="row-1">
+                                        <i></i>
+                                    </div>
+                                    <div class="row-2 text-left">
+                                        <label class="@labelClass">@locationsList[z].LocationInstanceAbbrev</label>
+                                    </div>
+                                </div>
+                            </td>
+                        }
+                        else if (locationsList[z].IsFull || (!inReceivedModal && Model.RequestChildrenLocationInstances[z].IsThisRequest/*for archived*/))
+                        {
+                            var backgroundClass = "graduated-table-background-color  ";
+                            hideIcon = "d-none"; 
+                            var disabled = "disabled";
+                            if (!inReceivedModal && Model.RequestChildrenLocationInstances[z].IsThisRequest)
+                            {
+                                backgroundClass = "";
+                                disabled = "";
+                                iconClass = "icon-delete-24px";
+                            }
+                            <td class="@outerClass @disabledEdit location-selected @backgroundClass" style="padding:0px;  ">
+                                <div class="">
+                                    <input class="@classes @disabled" id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
+                                    <div class="row-1">
+                                        <i class="@iconClass @hideIcon location-icon "></i> @*hide on load, show when turn edit on*@
+                                    </div>
+
+                                    <div class="row-2 text-left">
+                                        <label class="@labelClass">@locationsList[z].LocationInstanceAbbrev</label>
+
+                                    </div>
+                                </div>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="@outerClass @disabledEdit" style="padding:0px;">
+                                <div>
+                                    <input class="@classes " id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
+                                    <div class="row-1"> @*hide on load, show when turn edit on*@
+                                        <i class="@iconClass @hideIcon location-icon "></i>
+                                    </div>
+                                    <div class="row-2 text-left">
+                                        <label class="@labelClass">@locationsList[z].LocationInstanceAbbrev</label>
+                                    </div>
+                                </div>
+                            </td>
+                        }
+
+                    }
+                }
+            </tr>
+        }
+
+    }
+</table>
+}
+<script>
+    $("body, .modal").off('click', ".open-archive-modal").on('click', ".open-archive-modal", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        //alert('open archive modal.');
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+        if (valid) {
+            $("#loading").show();
+            $.ajax({
+                async: true,
+                url: "/Requests/ConfirmArchiveModal?locationName=" + $('.locationFullName').text(),
+                type: 'GET',
+                cache: true,
+                success: function (data) {
+                    console.log('success!');
+                    $("#loading").hide();
+                    $.fn.OpenModal("confirm-archive-modal", 'confirm-archive', data);
+                }
+            });
+        }
+    });
+</script>
+@*<script type="text/javascript">
+        $(function () {
+            $("document").ready(function () {
+            });
+        });
+    </script>*@

@@ -1,6 +1,9 @@
 ﻿$(".delete-file-perm").on("click", function (e) {
 	e.preventDefault();
 	e.stopPropagation();
+	if ($("#masterSidebarType").val() == "NoInvoice") {
+		$(".invoice-image-name").text("")
+	}
 	var link = $('#submitDelete').attr("href");
 	console.log("link: " + link)
 	var formData = new FormData($(".DeleteDocumentModalForm")[0]);
@@ -8,9 +11,11 @@
 	$parentfoldername = $("#ParentFolderName").val();
 	$objectId = $("#ObjectID").val();
 	var $SectionType = $("#masterSectionType").val();
-	console.log($SectionType);
-		var $isEdittable = $('.active-document-modal').attr("data-val");
-		var $showSwitch =  $('.active-document-modal').attr("showSwitch");
+	
+	var $isEdittable = $('.active-document-modal').attr("data-val");
+	var $showSwitch = $('.active-document-modal').attr("showSwitch");
+	var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
+	console.log("allowmultiple " + dontAllowMultipleFiles);
 	console.log("$requestId: " + $objectId);
 	$.ajax({
 		url: link,
@@ -18,8 +23,19 @@
 		data: formData,
 		success: (partialResult) => {
 			$.fn.CloseModal("documents-delete");
-			$.fn.OpenDocumentsModal($foldername, $objectId, $isEdittable, $SectionType, $showSwitch, $parentfoldername);
+			var deletedReportFile = $(".report-file-card.delete-card");
+			if (deletedReportFile.length > 0) {
+				deletedReportFile.prev().remove();
+				deletedReportFile.next().remove();
+				deletedReportFile.remove();
+				$(".report-text").trigger("change");
+			}
+			else {
+				$.fn.OpenDocumentsModal($foldername, $objectId, $isEdittable, $SectionType, $showSwitch, $parentfoldername, dontAllowMultipleFiles);
+			}
 			//$.fn.ChangeColorsOfDocs($foldername);
+			$(".document-name").text('')
+			$(".document-name#FileName").val('')
 		},
 		processData: false,
 		contentType: false

@@ -51,6 +51,7 @@ namespace PrototypeWithAuth
             ////Set database Connection from application json file
 
             //add identity
+            
             services.AddDefaultIdentity<ApplicationUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
@@ -86,7 +87,20 @@ namespace PrototypeWithAuth
             //services.AddApplicationInsightsTelemetry();
 
             // in order to be able to customize the aspnetcore identity
+            //services.Configure<CookiePolicyOptions>(options =>
+            //{
+            //    options.CheckConsentNeeded = context => false; // consent required
+            //    options.MinimumSameSitePolicy = SameSiteMode.None;
+            //});
 
+            //services.AddSession(opts =>
+            //{
+            //    opts.Cookie.IsEssential = true;
+            //    opts.IdleTimeout = TimeSpan.FromHours(10);
+            //    opts.IOTimeout = TimeSpan.FromHours(10);
+            //    //opts.Cookie.HttpOnly = false;
+            //    //opts.Cookie.Name = "Sessions" + Guid.NewGuid().ToString();
+            //});
             services.AddMvc(config => //this creates a global authorzation - meaning only registered users can use view the application
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -98,9 +112,7 @@ namespace PrototypeWithAuth
             services.AddSession(/*opts =>
             {
                 opts.Cookie.IsEssential = true;
-
             }*/);
-
             ////allow for data anotations validations
             //services.AddMvcCore()
             //   .AddDataAnnotations();
@@ -158,8 +170,9 @@ namespace PrototypeWithAuth
                 endpoints.MapRazorPages();
             });
 
-            //ChangePassword(serviceProvider).Wait();
-            //CreateRoles(serviceProvider).Wait();
+             //ChangePassword(serviceProvider).Wait();
+
+            CreateRoles(serviceProvider).Wait();
             //AddRoles(serviceProvider).Wait();
 
             //app.UseApplicationInsightsRequestTelemetry();
@@ -169,41 +182,46 @@ namespace PrototypeWithAuth
         //private async Task ChangePassword(IServiceProvider serviceProvider)
         //{
         //    var _userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        //    var user = await _userManager.FindByEmailAsync("adina@centarix.com");
+        //    var user = await _userManager.FindByEmailAsync("debbie@centarix.com");
         //    var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-        //    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        //    var result = _userManager.ResetPasswordAsync(user, code, "adinabCE2063*");
+        //    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        //    var result = await _userManager.ResetPasswordAsync(user, code, "Centarix.2020");
         //}
 
 
         //Seed database with new roles
 
-        private async Task AddRoles(IServiceProvider serviceProvider)
-        {
-            var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var user = await UserManager.FindByEmailAsync("adina@centarix.com");
-            await UserManager.AddToRoleAsync(user, "LabManagement");
-            ////await UserManager.AddToRoleAsync(user, "CEO");
-            //var code = await UserManager.GeneratePasswordResetTokenAsync(user);
-            //var result = await UserManager.ResetPasswordAsync(user, code, "adinabCE2063*");
-        }
+        //private async Task AddRoles(IServiceProvider serviceProvider)
+        //{
+        //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        //    var user = await UserManager.FindByEmailAsync("adina@centarix.com");
+        //    await UserManager.AddToRoleAsync(user, "LabManagement");
+        //    ////await UserManager.AddToRoleAsync(user, "CEO");
+        //    //var code = await UserManager.GeneratePasswordResetTokenAsync(user);
+        //    //var result = await UserManager.ResetPasswordAsync(user, code, "adinabCE2063*");
+        //}
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
             string[] roleNames1 = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
-            string[] roleNames2 = Enum.GetNames(typeof(AppUtility.RoleItems)).Cast<string>().Select(x => x.ToString()).ToArray();
-            string[] roleNames = new string[roleNames1.Length + roleNames2.Length];
+            string[] roleNames2 = AppUtility.RequestRoleEnums().Select(x => x.StringDefinition).ToArray();
+            string[] roleNames3 = AppUtility.OperationRoleEnums().Select(x => x.StringDefinition).ToArray();
+            string[] roleNames4 = AppUtility.ProtocolRoleEnums().Select(x => x.StringDefinition).ToArray();
+            string[] roleNames = new string[roleNames1.Length + roleNames2.Length + roleNames3.Length + roleNames4.Length];
             roleNames1.CopyTo(roleNames, 0);
             roleNames2.CopyTo(roleNames, roleNames1.Length);
+            roleNames3.CopyTo(roleNames, roleNames1.Length + roleNames2.Length);
+            roleNames4.CopyTo(roleNames, roleNames1.Length + roleNames2.Length + roleNames3.Length);
 
             IdentityResult roleResult;
-            var roleCheck = await RoleManager.RoleExistsAsync("Admin");
-            if (!roleCheck)
-            {
-                roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
-            }
+            //var roleCheck = await RoleManager.RoleExistsAsync("Admin");
+            //if (!roleCheck)
+            //{
+            //    roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
+            //}
             foreach (var roleName in roleNames)
             {
                 bool roleExist = await RoleManager.RoleExistsAsync(roleName);
@@ -217,34 +235,34 @@ namespace PrototypeWithAuth
 
             //await UserManager.AddToRoleAsync(poweruser, "Admin");
 
-            var adminuser = new Employee()
-            {
-                UserName = "debbie@centarix.com",
-                Email = "debbie@centarix.com",
-                FirstName = "Debbie",
-                LastName = "Shulman",
-                EmailConfirmed = true,
-                TwoFactorEnabled = true,
-                EmployeeStatusID = 4,
-                LockoutEnabled = true,
-                LockoutEnd = new DateTime(2999, 01, 01),
-                NeedsToResetPassword = true,
-                UserNum = 0,
-                IsUser = true,
-            };
-            var createAdminUser = await UserManager.CreateAsync(adminuser, "ElixirSA29873$*");
-            adminuser.EmailConfirmed = true;
-            var result = await UserManager.UpdateAsync(adminuser);
-            if (createAdminUser.Succeeded)
-            {
-                await UserManager.AddToRoleAsync(adminuser, "Users");
-            }
+            //var adminuser = new Employee()
+            //{
+            //    UserName = "adinasilberberg@gmail.com",
+            //    Email = "adinasilberberg@gmail.com",
+            //    FirstName = "Adina",
+            //    LastName = "Gayer",
+            //    EmailConfirmed = true,
+            //    TwoFactorEnabled = true,
+            //    EmployeeStatusID = 4,
+            //    LockoutEnabled = true,
+            //    LockoutEnd = new DateTime(2999, 01, 01),
+            //    NeedsToResetPassword = true,
+            //    UserNum = 1,
+            //    IsUser = true,
+            //};
+            //var createAdminUser = await UserManager.CreateAsync(adminuser, "ElixirSA29873$*");
+            //adminuser.EmailConfirmed = true;
+            //var result = await UserManager.UpdateAsync(adminuser);
+            //if (createAdminUser.Succeeded)
+            //{
+            //    await UserManager.AddToRoleAsync(adminuser, "Users");
+            //}
 
             //var poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
-            // //{
-            // //    UserName = Configuration.GetSection("UserSettings")["UserEmail"],
-            // //    Email = Configuration.GetSection("UserSettings")["UserEmail"]
-            // //};
+            ////{
+            ////    UserName = Configuration.GetSection("UserSettings")["UserEmail"],
+            ////    Email = Configuration.GetSection("UserSettings")["UserEmail"]
+            ////};
             //string UserPassword = /*Configuration.GetSection("UserSettings")["UserEmail"]*/ "adinabCE2063*!";
             //var _user = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
             //if (_user == null)
@@ -255,58 +273,60 @@ namespace PrototypeWithAuth
             //        await UserManager.AddToRoleAsync(poweruser, "Admin");
             //    }
             //}
-            //  }
         }
+
+        //
+
+        // var poweruser = await UserManager.FindByEmailAsync("faigew@gmail.com");
+        // //{
+        // //    UserName = Configuration.GetSection("UserSettings")["UserEmail"],
+        // //    Email = Configuration.GetSection("UserSettings")["UserEmail"]
+        // //};
+        //string UserPassword = /*Configuration.GetSection("UserSettings")["UserEmail"]*/ "AkivaH1!";
+        // var _user = await UserManager.FindByEmailAsync("faigew@gmail.com");
+        // if (_user == null)
+        // {
+        //     var createPowerUser = await UserManager.CreateAsync(poweruser, UserPassword);
+        //     if (createPowerUser.Succeeded)
+        //     {
+        //         await UserManager.AddToRoleAsync(poweruser, "Admin");
+        //     }
+        // }
+        //  }
+
+        //private async Task CreateRoles(IServiceProvider serviceProvider)
+        //{
+        //    var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();//replaced Idetntiy user with application user
+
+        //    IdentityResult roleResult;
+        //    //here in this line we are adding Admin Role
+        //    var roleCheck = await RoleManager.RoleExistsAsync("Users");
+        //    if (!roleCheck)
+        //    {
+        //        //here in this line we are creating admin role and seed it to the database
+        //        roleResult = await RoleManager.CreateAsync(new IdentityRole { Name = "Users" });
+        //    }
+        //    //here we are assigning the Admin role to the User that we have registered above
+        //    //Now, we are assinging admin role to this user("Ali@gmail.com").When will we run this project then it will
+        //    //be assigned to that user.
+        //    ApplicationUser user = await UserManager.FindByEmailAsync("adinagayer55@gmail.com");
+        //    var User = new IdentityUser();
+        //    await UserManager.AddToRoleAsync(user, "Users");
+        //}
+
+
+        /*              app.UseRouting();
+                        app.UseAuthentication();
+                        app.UseAuthorization();
+                        app.UseEndpoints(endpoints =>
+                        {
+                            endpoints.MapControllerRoute(
+                                name: "default",
+                                pattern: "{controller=Home}/{action=Index}/{id?}");
+                            endpoints.MapRazorPages();
+                        });
+                        app.UseEndpoints();*/
     }
+
 }
-
-// var poweruser = await UserManager.FindByEmailAsync("faigew@gmail.com");
-// //{
-// //    UserName = Configuration.GetSection("UserSettings")["UserEmail"],
-// //    Email = Configuration.GetSection("UserSettings")["UserEmail"]
-// //};
-//string UserPassword = /*Configuration.GetSection("UserSettings")["UserEmail"]*/ "AkivaH1!";
-// var _user = await UserManager.FindByEmailAsync("faigew@gmail.com");
-// if (_user == null)
-// {
-//     var createPowerUser = await UserManager.CreateAsync(poweruser, UserPassword);
-//     if (createPowerUser.Succeeded)
-//     {
-//         await UserManager.AddToRoleAsync(poweruser, "Admin");
-//     }
-// }
-//  }
-
-/* private async Task CreateRoles(IServiceProvider serviceProvider)
- {
-     var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityUser>>(); 
-     var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();//replaced Idetntiy user with application user
-
-     IdentityResult roleResult;
-     //here in this line we are adding Admin Role
-     var roleCheck = await RoleManager.RoleExistsAsync("Admin");
-     if (!roleCheck)
-     {
-         //here in this line we are creating admin role and seed it to the database
-         roleResult = await RoleManager.CreateAsync(new IdentityUser("Admin"));
-     }
-     //here we are assigning the Admin role to the User that we have registered above 
-     //Now, we are assinging admin role to this user("Ali@gmail.com"). When will we run this project then it will
-     //be assigned to that user.
-     IdentityUser user = await UserManager.FindByEmailAsync("faigew@gmail.com");
-     var User = new IdentityUser();
-     await UserManager.AddToRoleAsync(user, "Admin");
- }*/
-
-
-/*              app.UseRouting();
-                app.UseAuthentication();
-                app.UseAuthorization();
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllerRoute(
-                        name: "default",
-                        pattern: "{controller=Home}/{action=Index}/{id?}");
-                    endpoints.MapRazorPages();
-                });
-                app.UseEndpoints();*/

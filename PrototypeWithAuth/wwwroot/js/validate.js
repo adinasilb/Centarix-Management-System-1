@@ -96,11 +96,12 @@ $(function () {
 	$.validator.addMethod('mindate', function (v, el, minDate) {
 	if (this.optional(el)) {
 		return true;
-		}
+	}
 		
 	var val = $(el).val();
-	val = val.split("/").reverse().join("-");
-	var selectedDate = moment(val).toDate();
+	console.log('val: ' + val);
+	//val = val.split("/").reverse().join("-");
+	var selectedDate = moment(val, "D MMM YYYY").toDate();
 	console.log("selected date"+selectedDate)
 	minDate = new Date(minDate.setHours(0));
 	minDate = new Date(minDate.setMinutes(0));
@@ -109,13 +110,14 @@ $(function () {
 	return selectedDate >= minDate;
 }, 'Please select a valid date');
 
-		$.validator.addMethod('maxDate', function (v, el, minDate) {
+	$.validator.addMethod('maxDate', function (v, el, minDate) {
 	if (this.optional(el)) {
 		return true;
-			}
+	}
 	var val = $(el).val();
-	val = val.split("/").reverse().join("-");
-	var selectedDate = moment(val).toDate();
+	//val = val.split("/").reverse().join("/");
+	console.log('val: ' + val);
+	var selectedDate = moment(val,"D MMM YYYY").toDate();
 	console.log("selected date"+selectedDate)
 	selectedDate = new Date(selectedDate.setHours(0));
 	selectedDate = new Date(selectedDate.setMinutes(0));
@@ -291,7 +293,7 @@ $(function () {
 		//alert("validate form");
 		$(this).data("validator").settings.ignore = "";
 		var valid = $(this).valid();
-		console.log("valid form: " + valid)
+		console.log("validate.js says valid form: " + valid)
 		if (!valid) {
 			e.preventDefault();
 			if (!$('.activeSubmit').hasClass('disabled-submit')) {
@@ -304,6 +306,11 @@ $(function () {
 		}
 		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 	});
+
+	$.validator.addMethod("fileRequired", function (value, element) {
+		console.log("in file required")
+		return $(element).hasClass("contains-file");
+	}, 'Must upload a file before submitting');
 
 
 });

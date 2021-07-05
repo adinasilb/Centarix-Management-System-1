@@ -309,7 +309,9 @@ $(function () {
 		console.log($("#masterSidebarType").val())
 		var showSwitch = $(".active-document-modal").attr("showSwitch");
 		var parentFolder = $(".active-document-modal").attr("parentfolder");
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder);
+		var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
+		console.log(dontAllowMultipleFiles)
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles);
 		return true;
 	});
 
@@ -1360,7 +1362,7 @@ $(function () {
 	$(".back-button").off("click").on("click", function () {
 		console.log('back button');
 		var type = $(".turn-edit-on-off").attr('name');
-		console.log('type' + type);
+		console.log('type ' + type);
 		if (type == 'edit') {
 			var section = "";
 			console.log($('#masterSectionType').val());
@@ -1396,6 +1398,11 @@ $(function () {
 				}
 
 			});
+		}
+		else if ($(this).parents("div.modal").hasClass('historyModal')) {
+			$.fn.CloseModal("history-item");
+			$('div.editModal').find('tr.current-item').removeClass('gray-background');
+			console.log($('div.editModal').find('tr.current-item'))
 		}
 		else {
 			console.log('close edit')
@@ -1433,8 +1440,10 @@ $(function () {
 			section = "Requests";
 		}
 		else if ($(this).hasClass('locations')) {
+			console.log("has locations");
 			url = "/Requests/ReceivedModalVisual";
-			section = "Requests";
+			section = $(".turn-edit-on-off").attr("section-type"); //"Requests";
+			console.log("section: " + section);
         }
 		if ($(this).hasClass('orders') && $(this).hasClass('equipment')) {
 			url = "/Requests/EditModalView";
@@ -1455,19 +1464,19 @@ $(function () {
 					$("#loading").hide();
 					$.fn.OpenModal('confirm-edit-modal', 'confirm-edit', data)
 					$(".modal-open-state").attr("text", "open");
-
 				}
-
 			});
-
 
 		}
 		else if (type == 'details') {
 			if ($(this).hasClass('locations')) {
+				console.log('locations');
 				$(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
 				$('#location .mark-readonly').removeClass("disabled")
+				$('#location .mark-readonly').attr("disabled", false);
 				$('.edit-mode-switch-description').text("Edit Mode On");
 				$('.turn-edit-on-off').attr('name', 'edit');
+				$('.location-icon').removeClass('d-none');
 			}
 			else {
 				enableMarkReadonly($(this));
@@ -1488,36 +1497,57 @@ $(function () {
     }
 
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
+		console.log("enable " + selectID)
+		var selectedElements = $('#' + dataActivates).find(".active")
 		var selectedIndex = $('#' + dataActivates).find(".active").index();
-		if($('#' + dataActivates+" .search-wrap").length>0)
-		{
-			selectedIndex = selectedIndex-1;
-		}
-		var isOptGroup = false;
-		if ($('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup') || $('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup-option')) { isOptGroup = true; }
-		if (isOptGroup) {
-			var selected = $(':selected', $(selectID));
-			console.log(selectID + "  " + selectedIndex);
-			var optgroup = selected.closest('optgroup').attr('label');
-			switch (optgroup) {
-				case "Units":
-					console.log("Units")
-					selectedIndex = selectedIndex - 1;
-					break;
-				case "Weight/Volume":
-					console.log("Volume")
-					selectedIndex = selectedIndex - 2;
-					break;
-				case "Test":
-					console.log("Test")
-					selectedIndex = selectedIndex - 3;
-					break;
-			} 
+		var dataActivatesLength = $('#' + dataActivates).children('li').length;
+		if (selectedElements.length <= 1) {
+			if ($('#' + dataActivates + " .search-wrap").length > 0 || $(selectID).children().length < dataActivatesLength)
+			{
+				selectedIndex = selectedIndex-1;
+			}
+			var isOptGroup = false;
+			if ($('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup') || $('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup-option')) { isOptGroup = true; }
+			if (isOptGroup) {
+				var selected = $(':selected', $(selectID));
+				console.log(selectID + "  " + selectedIndex);
+				var optgroup = selected.closest('optgroup').attr('label');
+				switch (optgroup) {
+					case "Units":
+						console.log("Units")
+						selectedIndex = selectedIndex - 1;
+						break;
+					case "Weight/Volume":
+						console.log("Volume")
+						selectedIndex = selectedIndex - 2;
+						break;
+					case "Test":
+						console.log("Test")
+						selectedIndex = selectedIndex - 3;
+						break;
+				} 
 
-		} 
+			} 
+		}
 		$(selectID).destroyMaterialSelect();
 		$(selectID).prop("disabled", false);
-		$(selectID).prop('selectedIndex', selectedIndex);
+		if (selectedElements.length <= 1) {
+			
+			$(selectID).prop('selectedIndex', selectedIndex);
+		}
+		else {
+			var selectedIndexes = [];
+			selectedElements.each(function (el) {
+				selectedIndexes.push(el)
+            })
+			var i = 0
+			$(selectID).children().each(function (el) {
+				if (el == selectedIndexes[i]) {
+					el.selected = true;
+					i++
+				}
+			})
+        }
 		$(selectID).removeAttr("disabled")
 		$('[data-activates="' + dataActivates + '"]').prop('disabled', false);
 		$(selectID).materialSelect();
@@ -1540,18 +1570,20 @@ $(function () {
 
 	
 
-	$("#home-btn").off('click').on('click',function () {
-		console.log("clicked home")
-			$('[data-toggle="tooltip"]').popover('dispose');
-			$("#home-btn").popover({
-				sanitize: false,
-				placement: 'bottom',
-				html: true,
-				content: function () {
-					return $('#home-content').html();
-				}
-			});
-			$("#home-btn").popover('toggle');
+	$("#home-btn").off('click').on('click', function () {
+		$('[data-toggle="popover"]').popover('dispose');
+		$('body').removeClass('popover-open');
+		//$('[data-toggle="tooltip"]').popover('dispose');
+		$("#home-btn").popover({
+			sanitize: false,
+			placement: 'bottom',
+			html: true,
+			content: function () {
+				return $('#home-content').html();
+			}
+		});
+		$("#home-btn").popover('toggle');
+
 	});
 	
 	$('.isRepeat').off("click").on("click", function () {

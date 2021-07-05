@@ -10,16 +10,18 @@ using PrototypeWithAuth.Models;
 using PrototypeWithAuth.AppData;
 using Microsoft.AspNetCore.Authorization;
 using Abp.Extensions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 
 namespace PrototypeWithAuth.Controllers
 {
     public class ProductSubcategoriesController : SharedController
     {
-        private readonly ApplicationDbContext _context;
-
-        public ProductSubcategoriesController(ApplicationDbContext context) : base(context)
+        public ProductSubcategoriesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+           : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
-            _context = context;
         }
 
         // GET: ProductSubcategories
@@ -52,6 +54,10 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             var applicationDbContext = _context.ProductSubcategories.Include(p => p.ParentCategory).ThenInclude(pc => pc.CategoryType)
                 .Where(ps => ps.ParentCategory.CategoryTypeID == categoryType);
+            if(PageType == AppUtility.PageTypeEnum.RequestRequest)
+            {
+                applicationDbContext = applicationDbContext.Where(ps => ps.ParentCategory.IsProprietary == false);
+            }
             return View(await applicationDbContext.ToListAsync());
         }
         

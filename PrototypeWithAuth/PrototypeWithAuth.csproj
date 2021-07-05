@@ -9,16 +9,12 @@
 
   <ItemGroup>
     <Compile Remove="Models\LocationModels\**" />
-    <Compile Remove="Views\Operations\**" />
     <Compile Remove="wwwroot\images\NewFolder\**" />
     <Content Remove="Models\LocationModels\**" />
-    <Content Remove="Views\Operations\**" />
     <Content Remove="wwwroot\images\NewFolder\**" />
     <EmbeddedResource Remove="Models\LocationModels\**" />
-    <EmbeddedResource Remove="Views\Operations\**" />
     <EmbeddedResource Remove="wwwroot\images\NewFolder\**" />
     <None Remove="Models\LocationModels\**" />
-    <None Remove="Views\Operations\**" />
     <None Remove="wwwroot\images\NewFolder\**" />
   </ItemGroup>
 
@@ -257,11 +253,134 @@
     <Compile Remove="Data\Migrations\20210504052717_NewUpdateProductSubcategories.Designer.cs" />
     <Compile Remove="Data\Migrations\20210504091617_addedFavoriteProtocols.cs" />
     <Compile Remove="Data\Migrations\20210504091617_addedFavoriteProtocols.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210505062129_fixedFavoriteResource2.cs" />
+    <Compile Remove="Data\Migrations\20210505062129_fixedFavoriteResource2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506105827_AddTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210506105827_AddTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506112350_AddTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210506112350_AddTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506113349_AddTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210506113349_AddTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506113829_AddTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210506113829_AddTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506114848_AddFkParentLine.cs" />
+    <Compile Remove="Data\Migrations\20210506114848_AddFkParentLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506115752_TurnOffAutoIncrement.cs" />
+    <Compile Remove="Data\Migrations\20210506115752_TurnOffAutoIncrement.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210509050711_removeIdentityFromTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210509050711_removeIdentityFromTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210509051108_AddIdentityToTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210509051108_AddIdentityToTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210510114235_test.cs" />
+    <Compile Remove="Data\Migrations\20210510114235_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210511052342_TemplineGetterProperty.cs" />
+    <Compile Remove="Data\Migrations\20210511052342_TemplineGetterProperty.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210512081048_PermanentLineIDNotNull.cs" />
+    <Compile Remove="Data\Migrations\20210512081048_PermanentLineIDNotNull.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210512082448_PermanentLineIDNullable.cs" />
+    <Compile Remove="Data\Migrations\20210512082448_PermanentLineIDNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210512083035_PermanentLineIDNullable.cs" />
+    <Compile Remove="Data\Migrations\20210512083035_PermanentLineIDNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210512090000_PermanentLineIDNullable.cs" />
+    <Compile Remove="Data\Migrations\20210512090000_PermanentLineIDNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513063210_PermanentIDNullabl.cs" />
+    <Compile Remove="Data\Migrations\20210513063210_PermanentIDNullabl.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513063650_PermaneetIDNullable.cs" />
+    <Compile Remove="Data\Migrations\20210513063650_PermaneetIDNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513063806_PermanentIDNullable.cs" />
+    <Compile Remove="Data\Migrations\20210513063806_PermanentIDNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513071025_PermanentIDNullable4.cs" />
+    <Compile Remove="Data\Migrations\20210513071025_PermanentIDNullable4.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513072330_PermanentFKNullable.cs" />
+    <Compile Remove="Data\Migrations\20210513072330_PermanentFKNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513072858_test.cs" />
+    <Compile Remove="Data\Migrations\20210513072858_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513073120_virtualPermanentLineID.cs" />
+    <Compile Remove="Data\Migrations\20210513073120_virtualPermanentLineID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513073732_virtualPermanentLineID2.cs" />
+    <Compile Remove="Data\Migrations\20210513073732_virtualPermanentLineID2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513075020_fkNotationParentLineID.cs" />
+    <Compile Remove="Data\Migrations\20210513075020_fkNotationParentLineID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513080636_FKAnnotation.cs" />
+    <Compile Remove="Data\Migrations\20210513080636_FKAnnotation.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513102924_FKAnnotation.cs" />
+    <Compile Remove="Data\Migrations\20210513102924_FKAnnotation.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513115946_HasFilterNullPermanentID.cs" />
+    <Compile Remove="Data\Migrations\20210513115946_HasFilterNullPermanentID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513120854_HasFilterNullPermanentID2.cs" />
+    <Compile Remove="Data\Migrations\20210513120854_HasFilterNullPermanentID2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513121123_HasFilterNullPermanentID2.cs" />
+    <Compile Remove="Data\Migrations\20210513121123_HasFilterNullPermanentID2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513121302_HasFilterNullPermanentID3.cs" />
+    <Compile Remove="Data\Migrations\20210513121302_HasFilterNullPermanentID3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513121717_HasFilterNullPermanentID3.cs" />
+    <Compile Remove="Data\Migrations\20210513121717_HasFilterNullPermanentID3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513121932_HasFilterNullPermanentID3.cs" />
+    <Compile Remove="Data\Migrations\20210513121932_HasFilterNullPermanentID3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513122233_HasFilterNullPermanentID2.cs" />
+    <Compile Remove="Data\Migrations\20210513122233_HasFilterNullPermanentID2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210519060127_j.cs" />
+    <Compile Remove="Data\Migrations\20210519060127_j.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210519060744_d.cs" />
+    <Compile Remove="Data\Migrations\20210519060744_d.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210519063214_hj.cs" />
+    <Compile Remove="Data\Migrations\20210519063214_hj.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210519065517_FunctionDescriptionEnum.cs" />
+    <Compile Remove="Data\Migrations\20210519065517_FunctionDescriptionEnum.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210519071241_FunctionDescriptionEnum.cs" />
+    <Compile Remove="Data\Migrations\20210519071241_FunctionDescriptionEnum.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210523113426_ProductQueryDeletedNotIncluded.cs" />
+    <Compile Remove="Data\Migrations\20210523113426_ProductQueryDeletedNotIncluded.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210601121013_AddArchive.cs" />
+    <Compile Remove="Data\Migrations\20210601121013_AddArchive.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210603070637_jlj.cs" />
+    <Compile Remove="Data\Migrations\20210603070637_jlj.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210603083914_DownFunctionLineNullableFK.cs" />
+    <Compile Remove="Data\Migrations\20210603083914_DownFunctionLineNullableFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210603084849_AddFunctionLineFK.cs" />
+    <Compile Remove="Data\Migrations\20210603084849_AddFunctionLineFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210603085414_AddFunctionLineFK.cs" />
+    <Compile Remove="Data\Migrations\20210603085414_AddFunctionLineFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606050007_RemovePrimaryKeyFunctionLine.cs" />
+    <Compile Remove="Data\Migrations\20210606050007_RemovePrimaryKeyFunctionLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606063043_ReportWeekNumber.cs" />
+    <Compile Remove="Data\Migrations\20210606063043_ReportWeekNumber.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606084923_parentline.cs" />
+    <Compile Remove="Data\Migrations\20210606084923_parentline.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606092657_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606092657_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606093920_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606093920_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606094227_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606094227_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606094516_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606094516_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606095059_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606095059_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606095307_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606095307_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606101617_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606101617_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606101910_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606101910_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606102218_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606102218_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606104944_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606104944_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606111514_ParentLineLinqconfig3.cs" />
+    <Compile Remove="Data\Migrations\20210606111514_ParentLineLinqconfig3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210608062849_testmerge.cs" />
+    <Compile Remove="Data\Migrations\20210608062849_testmerge.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210610055638_TestMerge.cs" />
+    <Compile Remove="Data\Migrations\20210610055638_TestMerge.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210616055936_resourcesreceived.cs" />
+    <Compile Remove="Data\Migrations\20210616055936_resourcesreceived.Designer.cs" />
   </ItemGroup>
 
 
   <ItemGroup>
     <PackageReference Include="Abp" Version="5.10.1" />
+    <PackageReference Include="Aspose.Slides.NET" Version="21.5.0" />
     <PackageReference Include="bootstrap" Version="4.5.0" />
     <PackageReference Include="Chart.Mvc.Core" Version="1.1.0" />
     <PackageReference Include="EmguCV" Version="3.1.0.1" />
@@ -276,6 +395,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6">
@@ -303,11 +424,12 @@
 
 
   <ItemGroup>
-    <Folder Include="wwwroot\files\" />
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />
     <Folder Include="wwwroot\Materials\" />
+    <Folder Include="wwwroot\FunctionLine\" />
     <Folder Include="wwwroot\Protocols\" />
+    <Folder Include="wwwroot\Reports\" />
     <Folder Include="wwwroot\Requests\" />
   </ItemGroup>
 

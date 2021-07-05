@@ -15,17 +15,17 @@ using X.PagedList;
 using SQLitePCL;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 
 namespace PrototypeWithAuth.Controllers
 {
     public class CalibrationsController : SharedController
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IHostingEnvironment _hostingEnvironment;
-        public CalibrationsController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment ) : base(context)
+        public CalibrationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
-            _context = context;
-            _hostingEnvironment = hostingEnvironment;
         }
 
         // GET: ProductSubcategories
@@ -60,7 +60,6 @@ namespace PrototypeWithAuth.Controllers
         // GET: ProductSubcategories
         [Authorize(Roles = "LabManagement")]
         [HttpGet]
-
         public async Task<IActionResult> CreateCalibration(int requestid)
         {
             Request request = await _context.Requests.Where(r => r.RequestID == requestid).Include(r => r.Product).FirstOrDefaultAsync();

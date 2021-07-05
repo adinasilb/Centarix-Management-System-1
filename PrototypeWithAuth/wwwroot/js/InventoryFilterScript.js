@@ -8,12 +8,11 @@ $('#invFilterPopover').on('shown.bs.popover', function () {
 })
 $('body').off('click').on('click', '.btn-filter', function () {
 	//alert("in filter function")
+	//var archived = $('.archive-check').val();
+	//console.log('archived ' + archived);
 	var data = $.fn.BindSelectedFilters();
 	var id = $(this).val();
 	var col = $(this).parent().parent();
-	var sectionType = $('#masterSectionType').val();
-	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
-	console.log('status ' + $(".request-status-id").attr("value"));
 	var arr;
 	if (col.hasClass('vendor-col')) {
 			arr = data.SelectedVendorsIDs;
@@ -34,23 +33,30 @@ $('body').off('click').on('click', '.btn-filter', function () {
 		arr.splice($.inArray(id, arr), 1);
 		numFilters = Number($('.numFilters').attr("value")) - 1;
 	}
+	//console.log('archived ' + archived);
+	$.fn.ReloadFilterDiv(numFilters, data);
+});
+$.fn.ReloadFilterDiv = function (numFilters, data) {
+	console.log('in reload filter function');
+	var sectionType = $('#masterSectionType').val();
+	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
+	console.log('status ' + $(".request-status-id").attr("value"));
 	//console.log(data);
-    $.ajax({
+	$.ajax({
 		//processData: false,
 		//contentType: false,
 		data: data,
-		traditional:true,
+		traditional: true,
 		async: true,
-		url: "/Requests/_InventoryFilterResults?numFilters=" + numFilters + "&sectionType=" + sectionType + "&isProprietary="+ isProprietary,
+		url: "/Requests/_InventoryFilterResults?numFilters=" + numFilters + "&sectionType=" + sectionType + "&isProprietary=" + isProprietary,
 		type: 'POST',
 		cache: false,
 		success: function (newData) {
 			$('#inventoryFilterContent').html(newData);
 			$('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
-        }
-     });
-
-});
+		}
+	});
+}
 $('.search-requests').on('change', function () {
 	var searchText = $(this).val().toLowerCase();
 	console.log(searchText);
@@ -149,5 +155,54 @@ $('body').on('click', '.clear-filters', function () {
 	var sectionType = $('#masterSectionType').val();
 	$.fn.ClearFilter(sectionType, isProprietary);
 });
-
+$(".popover").off("click").on("click", ".archive-button", function (e) {
+	console.log('check archive!')
+	$(".archive-check").each(function () {
+		console.log(this);
+		var checked = $(this).prop("checked");
+		$(this).attr("checked", !checked);
+		$(this).val(!checked);
+		/*var numFilters = $('.numFilters').attr("value");
+		var data = $.fn.BindSelectedFilters();
+		$.fn.ReloadFilterDiv(numFilters, data);*/
+	})
+});
+$('body').on('click', "#applyFilter", function () {
+	console.log('clicked!')
+	var data = $.fn.BindSelectedFilters();
+	var searchText = $('.popover .search-requests-in-filter').val();
+	var numFilters = $('.numFilters').attr("value");
+	console.log('search text ' + searchText);
+	var url;
+	switch ($('#masterPageType').val()) {
+		case 'RequestSummary':
+			url = "_IndexTableWithProprietaryTabs";
+			break;
+		case 'RequestRequest':
+		case 'OperationsRequest':
+			url = "_IndexTableWithCounts"
+			break;
+		case 'OperationsInventory':
+			url = "_IndexTable";
+			break;
+	}
+	//console.log(data);
+	$.ajax({
+		//    processData: false,
+		//    contentType: false,
+		data: data,
+		async: true,
+		traditional: true,
+		url: "/Requests/" + url + "?" + $.fn.getRequestIndexString() + "&searchText=" + searchText + "&numFilters=" + numFilters,
+		type: 'POST',
+		cache: false,
+		success: function (data) {
+			$('.' + url).html(data);
+			$('[data-toggle="popover"]').popover('dispose');
+			$('body').removeClass('popover-open');
+			$('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
+			$('#invFilterPopover').addClass('custom-order-inv');
+		}
+	});
+});
 

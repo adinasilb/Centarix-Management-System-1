@@ -1,0 +1,55 @@
+﻿@model PrototypeWithAuth.ViewModels.AddFunctionViewModel
+@using PrototypeWithAuth.AppData
+<script src="~/js/site.js"></script>
+<script src="~/js/Validation/AddFunctionValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<div class="modal modal-document fader addFunctionModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+    <div class=" modal-dialog-centered mx-auto" style="width:30%">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+            <button type="button" class="close modal-close-padding modal-close-style"  aria-label="Close" onclick="$.fn.CloseModal('add-function');">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form addFunctionForm on-form-modal">
+                <input type="hidden" asp-for="FunctionLine.FunctionTypeID" class="function-typeID" />
+                <input type="hidden" asp-for="FunctionLine.LineID" class="lineID" />
+                <input type="hidden" asp-for="FunctionLine.ID" class="function-lineID" />
+                <input type="hidden" asp-for="IsRemove" class="isRemove" />
+                <input type="hidden" asp-for="ModalType" class="isRemove" />
+                <div class="modal-header border-0 pt-0 px-0 modal-header-padding text-center">
+                    <div class="container p-0">
+
+                        <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessage</label>
+
+                        <div>
+                            <span class="heading-1"><i class="@Model.FunctionLine.FunctionType.Icon"></i>&ensp;@Model.FunctionLine.FunctionType.FunctionDescription</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body m-0 p-0 _AddFunctionModal">
+                    @{await Html.RenderPartialAsync("_AddFunctionModal", Model); }
+                </div>
+                <div class="modal-footer border-0 p-0">
+                    <div class="mx-auto modal-footer-mt">
+                        @if ((Model.ModalType == AppUtility.ProtocolModalType.Edit ||
+                             Model.ModalType == AppUtility.ProtocolModalType.Create)
+                             && ((Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProduct.ToString()  && Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProtocol.ToString() )||Model.FunctionLine.ID==0))
+                        {
+                            <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin saveFunction" value="Save" />
+                        }
+
+                        @if ((Model.ModalType == AppUtility.ProtocolModalType.Edit || Model.ModalType == AppUtility.ProtocolModalType.Create)&& Model.FunctionLine.ID>0)
+                        {
+                            <input type="submit" class="custom-button custom-cancel removeFunction" value="Remove" />
+                        }
+                        else
+                        {
+                            <button type="button" class="custom-button custom-cancel " onclick="$.fn.CloseModal('add-function');">Cancel</button>
+                        }
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="~/js/function.js"></script>

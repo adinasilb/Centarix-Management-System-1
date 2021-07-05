@@ -193,7 +193,7 @@ span.choose {
     border-radius: 18px;
     border-color: var(--acc-color) !important;
 }
-.protocol-form .RequestUnitCard div:first-child, .accounting-form .RequestSubunitCard div:first-child, .protocol-form .RequestSubsubunitCard div:first-child {
+.protocol-form .RequestUnitCard div:first-child, .protocol-form .RequestSubunitCard div:first-child, .protocol-form .RequestSubsubunitCard div:first-child {
     border-radius: 18px;
     border-color: var(--protocol-color) !important;
 }
@@ -862,6 +862,10 @@ a.bold-hover-effects {
     color: black !important;
 }
 
+.text-transform-none {
+    text-transform: none !important;
+}
+
 a.bold-hover-effects:hover,
 ul li button.bold-hover-effects:hover {
     /*color: black !important;*/
@@ -1156,6 +1160,19 @@ a.nav-link {
 
 .modal-content {
     /*background-color: #FAFAFA;*/
+}
+
+/*Left*/
+.modal.left.fader .modal-dialog {
+    position: fixed;
+    margin: auto;
+    /*width: 1200em;*/
+    height: 100%;
+    transition: opacity 0.5s linear, right 0.5s ease-out;
+}
+.modal.left .modal-content {
+    height: 100%;
+    overflow-y: auto;
 }
 
 .new-button {
@@ -2039,6 +2056,9 @@ span.caret {
 .protocol-form .form-control-plaintext:focus {
     box-shadow: 0 2px 0 0 var(--protocol-color) !important;
 }
+.protocol-form.createReportForm .form-control-plaintext:focus {
+    box-shadow: none !important;
+}
 
 .dropdown .select, .dropdown-multiple .select {
     z-index: 2;
@@ -2248,7 +2268,7 @@ span.caret {
     border: 2px solid var(--expense-color) !important;
 }
 
-.expenses.reports-filters {
+.expenses.reports-filters, .protocols.reports-filters {
     width: 13rem;
 }
 /*end change to reports*/
@@ -2297,7 +2317,7 @@ span.caret {
 
 .resource-fieldset {
     border-radius: .75rem;
-    height: 29.75rem;
+    /*height: 29.75rem;*/
     /*width: 18.625rem;*/
     border: .15rem solid #CBCBCB;
 }
@@ -2492,7 +2512,7 @@ span.caret {
     box-shadow: 6px 0px 10px #0000008C;
 }
 
-.add-invoice-modal {
+.wide-modal {
     width: 93.31rem;
 }
 
@@ -2735,6 +2755,10 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     background-color: var(--order-inv-color);
 }
 
+.supplier-form .location-selected {
+    background-color: var(--lab-man-color);
+}
+
 .visual-locations tr {
     border: 1px solid var(--black-87) !important;
 }
@@ -2918,4 +2942,63 @@ body.modal-open .popover {
 
 .textarea-border-radius{
     border-radius: .75rem;
+}
+
+
+.function-bar {
+    background-color: #E8E8E8;
+    border-radius: 1.9375rem;
+    height: 3.875rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
+    display:flex;
+}
+.function-bar i{
+    font-size: 2rem;
+    vertical-align: middle;
+}
+.function-bar button {
+    border:none;
+    box-shadow:none;
+    background: none;
+    vertical-align: middle;
+
+}
+.line-input:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+  
+}
+.line-header {
+    font-size: 1.40rem;
+}
+.line-subheader {
+    font-size: 1.20rem;
+}
+.line-step{
+    font-size:1rem
+}
+.line-input {
+   /* min-width: 10%;*/
+    align-items: center;
+    display: flex;
+    padding-right: 1rem;
+}
+.line-div{
+    margin-top:1.25rem;
+}
+
+    .line-div .line-function {
+        cursor: pointer;
+        font-size: 2rem;
+        justify-content: center;
+        align-items: center;
+        display:flex;
+    }
+
+.gray-background {
+    background-color: rgba(0, 0, 0, 0.075) !important;
+}
+.focused-line {
+    border-bottom: 2px solid var(--protocol-color) !important;
 }

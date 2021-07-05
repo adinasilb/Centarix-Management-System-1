@@ -20,13 +20,15 @@
 			required: true,
 			maxDate: new Date()
 		},
+		"ExpectedSupplyDays": {
+			required: true,
+			min: 0,
+			integer: true
+        }
 		//OrdersInput :{
 		//	fileRequired : true			
 		//}
 	}
 });
 
-$.validator.addMethod("fileRequired", function (value, element) {
-	console.log("in file required")
-	return $(element).hasClass("contains-file");
-}, 'Must upload a file before submitting');
+

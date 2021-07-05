@@ -1,12 +1,14 @@
 ﻿@model AddInvoiceViewModel
 @using PrototypeWithAuth.AppData
 <script src="~/js/InitializeDatePicker.js"></script>
-<script src="~/js/Validation/AddInvoiceFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
+<script src="~/js/Validation/AddInvoiceFormValidation.js"></script>
 <script src="~/js/accounting.js"></script>
+<script src="~/js/site.js"></script>
+<script src="~/js/editquotemodal.js"></script>
 
 <div class="modal modal-view fader on-form-modal accounting-form" id="myModal" data-backdrop="false">
-    <div class="add-invoice-modal modal-dialog-centered mx-auto">
+    <div class="wide-modal modal-dialog-centered mx-auto">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('payments-invoice')">
                 <span aria-hidden="true">&times;</span>
@@ -18,7 +20,9 @@
                     // var currency = Model.Requests[0].Currency == AppUtility.CurrencyEnum.NIS.ToString() ? "&#x20aa;" : "&#36;";
                 }
                 <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
-                <input type="hidden" asp-for="Requests[0].ExchangeRate" class="exchange-rate" />
+                <input type="hidden" asp-for="Requests[0].ExchangeRate" id="exchangeRate" />
+                <input type="hidden" asp-for="Requests[0].IncludeVAT" class="include-vat" />
+
                 <div class="modal-body  m-0 p-0 ">
 
                     <div class="container-fluid p-0 m-0">
@@ -37,7 +41,7 @@
                                 <span class="float-right">Invoice Date: </span>
                             </div>
                             <div class="col-2">
-                                <input asp-for="Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker" asp-format="{0:dd/MM/yyyy}" />
+                                <input asp-for="Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
                                 <span asp-validation-for="Invoice.InvoiceDate" class="text-danger-centarix"></span>
                             </div>
                         </div>
@@ -93,16 +97,46 @@
                                         </td>
                                         <td style="width:15%;">
                                             <div class="input-group">
+                                                @{
+                                                    decimal cost = Model.Requests[x].Cost ?? 0;
+                                                    decimal vat = Model.Requests[x].IncludeVAT ? cost * (decimal)0.17 : 0;
+                                                    decimal costWithVAT = cost + vat;
+                                                }
+
+
                                                 @if (Model.Requests[0].Currency == AppUtility.CurrencyEnum.NIS.ToString())
                                                 {
-                                                    <span class="input-group-text border-bottom pr-2">&#x20aa;</span>
-                                                    <input asp-for="Requests[x].Cost" class="form-control-plaintext border-bottom " />
+                                                    cost = Math.Round(cost, 2);
+                                                    @*<span class="input-group-text border-bottom pr-2">T: &#x20aa;</span>*@
+
+                                                    <div class="form-group shekel-group">
+                                                        <div class="input-group ">
+                                                            <span class="input-group-text pr-1">P: &#x20aa;</span>
+                                                            <input asp-for="Requests[x].Cost" class="form-control-plaintext border-bottom cost" index="@x" value="@cost" />
+                                                            <span class="text-danger-centarix" asp-validation-for="Requests[x].Cost"></span>
+                                                        </div>
+                                                        <div class="input-group ">
+                                                            <span class="input-group-text request-cost-shekel-icon disabled-text pr-1">T: &#x20aa;</span>
+                                                            <input class="form-control-plaintext border-bottom disabled-text price-with-vat-shekel @x" value="@costWithVAT.ToString("0.00")" disabled />
+                                                        </div>
+                                                    </div>
                                                 }
                                                 else
                                                 {
-                                                    <span class="input-group-text border-bottom pr-2">&#36;</span>
-                                                    <input class="form-control-plaintext border-bottom cost-validation price-in-dollars" index="@x"
-                                                           value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round((Model.Requests[x].Cost ?? 0) / Model.Requests[0].ExchangeRate, 2))" />
+                                                    cost = Math.Round(Model.Requests[0].ExchangeRate == 0 ? 0 : cost / Model.Requests[0].ExchangeRate, 2);
+                                                    costWithVAT = Model.Requests[0].ExchangeRate == 0 ? 0 : costWithVAT / Model.Requests[0].ExchangeRate;
+
+                                                    <div class="form-group dollar-group">
+                                                        <div class="input-group ">
+                                                            <span class="input-group-text  pr-1">P: &#36;</span>
+                                                            <input class="form-control-plaintext border-bottom sum-dollars" value="@cost" index="@x" />
+                                                            <span class="text-danger-centarix" asp-validation-for="Requests[x].Cost"></span>
+                                                        </div>
+                                                        <div class="input-group ">
+                                                            <span class="input-group-text request-cost-dollar-icon pr-1 disabled-text">T: &#36;</span>
+                                                            <input class="form-control-plaintext border-bottom disabled-text price-with-vat-dollar @x" value="@costWithVAT.ToString("0.00")" disabled />
+                                                        </div>
+                                                    </div>
                                                     <input type="hidden" asp-for="Requests[x].Cost" class="cost @x" />
                                                 }
                                             </div>
@@ -121,21 +155,25 @@
                             </tbody>
                         </table>
                         <div class="row mt-5">
-                            <div class="col-3">
+                            <div class="col-5">
                                 <label asp-for="InvoiceImage" class="control-label"></label>
-                                <input type="file" asp-for="InvoiceImage" class="form-control-file  ta pt-1">
-                                <span asp-validation-for="InvoiceImage" class="text-danger"></span>
-                                @*<div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="invoice-image" /></div>
-                            <button class="accounting-background-color custom-button-font custom-button open-invoice-doc-modal" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()"
-                                    data-ids="@Model.Request.RequestID"   ---> Get all the ids when in javascript
-                                    id="@AppUtility.FolderNamesEnum.Invoices.ToString()" data-val="@false">
-                                Select File
-                            </button>*@
+                                <br />
+                                <button class="my-2 accounting-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()"
+                                        data-id="@Model.Requests[0].RequestID"
+                                        id="@AppUtility.FolderNamesEnum.Invoices.ToString()" data-val="@true" show-switch="@false">
+                                    Select File
+                                </button>
+                                <input type="hidden" asp-for="InvoiceImage" id="@AppUtility.FolderNamesEnum.Invoices.ToString()Input" />
+                                <span class="invoice-image-name document-name pl-2"></span>
+                                    @*<input type="file" asp-for="InvoiceImage" class="form-control-file  ta pt-1">
+                                    <span asp-validation-for="InvoiceImage" class="text-danger"></span>*@
+                                    @*<div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="invoice-image" /></div>
+            *@
                             </div>
-                            <div class="col-2 offset-5">
+                            <div class="col-2 offset-3 align-self-center">
                                 <input type="submit" class="accounting-background-color custom-button-font custom-button" asp-action="AddInvoiceModal" value="Save" />
                             </div>
-                            <div class="col-2">
+                            <div class="col-2 align-self-center">
                                 <button data-dismiss="modal" class="custom-button custom-cancel" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
                             </div>
                         </div>
@@ -145,11 +183,3 @@
         </div>
     </div>
 </div>
-<script>
-    $('.price-in-dollars').change(function (e) {
-        var cost = $(this).val() * $('.exchange-rate').val();
-        var index = $(this).attr("index");
-        console.log(index)
-        $('.cost.'+index).val(cost)
-    });
-</script>
