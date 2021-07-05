@@ -162,7 +162,7 @@ $(".popover-more").off('click').click(function (e) {
 		}
 		shareNum = $(this).attr("data-share-resource-id");
 		var url = "/" + ControllersEnum + "/RemoveShare?ID=" + shareNum + "&ModelsEnum=" + $("#masterSectionType").val();
-		alert("url " + url);
+		//alert("url " + url);
 		$.ajax({
 			async: true,
 			url: url,
