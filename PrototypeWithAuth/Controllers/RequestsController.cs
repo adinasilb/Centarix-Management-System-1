@@ -4041,6 +4041,7 @@ namespace PrototypeWithAuth.Controllers
                 using (var transaction = _context.Database.BeginTransaction())
                 {
                     var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Include(x => x.ParentQuote).Select(r => r);
+                    int? parentQuoteId = requests.Where(r => r.RequestID == editQuoteDetailsViewModel.Requests[0].RequestID).Select(r => r.ParentQuoteID).FirstOrDefault();
                     try
                     {
                         //var quoteDate = editQuoteDetailsViewModel.QuoteDate;
@@ -4064,22 +4065,20 @@ namespace PrototypeWithAuth.Controllers
                         }
                         //save file
                         string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
-                        string requestFolder = Path.Combine(uploadFolder, requests.FirstOrDefault().ParentQuoteID.ToString());
+                        string requestFolder = Path.Combine(uploadFolder, parentQuoteId.ToString());
                         string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Quotes.ToString());
                         Directory.CreateDirectory(folderPath);
                         string uniqueFileName = 1 + editQuoteDetailsViewModel.QuoteFileUpload.FileName;
                         string filePath = Path.Combine(folderPath, uniqueFileName);
-                        editQuoteDetailsViewModel.QuoteFileUpload.CopyTo(new FileStream(filePath, FileMode.Create));
+                        var fileStream = new FileStream(filePath, FileMode.Create);
+                        editQuoteDetailsViewModel.QuoteFileUpload.CopyTo(fileStream);
+                        fileStream.Close();
                         transaction.CommitAsync();
                     }
                     catch (Exception ex)
                     {
                         transaction.RollbackAsync();
-                        int? parentQuoteId = requests.FirstOrDefault().ParentQuoteID;
-                        if (parentQuoteId != null)
-                        {
-                            DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, (int)parentQuoteId);
-                        }
+                        DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, (int)parentQuoteId);
                         throw new Exception(AppUtility.GetExceptionMessage(ex));
                     }
                 }
