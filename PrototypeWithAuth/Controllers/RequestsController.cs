@@ -653,6 +653,10 @@ namespace PrototypeWithAuth.Controllers
                                         additionalRequests = false;
                                     }
                                     MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests);
+                                    if (request.ParentQuoteID != null)
+                                    {
+                                        MoveDocumentsOutOfTempFolder((int)request.ParentQuoteID, AppUtility.ParentFolderName.ParentQuote);
+                                    }
                                     //await saveItemTransaction.CommitAsync();
                                 }
                                 else if (OrderType != AppUtility.OrderTypeEnum.SaveOperations)
@@ -1216,9 +1220,9 @@ namespace PrototypeWithAuth.Controllers
             //}
             //tempRequestListViewModel.TempRequestViewModels.ForEach(vm => vm.Request.Product.ProductSubcategory = null && vm.Request.Product.ProductSubcategoryID = vm.Request.Product.ProductSubcategory.ProductSubcategoryID);
             //tempRequestListViewModel.TempRequestViewModels.ForEach(vm => vm.Request.Product.Vendor = null && vm.Request.Product.VendorID = vm.Request.Product.Vendor.VendorID );
-       
+
             tempRequestJson.SerializeViewModel(tempRequestListViewModel.TempRequestViewModels);
-            
+
             _context.Update(tempRequestJson);
             await _context.SaveChangesAsync();
         }
@@ -1301,7 +1305,7 @@ namespace PrototypeWithAuth.Controllers
             await _context.SaveChangesAsync();
         }
         [Authorize(Roles = "Requests, Operations")]
-        public async Task<TermsViewModel> GetTermsViewModelAsync(int vendorID, TempRequestListViewModel tempRequestListViewModel)
+        public async Task<TermsViewModel> GetTermsViewModelAsync(int vendorID, int[] requestIds, TempRequestListViewModel tempRequestListViewModel)
         {
             //var requ = _httpContextAccessor.HttpContext.Session.GetObject<Request>("Request1");
             //List<Request> requests = new List<Request>();
@@ -1342,7 +1346,16 @@ namespace PrototypeWithAuth.Controllers
                     tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = req });
                 }
                 tempRequestListViewModel.GUID = Guid.NewGuid();
-
+            }
+            else if (requestIds != null)
+            {
+                tempRequestListViewModel.GUID = Guid.NewGuid();
+                tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>();
+                var requests = _context.Requests.Where(r => requestIds.Contains(r.RequestID)).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
+                foreach (var request in requests)
+                {
+                    tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
+                }
             }
 
             //foreach (var req in requests)
@@ -1503,6 +1516,7 @@ namespace PrototypeWithAuth.Controllers
                                     _context.Add(requestNotification);
                                 }
                             }
+                            MoveDocumentsOutOfTempFolder(newTRLVM.TempRequestViewModels[0].Request.RequestID, AppUtility.ParentFolderName.Requests);
                             await _context.SaveChangesAsync();
                             await transaction.CommitAsync();
 
@@ -2035,6 +2049,7 @@ namespace PrototypeWithAuth.Controllers
             }
             FillDocumentsInfo(requestItemViewModel, productSubcategory);
             base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
+            base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote);
             return requestItemViewModel;
         }
 
@@ -2473,6 +2488,7 @@ namespace PrototypeWithAuth.Controllers
             if (isCancel)
             {
                 DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote);
                 await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
                 return PartialView("Default");
             }
@@ -2578,6 +2594,7 @@ namespace PrototypeWithAuth.Controllers
             lock (lockObj)
             {*/
             DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
+            DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote);
             /*}*/
             //base.RemoveRequestWithCommentsAndEmailSessions();
             TempRequestJson tempRequestJson = CreateTempRequestJson(Guid.NewGuid());
@@ -2689,7 +2706,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     else
                     {
-                        tempRequest.Request.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == tempRequest.Request.Product.ProductSubcategoryID).Include(ps=>ps.ParentCategory).FirstOrDefault();
+                        tempRequest.Request.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == tempRequest.Request.Product.ProductSubcategoryID).Include(ps => ps.ParentCategory).FirstOrDefault();
                         tempRequest.Request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == tempRequest.Request.Product.VendorID).FirstOrDefault();
                     }
                     allRequests.Add(tempRequest.Request);
@@ -2942,6 +2959,7 @@ namespace PrototypeWithAuth.Controllers
                                     {
                                         var additionalRequests = tr + 1 < deserializedTempRequestListViewModel.TempRequestViewModels.Count() ? true : false;
                                         MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests);
+                                        MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID, AppUtility.ParentFolderName.ParentQuote, additionalRequests);
                                     }
 
                                     string NewFolder = Path.Combine(uploadFolder, deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID.ToString());
@@ -3758,14 +3776,14 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch, AppUtility.ParentFolderName ParentFolder,
+        public ActionResult DocumentsModal(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch, AppUtility.ParentFolderName parentFolderName,
             AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
                 FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
-                ParentFolderName = ParentFolder,
+                ParentFolderName = parentFolderName,
                 ObjectID = id == "" ? "0" : id,
                 SectionType = SectionType,
                 ShowSwitch = showSwitch
@@ -3976,12 +3994,12 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "LabManagement")]
-        public IActionResult EditQuoteDetails(int id, int requestID = 0)
+        public IActionResult EditQuoteDetails(int id, int[] requestIds = null)
         {
-            if (requestID != 0)
+            if (requestIds != null)
             {
-                //user wants to edit only one quote
-                var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.RequestID == requestID)
+                //user wants to edit only one quote, or for selected requests
+                var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => requestIds.Contains(r.RequestID))
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.ParentQuote)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList();
@@ -4000,6 +4018,7 @@ namespace PrototypeWithAuth.Controllers
 
                 return PartialView(editQuoteDetailsViewModel);
             }
+            //add one quote for vendor
             //needs testing 
             //not implemented at all on the client side
             //just here for now for future implmentation
@@ -4035,27 +4054,27 @@ namespace PrototypeWithAuth.Controllers
                             //request.ParentQuote.QuoteDate = quoteDate;
                             request.ParentQuote.QuoteNumber = quoteNumber.ToString();
                             request.Cost = quote.Cost;
-                            request.Currency = quote.Currency;
-                            request.IncludeVAT = quote.IncludeVAT;
+                            request.Currency = editQuoteDetailsViewModel.Requests[0].Currency;
+                            request.IncludeVAT = editQuoteDetailsViewModel.Requests[0].IncludeVAT;
                             request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
                             request.Discount = quote.Discount;
                             _context.Update(request);
                             _context.SaveChanges();
-                            //save file
-                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
-                            string requestFolder = Path.Combine(uploadFolder, quote.RequestID.ToString());
-                            string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Quotes.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = 1 + editQuoteDetailsViewModel.QuoteFileUpload.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            editQuoteDetailsViewModel.QuoteFileUpload.CopyTo(new FileStream(filePath, FileMode.Create));
                         }
+                        //save file
+                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
+                        string requestFolder = Path.Combine(uploadFolder, requests.FirstOrDefault().ParentQuoteID.ToString());
+                        string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Quotes.ToString());
+                        Directory.CreateDirectory(folderPath);
+                        string uniqueFileName = 1 + editQuoteDetailsViewModel.QuoteFileUpload.FileName;
+                        string filePath = Path.Combine(folderPath, uniqueFileName);
+                        editQuoteDetailsViewModel.QuoteFileUpload.CopyTo(new FileStream(filePath, FileMode.Create));
                         transaction.CommitAsync();
                     }
                     catch (Exception ex)
                     {
                         transaction.RollbackAsync();
-                        editQuoteDetailsViewModel.Requests.ForEach(r => DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, r.RequestID));
+                        DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, (int)editQuoteDetailsViewModel.Requests[0].ParentQuoteID);
                         throw new Exception(AppUtility.GetExceptionMessage(ex));
                     }
                 }
@@ -4151,6 +4170,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ConfirmExit(ConfirmExitViewModel confirmExit)
         {
             DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
+            DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote);
             await RemoveTempRequestAsync(confirmExit.GUID);
 
             if (confirmExit.URL.IsEmpty())
@@ -4780,7 +4800,7 @@ namespace PrototypeWithAuth.Controllers
             if (isCancel)
             {
                 //RemoveRequestWithCommentsAndEmailSessions();
-                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote);
                 return PartialView("Default");
             }
             try
@@ -5081,10 +5101,21 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> TermsModal(int vendorID, RequestIndexObject requestIndexObject /*RequestIndexObject requestIndexObject*/) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
+        public async Task<IActionResult> TermsModal(int vendorID, int[] requestIds, RequestIndexObject requestIndexObject /*RequestIndexObject requestIndexObject*/) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
         {
-            TempRequestListViewModel tempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
-            return PartialView(await GetTermsViewModelAsync(vendorID, tempRequestListViewModel));
+            TempRequestListViewModel tempRequestListViewModel = new TempRequestListViewModel()
+            {
+                TempRequestViewModels = new List<TempRequestViewModel>()
+            };
+            if (vendorID == 0 && requestIds == null)
+            {
+                tempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
+            }
+            else
+            {
+                tempRequestListViewModel.RequestIndexObject = requestIndexObject;
+            }
+            return PartialView(await GetTermsViewModelAsync(vendorID, requestIds, tempRequestListViewModel));
         }
 
         [HttpPost]

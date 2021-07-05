@@ -1141,8 +1141,7 @@ namespace PrototypeWithAuth.Controllers
             return totalDays - companyDaysOffCount;
         }
 
-        protected void 
-            MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, bool additionalRequests = false)
+        protected void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, bool additionalRequests = false)
         {
             //rename temp folder to the request id
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
