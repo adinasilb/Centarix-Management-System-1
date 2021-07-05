@@ -1216,9 +1216,9 @@ namespace PrototypeWithAuth.Controllers
             //}
             //tempRequestListViewModel.TempRequestViewModels.ForEach(vm => vm.Request.Product.ProductSubcategory = null && vm.Request.Product.ProductSubcategoryID = vm.Request.Product.ProductSubcategory.ProductSubcategoryID);
             //tempRequestListViewModel.TempRequestViewModels.ForEach(vm => vm.Request.Product.Vendor = null && vm.Request.Product.VendorID = vm.Request.Product.Vendor.VendorID );
-       
+
             tempRequestJson.SerializeViewModel(tempRequestListViewModel.TempRequestViewModels);
-            
+
             _context.Update(tempRequestJson);
             await _context.SaveChangesAsync();
         }
@@ -2649,7 +2649,8 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ConfirmEmailModal(int id, RequestIndexObject requestIndexObject)
         {
 
-            TempRequestListViewModel tempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
+            TempRequestListViewModel tempRequestListViewModel =
+                await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
             //var allRequests = new List<Request>();
             //var isRequests = true;
             //var RequestNum = 1;
@@ -2665,7 +2666,7 @@ namespace PrototypeWithAuth.Controllers
                 OrderNumber = lastParentRequestOrderNum + 1,
                 OrderDate = DateTime.Now
             };
-            TempRequestListViewModel newTRLVM = new TempRequestListViewModel();
+            TempRequestListViewModel newTRLVM = new TempRequestListViewModel() { RequestIndexObject = requestIndexObject };
             TempRequestJson updatedTempRequestJson = new TempRequestJson();
             var allRequests = new List<Request>();
             if (id != 0) //already has terms, being sent from approve order button -- not in a temprequestjson
@@ -2706,7 +2707,6 @@ namespace PrototypeWithAuth.Controllers
 
                 newTRLVM.TempRequestViewModels = oldTempRequestJson.DeserializeJson<List<TempRequestViewModel>>();
                 newTRLVM.GUID = tempRequestListViewModel.GUID;
-                newTRLVM.RequestIndexObject = tempRequestListViewModel.RequestIndexObject;
 
                 foreach (var tempRequest in newTRLVM.TempRequestViewModels)
                 {
@@ -2723,7 +2723,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     else
                     {
-                        tempRequest.Request.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == tempRequest.Request.Product.ProductSubcategoryID).Include(ps=>ps.ParentCategory).FirstOrDefault();
+                        tempRequest.Request.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == tempRequest.Request.Product.ProductSubcategoryID).Include(ps => ps.ParentCategory).FirstOrDefault();
                         tempRequest.Request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == tempRequest.Request.Product.VendorID).FirstOrDefault();
                     }
                     allRequests.Add(tempRequest.Request);
@@ -3959,7 +3959,19 @@ namespace PrototypeWithAuth.Controllers
                     case AppUtility.OrderTypeEnum.OrderNow:
                         //var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
                         //_httpContextAccessor.HttpContext.Session.SetObject(requestNum, request);
-                        return RedirectToAction("ConfirmEmailModal", new { id = id });
+                        TempRequestJson r = CreateTempRequestJson(Guid.NewGuid());
+                        TempRequestListViewModel trlvm = new TempRequestListViewModel()
+                        {
+                            TempRequestViewModels = new List<TempRequestViewModel>()
+                            {
+                                new TempRequestViewModel()
+                                {
+                                    Request = request
+                                }
+                            }
+                        };
+                        await SetTempRequestAsync(r, trlvm);
+                        return RedirectToAction("ConfirmEmailModal", new { id = id, Guid = r.GuidID }) ;
                         break;
                     case AppUtility.OrderTypeEnum.AlreadyPurchased:
                         break;
@@ -4762,13 +4774,22 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<TempRequestListViewModel> LoadTempListFromRequestIndexObjectAsync(RequestIndexObject requestIndexObject)
         {
+            TempRequestListViewModel returntrlvm = new TempRequestListViewModel();
+            //if (requestIndexObject.GUID != Guid.Empty)
+            //{
             var oldJson = _context.TempRequestJsons.Where(trj => trj.GuidID == requestIndexObject.GUID).FirstOrDefault();
-            return new TempRequestListViewModel()
+            returntrlvm = new TempRequestListViewModel()
             {
                 GUID = requestIndexObject.GUID,
                 RequestIndexObject = requestIndexObject,
                 TempRequestViewModels = oldJson.DeserializeJson<List<TempRequestViewModel>>()
             };
+            //}
+            //else
+            //{
+
+            //}
+            return returntrlvm;
 
         }
 
