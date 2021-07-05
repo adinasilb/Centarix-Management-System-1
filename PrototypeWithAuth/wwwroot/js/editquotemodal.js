@@ -42,10 +42,15 @@ $(".vat-check").click(function (e) {
     console.log(checked)
     $(this).attr("checked", !checked);
     $(this).val(checked);
+    var classes;
     if ($('#currency').val() === "NIS") {
-        $.fn.CalculatePriceWithVAT('.price-with-vat-shekel', $('.cost').val()); //do for each
+        $('.cost').each(function (index) {
+            $.fn.CalculatePriceWithVAT('.price-with-vat-shekel.' + index, $('.cost.' + index).val());
+        })
     } else {
-        $.fn.CalculatePriceWithVAT('.price-with-vat-dollar', $('.sum-dollars').val());
+        $('.sum-dollars').each(function (index) {
+            $.fn.CalculatePriceWithVAT('.price-with-vat-dollar.' + index, $('.sum-dollars.' + index).val());
+        })
     }
 })
 
