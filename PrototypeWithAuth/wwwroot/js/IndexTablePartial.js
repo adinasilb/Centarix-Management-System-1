@@ -1,28 +1,6 @@
 ﻿//const { ajax } = require("jquery");
 $(function () {
 
-	$.fn.LoadModalForSelectedItems = function (e, itemUrl, modalClass) {
-		e.preventDefault();
-		e.stopPropagation();
-		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
-			return $(this).attr("id")
-		}).get()
-		//alert('before loading');
-		console.log("arrayOfSelected: " + arrayOfSelected);
-		$("#loading").show();
-		$.ajax({
-			type: "GET",
-			url: itemUrl,
-			traditional: true,
-			data: { 'requestIds': arrayOfSelected },
-			cache: true,
-			success: function (data) {
-				//alert('success!');
-				$.fn.OpenModal("modal", modalClass, data)
-				$("#loading").hide();
-			}
-		});
-	}
 	$(".popover-more").off('click').click(function () {
 		var val = $(this).val();
 		$('[data-toggle="popover"]').popover('dispose');
@@ -139,7 +117,7 @@ $(function () {
 		e.preventDefault();
 		e.stopPropagation();
 		$("#loading").show();
-		var $itemurl = "/Requests/EditQuoteDetails/?id=" + $(".key-vendor-id").val() + "&requestID=" + $(this).attr("value");
+		var $itemurl = "/Requests/EditQuoteDetails/?id=" + $(".key-vendor-id").val() + "&requestIds=" + $(this).attr("value");
 		$.fn.CallPageRequest($itemurl, "quote");
 		return false;
 	});
@@ -357,18 +335,36 @@ $("body").off("click").on("click", ".load-order-details", function (e) {
 		return false;
 	});
 
+	$.fn.LoadModalForSelectedItems = function (e, itemUrl, modalClass) {
+		e.preventDefault();
+		e.stopPropagation();
+		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
+			return $(this).attr("id")
+		}).get()
+		//alert('before loading');
+		console.log("arrayOfSelected: " + arrayOfSelected);
+		$("#loading").show();
+		$.ajax({
+			type: "GET",
+			url: itemUrl,
+			traditional: true,
+			data: { 'requestIds': arrayOfSelected },
+			cache: true,
+			success: function (data) {
+				//alert('success!');
+				$.fn.OpenModal("modal", modalClass, data)
+				$('.mdb-select').materialSelect();
+				$("#loading").hide();
+			}
+		});
+	}
 	$('.load-terms-for-selected').on('click', function (e) {
 		var itemUrl = "/Requests/TermsModal/?" + $.fn.getRequestIndexString();
-		$.fn.LoadModalForSelectedItems(e, itemUrl, "terms");
-	})
-	$('.upload-quote-for-selected').on('click', function (e) {
-		var itemUrl = "/Requests/UploadQuoteModal/?" + $.fn.getRequestIndexString();
 		$.fn.LoadModalForSelectedItems(e, itemUrl, "terms");
 	})
 	$('.update-quote-for-selected').on('click', function (e) {
 		$.fn.LoadModalForSelectedItems(e, "/Requests/EditQuoteDetails/", "edit-quote");
 	})
-
 
 
 	$.fn.ajaxPartialIndexTable = function(status, url, viewClass, type, formdata, modalClass = "", months, years, isArchive) {
