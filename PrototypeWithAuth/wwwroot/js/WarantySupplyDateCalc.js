@@ -22,11 +22,12 @@ $.fn.SetExpectedSupplyDateFromDays = function (selector, thisElement) {
 	$(selector).attr("data-val", supplyDate/*.split("/").reverse().join("-")*/);
 }
 
-$("#expected-supply-date").change(function () {
+$(".expected-supply-date").change(function () {
 	var selector = ".expected-supply-days";
 	if ($(this).attr("index") != null) {
 		selector += "." + $(this).attr("index");
 	}
+	console.log(selector)
 	$.fn.SetExpectedSupplyDaysFromDate(selector, $(this));
 });
 $.fn.SetExpectedSupplyDaysFromDate = function(selector, thisElement) {
