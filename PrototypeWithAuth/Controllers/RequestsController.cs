@@ -4040,9 +4040,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 using (var transaction = _context.Database.BeginTransaction())
                 {
+                    var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Include(x => x.ParentQuote).Select(r => r);
                     try
                     {
-                        var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Include(x => x.ParentQuote).Select(r => r);
                         //var quoteDate = editQuoteDetailsViewModel.QuoteDate;
                         var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
                         foreach (var quote in editQuoteDetailsViewModel.Requests)
@@ -4055,6 +4055,7 @@ namespace PrototypeWithAuth.Controllers
                             request.ParentQuote.QuoteNumber = quoteNumber.ToString();
                             request.Cost = quote.Cost;
                             request.Currency = editQuoteDetailsViewModel.Requests[0].Currency;
+                            request.ExchangeRate = editQuoteDetailsViewModel.Requests[0].ExchangeRate;
                             request.IncludeVAT = editQuoteDetailsViewModel.Requests[0].IncludeVAT;
                             request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
                             request.Discount = quote.Discount;
@@ -4074,7 +4075,11 @@ namespace PrototypeWithAuth.Controllers
                     catch (Exception ex)
                     {
                         transaction.RollbackAsync();
-                        DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, (int)editQuoteDetailsViewModel.Requests[0].ParentQuoteID);
+                        int? parentQuoteId = requests.FirstOrDefault().ParentQuoteID;
+                        if (parentQuoteId != null)
+                        {
+                            DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, (int)parentQuoteId);
+                        }
                         throw new Exception(AppUtility.GetExceptionMessage(ex));
                     }
                 }
