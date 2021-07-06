@@ -28,7 +28,7 @@
                     dNone = "";
                 }
             }
-            <a tabindex="0" role="button"  data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="@dNone no-box-shadow btn p-0 m-0 addLinePopover mark-readonly button-mark-readonly @(dynamicID)ContentLinePopoverButton" lineNumber="@Model.LineNumberString" value="line-content@(Model.Index)" parentLineID="@Model.TempLine?.ParentLineID" lineCount="@Model.Index">
+            <a tabindex="0" role="button"  data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="@dNone no-box-shadow btn p-0 m-0 addLinePopover mark-readonly @(dynamicID)ContentLinePopoverButton" lineNumber="@Model.LineNumberString" value="line-content@(Model.Index)" parentLineID="@Model.TempLine?.ParentLineID" lineCount="@Model.Index">
                 <i class="protocols-color icon-add_circle-24px" style="  font-size: 3rem;"></i>
             </a>
         </li>
@@ -41,10 +41,10 @@
                     </button><hr class="m-0" />
                 </div>
             }
-            @if(Model.Index!=0)
+            @if(Model.Index!=0 && Model.ModalType==AppUtility.ProtocolModalType.Create )
             {
                 <div class="row px-2 comment-btn">
-                    <button type="button" value="-1" current-line-id="@(Model.TempLine?.PermanentLineID??Model.TempLine?.LineID??0)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine mark-readonly " style="font-size:1rem; font-weight:400;">
+                    <button type="button" value="-1" current-line-id="@(Model.TempLine?.PermanentLineID??Model.TempLine?.LineID??0)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark @AppUtility.ProtocolModalType.Create addLine mark-readonly " style="font-size:1rem; font-weight:400;">
                         Delete Current Line
                     </button><hr class="m-0" />
                 </div>

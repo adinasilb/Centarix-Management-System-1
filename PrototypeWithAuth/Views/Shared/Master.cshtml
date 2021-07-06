@@ -462,11 +462,12 @@
             if ($(element).hasClass('protocols')) {
      
                 $(".mark-readonly").attr("disabled", false);
+                $(".button-mark-readonly").removeClass("d-none");
                 $("div.mark-readonly").attr("contenteditable", true);
                 $('.open-document-modal').attr("data-val", true);
                 $.fn.EnableMaterialSelect('#protocolParentList', 'select-options-protocolParentList');
                 $.fn.EnableMaterialSelect('#protocolSubList', 'select-options-protocolSubList');
-                $(".Material").addClass("saveProtocol");
+                $(".Materials").addClass("saveProtocol");
                 $(".Protocols").addClass("saveProtocol"); 
                 var modalType = $(".modalType").val();
                 $("." + modalType).addClass("d-none")
@@ -475,8 +476,7 @@
                 $("[modaltype = " + modalType + "]").attr("modaltype", "Edit");
                 $(".modalType").val("Edit");
                 modalType = $(".modalType").val();
-                $("." + modalType).removeClass("d-none")
-           
+                $("." + modalType).removeClass("d-none")           
             }
         }
 

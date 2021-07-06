@@ -751,16 +751,21 @@ namespace PrototypeWithAuth.AppData
             return dateRange;
         }
 
-        public static string FormatDate(DateTime? date)
+        public static string GetElixirDateFormat(this DateTime? date)
         {
-            if(date != null)
-            {
-                return date?.ToString("d MMM yyyy");
-            }
-            else
-            {
-                return "";
-            }
+            return date?.ToString("d MMM yyyy")??"";
+        }
+        public static string GetElixirDateFormat(this DateTime date)
+        {
+            return date.ToString("d MMM yyyy");
+        }
+        public static string GetElixirDateFormatWithTime(this DateTime? date)
+        {
+            return date?.ToString("d MMM yyyy HH:mm:ss")??"";
+        }
+        public static string GetElixirDateFormatWithTime(this DateTime date)
+        {
+            return date.ToString("d MMM yyyy HH:mm:ss");
         }
     }
 }

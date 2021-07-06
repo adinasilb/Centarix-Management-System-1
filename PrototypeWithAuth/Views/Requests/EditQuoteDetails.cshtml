@@ -212,7 +212,7 @@
                                                     expectedSupplyDate = DateTime.Now.AddDays(Model.Requests[i].ExpectedSupplyDays ?? 0);
                                                 }
                                             }
-                                            <input class="form-control-plaintext border-bottom datepicker " type="text" name="expected-supply-days" id="expected-supply-date" value="@AppUtility.FormatDate(expectedSupplyDate)" />
+                                            <input class="form-control-plaintext border-bottom datepicker " type="text" name="expected-supply-days" id="expected-supply-date" value="@expectedSupplyDate.GetElixirDateFormat()" />
                                         </div>
                                     </td>
                                 </tr>
