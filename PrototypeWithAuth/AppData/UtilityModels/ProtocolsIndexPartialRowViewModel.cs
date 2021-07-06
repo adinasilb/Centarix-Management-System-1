@@ -94,11 +94,11 @@ namespace PrototypeWithAuth.ViewModels
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = "" };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = p.ProtocolID, Width = 15, Value = new List<string>() { p.Name } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, Value = new List<string>() { p.VersionNumber } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 8, Value = new List<string>() { p.VersionNumber } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Creator", Width = 10, Value = new List<string>() { p.ApplicationUserCreator.FirstName + " " + p.ApplicationUserCreator.LastName } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, Value = new List<string>() { } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Start Date", Width = 12, Value = new List<string>() { protocolInstance.StartDate.GetElixirDateFormatWithTime() } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "End Date", Width = 12, Value = new List<string>() { protocolInstance.EndDate.GetElixirDateFormatWithTime()} };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 8, Value = new List<string>() { } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Start Date", Width = 10, Value = new List<string>() { protocolInstance.StartDate.GetElixirDateFormatWithTime() } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "End Date", Width = 10, Value = new List<string>() { protocolInstance.EndDate.GetElixirDateFormatWithTime()} };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, Value = new List<string>() { p.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } };
             yield return new RequestIndexPartialColumnViewModel()
             {
