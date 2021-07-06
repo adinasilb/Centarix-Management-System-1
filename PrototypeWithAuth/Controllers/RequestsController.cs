@@ -676,20 +676,20 @@ namespace PrototypeWithAuth.Controllers
 
                     try
                     {
-                        if (OrderType != AppUtility.OrderTypeEnum.AddToCart)
-                        {
-                            //if (isInBudget)
-                            //{
-                            TempRequestJson trj = CreateTempRequestJson(requestItemViewModel.TempRequestListViewModel.GUID);
-                            await SetTempRequestAsync(trj, trlvm);
-                            await saveItemTransaction.CommitAsync();
-                            //}
-                            //else
-                            //{
-                            //    await SaveTempRequestAndCommentsAsync(trvm);
-                            //    base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
-                            //}
-                        }
+                        //if (OrderType != AppUtility.OrderTypeEnum.AddToCart)
+                        //{
+                        //if (isInBudget)
+                        //{
+                        TempRequestJson trj = CreateTempRequestJson(requestItemViewModel.TempRequestListViewModel.GUID);
+                        await SetTempRequestAsync(trj, trlvm);
+                        await saveItemTransaction.CommitAsync();
+                        //}
+                        //else
+                        //{
+                        //    await SaveTempRequestAndCommentsAsync(trvm);
+                        //    base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
+                        //}
+                        //}
                     }
                     catch (Exception ex)
                     {
@@ -725,16 +725,12 @@ namespace PrototypeWithAuth.Controllers
             {
                 case AppUtility.OrderTypeEnum.AlreadyPurchased:
                     return new RedirectToActionResult("UploadOrderModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
-                //return new RedirectToActionResult("UploadOrderModal", "Requests", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType, GUID = requestItemViewModel.TempRequestListViewModel.GUID });
                 case AppUtility.OrderTypeEnum.OrderNow:
                     return new RedirectToActionResult("UploadQuoteModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
-                //return new RedirectToActionResult("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                 case AppUtility.OrderTypeEnum.AddToCart:
-                    return new RedirectToActionResult("_IndexTableWithCounts", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
-                //return new RedirectToActionResult("UploadQuoteModal", "Requests", new { OrderType = OrderType });
+                    return new RedirectToActionResult("UploadQuoteModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
                 case AppUtility.OrderTypeEnum.SaveOperations:
                     return new RedirectToActionResult("UploadOrderModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
-                //return new RedirectToActionResult("UploadOrderModal", "Requests", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType });
                 default:
                     await RemoveTempRequestAsync(requestItemViewModel.TempRequestListViewModel.GUID);
                     if (requestItemViewModel.PageType == AppUtility.PageTypeEnum.RequestSummary)
@@ -946,15 +942,19 @@ namespace PrototypeWithAuth.Controllers
                     }
                     request.OrderType = AppUtility.OrderTypeEnum.AddToCart.ToString();
 
-                    if (request.ProductID == 0 || request.ProductID == null)
-                    {
-                        _context.Entry(request.Product).State = EntityState.Added;
-                    }
-                    _context.Entry(request).State = EntityState.Added;
-                    await SaveCommentFromTempRequestListViewModelAsync(request, tempRequestListViewModel.TempRequestViewModels[0]);
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                    base.MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests);
+                    //if (request.ProductID == 0 || request.ProductID == null)
+                    //{
+                    //    _context.Entry(request.Product).State = EntityState.Added;
+                    //}
+                    //_context.Entry(request).State = EntityState.Added;
+                    ////tempRequestListViewModel.TempRequestViewModels[0].Request = request;
+                    ////await SaveCommentFromTempRequestListViewModelAsync(request, tempRequestListViewModel.TempRequestViewModels[0]);
+                    //await _context.SaveChangesAsync();
+                    //await transaction.CommitAsync();
+                    tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>() { new TempRequestViewModel() { Request = request } };
+                    TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
+                    await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
+                    //base.MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests);
                 }
                 catch (Exception ex)
                 {
@@ -962,10 +962,7 @@ namespace PrototypeWithAuth.Controllers
                     throw ex;
                 }
             }
-            return new TempRequestViewModel()
-            {
-                Request = request
-            };
+            return tempRequestListViewModel.TempRequestViewModels.FirstOrDefault();
         }
 
         private async Task SaveCommentFromTempRequestListViewModelAsync(Request request, TempRequestViewModel tempRequestViewModel)
@@ -2850,7 +2847,7 @@ namespace PrototypeWithAuth.Controllers
 
                 //add CC's to email
                 //TEST THIS STATEMENT IF VENDOR IS MISSING AN ORDERS EMAIL
-                if(deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails != null)
+                if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails != null)
                 {
                     for (int e = 0; e < deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.Count(); e++)
                     {
@@ -3971,7 +3968,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                         };
                         await SetTempRequestAsync(r, trlvm);
-                        return RedirectToAction("ConfirmEmailModal", new { id = id, Guid = r.GuidID }) ;
+                        return RedirectToAction("ConfirmEmailModal", new { id = id, Guid = r.GuidID });
                         break;
                     case AppUtility.OrderTypeEnum.AlreadyPurchased:
                         break;
@@ -4889,6 +4886,15 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 _context.Entry(tempRequestViewModel.Request).State = EntityState.Added;
                                 await _context.SaveChangesAsync();
+
+                                if (tempRequestViewModel.Comments != null)
+                                {
+                                    foreach (var comment in tempRequestViewModel.Comments)
+                                    {
+                                        comment.RequestID = tempRequestViewModel.Request.RequestID;
+                                        _context.Add(comment);
+                                    }
+                                }
                                 //await SaveCommentsFromSession(request);
                                 //IMPORTANT TO GET BACK TO HERE
                                 //rename temp folder to the request id
@@ -4900,6 +4906,7 @@ namespace PrototypeWithAuth.Controllers
                                     Directory.Delete(requestFolderTo, true);
                                 }
                                 Directory.Move(requestFolderFrom, requestFolderTo);
+
 
                                 try
                                 {
