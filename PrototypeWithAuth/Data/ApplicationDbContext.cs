@@ -19,6 +19,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<LineChange> LineChanges { get; set; }
         public DbSet<ShareProtocol> ShareProtocols { get; set; }
         public DbSet<ShareResource> ShareResources { get; set; }
         public DbSet<FavoriteResource> FavoriteResources { get; set; }
@@ -353,7 +354,8 @@ namespace PrototypeWithAuth.Data
                .WithMany()
                .HasForeignKey(ltc => ltc.LineTypeChildID);
 
-
+            modelBuilder.Entity<LineChange>()
+           .HasKey(lc => new { lc.LineID, lc.ProtocolInstanceID });
 
             modelBuilder.Entity<TempLine>().Property(tl => tl.PermanentLineID).IsRequired(false);
             modelBuilder.Entity<TempLine>(tl =>

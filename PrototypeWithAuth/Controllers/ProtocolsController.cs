@@ -470,6 +470,24 @@ namespace PrototypeWithAuth.Controllers
 
             return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = refreshedLines });
         }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> AddChangeModal(int protocolInstanceID, int currentLineID)
+        {
+            var protocolInstance = await _context.ProtocolInstances.Where(pi => pi.ProtocolInstanceID == protocolInstanceID).FirstOrDefaultAsync();            
+            return PartialView(new LineChange() { ProtocolInstanceID = protocolInstanceID, LineID = currentLineID});
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> AddChangeModal(LineChange lineChange)
+        {
+            var protocolInstance = await _context.ProtocolInstances.Where(pi => pi.ProtocolInstanceID == lineChange.ProtocolInstanceID).FirstOrDefaultAsync();
+
+            List<ProtocolsLineViewModel> refreshedLines = OrderLinesForView(protocolInstance.ProtocolID, AppUtility.ProtocolModalType.CheckListMode, protocolInstance);
+
+            return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = refreshedLines });
+        }
         private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(CreateProtocolsViewModel createProtocolsViewModel, int typeID, int protocolID = 0)
         {
             DeleteTemporaryDocuments(AppUtility.ParentFolderName.Protocols);

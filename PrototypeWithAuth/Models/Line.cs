@@ -13,5 +13,6 @@ namespace PrototypeWithAuth.Models
         public TempLine TempLine { get; set; }
         public bool IsTemporary { get; set; }
         public bool IsTemporaryDeleted { get; set; }
+        public IEnumerable<LineChange> LineChange { get; set; }
     }
 }
