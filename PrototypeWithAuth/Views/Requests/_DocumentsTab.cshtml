@@ -38,7 +38,7 @@
 <div class="row document-margin-bottom">
     @for(int i =0; i<4; i++)
     {
-        if(i < Model.DocumentsInfo?.Count)
+        if (i < Model.DocumentsInfo?.Count)
         {
             var folder = Model.DocumentsInfo?[i];
         <div class=" @(i == 3 ? "" : "document-margin")">
@@ -50,8 +50,9 @@
                     filterClass = color;
                     hasFileClass = "hasFile";
                 }
+                var id = folder.ObjectID == null ? "0" : folder.ObjectID;
             }
-            <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@folder.ObjectID" id="@folder.FolderName.ToString()" data-val="@true" showSwitch="@false"parentFolder="@folder.ParentFolderName">
+            <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@id" id="@folder.FolderName.ToString()" data-val="@true" showSwitch="@false"parentFolder="@folder.ParentFolderName">
                 <div class="card document-border @hasFileClass ">
                     <div class="document-card text-center">
                         <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
