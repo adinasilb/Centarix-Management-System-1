@@ -135,7 +135,7 @@ $("body").off("click").on("click", ".load-order-details", function (e) {
 	var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString()
 	$.fn.CallPageRequest($itemurl, "reorder");
 	console.log("after call page request");
-	$(".temprequesthiddenfors").html('');
+	$(".temprequesthiddenfors").first().html('');
 	return false;
 });
 
@@ -187,10 +187,12 @@ $("body").off("click").on("click", ".load-order-details", function (e) {
 	$(".approve-order").off('click').on("click", function (e) {
 		console.log("approving");
 		var val = $(this).attr("value");
+		console.log("val: " + val);
 		e.preventDefault();
 		$("#loading").show();
-		console.log($(".order-type" + val).val())
-		if ($(".order-type" + val).val() == "1") {
+		console.log("a tag: " + $(".order-type" + val))
+		console.log("order type: " + $(".order-type" + val).attr("value"))
+		if ($(".order-type" + val).attr("value") == "1") {
 			console.log("confirm email")
 			$.ajax({
 				async: true,
@@ -199,12 +201,13 @@ $("body").off("click").on("click", ".load-order-details", function (e) {
 				type: "GET",
 				cache: false,
 				success: function (data) {
+					alert("about to open modal");
 					$.fn.OpenModal("emailModal", "confirm-email", data)
 					$("#loading").hide();
 				}
 			})
 		}
-		else if ($(".order-type" + val).val() == "2") {
+		else if ($(".order-type" + val).attr("value") == "2") {
 			console.log("cart")
 			$.ajax({
 				async: true,
@@ -219,6 +222,7 @@ $("body").off("click").on("click", ".load-order-details", function (e) {
 			})
 		}
 		else {
+			console.log("request status id: " + $(".request-status-id").val());
 			$.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/Approve/?id=" + val, "._IndexTableWithCounts", "GET");
 		}
 		return false;

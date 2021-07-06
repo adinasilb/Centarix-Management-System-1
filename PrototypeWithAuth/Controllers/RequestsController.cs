@@ -587,6 +587,7 @@ namespace PrototypeWithAuth.Controllers
                 var RequestNum = 1;
                 var i = 1;
                 var additionalRequests = false;
+                var trlvm = new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() };
                 foreach (var request in requestItemViewModel.Requests)
                 {
                     if (!request.Ignore)
@@ -614,87 +615,91 @@ namespace PrototypeWithAuth.Controllers
                         lastSerialNumber++;
                         TempRequestViewModel trvm = await AddItemAccordingToOrderType(request, OrderType, isInBudget, requestItemViewModel.TempRequestListViewModel, requestNum: RequestNum);
 
-                        using (var saveItemTransaction = _context.Database.BeginTransaction())
+
+                        //var tempRequestJson = GetTempRequestAsync(requestItemViewModel.TempRequestListViewModel.GUID);
+                        //TempRequestJson trj = new TempRequestJson();
+                        //var t = trj.DeserializeJson<List<TempRequestViewModel>>();
+                        if (requestItemViewModel.Comments != null)
                         {
-                            try
+                            trvm.Comments = new List<Comment>();
+                            foreach (var comment in requestItemViewModel.Comments)
                             {
-                                //var tempRequestJson = GetTempRequestAsync(requestItemViewModel.TempRequestListViewModel.GUID);
-                                //TempRequestJson trj = new TempRequestJson();
-                                //var t = trj.DeserializeJson<List<TempRequestViewModel>>();
-                                if (requestItemViewModel.Comments != null)
+                                if (comment.CommentText.Length != 0)
                                 {
-                                    trvm.Comments = new List<Comment>();
-                                    foreach (var comment in requestItemViewModel.Comments)
-                                    {
-                                        if (comment.CommentText.Length != 0)
-                                        {
-                                            //save the new comment
-                                            comment.ApplicationUserID = currentUser.Id;
+                                    //save the new comment
+                                    comment.ApplicationUserID = currentUser.Id;
 
-                                            comment.RequestID = request.RequestID;
+                                    comment.RequestID = request.RequestID;
 
-                                            trvm.Comments.Add(comment);
-                                        }
-                                    }
-                                }
-                                if (trvm.Request.RequestStatusID == 7)//issavedusingsessions
-                                {
-                                    await _context.SaveChangesAsync();
-                                    if (receivedModalVisualViewModel.LocationInstancePlaces != null)
-                                    {
-                                        await SaveLocations(receivedModalVisualViewModel, request, false);
-                                    }
-                                    if (i < requestItemViewModel.Requests.Count)
-                                    {
-                                        additionalRequests = true;
-                                    }
-                                    else
-                                    {
-                                        additionalRequests = false;
-                                    }
-                                    MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests);
-                                    if (request.ParentQuoteID != null)
-                                    {
-                                        MoveDocumentsOutOfTempFolder((int)request.ParentQuoteID, AppUtility.ParentFolderName.ParentQuote);
-                                    }
-                                    //await saveItemTransaction.CommitAsync();
-                                }
-                                else if (OrderType != AppUtility.OrderTypeEnum.SaveOperations)
-                                {
-                                    trvm.Emails = new List<string>();
-                                    foreach (var e in requestItemViewModel.EmailAddresses.Where(e => e != null))
-                                    {
-                                        trvm.Emails.Add(e);
-                                    }
-                                }
-                                if (OrderType != AppUtility.OrderTypeEnum.AddToCart)
-                                {
-                                    //if (isInBudget)
-                                    //{
-                                    TempRequestJson trj = CreateTempRequestJson(requestItemViewModel.TempRequestListViewModel.GUID);
-                                    await SetTempRequestAsync(trj,
-                                        new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() { trvm } });
-                                    await saveItemTransaction.CommitAsync();
-                                    //}
-                                    //else
-                                    //{
-                                    //    await SaveTempRequestAndCommentsAsync(trvm);
-                                    //    base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
-                                    //}
+                                    trvm.Comments.Add(comment);
                                 }
                             }
-                            catch (Exception ex)
-                            {
-                                await saveItemTransaction.RollbackAsync();
-                                await RollbackCurrentTempAsync(requestItemViewModel.TempRequestListViewModel.GUID);
-                                throw ex;
-                            }
-                            RequestNum++;
                         }
+                        if (trvm.Request.RequestStatusID == 7)//issavedusingsessions
+                        {
+                            await _context.SaveChangesAsync();
+                            if (receivedModalVisualViewModel.LocationInstancePlaces != null)
+                            {
+                                await SaveLocations(receivedModalVisualViewModel, request, false);
+                            }
+                            if (i < requestItemViewModel.Requests.Count)
+                            {
+                                additionalRequests = true;
+                            }
+                            else
+                            {
+                                additionalRequests = false;
+                            }
+                            await SaveCommentFromTempRequestListViewModelAsync(request, trvm);
+                            MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests);
+                            if (request.ParentQuoteID != null)
+                            {
+                                MoveDocumentsOutOfTempFolder((int)request.ParentQuoteID, AppUtility.ParentFolderName.ParentQuote);
+                            }
+                            //await saveItemTransaction.CommitAsync();
+                        }
+                        else if (OrderType != AppUtility.OrderTypeEnum.SaveOperations)
+                        {
+                            trvm.Emails = new List<string>();
+                            foreach (var e in requestItemViewModel.EmailAddresses.Where(e => e != null))
+                            {
+                                trvm.Emails.Add(e);
+                            }
+                        }
+                        trlvm.TempRequestViewModels.Add(trvm);
                         i++;
+
+                    }
+                }
+                using (var saveItemTransaction = _context.Database.BeginTransaction())
+                {
+
+                    try
+                    {
+                        if (OrderType != AppUtility.OrderTypeEnum.AddToCart)
+                        {
+                            //if (isInBudget)
+                            //{
+                            TempRequestJson trj = CreateTempRequestJson(requestItemViewModel.TempRequestListViewModel.GUID);
+                            await SetTempRequestAsync(trj, trlvm);
+                            await saveItemTransaction.CommitAsync();
+                            //}
+                            //else
+                            //{
+                            //    await SaveTempRequestAndCommentsAsync(trvm);
+                            //    base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
+                            //}
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        await saveItemTransaction.RollbackAsync();
+                        await RollbackCurrentTempAsync(requestItemViewModel.TempRequestListViewModel.GUID);
+                        throw ex;
                     }
                 }
             }
+
             catch (Exception ex)
             {
                 //Redirect Results Need to be checked here
@@ -946,15 +951,7 @@ namespace PrototypeWithAuth.Controllers
                         _context.Entry(request.Product).State = EntityState.Added;
                     }
                     _context.Entry(request).State = EntityState.Added;
-                    if (tempRequestListViewModel.TempRequestViewModels?[0].Comments != null)
-                    {
-                        foreach (var comment in tempRequestListViewModel.TempRequestViewModels[0].Comments)
-                        {
-                            comment.RequestID = request.RequestID;
-                            _context.Add(comment);
-                        }
-                    }
-
+                    await SaveCommentFromTempRequestListViewModelAsync(request, tempRequestListViewModel.TempRequestViewModels[0]);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                     base.MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests);
@@ -969,6 +966,20 @@ namespace PrototypeWithAuth.Controllers
             {
                 Request = request
             };
+        }
+
+        private async Task SaveCommentFromTempRequestListViewModelAsync(Request request, TempRequestViewModel tempRequestViewModel)
+        {
+            if (tempRequestViewModel.Comments != null)
+            {
+                foreach (var comment in tempRequestViewModel.Comments)
+                {
+                    comment.RequestID = request.RequestID;
+                    _context.Add(comment);
+                }
+                await _context.SaveChangesAsync();
+            }
+
         }
 
         private async Task<TempRequestViewModel> AlreadyPurchased(Request request, TempRequestListViewModel tempRequestListViewModel)
@@ -1140,17 +1151,8 @@ namespace PrototypeWithAuth.Controllers
                     request.UnitTypeID = 5;
                     request.OrderType = AppUtility.OrderTypeEnum.SaveOperations.ToString();
 
-                    tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>() { new TempRequestViewModel() { Request = request } };
-                    TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
-                    //TempRequestJson tempRequestJson = new TempRequestJson()
-                    //{
-                    //    CookieGUID = tempRequestListViewModel.GUID,
-                    //    ApplicationUserID = _userManager.GetUserId(User),
-                    //    IsOriginal = true,
-                    //    IsCurrent = true
-                    //};
-                    await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
-                    await transaction.CommitAsync();
+                    return new TempRequestViewModel() { Request = request };
+
                 }
                 catch (DbUpdateException ex)
                 {
@@ -2632,7 +2634,8 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ConfirmEmailModal(int id, RequestIndexObject requestIndexObject)
         {
 
-            TempRequestListViewModel tempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
+            TempRequestListViewModel tempRequestListViewModel =
+                await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
             //var allRequests = new List<Request>();
             //var isRequests = true;
             //var RequestNum = 1;
@@ -2648,7 +2651,7 @@ namespace PrototypeWithAuth.Controllers
                 OrderNumber = lastParentRequestOrderNum + 1,
                 OrderDate = DateTime.Now
             };
-            TempRequestListViewModel newTRLVM = new TempRequestListViewModel();
+            TempRequestListViewModel newTRLVM = new TempRequestListViewModel() { RequestIndexObject = requestIndexObject };
             TempRequestJson updatedTempRequestJson = new TempRequestJson();
             var allRequests = new List<Request>();
             if (id != 0) //already has terms, being sent from approve order button -- not in a temprequestjson
@@ -2689,7 +2692,6 @@ namespace PrototypeWithAuth.Controllers
 
                 newTRLVM.TempRequestViewModels = oldTempRequestJson.DeserializeJson<List<TempRequestViewModel>>();
                 newTRLVM.GUID = tempRequestListViewModel.GUID;
-                newTRLVM.RequestIndexObject = tempRequestListViewModel.RequestIndexObject;
 
                 foreach (var tempRequest in newTRLVM.TempRequestViewModels)
                 {
@@ -2848,9 +2850,12 @@ namespace PrototypeWithAuth.Controllers
 
                 //add CC's to email
                 //TEST THIS STATEMENT IF VENDOR IS MISSING AN ORDERS EMAIL
-                for (int e = 0; e < deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.Count(); e++)
+                if(deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails != null)
                 {
-                    message.Cc.Add(new MailboxAddress(deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails[e]));
+                    for (int e = 0; e < deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.Count(); e++)
+                    {
+                        message.Cc.Add(new MailboxAddress(deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails[e]));
+                    }
                 }
                 //if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.Count >= 2)
                 //{
@@ -2936,12 +2941,23 @@ namespace PrototypeWithAuth.Controllers
                                         _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentRequest).State = EntityState.Added;
                                     }
                                     await _context.SaveChangesAsync();
-
-                                    foreach (var p in deserializedTempRequestListViewModel.TempRequestViewModels[tr].Payments)
+                                    //if there are no payments it means that the payments were saved previously
+                                    if (deserializedTempRequestListViewModel.TempRequestViewModels[tr].Payments == null)
                                     {
-                                        //DO WE NEED THIS NEXT LINE HERE???
-                                        p.RequestID = deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID;
-                                        _context.Entry(p).State = EntityState.Added;
+                                        //deserializedTempRequestListViewModel.TempRequestViewModels[tr].Payments = new List<Payment>();
+                                        //foreach(var payment in _context.Payments.Where(p => p.RequestID == deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID))
+                                        //{
+                                        //    deserializedTempRequestListViewModel.TempRequestViewModels[tr].Payments.Add(payment);
+                                        //}
+                                    }
+                                    else
+                                    {
+                                        foreach (var p in deserializedTempRequestListViewModel.TempRequestViewModels[tr].Payments)
+                                        {
+                                            //DO WE NEED THIS NEXT LINE HERE???
+                                            p.RequestID = deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID;
+                                            _context.Entry(p).State = EntityState.Added;
+                                        }
                                     }
                                     await _context.SaveChangesAsync();
                                     if (deserializedTempRequestListViewModel.TempRequestViewModels[tr].Comments != null)
@@ -3943,7 +3959,19 @@ namespace PrototypeWithAuth.Controllers
                     case AppUtility.OrderTypeEnum.OrderNow:
                         //var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
                         //_httpContextAccessor.HttpContext.Session.SetObject(requestNum, request);
-                        return RedirectToAction("ConfirmEmailModal", new { id = id });
+                        TempRequestJson r = CreateTempRequestJson(Guid.NewGuid());
+                        TempRequestListViewModel trlvm = new TempRequestListViewModel()
+                        {
+                            TempRequestViewModels = new List<TempRequestViewModel>()
+                            {
+                                new TempRequestViewModel()
+                                {
+                                    Request = request
+                                }
+                            }
+                        };
+                        await SetTempRequestAsync(r, trlvm);
+                        return RedirectToAction("ConfirmEmailModal", new { id = id, Guid = r.GuidID }) ;
                         break;
                     case AppUtility.OrderTypeEnum.AlreadyPurchased:
                         break;
@@ -4752,14 +4780,13 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<TempRequestListViewModel> LoadTempListFromRequestIndexObjectAsync(RequestIndexObject requestIndexObject)
         {
-            var oldJson = _context.TempRequestJsons.Where(trj => trj.GuidID == requestIndexObject.GUID).FirstOrDefault();
+            var oldJson = await _context.TempRequestJsons.Where(trj => trj.GuidID == requestIndexObject.GUID).FirstOrDefaultAsync();
             return new TempRequestListViewModel()
             {
                 GUID = requestIndexObject.GUID,
                 RequestIndexObject = requestIndexObject,
                 TempRequestViewModels = oldJson.DeserializeJson<List<TempRequestViewModel>>()
             };
-
         }
 
         [HttpGet]
@@ -5071,37 +5098,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        //private async Task SaveCommentsFromSession(Request request)
-        //{
-        //    try
-        //    {
-        //        var commentExists = true;
-        //        var n = 1;
-        //        do
-        //        {
-        //            var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
-        //            var comment = _httpContextAccessor.HttpContext.Session.GetObject<Comment>(commentNumber);
-        //            if (comment != null)
-        //            //will only go in here if there are comments so will only work if it's there
-        //            //IMPT look how to clear the session information if it fails somewhere...
-        //            {
-        //                comment.RequestID = request.RequestID;
-        //                _context.Add(comment);
-        //                n++;
-        //            }
-        //            else
-        //            {
-        //                commentExists = false;
-        //            }
-        //        } while (commentExists);
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception(AppUtility.GetExceptionMessage(ex));
-        //    }
 
-        //}
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
@@ -5133,6 +5130,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (r.RedirectToActionResult.ActionName == "NeedsToBeApproved")
             {
+                //return PartialView("_IndexTableWithCounts", new { requestIndexObject = tempRequestListViewModel.RequestIndexObject });
                 return new EmptyResult();
             }
             else if (r.RedirectToActionResult.ActionName == "Index")
