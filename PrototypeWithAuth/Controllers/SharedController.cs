@@ -214,13 +214,15 @@ namespace PrototypeWithAuth.Controllers
             return rate;
         }
 
-        protected void GetExistingFileStrings(List<DocumentFolder> DocumentsInfo, AppUtility.FolderNamesEnum folderName, AppUtility.ParentFolderName parentFolderName, string uploadFolderParent)
+        protected void GetExistingFileStrings(List<DocumentFolder> DocumentsInfo, AppUtility.FolderNamesEnum folderName, AppUtility.ParentFolderName parentFolderName, 
+                                                                                                                                string uploadFolderParent, string objectID)
         {
             string uploadFolder = Path.Combine(uploadFolderParent, folderName.ToString());
             DocumentFolder folder = new DocumentFolder()
             {
                 FolderName = folderName, 
-                ParentFolderName = parentFolderName
+                ParentFolderName = parentFolderName,
+                ObjectID = objectID
             };
             if (Directory.Exists(uploadFolder))
             {
@@ -388,13 +390,14 @@ namespace PrototypeWithAuth.Controllers
             //may be able to do this together - combining the path for the orders folders
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string requestId = requestItemViewModel.Requests.FirstOrDefault().RequestID.ToString();
+            string parentQuoteId = requestItemViewModel.Requests.FirstOrDefault().ParentQuoteID?.ToString();
             requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
 
             //the partial file name that we will search for (1- because we want the first one)
             //creating the directory from the path made earlier
             var productSubcategory = requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory;
 
-            FillDocumentsInfo(requestItemViewModel, productSubcategory, requestId);
+            FillDocumentsInfo(requestItemViewModel, productSubcategory, requestId, parentQuoteId);
 
             //locations:
             //get the list of requestLocationInstances in this request
@@ -599,39 +602,39 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
                 {
-                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.S, requestParentFolderName, requestFolder);
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.S, requestParentFolderName, requestFolder, requestId);
 
                 }
                 if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
                     && productSubcategory.ProductSubcategoryDescription != "Cells")
                 {
-                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, requestParentFolderName, requestFolder);
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, requestParentFolderName, requestFolder, requestId);
 
                 }
                 if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
                     && productSubcategory.ProductSubcategoryDescription != "Cells" && productSubcategory.ProductSubcategoryDescription != "Probes")
                 {
-                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Map, requestParentFolderName, requestFolder);
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Map, requestParentFolderName, requestFolder, requestId);
 
                 }
             }
             else if (requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID == 2)
             {
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, quoteParentFolderName, quoteFolder);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, requestParentFolderName, requestFolder);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Details, requestParentFolderName, requestFolder);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, requestParentFolderName, requestFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, quoteParentFolderName, quoteFolder, parentQuoteId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, requestParentFolderName, requestFolder, requestId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Details, requestParentFolderName, requestFolder, requestId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, requestParentFolderName, requestFolder, requestId);
             }
             else
             {
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, quoteParentFolderName, quoteFolder);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, requestParentFolderName, requestFolder);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, requestParentFolderName, requestFolder);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Shipments, requestParentFolderName, requestFolder);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, requestParentFolderName, requestFolder);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, requestParentFolderName, requestFolder);
-                //GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.RequestFolderNamesEnum.Returns, requestParentFolderName, requestFolder);
-                //GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.RequestFolderNamesEnum.Credits, requestParentFolderName, requestFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, quoteParentFolderName, quoteFolder, parentQuoteId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, requestParentFolderName, requestFolder, requestId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, requestParentFolderName, requestFolder, requestId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Shipments, requestParentFolderName, requestFolder, requestId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, requestParentFolderName, requestFolder, requestId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, requestParentFolderName, requestFolder, requestId);
+                //GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.RequestFolderNamesEnum.Returns, requestParentFolderName, requestFolder, requestId);
+                //GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.RequestFolderNamesEnum.Credits, requestParentFolderName, requestFolder, requestId);
             }
         }
         protected async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null, SelectedFilters selectedFilters = null, string searchText = "", int numFilters = 0)
