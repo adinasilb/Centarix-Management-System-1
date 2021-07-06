@@ -357,7 +357,7 @@ $("body").off("click").on("click", ".load-order-details", function (e) {
 			success: function (data) {
 				//alert('success!');
 				$.fn.OpenModal("modal", modalClass, data)
-				$('.mdb-select').materialSelect();
+				$('#currency').materialSelect();
 				$("#loading").hide();
 			}
 		});

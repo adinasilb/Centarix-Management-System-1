@@ -1350,7 +1350,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 tempRequestListViewModel.GUID = Guid.NewGuid();
                 tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>();
-                var requests = _context.Requests.Where(r => requestIds.Contains(r.RequestID)).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
+                var requests = _context.Requests.Where(r => requestIds.Contains(r.RequestID)).Include(r => r.Product).ThenInclude(p => p.Vendor)
+                    .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
                 foreach (var request in requests)
                 {
                     tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
@@ -2935,7 +2936,6 @@ namespace PrototypeWithAuth.Controllers
                                     else
                                     {
                                         _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request).State = EntityState.Modified;
-                                        _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentRequest).State = EntityState.Added;
                                     }
                                     await _context.SaveChangesAsync();
                                     //if there are no payments it means that the payments were saved previously
@@ -3003,10 +3003,11 @@ namespace PrototypeWithAuth.Controllers
                                     requestNotification.Vendor = deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.Product.Vendor.VendorEnName;
                                     _context.Add(requestNotification);
 
-
                                     await _context.SaveChangesAsync();
                                 }
 
+                                _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Added;
+                                await _context.SaveChangesAsync();
                                 if (System.IO.File.Exists(uploadFile))
                                 {
                                     System.IO.File.Delete(uploadFile);
@@ -5109,7 +5110,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> TermsModal(int vendorID, int[] requestIds, RequestIndexObject requestIndexObject /*RequestIndexObject requestIndexObject*/) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
+        public async Task<IActionResult> TermsModal(int vendorID, int[] requestIds, RequestIndexObject requestIndexObject) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
         {
             TempRequestListViewModel tempRequestListViewModel = new TempRequestListViewModel()
             {
