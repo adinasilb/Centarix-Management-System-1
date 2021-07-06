@@ -2865,9 +2865,12 @@ namespace PrototypeWithAuth.Controllers
 
                 //add CC's to email
                 //TEST THIS STATEMENT IF VENDOR IS MISSING AN ORDERS EMAIL
-                for (int e = 0; e < deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.Count(); e++)
+                if(deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails != null)
                 {
-                    message.Cc.Add(new MailboxAddress(deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails[e]));
+                    for (int e = 0; e < deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.Count(); e++)
+                    {
+                        message.Cc.Add(new MailboxAddress(deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails[e]));
+                    }
                 }
                 //if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.Count >= 2)
                 //{
@@ -2953,12 +2956,23 @@ namespace PrototypeWithAuth.Controllers
                                         _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentRequest).State = EntityState.Added;
                                     }
                                     await _context.SaveChangesAsync();
-
-                                    foreach (var p in deserializedTempRequestListViewModel.TempRequestViewModels[tr].Payments)
+                                    //if there are no payments it means that the payments were saved previously
+                                    if (deserializedTempRequestListViewModel.TempRequestViewModels[tr].Payments == null)
                                     {
-                                        //DO WE NEED THIS NEXT LINE HERE???
-                                        p.RequestID = deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID;
-                                        _context.Entry(p).State = EntityState.Added;
+                                        //deserializedTempRequestListViewModel.TempRequestViewModels[tr].Payments = new List<Payment>();
+                                        //foreach(var payment in _context.Payments.Where(p => p.RequestID == deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID))
+                                        //{
+                                        //    deserializedTempRequestListViewModel.TempRequestViewModels[tr].Payments.Add(payment);
+                                        //}
+                                    }
+                                    else
+                                    {
+                                        foreach (var p in deserializedTempRequestListViewModel.TempRequestViewModels[tr].Payments)
+                                        {
+                                            //DO WE NEED THIS NEXT LINE HERE???
+                                            p.RequestID = deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID;
+                                            _context.Entry(p).State = EntityState.Added;
+                                        }
                                     }
                                     await _context.SaveChangesAsync();
                                     if (deserializedTempRequestListViewModel.TempRequestViewModels[tr].Comments != null)
