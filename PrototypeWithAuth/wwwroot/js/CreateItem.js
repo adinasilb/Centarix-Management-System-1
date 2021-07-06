@@ -122,7 +122,7 @@
        
         var newIndex = $(this).attr('data-val');
         var currency = $("#currency").val();
-        var subcategoryID = $("#Requests_0__Product_ProductSubcategory_ProductSubcategoryID").val();
+        var subcategoryID = $("#Requests_0__Product_ProductSubcategoryID").val();
         var url = "/Requests/_PartialItemOperationsTab?index=" + newIndex
         if (subcategoryID != null) {
             url = url + "&subcategoryID=" + subcategoryID
@@ -135,6 +135,7 @@
             cache: false,
             success: function (data) {
                 var newitem = $(data);
+                //alert("newindex: " + newIndex);
                 $('.operations-item-div').append(newitem);
                 $("#addOperationItem").attr('data-val', parseInt(newIndex) + 1);
                 $(".mdb-select" + newIndex).materialSelect();
