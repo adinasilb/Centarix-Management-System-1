@@ -124,19 +124,19 @@
                 cache: false,
                 success: function (data) {
                     if (($("#SectionType").val() == "Operations" || $("#masterSectionType").val() == "Operations") && data == '') {
-                        alert("if 1");
+                        //alert("if 1");
                         window.location.href = "/Requests/Index?PageType=OperationsRequest&SectionType=Operations&RequestStatusID=2&SidebarType=List";
                     }
                     else if (($("#SectionType").val() == "Requests" || $("#masterSectionType").val() == "Requests") && data == '') {
-                        alert("if 2");
+                        //alert("if 2");
                         window.location.href = "/Requests/Index?PageType=RequestRequest&SectionType=Requests&RequestStatusID=6&SidebarType=List";
                     }
                     else if (($("#RequestIndexObject_OrderType").val() == "AlreadyPurchased" || $("#masterSectionType").val() == "AlreadyPurchased") && data == '') {
-                        alert("if 3");
+                        //alert("if 3");
                         window.location.href = "/Requests?PageType=RequestRequest&SectionType=Requests&SidebarType=List";
                     }
                     else {
-                        alert("else");
+                        //alert("else");
                         $.fn.OpenModal('emailModal', 'confirm-email', data);
                     }
                     $("#loading").hide();
