@@ -123,15 +123,15 @@
                 cache: false,
                 success: function (data) {
                     if ($("#SectionType").val() == "Operations" && data == '') {
-                        console.log("if 1");
+                        alert("if 1");
                         window.location.href = "/Requests/Index?PageType=OperationsRequest&SectionType=Operations&RequestStatusID=2&SidebarType=List";
                     }
                     else if ($("#SectionType").val() == "Requests" && data == '') {
-                        console.log("if 1");
+                        alert("if 2");
                         window.location.href = "/Requests/Index?PageType=RequestRequest&SectionType=Requests&RequestStatusID=6&SidebarType=List";
                     }
                     else if ($("#RequestIndexObject_OrderType").val() == "AlreadyPurchased" && data == '') {
-                        console.log("if 2");
+                        alert("if 3");
                         window.location.href = "/Requests?PageType=RequestRequest&SectionType=Requests&SidebarType=List";
                     }
                     else {

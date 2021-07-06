@@ -5167,6 +5167,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (r.RedirectToActionResult.ActionName == "NeedsToBeApproved")
             {
+                //return PartialView("_IndexTableWithCounts", new { requestIndexObject = tempRequestListViewModel.RequestIndexObject });
                 return new EmptyResult();
             }
             else if (r.RedirectToActionResult.ActionName == "Index")
