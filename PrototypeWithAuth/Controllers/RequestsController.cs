@@ -2651,7 +2651,8 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ConfirmEmailModal(int id, RequestIndexObject requestIndexObject)
         {
 
-            TempRequestListViewModel tempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
+            TempRequestListViewModel tempRequestListViewModel =
+                await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
             //var allRequests = new List<Request>();
             //var isRequests = true;
             //var RequestNum = 1;
@@ -2667,7 +2668,7 @@ namespace PrototypeWithAuth.Controllers
                 OrderNumber = lastParentRequestOrderNum + 1,
                 OrderDate = DateTime.Now
             };
-            TempRequestListViewModel newTRLVM = new TempRequestListViewModel();
+            TempRequestListViewModel newTRLVM = new TempRequestListViewModel() { RequestIndexObject = requestIndexObject };
             TempRequestJson updatedTempRequestJson = new TempRequestJson();
             var allRequests = new List<Request>();
             if (id != 0) //already has terms, being sent from approve order button -- not in a temprequestjson
@@ -2708,7 +2709,6 @@ namespace PrototypeWithAuth.Controllers
 
                 newTRLVM.TempRequestViewModels = oldTempRequestJson.DeserializeJson<List<TempRequestViewModel>>();
                 newTRLVM.GUID = tempRequestListViewModel.GUID;
-                newTRLVM.RequestIndexObject = tempRequestListViewModel.RequestIndexObject;
 
                 foreach (var tempRequest in newTRLVM.TempRequestViewModels)
                 {
@@ -3961,7 +3961,19 @@ namespace PrototypeWithAuth.Controllers
                     case AppUtility.OrderTypeEnum.OrderNow:
                         //var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
                         //_httpContextAccessor.HttpContext.Session.SetObject(requestNum, request);
-                        return RedirectToAction("ConfirmEmailModal", new { id = id });
+                        TempRequestJson r = CreateTempRequestJson(Guid.NewGuid());
+                        TempRequestListViewModel trlvm = new TempRequestListViewModel()
+                        {
+                            TempRequestViewModels = new List<TempRequestViewModel>()
+                            {
+                                new TempRequestViewModel()
+                                {
+                                    Request = request
+                                }
+                            }
+                        };
+                        await SetTempRequestAsync(r, trlvm);
+                        return RedirectToAction("ConfirmEmailModal", new { id = id, Guid = r.GuidID }) ;
                         break;
                     case AppUtility.OrderTypeEnum.AlreadyPurchased:
                         break;
