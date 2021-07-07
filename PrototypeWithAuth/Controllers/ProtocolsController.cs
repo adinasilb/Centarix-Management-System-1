@@ -470,12 +470,17 @@ namespace PrototypeWithAuth.Controllers
 
             return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = refreshedLines });
         }
-
+        [HttpGet]
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> AddChangeModal(int protocolInstanceID, int currentLineID)
         {
             var protocolInstance = await _context.ProtocolInstances.Where(pi => pi.ProtocolInstanceID == protocolInstanceID).FirstOrDefaultAsync();            
-            return PartialView(new LineChange() { ProtocolInstanceID = protocolInstanceID, LineID = currentLineID});
+            var lineChange = await _context.LineChanges.Where(lc => lc.LineID == currentLineID && lc.ProtocolInstanceID == protocolInstanceID).FirstOrDefaultAsync();
+            if(lineChange == null)
+            {
+                lineChange = new LineChange() { ProtocolInstanceID = protocolInstanceID, LineID = currentLineID };
+            }
+            return PartialView(lineChange);
         }
 
         [HttpPost]
@@ -484,9 +489,37 @@ namespace PrototypeWithAuth.Controllers
         {
             var protocolInstance = await _context.ProtocolInstances.Where(pi => pi.ProtocolInstanceID == lineChange.ProtocolInstanceID).FirstOrDefaultAsync();
 
-            List<ProtocolsLineViewModel> refreshedLines = OrderLinesForView(protocolInstance.ProtocolID, AppUtility.ProtocolModalType.CheckListMode, protocolInstance);
+            if (lineChange.ChangeText != null && !lineChange.ChangeText.IsNullOrWhiteSpace() )
+            {
+                var lineChangeDB = await _context.LineChanges.Where(lc => lc.LineID == lineChange.LineID && lc.ProtocolInstanceID == lineChange.ProtocolInstanceID).FirstOrDefaultAsync();
+                using (var transaction = await _context.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        if(lineChangeDB==null)
+                        {
+                            _context.Entry(lineChange).State = EntityState.Added;
+                        }
+                        else
+                        {
+                            lineChangeDB.ChangeText = lineChange.ChangeText;
+                            _context.Entry(lineChangeDB).State = EntityState.Modified;
+                        }
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception ex)
+                    {
 
+                        await transaction.RollbackAsync();
+                        return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView(protocolInstance.ProtocolID, AppUtility.ProtocolModalType.CheckListMode, protocolInstance), ErrorMessage = AppUtility.GetExceptionMessage(ex) });
+                    }
+                }
+            }
+            
+            List<ProtocolsLineViewModel> refreshedLines = OrderLinesForView(protocolInstance.ProtocolID, AppUtility.ProtocolModalType.CheckListMode, protocolInstance);
             return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = refreshedLines });
+
         }
         private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(CreateProtocolsViewModel createProtocolsViewModel, int typeID, int protocolID = 0)
         {
@@ -881,6 +914,7 @@ namespace PrototypeWithAuth.Controllers
         private List<ProtocolsLineViewModel> OrderLinesForView(int protocolID, AppUtility.ProtocolModalType modalType, ProtocolInstance protocolInstance =null)
         {
             var currentLineID = protocolInstance?.CurrentLineID;
+            var protocolInstanceID = protocolInstance?.ProtocolInstanceID;
             var functionLine = _context.FunctionLines.Where(fl => fl.Line.ProtocolID == protocolID && fl.IsTemporaryDeleted == false).Include(fl => fl.FunctionType).ToList();
             List<ProtocolsLineViewModel> refreshedLines = new List<ProtocolsLineViewModel>();
             Stack<TempLine> parentNodes = new Stack<TempLine>();
@@ -906,8 +940,9 @@ namespace PrototypeWithAuth.Controllers
                     Functions = functionLine.Where(fl => fl.LineID == node.PermanentLineID),
                     ModalType = modalType,
                     IsLast = parentNodes.IsEmpty(),
-                    IsDone = protocolInstance?.IsFinished??false
-                });
+                    IsDone = protocolInstance?.IsFinished ?? false,
+                    LineChange = _context.LineChanges.Where(lc => lc.LineID == node.PermanentLineID && lc.ProtocolInstanceID == protocolInstanceID).FirstOrDefault()
+                }) ;
             }
             if (refreshedLines.Count == 0)
             {

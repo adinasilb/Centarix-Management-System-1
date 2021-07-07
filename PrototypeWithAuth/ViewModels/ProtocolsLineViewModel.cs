@@ -15,7 +15,8 @@ namespace PrototypeWithAuth.ViewModels
         public List<LineType> LineTypes { get; set; }
         public IEnumerable<FunctionLine> Functions { get; set; }
         public AppUtility.ProtocolModalType ModalType { get; set; }
-        public bool IsDone { get; set;}
+        public bool IsDone { get; set; }
         public bool IsLast { get; set; }
+        public LineChange LineChange { get; set;}
     }
 }

@@ -76,18 +76,11 @@
             }
         });
     });
+
     $(".add-change").click(function () {
-        $.ajax({
-            url: "/Protocols/AddChange?protocolInstanceID=" + $(".protocolInstanceID").val() +
-                "&currentLineID=" + $("#" + $(this).attr("currentLineID")).val() + "&IsLast=" + $(this).attr("is-last"),
-            type: 'GET',
-            success: function (data) {
-                $("._Lines").html(data);
-            },
-            error: function (jqxhr) {
-                $("._Lines").html(jqxhr.responseText);
-            }
-        });
+        var url = "/Protocols/AddChangeModal?protocolInstanceID=" + $(".protocolInstanceID").val() +
+            "&currentLineID=" + $(this).attr("currentlineid") ;
+        $.fn.CallPageRequest(url, "addChange");
     });
 
 </script>
