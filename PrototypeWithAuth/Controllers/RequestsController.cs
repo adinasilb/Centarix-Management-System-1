@@ -1304,7 +1304,7 @@ namespace PrototypeWithAuth.Controllers
             await _context.SaveChangesAsync();
         }
         [Authorize(Roles = "Requests, Operations")]
-        public async Task<TermsViewModel> GetTermsViewModelAsync(int vendorID, int[] requestIds, TempRequestListViewModel tempRequestListViewModel)
+        public async Task<TermsViewModel> GetTermsViewModelAsync(int vendorID, List<int> requestIds, TempRequestListViewModel tempRequestListViewModel)
         {
             //var requ = _httpContextAccessor.HttpContext.Session.GetObject<Request>("Request1");
             //List<Request> requests = new List<Request>();
@@ -1346,7 +1346,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 tempRequestListViewModel.GUID = Guid.NewGuid();
             }
-            else if (requestIds != null)
+            else if (requestIds != null && requestIds.Count != 0)
             {
                 tempRequestListViewModel.GUID = Guid.NewGuid();
                 tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>();
@@ -5110,13 +5110,13 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> TermsModal(int vendorID, int[] requestIds, RequestIndexObject requestIndexObject) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
+        public async Task<IActionResult> TermsModal(int vendorID, List<int> requestIds, RequestIndexObject requestIndexObject) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
         {
             TempRequestListViewModel tempRequestListViewModel = new TempRequestListViewModel()
             {
                 TempRequestViewModels = new List<TempRequestViewModel>()
             };
-            if (vendorID == 0 && requestIds == null)
+            if (vendorID == 0 && (requestIds == null || requestIds.Count == 0))
             {
                 tempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
             }
