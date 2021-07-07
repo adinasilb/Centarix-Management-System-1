@@ -651,10 +651,10 @@ namespace PrototypeWithAuth.Controllers
                                 additionalRequests = false;
                             }
                             await SaveCommentFromTempRequestListViewModelAsync(request, trvm);
-                            MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests);
+                            MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, trlvm.GUID);
                             if (request.ParentQuoteID != null)
                             {
-                                MoveDocumentsOutOfTempFolder((int)request.ParentQuoteID, AppUtility.ParentFolderName.ParentQuote);
+                                MoveDocumentsOutOfTempFolder((int)request.ParentQuoteID, AppUtility.ParentFolderName.ParentQuote, false, trlvm.GUID);
                             }
                             //await saveItemTransaction.CommitAsync();
                         }
@@ -907,7 +907,7 @@ namespace PrototypeWithAuth.Controllers
                             trvm = await RequestItem(newRequest, isInBudget);
                             break;
                         case AppUtility.OrderTypeEnum.Save:
-                            trvm = await SaveItem(newRequest);
+                            trvm = await SaveItem(newRequest, tempRequestListViewModel.GUID);
                             break;
                         case AppUtility.OrderTypeEnum.SaveOperations:
                             trvm = await SaveOperationsItem(newRequest, requestNum, tempRequestListViewModel);
@@ -1085,7 +1085,7 @@ namespace PrototypeWithAuth.Controllers
                 Request = newRequest
             };
         }
-        private async Task<TempRequestViewModel> SaveItem(Request newRequest)
+        private async Task<TempRequestViewModel> SaveItem(Request newRequest, Guid guid)
         {
 
             using (var transaction = _context.Database.BeginTransaction())
@@ -1098,7 +1098,7 @@ namespace PrototypeWithAuth.Controllers
                     newRequest.UnitTypeID = 5;
                     _context.Add(newRequest);
                     await _context.SaveChangesAsync();
-                    MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests);
+                    MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests, false, guid);
 
                     newRequest.Product = await _context.Products.Where(p => p.ProductID == newRequest.ProductID).FirstOrDefaultAsync();
                     RequestNotification requestNotification = new RequestNotification();
@@ -1497,7 +1497,7 @@ namespace PrototypeWithAuth.Controllers
                             for (int n = 0; n < newTRLVM.TempRequestViewModels.Count; n++)
                             {
                                 var additionalRequests = n + 1 < newTRLVM.TempRequestViewModels.Count ? true : false;
-                                MoveDocumentsOutOfTempFolder(newTRLVM.TempRequestViewModels[n].Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests);
+                                MoveDocumentsOutOfTempFolder(newTRLVM.TempRequestViewModels[n].Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, tempRequestListViewModel.GUID);
                                 newTRLVM.TempRequestViewModels[n].Request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == newTRLVM.TempRequestViewModels[n].Request.Product.VendorID).FirstOrDefault();
                                 if (!needsToBeApproved)
                                 {
@@ -1516,7 +1516,7 @@ namespace PrototypeWithAuth.Controllers
                                     _context.Add(requestNotification);
                                 }
                             }
-                            MoveDocumentsOutOfTempFolder(newTRLVM.TempRequestViewModels[0].Request.RequestID, AppUtility.ParentFolderName.Requests);
+                            MoveDocumentsOutOfTempFolder(newTRLVM.TempRequestViewModels[0].Request.RequestID, AppUtility.ParentFolderName.Requests, false, newTRLVM.GUID);
                             await _context.SaveChangesAsync();
                             await transaction.CommitAsync();
 
@@ -2971,8 +2971,8 @@ namespace PrototypeWithAuth.Controllers
                                     if (deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
                                     {
                                         var additionalRequests = tr + 1 < deserializedTempRequestListViewModel.TempRequestViewModels.Count() ? true : false;
-                                        MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests);
-                                        MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID, AppUtility.ParentFolderName.ParentQuote, additionalRequests);
+                                        MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, deserializedTempRequestListViewModel.GUID);
+                                        MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID, AppUtility.ParentFolderName.ParentQuote, additionalRequests, deserializedTempRequestListViewModel.GUID);
                                     }
 
                                     string NewFolder = Path.Combine(uploadFolder, deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID.ToString());
@@ -3790,7 +3790,7 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch, AppUtility.ParentFolderName parentFolderName,
+        public ActionResult DocumentsModal(string id, Guid guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch, AppUtility.ParentFolderName parentFolderName,
             AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
@@ -3799,6 +3799,7 @@ namespace PrototypeWithAuth.Controllers
                 IsEdittable = IsEdittable,
                 ParentFolderName = parentFolderName,
                 ObjectID = id == "" ? "0" : id,
+                Guid = guid,
                 SectionType = SectionType,
                 ShowSwitch = showSwitch
             };
@@ -3809,7 +3810,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult _DocumentsModalData(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+        public ActionResult _DocumentsModalData(string id, Guid guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
           AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
@@ -3818,6 +3819,7 @@ namespace PrototypeWithAuth.Controllers
                 IsEdittable = IsEdittable,
                 ParentFolderName = parentFolderName,
                 ObjectID = id == "" ? "0" : id,
+                Guid = guid,
                 SectionType = SectionType,
                 ShowSwitch = showSwitch
             };
@@ -4899,14 +4901,18 @@ namespace PrototypeWithAuth.Controllers
                                 //await SaveCommentsFromSession(request);
                                 //IMPORTANT TO GET BACK TO HERE
                                 //rename temp folder to the request id
-                                string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-                                string requestFolderFrom = Path.Combine(uploadFolder, "0");
-                                string requestFolderTo = Path.Combine(uploadFolder, tempRequestViewModel.Request.RequestID.ToString());
-                                if (Directory.Exists(requestFolderTo))
-                                {
-                                    Directory.Delete(requestFolderTo, true);
-                                }
-                                Directory.Move(requestFolderFrom, requestFolderTo);
+
+                                MoveDocumentsOutOfTempFolder(tempRequestViewModel.Request.RequestID, AppUtility.ParentFolderName.Requests, false, tempRequestListViewModel.GUID);
+                                MoveDocumentsOutOfTempFolder(tempRequestViewModel.Request.RequestID, AppUtility.ParentFolderName.ParentQuote, false, tempRequestListViewModel.GUID);
+
+                                //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+                                //string requestFolderFrom = Path.Combine(uploadFolder, tempRequestListViewModel.GUID.ToString());
+                                //string requestFolderTo = Path.Combine(uploadFolder, tempRequestViewModel.Request.RequestID.ToString());
+                                //if (Directory.Exists(requestFolderTo))
+                                //{
+                                //    Directory.Delete(requestFolderTo, true);
+                                //}
+                                //Directory.Move(requestFolderFrom, requestFolderTo);
 
 
                                 try
@@ -4915,7 +4921,7 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 catch (Exception ex)
                                 {
-                                    Directory.Move(requestFolderTo, requestFolderFrom);
+                                    //Directory.Move(requestFolderTo, requestFolderFrom);
                                     throw new Exception(AppUtility.GetExceptionMessage(ex));
                                 }
                             }
