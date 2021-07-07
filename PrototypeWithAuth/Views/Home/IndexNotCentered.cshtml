@@ -1,0 +1,42 @@
+﻿@model IEnumerable<PrototypeWithAuth.Models.Menu>
+@using PrototypeWithAuth.Data
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_HomeView.cshtml";
+
+
+}
+@*Need to add security here*@
+
+<div class="text-center center-horizontally mt-3">
+    <h2>Welcome @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</h2>
+
+    @{ await Html.RenderPartialAsync("_HomeButtons", Model);}
+    @*<div class="mt-5">
+            <button type="submit" class="btn btn-success module-buttons">Protocols</button>
+            &nbsp;
+            @Html.ActionLink("Orders & Inventory", "Index", "Requests", new { /*should this be none or inventory?*/}, new { @class = "btn btn-info module-buttons" })
+            &nbsp;
+            @Html.ActionLink("Expenses", "Index", "ParentRequests", new { }, new { @class = "btn btn-primary module-buttons" })
+            &nbsp;
+            <button type="submit" class="btn btn-danger module-buttons">Biomarkers</button>
+            &nbsp;
+            @Html.ActionLink("Register A New User", "RegisterUser", "Admin", new { }, new { @class = "btn btn-secondary module-buttons" })
+        </div>*@
+
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $.fn.GetNotifcationCount();
+            $.fn.GetNotifications();
+            $.fn.getMenuItems();
+
+        });
+    </script>
+}
