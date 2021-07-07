@@ -87,7 +87,7 @@ $.fn.CalculatePriceWithVAT = function (totalPriceClass, cost) {
         totalPrice = cost * 1.17;
     }
     console.log(totalPrice)
-    $(totalPriceClass).val(totalPrice.ToFixed(2));
+    $(totalPriceClass).val(totalPrice.toFixed(2));
 }
 $('.cost').change(function (e) {
     //console.log('shekel cost change function');
