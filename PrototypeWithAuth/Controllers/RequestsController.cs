@@ -2565,7 +2565,7 @@ namespace PrototypeWithAuth.Controllers
                             action = "UploadQuoteModal";
                             break;
                         case AppUtility.OrderTypeEnum.AddToCart:
-                            action = "_IndexTableData";
+                            action = "UploadQuoteModal";
                             break;
                     }
                     tempRequestListViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
