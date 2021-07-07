@@ -126,7 +126,7 @@ namespace PrototypeWithAuth.Controllers
                 totalDays = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff);
                 totalhours = (totalDays - (vacationDaysTaken + sickDaysTaken + unpaidLeave + specialDays)) * user.SalariedEmployee.HoursPerDay;
                 workingDays = employeeHours.Where(eh => (eh.OffDayTypeID == null) || (eh.IsBonus && eh.OffDayTypeID != null))
-                    .Where(eh => (eh.Exit1 != null || eh.TotalHours != null) && eh.Date.Date < DateTime.Now.Date).Count();
+                    .Where(eh => eh.Exit1 != null || eh.TotalHours != null).Count();
                 workingDays = workingDays - Math.Round((sickHours + vacationHours) / user.SalariedEmployee?.HoursPerDay ?? 1, 2);
             }
             SummaryHoursViewModel summaryHoursViewModel = new SummaryHoursViewModel()
