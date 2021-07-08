@@ -472,7 +472,7 @@ namespace PrototypeWithAuth.Controllers
         }
         private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(CreateProtocolsViewModel createProtocolsViewModel, int typeID, int protocolID = 0)
         {
-            DeleteTemporaryDocuments(AppUtility.ParentFolderName.Protocols);
+            DeleteTemporaryDocuments(AppUtility.ParentFolderName.Protocols, Guid.Empty);
             var protocol = _context.Protocols
                 .Include(p => p.Urls).Include(p => p.Materials)
                 .ThenInclude(m => m.Product).Include(p => p.ProtocolSubCategory).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
@@ -2293,7 +2293,7 @@ namespace PrototypeWithAuth.Controllers
                     viewmodel.Protocols = _context.Protocols.ToList();
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddFile:
-                    DeleteTemporaryDocuments(AppUtility.ParentFolderName.Reports);
+                    DeleteTemporaryDocuments(AppUtility.ParentFolderName.Reports, Guid.Empty);
                     DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
                     {
                         FolderName = AppUtility.FolderNamesEnum.Files,

@@ -1981,7 +1981,7 @@ namespace PrototypeWithAuth.Controllers
 
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> CreateItemTabs(int productSubCategoryId, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, string itemName = "", bool isRequestQuote = false)
-        {
+        { //TODO : CHECK IF WE NEED TO DELETE GUID DOCS HERE
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             var categoryType = 1;
             var sectionType = AppUtility.MenuItems.Requests;
@@ -2058,8 +2058,8 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.RequestStatusID = 7;
             }
             FillDocumentsInfo(requestItemViewModel, productSubcategory);
-            base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
-            base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote);
+            //base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
+            //base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote);
             return requestItemViewModel;
         }
 
@@ -2497,8 +2497,8 @@ namespace PrototypeWithAuth.Controllers
         {
             if (isCancel)
             {
-                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
-                DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote);
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
                 await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
                 return PartialView("Default");
             }
@@ -2603,8 +2603,8 @@ namespace PrototypeWithAuth.Controllers
             /*Object lockObj = new Object();
             lock (lockObj)
             {*/
-            DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
-            DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote);
+            //DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
+            //DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote);
             /*}*/
             //base.RemoveRequestWithCommentsAndEmailSessions();
             TempRequestJson tempRequestJson = CreateTempRequestJson(Guid.NewGuid());
@@ -4118,7 +4118,7 @@ namespace PrototypeWithAuth.Controllers
                     catch (Exception ex)
                     {
                         transaction.RollbackAsync();
-                        DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, (int)parentQuoteId);
+                        DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, Guid.Empty ,(int)parentQuoteId);
                         throw new Exception(AppUtility.GetExceptionMessage(ex));
                     }
                 }
@@ -4213,8 +4213,8 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, Users, Biomarkers, Accounting, Admin, Reports, Timekeeper, Operations, Protocols, Income, Operation, Expenses, LabManagement")]
         public async Task<IActionResult> ConfirmExit(ConfirmExitViewModel confirmExit)
         {
-            DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
-            DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote);
+            DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, confirmExit.GUID);
+            DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, confirmExit.GUID);
             await RemoveTempRequestAsync(confirmExit.GUID);
 
             if (confirmExit.URL.IsEmpty())
@@ -4843,7 +4843,8 @@ namespace PrototypeWithAuth.Controllers
             if (isCancel)
             {
                 //RemoveRequestWithCommentsAndEmailSessions();
-                DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote);
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
+                await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
                 return PartialView("Default");
             }
             try
@@ -5042,7 +5043,7 @@ namespace PrototypeWithAuth.Controllers
             if (isCancel)
             {
                 await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
-                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
                 return PartialView("Default");
             }
             try
