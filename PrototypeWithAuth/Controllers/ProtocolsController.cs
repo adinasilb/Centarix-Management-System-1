@@ -566,29 +566,7 @@ namespace PrototypeWithAuth.Controllers
             createProtocolsViewModel.MaterialDocuments = (Lookup<Material, List<DocumentFolder>>)MaterialFolders.ToLookup(o => o.Key, o => o.Value);
             return createProtocolsViewModel;
         }
-        private TempLine TurnLineIntoTempLine(Line line, Guid guid)
-        {
-            TempLine tempLine = new TempLine();
-            tempLine.PermanentLineID = line.LineID;
-            tempLine.Content = line.Content;
-            tempLine.LineNumber = line.LineNumber;
-            tempLine.LineTypeID = line.LineTypeID;
-            tempLine.ProtocolID = line.ProtocolID;
-            tempLine.ParentLineID = line.ParentLineID;
-            tempLine.UniqueGuid = guid;
-            return tempLine;
-        }
-        private Line TurnTempLineToLine(TempLine tempLine)
-        {
-            Line line = new Line();
-            line.LineID = tempLine.PermanentLineID ?? tempLine.LineID;
-            line.Content = tempLine.Content;
-            line.LineNumber = tempLine.LineNumber;
-            line.LineTypeID = tempLine.LineTypeID;
-            line.ProtocolID = tempLine.ProtocolID;
-            line.ParentLineID = tempLine.ParentLineID;
-            return line;
-        }
+
         private List<LineType> GetOrderLineTypeFromParentToChild()
         {
             List<LineType> orderedLineTypes = new List<LineType>();
@@ -631,7 +609,7 @@ namespace PrototypeWithAuth.Controllers
                 await _context.SaveChangesAsync();
             }
         }
-        public async Task SaveTempLines(List<TempLine> TempLines, int ProtocolID, Guid guid)
+        public async Task SaveTempLines(List<Line> Lines, int ProtocolID, Guid guid)
         {
             try
             {
@@ -639,8 +617,8 @@ namespace PrototypeWithAuth.Controllers
                 {
                     try
                     {
-                        await UpdateLineContentAsync(TempLines);
-                        var tempLines = _context.TempLines.Where(tl=>tl.UniqueGuid == guid);
+                        await UpdateLineContentAsync(Lines, guid);
+                        var tempLines = _context.TempLinesJsons.Where(tl=>tl.UniqueGuid == guid);
                         foreach (var line in tempLines)
                         {
                             _context.Update(TurnTempLineToLine(line));
@@ -769,22 +747,22 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> _Lines(List<Line> TempLines, int lineTypeID, int currentLineID, int protocolID, AppUtility.ProtocolModalType modalType, Guid guid)
+        public async Task<IActionResult> _Lines(List<Line> Lines, int lineTypeID, int currentLineID, int protocolID, AppUtility.ProtocolModalType modalType, Guid guid)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    var currentLine = _context.TempLines.Where(tl=>tl.UniqueGuid==guid).Include(tl => tl.ParentLine).Include(tl => tl.PermanentLine).Where(tl => tl.PermanentLineID == currentLineID).FirstOrDefault();
+                    var currentLine = _context.Lines.Where(tl=>tl.LineID==currentLineID).Include(tl => tl.ParentLine).FirstOrDefault();
                     var orderedLineTypes = GetOrderLineTypeFromParentToChild();
-                    if (TempLines != null)
+                    if (Lines != null)
                     {
                         //save all temp line data 
-                        await UpdateLineContentAsync(TempLines);
+                        await UpdateLineContentAsync(Lines, guid);
                     }
                     if (lineTypeID == -1)
                     {
-                        await DeleteTempLineWithChildrenAsync(currentLine);
+                        await DeleteTempLineWithChildrenAsync(currentLine, guid);
                     }
                     else
                     {
@@ -902,11 +880,13 @@ namespace PrototypeWithAuth.Controllers
         {
             return _context.Protocols.Where(p => p.UniqueCode.Equals(uniqueNumber)).ToList().Any();
         }
-        private async Task UpdateLineContentAsync(List<Line> TempLines, Guid guid)
+        private async Task UpdateLineContentAsync(List<Line> Lines, Guid guid)
         {
-            foreach (var line in TempLines)
+            var json = _context.TempLinesJsons.Where(tlj => tlj.TempLinesJsonID == guid).FirstOrDefault();
+            var originalLines = json.DeserializeJson<List<Line>>();
+            foreach (var line in Lines)
             {
-                var temp = _context.TempLines.Where(tl => tl.PermanentLineID == line.PermanentLineID && tl.UniqueGuid == line.UniqueGuid).FirstOrDefault();
+                var temp = originalLines.Where(l => l.LineID == line.LineID ).FirstOrDefault();
                 if (temp != null)
                 {
                     temp.Content = line.Content ?? "";
@@ -939,9 +919,9 @@ namespace PrototypeWithAuth.Controllers
                 refreshedLines.Add(new ProtocolsLineViewModel()
                 {
                     LineTypes = lineTypes,
-                    TempLine = node,
+                    Line = node,
                     Index = count++,
-                    LineNumberString = refreshedLines.Where(rl => rl.TempLine.PermanentLineID == node.ParentLineID)?.FirstOrDefault()?.LineNumberString + node.LineNumber + ".",
+                    LineNumberString = refreshedLines.Where(rl => rl.Line.PermanentLineID == node.ParentLineID)?.FirstOrDefault()?.LineNumberString + node.LineNumber + ".",
                     Functions = functionLine.Where(fl => fl.LineID == node.PermanentLineID),
                     ModalType = modalType,
                     IsLast = parentNodes.IsEmpty(),
@@ -969,17 +949,19 @@ namespace PrototypeWithAuth.Controllers
                 await _context.SaveChangesAsync();
             }
         }
-        private async Task DeleteTempLineWithChildrenAsync(TempLine line)
+        private async Task DeleteTempLineWithChildrenAsync(Line line, Guid guid)
         {
-            var siblingsAfter = _context.TempLines.Where(tl => tl.ParentLineID == line.ParentLineID && tl.LineNumber > line.LineNumber &&  tl.UniqueGuid == line.UniqueGuid).Include(tl => tl.PermanentLine).ToList();
-            Stack<TempLine> nodes = new Stack<TempLine>();
-            List<TempLine> nodeInOrderOfChildrenToParent = new List<TempLine>();
+            var tempLinesJson =  await _context.TempLinesJsons.Where(tlj => tlj.TempLinesJsonID == guid).FirstOrDefaultAsync();
+            var tempLines = tempLinesJson.DeserializeJson<List<Line>>();
+            var siblingsAfter = tempLines.Where(tl => tl.ParentLineID == line.ParentLineID && tl.LineNumber > line.LineNumber).ToList();
+            Stack<Line> nodes = new Stack<Line>();
+            List<Line> nodeInOrderOfChildrenToParent = new List<Line>();
             nodes.Push(line);
             while (!nodes.IsEmpty())
             {
                 var curr = nodes.Pop();
                 nodeInOrderOfChildrenToParent.Add(curr);
-                var children = await _context.TempLines.Where(tl => tl.ParentLineID == curr.PermanentLineID && tl.UniqueGuid==curr.UniqueGuid).Include(tl => tl.PermanentLine).ToListAsync();
+                var children = await tempLines.Where(tl => tl.ParentLineID == curr.LineID).ToListAsync();
                 children.ForEach(tl => { nodes.Push(tl); });
             }
             var lineTypes = GetOrderLineTypeFromChildToParent();
@@ -988,11 +970,11 @@ namespace PrototypeWithAuth.Controllers
                 var nodesByType = nodeInOrderOfChildrenToParent.Where(n => n.LineTypeID == lineType.LineTypeID);
                 foreach (var node in nodesByType)
                 {
-                    var permanentLine = node.PermanentLine;
-                    _context.Remove(node);
-                    if (node.PermanentLine != null)
+                    var permanentLine = await _context.Lines.Where(l => l.LineID == node.LineID).FirstOrDefaultAsync();
+                    tempLines.Remove(node);
+                    if (permanentLine != null)
                     {
-                        if (node.PermanentLine.IsTemporary)
+                        if (permanentLine.IsTemporary)
                         {
                             _context.Remove(permanentLine);
                         }

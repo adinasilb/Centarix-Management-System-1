@@ -1260,7 +1260,7 @@ namespace PrototypeWithAuth.Controllers
 
             TempRequestJson newTempRequestJson = new TempRequestJson()
             {
-                RequestJson = original.RequestJson,
+                Json = original.Json,
                 ApplicationUserID = original.ApplicationUserID,
                 GuidID = original.GuidID,
                 IsOriginal = false,

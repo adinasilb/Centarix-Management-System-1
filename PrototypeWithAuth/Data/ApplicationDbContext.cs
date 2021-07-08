@@ -49,7 +49,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<FunctionLine> FunctionLines { get; set; }
         public DbSet<ProtocolComment> ProtocolComments { get; set; }
         public DbSet<Line> Lines { get; set; }
-        public DbSet<TempLine> TempLines { get; set; }
+        public DbSet<TempLinesJson> TempLinesJsons { get; set; }
         //public DbSet<LineBase> LineBases { get; set; }
         public DbSet<ProtocolInstance> ProtocolInstances { get; set; }
         public DbSet<Link> Links { get; set; }
@@ -359,29 +359,14 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<LineChange>()
            .HasKey(lc => new { lc.LineID, lc.ProtocolInstanceID });
 
-            modelBuilder.Entity<TempLine>().Property(tl => tl.PermanentLineID).IsRequired(false);
-            modelBuilder.Entity<TempLine>(tl =>
-            {
-                tl.HasOne(tl => tl.ParentLine)
-                .WithMany(tl => tl.TempLines).IsRequired(false)
-                .HasForeignKey(tl => tl.ParentLineID).IsRequired(false);
-                //.HasPrincipalKey(tl => tl.PermanentLineID);
-                tl.Property(tl => tl.PermanentLineID).IsRequired(false);
-            });
 
-            modelBuilder.Entity<TempLine>().HasIndex(tl => tl.PermanentLineID).IsUnique().HasFilter(null);
-
-            modelBuilder.Entity<TempLine>()
-               .HasOne(tl => tl.PermanentLine)
-               .WithOne()
-               .HasForeignKey<TempLine>(tl => tl.PermanentLineID);
 
             modelBuilder.Entity<Report>().Property(r => r.ReportText).HasColumnType("ntext");
             modelBuilder.Entity<Resource>().Property(r => r.Summary).HasColumnType("ntext");
             modelBuilder.Entity<ResourceNote>().Property(r => r.Note).HasColumnType("ntext");
             modelBuilder.Entity<ProtocolInstance>().Property(r => r.ResultDescription).HasColumnType("ntext");
-            modelBuilder.Entity<TempRequestJson>().Property(t => t.RequestJson).HasColumnType("ntext");
-
+            modelBuilder.Entity<TempRequestJson>().Property(t => t.Json).HasColumnType("ntext");
+            modelBuilder.Entity<TempLinesJson>().Property(t => t.Json).HasColumnType("ntext");
             //modelBuilder.Entity<TempLine>().HasIndex(r => r.PermanentLineID).IsUnique();
             modelBuilder.Seed();
 

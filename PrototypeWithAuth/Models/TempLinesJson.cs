@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class TempLinesJson 
+    public class TempLinesJson :TempJson
     {
-        public int TempLinesJsonID { get; set; }
-        public string Json { get; set; }
-        public Guid UniqueGuid { get; set; }
+        [Key]
+        public Guid TempLinesJsonID { get; set; }
     }
 }
