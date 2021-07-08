@@ -14,7 +14,7 @@ namespace PrototypeWithAuth.ViewModels
         private static RequestIndexObject requestIndexObject;
         private static string defaultImage;
         private List<IconColumnViewModel> iconList;
-        private Request r;
+        public Request r;
         private ApplicationUser user;
         private FavoriteRequest favoriteRequest;
         private ShareRequest shareRequest;
