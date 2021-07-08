@@ -2873,7 +2873,7 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 //body
-                builder.TextBody = @"Hello," + "\n\n" + "Please see the attached order for quote number(s) " + string.Join(",", quoteNumbers) +
+                builder.TextBody = @"Hello," + "\n\n" + "Please see the attached order for quote number(s) " + string.Join(", ", quoteNumbers) +
                     ". \n\nPlease confirm that you received the order. \n\nThank you.\n"
                     + ownerUsername + "\nCentarix";
                 builder.Attachments.Add(uploadFile);
