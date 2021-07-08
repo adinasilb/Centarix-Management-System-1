@@ -2861,7 +2861,7 @@ namespace PrototypeWithAuth.Controllers
                 message.Subject = "Order from Centarix to " + vendorName;
 
                 List<string> quoteNumbers = new List<string>();
-                string quoteNumberFromJson = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentQuote.QuoteNumber;
+                ParentQuote quoteNumberFromJson = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentQuote;
                 if (quoteNumberFromJson != null)
                 {
                     quoteNumbers = deserializedTempRequestListViewModel.TempRequestViewModels.Select(trvm => trvm.Request.ParentQuote.QuoteNumber).ToList();
