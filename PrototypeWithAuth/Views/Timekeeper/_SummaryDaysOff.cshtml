@@ -55,19 +55,19 @@
                     @Math.Round(Model.VacationDays, 2)                    
                 </div>
                 <div class="col">
-                    @Model.VacationDaysTakenCount
+                    @Math.Round(Model.VacationDaysTakenCount, 2)
                 </div>
                 <div class="col">
                     @Math.Round(Model.VacationDaysLeft, 2)
                 </div>
                 <div class="col">
-                    @Model.SickDays
+                    @Math.Round(Model.SickDays, 2)
                 </div>
                 <div class="col">
-                    @Model.SickDaysTakenCount
+                    @Math.Round(Model.SickDaysTakenCount, 2)
                 </div>
                 <div class="col">
-                    @Model.SickDaysLeft
+                    @Math.Round(Model.SickDaysLeft, 2)
                 </div>
             </div>
             <div class="row  mt-6 ">
@@ -87,9 +87,11 @@
                             </tr>
                         }
 
-                    </tbody>
-                </table>
-                <table class="col offset-1 text-center">
+                        </tbody>
+                    </table>
+                </div>
+            <div class="col offset-1 text-center p-0">
+                <table class="w-100">
                     <thead>
                         <tr class="text-left">
                             <th class="p-4 text-left text font-weight-bold">Sick Days</th>
@@ -106,7 +108,9 @@
                         }
                     </tbody>
                 </table>
-                <table class="col offset-1  text-center">
+                </div>
+            <div class="col offset-1  text-center p-0">
+                <table class="w-100">
                     <thead>
                         <tr class="text-left">
                             <th class="p-4 text-left text font-weight-bold">Special Days</th>
@@ -123,6 +127,7 @@
                         }
                     </tbody>
                 </table>
+            </div>
             </div>
 
 

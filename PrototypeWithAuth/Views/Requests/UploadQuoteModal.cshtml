@@ -32,14 +32,9 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
-                @Html.HiddenFor(model => model.RequestIndexObject.PageType)
-                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
-                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
-                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
-                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
-                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
-                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
-                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
+
+                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel);}
+
                 <div>
                     <div class="modal-header modal-header-padding">
                         <div class="container-fluid">
@@ -75,7 +70,7 @@
                     <div class="row">
                         <div class=" offset-4 text-center">
                             <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" name="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
-                            <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-id="0" id="@AppUtility.FolderNamesEnum.Quotes.ToString()" name="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-val="@true" showSwitch="@false">
+                            <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-id="0" id="@AppUtility.FolderNamesEnum.Quotes.ToString()" name="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-val="@true" showSwitch="@false" parentfolder="@AppUtility.ParentFolderName.ParentQuote.ToString()">
 
                                 <div class="card document-border @hasFileClass">
                                     <div class="document-card text-center">
@@ -97,7 +92,7 @@
                                 <div class="col-md-6">
                                 </div>
                             </div>
-                            @if (Model.RequestIndexObject.IsReorder)
+                            @if (Model.TempRequestListViewModel.RequestIndexObject.IsReorder)
                             {
                                 <div class="row">
                                     <div class=" col-md-6">
@@ -110,18 +105,18 @@
                                     <div class=" col-md-6">
                                         <div class="form-group">
                                             <label class="control-label">Expected supply date</label>
-                                            <input value="" class="form-control-plaintext border-bottom datepicker " disabled type="text" name="expected-supply-days" id="expected-supply-date" />
+                                            <input value="" class="form-control-plaintext border-bottom datepicker expected-supply-date" type="text" name="expected-supply-days" />
                                         </div>
                                     </div>
                                 </div>
                             }
                             @*<div class="row">
-                                    <div class="form-group ">
-                                        <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                        <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
-                                        <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
-                                    </div>
-                                </div>*@
+                        <div class="form-group ">
+                            <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                            <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
+                            <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
+                        </div>
+                    </div>*@
                         </div>
                     </div>
                 </div>

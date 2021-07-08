@@ -122,7 +122,7 @@
        
         var newIndex = $(this).attr('data-val');
         var currency = $("#currency").val();
-        var subcategoryID = $("#Requests_0__Product_ProductSubcategory_ProductSubcategoryID").val();
+        var subcategoryID = $("#Requests_0__Product_ProductSubcategoryID").val();
         var url = "/Requests/_PartialItemOperationsTab?index=" + newIndex
         if (subcategoryID != null) {
             url = url + "&subcategoryID=" + subcategoryID
@@ -135,6 +135,7 @@
             cache: false,
             success: function (data) {
                 var newitem = $(data);
+                //alert("newindex: " + newIndex);
                 $('.operations-item-div').append(newitem);
                 $("#addOperationItem").attr('data-val', parseInt(newIndex) + 1);
                 $(".mdb-select" + newIndex).materialSelect();
@@ -197,6 +198,7 @@
                 data: formData,
                 cache: false,
                 success: function (data) {
+                    $(".temprequesthiddenfors").html(''); //remove hidden fors so don't conflict further down the line
                     $.fn.OpenModal('modal', 'step-1', data)
                 }
             });
@@ -204,7 +206,7 @@
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
        
     })
-    $('body').off('click', 'remove-item').on('click','.remove-item', function (e) {
+    $('.ordersItemForm').off('click', '.remove-item').on('click','.remove-item', function (e) {
         var index = $(this).attr('data-val');
         var items = $('.partial-item-tab').length
         if (items > 1) {
@@ -219,7 +221,7 @@
             $("#" + deletedid).val("true");
         }
     })
-    $('body').off('change', '.include-vat-radio').on('change', '.include-vat-radio', function (e) {
+    $('.ordersItemForm').off('change', '.include-vat-radio').on('change', '.include-vat-radio', function (e) {
         console.log("radio click")
         var index = $(this).attr("index");
         var vatInfoClass = ".vat-info";
@@ -240,14 +242,15 @@
             $(vatInfoClass).removeClass("d-none");
         }
     })
-    $('body').off('click', '.received-check').on('click', '.received-check', function (e) {
+    $('.ordersItemForm').off('click', '.received-check').on('click', '.received-check', function (e) {
         var index = $(this).attr("index");
         var checked = $(this).is(":checked");
         console.log(index)
+        console.log('checked!!!!')
         $("#Requests_" + index + "__IsReceived").attr("value", checked)
     })
 
-    $('body').on('click', "#addRequestComment", function () {
+    $('.ordersItemForm').on('click', "#addRequestComment", function () {
         console.log("clicked!");
         console.log($('#popover-content').html())
         $('[data-toggle="popover"]').popover('dispose');
@@ -268,10 +271,13 @@
         e.preventDefault();
         e.stopPropagation();
         //alert('here')
+        console.log(this)
+        $(".tooltip").remove();
         //highlight this
         $(this).parents('tr').addClass('gray-background');
         $(this).parents('tr').addClass('current-item');
         var $itemurl = "/Requests/HistoryItemModal/?id=" + $(this).attr("value") + "&SectionType=" + $("#masterSectionType").val();
         $.fn.CallPageRequest($itemurl, 'historyItem');
     });
+
 })

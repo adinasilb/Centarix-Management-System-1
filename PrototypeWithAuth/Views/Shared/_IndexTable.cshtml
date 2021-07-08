@@ -11,7 +11,7 @@
             @foreach (var col in Model.PagedList[0].Columns)
                 {
 
-            <th width="@col.Width%">
+            <th width="@col.Width%" class="@(col.Width==0?"p-0":"")">
                 <label>@col.Title</label>
                 @switch (col.FilterEnum)
                 {

@@ -21,7 +21,7 @@
         shekelDisabledText = "disabled-text";
         shekelReadOnly = "readonly";
     }
-    if(Model.RequestItemViewModel.Requests[0].IncludeVAT == false)
+    if (Model.RequestItemViewModel.Requests[0].IncludeVAT == false)
     {
         hideVat = "d-none";
     }
@@ -43,18 +43,12 @@
             </button>
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding reorderForm">
 
-
+                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.RequestItemViewModel.TempRequestListViewModel); }
                 @*
                     NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
                         they need the hiddenfors that are right underneath it
                 *@
-                @Html.HiddenFor(model => model.RequestIndexObject.PageType)
-                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
-                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
-                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
-                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
-                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
-                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
+
                 @Html.HiddenFor(model => model.RequestItemViewModel.Requests.FirstOrDefault().RequestID)
                 <input type="hidden" asp-for="RequestItemViewModel.Requests[0].ExchangeRate" id="exchangeRate" />
                 <input type="hidden" asp-for="RequestItemViewModel.Requests[0].Currency" id="currency" />
@@ -70,7 +64,8 @@
                     @if (Model.ErrorMessage != null)
                     {
                         <h6 class="text-danger-centarix">
-                        @Model.ErrorMessage</h6>
+                            @Model.ErrorMessage
+                        </h6>
                         <br />
                     }
 
@@ -151,7 +146,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                             <div class="row mb-4">
                                                 <div class="col-md-6  form-group">
                                                     <label asp-for="RequestItemViewModel.Requests[0].SubUnit" class="control-label"></label>
-                                                    <input asp-for="RequestItemViewModel.Requests[0].SubUnit" class="form-control-plaintext border-bottom" id="subUnit" disabled/>
+                                                    <input asp-for="RequestItemViewModel.Requests[0].SubUnit" class="form-control-plaintext border-bottom" id="subUnit" disabled />
                                                     <span asp-validation-for="RequestItemViewModel.Requests[0].SubUnit" class="text-danger-centarix"></span>
                                                 </div>
                                                 <div class="col-md-6 form-group">
@@ -170,7 +165,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="input-group">
-                                                            <span class="input-group-text disabled-text" disabled >&#36;</span>
+                                                            <span class="input-group-text disabled-text" disabled>&#36;</span>
                                                             <input class="form-control-plaintext border-bottom disabled-text" name="subunit-price-dollars" id="subunit-price-dollars" disabled
                                                                    value="@(Math.Round((Model.RequestItemViewModel.Requests[0].PricePerSubUnit??0)/Model.RequestItemViewModel.Requests[0].ExchangeRate, 2))" />
                                                         </div>
@@ -203,7 +198,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                 <div class="row mb-4">
                                                     <div class="col-md-6  form-group">
                                                         <label asp-for="RequestItemViewModel.Requests[0].SubSubUnit" class="control-label"></label>
-                                                        <input asp-for="RequestItemViewModel.Requests[0].SubSubUnit" class="form-control-plaintext border-bottom" min="0" id="subSubUnit" disabled/>
+                                                        <input asp-for="RequestItemViewModel.Requests[0].SubSubUnit" class="form-control-plaintext border-bottom" min="0" id="subSubUnit" disabled />
                                                         <span asp-validation-for="RequestItemViewModel.Requests[0].SubSubUnit" class="text-danger-centarix"></span>
                                                     </div>
                                                     <div class="col-md-6 form-group">
@@ -385,11 +380,9 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
         var valid = $(".reorderForm").valid();
         console.log("valid form: " + valid)
         if (!valid) {
-
             if (!$('.activeSubmit').hasClass('disabled-submit')) {
                 $('.activeSubmit').addClass('disabled-submit')
             }
-
         }
         else {
             $('.activeSubmit').removeClass('disabled-submit')
@@ -407,7 +400,15 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                 type: "POST",
                 cache: false,
                 success: function (data) {
+                    $(".temprequesthiddenfors").remove();
+                    //if (orderType == 'AddToCart') {
+                    //    $("_IndexTableData").html(data);
+                    //    $.fn.CloseModal('reorder-item');
+                    //}
+                    //else {
+                    alert("$.fn.OpenModal('modalStep1', 'step-1', data)");
                     $.fn.OpenModal('modalStep1', 'step-1', data)
+                    //}
                     $("#loading").hide();
                     return true;
                 },

@@ -44,7 +44,7 @@
                                 {
                                     description = locationType.LocationInstanceName;
                                 }
-                                <li id="@locationType.LocationInstanceID" class="SLI-click" data-string="@description" @*onclick="SLI(this.id)"*@ value="@locationType.LocationInstanceID">
+                                <li id="@locationType.LocationInstanceID" class="SLI-click " data-string="@description" @*onclick="SLI(this.id)"*@ value="@locationType.LocationInstanceID">
                                     @locationName
                                 </li>
                             }
@@ -60,7 +60,7 @@
             <div class=" form-control-plaintext border-bottom p-0">
                 <span class="choose p-0"></span>
                 <div class="dropdown dropdown-main">
-                    <div class="select d-inline-flex " id="@id" style="padding-right:1.25rem;">
+                    <div class="select d-inline-flex" id="@id" style="padding-right:1.25rem;">
                         <span class="caret py-0">
                             ▼
                         </span>

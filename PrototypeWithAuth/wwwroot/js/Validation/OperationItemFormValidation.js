@@ -64,7 +64,7 @@
 
 	$(".expected-supply-days").each(function(){
 		$(this).rules("add", {
-		min: 1,
+		min: 0,
 		integer: true,
 		required: true
 		});
@@ -80,7 +80,7 @@
 
 	$(".expected-supply-days").each(function(){
 		$(this).rules("add", {
-		min: 1,
+		min: 0,
 		integer: true,
 		required: true
 		});

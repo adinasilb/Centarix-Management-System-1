@@ -13,5 +13,6 @@ using System.Threading.Tasks;
         public AppUtility.MenuItems SectionType { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
         public string URL { get; set; }
+        public Guid GUID { get; set; }
     }
 }

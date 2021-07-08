@@ -425,8 +425,6 @@
                 $.fn.EnableMaterialSelect('#currency', 'select-options-currency');
                 $.fn.EnableMaterialSelect('#operationsCategory', 'select-options-operationsCategory');
                 $.fn.EnableMaterialSelect('#operationsSubcategory', 'select-options-operationsSubcategory');
-                $.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList');
-
             }
             if ($(element).hasClass('orders')) {
                 console.log("orders");
@@ -505,6 +503,8 @@
                             $.fn.OpenModal('modal', 'edits', modal)
                             $.fn.LoadEditModalDetails();
                             $('.modal-content a:first').tab('show');
+                            $("[data-toggle='tooltip']").tooltip();
+
                             break;
                         case "reorder":
                             $.fn.OpenModal('reorderModal', 'reorder-item', modal)
@@ -556,7 +556,7 @@
                             break;
                         case "historyItem":
                             $.fn.OpenModal('historyModal', 'history-item', modal)
-                            $.fn.LoadSummaryModal('.history-item');
+                            $.fn.LoadSummaryModal('history-item');
                             $('.modal-content a:first').tab('show');
                             break;
                         case "protocolFloatModal":
@@ -573,7 +573,7 @@
                     //var err = eval("(" + xhr.responseText + ")");
                     console.log("in error..." + error.Description);
                     $("#loading").hide();
-                    //alert(err.Message);
+                    //alert(error.Message);
                 }
 
                 //error: function (/*request, status, error*/) {
@@ -1132,25 +1132,17 @@
             //alert("in documents modal in document modal js")
             //$(".modal-backdrop").first().removeClass();
             //alert(parentFolder)
-            var sectionType = $("#masterSectionType").val()
-            var urlbeginning="";
-            if(sectionType=="Requests")
-            {
-                urlbeginning="/Requests/"
-            }
-            else if(sectionType = "Protocols")
-            {
+            var urlbeginning = "/Requests/"
+            if(section === "Protocols") {
                 urlbeginning ="/Protocols/"
             }
-            if(isReopen)
-            {
-                urltogo = urlbeginning+"_DocumentsModalData?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
+            if(isReopen) {
+                urltogo = urlbeginning + "_DocumentsModalData?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
+                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
+            } else {
+                urltogo = urlbeginning + "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
+                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
             }
-            else
-            {
-                urltogo = urlbeginning+ "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
-            }
-           
 
             console.log(urltogo);
             $.ajax({
@@ -1160,13 +1152,14 @@
                 cache: false,
                 success: function (data) {
                     $('#loading').hide();
+                    console.log("isreopen: " + isReopen);
                     if(isReopen)
                     {
-                        alert("._DocumentsModalData")
+                        //alert("._DocumentsModalData")
                         $("._DocumentsModalData").html(data);
                     }
                     else {
-                        alert("open doucment modal");
+                        //alert("open doucment modal");
                         $.fn.OpenModal('documentsModal', 'documents', data)
                     }
                     

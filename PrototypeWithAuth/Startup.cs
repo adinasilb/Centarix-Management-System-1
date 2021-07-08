@@ -51,7 +51,7 @@ namespace PrototypeWithAuth
             ////Set database Connection from application json file
 
             //add identity
-            
+
             services.AddDefaultIdentity<ApplicationUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
@@ -72,7 +72,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"));
+                    Configuration.GetConnectionString("DevelopersDB"));
                 options.EnableSensitiveDataLogging(true);
             });
 
@@ -109,10 +109,8 @@ namespace PrototypeWithAuth
                 config.Filters.Add(new AuthorizeFilter(policy));
                 // config.AllowValidatingTopLevelNodes = true;
             });
-            services.AddSession(/*opts =>
-            {
-                opts.Cookie.IsEssential = true;
-            }*/);
+            services.AddDistributedMemoryCache();
+            services.AddSession();
             ////allow for data anotations validations
             //services.AddMvcCore()
             //   .AddDataAnnotations();
@@ -130,7 +128,11 @@ namespace PrototypeWithAuth
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
                 options.Cookie.Name = "LoginCookie";
-            });
+            }); 
+
+            //CookieOptions cookieOptions = new CookieOptions();
+            //string GUID = new Guid().ToString();
+            //string Key = "SessionCookie";
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -170,7 +172,7 @@ namespace PrototypeWithAuth
                 endpoints.MapRazorPages();
             });
 
-             //ChangePassword(serviceProvider).Wait();
+            //ChangePassword(serviceProvider).Wait();
 
             CreateRoles(serviceProvider).Wait();
             //AddRoles(serviceProvider).Wait();

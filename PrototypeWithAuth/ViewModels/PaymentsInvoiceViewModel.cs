@@ -21,6 +21,7 @@ namespace PrototypeWithAuth.ViewModels
         [Display(Name = "Invoice Image")]
         public IFormFile InvoiceImage { get; set; }
         public string InvoiceImageSaved { get; set; }
+        public decimal AmtLeftToPay { get; set; }
 
     }
 }

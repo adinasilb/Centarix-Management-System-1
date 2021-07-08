@@ -14,7 +14,8 @@ namespace PrototypeWithAuth.ViewModels
         public ParentQuote ParentQuote { get; set; }
         public List<string> FileStrings { get; set; }
         public AppUtility.OrderTypeEnum OrderTypeEnum { get; set; }
-        public RequestIndexObject RequestIndexObject { get; set; }
+        //public RequestIndexObject RequestIndexObject { get; set; }
+        public TempRequestListViewModel TempRequestListViewModel { get; set; }
         [Display(Name = "Expected Supply Days")]
 
         [Range(0, 2147483647, ErrorMessage = "Field must be a positive number")]

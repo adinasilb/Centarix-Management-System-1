@@ -129,7 +129,7 @@
              "ParentCategoryID",
              "ParentCategoryDescription"
              ), "Select Category",
-             new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "parentlist", @searchable = "Select Category" })
+             new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "parentlist", @searchable = "Select Category", @data_stop_refresh = "true" })
             }
             <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" />
             <span asp-validation-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
@@ -138,14 +138,14 @@
     <div class="col-md-6 px-4">
         <div class="form-group sublist">
             <label asp-for="Requests[0].Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
-            @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategory.ProductSubcategoryID,
+            @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategoryID,
                 new SelectList(
                 Model.ProductSubcategories,
                 "ProductSubcategoryID",
                 "ProductSubcategoryDescription"
                 ), "Select Sub Category",
-                new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category" })
-            <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ProductSubcategoryID" disabled class="proprietryHidenCategory" />
+                new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category", @data_stop_refresh = "true" })
+            <input type="hidden" asp-for="Requests[0].Product.ProductSubcategoryID" disabled class="proprietryHidenCategory" />
             <span asp-validation-for="Requests[0].Product.ProductSubcategoryID" class="text-danger-centarix"></span>
         </div>
     </div>
@@ -173,7 +173,7 @@
                                     <label class="control-label">Sub Project:</label>
                                     @Html.DropDownListFor(vm => vm.Requests[0].SubProjectID,
         Enumerable.Empty<SelectListItem>(), "Select Sub Project",
-        new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext " + subProjectCategories + " " + markReadOnlyClass, @id = "SubProject", @searchable = "Select Sub Project" })-->
+        new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext " + subProjectCategories + " " + markReadOnlyClass, @id = "SubProject", @searchable = "Select Sub Project", @data_stop_refresh = "true" })-->
         @*<select asp-for="Request.SubProjectID" id="SubProject" class="mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext" searchable="Select Sub Project">
             </select>*@
         <!--<span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
@@ -190,7 +190,7 @@
     dataTextField: "VendorEnName"),
     //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
     "Select a Vendor",
-    htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext " + vendorCategories + " " + markReadOnlyClass, @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
+    htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext " + vendorCategories + " " + markReadOnlyClass, @id = "vendorList", @size = 1, @searchable = "Select A Vendor", @data_stop_refresh = "true" }
     )
                 <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
             </div>
@@ -260,7 +260,7 @@
                     <label class="control-label">Expected supply date</label>
                     @if (modalType == AppUtility.RequestModalType.Create)
                     {
-                        <input value="" class="form-control-plaintext border-bottom datepicker requestPriceQuote @supplyDaysCategories " disabled type="text" name="expected-supply-days" id="expected-supply-date" />
+                        <input value="" class="form-control-plaintext border-bottom datepicker expected-supply-date requestPriceQuote @supplyDaysCategories " disabled type="text" name="expected-supply-days"/>
                     }
                     else
                     {

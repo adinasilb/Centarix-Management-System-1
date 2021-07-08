@@ -22,131 +22,125 @@
     </div>
 }
 
-<form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style=" ">
+@*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
+@Html.HiddenFor(model => model.RequestStatusID)
+@Html.HiddenFor(model => model.PageType)
+@Html.HiddenFor(model => model.SectionType)
+@Html.HiddenFor(model => model.IsProprietary)
+<input type="hidden" asp-for="@Model.Requests[0].RequestID" />
+@{
+    if (Model.Requests[0].Product.ProductSubcategory.ParentCategory?.ParentCategoryDescriptionEnum != null)
+    {
+        <input type="hidden" value="@(Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum)" id="categoryDescription" />
+    }
+}
+@*<input type="hidden" value="@Model.ParentCategory.ParentCategoryID" id="categoryId" />*@
 
-        @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
-        @Html.HiddenFor(model => model.RequestStatusID)
-        @Html.HiddenFor(model => model.PageType)
-        @Html.HiddenFor(model => model.SectionType)
-        @Html.HiddenFor(model => model.IsProprietary)
-        <input type="hidden" asp-for="@Model.Requests[0].RequestID" />
-        @{
-            if (Model.Requests[0].Product.ProductSubcategory.ParentCategory?.ParentCategoryDescriptionEnum != null)
-            {
-                <input type="hidden" value="@(Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum)" id="categoryDescription" />
-            }
+<!-- Modal Header -->
+<div class="new-modal-header border-bottom container-fluid" style="padding: 0">
+    @*class needed here to override bootstraps modal limitations*@
+
+
+    <div class="form-group modal-line-1-header modal-sides row">
+        @if (Model.SectionType != AppUtility.MenuItems.Operations)
+        {
+            var productNameRows = Model.Requests[0].Product.ProductName != null ? Math.Ceiling((float)(Model.Requests[0].Product.ProductName.Length) / 45) : 1;
+            <div class="heading-1 modal-title col-8">
+                <textarea asp-for="Requests[0].Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name" placeholder="(item name)" rows="@productNameRows" cols="50" maxlength="150" style="resize:none;"></textarea>
+            </div>
+            <span asp-validation-for="Requests[0].Product.ProductName" class="text-danger-centarix"></span>
         }
-        @*<input type="hidden" value="@Model.ParentCategory.ParentCategoryID" id="categoryId" />*@
-
-    <!-- Modal Header -->
-    <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
-        @*class needed here to override bootstraps modal limitations*@
-
-
-            <div class="form-group modal-line-1-header modal-sides row">
-                @if (Model.SectionType != AppUtility.MenuItems.Operations)
-                {
-                    var productNameRows = Model.Requests[0].Product.ProductName!=null ? Math.Ceiling((float)(Model.Requests[0].Product.ProductName.Length) / 45) : 1;
-                    <div class="heading-1 modal-title col-8">
-                        <textarea asp-for="Requests[0].Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name" placeholder="(item name)" rows="@productNameRows" cols="50" maxlength="150" style="resize:none;"></textarea>
-                    </div>
-                    <span asp-validation-for="Requests[0].Product.ProductName" class="text-danger-centarix"></span>
-                }
-                else
-                {
-                    <div class="col-md-4 ">
-                        <div class="form-group">
-                            @Html.DropDownListFor(
-                vm => vm.Requests[0].Product.VendorID,
-                new SelectList(
-                Model.Vendors,
-                dataValueField: "VendorID",
-                dataTextField: "VendorEnName"),
-                //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
-                "Select a Vendor",
-                htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext vendor  " + " ", @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
-                )
-                            <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                    <input class="" type="hidden" value="" id="vendor-primary-email" />
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " readonly />
-                        </div>
-                    </div>
-                }
-                @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary)
-                {
-                    <div class="d-flex align-items-center col-4">
-                        <button type="submit" asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.Save" name="OrderType" asp-route-RequestStatusID="7" asp-route-PageType="RequestSummary" asp-route-SectionType="Requests" asp-route-SidebarType="List" class=" custom-button custom-button-font @bcColor m-auto complete-order disabled-submit">Save</button>
-                    </div>
-                }
-                @if (Model.SectionType == AppUtility.MenuItems.Operations)
-                {
-                    <div class="d-flex align-items-center col-4">
-                        <button type="submit" @*asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.SaveOperations" name="OrderType" asp-route-RequestStatusID="2" asp-route-PageType="OperationsRequest" asp-route-SectionType="Operations" asp-route-SidebarType="List"*@ class=" custom-button custom-button-font @bcColor m-auto complete-order save-operations-item disabled-submit">Save</button>
-                    </div>
-                }
-            </div>
-            <div class="row">
-                <div class="col-12 px-0">
-                    <div class="container-fluid div-tabs text-center modal-sides">
-                        <ul id="create-modal-tabs" class="nav nav-tabs text-center container-fluid pr-0 border-bottom-0 nav-tabs-icons" style="">
-                            <li class="nav-item icon ">
-                                <a data-toggle="tab" href="#item" class="next-tab nav-link active request-item">
-                                    <i class="icon-centarix-icons-05" style="font-size: 2rem;"></i>
-                                    <br />Item
-                                </a>
-                            </li>
-                            @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary && Model.SectionType != AppUtility.MenuItems.Operations)
-                            {
-                                <li class="nav-item icon">
-                                    <a data-toggle="tab" href="#location" class="nav-link request-location next-tab">
-                                        <i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location
-                                    </a>
-                                </li>
-                            }
-                            else if (Model.SectionType != AppUtility.MenuItems.Operations)
-                            {
-                                <li class="nav-item icon" id="price-tab">
-                                    <a data-toggle="tab" href="#price" class="next-tab nav-link request-price">
-                                        <i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price
-                                    </a>
-                                </li>
-                            }
-                            <li class="nav-item icon">
-                                <a data-toggle="tab" href="#documents" class="request-documents-tab nav-link next-tab documents-tab">
-                                    <i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents
-                                </a>
-                            </li>
-                            <li class="nav-item icon comments-tab">
-                                <a data-toggle="tab" href="#comments" class="next-tab nav-link">
-                                    <i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />Comments
-                                </a>
-                            </li>
-                            @if (Model.PageType != AppUtility.PageTypeEnum.RequestSummary && Model.SectionType != AppUtility.MenuItems.Operations)
-                            {
-                                <li class="nav-item icon order-tab">
-                                    <a data-toggle="tab" href="#order" class="next-tab nav-link order-tab-link">
-                                        <i class="icon-assignment-24px" style="font-size: 2rem;"></i> <br />Order
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    </div>
+        else
+        {
+            <div class="col-md-4 ">
+                <div class="form-group">
+                    @Html.DropDownListFor(
+        vm => vm.Requests[0].Product.VendorID,
+        new SelectList(
+        Model.Vendors,
+        dataValueField: "VendorID",
+        dataTextField: "VendorEnName"),
+        //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
+        "Select a Vendor",
+        htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext vendor  " + " ", @id = "vendorList", @size = 1, @searchable = "Select A Vendor", @data_stop_refresh ="true" }
+        )
+                    <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
                 </div>
             </div>
-        </div>
-        <div>
-            <div class="modal-sides modal-body-top-p">
-                <div class="new-modal-body" style="background:none;">
-                    @{await Html.RenderPartialAsync("ItemData", Model); }
+            <input class="" type="hidden" value="" id="vendor-primary-email" />
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " readonly />
                 </div>
-
+            </div>
+        }
+        @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary)
+        {
+            <div class="d-flex align-items-center col-4">
+                <button type="submit" asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.Save" name="OrderType" asp-route-RequestStatusID="7" asp-route-PageType="RequestSummary" asp-route-SectionType="Requests" asp-route-SidebarType="List" class=" custom-button custom-button-font @bcColor m-auto complete-order disabled-submit">Save</button>
+            </div>
+        }
+        @if (Model.SectionType == AppUtility.MenuItems.Operations)
+        {
+            <div class="d-flex align-items-center col-4">
+                <button type="submit" @*asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.SaveOperations" name="OrderType" asp-route-RequestStatusID="2" asp-route-PageType="OperationsRequest" asp-route-SectionType="Operations" asp-route-SidebarType="List"*@ class=" custom-button custom-button-font @bcColor m-auto complete-order save-operations-item disabled-submit">Save</button>
+            </div>
+        }
+    </div>
+    <div class="row">
+        <div class="col-12 px-0">
+            <div class="container-fluid div-tabs text-center modal-sides">
+                <ul id="create-modal-tabs" class="nav nav-tabs text-center container-fluid pr-0 border-bottom-0 nav-tabs-icons" style="">
+                    <li class="nav-item icon ">
+                        <a data-toggle="tab" href="#item" class="next-tab nav-link active request-item">
+                            <i class="icon-centarix-icons-05" style="font-size: 2rem;"></i>
+                            <br />Item
+                        </a>
+                    </li>
+                    @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary && Model.SectionType != AppUtility.MenuItems.Operations)
+                    {
+                        <li class="nav-item icon">
+                            <a data-toggle="tab" href="#location" class="nav-link request-location next-tab">
+                                <i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location
+                            </a>
+                        </li>
+                    }
+                    else if (Model.SectionType != AppUtility.MenuItems.Operations)
+                    {
+                        <li class="nav-item icon" id="price-tab">
+                            <a data-toggle="tab" href="#price" class="next-tab nav-link request-price">
+                                <i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price
+                            </a>
+                        </li>
+                    }
+                    <li class="nav-item icon">
+                        <a data-toggle="tab" href="#documents" class="request-documents-tab nav-link next-tab documents-tab">
+                            <i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents
+                        </a>
+                    </li>
+                    <li class="nav-item icon comments-tab">
+                        <a data-toggle="tab" href="#comments" class="next-tab nav-link">
+                            <i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />Comments
+                        </a>
+                    </li>
+                    @if (Model.PageType != AppUtility.PageTypeEnum.RequestSummary && Model.SectionType != AppUtility.MenuItems.Operations)
+                    {
+                        <li class="nav-item icon order-tab">
+                            <a data-toggle="tab" href="#order" class="next-tab nav-link order-tab-link">
+                                <i class="icon-assignment-24px" style="font-size: 2rem;"></i> <br />Order
+                            </a>
+                        </li>
+                    }
+                </ul>
             </div>
         </div>
-    </form>
-    <script>
-    
-    </script>
+    </div>
+</div>
+<div>
+    <div class="modal-sides modal-body-top-p">
+        <div class="new-modal-body" style="background:none;">
+            @{await Html.RenderPartialAsync("ItemData", Model); }
+        </div>
+
+    </div>
+</div>

@@ -38,13 +38,13 @@ namespace PrototypeWithAuth.Controllers
             var usersLoggedIn = _context.Employees.Where(u => u.LastLogin.Date == DateTime.Today.Date).Count();
             var users = _context.Employees.ToList();
             var lastUpdateToTimekeeper = _context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.LoginUpdates.ToString()).FirstOrDefault();
-            if(lastUpdateToTimekeeper==null)
+            if (lastUpdateToTimekeeper == null)
             {
                 lastUpdateToTimekeeper = new GlobalInfo { GlobalInfoType = AppUtility.GlobalInfoType.LoginUpdates.ToString(), Date = DateTime.Now.AddDays(-1) };
                 _context.Update(lastUpdateToTimekeeper);
                 await _context.SaveChangesAsync();
             }
-            else if(lastUpdateToTimekeeper.Date.Date < DateTime.Today)
+            else if (lastUpdateToTimekeeper.Date.Date < DateTime.Today)
             {
                 foreach (Employee employee in users)
                 {
@@ -59,7 +59,7 @@ namespace PrototypeWithAuth.Controllers
                 _context.Update(lastUpdateToTimekeeper);
                 await _context.SaveChangesAsync();
             }
-  
+
             if (user.LastLogin.Date < DateTime.Today)
             {
                 fillInOrderLate(user);
@@ -75,13 +75,13 @@ namespace PrototypeWithAuth.Controllers
             //}
             //else
             //{
-                menu =CreateMainMenu.GetMainMenu().Where(m => rolesList.Contains(m.MenuDescription));
+            menu = CreateMainMenu.GetMainMenu().Where(m => rolesList.Contains(m.MenuDescription));
             //}
 
             //update latest exchange rate if need be
             var latestRate = _context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.ExchangeRate.ToString()).FirstOrDefault();
 
-          
+
             if (latestRate == null)
             {
                 latestRate = new GlobalInfo();
@@ -90,10 +90,14 @@ namespace PrototypeWithAuth.Controllers
             var updateDate = latestRate.Date;
             if (updateDate.Date != DateTime.Today)
             {
-                latestRate.Date = DateTime.Now;
-                latestRate.Description = AppUtility.GetExchangeRateFromApi().ToString();
-                _context.Update(latestRate);
-                await _context.SaveChangesAsync();
+                decimal currentRate = AppUtility.GetExchangeRateFromApi();
+                if (currentRate != 0)
+                {
+                    latestRate.Date = DateTime.Now;
+                    latestRate.Description = currentRate.ToString();
+                    _context.Update(latestRate);
+                    await _context.SaveChangesAsync();
+                }
             }
             return View(menu);
         }
@@ -108,12 +112,12 @@ namespace PrototypeWithAuth.Controllers
             //}
             //else
             //{
-                menu = CreateMainMenu.GetMainMenu().Where(m => rolesList.Contains(m.MenuDescription));
+            menu = CreateMainMenu.GetMainMenu().Where(m => rolesList.Contains(m.MenuDescription));
             //}
 
             return PartialView(menu);
         }
-        
+
 
         public IActionResult Privacy()
         {
@@ -201,7 +205,7 @@ namespace PrototypeWithAuth.Controllers
             DateTime nextDay = lastUpdate.AddDays(1);
             var year = nextDay.Year;
             var companyDaysOff = await _context.CompanyDayOffs.Where(d => d.Date.Year == year).ToListAsync();
-            
+
             while (nextDay.Date <= DateTime.Today)
             {
                 if (year != nextDay.Year)
@@ -250,7 +254,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         private void fillInOrderLate(ApplicationUser user)
-        
+
         {
             if (user.LastLogin.Date != DateTime.Now.Date)
             {
@@ -306,7 +310,7 @@ namespace PrototypeWithAuth.Controllers
         {
             return null;
         }
-        
+
 
     }
 }
