@@ -2984,7 +2984,7 @@ namespace PrototypeWithAuth.Controllers
                                     {
                                         var additionalRequests = tr + 1 < deserializedTempRequestListViewModel.TempRequestViewModels.Count() ? true : false;
                                         MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, deserializedTempRequestListViewModel.GUID);
-                                        MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID, AppUtility.ParentFolderName.ParentQuote, additionalRequests, deserializedTempRequestListViewModel.GUID);
+                                        MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentQuoteID == null ? 0 : Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, additionalRequests, deserializedTempRequestListViewModel.GUID);
                                     }
 
                                     string NewFolder = Path.Combine(uploadFolder, deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID.ToString());
