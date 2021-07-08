@@ -1211,22 +1211,6 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task SetTempRequestAsync(TempRequestJson tempRequestJson, TempRequestListViewModel tempRequestListViewModel)
         {
-            //foreach (var tempRequest in tempRequestListViewModel.TempRequestViewModels)
-            //{
-            //    if (tempRequest.Request.Product.ProductSubcategory != null)
-            //    {
-            //        tempRequest.Request.Product.ProductSubcategoryID = tempRequest.Request.Product.ProductSubcategory.ProductSubcategoryID;
-            //        tempRequest.Request.Product.ProductSubcategory = null;
-            //    }
-            //    if (tempRequest.Request.Product.Vendor != null)
-            //    {
-            //        tempRequest.Request.Product.VendorID = tempRequest.Request.Product.Vendor.VendorID;
-            //        tempRequest.Request.Product.Vendor = null;
-            //    }
-            //}
-            //tempRequestListViewModel.TempRequestViewModels.ForEach(vm => vm.Request.Product.ProductSubcategory = null && vm.Request.Product.ProductSubcategoryID = vm.Request.Product.ProductSubcategory.ProductSubcategoryID);
-            //tempRequestListViewModel.TempRequestViewModels.ForEach(vm => vm.Request.Product.Vendor = null && vm.Request.Product.VendorID = vm.Request.Product.Vendor.VendorID );
-
             tempRequestJson.SerializeViewModel(tempRequestListViewModel.TempRequestViewModels);
 
             _context.Update(tempRequestJson);
@@ -4921,15 +4905,8 @@ namespace PrototypeWithAuth.Controllers
                                 //await SaveCommentsFromSession(request);
                                 //IMPORTANT TO GET BACK TO HERE
                                 //rename temp folder to the request id
-                                string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-                                string requestFolderFrom = Path.Combine(uploadFolder, "0");
-                                string requestFolderTo = Path.Combine(uploadFolder, tempRequestViewModel.Request.RequestID.ToString());
-                                if (Directory.Exists(requestFolderTo))
-                                {
-                                    Directory.Delete(requestFolderTo, true);
-                                }
-                                Directory.Move(requestFolderFrom, requestFolderTo);
-
+                                MoveDocumentsOutOfTempFolder(tempRequestViewModel.Request.RequestID, AppUtility.ParentFolderName.Requests, false, tempRequestListViewModel.GUID);
+                                MoveDocumentsOutOfTempFolder(tempRequestViewModel.Request.ParentQuoteID == null ? 0 : Convert.ToInt32(tempRequestViewModel.Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, false, tempRequestListViewModel.GUID);
 
                                 try
                                 {
@@ -4937,7 +4914,9 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 catch (Exception ex)
                                 {
-                                    Directory.Move(requestFolderTo, requestFolderFrom);
+                                    RevertDocuments(tempRequestViewModel.Request.RequestID, AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
+                                    RevertDocuments(tempRequestViewModel.Request.ParentQuoteID == null ? 0 : Convert.ToInt32(tempRequestViewModel.Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
+                                    //Directory.Move(requestFolderTo, requestFolderFrom);
                                     throw new Exception(AppUtility.GetExceptionMessage(ex));
                                 }
                             }
