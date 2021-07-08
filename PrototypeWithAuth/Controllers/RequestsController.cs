@@ -79,7 +79,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 var viewmodel = await base.GetIndexViewModel(requestIndexObject);
 
-                SetViewModelCounts(requestIndexObject, viewmodel);
+               // SetViewModelCounts(requestIndexObject, viewmodel);
                 return View(viewmodel);
             }
             else
@@ -101,7 +101,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
 
                 var viewmodel = await base.GetIndexViewModel(requestIndexObject);
-                SetViewModelProprietaryCounts(requestIndexObject, viewmodel);
+              //  SetViewModelProprietaryCounts(requestIndexObject, viewmodel);
                 //viewmodel.InventoryFilterViewModel = GetInventoryFilterViewModel();
 
                 if (ViewBag.ErrorMessage != null)
@@ -467,7 +467,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> _IndexTableWithCounts(RequestIndexObject requestIndexObject, SelectedFilters selectedFilters = null, string searchText = "", int numFilters = 0)
         {
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, selectedFilters: selectedFilters, searchText: searchText, numFilters: numFilters);
-            SetViewModelCounts(requestIndexObject, viewModel, selectedFilters, searchText);
+            //SetViewModelCounts(requestIndexObject, viewModel, selectedFilters, searchText);
             if (TempData["RequestStatus"]?.ToString() == "1")
             {
                 Response.StatusCode = 210;
@@ -1665,8 +1665,8 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
-            SetViewModelCounts(requestIndexObject, viewModel);
-            SetViewModelProprietaryCounts(requestIndexObject, viewModel);
+            //SetViewModelCounts(requestIndexObject, viewModel);
+           // SetViewModelProprietaryCounts(requestIndexObject, viewModel);
             return View(viewModel);
         }
         [HttpGet]
@@ -3809,8 +3809,8 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(string id, Guid guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch, AppUtility.ParentFolderName parentFolderName,
-            AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+        public ActionResult DocumentsModal(string id, Guid Guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch, 
+            AppUtility.ParentFolderName parentFolderName, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
@@ -3819,7 +3819,8 @@ namespace PrototypeWithAuth.Controllers
                 ParentFolderName = parentFolderName,
                 ObjectID = id == "" ? "0" : id,
                 SectionType = SectionType,
-                ShowSwitch = showSwitch
+                ShowSwitch = showSwitch,
+                Guid = Guid
             };
 
             FillDocumentsViewModel(documentsModalViewModel);
@@ -3828,7 +3829,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult _DocumentsModalData(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+        public ActionResult _DocumentsModalData(string id, Guid Guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
           AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
@@ -3838,7 +3839,8 @@ namespace PrototypeWithAuth.Controllers
                 ParentFolderName = parentFolderName,
                 ObjectID = id == "" ? "0" : id,
                 SectionType = SectionType,
-                ShowSwitch = showSwitch
+                ShowSwitch = showSwitch,
+                Guid = Guid
             };
 
             FillDocumentsViewModel(documentsModalViewModel);

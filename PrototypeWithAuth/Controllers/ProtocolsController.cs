@@ -1890,7 +1890,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public ActionResult DocumentsModal(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+        public ActionResult DocumentsModal(string id, Guid Guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
     AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Protocols, bool dontAllowMultipleFiles = false)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
@@ -1901,7 +1901,8 @@ namespace PrototypeWithAuth.Controllers
                 SectionType = SectionType,
                 IsEdittable = IsEdittable, 
                 DontAllowMultiple = dontAllowMultipleFiles,
-                ShowSwitch =showSwitch
+                ShowSwitch =showSwitch,
+                Guid = Guid
             };
 
             base.FillDocumentsViewModel(documentsModalViewModel);
@@ -1911,7 +1912,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public ActionResult _DocumentsModalData(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+        public ActionResult _DocumentsModalData(string id, Guid Guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
   AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Protocols, bool dontAllowMultipleFiles = false)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
@@ -1922,7 +1923,8 @@ namespace PrototypeWithAuth.Controllers
                 SectionType = SectionType,
                 IsEdittable = IsEdittable,
                 DontAllowMultiple = dontAllowMultipleFiles,
-                ShowSwitch = showSwitch
+                ShowSwitch = showSwitch,
+                Guid = Guid
             };
 
             base.FillDocumentsViewModel(documentsModalViewModel);
