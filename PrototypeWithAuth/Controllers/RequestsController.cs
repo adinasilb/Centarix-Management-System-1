@@ -4903,7 +4903,7 @@ namespace PrototypeWithAuth.Controllers
                                 //rename temp folder to the request id
 
                                 MoveDocumentsOutOfTempFolder(tempRequestViewModel.Request.RequestID, AppUtility.ParentFolderName.Requests, false, tempRequestListViewModel.GUID);
-                                MoveDocumentsOutOfTempFolder(tempRequestViewModel.Request.RequestID, AppUtility.ParentFolderName.ParentQuote, false, tempRequestListViewModel.GUID);
+                                MoveDocumentsOutOfTempFolder(tempRequestViewModel.Request.ParentQuoteID == null ? 0 : Convert.ToInt32(tempRequestViewModel.Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, false, tempRequestListViewModel.GUID);
 
                                 //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
                                 //string requestFolderFrom = Path.Combine(uploadFolder, tempRequestListViewModel.GUID.ToString());
