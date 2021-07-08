@@ -210,6 +210,20 @@
             type: "POST",
             cache: false,
             success: function (data) {
+                $.ajax({
+                    contentType: false,
+                    processData: false,
+                    async: true,
+                    url: "/Requests/_TempRequestHiddenFors",
+                    data: formData,
+                    traditional: true,
+                    type: "POST",
+                    cache: false,
+                    success: function (data) {
+                        alert("in success of ajax call");
+                        $(body).append(data);
+                    }
+                })
                 $.fn.CloseModal("step-1");
                 return true;
             }

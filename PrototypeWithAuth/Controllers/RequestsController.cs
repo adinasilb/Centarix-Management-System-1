@@ -1271,6 +1271,12 @@ namespace PrototypeWithAuth.Controllers
 
             return newTempRequestJson;
         }
+
+        public async Task<PartialViewResult> _TempRequestHiddenFors(RequestIndexObject requestIndexObject)
+        {
+            var trlvm = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
+            return PartialView(trlvm);
+        }
         public async Task KeepTempRequestJsonCurrentAsOriginal(Guid GUID)
         //take away current from original
         //or switch current to original and remove current from table
@@ -3803,7 +3809,7 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch, AppUtility.ParentFolderName parentFolderName,
+        public ActionResult DocumentsModal(string id, Guid guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch, AppUtility.ParentFolderName parentFolderName,
             AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
