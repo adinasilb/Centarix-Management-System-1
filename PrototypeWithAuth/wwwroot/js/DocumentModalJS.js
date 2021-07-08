@@ -62,6 +62,7 @@
 				var $enumString =  $('.folderName').val();
 				var $requestId =  $('.objectID').val();
 				var section = $("#masterSectionType").val();
+				var guid = $("#GUID").val();
 				
 				if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
 					section = "Operations"
@@ -70,14 +71,13 @@
 				}
 				$.fn.ChangeColorsOfModal($enumString, section);
 				var parentFolder =  $('.parentFolderName').val();
-				$.fn.OpenDocumentsModal(true, $enumString, $requestId, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles);
+				$.fn.OpenDocumentsModal(true, $enumString, $requestId, guid, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles);
 				return true;
 			},
 			processData: false,
 			contentType: false
 		});
 		return true;
-
 	})
 
 	$(".file-select").on("change", function (e) {

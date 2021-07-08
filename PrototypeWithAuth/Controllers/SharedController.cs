@@ -244,9 +244,10 @@ namespace PrototypeWithAuth.Controllers
         protected virtual void DocumentsModal(DocumentsModalViewModel documentsModalViewModel)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
-            string folder = Path.Combine(uploadFolder, documentsModalViewModel.ObjectID.ToString());
+            var MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
+            string folder = Path.Combine(uploadFolder, MiddleFolderName);
             Directory.CreateDirectory(folder);
-            if (documentsModalViewModel.FilesToSave != null) //test for more than one???
+             if (documentsModalViewModel.FilesToSave != null) //test for more than one???
             {
                 var x = 1;
                 foreach (IFormFile file in documentsModalViewModel.FilesToSave)
@@ -263,10 +264,11 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
         }
-        protected void DeleteTemporaryDocuments(AppUtility.ParentFolderName parentFolderName, int ObjectID = 0)
+        protected void DeleteTemporaryDocuments(AppUtility.ParentFolderName parentFolderName, Guid guid, int ObjectID = 0)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
-            string requestFolder = Path.Combine(uploadFolder, ObjectID.ToString());
+            String FolderName = guid == Guid.Empty ? ObjectID.ToString() : guid.ToString();
+            string requestFolder = Path.Combine(uploadFolder, FolderName);
 
             if (Directory.Exists(requestFolder))
             {
@@ -286,7 +288,8 @@ namespace PrototypeWithAuth.Controllers
         protected void FillDocumentsViewModel(DocumentsModalViewModel documentsModalViewModel)
         {
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
-            string uploadFolder2 = Path.Combine(uploadFolder1, documentsModalViewModel.ObjectID.ToString());
+            var MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
+            string uploadFolder2 = Path.Combine(uploadFolder1, MiddleFolderName);
             string uploadFolder3 = Path.Combine(uploadFolder2, documentsModalViewModel.FolderName.ToString());
 
             if (Directory.Exists(uploadFolder3))
@@ -1146,11 +1149,12 @@ namespace PrototypeWithAuth.Controllers
             return totalDays - companyDaysOffCount;
         }
 
-        protected void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, bool additionalRequests = false)
+        protected void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, bool additionalRequests = false, Guid? guid = null)
         {
             //rename temp folder to the request id
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
-            string requestFolderFrom = Path.Combine(uploadFolder, "0");
+            var TempFolderName = guid == null ? "0" : guid.ToString();
+            string requestFolderFrom = Path.Combine(uploadFolder, TempFolderName);
             string requestFolderTo = Path.Combine(uploadFolder, id.ToString());
             if (Directory.Exists(requestFolderFrom))
             {

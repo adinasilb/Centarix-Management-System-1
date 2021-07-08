@@ -294,7 +294,6 @@ $(function () {
 	});
 
 	$(".open-document-modal").off('click').on("click", function (e) {
-
 		e.preventDefault();
 		e.stopPropagation();
 		console.log("clicked open doc modal 2");
@@ -305,6 +304,8 @@ $(function () {
 		console.log("enumString: " + enumString);
 		var requestId = $(this).data("id");
 		console.log("requestId: " + requestId);
+		var guid = $("#GUID").val();
+		console.log("guid: " + guid);
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
 		var showSwitch = $(".active-document-modal").attr("showSwitch");
@@ -312,7 +313,8 @@ $(function () {
 		console.log('parentfolder' + parentFolder)
 		var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
 		console.log(dontAllowMultipleFiles)
-		$.fn.OpenDocumentsModal(false, enumString, requestId, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles);
+		alert("before open doc modal");
+		$.fn.OpenDocumentsModal(false, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles);
 		return true;
 	});
 

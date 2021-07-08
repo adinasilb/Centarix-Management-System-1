@@ -458,14 +458,14 @@
                 $.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
             }
             if ($(element).hasClass('protocols')) {
-     
+
                 $(".mark-readonly").attr("disabled", false);
                 $("div.mark-readonly").attr("contenteditable", true);
                 $('.open-document-modal').attr("data-val", true);
                 $.fn.EnableMaterialSelect('#protocolParentList', 'select-options-protocolParentList');
                 $.fn.EnableMaterialSelect('#protocolSubList', 'select-options-protocolSubList');
                 $(".Material").addClass("saveProtocol");
-                $(".Protocols").addClass("saveProtocol"); 
+                $(".Protocols").addClass("saveProtocol");
                 var modalType = $(".modalType").val();
                 $("." + modalType).addClass("d-none")
                 var attrString = "[modaltype=" + modalType + "]";
@@ -474,7 +474,7 @@
                 $(".modalType").val("Edit");
                 modalType = $(".modalType").val();
                 $("." + modalType).removeClass("d-none")
-           
+
             }
         }
 
@@ -543,14 +543,14 @@
                         case "locations": case "addlocation":
                             $.fn.OpenModal('modal', 'add-location', modal)
                             break;
-                        case "addMaterial": 
+                        case "addMaterial":
                             $.fn.OpenModal('modal', 'add-material', modal)
                             break;
                         case "materialInfo":
                             $.fn.OpenModal('modal', 'material-info', modal)
                             break;
                         case "addFunction":
-                            $.fn.OpenModal('addFunctionModal', 'add-function', modal)                     
+                            $.fn.OpenModal('addFunctionModal', 'add-function', modal)
                             $(".add-function .mark-readonly").attr("disabled", true);
                             $(".add-function .mdb-select").materialSelect();
                             break;
@@ -563,7 +563,7 @@
                             $.fn.OpenModal('modal', 'protocol-details', modal)
                             $.fn.ProtocolsMarkReadonly("protocol-details")
                             break
-                 
+
                     }
 
                 },
@@ -615,7 +615,7 @@
             $('.edits .mdb-select').materialSelect();
             $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
-        
+
 
         $.fn.LoadSummaryModal = function (modalClass) {
             $("#cost").trigger('change');
@@ -676,7 +676,7 @@
                 type: "GET",
                 cache: false,
                 success: function (data) {
-                    
+
                     $("._IndexTable").html(data);
                     var modalType=$(".modalType").val();
                     $.fn.ProtocolsMarkReadonly("_IndexTable");
@@ -1125,7 +1125,7 @@
 
 
 
-        $.fn.OpenDocumentsModal = function (isReopen, enumString, requestId, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles) {
+        $.fn.OpenDocumentsModal = function (isReopen, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles) {
             $('#loading').show();
             //alert("in documents modal in document modal js")
             //$(".modal-backdrop").first().removeClass();
@@ -1134,11 +1134,11 @@
             if(section === "Protocols") {
                 urlbeginning ="/Protocols/"
             }
-            if(isReopen) {
-                urltogo = urlbeginning + "_DocumentsModalData?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
+            if (isReopen) {
+                urltogo = urlbeginning + "_DocumentsModalData?id=" + requestId + "&Guid=" + guid + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
                     "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
             } else {
-                urltogo = urlbeginning + "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
+                urltogo = urlbeginning + "DocumentsModal?id=" + requestId + "&Guid=" + guid + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
                     "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
             }
 
@@ -1160,7 +1160,7 @@
                         //alert("open doucment modal");
                         $.fn.OpenModal('documentsModal', 'documents', data)
                     }
-                    
+
                     var numCards = $("._DocumentsModalData .card.document-border").length;
                     console.log("numcards: " + numCards);
                     if (numCards < 1) {
@@ -1169,8 +1169,8 @@
                     else if (dontAllowMultipleFiles == 'True' || dontAllowMultipleFiles == 'true') {
                         console.log("don't allow multiples")
                         $(".upload-file").attr('disabled', true)
-                        $(".upload-file").addClass('disabled-background-color')   
-                        $(".upload-file").removeClass('protocols-background-color')  
+                        $(".upload-file").addClass('disabled-background-color')
+                        $(".upload-file").removeClass('protocols-background-color')
                         $(".file-select").attr('disabled', true)
                     }
                     if ($(".addFunctionForm").length >0)
@@ -1249,7 +1249,7 @@
             console.log('archived ' + archived);
             return { SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived }
         }
-        
+
 
         $.fn.ClearFilter = function (sectionType, isProprietary) {
             //alert(sectionType);
