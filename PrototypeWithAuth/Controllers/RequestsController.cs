@@ -38,6 +38,7 @@ using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.AppData.Exceptions;
 using System.Drawing;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Text;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -2865,35 +2866,24 @@ namespace PrototypeWithAuth.Controllers
                         message.Cc.Add(new MailboxAddress(deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails[e]));
                     }
                 }
-                //if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.Count >= 2)
-                //{
-                //    message.Cc.Add(new MailboxAddress(emails[1]));
-                //}
-                //if (emails.Count >= 3)
-                //{
-                //    message.Cc.Add(new MailboxAddress(emails[2]));
-                //}
-                //if (emails.Count >= 4)
-                //{
-                //    message.Cc.Add(new MailboxAddress(emails[3]));
-                //}
-                //if (emails.Count >= 5)
-                //{
-                //    message.Cc.Add(new MailboxAddress(emails[4]));
-                //}
 
                 //subject
                 message.Subject = "Order from Centarix to " + vendorName;
-/*                var parentQuoteIDs = deserializedTempRequestListViewModel.TempRequestViewModels.Select(trvm => trvm.Request.ParentQuoteID);
-                var quoteNumber = _context.ParentQuotes.Where(pq => parentQuoteIDs.Contains(pq.ParentQuoteID)).Select(pq => pq.QuoteNumber).FirstOrDefault();*/
-                var quoteNumber = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentQuoteID)
-                    .Select(pq => pq.QuoteNumber).FirstOrDefault();
-                if(quoteNumber == null)
+
+                List<string> quoteNumbers = new List<string>();
+                string quoteNumberFromJson = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentQuote.QuoteNumber;
+                if (quoteNumberFromJson != null)
                 {
-                    quoteNumber = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentQuote.QuoteNumber;
+                    quoteNumbers = deserializedTempRequestListViewModel.TempRequestViewModels.Select(trvm => trvm.Request.ParentQuote.QuoteNumber).ToList();
                 }
+                else
+                {
+                    var parentQuoteIDs = deserializedTempRequestListViewModel.TempRequestViewModels.Select(trvm => trvm.Request.ParentQuoteID);
+                    quoteNumbers = _context.ParentQuotes.Where(pq => parentQuoteIDs.Contains(pq.ParentQuoteID)).Select(pq => pq.QuoteNumber).ToList();
+                }
+
                 //body
-                builder.TextBody = @"Hello," + "\n\n" + "Please see the attached order for quote number " + quoteNumber +
+                builder.TextBody = @"Hello," + "\n\n" + "Please see the attached order for quote number(s) " + string.Join(",", quoteNumbers) +
                     ". \n\nPlease confirm that you received the order. \n\nThank you.\n"
                     + ownerUsername + "\nCentarix";
                 builder.Attachments.Add(uploadFile);
