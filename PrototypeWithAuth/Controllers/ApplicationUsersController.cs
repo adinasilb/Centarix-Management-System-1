@@ -155,16 +155,13 @@ namespace PrototypeWithAuth.Controllers
 
             List<WorkerHourViewModel> workerHoursViewModel = new List<WorkerHourViewModel>();
             var companyDaysOff = _context.CompanyDayOffs.ToList();
-            double totalWorkingDaysInMonthOrYear;
-            double totalWorkingDaysInYear = amountInYear == 0 ? SharedController.GetTotalWorkingDaysThisYear(new DateTime(year, 1, 1), companyDaysOff) : amountInYear;
+            //if enum is yearly
+            double totalWorkingDaysInMonthOrYear = amountInYear == 0 ? GetTotalWorkingDaysThisYear(new DateTime(year, 1, 1), companyDaysOff) : amountInYear;
             if (yearlyMonthlyEnum == YearlyMonthlyEnum.Monthly)
             {
-                totalWorkingDaysInMonthOrYear = SharedController.GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff);
+                totalWorkingDaysInMonthOrYear = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff);
             }
-            else
-            {
-                totalWorkingDaysInMonthOrYear = totalWorkingDaysInYear;
-            }
+
             List<Task> listOfTasks = new List<Task>();
             await employees.ForEachAsync(employee =>
             {
@@ -181,7 +178,7 @@ namespace PrototypeWithAuth.Controllers
                 int unpaidLeave = 0;
                 double vacationHours;
                 TimeSpan hours = new TimeSpan();
-                IEnumerable<EmployeeHours> employeeHoursOfMonthOrYear;
+                //IEnumerable<EmployeeHours> employeeHoursOfMonthOrYear;
 
 
                 var workingDaysDates = employee.EmployeeHours.Where(eh => (eh.OffDayTypeID == null) || (eh.IsBonus && eh.OffDayTypeID != null)).Where(eh => (eh.Exit1 != null || eh.TotalHours != null)).Select(eh => eh.Date.Date).ToList();

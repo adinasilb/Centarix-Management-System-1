@@ -1185,9 +1185,16 @@ namespace PrototypeWithAuth.Controllers
             {
                 _context.Entry(tempRequest.Request.Product).State = EntityState.Unchanged;
             }
+            if (tempRequest.Request.ParentQuote.ParentQuoteID == 0)
+            {
+                _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Added;
+            }
+            else
+            {
+                _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Unchanged;
+            }
             _context.Entry(tempRequest.Request).State = EntityState.Added;
             _context.Entry(tempRequest.Request.ParentRequest).State = EntityState.Added;
-
 
             await _context.SaveChangesAsync();
 
@@ -1516,13 +1523,16 @@ namespace PrototypeWithAuth.Controllers
                                     _context.Add(requestNotification);
                                 }
                             }
-                            MoveDocumentsOutOfTempFolder(newTRLVM.TempRequestViewModels[0].Request.RequestID, AppUtility.ParentFolderName.Requests, false, newTRLVM.GUID);
+                            MoveDocumentsOutOfTempFolder(newTRLVM.TempRequestViewModels[0].Request.ParentQuoteID == null ? 0 : Convert.ToInt32(newTRLVM.TempRequestViewModels[0].Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, false, newTRLVM.GUID);
                             await _context.SaveChangesAsync();
                             await transaction.CommitAsync();
 
                             await RemoveTempRequestAsync(newTRLVM.GUID);
                             tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
-                            if (!needsToBeApproved) { return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("Index", controller, tempRequestListViewModel.RequestIndexObject) }; };
+                            if (!needsToBeApproved)
+                            {
+                                return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("Index", controller, tempRequestListViewModel.RequestIndexObject) };
+                            };
                         }
 
                     }
@@ -5037,7 +5047,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
                 var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
-
+                var parentQuote = new ParentQuote() { QuoteStatusID = -1 };
                 var deserializedTempRequestListViewModel = new TempRequestListViewModel()
                 {
                     TempRequestViewModels =
@@ -5050,7 +5060,7 @@ namespace PrototypeWithAuth.Controllers
                         tempRequest.Request.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
                     }
                     tempRequest.Request.ParentRequest = uploadQuoteOrderViewModel.ParentRequest;
-                    tempRequest.Request.ParentQuote = null;
+                    tempRequest.Request.ParentQuote = parentQuote;
                 }
 
                 await SetTempRequestAsync(newTempRequestJson, deserializedTempRequestListViewModel);
