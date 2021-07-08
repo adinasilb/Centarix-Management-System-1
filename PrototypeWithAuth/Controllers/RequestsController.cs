@@ -79,7 +79,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 var viewmodel = await base.GetIndexViewModel(requestIndexObject);
 
-                SetViewModelCounts(requestIndexObject, viewmodel);
+               // SetViewModelCounts(requestIndexObject, viewmodel);
                 return View(viewmodel);
             }
             else
@@ -101,7 +101,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
 
                 var viewmodel = await base.GetIndexViewModel(requestIndexObject);
-                SetViewModelProprietaryCounts(requestIndexObject, viewmodel);
+              //  SetViewModelProprietaryCounts(requestIndexObject, viewmodel);
                 //viewmodel.InventoryFilterViewModel = GetInventoryFilterViewModel();
 
                 if (ViewBag.ErrorMessage != null)
@@ -467,7 +467,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> _IndexTableWithCounts(RequestIndexObject requestIndexObject, SelectedFilters selectedFilters = null, string searchText = "", int numFilters = 0)
         {
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, selectedFilters: selectedFilters, searchText: searchText, numFilters: numFilters);
-            SetViewModelCounts(requestIndexObject, viewModel, selectedFilters, searchText);
+            //SetViewModelCounts(requestIndexObject, viewModel, selectedFilters, searchText);
             if (TempData["RequestStatus"]?.ToString() == "1")
             {
                 Response.StatusCode = 210;
@@ -1659,8 +1659,8 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
-            SetViewModelCounts(requestIndexObject, viewModel);
-            SetViewModelProprietaryCounts(requestIndexObject, viewModel);
+            //SetViewModelCounts(requestIndexObject, viewModel);
+           // SetViewModelProprietaryCounts(requestIndexObject, viewModel);
             return View(viewModel);
         }
         [HttpGet]
