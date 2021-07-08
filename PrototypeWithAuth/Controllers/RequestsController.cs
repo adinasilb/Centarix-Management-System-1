@@ -2885,13 +2885,17 @@ namespace PrototypeWithAuth.Controllers
                 //subject
                 message.Subject = "Order from Centarix to " + vendorName;
 
-                var quoteNumber = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentQuoteID).Select(pq => pq.QuoteNumber).FirstOrDefault();
+                var quoteNumber = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentQuoteID)
+                    .Select(pq => pq.QuoteNumber).FirstOrDefault();
+                if(quoteNumber == null)
+                {
+                    quoteNumber = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentQuote.QuoteNumber;
+                }
                 //body
                 builder.TextBody = @"Hello," + "\n\n" + "Please see the attached order for quote number " + quoteNumber +
                     ". \n\nPlease confirm that you received the order. \n\nThank you.\n"
                     + ownerUsername + "\nCentarix";
                 builder.Attachments.Add(uploadFile);
-
 
                 message.Body = builder.ToMessageBody();
 
@@ -2937,10 +2941,8 @@ namespace PrototypeWithAuth.Controllers
                                         {
                                             _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.Product).State = EntityState.Added;
                                         }
-                                        _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentRequest).State = EntityState.Added;
                                         _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request).State = EntityState.Added;
                                         //deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentRequest.OrderDate = DateTime.Now;
-                                        _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentRequest).State = EntityState.Added;
                                         _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentQuote).State = EntityState.Added;
                                     }
                                     else
