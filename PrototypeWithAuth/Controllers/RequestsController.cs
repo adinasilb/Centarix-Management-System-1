@@ -3803,8 +3803,8 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch, AppUtility.ParentFolderName parentFolderName,
-            AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+        public ActionResult DocumentsModal(string id, Guid Guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch, 
+            AppUtility.ParentFolderName parentFolderName, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
@@ -3813,7 +3813,8 @@ namespace PrototypeWithAuth.Controllers
                 ParentFolderName = parentFolderName,
                 ObjectID = id == "" ? "0" : id,
                 SectionType = SectionType,
-                ShowSwitch = showSwitch
+                ShowSwitch = showSwitch,
+                Guid = Guid
             };
 
             FillDocumentsViewModel(documentsModalViewModel);
@@ -3822,7 +3823,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult _DocumentsModalData(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+        public ActionResult _DocumentsModalData(string id, Guid Guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
           AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
@@ -3832,7 +3833,8 @@ namespace PrototypeWithAuth.Controllers
                 ParentFolderName = parentFolderName,
                 ObjectID = id == "" ? "0" : id,
                 SectionType = SectionType,
-                ShowSwitch = showSwitch
+                ShowSwitch = showSwitch,
+                Guid = Guid
             };
 
             FillDocumentsViewModel(documentsModalViewModel);

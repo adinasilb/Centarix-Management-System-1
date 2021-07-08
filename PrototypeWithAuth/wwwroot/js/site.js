@@ -313,7 +313,7 @@ $(function () {
 		console.log('parentfolder' + parentFolder)
 		var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
 		console.log(dontAllowMultipleFiles)
-		alert("before open doc modal");
+		//alert("before open doc modal");
 		$.fn.OpenDocumentsModal(false, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles);
 		return true;
 	});
