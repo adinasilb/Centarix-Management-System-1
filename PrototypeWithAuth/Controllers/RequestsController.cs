@@ -4818,7 +4818,7 @@ namespace PrototypeWithAuth.Controllers
             //};
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
-            string uploadFolder2 = Path.Combine(uploadFolder1, "0");
+            string uploadFolder2 = Path.Combine(uploadFolder1, requestIndexObject.GUID.ToString());
             string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
 
             if (Directory.Exists(uploadFolderQuotes))
@@ -5015,7 +5015,7 @@ namespace PrototypeWithAuth.Controllers
             uploadOrderViewModel.ParentRequest = pr;
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-            string uploadFolder2 = Path.Combine(uploadFolder1, "0");
+            string uploadFolder2 = Path.Combine(uploadFolder1, requestIndexObject.GUID.ToString());
             string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Orders.ToString());
 
             if (Directory.Exists(uploadFolderOrders))
