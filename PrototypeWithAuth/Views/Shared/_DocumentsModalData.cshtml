@@ -130,14 +130,14 @@
                                         carouselItemClass += " active";
                                     }
                                     <div class="@carouselItemClass">
-                                        <div class="col-12 col-md-4 m-0">
+                                        <div class=" doc-card-outer-div col-md-4 m-0">
                                             @if (ModelCount > i)
                                             {
                                                 var iframeFilestring = Model.FileStrings[i];
                                                 var ext = iframeFilestring.Split(".").Last();
                                                 if (ext == "pptx" || ext == "ppt")
                                                 {
-                                                    iframeFilestring = "";
+                                                    iframeFilestring = "images/powerpoint.png";
                                                 }
                                                 <div class="card iframe-container document-border m-0">
                                                     <div class="card-body responsive-iframe-container">

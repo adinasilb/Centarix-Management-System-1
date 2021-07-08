@@ -24,5 +24,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<DocumentFolder> DocumentsInfo { get; set; }
         public bool IsRemove { get; set; }
         public AppUtility.ProtocolModalType ModalType { get; set; }
+        public Guid UniqueGuid { get; set; }
     }
 }

@@ -36,5 +36,6 @@ namespace PrototypeWithAuth.ViewModels
             set { _Tab = value; }
         }
         public AppUtility.ProtocolModalType ModalType { get; set; }
+        public Guid UniqueGuid { get; set; }
     }
 }
