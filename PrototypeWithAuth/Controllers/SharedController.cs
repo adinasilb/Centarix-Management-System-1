@@ -1149,6 +1149,29 @@ namespace PrototypeWithAuth.Controllers
             return totalDays - companyDaysOffCount;
         }
 
+        protected void RevertDocuments(int id, AppUtility.ParentFolderName parentFolderName, Guid? guid, bool additionalRequests = false)
+        {
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
+            var TempFolderName = guid == null ? "0" : guid.ToString();
+            string requestFolderTo = Path.Combine(uploadFolder, TempFolderName);
+            string requestFolderFrom = Path.Combine(uploadFolder, id.ToString());
+            if (Directory.Exists(requestFolderFrom))
+            {
+                if (Directory.Exists(requestFolderTo))
+                {
+                    Directory.Delete(requestFolderTo, true);
+                }
+                if (additionalRequests)
+                {
+                    AppUtility.DirectoryCopy(requestFolderFrom, requestFolderTo, true);
+                }
+                else if (requestFolderFrom != requestFolderTo)
+                {
+                    Directory.Move(requestFolderFrom, requestFolderTo);
+                }
+            }
+        }
+
         protected void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, bool additionalRequests = false, Guid? guid = null)
         {
             //rename temp folder to the request id
