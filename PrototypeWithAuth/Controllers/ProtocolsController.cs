@@ -768,7 +768,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> _Lines(List<TempLine> TempLines, int lineTypeID, int currentLineID, int protocolID, AppUtility.ProtocolModalType modalType, Guid guid)
+        public async Task<IActionResult> _Lines(List<Line> TempLines, int lineTypeID, int currentLineID, int protocolID, AppUtility.ProtocolModalType modalType, Guid guid)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -901,7 +901,7 @@ namespace PrototypeWithAuth.Controllers
         {
             return _context.Protocols.Where(p => p.UniqueCode.Equals(uniqueNumber)).ToList().Any();
         }
-        private async Task UpdateLineContentAsync(List<TempLine> TempLines)
+        private async Task UpdateLineContentAsync(List<Line> TempLines, Guid guid)
         {
             foreach (var line in TempLines)
             {

@@ -10,7 +10,7 @@ namespace PrototypeWithAuth.ViewModels
     public class ProtocolsLineViewModel
     {
         public int Index { get; set; }
-        public TempLine TempLine { get; set; }
+        public Line Line { get; set; }
         public string LineNumberString { get; set; }
         public List<LineType> LineTypes { get; set; }
         public IEnumerable<FunctionLine> Functions { get; set; }
