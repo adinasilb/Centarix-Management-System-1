@@ -3429,7 +3429,7 @@ namespace PrototypeWithAuth.Controllers
         //    try
         //    {
         //        onePageOfProducts = await requestsSearched.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory)
-        //            .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedListAsync(pageNumber, 25);
+        //            .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedListAsync(pageNumber, 20);
         //        //onePageOfProducts;
 
 

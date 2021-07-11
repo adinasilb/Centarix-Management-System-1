@@ -59,7 +59,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
             }
-            var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n=> n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
+            var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n=> n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(20).ToList();
             entryExitViewModel.TimekeeperNotifications = notifications;
             if (errorMessage != null)
             {
@@ -138,7 +138,7 @@ namespace PrototypeWithAuth.Controllers
                         //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
                     }
                     // throw new Exception();
-                    //var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
+                    //var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(20).ToList();
                     //entryExitViewModel.TimekeeperNotifications = notifications;
                     await transaction.CommitAsync();
                     return RedirectToAction();
