@@ -6,15 +6,18 @@
             var subcategoryID = $("#sublist").val()
             var pageType = $("#masterPageType").val()
             var itemName = $("#Requests_0__Product_ProductName").val()
+            console.log("name " + itemName);
             var isRequestQuote = false; //always false until put back in //$(".isRequest").is(":checked")
             console.log(isRequestQuote)
             console.log("subcategory " + subcategoryID)
+            var url = "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&PageType=" + pageType + "&itemName=" + itemName + "&isRequestQuote=" + isRequestQuote;
+            console.log(url);
             if (subcategoryID != "") {
                 $.ajax({
                     //processData: true,
                     //contentType: true,
                     async: true,
-                    url: "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&PageType=" + pageType + "&itemName=" + itemName + "&isRequestQuote=" + isRequestQuote,
+                    url: url,
                     type: 'GET',
                     cache: false,
                     //data: formData,
