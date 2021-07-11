@@ -127,7 +127,11 @@
 						});
 
 					} else if ($('.turn-edit-on-off').hasClass('orders')) {
-						$.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
+						var viewClass = "_IndexTableData";
+						if ($('#masterSidebarType').val()) {
+							viewClass = "_IndexTableDataByVendor";
+						}
+						$.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass + "/", "." + viewClass, "GET");
 					}
 					else if ($('.turn-edit-on-off').hasClass('protocols')) {
 						var tab= $(".protocol-tab.active.show");
