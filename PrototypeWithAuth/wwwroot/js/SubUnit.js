@@ -473,7 +473,7 @@ $(function () {
 	});
 
 	$("#unit-type-select").on("change", function () {
-		alert('in id function');
+		//alert('in id function');
 		$.fn.ChangeSubUnitDropdown();
 		$.fn.ChangeSubSubUnitDropdown();
 	});

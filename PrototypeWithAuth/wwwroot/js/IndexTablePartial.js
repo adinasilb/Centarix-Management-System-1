@@ -123,21 +123,21 @@ $(function () {
 	});
 
 
-$("body").off("click").on("click", ".load-order-details", function (e) {
-	//alert('in function')
-	console.log("in order details");
-	e.preventDefault();
-	e.stopImmediatePropagation();
-	//e.stopPropagation();
-	$("#loading").show();
-	var section = $("#masterSectionType").val()
-	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
-	var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString()
-	$.fn.CallPageRequest($itemurl, "reorder");
-	console.log("after call page request");
-	$(".temprequesthiddenfors").first().html('');
-	return false;
-});
+	$("body").off("click").on("click", ".load-order-details", function (e) {
+		//alert('in function')
+		e.preventDefault();
+		e.stopImmediatePropagation();
+		console.log("in order details");
+		//e.stopPropagation();
+		$("#loading").show();
+		var section = $("#masterSectionType").val()
+		//takes the item value and calls the Products controller with the ModalView view to render the modal inside
+		var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString()
+		$.fn.CallPageRequest($itemurl, "reorder");
+		console.log("after call page request");
+		$(".temprequesthiddenfors").first().html('');
+		return false;
+	});
 
 	$(".load-product-details").off('click').on("click", function (e) {
 		e.preventDefault();

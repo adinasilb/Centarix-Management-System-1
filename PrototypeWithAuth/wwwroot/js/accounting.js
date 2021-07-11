@@ -178,7 +178,7 @@
 		$(".icon-more-popover").off("click").on("click", ".remove-share", function (e) {
 			var ModelsEnum = "";
 			var shareNum = "";
-			alert("in icon more popover remove share setup");
+			//alert("in icon more popover remove share setup");
 			if ($(this).hasClass("resources")) { //THIS IF IS NOT WORKING
 				ModelsEnum = "Resource";
 				shareNum = $(this).attr("data-share-resource-id");
