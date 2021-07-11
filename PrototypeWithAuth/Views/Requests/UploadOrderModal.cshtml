@@ -156,7 +156,7 @@
             var formData = new FormData($(".uploadQuoteForm")[0]);
             //alert(...formData);
             var orderType = $("#RequestIndexObject_OrderType").val();
-            alert("orderType: " + orderType);
+            //alert("orderType: " + orderType);
             $.ajax({
                 contentType: false,
                 processData: false,
@@ -168,7 +168,7 @@
                 cache: false,
                 success: function (data) {
                     if (orderType == "SaveOperations" || orderType == "AlreadyPurchased") {
-                        alert("opening terms modal");
+                        //alert("opening terms modal");
                         $.fn.OpenModal("termsModal", "terms", data);
                     }
                     else {
@@ -220,7 +220,7 @@
                     type: "POST",
                     cache: false,
                     success: function (data) {
-                        alert("in success of ajax call");
+                        //alert("in success of ajax call");
                         $(".temprequesthiddenfors").append(data);
                     }
                 })
