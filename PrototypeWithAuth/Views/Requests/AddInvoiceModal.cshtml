@@ -10,7 +10,7 @@
 <div class="modal modal-view fader on-form-modal accounting-form" id="myModal" data-backdrop="false">
     <div class="elixir-modal-xl modal-dialog-centered mx-auto">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('payments-invoice')">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('add-invoice')">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" id="myForm" class="modal-padding addInvoiceForm">
@@ -159,7 +159,7 @@
                                 <label asp-for="InvoiceImage" class="control-label"></label>
                                 <br />
                                 <button class="my-2 accounting-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()"
-                                        data-id="@Model.Requests[0].RequestID"
+                                        data-id="@Model.Requests[0].RequestID" parentfolder="@AppUtility.ParentFolderName.Requests"
                                         id="@AppUtility.FolderNamesEnum.Invoices.ToString()" data-val="@true" show-switch="@false">
                                     Select File
                                 </button>
