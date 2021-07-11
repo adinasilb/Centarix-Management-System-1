@@ -4775,7 +4775,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<TempRequestListViewModel> LoadTempListFromRequestIndexObjectAsync(RequestIndexObject requestIndexObject)
         {
-            var oldJson = await _context.TempRequestJsons.Where(trj => trj.GuidID == requestIndexObject.GUID).FirstOrDefaultAsync();
+            var oldJson = _context.TempRequestJsons.Where(trj => trj.GuidID == requestIndexObject.GUID).FirstOrDefault();
             return new TempRequestListViewModel()
             {
                 GUID = requestIndexObject.GUID,
