@@ -4,7 +4,7 @@
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
 
-    <script src="~/js/site.js"></script>
+<script src="~/js/site.js"></script>
 <div class="row"><span class="heading-1 modal-tab-name">Documents</span></div>
 
 @{
@@ -36,63 +36,49 @@
 }
 <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
 <div class="row document-margin-bottom">
-    @for(int i =0; i<4; i++)
+    @for (int i = 0; i < 4; i++)
     {
-        if (i < Model.DocumentsInfo?.Count)
-        {
-            var folder = Model.DocumentsInfo?[i];
-        <div class=" @(i == 3 ? "" : "document-margin")">
-            @{
-                var filterClass = "opac87";
-                var hasFileClass = "";
-                if (folder.FileStrings != null && folder.FileStrings.Count > 0)
-                {
-                    filterClass = color;
-                    hasFileClass = "hasFile";
-                }
-                var id = folder.ObjectID == null ? "0" : folder.ObjectID;
-            }
-            <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@id" id="@folder.FolderName.ToString()" data-val="@true" showSwitch="@false"parentFolder="@folder.ParentFolderName">
-                <div class="card document-border @hasFileClass ">
-                    <div class="document-card text-center">
-                        <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                    </div>
+        GetDocumentCardsRow(i, color, fontSize);
 
-                </div>
-            </a>
-            <label class="control-label text-center text document-text-margin" style="width:100%;">@folder.FolderName</label>
-        </div>
-        }
     }
 
 </div>
 @if (Model.DocumentsInfo.Count > 4)
 {
-<div class="row document-margin-bottom">
-    @for (int i = 4; i < Model.DocumentsInfo.Count; i++)
-    {
-        if (i < Model.DocumentsInfo?.Count)
+    <div class="row document-margin-bottom">
+        @for (int i = 4; i < Model.DocumentsInfo.Count; i++)
         {
-            var folder = Model.DocumentsInfo[i];
-        <div class=" @(i == 7 ? "" : "document-margin")">
-            @{
-                var filterClass = "opac87";
-                if (folder.FileStrings != null && folder.FileStrings.Count > 0)
-                {
-                    filterClass = color;
-                }
-            }
-            <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@Model.Requests[0].RequestID" id="@folder.FolderName.ToString()" data-val="@true" showSwitch="@false">
-                <div class="card document-border ">
-                    <div class="document-card text-center">
-                        <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                    </div>
+            GetDocumentCardsRow(i, color, fontSize);
+        }
+    </div>
+}
 
-                </div>
-            </a>
-            <label class="control-label text-center text document-text-margin" style="width:100%;">@folder.FolderName</label>
-        </div>
+@functions{
+    private void GetDocumentCardsRow(int i, string color, string fontSize)
+    {
+        @if (i < Model.DocumentsInfo?.Count)
+        {
+            var folder = Model.DocumentsInfo?[i];
+            <div class=" @(i == 3 ? "" : "document-margin")">
+                @{
+                    var filterClass = "opac87";
+                    var hasFileClass = "";
+                    if (folder.FileStrings != null && folder.FileStrings.Count > 0)
+                    {
+                        filterClass = color;
+                        hasFileClass = "hasFile";
+                    }
+                    var id = folder.ObjectID == null ? "0" : folder.ObjectID;
+                }
+                <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@id" id="@folder.FolderName.ToString()" data-val="@true" showSwitch="@false" parentFolder="@folder.ParentFolderName">
+                    <div class="card document-border @hasFileClass ">
+                        <div class="document-card text-center">
+                            <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                        </div>
+                    </div>
+                </a>
+                <label class="control-label text-center text document-text-margin" style="width:100%;">@folder.FolderName</label>
+            </div>
         }
     }
-</div>
 }
