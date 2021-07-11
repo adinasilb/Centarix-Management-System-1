@@ -21,6 +21,7 @@
     <div class="col-12 create-user mx-auto @form on-form-modal  " style="width: 60%">
         <div class="on-form-modal-border">
             <form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style=" ">
+                @Html.HiddenFor(m => m.TempRequestListViewModel.GUID) @*for reloading the partial view*@
                 @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel); }
                 <div class="outer-partial">
 

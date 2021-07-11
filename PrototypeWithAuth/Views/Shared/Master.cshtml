@@ -1238,6 +1238,22 @@
                 $('.body').removeClass('modal-open');
             }
         }
+
+        $.fn.AddTempRequestHiddenFors = function (guid) {
+            alert("in $.fn.AddTempRequestHiddenFors : " + guid);
+            $.ajax({
+                async: true,
+                url: "/Requests/_TempRequestHiddenFors?GUID=" + guid,
+                traditional: true,
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    $(".temprequesthiddenfors").replaceWith(data);
+                    return false;
+                }
+            });
+        };
+
         $.fn.BindSelectedFilters = function () {
             console.log('in bind selected filters');
             var selectedVendor = $(".popover .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();

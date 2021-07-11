@@ -28,7 +28,7 @@
 <div class="modal modal-document fader modalStep1 on-form-modal @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9000">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style  cancel-quote" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('step-1');">
+            <button type="button" class="close modal-close-padding modal-close-style cancel-quote" @*data-dismiss="modal"*@ aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
@@ -124,7 +124,7 @@
                     <div class="mx-auto modal-footer-mt">
                         <input type="hidden" asp-for="OrderTypeEnum" />
                         <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin submitQuote" @*asp-action="UploadQuoteModal"*@ />
-                        <button type="button" class="custom-button custom-cancel cancel-quote" onclick="$.fn.CloseModal('step-1'); $.fn.AddTempRequestHiddenFors(@Model.TempRequestListViewModel.GUID)">Cancel</button>
+                        <button type="button" class="custom-button custom-cancel cancel-quote">Cancel</button>
                     </div>
                 </div>
             </form>
@@ -135,9 +135,13 @@
 <script src="~/js/validate.js"></script>
 <script src="~/js/Validation/ValidateUploadQuoteForm.js"></script>
 <script>
-    $.fn.AddTempRequestHiddenFors = new function (guid) {
-        //alert("in $.fn.AddTempRequestHiddenFors");
-    };
+    $(".cancel-quote").on("click", function (e) {
+        e.preventDefault();
+        alert("in cancel quote");
+        $.fn.CloseModal('step-1');
+        $.fn.AddTempRequestHiddenFors($("#TempRequestListViewModel_GUID").val());
+    });
+    
     $(".submitQuote").off('click').on("click", function (e) {
         e.preventDefault();
         console.log("submit quote");
