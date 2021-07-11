@@ -4182,13 +4182,13 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests, Users, Biomarkers, Accounting, Admin, Reports, Timekeeper, Operations, Protocols, Income, Operation, Expenses, LabManagement")]
-        public async Task<IActionResult> ConfirmExit(Guid TempRequestGUID, AppUtility.MenuItems MenuItem = AppUtility.MenuItems.Requests, string url = "")
+        public async Task<IActionResult> ConfirmExit(String TempRequestGUID, AppUtility.MenuItems MenuItem = AppUtility.MenuItems.Requests, string url = "")
         {
             ConfirmExitViewModel confirmExit = new ConfirmExitViewModel()
             {
                 SectionType = MenuItem,
                 URL = url,
-                GUID = TempRequestGUID
+                GUID = TempRequestGUID == Guid.NewGuid().ToString() || TempRequestGUID == "undefined" ? Guid.NewGuid() : Guid.Parse(TempRequestGUID)
             };
             return PartialView(confirmExit);
         }
