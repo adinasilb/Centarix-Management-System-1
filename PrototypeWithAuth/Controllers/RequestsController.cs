@@ -5021,7 +5021,7 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadQuoteOrderViewModel, TempRequestListViewModel tempRequestListViewModel, bool isCancel = false)
+        public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadOrderViewModel, TempRequestListViewModel tempRequestListViewModel, bool isCancel = false)
         {
             /*if (isCancel)
             {
@@ -5036,16 +5036,19 @@ namespace PrototypeWithAuth.Controllers
                 var parentQuote = new ParentQuote() { QuoteStatusID = -1 };
                 var deserializedTempRequestListViewModel = new TempRequestListViewModel()
                 {
-                    TempRequestViewModels =
-                    newTempRequestJson.DeserializeJson<List<TempRequestViewModel>>()
+                    TempRequestViewModels = newTempRequestJson.DeserializeJson<List<TempRequestViewModel>>()
                 };
                 foreach (var tempRequest in deserializedTempRequestListViewModel.TempRequestViewModels)
                 {
-                    if (uploadQuoteOrderViewModel.ExpectedSupplyDays != null)
+                    if (uploadOrderViewModel.ExpectedSupplyDays != null)
                     {
-                        tempRequest.Request.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
+                        tempRequest.Request.ExpectedSupplyDays = uploadOrderViewModel.ExpectedSupplyDays;
                     }
-                    tempRequest.Request.ParentRequest = uploadQuoteOrderViewModel.ParentRequest;
+                    if(uploadOrderViewModel.ParentRequest.OrderDate == DateTime.Today)
+                    {
+                        uploadOrderViewModel.ParentRequest.OrderDate = DateTime.Now;
+                    }
+                    tempRequest.Request.ParentRequest = uploadOrderViewModel.ParentRequest;
                     tempRequest.Request.ParentQuote = parentQuote;
                 }
 
@@ -5086,7 +5089,8 @@ namespace PrototypeWithAuth.Controllers
                 //}
                 string action;
                 tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
-                if (tempRequestListViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased || tempRequestListViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.SaveOperations)
+                if (tempRequestListViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased || 
+                    tempRequestListViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.SaveOperations)
                 {
                     action = "TermsModal";
                 }
@@ -5101,9 +5105,9 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                uploadQuoteOrderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                uploadOrderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
-                return PartialView("UploadOrderModal", uploadQuoteOrderViewModel);
+                return PartialView("UploadOrderModal", uploadOrderViewModel);
             }
         }
 
