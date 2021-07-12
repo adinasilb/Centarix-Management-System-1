@@ -21,6 +21,7 @@
                 <input asp-for="VendorId" style="display: none;" />
                 <input asp-for="RequestID" style="display: none;" />
 
+                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel);}
                 @Html.HiddenFor(model => model.IsResend)
 
                 <div>
@@ -29,9 +30,12 @@
 
                 <div class="modal-footer p-4">
                     <div class="m-auto">
-                        <input type="submit" class="custom-button custom-button-font lab-man-background-color between-button-margin" asp-action="ConfirmQuoteEmailModal" value="Confirm & Send Email" />
+                        <input type="submit" class="custom-button custom-button-font lab-man-background-color between-button-margin" asp-action="ConfirmQuoteEmailModal" 
+                               value="Confirm & Send Email" />
 
-                        <button class="custom-cancel custom-button cancel-email" @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('confirm-email').html('');">Cancel Email</button>
+                        <button class="custom-cancel custom-button cancel-email" @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('confirm-email').html('');">
+                            Cancel Email
+                        </button>
                     </div>
                 </div>
 

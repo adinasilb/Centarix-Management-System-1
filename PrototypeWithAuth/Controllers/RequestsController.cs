@@ -80,7 +80,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 var viewmodel = await base.GetIndexViewModel(requestIndexObject);
 
-               // SetViewModelCounts(requestIndexObject, viewmodel);
+                // SetViewModelCounts(requestIndexObject, viewmodel);
                 return View(viewmodel);
             }
             else
@@ -102,7 +102,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
 
                 var viewmodel = await base.GetIndexViewModel(requestIndexObject);
-              //  SetViewModelProprietaryCounts(requestIndexObject, viewmodel);
+                //  SetViewModelProprietaryCounts(requestIndexObject, viewmodel);
                 //viewmodel.InventoryFilterViewModel = GetInventoryFilterViewModel();
 
                 if (ViewBag.ErrorMessage != null)
@@ -1520,9 +1520,9 @@ namespace PrototypeWithAuth.Controllers
 
                             await RemoveTempRequestAsync(newTRLVM.GUID);
                             tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
-                            if (!needsToBeApproved) 
-                            { 
-                                return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("Index", controller, tempRequestListViewModel.RequestIndexObject) }; 
+                            if (!needsToBeApproved)
+                            {
+                                return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("Index", controller, tempRequestListViewModel.RequestIndexObject) };
                             };
                         }
 
@@ -1651,7 +1651,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
             //SetViewModelCounts(requestIndexObject, viewModel);
-           // SetViewModelProprietaryCounts(requestIndexObject, viewModel);
+            // SetViewModelProprietaryCounts(requestIndexObject, viewModel);
             return View(viewModel);
         }
         [HttpGet]
@@ -3056,7 +3056,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ConfirmQuoteEmailModal(ConfirmEmailViewModel confirmQuoteEmail)
+        public async Task<IActionResult> ConfirmQuoteEmailModal(ConfirmEmailViewModel confirmQuoteEmail, RequestIndexObject requestIndexObject)
         {
             List<Request> requests;
             if (confirmQuoteEmail.IsResend)
@@ -3084,6 +3084,11 @@ namespace PrototypeWithAuth.Controllers
             var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
 
             confirmQuoteEmail.Requests = requests;
+            confirmQuoteEmail.TempRequestListViewModel = new TempRequestListViewModel()
+            {
+                RequestIndexObject = requestIndexObject
+            };
+
             //render the purchase order view into a string using a the confirmEmailViewModel
             string renderedView = await RenderPartialViewToString("OrderEmailView", confirmQuoteEmail);
             //instantiate a html to pdf converter object
@@ -3785,7 +3790,7 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(string id, Guid Guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch, 
+        public ActionResult DocumentsModal(string id, Guid Guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
             AppUtility.ParentFolderName parentFolderName, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
@@ -4101,7 +4106,7 @@ namespace PrototypeWithAuth.Controllers
                     catch (Exception ex)
                     {
                         transaction.RollbackAsync();
-                        DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, Guid.Empty ,(int)parentQuoteId);
+                        DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, Guid.Empty, (int)parentQuoteId);
                         throw new Exception(AppUtility.GetExceptionMessage(ex));
                     }
                 }
@@ -4832,7 +4837,7 @@ namespace PrototypeWithAuth.Controllers
             }*/
             try
             {
-                
+
                 var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
                 var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
 
@@ -4867,7 +4872,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
                 if ((deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.RequestStatusID == 6 ||
-                    deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.RequestStatusID == 1 )
+                    deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.RequestStatusID == 1)
                     && deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderType != AppUtility.OrderTypeEnum.AddToCart.ToString())
                 {
                     //    var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
@@ -5044,7 +5049,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         tempRequest.Request.ExpectedSupplyDays = uploadOrderViewModel.ExpectedSupplyDays;
                     }
-                    if(uploadOrderViewModel.ParentRequest.OrderDate == DateTime.Today)
+                    if (uploadOrderViewModel.ParentRequest.OrderDate == DateTime.Today)
                     {
                         uploadOrderViewModel.ParentRequest.OrderDate = DateTime.Now;
                     }
@@ -5089,7 +5094,7 @@ namespace PrototypeWithAuth.Controllers
                 //}
                 string action;
                 tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
-                if (tempRequestListViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased || 
+                if (tempRequestListViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased ||
                     tempRequestListViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.SaveOperations)
                 {
                     action = "TermsModal";
