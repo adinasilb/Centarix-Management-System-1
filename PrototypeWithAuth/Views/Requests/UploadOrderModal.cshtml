@@ -138,10 +138,7 @@
 <script src="~/js/Validation/ValidateUploadQuoteForm.js"></script>
 <script src="~/js/validate.js"></script>
 <script>
-    //$(".cancel-order").on("click", function (e) {
-    //    e.preventDefault();
-    //    $.fn.CloseModal('step-1');
-    //});
+
     $(".submit-order").off('click').on("click", function (e) {
         e.preventDefault();
         console.log("submit order doc");
@@ -207,7 +204,12 @@
         e.preventDefault();
         //alert("in cancel order");
         $.fn.CloseModal('step-1');
-        $.fn.AddTempRequestHiddenFors($("#TempRequestListViewModel_GUID").val());
+        var selector = '.temprequesthiddenfors';
+        if ($('#RequestIndexObject_IsReorder').val() === 'true') {
+            selector = '.modal .temprequesthiddenfors';
+        }
+        console.log('selector')
+        $.fn.AddTempRequestHiddenFors($("#TempRequestListViewModel_GUID").val(), selector);
     });
 </script>
 
