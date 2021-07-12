@@ -83,12 +83,12 @@
 		e.preventDefault();
 		e.stopPropagation();
 		var vendorid = $(this).attr("value");
-		var paymentstatusid = $(this).attr("paymentstatus");
+		//var paymentstatusid = $(this).attr("paymentstatus");
 		var typeEnum = $("#masterSidebarType").val();
 		console.log("vendor: " + vendorid);
-		console.log("payment status: " + paymentstatusid);
+		//console.log("payment status: " + paymentstatusid);
 		//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
-		var itemurl = "/Requests/PaymentsPayModal/?vendorid=" + vendorid + "&paymentstatusid=" + paymentstatusid + "&accountingPaymentsEnum=" + typeEnum;
+		var itemurl = "/Requests/PaymentsPayModal/?vendorid=" + vendorid + "&accountingPaymentsEnum=" + typeEnum;
 		$("#loading").show();
 		$.fn.CallModal(itemurl, "payments-pay");
 	});

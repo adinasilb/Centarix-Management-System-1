@@ -193,8 +193,8 @@
                     $.fn.CloseModal("payments-pay");
                     $(".render-body").html(data);
                     var payNowSidebar = $(".sidebarTitle.2");
-                    var payNowCount = @TempData["PayNowCount"];
-                    console.log(payNowCount)
+                    var payNowCount = $("#payNowCount").val();
+                    console.log('pay now count: ' + payNowCount)
                     payNowSidebar.html("Pay Now <br> [" + payNowCount + "]");
                     return true;
                 },
