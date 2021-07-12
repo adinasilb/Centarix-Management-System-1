@@ -383,6 +383,10 @@
     <Compile Remove="Data\Migrations\20210623063851_changedGuidStringToGuid2.Designer.cs" />
     <Compile Remove="Data\Migrations\20210712091959_Test.cs" />
     <Compile Remove="Data\Migrations\20210712091959_Test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210712102451_ParentRequestIsShippingPaidBoolean.cs" />
+    <Compile Remove="Data\Migrations\20210712102451_ParentRequestIsShippingPaidBoolean.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210712104603_AdditionalTempRequestMigration.cs" />
+    <Compile Remove="Data\Migrations\20210712104603_AdditionalTempRequestMigration.Designer.cs" />
   </ItemGroup>
 
 
