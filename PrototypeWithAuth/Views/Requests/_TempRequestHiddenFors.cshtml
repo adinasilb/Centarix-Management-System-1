@@ -2,7 +2,7 @@
 <div class="temprequesthiddenfors">
     @Html.HiddenFor(r => r.GUID)
 
-    @if (Model.TempRequestViewModels.Any())
+    @if (Model.TempRequestViewModels != null)
     {
         for (int trID = 0; trID < Model.TempRequestViewModels.Count(); trID++)
         {
