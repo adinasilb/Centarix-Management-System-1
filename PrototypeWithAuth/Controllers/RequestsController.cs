@@ -4832,7 +4832,7 @@ namespace PrototypeWithAuth.Controllers
             }*/
             try
             {
-
+                
                 var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
                 var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
 
@@ -4854,8 +4854,20 @@ namespace PrototypeWithAuth.Controllers
                         TempData["RequestStatus"] = 1;
                     }
                 }
+                //todo: take this out and do it properly with is cancel
+                if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.RequestStatusID == 2)
+                {
+                    if (checkIfInBudget(deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request))
+                    {
+                        deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.RequestStatusID = 6;
+                    }
+                    else
+                    {
+                        deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.RequestStatusID = 1;
+                    }
+                }
                 if ((deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.RequestStatusID == 6 ||
-                    deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.RequestStatusID == 1)
+                    deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.RequestStatusID == 1 )
                     && deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderType != AppUtility.OrderTypeEnum.AddToCart.ToString())
                 {
                     //    var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
