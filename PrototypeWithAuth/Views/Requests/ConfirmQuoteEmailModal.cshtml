@@ -21,7 +21,6 @@
                 <input asp-for="VendorId" style="display: none;" />
                 <input asp-for="RequestID" style="display: none;" />
 
-                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel);}
                 @Html.HiddenFor(model => model.IsResend)
 
                 <div>
