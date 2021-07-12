@@ -173,6 +173,7 @@
                 success: function (data) {
                     if (orderType == "SaveOperations" || orderType == "AlreadyPurchased") {
                         //alert("opening terms modal");
+                        $('.modal .temprequesthiddenfors').html('');
                         $.fn.OpenModal("termsModal", "terms", data);
                     }
                     else {
@@ -203,23 +204,10 @@
         $(".uploadQuoteForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
     });
     $(".cancel-order").click(function (e) {
-        var formData = new FormData($(".uploadQuoteForm")[0]);
-        $.ajax({
-            contentType: false,
-            processData: false,
-            async: true,
-            url: "/Requests/UploadOrderModal?isCancel=true",
-            data: formData,
-            traditional: true,
-            type: "POST",
-            cache: false,
-            success: function (data) {
-                $.fn.AddTempRequestHiddenFors($("#TempRequestListViewModel_GUID").val());
-                $.fn.CloseModal("step-1");
-                return true;
-            }
-        })
-
+        e.preventDefault();
+        //alert("in cancel order");
+        $.fn.CloseModal('step-1');
+        $.fn.AddTempRequestHiddenFors($("#TempRequestListViewModel_GUID").val());
     });
 </script>
 

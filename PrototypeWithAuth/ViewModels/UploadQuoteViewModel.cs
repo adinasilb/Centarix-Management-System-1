@@ -16,10 +16,10 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.OrderTypeEnum OrderTypeEnum { get; set; }
         //public RequestIndexObject RequestIndexObject { get; set; }
         public TempRequestListViewModel TempRequestListViewModel { get; set; }
-        [Display(Name = "Expected Supply Days")]
 
+        [Display(Name = "Expected Supply Days")]
         [Range(0, 2147483647, ErrorMessage = "Field must be a positive number")]
         public byte? ExpectedSupplyDays { get; set; }
-        public bool IsReorder { get; set; }
+        //public bool IsReorder { get; set; }
     }
 }

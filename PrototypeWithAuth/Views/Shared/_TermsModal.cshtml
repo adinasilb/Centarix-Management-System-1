@@ -123,6 +123,7 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
+                    $('.termsModalForm .temprequesthiddenfors').html('');
                     if (($("#SectionType").val() == "Operations" || $("#masterSectionType").val() == "Operations") && data == '') {
                         //alert("if 1");
                         window.location.href = "/Requests/Index?PageType=OperationsRequest&SectionType=Operations&RequestStatusID=2&SidebarType=List";

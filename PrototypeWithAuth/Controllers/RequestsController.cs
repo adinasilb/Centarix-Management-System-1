@@ -4823,13 +4823,13 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadQuoteModal(UploadQuoteViewModel uploadQuoteOrderViewModel, TempRequestListViewModel tempRequestListViewModel, bool isCancel = false)
         {
-            if (isCancel)
+            /*if (isCancel)
             {
                 //RemoveRequestWithCommentsAndEmailSessions();
                 DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
                 await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
                 return PartialView("Default");
-            }
+            }*/
             try
             {
 
@@ -4895,8 +4895,6 @@ namespace PrototypeWithAuth.Controllers
                                     }
                                 }
                                 //await SaveCommentsFromSession(request);
-                                //IMPORTANT TO GET BACK TO HERE
-                                //rename temp folder to the request id
                                 MoveDocumentsOutOfTempFolder(tempRequestViewModel.Request.RequestID, AppUtility.ParentFolderName.Requests, false, tempRequestListViewModel.GUID);
                                 MoveDocumentsOutOfTempFolder(tempRequestViewModel.Request.ParentQuoteID == null ? 0 : Convert.ToInt32(tempRequestViewModel.Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, false, tempRequestListViewModel.GUID);
 
@@ -4916,7 +4914,6 @@ namespace PrototypeWithAuth.Controllers
                             //base.RemoveRequestWithCommentsAndEmailSessions();
 
                             var action = "_IndexTableData";
-                            var controller = "Requests";
                             if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                             {
                                 action = "_IndexTableWithCounts";
@@ -5014,12 +5011,12 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadQuoteOrderViewModel, TempRequestListViewModel tempRequestListViewModel, bool isCancel = false)
         {
-            if (isCancel)
+            /*if (isCancel)
             {
                 await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
                 DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
                 return PartialView("Default");
-            }
+            }*/
             try
             {
                 var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);

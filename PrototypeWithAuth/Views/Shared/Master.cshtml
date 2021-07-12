@@ -1239,7 +1239,7 @@
             }
         }
 
-        $.fn.AddTempRequestHiddenFors = function (guid) {
+        $.fn.AddTempRequestHiddenFors = function (guid, selector) {
             alert("in $.fn.AddTempRequestHiddenFors : " + guid);
             $.ajax({
                 async: true,
@@ -1248,7 +1248,7 @@
                 type: "GET",
                 cache: false,
                 success: function (data) {
-                    $(".temprequesthiddenfors").replaceWith(data);
+                    $(selector).replaceWith(data);
                     return false;
                 }
             });
