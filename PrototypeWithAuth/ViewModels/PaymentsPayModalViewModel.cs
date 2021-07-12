@@ -15,6 +15,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<CompanyAccount> CompanyAccounts {get; set;}
         public AppUtility.SidebarEnum AccountingEnum { get; set; }
         public List<PaymentType> PaymentTypes { get; set; }
+        public List<CheckboxViewModel> ShippingToPay { get; set; }
 
     }
 }
