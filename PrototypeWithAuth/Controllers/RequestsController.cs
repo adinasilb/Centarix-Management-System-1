@@ -1430,6 +1430,15 @@ namespace PrototypeWithAuth.Controllers
                 {
                     try
                     {
+                        if (termsViewModel.ParentRequest.Shipping == 0)
+                        {
+                            termsViewModel.ParentRequest.IsShippingPaid = true;
+                        }
+                        else
+                        {
+                            termsViewModel.ParentRequest.IsShippingPaid = false;
+                        }
+                        var hasShippingOnPayment = false;
                         foreach (var tempRequest in newTRLVM.TempRequestViewModels)
                         {
                             tempRequest.Request.PaymentStatusID = termsViewModel.SelectedTerm;
@@ -1454,13 +1463,19 @@ namespace PrototypeWithAuth.Controllers
                             }
                             //test if we need to add the shipping
                             tempRequest.Request.ParentRequest.Shipping = termsViewModel.ParentRequest.Shipping;
+
                             if (!SaveUsingTempRequest)
                             {
                                 await SaveTempRequestAndCommentsAsync(tempRequest);
                             }
                             for (int i = 0; i < tempRequest.Request.Installments; i++)
                             {
-                                var payment = new Payment() { InstallmentNumber = i + 1 };
+                                var payment = new Payment()
+                                {
+                                    InstallmentNumber = i + 1,
+                                    ShippingPaidHere = hasShippingOnPayment ? false : true
+                                };
+                                hasShippingOnPayment = true;
                                 if (tempRequest.Request.PaymentStatusID == 5)
                                 {
                                     payment.PaymentDate = termsViewModel.InstallmentDate.AddMonths(i);
@@ -4479,20 +4494,38 @@ namespace PrototypeWithAuth.Controllers
                 requestsToPay = await requestsList.Where(r => r.RequestID == requestid).ToListAsync();
             }
             else if (requestIds != null)
-
             {
                 foreach (int rId in requestIds)
                 {
                     requestsToPay.Add(requestsList.Where(r => r.RequestID == rId).FirstOrDefault());
                 }
             }
+
+            List<CheckboxViewModel> shippings = new List<CheckboxViewModel>();
+            foreach (var r in requestsToPay)
+            {
+                if (r.Payments.FirstOrDefault().ShippingPaidHere && !r.ParentRequest.IsShippingPaid)
+                {
+                    shippings.Add(new CheckboxViewModel()
+                    {
+                        ID = Convert.ToInt32(r.ParentRequestID),
+                        Name = r.Product.ProductName,
+                        Value = false,
+                        CostDollar = r.Currency == "USD" ? r.ParentRequest.Shipping : r.ParentRequest.Shipping / Convert.ToDouble(r.ExchangeRate),
+                        CostShekel = r.Currency == "NIS" ? r.ParentRequest.Shipping : r.ParentRequest.Shipping * Convert.ToDouble(r.ExchangeRate),
+                        Currency = r.Currency
+                    });
+                }
+            }
+
             PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
             {
                 Requests = requestsToPay,
                 AccountingEnum = accountingPaymentsEnum,
                 Payment = new Payment(),
                 PaymentTypes = _context.PaymentTypes.Select(pt => pt).ToList(),
-                CompanyAccounts = _context.CompanyAccounts.Select(ca => ca).ToList()
+                CompanyAccounts = _context.CompanyAccounts.Select(ca => ca).ToList(),
+                ShippingToPay = shippings
             };
 
             //check if payment status type is installments to show the installments in the view model
@@ -4506,6 +4539,21 @@ namespace PrototypeWithAuth.Controllers
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
+                try
+                {
+                    foreach(var shipping in paymentsPayModalViewModel.ShippingToPay)
+                    {
+                        var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == shipping.ID).FirstOrDefault();
+                        parentRequest.IsShippingPaid = true;
+
+                        _context.Update(parentRequest);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                catch(Exception ex)
+                {
+                    //throw exception here
+                }
                 try
                 {
                     var paymentsList = _context.Payments.Where(p => p.IsPaid == false);
@@ -4542,11 +4590,14 @@ namespace PrototypeWithAuth.Controllers
                         payment.CreditCardID = paymentsPayModalViewModel.Payment.CreditCardID;
                         payment.CheckNumber = paymentsPayModalViewModel.Payment.CheckNumber;
                         payment.IsPaid = true;
+
+
                         _context.Update(payment);
-                        _context.Update(requestToUpdate);
+                        _context.Update(requestToUpdate); //don't need this line of code
                     }
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
+
                 }
                 catch (Exception ex)
                 {

@@ -33,6 +33,13 @@
                                 var CostDollar = Model.Requests.Sum(r => r.Cost / r.ExchangeRate);
                                 var DollarVAT = Model.Requests.Sum(r => r.VAT / r.ExchangeRate);
                                 var TotalDollar = CostDollar + DollarVAT;
+                                var ShippingTotalShekel = TotalShekel;
+                                var ShippingTotalDollar = TotalDollar;
+                                foreach (var shipping in Model.ShippingToPay)
+                                {
+                                    ShippingTotalDollar += Convert.ToDecimal(shipping.CostDollar);
+                                    ShippingTotalShekel += Convert.ToDecimal(shipping.CostShekel);
+                                }
                             }
 
                         </div>
@@ -49,7 +56,7 @@
                                     <label class="control-label">Sum</label>
                                     <div class="input-group">
                                         <span class="input-group-text">&#x20aa;</span>
-                                        <input value="@String.Format("{0:0.00}",CostShekel)"  class="form-control-plaintext border-bottom" disabled />
+                                        <input value="@String.Format("{0:0.00}",CostShekel)" class="form-control-plaintext border-bottom" disabled />
                                     </div>
                                 </div>
                             </div>
@@ -150,7 +157,49 @@
                                 </div>
                             </div>
                         </div>
-
+                        Shipping:
+                        <div class="row">
+                            @foreach (var shipping in Model.ShippingToPay)
+                            {
+                                <div class="col-2 px-0">
+                                    <div class="form-group">
+                                        <label class=" control-label">@shipping.Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#x20aa;</span>
+                                            <input value="@String.Format("{0:0.00}",shipping.CostDollar)" class="form-control-plaintext border-bottom" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-2 px-0">
+                                    <div class="form-group">
+                                        <label class=" control-label"></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#36;</span>
+                                            <input value="@String.Format("{0:0.00}",shipping.CostShekel)" class="form-control-plaintext border-bottom" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="input-group-text">&#36;</span>
+                            }
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label class=" control-label">Total + VAT + Shipping</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">&#x20aa;</span>
+                                        <input value="@String.Format("{0:0.00}",TotalShekel)" class="form-control-plaintext border-bottom" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <label class=" control-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">&#36;</span>
+                                    <input value="@String.Format("{0:0.00}",TotalDollar)" class="form-control-plaintext border-bottom" disabled />
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="modal-footer-mt mx-auto">
                                 @*<button class="btn inv-payments-button float-right">Paid</button>*@

@@ -39,6 +39,7 @@ namespace PrototypeWithAuth.Models
         public bool IsPaid { get; set; }
         public bool HasInvoice { get; set; }
         public int InstallmentNumber { get; set; }
+        public bool ShippingPaidHere { get; set; }
     }
 }
 

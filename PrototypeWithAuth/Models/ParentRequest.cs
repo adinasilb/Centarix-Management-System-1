@@ -43,7 +43,7 @@ namespace PrototypeWithAuth.Models
         public double Taxes { get; set; }
         public double Credit { get; set; }
         public double Shipping { get; set; }
-        /*public bool ShippingIsPaid { get; set; }*/
+        public bool IsShippingPaid { get; set; }
     }
 }
 //list of request, owner, order date, (order number for an entire order or is it just for specific request) same for invoice number
