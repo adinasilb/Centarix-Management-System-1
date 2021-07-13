@@ -51,7 +51,7 @@ namespace PrototypeWithAuth
             ////Set database Connection from application json file
 
             //add identity
-            
+
             services.AddDefaultIdentity<ApplicationUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
@@ -110,10 +110,8 @@ namespace PrototypeWithAuth
                 config.Filters.Add(new AuthorizeFilter(policy));
                 // config.AllowValidatingTopLevelNodes = true;
             });
-            services.AddSession(/*opts =>
-            {
-                opts.Cookie.IsEssential = true;
-            }*/);
+            services.AddDistributedMemoryCache();
+            services.AddSession();
             ////allow for data anotations validations
             //services.AddMvcCore()
             //   .AddDataAnnotations();
@@ -131,7 +129,11 @@ namespace PrototypeWithAuth
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
                 options.Cookie.Name = "LoginCookie";
-            });
+            }); 
+
+            //CookieOptions cookieOptions = new CookieOptions();
+            //string GUID = new Guid().ToString();
+            //string Key = "SessionCookie";
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -171,7 +173,7 @@ namespace PrototypeWithAuth
                 endpoints.MapRazorPages();
             });
 
-             //ChangePassword(serviceProvider).Wait();
+            //ChangePassword(serviceProvider).Wait();
 
             CreateRoles(serviceProvider).Wait();
             //AddRoles(serviceProvider).Wait();
@@ -231,6 +233,27 @@ namespace PrototypeWithAuth
                     roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
                 }
             }
+
+            //string[] roleNames1 = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
+            //string[] roleNames2 = Enum.GetNames(typeof(AppUtility.RoleItems)).Cast<string>().Select(x => x.ToString()).ToArray();
+            //string[] roleNames = new string[roleNames1.Length + roleNames2.Length];
+            //roleNames1.CopyTo(roleNames, 0);
+            //roleNames2.CopyTo(roleNames, roleNames1.Length);
+
+            //IdentityResult roleResult;
+            //var roleCheck = await RoleManager.RoleExistsAsync("Admin");
+            //if (!roleCheck)
+            //{
+            //    roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
+            //}
+            //foreach (var roleName in roleNames)
+            //{
+            //    bool roleExist = await RoleManager.RoleExistsAsync(roleName);
+            //    if (!roleExist)
+            //    {
+            //        roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+            //    }
+            //}
             //var poweruser = new ApplicationUser();
             //poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
 

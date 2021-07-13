@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -189,7 +189,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
         {
             return string.Format(
                 AuthenticatorUriFormat,
-                _urlEncoder.Encode("ElixirTest"),
+                _urlEncoder.Encode("ElixirDevs"),
                 _urlEncoder.Encode(email),
                 unformattedKey);
         }

@@ -30,8 +30,8 @@
     </header>
     <div class="row">
         <div class="col-6">
-            @if (Model.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes &&
-Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
+            @if (Model.TempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes &&
+Model.TempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
             {
                 <span style="font-weight: 700; font-size:2rem;">Price Quote Request</span>
                 showPrice = "d-none";

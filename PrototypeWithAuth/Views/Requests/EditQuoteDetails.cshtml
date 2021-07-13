@@ -13,7 +13,7 @@
 @*<script src="~/js/SubUnit.js"></script>*@
 <div class="modal modal-view fader on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog-centered  mx-auto wide-modal " role="document">
+    <div class="modal-dialog-centered  mx-auto elixir-modal-xl " role="document">
 
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow supplier-form ">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('edit-quote');">
@@ -58,7 +58,7 @@
                         <div class="col-3 offset-2">
                             <div class="form-group d-inline-flex">
                                 <label asp-for="@Model.QuoteNumber" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                <input asp-for="@Model.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" required />
+                                <input asp-for="@Model.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" />
                                 <span asp-validation-for="@Model.QuoteNumber" class="text-danger-centarix"></span>
                             </div>
                         </div>
@@ -91,7 +91,7 @@
                             <div class="col-2">
                                 <div class="form-group">
                                     <label asp-for="Requests[0].ExchangeRate" class="control-label"></label>
-                                    <input asp-for="Requests[0].ExchangeRate" class="form-control-plaintext border-bottom " id="exchangeRate" />
+                                    <input name="Requests[0].ExchangeRate" value="@Model.Requests[0].ExchangeRate" class="form-control-plaintext border-bottom " id="exchangeRate" />
                                     <span asp-validation-for="Requests[0].ExchangeRate" class="text-danger-centarix"></span>
                                 </div>
                             </div>
@@ -167,7 +167,7 @@
                                             <div class="form-group @hideShekel shekel-group">
                                                 <div class="input-group ">
                                                     <span class="input-group-text pr-1">P: &#x20aa;</span>
-                                                    <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom cost cost-validation @i" index="@i" min="1" />
+                                                    <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom cost cost-validation @i" index="@i" />
                                                     <span class="text-danger-centarix" asp-validation-for="Requests[i].Cost"></span>
                                                 </div>
                                                 <div class="input-group ">
@@ -179,7 +179,7 @@
                                             <div class="form-group @hideDollar dollar-group">
                                                 <div class="input-group ">
                                                     <span class="input-group-text pr-1">P: &#36;</span>
-                                                    <input class="form-control-plaintext border-bottom sum-dollars" id="sum-dollars" index="@i" name="sum-dollars" />
+                                                    <input class="form-control-plaintext border-bottom sum-dollars @i" id="sum-dollars" index="@i" name="sum-dollars" />
                                                     <span class="text-danger-centarix" asp-validation-for="Requests[i].Cost"></span>
                                                 </div>
                                                 <div class="input-group ">
@@ -192,14 +192,14 @@
                                     </td>
                                     <td width="15%">
                                         <div class="input-group">
-                                            <input asp-for="@Model.Requests[i].Discount" class="form-control-plaintext border-bottom  expected-supply-days" />
+                                            <input asp-for="@Model.Requests[i].Discount" class="form-control-plaintext border-bottom" />
                                             <div class="input-group-text">%</div>
                                             <span asp-validation-for="@Model.Requests[i].Discount" class="text-danger-centarix"></span>
                                         </div>
                                     </td>
                                     <td width="15%">
                                         <div class="form-group">
-                                            <input asp-for="@Model.Requests[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom  expected-supply-days" />
+                                            <input asp-for="@Model.Requests[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom @i expected-supply-days" index="@i"/>
                                             <span asp-validation-for="@Model.Requests[i].ExpectedSupplyDays" class="text-danger-centarix"></span>
                                         </div>
                                     </td>
@@ -212,7 +212,7 @@
                                                     expectedSupplyDate = DateTime.Now.AddDays(Model.Requests[i].ExpectedSupplyDays ?? 0);
                                                 }
                                             }
-                                            <input class="form-control-plaintext border-bottom datepicker " type="text" name="expected-supply-days" id="expected-supply-date" value="@AppUtility.FormatDate(expectedSupplyDate)" />
+                                            <input class="form-control-plaintext border-bottom datepicker expected-supply-date @i" type="text" name="expected-supply-days" index="@i" value="@AppUtility.FormatDate(expectedSupplyDate)" />
                                         </div>
                                     </td>
                                 </tr>

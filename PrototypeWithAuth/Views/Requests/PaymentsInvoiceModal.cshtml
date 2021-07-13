@@ -11,8 +11,9 @@
             <form action="" method="post" enctype="multipart/form-data" class="modal-padding payModalForm accounting-form" id="myForm">
                 <input type="hidden" asp-for="AccountingEnum" />
                 <input type="text" class="d-none" id="currency" value="@Model.Requests[0].Currency.ToString()" />
-                <input type="hidden" asp-for="Requests[0].ExchangeRate" class="exchange-rate" />
-                <input type="hidden" asp-for="Payment.PaymentID" class="exchange-rate" />
+@*                <input type="hidden" asp-for="Requests[0].ExchangeRate" class="exchange-rate" />*@
+                <input type="hidden" asp-for="Payment.PaymentID" />
+                <input type="hidden" asp-for="AmtLeftToPay" class="amtLeftToPay"/>
                 @for (int i = 0; i < Model.Requests.Count; i++)
                 {
                     <input type="hidden" asp-for="Requests[i].RequestID" />
@@ -45,7 +46,14 @@
                                         DollarVAT += (double)(request.Payments.Where(p => !p.IsPaid).OrderBy(p => p.PaymentDate).FirstOrDefault().Sum / request.ExchangeRate) * 0.17;
                                     }
                                 }
-                                var TotalDollar = CostDollar + DollarVAT;
+                                var TotalDollar = CostDollar + DollarVAT; 
+                                var ShippingTotalShekel = TotalShekel;
+                                var ShippingTotalDollar = TotalDollar;
+                                foreach (var shipping in Model.ShippingToPay)
+                                {
+                                    ShippingTotalDollar += shipping.CostDollar;
+                                    ShippingTotalShekel += shipping.CostShekel;
+                                }
                             }
                         </div>
 
@@ -116,7 +124,7 @@
                                                         <span class="input-group-text border-bottom pr-2">&#36;</span>
                                                         <input class="form-control-plaintext border-bottom" id="price-in-dollars" index="@x"
                                                                value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[x].Payments[PaymentIndex].Sum / Model.Requests[0].ExchangeRate, 2))" />
-                                                        <input type="hidden" asp-for="Requests[x].Payments[PaymentIndex].Sum" class="installment-sum @x" vat-val="@Request.IncludeVAT" />
+                                                        <input type="hidden" asp-for="Requests[x].Payments[PaymentIndex].Sum" class="installment-sum @x" vat-val="@Request.IncludeVAT.ToString()" />
                                                     }
                                                 </div>
                                             </td>
@@ -191,6 +199,53 @@
                                 </div>
                             </div>
                         </div>
+                        @if (Model.ShippingToPay.Any())
+                        {
+                            <strong>Shipping:</strong>
+                            <div class="row pt-2">
+                                @for (var s = 0; s < Model.ShippingToPay.Count; s++)
+                                {
+                                    @Html.HiddenFor(m => m.ShippingToPay[s].ID);
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label class=" control-label">@Model.ShippingToPay[s].Name</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">&#x20aa;</span>
+                                                <input value="@String.Format("{0:0.00}",Model.ShippingToPay[s].CostShekel)" class="form-control-plaintext border-bottom" disabled />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label class=" control-label"></label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">&#36;</span>
+                                                <input value="@String.Format("{0:0.00}",Model.ShippingToPay[s].CostDollar)" class="form-control-plaintext border-bottom" disabled />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
+                            </div>
+                            <div class="row">
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label class=" control-label">Total + VAT + Shipping</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#x20aa;</span>
+                                            <input value="@String.Format("{0:0.00}", ShippingTotalShekel)" class="form-control-plaintext border-bottom" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <label class=" control-label"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">&#36;</span>
+                                        <input value="@String.Format("{0:0.00}", ShippingTotalDollar)" class="form-control-plaintext border-bottom" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                        }
                         <div class="row ">
                             <div class="col-3 pl-0">
                                 <div class="payment-type form-group">
@@ -224,10 +279,17 @@
                             </div>
                             <div class="col-3 pl-0">
                                 <div class="form-group payment-date d-none">
+                                    @{
+                                        DateTime? paymentDate = null;
+                                        if (Model.Payment.PaymentReferenceDate != new DateTime())
+                                        {
+                                            paymentDate = Model.Payment.PaymentReferenceDate;
+                                        }
+                                    }
                                     <label class="control-label wire d-none">Transfer Date</label>
                                     <label class="control-label credit-card">Reference Date</label>
                                     <label class="control-label bank-check d-none">Cash Out Date</label>
-                                    <input class="form-control-plaintext border-bottom datepicker" type="text" asp-for="Payment.PaymentReferenceDate" value="@((Model.Payment.PaymentReferenceDate != new DateTime()) ? Model.Payment.PaymentReferenceDate.ToShortDateString() : "")" />
+                                    <input class="form-control-plaintext border-bottom datepicker" type="text" asp-for="Payment.PaymentReferenceDate" value="@AppUtility.FormatDate(paymentDate)" />
                                 </div>
                             </div>
                             <div class="col-3 wire d-none">
@@ -292,13 +354,17 @@
         console.log("change price")
         var cost = $(this).val() * $('.exchange-rate').val();
         var index = $(this).attr("index");
-        $('.installment-sum.'+index).val(cost)
+        $('.installment-sum.' + index).val(cost)
+        $.fn.SetTotals();
     });
     $(".installment-sum").change(function (e) {
+        $.fn.SetTotals();
+    })
+    $.fn.SetTotals = function () {
         var currentTotal = 0;
         var vat = 0;
         var exchangeRate = $(".exchange-rate").val()
-        $(".installment-sum").each(function (e) {
+        $('.installment-sum').each(function (e) {
             currentTotal = currentTotal + parseFloat($(this).val());
             console.log($(this).val())
             if ($(this).attr("vat-val") == "True") {
@@ -312,7 +378,7 @@
         $(".vat-dollar").val(parseFloat(vat / exchangeRate).toFixed(2));
         $(".total-vat").val(parseFloat(vat + currentTotal).toFixed(2));
         $(".total-vat-dollar").val(parseFloat((vat + currentTotal) / exchangeRate).toFixed(2));
-    })
+    }
     $("#payInvoice").click(function (e) {
         e.preventDefault();
         $("#myForm").data("validator").settings.ignore = "";

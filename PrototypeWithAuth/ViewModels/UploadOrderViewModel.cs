@@ -14,11 +14,12 @@ namespace PrototypeWithAuth.ViewModels
         public ParentRequest ParentRequest { get; set; }
         public List<string> FileStrings { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
-        public RequestIndexObject RequestIndexObject { get; set;}
-        [Display(Name = "Expected Supply Days")]
+        //public RequestIndexObject RequestIndexObject { get; set;}
 
+        [Display(Name = "Expected Supply Days")]
         [Range(0, 2147483647, ErrorMessage = "Field must be a positive number")]
         public byte? ExpectedSupplyDays { get; set; }
-        public bool IsReorder { get; set; }
+        //public bool IsReorder { get; set; }
+        public TempRequestListViewModel TempRequestListViewModel { get; set; }
     }
 }

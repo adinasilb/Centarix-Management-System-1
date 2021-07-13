@@ -11,6 +11,5 @@ namespace PrototypeWithAuth.ViewModels
     public class ReorderViewModel : ViewModelBase
     {
         public RequestItemViewModel RequestItemViewModel { get; set; }
-        public RequestIndexObject RequestIndexObject { get; set; }
     }
 }

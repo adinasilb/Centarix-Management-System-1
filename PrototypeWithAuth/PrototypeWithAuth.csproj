@@ -375,6 +375,18 @@
     <Compile Remove="Data\Migrations\20210610055638_TestMerge.Designer.cs" />
     <Compile Remove="Data\Migrations\20210616055936_resourcesreceived.cs" />
     <Compile Remove="Data\Migrations\20210616055936_resourcesreceived.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210629101846_WorkFlowRealted.cs" />
+    <Compile Remove="Data\Migrations\20210629101846_WorkFlowRealted.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210623062422_changedGuidStringToGuid.cs" />
+    <Compile Remove="Data\Migrations\20210623062422_changedGuidStringToGuid.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210623063851_changedGuidStringToGuid2.cs" />
+    <Compile Remove="Data\Migrations\20210623063851_changedGuidStringToGuid2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210712091959_Test.cs" />
+    <Compile Remove="Data\Migrations\20210712091959_Test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210712102451_ParentRequestIsShippingPaidBoolean.cs" />
+    <Compile Remove="Data\Migrations\20210712102451_ParentRequestIsShippingPaidBoolean.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210712104603_AdditionalTempRequestMigration.cs" />
+    <Compile Remove="Data\Migrations\20210712104603_AdditionalTempRequestMigration.Designer.cs" />
   </ItemGroup>
 
 
@@ -412,6 +424,7 @@
     <PackageReference Include="OpenCvSharp3-AnyCPU" Version="4.0.0.20181129" />
     <PackageReference Include="RestSharp" Version="106.11.7" />
     <PackageReference Include="Select.HtmlToPdf.NetCore" Version="20.1.0" />
+    <PackageReference Include="System-Web-Helpers.dll" Version="1.0.0" />
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0" />
     <PackageReference Include="WebcamCapturer.Controls.WPF" Version="1.1.1.2" />
@@ -428,6 +441,7 @@
     <Folder Include="wwwroot\images\NewFolder1\" />
     <Folder Include="wwwroot\Materials\" />
     <Folder Include="wwwroot\FunctionLine\" />
+    <Folder Include="wwwroot\ParentQuotes\" />
     <Folder Include="wwwroot\Protocols\" />
     <Folder Include="wwwroot\Reports\" />
     <Folder Include="wwwroot\Requests\" />

@@ -9,7 +9,7 @@
     var form = "order-inv-form";
     var deleteDocumentClass = "";
     var sectionType = AppUtility.MenuItems.Requests.ToString();
-    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
+    if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
         bcColor = "oper-background-color";
@@ -37,15 +37,8 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
-                @Html.HiddenFor(model => model.RequestIndexObject.PageType)
-                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
-                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
-                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
-                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
-                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
-                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
-                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
-                @Html.HiddenFor(model => model.RequestIndexObject.OrderType)
+                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors", Model.TempRequestListViewModel);}
+                
                 @Html.HiddenFor(model => model.ParentRequest.ApplicationUserID)
                 @Html.HiddenFor(model => model.ParentRequest.OrderNumber)
                 <div>
@@ -82,7 +75,7 @@
                                 }
                             }
                             <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Orders.ToString()Input" name="@AppUtility.FolderNamesEnum.Orders.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
-                            <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Orders.ToString()" data-id="0" id="@AppUtility.FolderNamesEnum.Orders.ToString()" data-val="@true" showSwitch="@false">
+                            <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Orders.ToString()" data-id="0" id="@AppUtility.FolderNamesEnum.Orders.ToString()" data-val="@true" showSwitch="@false" parentFolder="@AppUtility.ParentFolderName.Requests.ToString()">
                                 <div class="card document-border @hasFileClass">
                                     <div class="document-card text-center">
                                         <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
@@ -109,7 +102,7 @@
                                     </div>
                                 </div>
 
-                                @if (Model.RequestIndexObject.IsReorder)
+                                @if (Model.TempRequestListViewModel.RequestIndexObject.IsReorder)
                                 {
                                     <div class="row">
                                         <div class="col-md-6">
@@ -122,7 +115,7 @@
                                         <div class=" col-md-6">
                                             <div class="form-group">
                                                 <label class="control-label">Expected supply date</label>
-                                                <input value="" class="form-control-plaintext border-bottom datepicker " disabled type="text" name="expected-supply-days" id="expected-supply-date" />
+                                                <input value="" class="form-control-plaintext border-bottom datepicker expected-supply-date" type="text" name="expected-supply-days" />
                                             </div>
                                         </div>
                                     </div>
@@ -145,6 +138,7 @@
 <script src="~/js/Validation/ValidateUploadQuoteForm.js"></script>
 <script src="~/js/validate.js"></script>
 <script>
+
     $(".submit-order").off('click').on("click", function (e) {
         e.preventDefault();
         console.log("submit order doc");
@@ -162,6 +156,8 @@
             $("#loading").show();
             var formData = new FormData($(".uploadQuoteForm")[0]);
             //alert(...formData);
+            var orderType = $("#RequestIndexObject_OrderType").val();
+            //alert("orderType: " + orderType);
             $.ajax({
                 contentType: false,
                 processData: false,
@@ -172,7 +168,9 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    if ($("#RequestIndexObject_OrderType").val() == "SaveOperations" || $("#RequestIndexObject_OrderType").val() == "AlreadyPurchased") {
+                    if (orderType == "SaveOperations" || orderType == "AlreadyPurchased") {
+                        //alert("opening terms modal");
+                        $('.modal .temprequesthiddenfors').html('');
                         $.fn.OpenModal("termsModal", "terms", data);
                     }
                     else {
@@ -203,22 +201,15 @@
         $(".uploadQuoteForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
     });
     $(".cancel-order").click(function (e) {
-        var formData = new FormData($(".uploadQuoteForm")[0]);
-        $.ajax({
-            contentType: false,
-            processData: false,
-            async: true,
-            url: "/Requests/UploadOrderModal?isCancel=true",
-            data: formData,
-            traditional: true,
-            type: "POST",
-            cache: false,
-            success: function (data) {
-                $.fn.CloseModal("step-1");
-                return true;
-            }
-        })
-
+        e.preventDefault();
+        //alert("in cancel order");
+        $.fn.CloseModal('step-1');
+        var selector = '.temprequesthiddenfors';
+        if ($('#RequestIndexObject_IsReorder').val() === 'true') {
+            selector = '.modal .temprequesthiddenfors';
+        }
+        console.log('selector')
+        $.fn.AddTempRequestHiddenFors($("#TempRequestListViewModel_GUID").val(), selector);
     });
 </script>
 

@@ -8,6 +8,7 @@ using PrototypeWithAuth.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Abp.Domain.Entities;
+using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Data
 {
@@ -19,6 +20,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<TempRequestJson> TempRequestJsons { get; set; }
         public DbSet<ShareProtocol> ShareProtocols { get; set; }
         public DbSet<ShareResource> ShareResources { get; set; }
         public DbSet<FavoriteResource> FavoriteResources { get; set; }
@@ -376,6 +378,8 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Resource>().Property(r => r.Summary).HasColumnType("ntext");
             modelBuilder.Entity<ResourceNote>().Property(r => r.Note).HasColumnType("ntext");
             modelBuilder.Entity<ProtocolInstance>().Property(r => r.ResultDescription).HasColumnType("ntext");
+            modelBuilder.Entity<TempRequestJson>().Property(t => t.RequestJson).HasColumnType("ntext");
+
             //modelBuilder.Entity<TempLine>().HasIndex(r => r.PermanentLineID).IsUnique();
             modelBuilder.Seed();
 
@@ -386,6 +390,8 @@ namespace PrototypeWithAuth.Data
             }
 
         }
+
+
     }
 }
 

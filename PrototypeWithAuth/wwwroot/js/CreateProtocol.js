@@ -34,7 +34,7 @@
         }
         else {
             $('.activeSubmit').removeClass('disabled-submit')
-              var tab= $(this);
+            var tab= $(this);
             var selectedTab = tab.parent().index() +1;
           
             console.log(selectedTab);
@@ -101,6 +101,6 @@
     $(".start-protocol-fx").off("click").click(function (e) {
         e.preventDefault();
         //switch this to universal share request and the modelsenum send in
-        $.fn.StartProtocol($(this).attr("value"));
+        $.fn.StartProtocol($(this).attr("value"), false, 3);
     });
 });

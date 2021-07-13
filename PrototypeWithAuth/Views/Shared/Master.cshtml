@@ -425,8 +425,6 @@
                 $.fn.EnableMaterialSelect('#currency', 'select-options-currency');
                 $.fn.EnableMaterialSelect('#operationsCategory', 'select-options-operationsCategory');
                 $.fn.EnableMaterialSelect('#operationsSubcategory', 'select-options-operationsSubcategory');
-                $.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList');
-
             }
             if ($(element).hasClass('orders')) {
                 console.log("orders");
@@ -459,6 +457,25 @@
                 $.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
                 $.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
             }
+            if ($(element).hasClass('protocols')) {
+
+                $(".mark-readonly").attr("disabled", false);
+                $("div.mark-readonly").attr("contenteditable", true);
+                $('.open-document-modal').attr("data-val", true);
+                $.fn.EnableMaterialSelect('#protocolParentList', 'select-options-protocolParentList');
+                $.fn.EnableMaterialSelect('#protocolSubList', 'select-options-protocolSubList');
+                $(".Material").addClass("saveProtocol");
+                $(".Protocols").addClass("saveProtocol");
+                var modalType = $(".modalType").val();
+                $("." + modalType).addClass("d-none")
+                var attrString = "[modaltype=" + modalType + "]";
+                console.log(attrString);
+                $("[modaltype = " + modalType + "]").attr("modaltype", "Edit");
+                $(".modalType").val("Edit");
+                modalType = $(".modalType").val();
+                $("." + modalType).removeClass("d-none")
+
+            }
         }
 
 
@@ -486,6 +503,8 @@
                             $.fn.OpenModal('modal', 'edits', modal)
                             $.fn.LoadEditModalDetails();
                             $('.modal-content a:first').tab('show');
+                            $("[data-toggle='tooltip']").tooltip();
+
                             break;
                         case "reorder":
                             $.fn.OpenModal('reorderModal', 'reorder-item', modal)
@@ -524,27 +543,27 @@
                         case "locations": case "addlocation":
                             $.fn.OpenModal('modal', 'add-location', modal)
                             break;
-                        case "addMaterial": 
+                        case "addMaterial":
                             $.fn.OpenModal('modal', 'add-material', modal)
                             break;
                         case "materialInfo":
                             $.fn.OpenModal('modal', 'material-info', modal)
                             break;
                         case "addFunction":
-                            $.fn.OpenModal('addFunctionModal', 'add-function', modal)                     
+                            $.fn.OpenModal('addFunctionModal', 'add-function', modal)
                             $(".add-function .mark-readonly").attr("disabled", true);
                             $(".add-function .mdb-select").materialSelect();
                             break;
                         case "historyItem":
                             $.fn.OpenModal('historyModal', 'history-item', modal)
-                            $.fn.LoadSummaryModal('.history-item');
+                            $.fn.LoadSummaryModal('history-item');
                             $('.modal-content a:first').tab('show');
                             break;
                         case "protocolFloatModal":
                             $.fn.OpenModal('modal', 'protocol-details', modal)
                             $.fn.ProtocolsMarkReadonly("protocol-details")
                             break
-                 
+
                     }
 
                 },
@@ -552,7 +571,7 @@
                     //var err = eval("(" + xhr.responseText + ")");
                     console.log("in error..." + error.Description);
                     $("#loading").hide();
-                    //alert(err.Message);
+                    //alert(error.Message);
                 }
 
                 //error: function (/*request, status, error*/) {
@@ -567,6 +586,7 @@
             $("." + modalClass + " div.mark-readonly").attr("contenteditable", false);
             $("." + modalClass + " .button-mark-readonly").addClass("d-none");
             $("." + modalClass + ' .open-document-modal').attr("data-val", false);
+            $(".protocol-tab").removeClass("saveProtocol")
             $("." + modalClass + " .mdb-select").materialSelect();
         }
 
@@ -595,7 +615,7 @@
             $('.edits .mdb-select').materialSelect();
             $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
-        
+
 
         $.fn.LoadSummaryModal = function (modalClass) {
             $("#cost").trigger('change');
@@ -647,8 +667,8 @@
 
         }
 
-        $.fn.StartProtocol = function (id, isContinue) {
-            var url = "/Protocols/StartProtocol?ID=" +id+"&IsContinue="+isContinue;
+        $.fn.StartProtocol = function (id, isContinue, tab) {
+            var url = "/Protocols/StartProtocol?ID=" +id+"&IsContinue="+isContinue+"&tab="+tab;
             $.ajax({
                 async: true,
                 url: url,
@@ -656,8 +676,11 @@
                 type: "GET",
                 cache: false,
                 success: function (data) {
+
                     $("._IndexTable").html(data);
+                    var modalType=$(".modalType").val();
                     $.fn.ProtocolsMarkReadonly("_IndexTable");
+                    $("."+modalType).removeClass("d-none");
                     return false;
                 }
             });
@@ -1101,20 +1124,24 @@
         }
 
 
-        $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles) {
+
+        $.fn.OpenDocumentsModal = function (isReopen, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles) {
             $('#loading').show();
             //alert("in documents modal in document modal js")
             //$(".modal-backdrop").first().removeClass();
             //alert(parentFolder)
-            var urltogo = $("#documentSubmit").attr("url");
-            if (urltogo == "") {
-                urltogo = "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
-	        }
-            else {
-                //var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
-                console.log("urltogo: " + urltogo);
-                urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
+            var urlbeginning = "/Requests/"
+            if(section === "Protocols") {
+                urlbeginning ="/Protocols/"
             }
+            if (isReopen) {
+                urltogo = urlbeginning + "_DocumentsModalData?id=" + requestId + "&Guid=" + guid + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
+                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
+            } else {
+                urltogo = urlbeginning + "DocumentsModal?id=" + requestId + "&Guid=" + guid + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
+                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
+            }
+
             console.log(urltogo);
             $.ajax({
                 async: true,
@@ -1123,8 +1150,18 @@
                 cache: false,
                 success: function (data) {
                     $('#loading').hide();
-                    $.fn.OpenModal('documentsModal', 'documents', data)
-                    var numCards = $(".documentsModal .card.document-border").length;
+                    console.log("isreopen: " + isReopen);
+                    if(isReopen)
+                    {
+                        //alert("._DocumentsModalData")
+                        $("._DocumentsModalData").html(data);
+                    }
+                    else {
+                        //alert("open doucment modal");
+                        $.fn.OpenModal('documentsModal', 'documents', data)
+                    }
+
+                    var numCards = $("._DocumentsModalData .card.document-border").length;
                     console.log("numcards: " + numCards);
                     if (numCards < 1) {
                         $.fn.RemoveColorsOfDocs(enumString);
@@ -1132,9 +1169,14 @@
                     else if (dontAllowMultipleFiles == 'True' || dontAllowMultipleFiles == 'true') {
                         console.log("don't allow multiples")
                         $(".upload-file").attr('disabled', true)
-                        $(".upload-file").addClass('disabled-background-color')   
-                        $(".upload-file").removeClass('protocols-background-color')  
+                        $(".upload-file").addClass('disabled-background-color')
+                        $(".upload-file").removeClass('protocols-background-color')
                         $(".file-select").attr('disabled', true)
+                    }
+                    if ($(".addFunctionForm").length >0)
+                    {
+                        $(".upload-file").addClass("d-none");
+                        $(".saveFunction").removeClass("d-none");
                     }
                     return true;
                 }
@@ -1196,6 +1238,22 @@
                 $('.body').removeClass('modal-open');
             }
         }
+
+        $.fn.AddTempRequestHiddenFors = function (guid, selector) {
+            alert("in $.fn.AddTempRequestHiddenFors : " + guid);
+            $.ajax({
+                async: true,
+                url: "/Requests/_TempRequestHiddenFors?GUID=" + guid,
+                traditional: true,
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    $(selector).replaceWith(data);
+                    return false;
+                }
+            });
+        };
+
         $.fn.BindSelectedFilters = function () {
             console.log('in bind selected filters');
             var selectedVendor = $(".popover .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
@@ -1207,7 +1265,7 @@
             console.log('archived ' + archived);
             return { SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived }
         }
-        
+
 
         $.fn.ClearFilter = function (sectionType, isProprietary) {
             //alert(sectionType);

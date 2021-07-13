@@ -6,17 +6,9 @@
 		return false;
 	});
 
-	$(".file-select").on("change", function (e) {
+	$(".file-select").off("change").on("change", function (e) {
 		e.preventDefault();
-		e.stopPropagation();
-		if(window.stop !== undefined) 
-		{
-			window.stop();
-		}
-		else if(document.execCommand !== undefined)
-		{
-			document.execCommand("Stop", false);
-		}
+		e.stopImmediatePropagation();
 		console.log("upload file submitted");
 		var dontAllowMultipleFiles = $("#DontAllowMultiple").val();
 		if (dontAllowMultipleFiles == false) {
@@ -46,23 +38,31 @@
 		//var url = $("#documentModalForm").data('string');
 		console.log("input button: " + inputButton);
 		var url = inputButton.attr("href");
-		var $isEdittable = $('.active-document-modal').data("val");
+		var $isEdittable = $('.isEdittable').val();
 		//alert($isEdittable)
-		var $showSwitch =  $('.active-document-modal').attr("showSwitch");
+		var $showSwitch =  $('.showSwitch').val();
 		console.log("url : " + url);
-		var formData = new FormData($(".documentModalForm")[0]);
+	    var formData = new FormData($(".documentModalForm")[0]);
+		//for(var i=0; i< $(this).get(0).files.length; i++)
+		//{
+		//	formData.append("FilesToSave", $(this).get(0).files[i])
+		//}
+
+		console.log(...formData)
 		$.ajax({
 			url: url,
 			method: 'POST',
 			data: formData,
 			success: (partialResult) => {
+		
 				//this.options.noteModalElement.modal('hide');
 				$(".carousel-item").remove();
-				$("#documentsModal").replaceWith('');
+				
 
-				var $enumString = $(".open-document-modal.active-document-modal").data("string");
-				var $requestId = $(".open-document-modal.active-document-modal").data("id");
+				var $enumString =  $('.folderName').val();
+				var $requestId =  $('.objectID').val();
 				var section = $("#masterSectionType").val();
+				var guid = $("#GUID").val();
 				
 				if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
 					section = "Operations"
@@ -70,41 +70,15 @@
 					section = "LabManagement"
 				}
 				$.fn.ChangeColorsOfModal($enumString, section);
-				var parentFolder = $(".active-document-modal").attr("parentfolder");
-				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles);
+				var parentFolder =  $('.parentFolderName').val();
+				$.fn.OpenDocumentsModal(true, $enumString, $requestId, guid, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles);
 				return true;
 			},
 			processData: false,
 			contentType: false
 		});
 		return true;
-
 	})
-
-	
-	//seems to not be used. only diff is that other one has $(".open-document-modal").removeClass("active-document-modal");
-	$(".open-document-modal").off('click').on("click", function (e) {
-
-		e.preventDefault();
-		e.stopPropagation();
-		console.log("clicked open doc modal 1");
-		var section = $("#masterSectionType").val();
-		console.log("section"+section)
-		$(this).addClass("active-document-modal");
-		var enumString = $(this).data("string");
-		console.log("enumString: " + enumString);
-		var requestId = $(this).data("id");
-		console.log("requestId: " + requestId);
-		var isEdittable = $(".active-document-modal").attr("data-val");
-		console.log($("#masterSidebarType").val())
-		var showSwitch = $(".active-document-modal").attr("showSwitch");
-		var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
-		console.log(dontAllowMultipleFiles)
-		var parentFolder = $(".active-document-modal").attr("parentFolder");
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles);
-		return true;
-	});
-
 
 	$(".file-select").on("change", function (e) {
 		console.log("file was changed");

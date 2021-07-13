@@ -143,7 +143,7 @@ $.fn.SearchColumns = function (searchText, colName) {
 }
 
 $("body").on("click", "#inventoryFilterContentDiv .popover-close", function (e) {
-	//alert('x button')
+	console.log('x button')
 	$('[data-toggle="popover"]').popover('dispose');
 	$('body').removeClass('popover-open');
 	$('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');

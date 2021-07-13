@@ -1,6 +1,6 @@
 ﻿$(function () {
 	$(".ResourceNotesModal").on("click", function (e) {
-		//alert("resource notes modal");
+		alert("resource notes modal");
 		var url = "/Protocols/ResourceNotesModal";
 		$.ajax({
 			processData: false,

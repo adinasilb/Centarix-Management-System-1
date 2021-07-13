@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+﻿@model PrototypeWithAuth.ViewModels.TempListWithRequestItem
 @*@inject UserManager<ApplicationUser> UserManager*@
 @{
     ViewData["Title"] = "Add Item";
@@ -6,7 +6,7 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 
     string form = "order-inv-form";
-    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    if (Model.RequestItemViewModel.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
     }
@@ -17,10 +17,31 @@
 @using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> _userManager
 
-<div class="col-12 create-user mx-auto @form on-form-modal " style="width: 60%">
-    <div class="on-form-modal-border">
-        <div class="outer-partial">
-            @{await Html.RenderPartialAsync("CreateItemTabs", Model); }
+<div class="outer-add-item-view">
+    <div class="col-12 create-user mx-auto @form on-form-modal  " style="width: 60%">
+        <div class="on-form-modal-border">
+            <form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style=" ">
+                @Html.HiddenFor(m => m.TempRequestListViewModel.GUID) @*for reloading the partial view*@
+                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel); }
+                <div class="outer-partial">
+
+                    @{ await Html.RenderPartialAsync("CreateItemTabs", Model.RequestItemViewModel); }
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<script>
+    
+    //$(".submitOrderHidden").off('click').on("click", function (e) {
+    //    var formData = new FormData($("#myForm")[0]);
+    //    console.log(...formData);
+    //    for (var pair of formData.entries()) {
+    //        console.log(pair[0] + ', ' + pair[1]);
+    //    }
+        
+
+    //    //return false;
+    //});
+</script>

@@ -11,7 +11,7 @@
 	$parentfoldername = $("#ParentFolderName").val();
 	$objectId = $("#ObjectID").val();
 	var $SectionType = $("#masterSectionType").val();
-	
+	var guid = $("#GUID").val();
 	var $isEdittable = $('.active-document-modal').attr("data-val");
 	var $showSwitch = $('.active-document-modal').attr("showSwitch");
 	var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
@@ -31,7 +31,7 @@
 				$(".report-text").trigger("change");
 			}
 			else {
-				$.fn.OpenDocumentsModal($foldername, $objectId, $isEdittable, $SectionType, $showSwitch, $parentfoldername, dontAllowMultipleFiles);
+				$.fn.OpenDocumentsModal(true, $foldername, $objectId, guid, $isEdittable, $SectionType, $showSwitch, $parentfoldername, dontAllowMultipleFiles);
 			}
 			//$.fn.ChangeColorsOfDocs($foldername);
 			$(".document-name").text('')
@@ -49,6 +49,7 @@ $.fn.RemoveColorsOfDocs = function ($foldername) {
 	$("#" + $foldername + " i").removeClass('oper-filter');
 	$("#" + $foldername + " i").removeClass('order-inv-filter')
 	$("#" + $foldername + " i").removeClass('lab-man-filter')
+	$("#" + $foldername + " i").removeClass('protocols-filter')
 	$(".active-document-modal .material-image-icon").removeClass("protocols-filter");
 	$(".active-document-modal .material-image-icon").addClass("disabled-text");
 	$("#" + $foldername + " i").addClass('opac87');

@@ -91,7 +91,7 @@ namespace PrototypeWithAuth.AppData
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
         public enum FolderNamesEnum {Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
-        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports }
+        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public static string AspDateFormatString = "{0:d MMM yyyy}";
         public static List<StringWithName> RequestRoleEnums()
@@ -271,6 +271,7 @@ namespace PrototypeWithAuth.AppData
             decimal rate = 0.0m;
             try //try is b/c sometimes the api is down
             {
+                //throw new Exception();
                 dynamic tmp = JsonConvert.DeserializeObject(response.Content);
                 String stringRate = (string)tmp.quotes.USDILS;
                 stringRate = stringRate.Replace("{", "");
@@ -542,11 +543,6 @@ namespace PrototypeWithAuth.AppData
             return newCopy;
         }
 
-        public static T DeepClone<T>(T obj)
-        {
-            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj));
-        }
-
         public static List<String> GetAmountColumn(Request request, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType)
         {
             List<String> amountColumn = new List<String>();
@@ -761,6 +757,13 @@ namespace PrototypeWithAuth.AppData
             {
                 return "";
             }
+        }
+        public static T DeepClone<T>(T obj)
+        {
+            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
         }
     }
 }

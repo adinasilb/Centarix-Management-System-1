@@ -22,7 +22,7 @@
 }
 <script src="~/js/DeleteDocModal.js"></script>
 <div class="modal modal-document-delete fader " id="DeleteDocumentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9999">
-    <div class="sm-modal modal-dialog-centered mx-auto">
+    <div class="elixir-modal-sm modal-dialog-centered mx-auto">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$('.documents-delete').html('');">
                 <span aria-hidden="true">&times;</span>
@@ -44,7 +44,14 @@
                             <div class="">
                                 <div class="card document-border m-0">
                                     <div class="card-body responsive-iframe-container">
-                                        <iframe src="/@Model.FileName" title="View" class="responsive-iframe" scrolling="no"></iframe>
+                                        @{var iframeFilestring = Model.FileName;
+                                            var ext = iframeFilestring.Split(".").Last();
+                                            if (ext == "pptx" || ext == "ppt")
+                                            {
+                                                iframeFilestring = "";
+                                            } 
+                                       }
+                                        <iframe src="/@iframeFilestring" title="View" class="responsive-iframe" scrolling="no"></iframe>
 
                                     </div>
                                     <div class="card-body text-center">

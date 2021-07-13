@@ -7,24 +7,14 @@
 		}
 		else {
 			//alert("is checked")
-			$(this).closest("tr").addClass("clicked-border-acc");
+			$.fn.AddBorderBySectionType(this);
 		}
 		var activeVendor = $(".activeVendor").val();
 		if (activeVendor == "" && $(this).is(":checked")) {
 			//	alert("reset vendor")
 			$(".activeVendor").val($(this).attr("vendorid"))
 		}
-		var addToSelectedButton = $(this).closest("tbody").find(".add-to-selected");
-		var paySelectedButton = $(this).closest("tbody").find(".pay-selected");
-
-
-		var selectedButton;
-		if (addToSelectedButton.length > 0) {
-			selectedButton = addToSelectedButton;
-		}
-		else if (paySelectedButton.length > 0) {
-			selectedButton = paySelectedButton;
-		}
+		var selectedButton = $(this).closest("tbody").find(".button-for-selected-items");
 
 		if ($(".form-check.accounting-select .form-check-input:checked").length) {
 			if ($(".activeVendor").val() != $(this).attr("vendorid")) {
@@ -49,6 +39,20 @@
 		}
 	});
 
+	$.fn.AddBorderBySectionType = function (element) {
+		switch ($('#masterSectionType').attr('value')) {
+			case 'LabManagement': 
+				$(element).closest("tr").addClass("clicked-border-lab-man");
+				break;
+			case 'Requests':
+				$(element).closest("tr").addClass("clicked-border-orders-inv");
+				break;
+			case 'Accounting':
+				$(element).closest("tr").addClass("clicked-border-acc");
+				console.log(element)
+				break;
+        }
+    }
 
 	$(".remove-invoice-item").off("click").on("click", function (e) {
 		e.stopPropagation();
@@ -73,23 +77,18 @@
 		console.log("in share payments fx site.js");
 	};
 
-	$("body").on("click", "#share-payment", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		console.log("in share payments body fx site.js");
-	});
 
 	/*--------------------------------Accounting Payment Notifications--------------------------------*/
 	$(".payments-pay-now").off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 		var vendorid = $(this).attr("value");
-		var paymentstatusid = $(this).attr("paymentstatus");
+		//var paymentstatusid = $(this).attr("paymentstatus");
 		var typeEnum = $("#masterSidebarType").val();
 		console.log("vendor: " + vendorid);
-		console.log("payment status: " + paymentstatusid);
+		//console.log("payment status: " + paymentstatusid);
 		//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
-		var itemurl = "/Requests/PaymentsPayModal/?vendorid=" + vendorid + "&paymentstatusid=" + paymentstatusid + "&accountingPaymentsEnum=" + typeEnum;
+		var itemurl = "/Requests/PaymentsPayModal/?vendorid=" + vendorid + "&accountingPaymentsEnum=" + typeEnum;
 		$("#loading").show();
 		$.fn.CallModal(itemurl, "payments-pay");
 	});
@@ -126,47 +125,15 @@
 		$.fn.CallModal(itemUrl, "payments-pay");
 	});
 	//$(".pay-invoice-selected").off("click").on("click", function (e) {
-	//	var typeEnum = $(this).attr("type");
-	//	var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
-	//		return $(this).attr("id")
-	//	}).get()
-	//	console.log("arrayOfSelected: " + arrayOfSelected);
-	//	$("#loading").show();
-	//	$.ajax({
-	//		type: "GET",
-	//		url: "/Requests/PaymentsInvoiceModal/?" + "accountingPaymentsEnum=" + typeEnum,
-	//		traditional: true,
-	//		data: { 'requestIds': arrayOfSelected },
-	//		cache: true,
-	//		success: function (data) {
-	//			$.fn.OpenModal("modal", "payments-invoice", data)
-	//			$("#loading").hide();
-	//		}
-	//	});
+
+		//var typeEnum = $(this).attr("type");
+		//var itemUrl = "/Requests/PaymentsInvoiceModal/?accountingPaymentsEnum=" + typeEnum;
+		//$.fn.LoadModalForSelectedItems(e, itemUrl, "payments-invoice");
 	//});
 	$(".pay-selected").off("click").on("click", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		//alert('pay selected')
 		var typeEnum = $(this).attr("type");
-		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
-			return $(this).attr("id")
-		}).get()
-		//alert('before loading');
-		console.log("arrayOfSelected: " + arrayOfSelected);
-		$("#loading").show();
-		$.ajax({
-			type: "GET",
-			url: "/Requests/PaymentsPayModal/?" + "accountingPaymentsEnum=" + typeEnum,
-			traditional: true,
-			data: { 'requestIds': arrayOfSelected },
-			cache: true,
-			success: function (data) {
-				//alert('success!');
-				$.fn.OpenModal("modal", "payments-pay", data)
-				$("#loading").hide();
-			}
-		});
+		var itemUrl = "/Requests/PaymentsPayModal/?accountingPaymentsEnum=" + typeEnum;
+		$.fn.LoadModalForSelectedItems(e, itemUrl, "payments-pay");
 	});
 
 	$(".invoice-add-all").off("click").on("click", function (e) {
@@ -179,26 +146,9 @@
 	});
 
 	$(".add-to-selected").off("click").on("click", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		//alert("add to selected")
-		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
-			return $(this).attr("id")
-		}).get()
-		console.log("arrayOfSelected: " + arrayOfSelected);
-		//var itemUrl = "/Requests/AddInvoiceModal/?requestids=" + arrayOfSelected;
-		$("#loading").show();
-		$.ajax({
-			type: "GET",
-			url: "/Requests/AddInvoiceModal/",
-			traditional: true,
-			data: { 'requestIds': arrayOfSelected },
-			cache: true,
-			success: function (data) {
-				$.fn.OpenModal("modal", "add-invoice", data)
-				$("#loading").hide();
-			}
-		});
+		var itemUrl = "/Requests/AddInvoiceModal/";
+		$.fn.LoadModalForSelectedItems(e, itemUrl, "add-invoice");
+
 	});
 
 	$(".invoice-add-one").off("click").on("click", function (e) {

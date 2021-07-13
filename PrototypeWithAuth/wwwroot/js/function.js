@@ -19,12 +19,6 @@
 	}
 });
 
-$(".remove-function").click(function (e) {
-    e.preventDefault();
-    console.log("remove file")
-    url = $(this).attr("url");
-    $.fn.CallPageRequest(url, "addFunction"); 
-})
 
 $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".saveFunction, .removeFunction",function (e) {
     e.preventDefault();
@@ -152,6 +146,13 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
         }
         $(".addFunctionForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';    
 
+});
+
+$(".remove-function").click(function (e) {
+    e.preventDefault();
+
+    url = $(this).attr("url");
+    $.fn.CallPageRequest(url, "addFunction");
 });
 
 $("form").off("click", ".open-line-product").on("click", ".open-line-product", function (e) {

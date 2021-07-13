@@ -1,40 +1,35 @@
-﻿@model PrototypeWithAuth.ViewModels.TermsViewModel;
+﻿@model PrototypeWithAuth.ViewModels.TermsViewModel
 @using PrototypeWithAuth.AppData
 @{
     Layout = null;
 
     var bcColor = "order-inv-background-color";
     string form = "";
-    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
+    if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
         bcColor = "oper-background-color";
     }
-    else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.LabManagement)
+    else if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.LabManagement)
     {
         bcColor = "lab-man-background-color";
         form = "supplier-form";
     }
-    else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Requests)
+    else if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Requests)
     {
         //bcColor = "order-inv-background-color";
         //form = "order-inv-form"; //switched to outer terms modal
     }
 }
 
+@{ await Html.RenderPartialAsync("_TempRequestHiddenFors", Model.TempRequestListViewModel);}
+
 <script src="~/js/TermsModal.js"></script>
 <script src="~/js/site.js"></script>
 <script src="~/js/Validation/TermsModalFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
 <script src="~/js/InitializeDatePicker.js"></script>
-@Html.HiddenFor(model => model.RequestIndexObject.PageType)
-@Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
-@Html.HiddenFor(model => model.RequestIndexObject.SectionType)
-@Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
-@*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
-@Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
-@Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
-@Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
+
 <input type="hidden" asp-for="ParentRequest.ParentRequestID" />
 <div class="modal-header modal-header-padding">
     <div class="col-10 float-left">
@@ -57,7 +52,7 @@
 
             <div class="col-3">
                 @{
-                    var currency = Model.RequestIndexObject.SelectedCurrency == AppUtility.CurrencyEnum.NIS ? "&#x20aa;" : "&#36;";
+                    var currency = Model.TempRequestListViewModel.RequestIndexObject.SelectedCurrency == AppUtility.CurrencyEnum.NIS ? "&#x20aa;" : "&#36;";
                 }
                 <label asp-for="ParentRequest.Shipping" class="control-label"></label>
                 <div class="input-group">
@@ -81,7 +76,7 @@
             <div class="col-3 @dNone installments-amount-block">
                 <div class="form-group ">
                     <label asp-for="@Model.InstallmentDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                    <input asp-for="@Model.InstallmentDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" disabled asp-format="{0:dd/MM/yyyy}" data-val="@Model.InstallmentDate.ToString("yyyy-MM-dd")" />
+                    <input asp-for="@Model.InstallmentDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" disabled asp-format="@AppUtility.AspDateFormatString" data-val="@Model.InstallmentDate.ToString("yyyy-MM-dd")" />
                     <span asp-validation-for="@Model.InstallmentDate" class="text-danger-centarix"></span>
                 </div>
             </div>
@@ -116,6 +111,7 @@
             $("#loading").show();
             $("#RedirectAction").val(window.location.href);
             //alert("window: " + window.location.href);
+            console.log("$('#SectionType').val() : " + $("#SectionType").val())
             var formData = new FormData($(".termsModalForm")[0]);
             $.ajax({
                 contentType: false,
@@ -127,19 +123,21 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    if ($("#SectionType").val() == "Operations" && data == '') {
-                        console.log("if 1");
+                    $('.termsModalForm .temprequesthiddenfors').html('');
+                    if (($("#SectionType").val() == "Operations" || $("#masterSectionType").val() == "Operations") && data == '') {
+                        //alert("if 1");
                         window.location.href = "/Requests/Index?PageType=OperationsRequest&SectionType=Operations&RequestStatusID=2&SidebarType=List";
                     }
-                    else if ($("#SectionType").val() == "Requests" && data == '') {
-                        console.log("if 1");
+                    else if (($("#SectionType").val() == "Requests" || $("#masterSectionType").val() == "Requests") && data == '') {
+                        //alert("if 2");
                         window.location.href = "/Requests/Index?PageType=RequestRequest&SectionType=Requests&RequestStatusID=6&SidebarType=List";
                     }
-                    else if ($("#RequestIndexObject_OrderType").val() == "AlreadyPurchased" && data == '') {
-                        console.log("if 2");
+                    else if (($("#RequestIndexObject_OrderType").val() == "AlreadyPurchased" || $("#masterSectionType").val() == "AlreadyPurchased") && data == '') {
+                        //alert("if 3");
                         window.location.href = "/Requests?PageType=RequestRequest&SectionType=Requests&SidebarType=List";
                     }
                     else {
+                        //alert("else");
                         $.fn.OpenModal('emailModal', 'confirm-email', data);
                     }
                     $("#loading").hide();

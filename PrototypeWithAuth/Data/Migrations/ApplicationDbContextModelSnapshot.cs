@@ -2712,6 +2712,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsShippingPaid")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
@@ -2782,6 +2785,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int>("RequestID")
                         .HasColumnType("int");
+
+                    b.Property<bool>("ShippingPaidHere")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("Sum")
                         .HasColumnType("decimal(18,2)");
@@ -4871,6 +4877,35 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("TempLines");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.TempRequestJson", b =>
+                {
+                    b.Property<int>("TempRequestJsonID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("GuidID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsCurrent")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsOriginal")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("RequestJson")
+                        .HasColumnType("ntext");
+
+                    b.HasKey("TempRequestJsonID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.ToTable("TempRequestJsons");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.TimekeeperNotification", b =>
                 {
                     b.Property<int>("NotificationID")
@@ -6396,7 +6431,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany()
+                        .WithMany("ProtocolInstances")
                         .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -6681,6 +6716,14 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TempRequestJson", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany("TempRequestJsons")
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.TimekeeperNotification", b =>

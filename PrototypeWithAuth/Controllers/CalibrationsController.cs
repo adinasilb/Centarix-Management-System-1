@@ -45,7 +45,7 @@ namespace PrototypeWithAuth.Controllers
                 onePageOfProducts = await _context.Calibrations.Include(c => c.Request).ThenInclude(r => r.Product).ThenInclude(p => p.Vendor)
                     .Include(c => c.Request.Product.ProductSubcategory).Include(c => c.CalibrationType)
                     .OrderBy(c => c.Date).ThenBy(c => c.Request.Product.ProductName).ThenBy(c => c.CalibrationName)
-                    .ToPagedListAsync(page, 25);
+                    .ToPagedListAsync(page, 20);
             }
             catch (Exception ex)
             {

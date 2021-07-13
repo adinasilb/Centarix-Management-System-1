@@ -368,6 +368,9 @@ center-horizontally {
 .clicked-border-orders-inv {
     border: 2px double var(--order-inv-color) !important;
 }
+.clicked-border-lab-man {
+    border: 2px double var(--lab-man-color) !important;
+}
 
 .carousel.vertical .item {
     -webkit-transition: 0.6s ease-in-out top;
@@ -1702,7 +1705,7 @@ td .btn {
     top: 15%;
 }
 
-.sm-modal {
+.elixir-modal-sm {
     width: 45.63rem;
     height: 35.31rem;
 }
@@ -2495,6 +2498,16 @@ span.caret {
     border: .5px solid #f3f3f3 !important;
 }
 
+.protocol-form .switch label input[type="checkbox"]:checked + .lever:after {
+    background-color: var(--protocol-color) !important;
+}
+
+.protocol-form .switch label input[type="checkbox"]:checked + .lever {
+    background-color: var(--protocols-25) !important;
+    opacity: 50 !important;
+    border: .5px solid #f3f3f3 !important;
+}
+
 .select-wrapper input.select-dropdown:disabled {
     color: var(--black-87) !important;
 }
@@ -2512,8 +2525,16 @@ span.caret {
     box-shadow: 6px 0px 10px #0000008C;
 }
 
-.wide-modal {
+.elixir-modal-xl {
     width: 93.31rem;
+}
+
+.elixir-modal-md {
+    width: 60rem;
+}
+
+.elixir-modal-xs {
+    width:32rem;
 }
 
 .add-resource-modal .modal-dialog {
@@ -2653,6 +2674,7 @@ a {
 .form-check {
     padding-left: 0 !important; /*Overridding bootstrap*/
 }
+
 /*Login*/
 .login .form-check-input[type="checkbox"].filled-in:checked + label:after, .orders-and-inv label.btn input[type="checkbox"].filled-in:checked + label:after, .order-inv-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .order-inv-form label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid black;

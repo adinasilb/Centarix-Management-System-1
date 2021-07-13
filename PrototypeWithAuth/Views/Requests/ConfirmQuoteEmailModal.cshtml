@@ -20,15 +20,9 @@
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%;">
                 <input asp-for="VendorId" style="display: none;" />
                 <input asp-for="RequestID" style="display: none;" />
+
+                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel);}
                 @Html.HiddenFor(model => model.IsResend)
-                @Html.HiddenFor(model => model.RequestIndexObject.PageType)
-                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
-                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
-                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
-                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
-                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
-                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
-                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
 
                 <div>
                     @{await Html.RenderPartialAsync("_OrderEmail", Model); }
@@ -36,9 +30,12 @@
 
                 <div class="modal-footer p-4">
                     <div class="m-auto">
-                        <input type="submit" class="custom-button custom-button-font lab-man-background-color between-button-margin" asp-action="ConfirmQuoteEmailModal" value="Confirm & Send Email" />
+                        <input type="submit" class="custom-button custom-button-font lab-man-background-color between-button-margin" asp-action="ConfirmQuoteEmailModal" 
+                               value="Confirm & Send Email" />
 
-                        <button class="custom-cancel custom-button cancel-email" @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('confirm-email').html('');">Cancel Email</button>
+                        <button class="custom-cancel custom-button cancel-email" @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('confirm-email').html('');">
+                            Cancel Email
+                        </button>
                     </div>
                 </div>
 

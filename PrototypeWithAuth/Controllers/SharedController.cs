@@ -1,6 +1,4 @@
-﻿using Aspose.Slides;
-using Aspose.Slides.Export;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -106,28 +104,29 @@ namespace PrototypeWithAuth.Controllers
             double vacationDaysTaken = 0;
             double sickDaysTaken = 0;
             var companyDaysOff = _context.CompanyDayOffs.Include(co => co.CompanyDayOffType).ToList();
-            var employeeHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id);
+            var employeeHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Month == month && eh.Date.Year == year && eh.Date <= DateTime.Now.Date);
+            int unpaidLeave = 0;
             if (user.EmployeeStatusID != 1)
             {
                 totalhours = null;
             }
             else
             {
-                var sickHours = employeeHours.Where(eh => eh.Date.Year == year && eh.PartialOffDayTypeID == 1 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month)
+                var sickHours = employeeHours.Where(eh => eh.PartialOffDayTypeID == 1)
                     .Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
-                sickDaysTaken = employeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
-                sickDaysTaken = Math.Round(sickDaysTaken + (sickHours / user.SalariedEmployee.HoursPerDay), 2);
+                sickDaysTaken = employeeHours.Where(eh =>eh.OffDayTypeID == 1).Count();
+                sickDaysTaken = sickDaysTaken + (sickHours / user.SalariedEmployee.HoursPerDay);
 
-                var vacationHours = employeeHours.Where(eh => eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month)
+                var vacationHours = employeeHours.Where(eh => eh.PartialOffDayTypeID == 2)
                     .Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
-                vacationDaysTaken = employeeHours.Where(eh => eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Count();
-                vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
-                var specialDays = employeeHours.Where(eh => eh.OffDayTypeID == 4 && eh.Date.Month == month && eh.Date.Year == year).Count();
-                var unpaidLeave = employeeHours.Where(eh => eh.OffDayTypeID == 5 && eh.Date.Month == month && eh.Date.Year == year).Count();
+                vacationDaysTaken = employeeHours.Where(eh => eh.OffDayTypeID == 2).Count();
+                vacationDaysTaken = vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay);
+                var specialDays = employeeHours.Where(eh => eh.OffDayTypeID == 4 ).Count();
+                unpaidLeave = employeeHours.Where(eh => eh.OffDayTypeID == 5).Count();
                 totalDays = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff);
                 totalhours = (totalDays - (vacationDaysTaken + sickDaysTaken + unpaidLeave + specialDays)) * user.SalariedEmployee.HoursPerDay;
                 workingDays = employeeHours.Where(eh => (eh.OffDayTypeID == null) || (eh.IsBonus && eh.OffDayTypeID != null))
-                    .Where(eh => (eh.Exit1 != null || eh.TotalHours != null) && eh.Date.Date < DateTime.Now.Date).Count();
+                    .Where(eh => eh.Exit1 != null || eh.TotalHours != null).Count();
                 workingDays = workingDays - Math.Round((sickHours + vacationHours) / user.SalariedEmployee?.HoursPerDay ?? 1, 2);
             }
             SummaryHoursViewModel summaryHoursViewModel = new SummaryHoursViewModel()
@@ -137,8 +136,8 @@ namespace PrototypeWithAuth.Controllers
                 TotalHoursInMonth = totalhours,
                 SelectedYear = year,
                 TotalHolidaysInMonth = companyDaysOff.Where(cdo => cdo.Date.Year == year && cdo.Date.Month == month).Count(),
-                VacationDayInThisMonth = vacationDaysTaken,
-                SickDayInThisMonth = sickDaysTaken,
+                VacationDayInThisMonth = Math.Round(vacationDaysTaken, 2),
+                SickDayInThisMonth = Math.Round(sickDaysTaken, 2),
                 User = user,
                 TotalWorkingDaysInThisMonth = totalDays,
                 WorkingDays = workingDays
@@ -205,17 +204,6 @@ namespace PrototypeWithAuth.Controllers
             return offDaysLeft;
         }
 
-        protected void RemoveRequestWithCommentsAndEmailSessions()
-        {
-            var sessionNames = Enum.GetNames(typeof(AppData.SessionExtensions.SessionNames)).Cast<string>().Select(x => x.ToString()).ToList();
-            var allKeys = _httpContextAccessor.HttpContext.Session.Keys;
-            //the following will work as long as all #s are less than 1000 (b/c they only allow for 3 digits, meaning less than 1000 of each type at a time)
-            var requiredKeys = allKeys.Where(ak => sessionNames.Contains(ak.Substring(0, ak.Length - 1)) || sessionNames.Contains(ak.Substring(0, ak.Length - 2)) || sessionNames.Contains(ak.Substring(0, ak.Length - 3)));
-            foreach (var k in requiredKeys)
-            {
-                _httpContextAccessor.HttpContext.Session.Remove(k); //will clear the session for the future
-            }
-        }
         protected decimal GetExchangeRate()
         {
             decimal rate;
@@ -227,12 +215,15 @@ namespace PrototypeWithAuth.Controllers
             return rate;
         }
 
-        protected void GetExistingFileStrings(List<DocumentFolder> DocumentsInfo, AppUtility.FolderNamesEnum folderName, string uploadFolderParent)
+        protected void GetExistingFileStrings(List<DocumentFolder> DocumentsInfo, AppUtility.FolderNamesEnum folderName, AppUtility.ParentFolderName parentFolderName, 
+                                                                                                                                string uploadFolderParent, string objectID)
         {
             string uploadFolder = Path.Combine(uploadFolderParent, folderName.ToString());
             DocumentFolder folder = new DocumentFolder()
             {
-                FolderName = folderName
+                FolderName = folderName, 
+                ParentFolderName = parentFolderName,
+                ObjectID = objectID
             };
             if (Directory.Exists(uploadFolder))
             {
@@ -253,9 +244,10 @@ namespace PrototypeWithAuth.Controllers
         protected virtual void DocumentsModal(DocumentsModalViewModel documentsModalViewModel)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
-            string folder = Path.Combine(uploadFolder, documentsModalViewModel.ObjectID.ToString());
+            var MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
+            string folder = Path.Combine(uploadFolder, MiddleFolderName);
             Directory.CreateDirectory(folder);
-            if (documentsModalViewModel.FilesToSave != null) //test for more than one???
+             if (documentsModalViewModel.FilesToSave != null) //test for more than one???
             {
                 var x = 1;
                 foreach (IFormFile file in documentsModalViewModel.FilesToSave)
@@ -272,10 +264,11 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
         }
-        protected void DeleteTemporaryDocuments(AppUtility.ParentFolderName parentFolderName, int ObjectID = 0)
+        protected void DeleteTemporaryDocuments(AppUtility.ParentFolderName parentFolderName, Guid guid, int ObjectID = 0)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
-            string requestFolder = Path.Combine(uploadFolder, ObjectID.ToString());
+            String FolderName = guid == Guid.Empty ? ObjectID.ToString() : guid.ToString();
+            string requestFolder = Path.Combine(uploadFolder, FolderName);
 
             if (Directory.Exists(requestFolder))
             {
@@ -295,7 +288,8 @@ namespace PrototypeWithAuth.Controllers
         protected void FillDocumentsViewModel(DocumentsModalViewModel documentsModalViewModel)
         {
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
-            string uploadFolder2 = Path.Combine(uploadFolder1, documentsModalViewModel.ObjectID.ToString());
+            var MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
+            string uploadFolder2 = Path.Combine(uploadFolder1, MiddleFolderName);
             string uploadFolder3 = Path.Combine(uploadFolder2, documentsModalViewModel.FolderName.ToString());
 
             if (Directory.Exists(uploadFolder3))
@@ -399,14 +393,15 @@ namespace PrototypeWithAuth.Controllers
             //requestItemViewModel.SubProjects = subprojects;
             //may be able to do this together - combining the path for the orders folders
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-            string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Requests.FirstOrDefault().RequestID.ToString());
+            string requestId = requestItemViewModel.Requests.FirstOrDefault().RequestID.ToString();
+            string parentQuoteId = requestItemViewModel.Requests.FirstOrDefault().ParentQuoteID?.ToString();
             requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
 
             //the partial file name that we will search for (1- because we want the first one)
             //creating the directory from the path made earlier
             var productSubcategory = requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory;
 
-            FillDocumentsInfo(requestItemViewModel, uploadFolder2, productSubcategory);
+            FillDocumentsInfo(requestItemViewModel, productSubcategory, requestId, parentQuoteId);
 
             //locations:
             //get the list of requestLocationInstances in this request
@@ -468,7 +463,7 @@ namespace PrototypeWithAuth.Controllers
 
                         ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
                         {
-                            locationInstancesDepthZero = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationTypeID == locationType.LocationTypeID),
+                            locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == locationType.LocationTypeID && !(li is TemporaryLocationInstance)),
                             locationTypeNames = new List<string>(),
                             locationInstancesSelected = new List<LocationInstance>()
                         };
@@ -588,48 +583,62 @@ namespace PrototypeWithAuth.Controllers
             return shareModalViewModel;
         }
 
-        protected void FillDocumentsInfo(RequestItemViewModel requestItemViewModel, string uploadFolder, ProductSubcategory productSubcategory)
+        protected void FillDocumentsInfo(RequestItemViewModel requestItemViewModel, ProductSubcategory productSubcategory, string requestId = null, string parentQuoteId = null)
         {
             requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
+            string quoteFolder = "";
+            string requestFolder = "";
+            AppUtility.ParentFolderName quoteParentFolderName = AppUtility.ParentFolderName.ParentQuote;
+            AppUtility.ParentFolderName requestParentFolderName = AppUtility.ParentFolderName.Requests;
+
+            if (parentQuoteId != null)
+            {
+                string quoteParentFolder = Path.Combine(_hostingEnvironment.WebRootPath, quoteParentFolderName.ToString());
+                quoteFolder = Path.Combine(quoteParentFolder, parentQuoteId.ToString());
+            }
+            if (requestId != null) //eventually change to/add? parent request...
+            {
+                string requestParentFolder = Path.Combine(_hostingEnvironment.WebRootPath, requestParentFolderName.ToString());
+                requestFolder = Path.Combine(requestParentFolder, requestId.ToString());
+            }
 
             if (productSubcategory.ParentCategory.IsProprietary)
             {
                 if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
                 {
-                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.S, uploadFolder);
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.S, requestParentFolderName, requestFolder, requestId);
 
                 }
                 if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
                     && productSubcategory.ProductSubcategoryDescription != "Cells")
                 {
-                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, requestParentFolderName, requestFolder, requestId);
 
                 }
                 if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
                     && productSubcategory.ProductSubcategoryDescription != "Cells" && productSubcategory.ProductSubcategoryDescription != "Probes")
                 {
-                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Map, uploadFolder);
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Map, requestParentFolderName, requestFolder, requestId);
 
                 }
             }
             else if (requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID == 2)
             {
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Details, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, quoteParentFolderName, quoteFolder, parentQuoteId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, requestParentFolderName, requestFolder, requestId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Details, requestParentFolderName, requestFolder, requestId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, requestParentFolderName, requestFolder, requestId);
             }
             else
             {
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Shipments, uploadFolder);
-
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
-                //GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Returns, uploadFolder);
-                //GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Credits, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, quoteParentFolderName, quoteFolder, parentQuoteId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, requestParentFolderName, requestFolder, requestId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, requestParentFolderName, requestFolder, requestId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Shipments, requestParentFolderName, requestFolder, requestId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, requestParentFolderName, requestFolder, requestId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, requestParentFolderName, requestFolder, requestId);
+                //GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.RequestFolderNamesEnum.Returns, requestParentFolderName, requestFolder, requestId);
+                //GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.RequestFolderNamesEnum.Credits, requestParentFolderName, requestFolder, requestId);
             }
         }
         protected async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null, SelectedFilters selectedFilters = null, string searchText = "", int numFilters = 0)
@@ -715,7 +724,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ParentRequest).Include(r => r.ApplicationUserCreator)
                 .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType);
-                    RequestsPassedIn = RequestsPassedIn.Include(r => r.RequestLocationInstances).ThenInclude(li => li.LocationInstance).ThenInclude(l => l.LocationInstanceParent).ToList().GroupBy(r => r.ProductID).Select(e => e.Last()).AsQueryable();
+                    RequestsPassedIn = RequestsPassedIn.Include(r => r.RequestLocationInstances).ThenInclude(li => li.LocationInstance).ThenInclude(l => l.LocationInstanceParent);
                 }
             }
             else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.AccountingGeneral)
@@ -898,7 +907,7 @@ namespace PrototypeWithAuth.Controllers
                                     new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Approved,
                                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                              r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage)
-                                    ).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+                                    ).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                             break;
                         case 2:
                             iconList.Add(receiveIcon);
@@ -907,19 +916,19 @@ namespace PrototypeWithAuth.Controllers
                             iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Ordered,
                                r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
-                                            r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+                                            r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                             break;
                         case 3:
                             //iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
                             popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder, popoverDelete };
                             iconList.Add(popoverMoreIcon);
-                            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r =>
+                            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).Select(r =>
                             new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                           r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(),
                                             _context.ShareRequests.Where(sr => sr.RequestID == r.RequestID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user,
-                                            r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+                                            r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                             break;
 
                     }
@@ -935,7 +944,7 @@ namespace PrototypeWithAuth.Controllers
                             onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.OrderedOperations,
                             r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                          r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, user)
-                                       ).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+                                       ).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
 
                             break;
                         case 3:
@@ -945,7 +954,7 @@ namespace PrototypeWithAuth.Controllers
                             onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryOperations,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                           r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, user)
-                                        ).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+                                        ).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                             break;
                     }
                     break;
@@ -956,7 +965,7 @@ namespace PrototypeWithAuth.Controllers
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                              r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(),
                                _context.ShareRequests.Where(sr => sr.RequestID == r.RequestID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user,
-                         r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+                         r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                     break;
                 case AppUtility.PageTypeEnum.RequestSummary:
 
@@ -972,19 +981,20 @@ namespace PrototypeWithAuth.Controllers
                                          r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(),
                                           _context.ShareRequests.Where(sr => sr.RequestID == r.RequestID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user,
                                           r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)
-                                       ).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+                                       ).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
 
                             break;
                         default:
                             popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder, popoverDelete };
                             iconList.Add(favoriteIcon);
                             iconList.Add(popoverMoreIcon);
-                            onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Summary,
+                            onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Summary,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                     r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(),
                                     _context.ShareRequests.Where(sr => sr.RequestID == r.RequestID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user,
                                     r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)
-                           ).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+                           ).ToLookup(r => r.r.ProductID).Select(e => e.Last()).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
+                           /// .GroupBy(r => r.ProductID, (key, value) => value.OrderByDescending(v => v.ParentRequest.OrderDate).First()).AsQueryable();
                             break;
                     }
 
@@ -997,7 +1007,7 @@ namespace PrototypeWithAuth.Controllers
                     onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryOperations,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                           r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest)
-                                        ).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+                                        ).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                     break;
                 case AppUtility.PageTypeEnum.LabManagementEquipment:
                     iconList.Add(equipmentIcon);
@@ -1006,14 +1016,14 @@ namespace PrototypeWithAuth.Controllers
                     onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r =>
                             new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
-                                          r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(), user, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+                                          r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(), user, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                     break;
                 case AppUtility.PageTypeEnum.ExpensesStatistics:
                     break;
                 case AppUtility.PageTypeEnum.AccountingGeneral:
                     onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.AccountingGeneral,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
-                                          r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+                                          r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
 
                     break;
                 case AppUtility.PageTypeEnum.RequestCart:
@@ -1027,7 +1037,7 @@ namespace PrototypeWithAuth.Controllers
                            new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryFavorites,
                             r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                          r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(),
-                                         user, r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+                                         user, r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                             break;
                         case AppUtility.SidebarEnum.SharedRequests:
                             //iconList.Add(reorderIcon);
@@ -1041,7 +1051,7 @@ namespace PrototypeWithAuth.Controllers
                                           _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(),
                                           _context.ShareRequests
                 .Where(sr => sr.RequestID == r.RequestID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user,
-                                          r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+                                          r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                             break;
                     }
                     break;
@@ -1139,11 +1149,35 @@ namespace PrototypeWithAuth.Controllers
             return totalDays - companyDaysOffCount;
         }
 
-        protected void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, bool additionalRequests = false)
+        protected void RevertDocuments(int id, AppUtility.ParentFolderName parentFolderName, Guid? guid, bool additionalRequests = false)
+        {
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
+            var TempFolderName = guid == null ? "0" : guid.ToString();
+            string requestFolderTo = Path.Combine(uploadFolder, TempFolderName);
+            string requestFolderFrom = Path.Combine(uploadFolder, id.ToString());
+            if (Directory.Exists(requestFolderFrom))
+            {
+                if (Directory.Exists(requestFolderTo))
+                {
+                    Directory.Delete(requestFolderTo, true);
+                }
+                if (additionalRequests)
+                {
+                    AppUtility.DirectoryCopy(requestFolderFrom, requestFolderTo, true);
+                }
+                else if (requestFolderFrom != requestFolderTo)
+                {
+                    Directory.Move(requestFolderFrom, requestFolderTo);
+                }
+            }
+        }
+
+        protected void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, bool additionalRequests = false, Guid? guid = null)
         {
             //rename temp folder to the request id
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
-            string requestFolderFrom = Path.Combine(uploadFolder, "0");
+            var TempFolderName = guid == null ? "0" : guid.ToString();
+            string requestFolderFrom = Path.Combine(uploadFolder, TempFolderName);
             string requestFolderTo = Path.Combine(uploadFolder, id.ToString());
             if (Directory.Exists(requestFolderFrom))
             {

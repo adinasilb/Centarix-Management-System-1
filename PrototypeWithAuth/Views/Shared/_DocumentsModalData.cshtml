@@ -1,0 +1,220 @@
+﻿@model PrototypeWithAuth.ViewModels.DocumentsModalViewModel
+@using PrototypeWithAuth.AppData
+@using Microsoft.Extensions.Primitives
+@{
+    Layout = null;
+    var markDisabled = "details";
+    //if (Model.Requests[0] != null && Model.Requests.Count == 1)
+    //{
+    //    requestid = Model.Requests[0].RequestID;
+    //}
+    //else
+    //{
+    //    requestid = 0;
+    //}
+    var bcColor = "order-inv-background-color";
+    var color = "order-inv-color";
+    var form = "order-inv-form";
+    var deleteDocumentClass = "";
+    var sectionType = AppUtility.MenuItems.Requests.ToString();
+
+    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    {
+        form = "oper-form";
+        bcColor = "oper-background-color";
+        color = "operations-filter";
+        sectionType = AppUtility.MenuItems.Operations.ToString();
+    }
+    else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
+    {
+        form = "supplier-form";
+        bcColor = "lab-man-background-color";
+        color = "lab-man-filter";
+        sectionType = AppUtility.MenuItems.LabManagement.ToString();
+    }
+    else if (Model.SectionType == AppUtility.MenuItems.Accounting)
+    {
+        form = "accounting-form";
+        bcColor = "accounting-background-color";
+        color = "accounting-filter";
+        sectionType = AppUtility.MenuItems.Accounting.ToString();
+    }
+    else if (Model.SectionType == AppUtility.MenuItems.Protocols)
+    {
+        form = "protocol-form";
+        bcColor = "protocols-background-color";
+        color = "protocols-color";
+        sectionType = AppUtility.MenuItems.Protocols.ToString();
+    }
+    var bcColorToUse = bcColor;
+    var colorToUse = color;
+    var disabled = false;
+    var isChecked = "";
+    if (!Model.IsEdittable)
+    {
+        disabled = true;
+    }
+    else
+    {
+        markDisabled = "edit";
+        isChecked = "checked";
+        deleteDocumentClass = "delete-file-document";
+    }
+    if (markDisabled == "details")
+    {
+        bcColorToUse = "disabled-color";
+        colorToUse = "disabled-filter";
+    }
+
+
+    /*toggle switch:  only if edit*/
+    /*upload button: everthing but summary*/
+    /*upload button disabled:  only if edit otherwise it is not shown*/
+    /*trash can: everthing but summary*/
+    /*trash can disabled: only if edit needs to be disabled*/
+
+}
+
+
+@*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
+
+
+
+
+
+<input type="submit" value="Save" id="save-documents" href="@Url.Action("DocumentsModal")" class="btn btn-block inv-button save-document-files" style="display: none;" />
+<input type="hidden" asp-for="FolderName" class="folderName" />
+<input type="hidden" asp-for="DontAllowMultiple" class="dontAllowMultiple" />
+<input type="hidden" asp-for="ParentFolderName" class="parentFolderName" />
+<input type="hidden" asp-for="SectionType" class="sectionType" />
+<input type="hidden" asp-for="ObjectID" class="objectID" />
+<input type="hidden" asp-for="Guid" class="guid" />
+@*edittable options*@
+<input type="hidden" id="bcColor" class="@bcColor" />
+<input type="hidden" id="color" class="@color" />
+<input type="hidden" asp-for="ShowSwitch" class="showSwitch" />
+<input type="hidden" asp-for="IsEdittable" class="@markDisabled isEdittable" />
+@if (Model.FileStrings != null && Model.FileStrings?.Count > 0)
+{
+    <div id="carousel-example-multi" class="carousel slide carousel-multi-item v-2" data-ride="carousel">
+
+
+        <div class="row">
+            <div class="col-1">
+                @if (Model.FileStrings.Count > 3)
+                {
+                    <a class="heading-1" href="#carousel-example-multi" data-slide="prev">
+                        <i class="fas fa-chevron-left @color"></i>
+                    </a>
+                }
+            </div>
+            <div class="col-10">
+                <div class="carousel-inner v-2" role="listbox">
+                    @{
+                        var ModelCount = Model.FileStrings.Count;
+                        var EndCount = ModelCount;
+                        switch (ModelCount % 3)
+                        {
+                            case 1:
+                                EndCount += 2;
+                                break;
+                            case 2:
+                                EndCount += 1;
+                                break;
+                        }
+
+                        for (int i = 0; i < EndCount; i++)
+                        {
+                            var carouselItemClass = "carousel-item";
+                            if (i == 0)
+                            {
+                                carouselItemClass += " active";
+                            }
+                            <div class="@carouselItemClass">
+                                <div class="col-12 col-md-4 m-0">
+                                    @if (ModelCount > i)
+                                    {
+                                        var iframeFilestring = Model.FileStrings[i];
+                                        var ext = iframeFilestring.Split(".").Last();
+                                        if (ext == "pptx" || ext == "ppt")
+                                        {
+                                            iframeFilestring = "";
+                                        }
+                                        <div class="card iframe-container document-border m-0">
+                                            <div class="card-body responsive-iframe-container">
+                                                @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
+
+                                                @*<a href="@Model.FileStrings[i]" class="linkwrap" target="_blank">
+                                                    <div class="blocker"></div>*@
+                                                <iframe src="\@iframeFilestring" title="View" class="responsive-iframe" scrolling="no"></iframe>
+
+                                                @*</a>*@
+                                            </div>
+                                            <div class="card-body d-flex text-center align-items-center justify-content-center">
+
+                                                <a href="\@Model.FileStrings[i]" target="_blank" class="mx-3  view-img">
+                                                    <i class="icon-centarix-icons-09 @color " style="font-size:2rem"></i>
+                                                </a>
+
+                                                @*@{var link = "delete-file-document"; }*@
+                                                @*@if (!Model.IsEdittable)
+                                                    {
+                                                        link = " ";
+                                                    }*@
+                                                @if (Model.ShowSwitch || Model.IsEdittable)
+                                                {
+                                                    <a href="" class="delete-document @deleteDocumentClass @Model.SectionType.ToString() mx-3" url="@Url.Action("DeleteDocumentModal", "Requests", new { FileString = Model.FileStrings[i], id = Model.ObjectID, RequestFolderNameEnum = Model.FolderName, IsEdittable = true, SectionType = Model.SectionType, ParentFolderName = Model.ParentFolderName })">
+                                                        <i style="font-size:2rem;" class="icon-delete-24px documents-delete-icon hover-bold @colorToUse"></i>
+                                                    </a>}
+                                                @*<a href="@Model.FileStrings[i]" target="_blank" class="btn btn-block btn-secondary">open</a>*@
+                                                @*<p class="align-to-bottom w-100">@Model.FileStrings[i]</p>*@
+                                            </div>
+                                        </div>
+
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                    }
+                </div>
+            </div>
+
+            <div class="col-1 ">
+                @if (Model.FileStrings.Count > 3)
+                {
+                    <a class="heading-1" href="#carousel-example-multi" data-slide="next">
+                        <i class="fas fa-chevron-right @color"></i>
+                    </a>
+                }
+            </div>
+        </div>
+
+
+    </div>
+}
+else
+{
+    <div class="text-center text-lowercase">
+        <div class="mt-6">
+            <img src="~/images/document_empty_image.png" />
+        </div>
+        <div class="mt-4" style="font-size: 1.125rem; color: #646464; font-weight:400;">
+            <span class="text-capitalize">No</span> @Model.FolderName.ToString().ToLower() have been uploaded
+        </div>
+        <div class='mt-2 pb-5'>
+            <div class='@((!Model.ShowSwitch && !Model.IsEdittable) ? "d-none" : "")' style="font-size: 1rem; color: #646464; font-weight:400;">
+                <span class="text-capitalize">Press</span> upload to add @Model.FolderName.ToString().TrimEnd('s').ToLower()
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $('.close-document-modal').click(function (e) {
+        $.fn.CloseModal("documents");
+    })
+</script>
+<script src="~/js/DeleteDocModal.js"></script>
+<script src="~/js/DocumentModalJS.js"></script>
+<script src="~/js/site.js"></script>

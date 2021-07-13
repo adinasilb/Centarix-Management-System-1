@@ -22,6 +22,8 @@ else
     <div class="_IndexTableByVendor">
         @{
             await Html.RenderPartialAsync("_IndexTableByVendor", Model);
+            <input type="hidden" id="payNowCount" value="@TempData["PayNowCount"]" />
+            
         }
     </div>
 

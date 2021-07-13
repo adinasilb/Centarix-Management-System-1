@@ -14,17 +14,17 @@
         category = Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum;
     }
     var modalType = Model.ModalType;
-    var markReadOnlyClass = "";
+    var markReadOnlyClass = "mark-readonly";
     var hiddenSummaryClass = "";
-    if (modalType == AppUtility.RequestModalType.Edit)
+    //var disabled = "disabled";
+    var disabledText = "disabled-text";
+    if (modalType == AppUtility.RequestModalType.Create)
     {
-        markReadOnlyClass = "mark-readonly";
+        markReadOnlyClass = "";
+        //disabled = "";
+        disabledText = "";
     }
-    if (modalType == AppUtility.RequestModalType.Summary)
-    {
-        hiddenSummaryClass = "hidden";
-        markReadOnlyClass = "mark-readonly";
-    }
+    
 }
 
 <div class="operations-item-div">
@@ -34,7 +34,7 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label class="control-label">Currency</label>
-                        <select id="currency" asp-for="Requests[0].Currency" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass">
+                        <select id="currency" asp-for="Requests[0].Currency" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass @disabledText" >
                             <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
                             <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
                         </select>
@@ -43,7 +43,7 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label asp-for="Requests[0].ExchangeRate" class="control-label"></label>
-                        <input asp-for="Requests[0].ExchangeRate" class="form-control-plaintext border-bottom " id="exchangeRate" />
+                        <input name="Requests[0].ExchangeRate" value="@Model.Requests[0].ExchangeRate" class="form-control-plaintext border-bottom @markReadOnlyClass" id="exchangeRate" />
                         <span asp-validation-for="Requests[0].ExchangeRate" class="text-danger-centarix"></span>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
 </div>
 @if (Model.ModalType == AppUtility.RequestModalType.Create)
 {
-    <div class="row text-center justify-content-center @hiddenSummaryClass">
+    <div class="row text-center justify-content-center">
         <input type="button" id="addOperationItem" value="+ Add Item" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize add-item" style="font-size:1rem;" data-val="1" />
     </div>
 }

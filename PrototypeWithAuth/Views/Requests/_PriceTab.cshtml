@@ -17,8 +17,10 @@
     var dollarReadOnly = "";
     var shekelReadOnly = "";
     var shekelSelected = "selected";
+    var disabledProperty = "";
     if (modalType == AppUtility.RequestModalType.Edit || modalType == AppUtility.RequestModalType.Summary)
     {
+        disabledProperty = "disabled";
         markReadOnlyClass = "mark-readonly";
         shekelReadOnly = "mark-readonly";
         if (Model.Requests[0].Currency.Equals("USD"))
@@ -32,7 +34,7 @@
             shekelSelected = "";
         }
     }
-    if(modalType == AppUtility.RequestModalType.Edit && Model.Requests[0].ParentQuote?.QuoteStatusID < 3)
+    if(modalType == AppUtility.RequestModalType.Edit && (Model.Requests[0].ParentQuote?.QuoteStatusID == 2 || Model.Requests[0].ParentQuote?.QuoteStatusID == 1))
     {
         hideNoQuote = "d-none";
     }
@@ -62,7 +64,7 @@
             <div class="col-6">
                 <div class="form-group">
                     <label asp-for="Requests[0].ExchangeRate" class="control-label"></label>
-                    <input asp-for="Requests[0].ExchangeRate" class="form-control-plaintext border-bottom " id="exchangeRate" />
+                    <input name="Requests[0].ExchangeRate" value="@Model.Requests[0].ExchangeRate" class="form-control-plaintext border-bottom @markReadOnlyClass " @disabledProperty id="exchangeRate" />
                     <span asp-validation-for="Requests[0].ExchangeRate" class="text-danger-centarix"></span>
                 </div>
             </div>
@@ -377,7 +379,7 @@
     </div>
 
     <input type="hidden" asp-for="Requests[0].IncludeVAT" />
-    @if (Model.Requests[0].RequestStatusID != 6 && Model.ModalType == AppUtility.RequestModalType.Create)
+    @if (Model.Requests[0].RequestStatusID != 6 && Model.ModalType != AppUtility.RequestModalType.Create)
     {
         <div class="col-3">
             <label class="control-label" asp-for="Requests[0].PaymentStatus.PaymentStatusDescription">Terms</label>

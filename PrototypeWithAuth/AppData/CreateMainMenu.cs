@@ -17,8 +17,8 @@ namespace PrototypeWithAuth.AppData
                     menuID = 1,
                     MenuDescription = AppUtility.MenuItems.Requests.ToString(),
                     MenuViewName = "Orders & Inventory",
-                    ControllerName = "",
-                    ActionName = "",
+                    ControllerName = "Requests",
+                    ActionName = "Index",
                     RouteValues = new Microsoft.AspNetCore.Routing.RouteValueDictionary()
                     {
                         {"PageType",  AppUtility.PageTypeEnum.RequestRequest
@@ -36,12 +36,7 @@ namespace PrototypeWithAuth.AppData
                     MenuDescription = AppUtility.MenuItems.Protocols.ToString(),
                     MenuViewName = "Protocols",
                     ControllerName = "Protocols",
-                    ActionName = "ReportsCategories",
-                    RouteValues = new Microsoft.AspNetCore.Routing.RouteValueDictionary()
-                        {
-                        {"PageType", AppUtility.PageTypeEnum.ProtocolsReports },
-                        {"SidebarType", AppUtility.SidebarEnum.WeeklyReports }
-                        },
+                    ActionName = "CurrentProtocols",
                     MenuImageURL = "/images/css/main_menu_icons/protocols.png",
                     SmallMenuImageURL = "/images/css/main_menu_small_icons/protocols_menu_button.png"
                 },
@@ -50,8 +45,8 @@ namespace PrototypeWithAuth.AppData
                     menuID = 3,
                     MenuDescription = AppUtility.MenuItems.Operations.ToString(),
                     MenuViewName = "Operation",
-                    ControllerName = "",
-                    ActionName = "",
+                    ControllerName = "Requests",
+                    ActionName = "Index",
                     RouteValues = new Microsoft.AspNetCore.Routing.RouteValueDictionary()
                     {
                         {"PageType",  AppUtility.PageTypeEnum.OperationsRequest },
@@ -87,8 +82,8 @@ namespace PrototypeWithAuth.AppData
                     menuID = 6,
                     MenuDescription = AppUtility.MenuItems.LabManagement.ToString(),
                     MenuViewName = "Lab Management",
-                    ControllerName = "",
-                    ActionName = "",
+                    ControllerName = "Vendors",
+                    ActionName = "IndexForPayment",
                     MenuImageURL = "/images/css/main_menu_icons/lab.png",
                     SmallMenuImageURL = "/images/css/main_menu_small_icons/lab_managment_menu_button.png"
                 },
@@ -97,8 +92,8 @@ namespace PrototypeWithAuth.AppData
                     menuID = 7,
                     MenuDescription = AppUtility.MenuItems.Accounting.ToString(),
                     MenuViewName = "Accounting",
-                    ControllerName = "",
-                    ActionName = "",
+                    ControllerName = "Requests",
+                    ActionName = "AccountingPayments",
                     MenuImageURL = "/images/css/main_menu_icons/accounting.png",
                     SmallMenuImageURL = "/images/css/main_menu_small_icons/accounting_menu_button.png"
                 },
@@ -107,8 +102,8 @@ namespace PrototypeWithAuth.AppData
                     menuID = 8,
                     MenuDescription = AppUtility.MenuItems.Reports.ToString(),
                     MenuViewName = "Reports",
-                    ControllerName = "",
-                    ActionName = "",
+                    ControllerName = "Expenses",
+                    ActionName = "SummaryPieCharts",
                     MenuImageURL = "/images/css/main_menu_icons/expenses.png",
                     SmallMenuImageURL = "/images/css/main_menu_small_icons/reports_menu_button.png"
                 },

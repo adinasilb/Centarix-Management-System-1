@@ -83,11 +83,11 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { p.CreationDate.ToString("dd'/'MM'/'yyyy") } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Type", Width = 10, Value = new List<string>() { p.ProtocolType.ProtocolTypeDescription } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, Value = new List<string>() { p.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } };
-             yield return new RequestIndexPartialColumnViewModel()
+            yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualProtocol(favoriteProtocol, user, protocolInstance),
+                Icons = GetIconsByIndividualProtocol(favoriteProtocol, user),
                 AjaxID = p.ProtocolID
             };  }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetLastProtocolList()
@@ -97,31 +97,30 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, Value = new List<string>() { p.VersionNumber } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Creator", Width = 10, Value = new List<string>() { p.ApplicationUserCreator.FirstName + " " + p.ApplicationUserCreator.LastName } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, Value = new List<string>() { } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { p.CreationDate.ToString("dd'/'MM'/'yyyy") } };
-           yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, Value = new List<string>() { p.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "End Date", Width = 12, Value = new List<string>() { AppUtility.FormatDate(protocolInstance.EndDate)} };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, Value = new List<string>() { p.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
                 Width = 10,
                 Icons = iconList,
-                AjaxID = p.ProtocolInstance.ProtocolInstanceID
+                AjaxID =protocolInstance.ProtocolInstanceID
             };
         }
-
         private IEnumerable<RequestIndexPartialColumnViewModel> GetMyProtocols()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = "" };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = p.ProtocolID, Width = 15, Value = new List<string>() { p.Name } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, Value = new List<string>() { p.VersionNumber } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, Value = new List<string>() { } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { p.CreationDate.ToString("dd'/'MM'/'yyyy") } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { AppUtility.FormatDate(p.CreationDate)} };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Type", Width = 10, Value = new List<string>() { p.ProtocolType.ProtocolTypeDescription } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, Value = new List<string>() { p.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualProtocol(favoriteProtocol, user, protocolInstance),
+                Icons = GetIconsByIndividualProtocol(favoriteProtocol, user),
                 AjaxID = p.ProtocolID
             };
         }
@@ -132,7 +131,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, Value = new List<string>() { p.VersionNumber } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Creator", Width = 10, Value = new List<string>() { p.ApplicationUserCreator.FirstName + " " + p.ApplicationUserCreator.LastName } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, Value = new List<string>() { } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { p.CreationDate.ToString("dd'/'MM'/'yyyy") } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { AppUtility.FormatDate(p.CreationDate) } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Type", Width = 10, Value = new List<string>() { p.ProtocolType.ProtocolTypeDescription } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, Value = new List<string>() { p.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Icons = iconList, AjaxID = p.ProtocolID };
@@ -141,7 +140,7 @@ namespace PrototypeWithAuth.ViewModels
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualProtocol(favoriteProtocol, user, protocolInstance),
+                Icons = GetIconsByIndividualProtocol(favoriteProtocol, user),
                 AjaxID = p.ProtocolID
             };
         }
@@ -152,18 +151,18 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, Value = new List<string>() { p.VersionNumber } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Creator", Width = 10, Value = new List<string>() { p.ApplicationUserCreator.FirstName + " " + p.ApplicationUserCreator.LastName } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, Value = new List<string>() { } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { p.CreationDate.ToString("dd'/'MM'/'yyyy") } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { AppUtility.FormatDate( p.CreationDate) } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Type", Width = 10, Value = new List<string>() { p.ProtocolType.ProtocolTypeDescription } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, Value = new List<string>() { p.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualProtocol(favoriteProtocol, user, protocolInstance),
+                Icons = GetIconsByIndividualProtocol(favoriteProtocol, user),
                 AjaxID = p.ProtocolID
             };
         }
-        private static List<IconColumnViewModel> GetIconsByIndividualProtocol( FavoriteProtocol favoriteProtocol, ApplicationUser user, ProtocolInstance protocolInstance)
+        private static List<IconColumnViewModel> GetIconsByIndividualProtocol( FavoriteProtocol favoriteProtocol, ApplicationUser user)
         {
             var newIconList = AppUtility.DeepClone<List<IconColumnViewModel>>(iconList);
             //favorite icon
@@ -174,17 +173,17 @@ namespace PrototypeWithAuth.ViewModels
                 var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "#5F79E2", "protocol-favorite protocol-unlike", "Unfavorite");
                 newIconList[favIconIndex] = unLikeIcon;
             }
-            var morePopoverIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("popover-more"));
-            if (morePopoverIndex != -1)
-            {
-                //var newMorePopoverList = AppUtility.DeepClone(newIconList[morePopoverIndex]);
-                var startIndex = newIconList.ElementAt(morePopoverIndex).IconPopovers.FindIndex(ni => ni.Description==AppUtility.PopoverDescription.Start);
-                if(startIndex !=-1 && protocolInstance!=null)
-                {
-                    var continueIcon = new IconPopoverViewModel("icon-play_circle_outline-24px-1", "#4CAF50", AppUtility.PopoverDescription.Continue, "StartProtocol", "Protocols", AppUtility.PopoverEnum.None, "start-protocol-fx");
-                    newIconList[morePopoverIndex].IconPopovers[startIndex] = continueIcon;
-                }
-            }
+            //var morePopoverIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("popover-more"));
+            //if (morePopoverIndex != -1)
+            //{
+            //    //var newMorePopoverList = AppUtility.DeepClone(newIconList[morePopoverIndex]);
+            //    var startIndex = newIconList.ElementAt(morePopoverIndex).IconPopovers.FindIndex(ni => ni.Description==AppUtility.PopoverDescription.Start);
+            //    if(startIndex !=-1 && protocolInstance!=null)
+            //    {
+            //        var continueIcon = new IconPopoverViewModel("icon-play_circle_outline-24px-1", "#4CAF50", AppUtility.PopoverDescription.Continue, "StartProtocol", "Protocols", AppUtility.PopoverEnum.None, "start-protocol-fx");
+            //        newIconList[morePopoverIndex].IconPopovers[startIndex] = continueIcon;
+            //    }
+            //}
             return newIconList;
         }
         private String GetSharedBy( ShareProtocol shareProtocol)

@@ -3,6 +3,7 @@
     $("#myForm").data("validator").settings.ignore = "";
     var valid = $("#myForm").valid();
     console.log("valid form: " + valid)
+    var formdata = new FormData($("#myForm")[0]);
     console.log(formdata);
     if (!valid) {
 
@@ -41,10 +42,15 @@ $(".vat-check").click(function (e) {
     console.log(checked)
     $(this).attr("checked", !checked);
     $(this).val(checked);
+    var classes;
     if ($('#currency').val() === "NIS") {
-        $.fn.CalculatePriceWithVAT('.price-with-vat-shekel', $('.cost').val()); //do for each
+        $('.cost').each(function (index) {
+            $.fn.CalculatePriceWithVAT('.price-with-vat-shekel.' + index, $('.cost.' + index).val());
+        })
     } else {
-        $.fn.CalculatePriceWithVAT('.price-with-vat-dollar', $('.sum-dollars').val());
+        $('.sum-dollars').each(function (index) {
+            $.fn.CalculatePriceWithVAT('.price-with-vat-dollar.' + index, $('.sum-dollars.' + index).val());
+        })
     }
 })
 
@@ -68,12 +74,9 @@ $("#currency").change(function (e) {
     }
 });
 $('.sum-dollars').change(function (e) {
-    var exchangeRate = $('#exchangeRate').val();
-    var costDollars = $('.sum-dollars').val()
-    var shekelPrice = costDollars * exchangeRate;
-    console.log('shekel price: ' + shekelPrice)
     var index = $(this).attr("index");
-    $('.cost.' + index).val(shekelPrice);
+    var costDollars = $('.sum-dollars.' + index).val()
+    $.fn.CalculateShekelPrice(index, costDollars);
     $.fn.CalculatePriceWithVAT('.price-with-vat-dollar.' + index, costDollars);
 });
 $.fn.CalculatePriceWithVAT = function (totalPriceClass, cost) {
@@ -84,9 +87,25 @@ $.fn.CalculatePriceWithVAT = function (totalPriceClass, cost) {
         totalPrice = cost * 1.17;
     }
     console.log(totalPrice)
-    $(totalPriceClass).val(totalPrice);
+    $(totalPriceClass).val(Number(totalPrice).toFixed(2));
 }
 $('.cost').change(function (e) {
     //console.log('shekel cost change function');
     $.fn.CalculatePriceWithVAT('.price-with-vat-shekel.' + $(this).attr("index"), $(this).val());
 })
+$('#exchangeRate').change(function (e) {
+    if ($("#currency").val() === "USD") {
+        $('.sum-dollars').each(function (index) {
+            var costDollars = $('.sum-dollars.' + index).val();
+            $.fn.CalculateShekelPrice(index, costDollars);
+        })
+    }
+})
+
+$.fn.CalculateShekelPrice = function (index, costDollars) {
+    var exchangeRate = $('#exchangeRate').val();
+    console.log(costDollars);
+    var shekelPrice = costDollars * exchangeRate;
+    console.log('shekel price: ' + shekelPrice)
+    $('.cost.' + index).val(shekelPrice);
+}
