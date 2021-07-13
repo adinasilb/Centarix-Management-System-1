@@ -889,7 +889,7 @@ namespace PrototypeWithAuth.Controllers
                         Line = node,
                         Index = count++,
                         LineNumberString = refreshedLines.Where(rl => rl.Line.LineID == node.ParentLineID)?.FirstOrDefault()?.LineNumberString + node.LineNumber + ".",
-                        Functions = functionLine.Where(fl => fl.LineID == node.LineID),
+                        Functions = functionLine.Where(fl => fl.LineID == node.LineID).ToList(),
                         ModalType = modalType,
                         IsLast = parentNodes.IsEmpty(),
                         IsDone = protocolInstance?.IsFinished ?? false,
@@ -1030,7 +1030,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 FunctionLine = functionLine,
                 ModalType = modalType,
-                UniqueGuid = guid
+                UniqueGuid = guid,
+                FunctionIndex = tempLine.Functions.Count()
             };
             AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.FunctionLine;
             string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
@@ -1158,11 +1159,9 @@ namespace PrototypeWithAuth.Controllers
                     if (addFunctionViewModel.IsRemove)
                     {
                         addFunctionViewModel.FunctionLine.IsTemporaryDeleted = true;
-                        _context.Entry(addFunctionViewModel.FunctionLine).State = EntityState.Modified;
                     }
                     else
                     {
-                        await SaveTempFunctionLineAsync(addFunctionViewModel);
                         var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
 
                         switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
@@ -1188,8 +1187,18 @@ namespace PrototypeWithAuth.Controllers
                         }
 
                     }
-                    await _context.SaveChangesAsync();
 
+                    if(tempLine.Functions.Count() < addFunctionViewModel.FunctionIndex)
+                    {
+                        tempLine.Functions[addFunctionViewModel.FunctionIndex] = addFunctionViewModel.FunctionLine; 
+                    }
+                    else
+                    {
+                        tempLine.Functions.Add(addFunctionViewModel.FunctionLine);
+                    }
+                    tempLinesJson.SerializeViewModel(tempLines);
+                    _context.Update(tempLinesJson);
+                    await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
@@ -1198,19 +1207,9 @@ namespace PrototypeWithAuth.Controllers
                     await transaction.RollbackAsync();
                     //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                 }
-                return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = await OrderLinesForViewAsync(line.ProtocolID, addFunctionViewModel.ModalType, addFunctionViewModel.UniqueGuid) });
+                return PartialView("_Lines", await OrderLinesForViewAsync(false, tempLine.Line.ProtocolID, addFunctionViewModel.ModalType, addFunctionViewModel.UniqueGuid));
 
             }
-        }
-
-        private async Task SaveTempFunctionLineAsync(AddFunctionViewModel addFunctionViewModel)
-        {
-            if (addFunctionViewModel.FunctionLine.ID == 0)
-            {
-                addFunctionViewModel.FunctionLine.IsTemporary = true;
-            }
-            _context.Entry(addFunctionViewModel.FunctionLine).State = EntityState.Added;
-            await _context.SaveChangesAsync();
         }
 
         [HttpGet]

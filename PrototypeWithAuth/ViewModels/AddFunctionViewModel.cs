@@ -25,5 +25,6 @@ namespace PrototypeWithAuth.ViewModels
         public bool IsRemove { get; set; }
         public AppUtility.ProtocolModalType ModalType { get; set; }
         public Guid UniqueGuid { get; set; }
+        public int FunctionIndex { get; set; }
     }
 }

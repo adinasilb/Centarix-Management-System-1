@@ -13,7 +13,7 @@ namespace PrototypeWithAuth.ViewModels
         public Line Line { get; set; }
         public string LineNumberString { get; set; }
         public List<LineType> LineTypes { get; set; }
-        public IEnumerable<FunctionLine> Functions { get; set; }
+        public List<FunctionLine> Functions { get; set; }
         public AppUtility.ProtocolModalType ModalType { get; set; }
         public Guid UniqueGuid { get; set; }
         public bool IsDone { get; set; }
