@@ -147,19 +147,21 @@
                 <td colspan="4" rowspan="4" class="borderless-cell">
                     <img src="/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">
                 </td>
+                    <td>Shipping</td>
+                    <td>$ 2.00</td>
                 </tr>
                 <tr class="">
                     <td>Total</td>
-                    <td>$ 20.00</td>
+                    <td>$ 22.00</td>
                 </tr>
                 <tr class="">
                     <td>VAT [17%]</td>
-                    <td>$ 3.40</td>
+                    <td>$ 3.74</td>
                 </tr>
                 <tr class="">
                     <td class="font-weight-bold">Total To Pay</td>
 
-                    <td class="font-weight-bold">$ 23.40</td>
+                    <td class="font-weight-bold">$ 25.74</td>
                 </tr>
             </tbody>
         </table>
@@ -175,6 +177,15 @@
     <br />
     <br />
     <br />
+<div class="m-4" style="width:25%;">
+            <span class="heading-1">
+                Payment Terms:
+            </span><br />
+            <span class="text">
+                
+                &#x2B; 30
+            </span><br />
+        </div>
 </div>
         </div>
 </div>

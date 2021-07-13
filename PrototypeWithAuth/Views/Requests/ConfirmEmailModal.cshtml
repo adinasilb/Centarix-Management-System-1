@@ -48,8 +48,8 @@
                 </div>
                 <script>
                     var today = new Date();
-                    var date = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
-                    document.getElementById("date").innerHTML = date;
+                    var date = moment(today);
+                    document.getElementById("date").innerHTML = date.format("D MMM YYYY");
                 </script>
 
 
