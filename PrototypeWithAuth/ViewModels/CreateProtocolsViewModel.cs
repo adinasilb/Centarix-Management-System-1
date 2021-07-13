@@ -20,7 +20,7 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<MaterialCategory> MaterialCategories { get; set; }
         public Lookup<Material, List<DocumentFolder>> MaterialDocuments { get; set; }
         public List<LineType> LineTypes { get; set; }
-        public IEnumerable<ProtocolsLineViewModel> Lines { get; set; }
+        public ProtocolsLinesViewModel Lines { get; set; }
         public IEnumerable<FunctionType> FunctionTypes { get; set; }
         private int _Tab;
         public int Tab

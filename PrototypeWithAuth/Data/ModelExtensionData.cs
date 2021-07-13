@@ -2924,7 +2924,16 @@ namespace PrototypeWithAuth.Data
                     IconActionClass = "add-file-to-line",
                     DescriptionEnum = "AddFile"
                 }
-          );
+           );
+
+           modelBuilder.Entity<GlobalInfo>().HasData(             
+               new GlobalInfo
+               {
+                   ID = 1,
+                   GlobalInfoType = AppUtility.GlobalInfoType.LastProtocolLine.ToString(),
+                   Date = DateTime.Now
+               }
+           );
         }
     }
 }

@@ -10,7 +10,6 @@ namespace PrototypeWithAuth.Models
     public class Line : LineBase
     {
         public  Line ParentLine { get; set; }
-        public bool IsTemporary { get; set; }
         public bool IsTemporaryDeleted { get; set; }
         public IEnumerable<LineChange> LineChange { get; set; }
     }

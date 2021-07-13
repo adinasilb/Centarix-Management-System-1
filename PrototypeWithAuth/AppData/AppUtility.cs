@@ -167,7 +167,7 @@ namespace PrototypeWithAuth.AppData
 
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
         { Request, Resource, Protocol }
-        public enum GlobalInfoType { ExchangeRate, LoginUpdates }
+        public enum GlobalInfoType { ExchangeRate, LoginUpdates, LastProtocolLine }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
