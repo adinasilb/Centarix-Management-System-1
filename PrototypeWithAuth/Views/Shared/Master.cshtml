@@ -1240,7 +1240,6 @@
         }
 
         $.fn.AddTempRequestHiddenFors = function (guid, selector) {
-            alert("in $.fn.AddTempRequestHiddenFors : " + guid);
             $.ajax({
                 async: true,
                 url: "/Requests/_TempRequestHiddenFors?GUID=" + guid,

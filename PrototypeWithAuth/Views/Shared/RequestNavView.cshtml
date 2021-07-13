@@ -460,7 +460,6 @@
                 url = $(this).attr("href")
             }
             url = encodeURIComponent(url)
-            alert("GUID: " + $("#GUID").val());
             $itemurl = "/Requests/ConfirmExit/?TempRequestGUID=" + $("#GUID").val() +"&MenuItem=" + $("#masterSectionType").val() + "&url=" + url;
             console.log($itemurl);
             $.fn.CloseModal("confirm-exit");
