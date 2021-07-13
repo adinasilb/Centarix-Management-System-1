@@ -1430,15 +1430,17 @@ namespace PrototypeWithAuth.Controllers
                 {
                     try
                     {
+                        bool hasShippingOnPayment;
                         if (termsViewModel.ParentRequest.Shipping == 0)
                         {
                             termsViewModel.ParentRequest.IsShippingPaid = true;
+                            hasShippingOnPayment = true;
                         }
                         else
                         {
                             termsViewModel.ParentRequest.IsShippingPaid = false;
+                            hasShippingOnPayment = false;
                         }
-                        var hasShippingOnPayment = false;
                         foreach (var tempRequest in newTRLVM.TempRequestViewModels)
                         {
                             tempRequest.Request.PaymentStatusID = termsViewModel.SelectedTerm;
