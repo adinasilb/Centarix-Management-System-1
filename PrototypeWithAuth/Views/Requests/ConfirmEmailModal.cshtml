@@ -25,7 +25,7 @@
 
             <div class="modal-header pb-0 border-bottom-0">
                 <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" 
-                        onclick="$('.confirm-email').html(''); $.fn.AddTempRequestHiddenFors($('#TempRequestListViewModel_GUID').val(), '.termsModal .temprequesthiddenfors');">
+                        onclick="$('.confirm-email').html(''); $.fn.AddTempRequestHiddenFors('.termsModal .temprequesthiddenfors');">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -43,7 +43,7 @@
                         <input type="submit" class="custom-button custom-button-font @bcColor between-button-margin complete-order" asp-action="ConfirmEmailModal" value="Confirm & Send Email" />
 
                         <input type="button" class="custom-cancel custom-button cancel-email"  asp-action="CancelEmailModal @bcColor" value="Cancel Email" 
-                               onclick="$('.confirm-email').html(''); $.fn.AddTempRequestHiddenFors($('#TempRequestListViewModel_GUID').val(), '.termsModal .temprequesthiddenfors');"/>
+                               onclick="$('.confirm-email').html(''); $.fn.AddTempRequestHiddenFors('.termsModal .temprequesthiddenfors');"/>
                     </div>
                 </div>
                 <script>

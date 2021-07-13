@@ -42,7 +42,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding reorderForm">
-                @Html.HiddenFor(m => m.RequestItemViewModel.TempRequestListViewModel.GUID) @*for reloading the partial view*@
+                <input type="hidden" asp-for="RequestItemViewModel.TempRequestListViewModel.GUID" class="hidden-guid" /> @*for reloading the partial view*@
 
                 @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.RequestItemViewModel.TempRequestListViewModel); }
                 @*
@@ -401,7 +401,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    $(".temprequesthiddenfors").remove();
+                    $(".modal .temprequesthiddenfors").html('');
                     //if (orderType == 'AddToCart') {
                     //    $("_IndexTableData").html(data);
                     //    $.fn.CloseModal('reorder-item');

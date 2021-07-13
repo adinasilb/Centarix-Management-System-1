@@ -202,14 +202,14 @@
     });
     $(".cancel-order").click(function (e) {
         e.preventDefault();
-        //alert("in cancel order");
-        $.fn.CloseModal('step-1');
+        console.log("in cancel order");
         var selector = '.temprequesthiddenfors';
-        if ($('#RequestIndexObject_IsReorder').val() === 'true') {
+        if ($('#RequestIndexObject_IsReorder').attr('value') === 'True') {
             selector = '.modal .temprequesthiddenfors';
         }
-        console.log('selector')
-        $.fn.AddTempRequestHiddenFors($("#TempRequestListViewModel_GUID").val(), selector);
+        console.log(selector);
+        $.fn.CloseModal('step-1');
+        $.fn.AddTempRequestHiddenFors(selector);
     });
 </script>
 
