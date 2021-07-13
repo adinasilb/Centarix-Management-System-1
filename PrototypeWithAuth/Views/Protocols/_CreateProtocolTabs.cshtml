@@ -185,7 +185,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
     <div class="lines">
         <div class="heading-1">@Model.Protocol.Name</div>
         <div class="_Lines">
-            @{await Html.RenderPartialAsync("_Lines", new ProtocolsLinesViewModel { Lines = Model.TempLines.ToList() });}
+            @{await Html.RenderPartialAsync("_Lines",  Model.Lines );}
         </div>
 
 
