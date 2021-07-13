@@ -4214,7 +4214,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 SectionType = MenuItem,
                 URL = url,
-                GUID = TempRequestGUID == Guid.NewGuid().ToString() || TempRequestGUID == "undefined" ? Guid.NewGuid() : Guid.Parse(TempRequestGUID)
+                GUID = TempRequestGUID == Guid.NewGuid().ToString() || TempRequestGUID == "undefined" || TempRequestGUID == null ? Guid.NewGuid() : Guid.Parse(TempRequestGUID)
             };
             return PartialView(confirmExit);
         }
