@@ -276,48 +276,48 @@ namespace PrototypeWithAuth.AppData
                     break;
                 case AppUtility.MenuItems.Protocols:
                     ActiveClasses = " text-dark protocols-filter";
-                    if (pageType == AppUtility.PageTypeEnum.ProtocolsWorkflow) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Workflow",
-                        Controller = "Protocols",
-                        Action = "CurrentProtocols",
-                        RouteValues = new RouteValueDictionary()
-                        {
-                        {"PageType", AppUtility.PageTypeEnum.ProtocolsWorkflow },
-                        {"SidebarType", AppUtility.SidebarEnum.CurrentProtocols }
-                        },
-                        Classes = AllClasses,
-                        ID = ""
-                    });
-                    if (pageType == AppUtility.PageTypeEnum.ProtocolsProtocols) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Protocols",
-                        Controller = "Protocols",
-                        Action = "Index",
-                        RouteValues = new RouteValueDictionary()
-                        {
-                        {"PageType", AppUtility.PageTypeEnum.ProtocolsProtocols },
-                        {"SidebarType", AppUtility.SidebarEnum.List }
-                        },
-                        Classes = AllClasses,
-                        ID = ""
-                    });
-                    if (pageType == AppUtility.PageTypeEnum.ProtocolsCreate) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Create",
-                        Controller = "Protocols",
-                        Action = "ResearchProtocol",
-                        RouteValues = new RouteValueDictionary()
-                        {
-                        {"PageType", AppUtility.PageTypeEnum.ProtocolsCreate},
-                        {"SidebarType", AppUtility.SidebarEnum.ResearchProtocol }
-                        },
-                        Classes = AllClasses,
-                        ID = ""
-                    });
+                    //if (pageType == AppUtility.PageTypeEnum.ProtocolsWorkflow) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    //MainMenuItems.Add(new MenuItems()
+                    //{
+                    //    Description = "Workflow",
+                    //    Controller = "Protocols",
+                    //    Action = "CurrentProtocols",
+                    //    RouteValues = new RouteValueDictionary()
+                    //    {
+                    //    {"PageType", AppUtility.PageTypeEnum.ProtocolsWorkflow },
+                    //    {"SidebarType", AppUtility.SidebarEnum.CurrentProtocols }
+                    //    },
+                    //    Classes = AllClasses,
+                    //    ID = ""
+                    //});
+                    //if (pageType == AppUtility.PageTypeEnum.ProtocolsProtocols) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    //MainMenuItems.Add(new MenuItems()
+                    //{
+                    //    Description = "Protocols",
+                    //    Controller = "Protocols",
+                    //    Action = "Index",
+                    //    RouteValues = new RouteValueDictionary()
+                    //    {
+                    //    {"PageType", AppUtility.PageTypeEnum.ProtocolsProtocols },
+                    //    {"SidebarType", AppUtility.SidebarEnum.List }
+                    //    },
+                    //    Classes = AllClasses,
+                    //    ID = ""
+                    //});
+                    //if (pageType == AppUtility.PageTypeEnum.ProtocolsCreate) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    //MainMenuItems.Add(new MenuItems()
+                    //{
+                    //    Description = "Create",
+                    //    Controller = "Protocols",
+                    //    Action = "ResearchProtocol",
+                    //    RouteValues = new RouteValueDictionary()
+                    //    {
+                    //    {"PageType", AppUtility.PageTypeEnum.ProtocolsCreate},
+                    //    {"SidebarType", AppUtility.SidebarEnum.ResearchProtocol }
+                    //    },
+                    //    Classes = AllClasses,
+                    //    ID = ""
+                    //});
                     if (pageType == AppUtility.PageTypeEnum.ProtocolsReports) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
@@ -332,20 +332,20 @@ namespace PrototypeWithAuth.AppData
                         Classes = AllClasses,
                         ID = ""
                     });
-                    if (pageType == AppUtility.PageTypeEnum.ProtocolsResources) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Resources",
-                        Controller = "Protocols",
-                        Action = "Library",
-                        RouteValues = new RouteValueDictionary()
-                        {
-                        {"PageType", AppUtility.PageTypeEnum.ProtocolsResources },
-                        {"SidebarType", AppUtility.SidebarEnum.Library }
-                        },
-                        Classes = AllClasses,
-                        ID = ""
-                    });
+                    //if (pageType == AppUtility.PageTypeEnum.ProtocolsResources) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    //MainMenuItems.Add(new MenuItems()
+                    //{
+                    //    Description = "Resources",
+                    //    Controller = "Protocols",
+                    //    Action = "Library",
+                    //    RouteValues = new RouteValueDictionary()
+                    //    {
+                    //    {"PageType", AppUtility.PageTypeEnum.ProtocolsResources },
+                    //    {"SidebarType", AppUtility.SidebarEnum.Library }
+                    //    },
+                    //    Classes = AllClasses,
+                    //    ID = ""
+                    //});
                     break;
                 case AppUtility.MenuItems.Reports:
                     ActiveClasses = " text-dark expenses-filter";
