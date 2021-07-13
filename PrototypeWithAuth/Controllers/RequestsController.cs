@@ -4506,6 +4506,23 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
 
+            PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
+            {
+                Requests = requestsToPay,
+                AccountingEnum = accountingPaymentsEnum,
+                Payment = new Payment(),
+                PaymentTypes = _context.PaymentTypes.Select(pt => pt).ToList(),
+                CompanyAccounts = _context.CompanyAccounts.Select(ca => ca).ToList(),
+                ShippingToPay = await GetShippingsToPay(requestsToPay)
+            };
+
+            //check if payment status type is installments to show the installments in the view model
+
+            return PartialView(paymentsPayModalViewModel);
+        }
+
+        public async Task<List<CheckboxViewModel>> GetShippingsToPay(List<Request> requestsToPay)
+        {
             List<CheckboxViewModel> shippings = new List<CheckboxViewModel>();
             foreach (var r in requestsToPay)
             {
@@ -4522,20 +4539,7 @@ namespace PrototypeWithAuth.Controllers
                     });
                 }
             }
-
-            PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
-            {
-                Requests = requestsToPay,
-                AccountingEnum = accountingPaymentsEnum,
-                Payment = new Payment(),
-                PaymentTypes = _context.PaymentTypes.Select(pt => pt).ToList(),
-                CompanyAccounts = _context.CompanyAccounts.Select(ca => ca).ToList(),
-                ShippingToPay = shippings
-            };
-
-            //check if payment status type is installments to show the installments in the view model
-
-            return PartialView(paymentsPayModalViewModel);
+            return shippings;
         }
 
         [HttpPost]
@@ -4651,7 +4655,8 @@ namespace PrototypeWithAuth.Controllers
                 Invoice = new Invoice()
                 {
                     InvoiceDate = DateTime.Today
-                }
+                },
+                ShippingToPay = await GetShippingsToPay(requestToPay)
             };
 
 
