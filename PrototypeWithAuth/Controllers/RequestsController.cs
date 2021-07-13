@@ -1470,6 +1470,10 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 await SaveTempRequestAndCommentsAsync(tempRequest);
                             }
+                            else if (SaveUsingTempRequest)
+                            {
+                                tempRequest.Payments = new List<Payment>();
+                            }
                             for (int i = 0; i < tempRequest.Request.Installments; i++)
                             {
                                 var payment = new Payment()
@@ -1490,7 +1494,7 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 if (SaveUsingTempRequest)
                                 {
-                                    tempRequest.Payments = new List<Payment>() { payment };
+                                    tempRequest.Payments.Add(payment);
                                 }
                                 else
                                 {
