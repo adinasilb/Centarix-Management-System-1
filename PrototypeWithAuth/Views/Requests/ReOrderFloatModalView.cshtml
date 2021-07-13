@@ -42,6 +42,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding reorderForm">
+                @Html.HiddenFor(m => m.RequestItemViewModel.TempRequestListViewModel.GUID) @*for reloading the partial view*@
 
                 @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.RequestItemViewModel.TempRequestListViewModel); }
                 @*
