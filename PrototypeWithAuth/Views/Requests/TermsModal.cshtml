@@ -36,6 +36,8 @@
         e.preventDefault();
         //alert("in cancel order");
         $.fn.CloseModal('terms');
-        $.fn.AddTempRequestHiddenFors($("#TempRequestListViewModel_GUID").val(), '.modal .temprequesthiddenfors');
+        if ($("#masterSectionType").val() != "LabManagement") {
+            $.fn.AddTempRequestHiddenFors($("#TempRequestListViewModel_GUID").val(), '.modal .temprequesthiddenfors');
+        }
     })
 </script>
