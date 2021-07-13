@@ -34,7 +34,7 @@
             shekelSelected = "";
         }
     }
-    if(modalType == AppUtility.RequestModalType.Edit && Model.Requests[0].ParentQuote?.QuoteStatusID < 3)
+    if(modalType == AppUtility.RequestModalType.Edit && (Model.Requests[0].ParentQuote?.QuoteStatusID == 2 || Model.Requests[0].ParentQuote?.QuoteStatusID == 1))
     {
         hideNoQuote = "d-none";
     }

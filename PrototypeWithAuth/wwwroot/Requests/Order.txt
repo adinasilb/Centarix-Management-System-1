@@ -1,0 +1,1391 @@
+
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PurchaseOrderView - Centarix Management System</title>
+
+
+    <link rel="stylesheet" href="/css/site.css?v=iccdriGhVDPlXrWCj35XWO5_vpSamqSHLwWpaHdrSjg" />
+    <link rel="stylesheet" href="/css/Master.css?v=D0vt1CZwOx6N4WU9LRMdMzdXGnZH6nbVqdXyjQ8dxEI" />
+    <link href="/css/forms.css" rel="stylesheet" />
+    <link href="/css/elixir-fonts/elixir-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/jquery-ui.min.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- Bootstrap core CSS -->
+    <link href="/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/bootstrap-reboot.css" rel="stylesheet" />
+    <!-- Material Design Bootstrap -->
+    <link href="/lib/bootstrap/dist/css/mdb.min.css" rel="stylesheet">
+
+    <link href="/lib/bootstrap/dist/css/addons/datatables-select.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/addons/datatables-select2.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/addons/datatables.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/addons/datatables2.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/addons/directives.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/addons/flag.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/addons/jquery.zmd.hierarchical-display.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/addons/rating.min.css" rel="stylesheet" />
+
+    <link href="/lib/bootstrap/dist/css/addons-pro/cards-extended.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/addons-pro/chat.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/addons-pro/multi-range.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/addons-pro/simple-charts.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/addons-pro/steppers.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/addons-pro/timeline.min.css" rel="stylesheet" />
+
+    <link href="/lib/bootstrap/dist/css/modules/accordion-extended.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/modules/animations-extended.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/modules/lightbox.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/modules/megamenu.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/modules/parallax.min.css" rel="stylesheet" />
+    <link href="/css/email.multiple.css" rel="stylesheet" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+
+<body style="display:none" class="body">
+
+    <div class="center" role="status" id="loading" style="        z-index: 9999;
+        left: calc(960px - 182.5px) !important;
+        width: fit-content;
+        display: none;">
+        <img src="/images/css/Loading/centarix_loading3.gif" />
+    </div>
+    <script src="/js/site.js?v=KYfDrQY8zfna_vcaNgUBoOT0Um096uBoTQWcV9Sz770"></script>
+    <div class="request_nav_body"> 
+    <!--<head>-->
+        <!-- Required meta tags -->
+        <!--<meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+
+        <!-- Bootstrap CSS -->
+        <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+        <title>Quote Summary</title>
+    </head>-->
+        <div>
+
+<div style="padding:1rem 2rem">
+    <header class="page-header">
+        <div class="row">
+            <div class="col-md-6 company-logo">
+                <br />
+                <img src="/images/centarix_logo-02.png" width="400" alt="Centarix Logo">
+            </div>
+            <div class="col-md-3 offset-3 pt-3 company-info">
+                <span style="font-weight: 700; font-size:1.5rem;">Centarix Biotech</span><br>
+                <span>ID: 51565512</span><br>
+                <span>Hamarpeh 3, Jerusalem</span><br>
+                <span>Tel: 073-7896888</span>
+            </div>
+        </div>
+        <hr>
+    </header>
+    <div class="row">
+        <div class="col-6">
+                <span style="font-weight: 700; font-size:2rem;">Purchase Order: 166</span>
+        </div>
+        <div class="col-3 offset-3 text-center">
+            <span style="font-weight:500" id="date"></span>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-4">
+            <div class="vendor-info">
+                <span class="heading-1">Beakers and More (Dollar)</span><br>
+                <span>ID: 4564879</span><br>
+                <span>New York</span><br>
+                <span>Tel: 7189999999</span>
+            </div>
+        </div>
+        <div class="col-6 offset-2">
+            <div class="note-message p-4 pl-5">
+
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row pl-3">
+        <span class="text"></span>
+    </div><br>
+    <div class="row">
+        <table class="table confirm-table">
+            <thead style="background-color: #D0001C; color: #ffffff;">
+                <tr>
+                        <th style="width:30%;">Items</th>
+                        <th style="width:15%;">SKU</th>
+                        <th style="width:8%;">Units</th>
+                            <th style="width:16%;">Price</th>
+                            <th style="width:15%;">Discount</th>
+                            <th style="width:16%;">Total</th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+                        <tr>
+                            <td style="font-weight: 500;">syringes</td>
+                            <td>8978798</td>
+                                <td>2</td>
+                                <td class="">$ 2.50</td>
+                            <td class="">0.00%</td>
+                            <td class="">$ 5.00</td>
+                        </tr>
+                
+            <tr>
+                <td colspan="4" rowspan="4" class="borderless-cell">
+                    <img src="/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">
+                </td>
+                </tr>
+                <tr class="">
+                    <td>Total</td>
+                    <td>$ 5.00</td>
+                </tr>
+                <tr class="">
+                    <td>VAT [17%]</td>
+                    <td>$ 0.85</td>
+                </tr>
+                <tr class="">
+                    <td class="font-weight-bold">Total To Pay</td>
+
+                    <td class="font-weight-bold">$ 5.85</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+<div class="m-4" style="width:25%;">
+            <span class="heading-1">
+                Payment Terms:
+            </span><br />
+            <span class="text">
+                
+                &#x2B; 30
+            </span><br />
+        </div>
+</div>
+        </div>
+</div>
+    <div class="modals">
+
+<div class="two-factor-expired"></div>
+<div class="add-invoice"></div>
+<div class="adjust-payments"></div> 
+<div class="confirm-edit"></div>
+<div class="confirm-exit"></div>
+<div class="confirm-email"></div>
+<div class="documents-delete"></div>
+<div class="documents"></div>
+<div class="edit-quote"></div>
+<div class="payments-pay"></div>
+<div class="payments-invoice"></div>
+<div class="received-item"></div>
+<div class="reorder-item"></div>
+<div class="terms"></div>
+<div class="upload-order"></div>
+<div class="upload-quote"></div>
+<div class="step-1"></div>
+<div class="step-2"></div>
+<div class="cart-total"></div>
+<div class="visual-zoom"></div>
+<div class="suspend-user"></div>
+<div class="user-picture"></div>
+<div class="deny-approval"></div>
+<div class="delete-item"></div>
+<div class="history-item"></div>
+<div class="edits"></div>
+<div class="add-location"></div>
+<div class="update-time-worked"></div>
+<div class="off-day"></div>
+<div class="hours-awaiting-approval"></div>
+<div class="share-request"></div>
+<div class="add-material"></div>
+<div class="late-order"></div>
+<div class="add-resources"></div>
+<div class="material-info"></div>
+<div class="resource-notes-modal"></div>
+<div class="share-modal"></div>
+<div class="new-report"></div>
+<div class="confirm-archive"></div>
+<div class="save-report"></div>
+<div class="protocol-details"></div>
+<div class="add-function"></div>    </div>
+
+
+    <!--  SCRIPTS  -->
+    <!-- JQuery -->
+
+    <script src="/lib/jquery/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/lib/bootstrap/dist/js/jquery.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="/js/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="/lib/bootstrap/dist/js/mdb.min.js"></script>
+
+    <!-- Multiple email js -->
+    <script src="/js/jquery.email.multiple.js"></script>
+
+
+    <script type="module" src="/lib/bootstrap/dist/js/addons/datatables-select.min.js"></script>
+    <script type="module" src="/lib/bootstrap/dist/js/addons/datatables-select2.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/addons/datatables.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/addons/datatables2.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/addons/directives.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/addons/flag.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/addons/imagesloaded.pkgd.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/addons/jquery.zmd.hierarchical-display.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/addons/masonry.pkgd.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/addons/rating.min.js"></script>
+
+    <script src="/lib/bootstrap/dist/js/addons-pro/cards-extended.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/addons-pro/chat.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/addons-pro/multi-range.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/addons-pro/simple-charts.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/addons-pro/steppers.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/addons-pro/timeline.min.js"></script>
+
+    <script src="/lib/bootstrap/dist/js/modules/dropdown/dropdown.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/dropdown/dropdown-searchable.min.js"></script>
+
+
+
+    <script src="/lib/bootstrap/dist/js/modules/accordion-extended.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/animations-extended.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/buttons.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/cards.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/character-counter.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/chips.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/collapsible.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/file-input.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/forms-free.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/lightbox.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/mdb-autocomplete.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/megamenu.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/parallax.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/preloading.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/range-input.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/scrolling-navbar.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/sidenav.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/smooth-scroll.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/sticky.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/treeview.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/modules/wow.min.js"></script>
+
+    <script src="/lib/bootstrap/dist/src/js/free/forms-free.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/free/scrolling-navbar.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/free/treeview.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/free/wow.js"></script>
+
+    <script src="/lib/bootstrap/dist/src/js/pro/dropdown/dropdown-searchable.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/pro/dropdown/dropdown.js"></script>
+
+
+
+    <script type="module" src="/lib/bootstrap/dist/src/js/pro/material-select/material-select-view-renderer.js"></script>
+    <script type="text/javascript" src="/lib/bootstrap/dist/src/js/pro/material-select/material-select-view.js"></script>
+    <script type="text/javascript" src="/lib/bootstrap/dist/src/js/pro/material-select/material-select.js"></script>
+
+    <script src="/lib/bootstrap/dist/src/js/pro/buttons.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/pro/cards.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/pro/character-counter.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/pro/chips.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/pro/collapsible.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/pro/file-input.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/pro/mdb-autocomplete.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/pro/preloading.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/pro/range-input.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/pro/sidenav.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/pro/sidenav2.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/pro/smooth-scroll.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/pro/sticky.js"></script>
+
+    <script src="/lib/bootstrap/dist/src/js/vendor/addons/datatables-select.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/addons/datatables-select2.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/addons/datatables.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/addons/datatables2.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/addons/imagesloaded.pkgd.min.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/addons/jquery.zmd.hierarchical-display.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/addons/masonry.pkgd.min.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/addons/rating.js"></script>
+
+    <script src="/lib/bootstrap/dist/src/js/vendor/addons-pro/chat.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/addons-pro/multi-range.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/addons-pro/simple-charts.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/addons-pro/steppers.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/addons-pro/timeline.js"></script>
+
+    <script src="/lib/bootstrap/dist/src/js/vendor/free/bs-custom-file-input.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/free/chart.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/free/chartjs-datalabels.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/free/enhanced-modals.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/free/jquery.easing.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/free/waves.js"></script>
+
+    <script src="/lib/bootstrap/dist/src/js/vendor/pro/jarallax-video.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/pro/jarallax.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/pro/jquery.sticky.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/pro/lightbox.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/pro/ofi.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/pro/scrollbar.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/pro/toastr.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/pro/vector-map-world-mill.js"></script>
+    <script src="/lib/bootstrap/dist/src/js/vendor/pro/vector-map.js"></script>
+    <script type="text/javascript" src="/lib/canvasjs.min.js"></script>
+    <script src="/js/charts/googleCharts.js"></script>
+
+    <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <script type="text/javascript" src="/js/popper.min.js"></script>
+    <script src="/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" type="text/javascript"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/additional-methods.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/additional-methods.min.js"></script>
+    <script src="/js/moment.js"></script>
+    <script src="/js/moment.min.js"></script>
+
+    <script>
+
+        $.fn.setUpChartDDlPlaceholders = function () {
+            $("#select-options-SelectedCategoryTypes li:first").hide()
+            $("#select-options-VendorCategoryTypes li:first").hide()
+            $("#select-options-SelectedYears li:first").hide()
+            $("#select-options-SelectedMonths li:first").hide()
+            $("#select-options-SelectedProjects li:first").hide()
+            $("#select-options-SelectedSubProjects li:first").hide()
+            $("#select-options-SelectedEmployees li:first").hide()
+            $("#select-options-parentlistMulitple li:first").hide()
+            $("#select-options-sublist li:first").hide()
+            $("#select-options-SelectedVendors li:first").hide()
+        }
+        $.fn.ChangeCheckboxesToFilledInWithoutMDB = function () {
+            console.log("in change checkboxes to filled in");
+            var dropdown = $(".multiple-select-dropdown li span input.form-check-input");
+            dropdown.addClass("filled-in");
+            $(".multiple-select-dropdown li span").replaceWith(function () {
+                return "<div class='form-check pl-0 py-2'>" + this.innerHTML + "</div>";
+            });
+            $(".multiple-select-dropdown li").each(function () {
+                if ($(this).attr("aria-selected") == "true") {
+                    $(this).children(".form-check").children("input[type='checkbox']").attr('checked', 'checked');
+                }
+            });
+        };
+
+        $.fn.ChangeCheckboxesToFilledIn = function () {
+            console.log("in change checkboxes to be filled in");
+            if ($(".setupdropdowns").val()) {
+                $.fn.SetUpDropdowns();
+            }
+            $('.mdb-select').materialSelect();
+            $.fn.ChangeCheckboxesToFilledInWithoutMDB();
+        };
+
+
+        $.fn.CallPage = function (itemurl, $type) {
+            console.log("in call page function");
+            //delete existing modals
+            $('.modal').replaceWith('');
+            $(".modal-backdrop").remove();
+            $.ajax({
+                async: true,
+                url: itemurl,
+                type: 'GET',
+                cache: true,
+                success: function (data) {
+                    $("#loading").hide();
+                    //console.log("success!");
+                    var modal = $(data);
+                    $('body').append(modal);
+                    //replaces the modal-view class with the ModalView view
+                    //$(".modal-view").html(data);
+                    //turn off data dismiss by clicking out of the box and by pressing esc
+                    $(".modal-view").modal({
+                        backdrop: true,
+                        keyboard: false,
+                    });
+                    //shows the modal
+                    $(".modal").modal('show');
+                    //reset so do not open the modal again
+                    $('#tduploadquotes').val('');
+                    $('#tduploadorders').val('');
+                    $('#tdprconfirmemail').val('');
+                    $('#tdconfirmemail').val('');
+                    $("#tdterms").val('')
+                    //$.fn.OnOpenModalView();
+                    $(".termsModal").modal('show');
+
+
+
+                }
+
+
+            });
+        }
+
+        $(".search-link").on("click", function () {
+            $('#request-search a:first').tab('show');
+        });
+
+
+
+
+        $(".load-confirm-delete-quote").on("click", function (e) {
+            console.log("in confirm delete");
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "/Requests/DeleteModal/?id=" + $(this).val(); // this is old code: + "&isQuote=true" + "&SectionType=" + $(this).attr('name');
+            $.fn.CallPageRequest($itemurl, "delete");
+            return false;
+        });
+
+
+
+        $(".js-go-to-controller").on("click", function (e) {
+            console.log("inside of js-go-to-controller");
+            e.preventDefault();
+            e.stopPropagation();
+            var $itemurl = "/Requests/ConfirmEmailModal";
+            $.fn.CallPageRequest($itemurl, "email");
+            return false;
+        });
+
+        $(".order-late").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $("#loading").show();
+        var $itemurl = "/Requests/OrderLateModal/?id=" + $(this).val();
+        $.fn.CallOrderLateModal($(this).val());
+        return false;
+    });
+
+    $.fn.CallOrderLateModal = function (id) {
+        console.log("in call modal, id: " + id);
+        $('#loading').show();
+        //var url = /OrderLate/Requests;
+        var url = "/Requests/OrderLateModal/?id=" + id;
+        $.ajax({
+            async: true,
+            type: 'GET',
+            cache: false,
+            url: url, 
+            //data: id,
+            //dataType: "string",
+            success: function (data) {
+                $('#loading').hide();
+                $.fn.OpenModal('modal','late-order', data)
+            }
+
+        });
+        return false;
+    };
+
+
+        function enableMarkReadonly(element) {
+            console.log("in if details");
+            $('.mark-readonly').attr("disabled", false);
+            $('.mark-readonly').removeClass("disabled");
+            $(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
+            //TODO: add in mark-readonly fields for subunits
+            //$.fn.CheckUnitsFilled();
+            //$.fn.CheckSubUnitsFilled();
+            $('.mark-edditable').data("val", true);
+            $('.edit-mode-switch-description').text("Edit Mode On");
+            $('.turn-edit-on-off').attr('name', 'edit');
+            $('.location-icon').removeClass('d-none');
+
+            //turn off document modals
+            if ($(element).hasClass('operations') || $(element).hasClass('orders')) {
+                console.log("orders operations");
+               // $.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist');
+                //$.fn.EnableMaterialSelect('#sublist', 'select-options-sublist');
+                $.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList');
+                $.fn.EnableMaterialSelect('#currency', 'select-options-currency');
+                $.fn.EnableMaterialSelect('#operationsCategory', 'select-options-operationsCategory');
+                $.fn.EnableMaterialSelect('#operationsSubcategory', 'select-options-operationsSubcategory');
+            }
+            if ($(element).hasClass('orders')) {
+                console.log("orders");
+                $.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
+                $.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
+                $.fn.EnableMaterialSelect('#unitTypeID', 'select-options-unitTypeID');
+                console.log($("#subSubUnitTypeID"))
+                if ($("#subSubUnitTypeID").hasClass('mark-readonly')) {
+                    $.fn.EnableSubSubUnits();
+                    $.fn.ChangeSubSubUnitDropdown();
+                }
+                console.log($("#subUnitTypeID"))
+                if ($("#subUnitTypeID").hasClass('mark-readonly')) {
+                    console.log('enabling');
+                    $.fn.EnableSubUnits();
+                    $.fn.ChangeSubUnitDropdown();
+                }
+                if ($("#quoteStatus").val() == "1" || $("#quoteStatus").val() == "2") {
+                    console.log("no quote")
+                    $(".requestPriceQuote").prop("disabled", true);
+                }
+            }
+            if ($(element).hasClass('suppliers') || $(element).hasClass('accounting')) {
+                $.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
+            }
+            if ($(element).hasClass('users')) {
+                $.fn.EnableMaterialSelect('#job-subcategory', 'select-options-job-subcategory');
+                $.fn.EnableMaterialSelect('#NewEmployee_JobSubcategoryType_JobCategoryTypeID', 'select-options-NewEmployee_JobSubcategoryType_JobCategoryTypeID');
+                $.fn.EnableMaterialSelect('#NewEmployee_DegreeID', 'select-options-NewEmployee_DegreeID');
+                $.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
+                $.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
+            }
+            if ($(element).hasClass('protocols')) {
+
+                $(".mark-readonly").attr("disabled", false);
+                $("div.mark-readonly").attr("contenteditable", true);
+                $('.open-document-modal').attr("data-val", true);
+                $.fn.EnableMaterialSelect('#protocolParentList', 'select-options-protocolParentList');
+                $.fn.EnableMaterialSelect('#protocolSubList', 'select-options-protocolSubList');
+                $(".Material").addClass("saveProtocol");
+                $(".Protocols").addClass("saveProtocol");
+                var modalType = $(".modalType").val();
+                $("." + modalType).addClass("d-none")
+                var attrString = "[modaltype=" + modalType + "]";
+                console.log(attrString);
+                $("[modaltype = " + modalType + "]").attr("modaltype", "Edit");
+                $(".modalType").val("Edit");
+                modalType = $(".modalType").val();
+                $("." + modalType).removeClass("d-none")
+
+            }
+        }
+
+
+        $.fn.CallPageRequest = function ($itemurl, $type) {
+            console.log("in call page function");
+            console.log("itemurl " + $itemurl);
+            console.log('type '+ $type);
+            //delete existing modals
+            //$('.modal:not(#visualZoomModal)').replaceWith('');
+            //$(".modal-backdrop").remove();
+            $('#loading').show();
+            $.ajax({
+                async: true,
+                url: $itemurl,
+                type: 'GET',
+                cache: false,
+
+                success: function (data) {
+                    $('#loading').hide();
+                    console.log("success!");
+                    var modal = $(data);
+                    switch ($type) {
+                        case "details":
+                            //$.fn.OnOpenModalView();
+                            $.fn.OpenModal('modal', 'edits', modal)
+                            $.fn.LoadEditModalDetails();
+                            $('.modal-content a:first').tab('show');
+                            $("[data-toggle='tooltip']").tooltip();
+
+                            break;
+                        case "reorder":
+                            $.fn.OpenModal('reorderModal', 'reorder-item', modal)
+                            //$.fn.OnOpenModalView();
+                            $("#cost").trigger('change');
+                            $(".reorderModal .mdb-select").materialSelect();
+                            //$.fn.CheckCurrency();
+                            break;
+                        case "summary":
+                            //$.fn.OnOpenModalView();
+                            $.fn.OpenModal('modal', 'edits', modal)
+                            $.fn.LoadSummaryModal('edits');
+                            $('.modal-content a:first').tab('show');
+                            break;
+                        case "create":
+                            //$.fn.OnOpenModalView();
+                            break;
+                        case "received":
+                            $.fn.OpenModal('modal', 'received-item', modal)
+                            $('.mdb-select').materialSelect();
+                            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+                            break;
+                        case "termsmodal":
+                            $.fn.OpenModal('modal', 'terms', modal)
+                            break;
+                        case "delete":
+                            $.fn.OpenModal('modal', 'delete-item', modal)
+                            break;
+                        case "confirmemail":
+                            $.fn.OpenModal('modal', 'confirm-email', modal)
+                            break;
+                        case "quote":
+                            $.fn.OpenModal('modal', 'edit-quote', modal);
+                            $('.mdb-select').materialSelect();
+                            break;
+                        case "locations": case "addlocation":
+                            $.fn.OpenModal('modal', 'add-location', modal)
+                            break;
+                        case "addMaterial":
+                            $.fn.OpenModal('modal', 'add-material', modal)
+                            break;
+                        case "materialInfo":
+                            $.fn.OpenModal('modal', 'material-info', modal)
+                            break;
+                        case "addFunction":
+                            $.fn.OpenModal('addFunctionModal', 'add-function', modal)
+                            $(".add-function .mark-readonly").attr("disabled", true);
+                            $(".add-function .mdb-select").materialSelect();
+                            break;
+                        case "historyItem":
+                            $.fn.OpenModal('historyModal', 'history-item', modal)
+                            $.fn.LoadSummaryModal('history-item');
+                            $('.modal-content a:first').tab('show');
+                            break;
+                        case "protocolFloatModal":
+                            $.fn.OpenModal('modal', 'protocol-details', modal)
+                            $.fn.ProtocolsMarkReadonly("protocol-details")
+                            break
+
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    //var err = eval("(" + xhr.responseText + ")");
+                    console.log("in error..." + error.Description);
+                    $("#loading").hide();
+                    //alert(error.Message);
+                }
+
+                //error: function (/*request, status, error*/) {
+                //    console.log("ajax call went wrong:" /*+ request.responseText*/);
+                //}
+            });
+        }
+
+
+        $.fn.ProtocolsMarkReadonly = function(modalClass) {
+            $("." + modalClass + " .mark-readonly").attr("disabled", true);
+            $("." + modalClass + " div.mark-readonly").attr("contenteditable", false);
+            $("." + modalClass + " .button-mark-readonly").addClass("d-none");
+            $("." + modalClass + ' .open-document-modal').attr("data-val", false);
+            $(".protocol-tab").removeClass("saveProtocol")
+            $("." + modalClass + " .mdb-select").materialSelect();
+        }
+
+
+        $.fn.TurnToDetails = function (modalClass) {
+            console.log("turn to details " + modalClass)
+            $("." + modalClass+ ' .mark-readonly').prop("disabled", true);
+            $("." + modalClass + ' .mark-readonly input').prop("disabled", true);
+            $("." + modalClass + ' .choose-location').addClass("disable-custom-mdbselect");
+            $("." + modalClass + ' .visual-locations td.mark-readonly').addClass("disabled");
+            $("." + modalClass + ' .mark-edditable').attr("data-val", false)
+            $("." + modalClass + ' .edit-mode-switch-description').text("Edit Mode Off");
+            $("." + modalClass + ' .turn-edit-on-off').attr('name', 'details')
+            $("." + modalClass + ' .open-document-modal').attr("data-val", false);
+            $("." + modalClass + ' .location-icon').addClass('d-none');
+        };
+
+        $.fn.LoadEditModalDetails = function () {
+            $("#cost").trigger('change');
+            var category = $("#categoryDescription").val();
+            console.log(category)
+            $("." + category).removeClass("d-none");
+            console.log("in detilas of case")
+            $.fn.TurnToDetails("edits");
+            $('.open-document-modal').attr("showSwitch", true);
+            $('.edits .mdb-select').materialSelect();
+            $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+        }
+
+
+        $.fn.LoadSummaryModal = function (modalClass) {
+            $("#cost").trigger('change');
+            var category = $("#categoryDescription").val();
+            console.log(category)
+            $("." + category).removeClass("d-none");
+            console.log("in details of case")
+            $.fn.TurnToDetails(modalClass);
+            $("."+modalClass + ' .mdb-select:not(.ignore-mdb)').materialSelect();
+            $("." +modalClass + ' .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+        }
+
+
+        $.fn.OnOpenModalView = function () {
+            $('.mdb-select').materialSelect();
+            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+            $('.modal-content a:first').tab('show');
+            var parentCategoryId = $("#parentlist").val();
+            var subcategoryId1 = $("#sublist").val();
+            var url = "/Requests/GetSubCategoryList";
+
+            $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+                var item = "";
+                $.each(data, function (i, subCategory) {
+                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                });
+                $("#sublist").html(item);
+                $("#sublist").val(subcategoryId1).change();
+            });
+
+            //For the order files
+
+            //goes into this function
+            $(".custom-file-input").on("change", function () {
+                var fileLabel = $(this).next(".custom-file-label");
+                var files = $(this)[0].files;
+                if (files.length > 1) {
+                    fileLabel.html(files.length + ' files selected');
+                }
+                else {
+                    fileLabel.html(files[0].name);
+                }
+            });
+
+            //get the current vendor id (if loading an already existing product)
+            var vendorid = $("#vendorList").val();
+            //call a function to lad the vendor business id from the vendor id
+            $.fn.ChangeVendorBusinessId(vendorid);
+
+        }
+
+        $.fn.StartProtocol = function (id, isContinue, tab) {
+            var url = "/Protocols/StartProtocol?ID=" +id+"&IsContinue="+isContinue+"&tab="+tab;
+            $.ajax({
+                async: true,
+                url: url,
+                traditional: true,
+                type: "GET",
+                cache: false,
+                success: function (data) {
+
+                    $("._IndexTable").html(data);
+                    var modalType=$(".modalType").val();
+                    $.fn.ProtocolsMarkReadonly("_IndexTable");
+                    $("."+modalType).removeClass("d-none");
+                    return false;
+                }
+            });
+        }
+
+
+        $(".load-confirm-email").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var cart = "";
+            if ($(this).hasClass("cart")) {
+                cart = "&cart=true"
+            }
+            var $itemurl = "/Requests/ConfirmEmailModal/?id=" + $(this).val() + cart;
+            $.fn.CallPageRequest($itemurl, "confirmemail");
+            return false;
+        });
+
+        $(".confirm-quote").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "/Requests/ConfirmQuoteEmailModal/?id=" + $(this).val();
+            $.fn.CallPageRequest($itemurl, "confirmemail");
+            return false;
+        });
+        $(".confirm-quote-resend").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "/Requests/ConfirmQuoteEmailModal/?id=" + $(this).val() + "&isResend=true";
+            $.fn.CallPageRequest($itemurl, "confirmemail");
+            return false;
+        });
+        $(".confirm-quote-order").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "/Requests/ConfirmQuoteOrderEmailModal/?id=" + $(this).val();
+            $.fn.CallPageRequest($itemurl, "confirmemail");
+            return false;
+        });
+
+
+        function addActive(id) {
+            var item = document.getElementById(id);
+            item.classList.add("activeNavLink");
+        }
+
+        $.fn.OnOpenModal = function () {
+            $('.modal-content a:first').tab('show');
+            $('.mdb-select').materialSelect();
+            //$('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+            //$('.mdb-select li:first-child').hide();
+            //$('.mdb-select li:nth-child(2)').hide();
+        };
+
+
+
+        $.fn.getMenuItems = function () {
+           // alert("get menu items")
+            $.ajax({
+                async: true,
+                url: '/Home/_MenuButtons',
+                type: 'GET',
+                cache: true,
+                success: function (data) {
+                    $('#home-content').html(data);
+
+                }
+            });
+        }
+
+        $.fn.CallPageUser = function ($itemurl) {
+            //delete existing modals
+            $.ajax({
+                async: true,
+                url: $itemurl,
+                type: 'GET',
+                cache: true,
+                success: function (data) {
+                    $("#loading").hide();
+                    $.fn.OpenModal('users-form', 'edits', data)
+                    $.fn.CalculateAge();
+                    $.fn.OnOpenModal();
+                }
+            });
+        };
+
+        $.fn.CalculateAge = function () {
+            //TODO Calculate age
+            $("#Age").val("0");
+        };
+
+
+        $(".load-vendor-search").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var $itemurl = "Search";
+            $.fn.CallPagePayment($itemurl);
+            return false;
+        });
+
+
+        $.fn.CallPagePayment = function ($itemurl, $Type = "") {
+            console.log("item url: " + $itemurl);
+            $.ajax({
+                //async: true,
+                url: $itemurl,
+                type: 'GET',
+                cache: true,
+                success: function (data) {
+                    //replaces the modal-view class with the ModalView view
+                    $(".modal-view").html(data);
+                    //turn off data dismiss by clicking out of the box and by pressing esc
+                    $(".modal-view").modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    //shows the modal
+                    $(".modal").modal('show');
+                    //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
+                    $(".modal-backdrop").remove();
+                    if ($Type == "details") {
+                        $('.modal-content a:first').tab('show');
+                    }
+                }
+            });
+        };
+
+
+        $("table tr .order-inv-form .form-check-input").click(function () {
+            if ($(this).is(':checked')) {
+                $(this).closest("tr").addClass("clicked-border-orders-inv");
+            }
+            else {
+                $(this).closest("tr").removeClass("clicked-border-orders-inv");
+            }
+        });
+
+        hide = true;
+        $('body').on("click", function () {
+            if (hide) $('.acc-sidebar').removeClass('active');
+            hide = true;
+        });
+
+        // add and remove .active
+        $('body').on('click', '.acc-sidebar', function () {
+
+            var self = $(this);
+
+            //if (self.hasClass('active')) {
+            //    $('.acc-sidebar').removeClass('active');
+            //    return false;
+            //}
+
+            $('.acc-sidebar').removeClass('active');
+
+            self.toggleClass('active');
+            hide = false;
+        });
+
+
+
+
+
+        //$(document).popover({
+        //    selector: '[data-toggle=popover]',
+        //    html: true,
+        //    content: $("#popover-body").html(),
+        //    sanitize: false,
+        //    trigger: 'focus'
+        //});
+
+        //$("[data-toggle=popover]").popover({
+        //    html: true,
+        //    content: function () {
+        //        var content = $(this).attr("data-popover-content");
+        //        return $(content).children(".popover-body").html();
+        //    },
+        //    title: function () {
+        //        var title = $(this).attr("data-popover-content");
+        //        return $(title).children(".popover-heading").html();
+        //    }
+        //});
+
+        $("#profile-img").click(function () {
+            $('[data-toggle="popover"]').popover('dispose');
+            $('#profile-img').popover({
+                sanitize: false,
+                placement: 'top',
+                html: true,
+                content: function () {
+                    return $('#logout-popover').html();
+                }
+            });
+            $('#profile-img').popover('toggle');
+
+        });
+
+        //$("#parentlist").change(function () {
+        //    console.log('  $("#parentlist").change(')
+        //    var parentCategoryId = $("#parentlist").val();
+        //    var url = "/Requests/GetSubCategorsyList";
+
+        //    $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+        //        var item = "<option value=''>Select a Subcategory</option>";
+        //        $("#sublist").empty();
+        //        $.each(data, function (i, subCategory) {
+        //            item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+        //        });
+        //        $("#sublist").html(item);
+        //    });
+        //});
+
+        $(".load-add-location").on("click", function (e) {
+            console.log("load add locations clicked");
+            e.preventDefault();
+            e.stopPropagation();
+            var $itemurl = "/Locations/AddLocation";
+            var $modal = $(".location-modal-view");
+            $.fn.CallPageRequest($itemurl, "locations");
+            return false;
+        });
+
+
+
+
+        $(".load-add-location-type").on("click", function (e) {
+            console.log("load add location type 3");
+            e.preventDefault();
+            e.stopPropagation();
+            var $itemurl = "/Locations/AddLocationType";
+            var $modal = $(".location-modal-view");
+            //$("location-modal-view").css("display", "none");
+            //IMPT REOPEN ON CLOSING
+            $.fn.CallPageRequest($itemurl, "addlocation");
+        });
+
+
+        $.fn.CallPageLocation = function ($itemurl, $modal, $isaddlocation) {
+            $.ajax({
+                async: true,
+                url: $itemurl,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    //console.log("success!");
+                    //replaces the modal-view class with the ModalView view
+                    $modal.html(data);
+                    //turn off data dismiss by clicking out of the box and by pressing esc
+                    $modal.modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    //shows the modal
+                    $(".modal").modal('show');
+                    //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
+                    $(".modal-backdrop").remove();
+
+
+                    if ($isaddlocation) {
+                        console.log("inside of modal if statement");
+
+
+
+                    }
+                    else {
+                        $(".addSublocation").hide();
+
+                    }
+
+                }
+            });
+        }
+       $.fn.GetNotifcationCount = function () {
+           console.log("in call getNotofication function");
+           var link = '/Home/GetNotificationCount';
+           $.ajax({
+               async: true,
+               url: link,
+               type: 'GET',
+               cache: false,
+               success: function (data) {
+                   console.log("count: " + data);
+                   $("#alertCount").html('<span>'+data+'</span>');
+                   if (data == "0") {
+                       $("#alertCount").hide();
+                   }
+                   else {
+                       $("#alertCount").show();
+                   }
+               }
+           });
+       }
+        $.fn.UpdateNotificationLastRead = function () {
+            $.ajax({
+                async: true,
+                url: "/Home/UpdateLastReadNotifications",
+                type: 'POST',
+                cache: false,
+                success: function (data) {
+                    $.fn.GetNotifcationCount();
+                }
+            });
+        }
+        $.fn.GetNotifications = function () {
+            //delete existing modals
+            $.getJSON("/Home/GetLatestNotifications", function (data) {
+                $.each(data, function (i, notification) {
+                    var timestamp = new Date(notification.timeStamp)
+                    var link = '/-1/-2?requestID=-3&didntArrive=-4';
+                    var isOrderLate = false;
+                    if(notification.status=="1")
+                    {
+                        isOrderLate = true;
+                    }
+                    link = link.replace("-4", isOrderLate);
+                    link = link.replace("-3", notification.id);
+                    link = link.replace("-2", notification.action);
+                    link = link.replace("-1", notification.controller);
+                    var bold = "";
+                    console.log( notification.isRead);
+                    if (notification.isRead == false) {
+                        bold = "font-weight-bold";
+                    }
+
+                    var newitem1 = '<a class="opac87 notificationDiv '+bold+' " href="'+ link+'"><div id="notification-info" class="px-3 pb-2 mb-3 ">' +
+                        '<div class="col-12 border-right-0 border-left-0 border-top-0 border-bottom  pb-2 mb-3 " >' +
+                        '<div class="row ">' +
+                        '<div class=" float-left " >' +
+                        '<i class="' + notification.icon + ' rounded-circle p-1" style="font-size: 1.75rem; color:var(' + notification.color + '); border: .125rem solid var(' + notification.color + ');"></i>' +
+                        '</div>' +
+                        '<div class=" col-10">' +
+                        '<label class="m-0 mr-5" id="notificationTimestamp">' + timestamp.getDate() + '/' + (timestamp.getMonth()+1) + '/' + timestamp.getFullYear() +  ' </label>' +
+                        '<label class="m-0 " id="notificationDescription" style="color:var('+notification.color+');">' + notification.description + '</label> </br>' +
+                        '<label class="m-0" id="requestName" >' + notification.requestName + '</label>' +
+                        '</div>' +
+
+                        '</div>' +
+
+                        '</div>' +
+                        '</div>' +
+                        '</div></a>';
+                    $("#notifications-popover").append(newitem1);
+
+                });
+
+            }
+
+            );
+        }
+        $("#openNotifications").click(function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $('[data-toggle="popover"]').popover('dispose');
+            $('[data-toggle="popover"]').popover({
+                sanitize: false,
+                placement: 'bottom',
+                html: true,
+                content: function () {
+                    return $('#notifications-popover').html();
+                }
+            });
+            $('#openNotifications').popover('toggle');
+            $.fn.UpdateNotificationLastRead();
+            $(".popover-close").on("click", function (e) {
+                console.log(" popover click")
+                $('[data-toggle="popover"]').popover('dispose');
+                $('body').removeClass('popover-open');
+            });
+        });
+
+        $.fn.CallModal = function (url, modalClass) {
+            $.ajax({
+                async: false,
+                url: url,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $.fn.OpenModal("modal", modalClass, data)
+                    $("#loading").hide();
+                    return false;
+                }
+            });
+        };
+
+
+        $.fn.GetHoursString = function (date) {
+            var date = new Date(date);
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+
+            var hoursString = hours.toString().padStart(2, '0')
+                + ':' + minutes.toString().padStart(2, '0');
+            return hoursString;
+        };
+
+
+        //RECEIVEDMODAL:
+        function changePartialDelivery() {
+            if ($('#Clarify').is(":checked")) {
+                $('#PartialDelivery').attr("disabled", true);
+                $("label[for='PartialDelivery']").addClass("white-background");
+            }
+            else {
+                $('#PartialDelivery').attr("disabled", false);
+                $("label[for='PartialDelivery']").removeClass("white-background");
+            }
+        };
+
+        function changeClarify() {
+            if ($('#PartialDelivery').is(":checked")) {
+                $('#Clarify').attr("disabled", true);
+                $("label[for='Clarify']").addClass("white-background");
+            }
+            else {
+                $('#Clarify').attr("disabled", false);
+                $("label[for='Clarify']").removeClass("white-background");
+            }
+        };
+        $.fn.getRequestIndexString = function(){
+            var selectedPriceSort = [];
+            $("#priceSortContent1 .priceSort:checked").each(function (e) {
+                selectedPriceSort.push($(this).attr("enum"));
+            })
+            return(
+                "PageNumber=" + $('.page-number').val() +
+                "&RequestStatusID=" + $(".request-status-id").val() +
+                "&PageType=" + $('#masterPageType').val() +
+                "&SectionType=" + $('#masterSectionType').val() +
+                "&SidebarType=" + $('#masterSidebarType').val() +
+                "&SelectedPriceSort=" + selectedPriceSort +
+                "&SelectedCurrency=" + $('#tempCurrency').val() +
+                "&SidebarFilterID=" + $('.sideBarFilterID').val());
+        }
+        $.fn.formatDateForSubmit = function(val)
+        {
+            return new Date(val.split("/").reverse().join("-")).toISOString();
+        }
+
+
+
+        $.fn.OpenDocumentsModal = function (isReopen, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles) {
+            $('#loading').show();
+            //alert("in documents modal in document modal js")
+            //$(".modal-backdrop").first().removeClass();
+            //alert(parentFolder)
+            var urlbeginning = "/Requests/"
+            if(section === "Protocols") {
+                urlbeginning ="/Protocols/"
+            }
+            if (isReopen) {
+                urltogo = urlbeginning + "_DocumentsModalData?id=" + requestId + "&Guid=" + guid + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
+                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
+            } else {
+                urltogo = urlbeginning + "DocumentsModal?id=" + requestId + "&Guid=" + guid + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
+                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
+            }
+
+            console.log(urltogo);
+            $.ajax({
+                async: true,
+                url: urltogo,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $('#loading').hide();
+                    console.log("isreopen: " + isReopen);
+                    if(isReopen)
+                    {
+                        //alert("._DocumentsModalData")
+                        $("._DocumentsModalData").html(data);
+                    }
+                    else {
+                        //alert("open doucment modal");
+                        $.fn.OpenModal('documentsModal', 'documents', data)
+                    }
+
+                    var numCards = $("._DocumentsModalData .card.document-border").length;
+                    console.log("numcards: " + numCards);
+                    if (numCards < 1) {
+                        $.fn.RemoveColorsOfDocs(enumString);
+                    }
+                    else if (dontAllowMultipleFiles == 'True' || dontAllowMultipleFiles == 'true') {
+                        console.log("don't allow multiples")
+                        $(".upload-file").attr('disabled', true)
+                        $(".upload-file").addClass('disabled-background-color')
+                        $(".upload-file").removeClass('protocols-background-color')
+                        $(".file-select").attr('disabled', true)
+                    }
+                    if ($(".addFunctionForm").length >0)
+                    {
+                        $(".upload-file").addClass("d-none");
+                        $(".saveFunction").removeClass("d-none");
+                    }
+                    return true;
+                }
+            });
+            return true;
+        };
+
+
+        //$.fn.AppendModalToBody = function(data)
+        //{
+        //    $(".modal").modal('hide');
+        //    $(".modal").replaceWith('');
+        //    var modal = $(data);
+        //    $('body').append(modal);
+        //    $(".modal").modal({
+        //        backdrop: true,
+        //        keyboard: false,
+        //    });
+        //    //shows the modal
+        //    $(".modal").modal('show');
+        //    $('.modal-content a:first').tab('show');
+        //    $(".mdb-select").materialSelect();
+
+        //}
+        $.fn.OpenModal = function (modalClass, modalDivClass, data) {
+            console.log("open modal")
+            console.log(modalClass);
+            //console.log(data.text());
+            //console.log(modalDivClass)
+            var backdrop = "static";
+            if ($('.modal-backdrop').length > 0) {
+                backdrop = false;
+            }
+            $('.' + modalClass).replaceWith('');
+            $('.' + modalDivClass).html('');
+            $('.' + modalDivClass).html(data);
+            $("." + modalClass).modal({
+                backdrop: backdrop,
+                keyboard: false,
+            });
+            //shows the modal
+            $("." + modalClass).modal('show');
+            $('input[type ="submit"]').removeClass("activeSubmit");
+            $('button[type ="submit"]').removeClass("activeSubmit");
+            $('.' + modalDivClass+' input[type="submit"]').addClass("activeSubmit");
+            $('.' + modalDivClass + ' button[type="submit"]').addClass("activeSubmit");
+
+        }
+
+        $.fn.removeOpenPopovers = function () {
+            console.log("remove open popovers");
+            $('.popover').remove();
+        }
+
+        $.fn.CloseModal = function (modalDivClass) {
+            $('.' + modalDivClass).html('');
+            if ($('.modal').length == 0) {
+                $('.modal-backdrop').remove();
+                $('.body').removeClass('modal-open');
+            }
+        }
+
+        $.fn.AddTempRequestHiddenFors = function (guid, selector) {
+            alert("in $.fn.AddTempRequestHiddenFors : " + guid);
+            $.ajax({
+                async: true,
+                url: "/Requests/_TempRequestHiddenFors?GUID=" + guid,
+                traditional: true,
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    $(selector).replaceWith(data);
+                    return false;
+                }
+            });
+        };
+
+        $.fn.BindSelectedFilters = function () {
+            console.log('in bind selected filters');
+            var selectedVendor = $(".popover .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedOwner = $(".popover .owner-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedLocation = $(".popover .location-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedCategory = $(".popover .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedSubCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var archived = $('.archive-check').val();
+            console.log('archived ' + archived);
+            return { SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived }
+        }
+
+
+        $.fn.ClearFilter = function (sectionType, isProprietary) {
+            //alert(sectionType);
+            $.ajax({
+                async: true,
+                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType + "&isProprietary=" + isProprietary,
+                type: 'POST',
+                cache: false,
+                success: function (newData) {
+                    $('#inventoryFilterContent').html(newData);
+                    $('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
+                }
+            });
+        }
+    </script>
+
+
+</body>
+</html>
