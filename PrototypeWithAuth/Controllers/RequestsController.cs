@@ -4503,7 +4503,7 @@ namespace PrototypeWithAuth.Controllers
             List<CheckboxViewModel> shippings = new List<CheckboxViewModel>();
             foreach (var r in requestsToPay)
             {
-                if (r.Payments.FirstOrDefault().ShippingPaidHere && !r.ParentRequest.IsShippingPaid)
+                if (r.Payments.FirstOrDefault().ShippingPaidHere && !r.ParentRequest.IsShippingPaid && r.ParentRequest.Shipping > 0)
                 {
                     shippings.Add(new CheckboxViewModel()
                     {
@@ -4538,20 +4538,23 @@ namespace PrototypeWithAuth.Controllers
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
-                try
+                if (paymentsPayModalViewModel.ShippingToPay != null)
                 {
-                    foreach(var shipping in paymentsPayModalViewModel.ShippingToPay)
+                    try
                     {
-                        var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == shipping.ID).FirstOrDefault();
-                        parentRequest.IsShippingPaid = true;
+                        foreach (var shipping in paymentsPayModalViewModel.ShippingToPay)
+                        {
+                            var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == shipping.ID).FirstOrDefault();
+                            parentRequest.IsShippingPaid = true;
 
-                        _context.Update(parentRequest);
-                        await _context.SaveChangesAsync();
+                            _context.Update(parentRequest);
+                            await _context.SaveChangesAsync();
+                        }
                     }
-                }
-                catch(Exception ex)
-                {
-                    //throw exception here
+                    catch (Exception ex)
+                    {
+                        //throw exception here
+                    }
                 }
                 try
                 {
