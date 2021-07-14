@@ -638,7 +638,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         if (trvm.Request.RequestStatusID == 7)//issavedusingsessions
                         {
-                            await _context.SaveChangesAsync();
+                            //await _context.SaveChangesAsync(); //what is this for?
                             if (receivedModalVisualViewModel.LocationInstancePlaces != null)
                             {
                                 await SaveLocations(receivedModalVisualViewModel, request, false);
@@ -929,10 +929,10 @@ namespace PrototypeWithAuth.Controllers
         }
         protected async Task<TempRequestViewModel> AddToCart(Request request, bool isInBudget, TempRequestListViewModel tempRequestListViewModel)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            /*using (var transaction = _context.Database.BeginTransaction())
             {
                 try
-                {
+                {*/
                     if (isInBudget)
                     {
                         request.RequestStatusID = 6;
@@ -953,16 +953,17 @@ namespace PrototypeWithAuth.Controllers
                     //await _context.SaveChangesAsync();
                     //await transaction.CommitAsync();
                     tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>() { new TempRequestViewModel() { Request = request } };
-                    TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
-                    await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
+                    /*TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
+                    await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);*/
                     //base.MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests);
-                }
-                catch (Exception ex)
+                    //await transaction.CommitAsync();
+                //}
+                /*catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
                     throw ex;
-                }
-            }
+                }*/
+            //}
             return tempRequestListViewModel.TempRequestViewModels.FirstOrDefault();
         }
 
@@ -982,17 +983,17 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task<TempRequestViewModel> AlreadyPurchased(Request request, TempRequestListViewModel tempRequestListViewModel)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            /*using (var transaction = _context.Database.BeginTransaction())
             {
                 try
-                {
+                {*/
                     request.RequestStatusID = 2;
                     request.ParentQuoteID = null;
                     request.OrderType = AppUtility.OrderTypeEnum.AlreadyPurchased.ToString();
 
                     tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>() { new TempRequestViewModel() { Request = request } };
-
-                    TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
+/*
+                    TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);*/
                     //TempRequestJson tempRequestJson = new TempRequestJson()
                     //{
                     //    CookieGUID = tempRequestListViewModel.GUID,
@@ -1000,21 +1001,21 @@ namespace PrototypeWithAuth.Controllers
                     //    IsOriginal = true,
                     //    IsCurrent = true
                     //};
-                    await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
-                    await transaction.CommitAsync();
-                }
+                    /*await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
+                    await transaction.CommitAsync();*/
+                /*}
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
                     throw ex;
                 }
-            }
+            }*/
             return tempRequestListViewModel.TempRequestViewModels.FirstOrDefault();
         }
         private async Task<TempRequestViewModel> OrderNow(Request request, bool isInBudget, TempRequestListViewModel tempRequestListViewModel)
         {
-            try
-            {
+            /*try
+            {*/
                 request.OrderType = AppUtility.OrderTypeEnum.OrderNow.ToString();
                 if (isInBudget)
                 {
@@ -1029,7 +1030,7 @@ namespace PrototypeWithAuth.Controllers
                     new TempRequestViewModel() {
                     Request = request, Emails = new List<string>(){ request.Product.Vendor.OrdersEmail }
                    } };
-                TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
+                //TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
                 //TempRequestJson tempRequestJson = new TempRequestJson()
                 //{
                 //    CookieGUID = tempRequestListViewModel.GUID,
@@ -1039,12 +1040,12 @@ namespace PrototypeWithAuth.Controllers
                 //};
                 //await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
                 //await transaction.CommitAsync();
-            }
+            /*}
             catch (Exception ex)
             {
                 //await transaction.RollbackAsync();
                 throw ex;
-            }
+            }*/
             return tempRequestListViewModel.TempRequestViewModels.FirstOrDefault();
         }
         private async Task<TempRequestViewModel> RequestItem(Request newRequest, bool isInBudget)
@@ -2551,31 +2552,36 @@ namespace PrototypeWithAuth.Controllers
 
 
                     TempRequestViewModel newTrvm = await AddItemAccordingToOrderType(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), OrderTypeEnum, isInBudget, tempRequestListViewModel);
-
-                    using (var transaction = _context.Database.BeginTransaction())
+                    if(OrderTypeEnum != AppUtility.OrderTypeEnum.RequestPriceQuote)
                     {
-                        try
+                        using (var transaction = _context.Database.BeginTransaction())
                         {
-                            TempRequestJson trj = CreateTempRequestJson(tempRequestListViewModel.GUID);
-                            await SetTempRequestAsync(trj,
-                            new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() { newTrvm } });
+                            try
+                            {
+                                TempRequestJson trj = CreateTempRequestJson(tempRequestListViewModel.GUID);
+                                await SetTempRequestAsync(trj,
+                                new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() { newTrvm } });
 
-                            await transaction.CommitAsync(); //IF SAVEITEM OR REQUEST ITEM
+                                await transaction.CommitAsync(); //IF SAVEITEM OR REQUEST ITEM
 
-                            //if (!deserializedTemp.TempRequestViewModels.Any()) //DO WE NEED THIS IF???
-                            //{
-                            //    MoveDocumentsOutOfTempFolder(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID, AppUtility.ParentFolderName.Requests);
-                            //    await transaction.CommitAsync();
-                            //    base.RemoveRequestWithCommentsAndEmailSessions();
-                            //}
-                        }
-                        catch (Exception ex)
-                        {
-                            transaction.Rollback();
-                            await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
-                            throw new Exception(AppUtility.GetExceptionMessage(ex)); ;
+                                //if (!deserializedTemp.TempRequestViewModels.Any()) //DO WE NEED THIS IF???
+                                //{
+                                //    MoveDocumentsOutOfTempFolder(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID, AppUtility.ParentFolderName.Requests);
+                                //    await transaction.CommitAsync();
+                                //    base.RemoveRequestWithCommentsAndEmailSessions();
+                                //}
+                            }
+                            catch (Exception ex)
+                            {
+                                transaction.Rollback();
+                                await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
+                                throw new Exception(AppUtility.GetExceptionMessage(ex)); ;
+                            }
                         }
                     }
+                    //should this be added?
+                    /*//uncurrent the one we're on
+                    await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);*/
 
                     var action = tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary ? "IndexInventory" : "Index";
                     switch (OrderTypeEnum)
