@@ -1,11 +1,76 @@
 ﻿@model PrototypeWithAuth.ViewModels.ExperimentViewModel
 @{
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
-<div class="experiment">
-    <div class="row">
-        <div class="col-2">
-            <button class="custom-button custom-button-font light-gray-background-color text-black">Back</button>
+<div class="experiment bio-form">
+    @*<div class="row">
+            <div class="col-2">
+                <button class="custom-button custom-button-font light-gray-background-color">
+                    <a href="@Url.Action("HumanTrialsList", "Biomarkers")" class="text-black">
+                        <i class="icon-arrow_back_ios-24px-1" style="font-size: 1.2rem;"></i>
+                        Back
+                    </a>
+                </button>
+            </div>
+        </div>*@
+    <div class="item-table">
+        <div class="list-inline-item m-0 float-left" style="width:15%;">
+            <button class="custom-button custom-button-font light-gray-background-color">
+                <a href="@Url.Action("HumanTrialsList", "Biomarkers")" class="text-black">
+                    <i class="icon-arrow_back_ios-24px-1" style="font-size: 1.2rem;"></i>
+                    Back
+                </a>
+            </button>
+        </div>
+        <ul class=" pl-0 nav float-left overflow-auto" style="width:85%;">
+            <li class="list-inline-item m-0 nav-item float-left">
+                <a data-toggle="tab" href="#Participants" class="next-tab nav-link active new-button">
+                    <label class="new-button-text">Participants</label>
+                </a>
+            </li>
+            <li class="list-inline-item m-0 nav-item float-left">
+                <a data-toggle="tab" href="#Summary" class="next-tab nav-link new-button">
+                    <label class="new-button-text">Summary</label>
+                </a>
+            </li>
+            <li class="list-inline-item m-0 nav-item float-left">
+                <a data-toggle="tab" href="#Settings" class="next-tab nav-link new-button">
+                    <label class="new-button-text">Settings</label>
+                </a>
+            </li>
+            <li class="list-inline-item m-0 nav-item float-left">
+                <a data-toggle="tab" href="#Activity" class="next-tab nav-link new-button">
+                    <label class="new-button-text">Activity</label>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-content">
+
+        <div id="Participants" class="tab-pane fade in active show">
+            <div class="container-fluid">
+                Participants
+            </div>
+        </div>
+
+        <div id="Summary" class="tab-pane fade in ">
+            <div class="container-fluid">
+                Summary
+            </div>
+        </div>
+
+        <div id="Settings" class="tab-pane fade in ">
+            <div class="container-fluid">
+                Settings
+            </div>
+        </div>
+
+        <div id="Activity" class="tab-pane fade in ">
+            <div class="container-fluid">
+                Activity
+            </div>
         </div>
     </div>
+
 </div>

@@ -8,6 +8,7 @@ namespace PrototypeWithAuth.ViewModels
     public class TDViewModel
     {
         public string Value { get; set; }
+        public string AjaxLink { get; set; }
         public string Link { get; set; }
         public int ID { get; set; }
         public string Width { get; set; }

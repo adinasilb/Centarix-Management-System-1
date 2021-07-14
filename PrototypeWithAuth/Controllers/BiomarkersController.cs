@@ -49,7 +49,8 @@ namespace PrototypeWithAuth.Controllers
                     new TDViewModel()
                     {
                         Value = e.Description,
-                        Link = "open-experiment",
+                        AjaxLink = "open-experiment",
+                        Link = "Experiment",
                         ID = e.ExperimentID
                     },
                     new TDViewModel()
@@ -97,7 +98,7 @@ namespace PrototypeWithAuth.Controllers
                 Experiment = _context.Experiments.Where(e => e.ExperimentID == ID).FirstOrDefault()
             };
 
-            return PartialView(experimentViewModel);
+            return View(experimentViewModel);
         }
     }
 }
