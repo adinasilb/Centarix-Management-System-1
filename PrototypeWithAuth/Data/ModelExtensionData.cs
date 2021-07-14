@@ -2926,14 +2926,6 @@ namespace PrototypeWithAuth.Data
                 }
            );
 
-           modelBuilder.Entity<GlobalInfo>().HasData(             
-               new GlobalInfo
-               {
-                   ID=-1,
-                   GlobalInfoType = AppUtility.GlobalInfoType.LastProtocolLine.ToString(),
-                   Date = DateTime.Now
-               }
-           );
         }
     }
 }
