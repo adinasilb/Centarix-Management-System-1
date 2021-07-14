@@ -50,7 +50,7 @@
 
         <div id="Participants" class="tab-pane fade in active show">
             <div class="container-fluid">
-                Participants
+                @{ await Html.RenderPartialAsync("_Participants", Model._ParticipantsViewModel); }
             </div>
         </div>
 

@@ -95,7 +95,8 @@ namespace PrototypeWithAuth.Controllers
 
             ExperimentViewModel experimentViewModel = new ExperimentViewModel()
             {
-                Experiment = _context.Experiments.Where(e => e.ExperimentID == ID).FirstOrDefault()
+                Experiment = _context.Experiments.Where(e => e.ExperimentID == ID).FirstOrDefault(),
+                _ParticipantsViewModel = GetParticipantsViewModel(ID)
             };
 
             return View(experimentViewModel);
@@ -149,7 +150,27 @@ namespace PrototypeWithAuth.Controllers
                     {
                         new TDViewModel()
                         {
-                            Value = null
+                            Value = p.CentarixID
+                        },
+                        new TDViewModel()
+                        {
+                            Value = AppUtility.FormatDate(p.DOB)
+                        },
+                        new TDViewModel()
+                        {
+                            Value = p.Gender.Description
+                        },
+                        new TDViewModel()
+                        {
+                            Value = "0"
+                        },
+                        new TDViewModel()
+                        {
+                            Value = "0"
+                        },
+                        new TDViewModel()
+                        {
+                            Value = p.ParticipantStatus.Description
                         }
                     }
                     )

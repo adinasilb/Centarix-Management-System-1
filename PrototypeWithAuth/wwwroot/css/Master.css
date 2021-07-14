@@ -199,6 +199,10 @@
     filter: var(--biomarkers-filter) !important;
 }
 
+.biomarkers-border-color{
+    border-color: var(--biomarkers-color) !important;
+}
+
 .lab-man-filter {
     filter: var(--lab-man-filter) !important;
 }
@@ -361,6 +365,11 @@ body {
 
 .top-menu {
     font-size: 1.5rem;
+    font-weight: var(--bold-regular);
+}
+
+.sub-header {
+    font-size: 1.25rem;
     font-weight: var(--bold-regular);
 }
 
@@ -553,6 +562,11 @@ table td, table td .btn, .text, table th {
     height: 2.875rem;
     border-radius: 1.438rem;
     border: none;
+}
+
+.bio-form .clear-custom-button{
+    background-color: white !important;
+    border: solid 2px var(--biomarkers-color) !important;
 }
 
 .inverted-custom-button {

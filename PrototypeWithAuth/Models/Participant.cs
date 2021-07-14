@@ -10,10 +10,12 @@ namespace PrototypeWithAuth.Models
     {
         [Key]
         public int ParticipantID { get; set; }
+        public string CentarixID { get; set; }
         public DateTime DOB { get; set; }
         public int GenderID { get; set; }
         public Gender Gender { get; set; }
         public int ParticipantStatusID { get; set; }
+        public ParticipantStatus ParticipantStatus { get; set; }
         public int ExperimentID { get; set; }
         public Experiment Experiment { get; set; }
     }
