@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210714051812_participantsGenderAndStatuses")]
+    partial class participantsGenderAndStatuses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1068,9 +1070,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("EndDateTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("ExperimentCode")
                         .HasColumnType("nvarchar(max)");
@@ -2795,9 +2794,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ExperimentID")
-                        .HasColumnType("int");
-
                     b.Property<int>("GenderID")
                         .HasColumnType("int");
 
@@ -2805,8 +2801,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ParticipantID");
-
-                    b.HasIndex("ExperimentID");
 
                     b.HasIndex("GenderID");
 
@@ -6457,12 +6451,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Participant", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Models.Experiment", "Experiment")
-                        .WithMany("Participants")
-                        .HasForeignKey("ExperimentID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("PrototypeWithAuth.Models.Gender", "Gender")
                         .WithMany("Participants")
                         .HasForeignKey("GenderID")

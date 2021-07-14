@@ -46,6 +46,7 @@
     --timekeeper-filter: brightness(0) saturate(100%) invert(72%) sepia(32%) saturate(7497%) hue-rotate(1deg) brightness(106%) contrast(104%);
     --expense-filter: brightness(0) saturate(100%) invert(45%) sepia(67%) saturate(926%) hue-rotate(146deg) brightness(108%) contrast(101%);
     --protocol-filter: brightness(0) invert(39%) sepia(20%) saturate(3905%) hue-rotate(142deg) brightness(98%) contrast(101%);
+    --biomarkers-filter: invert(28%) sepia(71%) saturate(3526%) hue-rotate(346deg) brightness(119%) contrast(91%);
     --notifications-orderlate-color: #DB2127;
     --notifications-ordered-color: #5F79E2;
     --notifications-approved-color: #00CA72;
@@ -184,6 +185,18 @@
 
 .users-border-color {
     border: solid 2px var(--user-color) !important;
+}
+
+.biomarkers-color{
+    color: var(--biomarkers-color) !important;
+}
+
+.biomarkers-background-color{
+    background-color: var(--biomarkers-color) !important;
+}
+
+.biomarkers-filter{
+    filter: var(--biomarkers-filter) !important;
 }
 
 .lab-man-filter {
@@ -804,3 +817,29 @@ span.resources-tags-big {
         padding: 10px 15px;
         border-radius: 30px;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+    
+****BIOMARKERS****
+
+
+*/
+.open-experiment{
+    color: var(--biomarkers-25) !important;
+    text-decoration: underline !important;
+}
+

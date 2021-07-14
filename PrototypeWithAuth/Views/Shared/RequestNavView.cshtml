@@ -187,6 +187,10 @@
     {
         SidebarMenuItems = CreateMenus.CreateProtocolsResourcesSidebar(sidebarType, originalNavClasses, "protocols-filter");
     }
+    else if (pageType == AppUtility.PageTypeEnum.BiomarkersExperiments)
+    {
+        SidebarMenuItems = CreateMenus.CreateBiomarkersExperimentsSidebar(sidebarType, originalNavClasses, "biomarkers-filter");
+    }
 
     var sidebarWidth = "119px";
 

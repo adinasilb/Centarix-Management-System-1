@@ -212,6 +212,16 @@ namespace PrototypeWithAuth.AppData
                 case AppUtility.MenuItems.Income:
                     break;
                 case AppUtility.MenuItems.Biomarkers:
+                    ActiveClasses = " text-dark biomarkers-filter"; 
+                    if (pageType == AppUtility.PageTypeEnum.BiomarkersExperiments) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Experiments",
+                        Controller = "Biomarkers",
+                        Action = "HumanTrialsList",
+                        RouteValues = new RouteValueDictionary(),
+                        Classes = AllClasses
+                    });
                     break;
                 case AppUtility.MenuItems.LabManagement:
                     ActiveClasses = " text-dark lab-man-filter";
@@ -1841,6 +1851,23 @@ namespace PrototypeWithAuth.AppData
                 RouteValues = new RouteValueDictionary() {
                     { "SidebarEnum" , AppUtility.SidebarEnum.Favorites }
                 },
+                Classes = CurrentClasses,
+                IconName = "icon-favorite_border-24px"
+            });
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateBiomarkersExperimentsSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
+            CurrentClasses = SidebarTitle == AppUtility.SidebarEnum.HumanTrials ? CurrentClasses += ActiveClasses : OrigClasses;
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Human Trials",
+                Controller = "Biomarkers",
+                Action = "HumanTrialsList",
+                RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
                 IconName = "icon-favorite_border-24px"
             });

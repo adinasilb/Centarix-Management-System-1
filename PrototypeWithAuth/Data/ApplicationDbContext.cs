@@ -20,6 +20,12 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<ParticipantStatus> ParticipantStatuses { get; set; }
+        public DbSet<Gender> Genders { get; set; }
+        public DbSet<Participant> Participants { get; set; }
+        public DbSet<Timepoint> Timepoints { get; set; }
+        public DbSet<Site> Sites { get; set; }
+        public DbSet<Experiment> Experiments { get; set; }
         public DbSet<TempRequestJson> TempRequestJsons { get; set; }
         public DbSet<ShareProtocol> ShareProtocols { get; set; }
         public DbSet<ShareResource> ShareResources { get; set; }
@@ -115,7 +121,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<LocationRoomInstance> LocationRoomInstances { get; set; }
         public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; }
         public DbSet<TemporaryLocationInstance> TemporaryLocationInstances { get; set; }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210714050253_timepointToExperimentRelationship")]
+    partial class timepointToExperimentRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1069,9 +1071,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("EndDateTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("ExperimentCode")
                         .HasColumnType("nvarchar(max)");
 
@@ -1371,21 +1370,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             Icon = "icon-description-24px2",
                             IconActionClass = "add-file-to-line"
                         });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Gender", b =>
-                {
-                    b.Property<int>("GenderID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("GenderID");
-
-                    b.ToTable("Genders");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.GlobalInfo", b =>
@@ -2783,51 +2767,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ApplicationUserID");
 
                     b.ToTable("ParentRequests");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Participant", b =>
-                {
-                    b.Property<int>("ParticipantID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("DOB")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ExperimentID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GenderID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ParticipantStatusID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ParticipantID");
-
-                    b.HasIndex("ExperimentID");
-
-                    b.HasIndex("GenderID");
-
-                    b.HasIndex("ParticipantStatusID");
-
-                    b.ToTable("Participants");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ParticipantStatus", b =>
-                {
-                    b.Property<int>("ParticipantStatusID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ParticipantStatusID");
-
-                    b.ToTable("ParticipantStatuses");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Payment", b =>
@@ -6453,27 +6392,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("ParentRequests")
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Participant", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.Experiment", "Experiment")
-                        .WithMany("Participants")
-                        .HasForeignKey("ExperimentID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Gender", "Gender")
-                        .WithMany("Participants")
-                        .HasForeignKey("GenderID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.ParticipantStatus", null)
-                        .WithMany("Participants")
-                        .HasForeignKey("ParticipantStatusID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Payment", b =>
