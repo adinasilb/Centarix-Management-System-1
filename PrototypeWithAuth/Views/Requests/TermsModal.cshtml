@@ -36,9 +36,28 @@
         e.preventDefault();
         console.log("in cancel terms");
         var guid = $('#GUID').val();
-        $.fn.CloseModal('terms');
-        if ($("#masterSectionType").val() != "LabManagement" && $('#masterSidebarType').val() != 'Cart') {
+        if ($("#masterSectionType").val() == "LabManagement") {
+            var formData = new FormData($(".termsModalForm")[0]);
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: "/Requests/TermsModal?isCancel=true",
+                data: formData,
+                traditional: true,
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    $.fn.CloseModal("terms");
+                }
+            });
+        }
+        else if ($('#masterSidebarType').val() != 'Cart') {
             $.fn.AddTempRequestHiddenFors(guid, '.modal .temprequesthiddenfors');
+            $.fn.CloseModal('terms');
+        }
+        else {
+            $.fn.CloseModal('terms');
         }
     })
 </script>
