@@ -1239,8 +1239,8 @@
             }
         }
 
-        $.fn.AddTempRequestHiddenFors = function (selector) {
-            var guid = $('.hidden-guid').val();
+        $.fn.AddTempRequestHiddenFors = function (guid, selector) {
+            //var guid = $('.hidden-guid').val();
             alert("in $.fn.AddTempRequestHiddenFors : " + guid);
             $.ajax({
                 async: true,

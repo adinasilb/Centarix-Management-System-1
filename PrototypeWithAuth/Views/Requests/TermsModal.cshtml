@@ -34,10 +34,11 @@
 <script>
     $('.cancel-terms').off('click').on('click', function (e) {
         e.preventDefault();
-        console.log("in cancel order");
+        console.log("in cancel terms");
+        var guid = $('#GUID').val();
         $.fn.CloseModal('terms');
-        if ($("#masterSectionType").val() != "LabManagement") {
-            $.fn.AddTempRequestHiddenFors('.modal .temprequesthiddenfors');
+        if ($("#masterSectionType").val() != "LabManagement" && $('#masterSidebarType').val() != 'Cart') {
+            $.fn.AddTempRequestHiddenFors(guid, '.modal .temprequesthiddenfors');
         }
     })
 </script>
