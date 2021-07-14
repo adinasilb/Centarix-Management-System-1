@@ -20,6 +20,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<TempLinesJson> TempLinesJsons { get; set; }
         public DbSet<TempRequestJson> TempRequestJsons { get; set; }
         public DbSet<LineChange> LineChanges { get; set; }
         public DbSet<ShareProtocol> ShareProtocols { get; set; }
@@ -49,8 +50,6 @@ namespace PrototypeWithAuth.Data
         public DbSet<FunctionLine> FunctionLines { get; set; }
         public DbSet<ProtocolComment> ProtocolComments { get; set; }
         public DbSet<Line> Lines { get; set; }
-        public DbSet<TempLinesJson> TempLinesJsons { get; set; }
-        //public DbSet<LineBase> LineBases { get; set; }
         public DbSet<ProtocolInstance> ProtocolInstances { get; set; }
         public DbSet<Link> Links { get; set; }
         public DbSet<FunctionType> FunctionTypes { get; set; }
