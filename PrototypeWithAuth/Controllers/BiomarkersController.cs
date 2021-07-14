@@ -198,5 +198,11 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(new Participant());
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Biomarkers")]
+        public ActionResult AddParticipantModal(Participant participant)
+        {
+            return PartialView();
+        }
     }
 }

@@ -1,21 +1,43 @@
 ﻿@model Participant
 @{
 }
-<div class="modal modal-view add-participant-modal " id="myModal"  data-backdrop="false" style="z-index: 9100">
-    <div class="elixir-modal-sm modal-dialog-centered mx-auto"style="width:27rem;">
-        <div class="modal-content d-inline-block modal-box-shadow " >
+<div class="modal modal-view add-participant-modal " id="myModal" data-backdrop="false" style="z-index: 9100">
+    <div class="elixir-modal-sm modal-dialog-centered mx-auto" style="width:27rem;">
+        <div class="modal-content d-inline-block modal-box-shadow ">
             <div class="modal-header biomarkers-background-color">
                 <span class="heading-1 text-white">Add New Participant</span>
                 <button type="button" class="close modal-close-padding modal-close-style cancel-add" @*data-dismiss="modal"*@ aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="modal-padding">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="small-modal-padding">
                 <div class="row">
                     <div class="col-12">
                         <label asp-for="CentarixID" class="control-label"></label>
                         <input asp-for="CentarixID" class="form-control-plaintext border-bottom" value="" />
                         <span asp-validation-for="CentarixID" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <label asp-for="DOB" class="control-label"></label>
+                        <input asp-for="DOB" class="form-control-plaintext border-bottom" value="" />
+                        <span asp-validation-for="DOB" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="row under-row-margin">
+                    <div class="col-12">
+                        <label asp-for="Gender" class="control-label"></label>
+                        <input asp-for="Gender" class="form-control-plaintext border-bottom" value="" />
+                        <span asp-validation-for="Gender" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <input type="submit" class="cancel-add custom-button custom-cancel text-black custom-button-small-font px-5" value="Cancel" />
+                    </div>
+                    <div class="col-6">
+                        <input type="submit" class="submit-add custom-button custom-button-font biomarkers-background-color" value="Save" />
                     </div>
                 </div>
             </form>
@@ -25,6 +47,30 @@
 
 <script>
     $(".cancel-add").on("click", function (e) {
+        e.preventDefault();
         $.fn.CloseModal('add-participant');
+    });
+    $(".submit-add").on("click", function (e) {
+        e.preventDefault();
+        $("#loading").show();
+        $.ajax({
+            contentType: false,
+            processData: false,
+            async: true,
+            url: "/Requests/AddParticipantModal",
+            data: formData,
+            traditional: true,
+            type: "POST",
+            cache: false,
+            success: function (data) {
+                $("#loading").hide();
+                alert("success!");
+                return true;
+            },
+            error: function (jqxhr) {
+                $("#loading").hide();
+                return true;
+            }
+        });
     });
 </script>

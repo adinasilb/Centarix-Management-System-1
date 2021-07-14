@@ -682,6 +682,13 @@ table td, table td .btn, .text, table th {
     margin-bottom: 3.5rem;
 }
 
+.small-modal-padding {
+    margin-top: 3rem;
+    margin-left: 3rem;
+    margin-right: 3rem;
+    margin-bottom: 1.5rem;
+}
+
 .modal-close-padding {
     margin-top: 1.375rem;
     margin-right: 2rem;
