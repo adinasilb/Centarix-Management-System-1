@@ -49,7 +49,8 @@
 
 <script>
     $(".open-experiment").off("click").on("click", function (e) {
-        e.preventDefault(); $.ajax({
+        e.preventDefault();
+        $.ajax({
             async: true,
             url: "/Biomarkers/Experiment?ID=" + $(this).val(),
             traditional: true,

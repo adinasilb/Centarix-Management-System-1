@@ -12,7 +12,7 @@
         <label class="sub-header align-bottom pt-2">
             Participants &nbsp;&nbsp; <span class="biomarkers-color"><span id="NumberOfParticipants">@numberOfParticipants</span>/@Model.Experiment.NumberOfParticipants.ToString()</span>
         </label>
-        <button class=" float-right custom-button custom-button-font clear-custom-button biomarkers-color white-background biomarkers-border-color">+ Add New Participant</button>
+        <button value="@Model.Experiment.ExperimentID" type="button" class="add-new float-right custom-button custom-button-font clear-custom-button biomarkers-color white-background biomarkers-border-color">+ Add New Participant</button>
     </div>
 </div>
 
@@ -55,3 +55,20 @@
         }
     </tbody>
 </table>
+
+<script>
+    $(".add-new").off("click").on("click", function (e) {
+        e.preventDefault();
+        $.ajax({
+            async: true,
+            url: "/Biomarkers/AddParticipantModal?ID=" + $(this).val(),
+            traditional: true,
+            type: "GET",
+            cache: false,
+            success: function (data) {
+                $.fn.OpenModal('add-participant-modal', 'add-participant', data);
+                return false;
+            }
+        });
+    });
+</script>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
+using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 
 namespace PrototypeWithAuth.Controllers
@@ -22,6 +24,8 @@ namespace PrototypeWithAuth.Controllers
             _context = context;
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Biomarkers")]
         public IActionResult HumanTrialsList()
         {
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.HumanTrials;
@@ -87,6 +91,9 @@ namespace PrototypeWithAuth.Controllers
 
             return View(experimentListViewModel);
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Biomarkers")]
         public IActionResult Experiment(int ID)
         {
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.HumanTrials;
@@ -102,12 +109,16 @@ namespace PrototypeWithAuth.Controllers
             return View(experimentViewModel);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Biomarkers")]
         public IActionResult _ParticipantsViewModel(int ID)
         {
             _ParticipantsViewModel participantsViewModel = GetParticipantsViewModel(ID);
             return PartialView(participantsViewModel);
         }
 
+
+        [Authorize(Roles = "Biomarkers")]
         public _ParticipantsViewModel GetParticipantsViewModel(int ID)
         {
             _ParticipantsViewModel participantsViewModel = new _ParticipantsViewModel()
@@ -179,5 +190,13 @@ namespace PrototypeWithAuth.Controllers
 
             return participantsViewModel;
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Biomarkers")]
+        public ActionResult AddParticipantModal()
+        {
+            return PartialView(new Participant());
+        }
+
     }
 }
