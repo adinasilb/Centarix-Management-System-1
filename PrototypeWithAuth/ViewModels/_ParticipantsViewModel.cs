@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class ExperimentViewModel
+    public class _ParticipantsViewModel
     {
         public Experiment Experiment { get; set; }
-        public _ParticipantsViewModel _ParticipantsViewModel { get; set; }
+        public List<TDViewModel> Headers { get; set; }
+        public List<List<TDViewModel>> Rows { get; set; }
     }
 }

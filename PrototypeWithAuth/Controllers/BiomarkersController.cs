@@ -100,5 +100,63 @@ namespace PrototypeWithAuth.Controllers
 
             return View(experimentViewModel);
         }
+
+        public IActionResult _ParticipantsViewModel(int ID)
+        {
+            _ParticipantsViewModel participantsViewModel = GetParticipantsViewModel(ID);
+            return PartialView(participantsViewModel);
+        }
+
+        public _ParticipantsViewModel GetParticipantsViewModel(int ID)
+        {
+            _ParticipantsViewModel participantsViewModel = new _ParticipantsViewModel()
+            {
+                Experiment = _context.Experiments.Where(e => e.ExperimentID == ID).FirstOrDefault()
+            };
+            participantsViewModel.Headers = new List<TDViewModel>()
+            {
+                new TDViewModel()
+                {
+                    Value = "Serial Number"
+                },
+                new TDViewModel()
+                {
+                    Value = "DOB"
+                },
+                new TDViewModel()
+                {
+                    Value = "Gender"
+                },
+                new TDViewModel()
+                {
+                    Value = "Timepoint"
+                },
+                new TDViewModel()
+                {
+                    Value = "Visit"
+                },
+                new TDViewModel()
+                {
+                    Value = "Status"
+                }
+            };
+            participantsViewModel.Rows = new List<List<TDViewModel>>();
+            if (participantsViewModel.Experiment.Participants != null)
+            {
+                participantsViewModel.Experiment.Participants.ToList().ForEach(p =>
+                participantsViewModel.Rows.Add(
+                    new List<TDViewModel>()
+                    {
+                        new TDViewModel()
+                        {
+                            Value = null
+                        }
+                    }
+                    )
+                );
+            }
+
+            return participantsViewModel;
+        }
     }
 }
