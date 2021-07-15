@@ -2513,7 +2513,7 @@ namespace PrototypeWithAuth.Controllers
                 DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
                 DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
                 await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
-                return PartialView("Default");
+                return new EmptyResult();
             }
             else
             {
@@ -4243,7 +4243,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                return PartialView("Default");
+                return new EmptyResult();
             }
         }
 
@@ -4903,7 +4903,7 @@ namespace PrototypeWithAuth.Controllers
                 //RemoveRequestWithCommentsAndEmailSessions();
                 DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
                 await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
-                return PartialView("Default");
+                return new EmptyResult();
             }*/
             try
             {
@@ -4929,21 +4929,8 @@ namespace PrototypeWithAuth.Controllers
                         TempData["RequestStatus"] = 1;
                     }
                 }
-                //todo: take this out and do it properly with is cancel
-                if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.RequestStatusID == 2)
-                {
-                    if (checkIfInBudget(deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request))
-                    {
-                        deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.RequestStatusID = 6;
-                    }
-                    else
-                    {
-                        deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.RequestStatusID = 1;
-                    }
-                }
-                if ((deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.RequestStatusID == 6 ||
-                    deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.RequestStatusID == 1)
-                    && deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderType != AppUtility.OrderTypeEnum.AddToCart.ToString())
+                
+                if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderType != AppUtility.OrderTypeEnum.AddToCart.ToString())
                 {
                     //    var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
                     //    _httpContextAccessor.HttpContext.Session.SetObject(requestNum, request);
@@ -5098,12 +5085,14 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadOrderViewModel, TempRequestListViewModel tempRequestListViewModel, bool isCancel = false)
         {
-            /*if (isCancel)
+            if (isCancel)
             {
-                await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
-                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
-                return PartialView("Default");
-            }*/
+                //tempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.RequestStatusID = 6;
+                 
+                //await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
+                //DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
+                return new EmptyResult();
+            }
             try
             {
                 var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
@@ -5217,7 +5206,7 @@ namespace PrototypeWithAuth.Controllers
                 DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
                 DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
                 await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
-                return PartialView("Default");
+                return new EmptyResult();
             }
             var r = await SaveTermsModalAsync(termsViewModel, tempRequestListViewModel);
             if (r.RedirectToActionResult.ActionName == "" && r.RedirectToActionResult.ControllerName == "")
