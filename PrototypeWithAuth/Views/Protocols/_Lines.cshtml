@@ -66,7 +66,7 @@
     $(".move-to-next-step").click(function(){
         $.ajax({
             url: "/Protocols/MoveToNextLine?protocolInstanceID=" + $(".protocolInstanceID").val() +
-                "&nextLineID=" + $("#" + $(this).attr("nextLineID")).val() + "&IsLast=" + $(this).attr("is-last")+"&guid=" + $(".createProtocolMasterGuid").val(),
+                "&nextLineID=" + $("#" + $(this).attr("nextlineid")).val() + "&IsLast=" + $(this).attr("is-last")+"&guid=" + $(".createProtocolMasterGuid").val(),
             type: 'GET',
             success: function (data) {
                 $("._Lines").html(data);

@@ -79,7 +79,7 @@
 
         @if (Model.ModalType == AppUtility.ProtocolModalType.CheckListMode)
         {
-            <div class=" d-flex align-items-center  mr-2 move-to-next-step pointer-event @moveToNextStepColor" nextLineID='@("TempLines_"+(Model.Index+1)+"__PermanentLineID")' is-last='@(Model.IsLast.ToString())'> <span class=" checklist-mode-only"><i class="icon-done-24px"></i></span></div>
+            <div class=" d-flex align-items-center  mr-2 move-to-next-step pointer-event @moveToNextStepColor" nextLineID='@("TempLines_"+(Model.Index+1)+"__LineID")' is-last='@(Model.IsLast.ToString())'> <span class=" checklist-mode-only"><i class="icon-done-24px"></i></span></div>
 
             <div class=" d-flex align-items-center mr-2 add-change  pointer-event @hasChangeColor" currentLineID='@Model.Line.LineID'>  <span class=" checklist-mode-only"><i class="icon-sync-24px"></i></span></div>
         }
