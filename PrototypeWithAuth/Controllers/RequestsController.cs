@@ -3789,7 +3789,10 @@ namespace PrototypeWithAuth.Controllers
                     if (receivedModalVisualViewModel.LocationInstancePlaces != null)
                     {
                         var request = Requests.FirstOrDefault();
-
+                        if(request.ArrivalDate == DateTime.Today) //if it's today, add seconds to be now so it shows up on top
+                        {
+                            request.ArrivalDate = DateTime.Now;
+                        }
                         var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
                         foreach (var location in requestLocations)
                         {
@@ -5108,7 +5111,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         tempRequest.Request.ExpectedSupplyDays = uploadOrderViewModel.ExpectedSupplyDays;
                     }
-                    if (uploadOrderViewModel.ParentRequest.OrderDate == DateTime.Today)
+                    if (uploadOrderViewModel.ParentRequest.OrderDate == DateTime.Today) //if it's today, add seconds to be now so it shows up on top
                     {
                         uploadOrderViewModel.ParentRequest.OrderDate = DateTime.Now;
                     }
