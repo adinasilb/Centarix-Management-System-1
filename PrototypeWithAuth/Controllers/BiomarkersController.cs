@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
@@ -94,7 +95,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Biomarkers")]
-        public IActionResult Experiment(int ID)
+        public async Task<IActionResult> Experiment(int ID)
         {
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.HumanTrials;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.BiomarkersExperiments;
@@ -103,7 +104,7 @@ namespace PrototypeWithAuth.Controllers
             ExperimentViewModel experimentViewModel = new ExperimentViewModel()
             {
                 Experiment = _context.Experiments.Where(e => e.ExperimentID == ID).FirstOrDefault(),
-                _ParticipantsViewModel = GetParticipantsViewModel(ID)
+                _ParticipantsViewModel = await GetParticipantsViewModel(ID)
             };
 
             return View(experimentViewModel);
@@ -111,19 +112,21 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Biomarkers")]
-        public IActionResult _ParticipantsViewModel(int ID)
+        public async Task<IActionResult> _ParticipantsViewModel(int ID)
         {
-            _ParticipantsViewModel participantsViewModel = GetParticipantsViewModel(ID);
+            _ParticipantsViewModel participantsViewModel = await GetParticipantsViewModel(ID);
             return PartialView(participantsViewModel);
         }
 
 
         [Authorize(Roles = "Biomarkers")]
-        public _ParticipantsViewModel GetParticipantsViewModel(int ID)
+        public async Task<_ParticipantsViewModel> GetParticipantsViewModel(int ID)
         {
             _ParticipantsViewModel participantsViewModel = new _ParticipantsViewModel()
             {
-                Experiment = _context.Experiments.Where(e => e.ExperimentID == ID).FirstOrDefault()
+                Experiment = _context.Experiments.Include(e => e.Participants)
+                .ThenInclude(p => p.Gender).Include(e => e.Participants).ThenInclude(p => p.ParticipantStatus)
+                .Where(e => e.ExperimentID == ID).FirstOrDefault()
             };
             participantsViewModel.Headers = new List<TDViewModel>()
             {
@@ -155,10 +158,29 @@ namespace PrototypeWithAuth.Controllers
             participantsViewModel.Rows = new List<List<TDViewModel>>();
             if (participantsViewModel.Experiment.Participants != null)
             {
-                participantsViewModel.Experiment.Participants.ToList().ForEach(p =>
-                participantsViewModel.Rows.Add(
-                    new List<TDViewModel>()
-                    {
+                participantsViewModel.Rows = await GetParticipantsRows(participantsViewModel.Experiment.Participants);
+            }
+
+            return participantsViewModel;
+        }
+
+        public async Task<ActionResult> _BiomarkersRows(int? ExperimentID)
+        {
+            List<List<TDViewModel>> BioRows = new List<List<TDViewModel>>();
+            if (ExperimentID != null)
+            {
+                BioRows = await GetParticipantsRows(_context.Participants.Include(p => p.Gender).Include(p => p.ParticipantStatus).Where(p => p.ExperimentID == ExperimentID));
+            }
+            return PartialView(BioRows);
+        }
+
+        public async Task<List<List<TDViewModel>>> GetParticipantsRows(IEnumerable<Participant> Participants)
+        {
+            List<List<TDViewModel>> rows = new List<List<TDViewModel>>();
+            Participants.ToList().ForEach(p =>
+                 rows.Add(
+                     new List<TDViewModel>()
+                     {
                         new TDViewModel()
                         {
                             Value = p.CentarixID
@@ -183,26 +205,53 @@ namespace PrototypeWithAuth.Controllers
                         {
                             Value = p.ParticipantStatus.Description
                         }
-                    }
-                    )
-                );
-            }
-
-            return participantsViewModel;
+                     }
+                     )
+                 );
+            return rows;
         }
 
         [HttpGet]
         [Authorize(Roles = "Biomarkers")]
-        public ActionResult AddParticipantModal()
+        public ActionResult AddParticipantModal(int ExperimentID)
         {
-            return PartialView(new Participant());
+            AddParticipantViewModel addParticipantViewModel = new AddParticipantViewModel()
+            {
+                Participant = new Participant()
+                {
+                    ExperimentID = ExperimentID
+                },
+                Genders = _context.Genders.ToList()
+            };
+
+            return PartialView(addParticipantViewModel);
         }
 
         [HttpPost]
         [Authorize(Roles = "Biomarkers")]
-        public ActionResult AddParticipantModal(Participant participant)
+        public async Task<ActionResult> AddParticipantModal(AddParticipantViewModel addParticipant)
         {
-            return PartialView();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    addParticipant.Participant.ParticipantStatusID = 1;
+                    _context.Add(addParticipant.Participant);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
+            }
+            return RedirectToAction("_BiomarkersRows", new { ExperimentID = addParticipant.Participant.ExperimentID });
+        }
+
+        public async Task<int> GetParticipantsCount(int ExperimentID)
+        {
+            return _context.Participants.Where(p => p.ExperimentID == ExperimentID).Count();
         }
     }
 }

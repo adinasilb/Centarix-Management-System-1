@@ -11,6 +11,8 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int ParticipantID { get; set; }
         public string CentarixID { get; set; }
+        [DataType(DataType.Date)]
+        [Display(Name = "DOB")]
         public DateTime DOB { get; set; }
         public int GenderID { get; set; }
         public Gender Gender { get; set; }
