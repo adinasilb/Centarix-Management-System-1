@@ -304,7 +304,7 @@ $(function () {
 		console.log("enumString: " + enumString);
 		var requestId = $(this).data("id");
 		console.log("requestId: " + requestId);
-		var guid = $("#GUID").val();
+		var guid = $(".hidden-guid").val();
 		console.log("guid: " + guid);
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
