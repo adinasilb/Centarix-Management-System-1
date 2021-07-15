@@ -20,6 +20,9 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<Test> Tests { get; set; }
+        public DbSet<TestCategory> TestCategories { get; set; }
+        public DbSet<Division> Divisions { get; set; }
         public DbSet<ParticipantStatus> ParticipantStatuses { get; set; }
         public DbSet<Gender> Genders { get; set; }
         public DbSet<Participant> Participants { get; set; }

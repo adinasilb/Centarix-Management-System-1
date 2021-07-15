@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210715090805_addedDivision")]
+    partial class addedDivision
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5056,51 +5058,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("TempRequestJsons");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Test", b =>
-                {
-                    b.Property<int>("TestID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ExperimentID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TestCategoryID")
-                        .HasColumnType("int");
-
-                    b.HasKey("TestID");
-
-                    b.HasIndex("ExperimentID");
-
-                    b.HasIndex("TestCategoryID");
-
-                    b.ToTable("Tests");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.TestCategory", b =>
-                {
-                    b.Property<int>("TestCategoryID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DivisionID")
-                        .HasColumnType("int");
-
-                    b.HasKey("TestCategoryID");
-
-                    b.HasIndex("DivisionID");
-
-                    b.ToTable("TestCategories");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.TimekeeperNotification", b =>
                 {
                     b.Property<int>("NotificationID")
@@ -6963,30 +6920,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("TempRequestJsons")
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Test", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.Experiment", "Experiment")
-                        .WithMany()
-                        .HasForeignKey("ExperimentID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.TestCategory", "TestCategory")
-                        .WithMany("Tests")
-                        .HasForeignKey("TestCategoryID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.TestCategory", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.Division", "Division")
-                        .WithMany("TestCategories")
-                        .HasForeignKey("DivisionID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.TimekeeperNotification", b =>
