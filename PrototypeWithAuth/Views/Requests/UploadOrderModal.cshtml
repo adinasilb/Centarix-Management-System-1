@@ -208,8 +208,22 @@
             selector = '.modal .temprequesthiddenfors';
         }
         console.log(selector);
-        $.fn.CloseModal('step-1');
-        $.fn.AddTempRequestHiddenFors($('.hidden-guid').val(), selector);
+        var formData = new FormData($(".uploadQuoteForm")[0]);
+        $.ajax({
+            contentType: false,
+            processData: false,
+            async: true,
+            url: "/Requests/UploadOrderModal?isCancel=true",
+            data: formData,
+            traditional: true,
+            type: "POST",
+            cache: false,
+            success: function (data) {
+                $.fn.CloseModal('step-1');
+                $.fn.AddTempRequestHiddenFors($('.hidden-guid').val(), selector);
+            }
+        });
+        
     });
 </script>
 
