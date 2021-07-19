@@ -12,8 +12,7 @@ namespace PrototypeWithAuth.Models
         public int LineID { get; set; }
         public Line Line { get; set; }
         public TimeSpan Timer { get; set; }
-        public string Description {get; set;}
-        
+        public string Description {get; set;}        
         
     }
 }

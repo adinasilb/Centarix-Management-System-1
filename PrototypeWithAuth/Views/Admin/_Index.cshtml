@@ -46,7 +46,7 @@
                 </td>
                 <td>
                     <a href="" class="open-user-modal" value="@user.Employee.Id" style="display:block;">
-                        @AppUtility.FormatDate(user.Employee.DateCreated)
+                        @user.Employee.DateCreated.GetElixirDateFormat()
                     </a>
                 </td>
                 <td>

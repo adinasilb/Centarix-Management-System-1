@@ -1484,7 +1484,6 @@ $(function () {
 			else {
 				enableMarkReadonly($(this));
 				$(".proprietryHidenCategory").attr("disabled", false);
-
 			}
 		}
 		//}

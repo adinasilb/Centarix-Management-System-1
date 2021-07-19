@@ -11,5 +11,6 @@ namespace PrototypeWithAuth.Models
     {
         public int ReportID { get; set; }
         public Report Report { get; set; }
+        public bool IsTemporary { get; set; }
     }
 }

@@ -448,7 +448,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> MoveToNextLine(int protocolInstanceID, int nextLineID, bool isLast)
+        public async Task<IActionResult> MoveToNextLine(int protocolInstanceID, int nextLineID, bool isLast, Guid guid)
         {
             var protocolInstance = await _context.ProtocolInstances.Where(pi => pi.ProtocolInstanceID == protocolInstanceID).FirstOrDefaultAsync();
             if(nextLineID>0 || isLast)
@@ -461,14 +461,64 @@ namespace PrototypeWithAuth.Controllers
                 else
                 {
                     protocolInstance.CurrentLineID = nextLineID;
-                }
-       
+                }       
                 _context.Update(protocolInstance);
                 await _context.SaveChangesAsync();
             }
-            List<ProtocolsLineViewModel> refreshedLines = OrderLinesForView(protocolInstance.ProtocolID, AppUtility.ProtocolModalType.CheckListMode, protocolInstance);
+             
+            return PartialView("_Lines", await OrderLinesForViewAsync(false, protocolInstance.ProtocolID, AppUtility.ProtocolModalType.CheckListMode, guid, protocolInstance));
+        }
+        [HttpGet]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> AddChangeModal(int protocolInstanceID, int currentLineID)
+        {
+            var protocolInstance = await _context.ProtocolInstances.Where(pi => pi.ProtocolInstanceID == protocolInstanceID).FirstOrDefaultAsync();            
+            var lineChange = await _context.LineChanges.Where(lc => lc.LineID == currentLineID && lc.ProtocolInstanceID == protocolInstanceID).FirstOrDefaultAsync();
+            if(lineChange == null)
+            {
+                lineChange = new LineChange() { ProtocolInstanceID = protocolInstanceID, LineID = currentLineID };
+            }
+            return PartialView(lineChange);
+        }
 
-            return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = refreshedLines });
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> AddChangeModal(LineChange lineChange, Guid guid)
+        {
+            var protocolInstance = await _context.ProtocolInstances.Where(pi => pi.ProtocolInstanceID == lineChange.ProtocolInstanceID).FirstOrDefaultAsync();
+
+            if (lineChange.ChangeText != null && !lineChange.ChangeText.IsNullOrWhiteSpace() )
+            {
+                var lineChangeDB = await _context.LineChanges.Where(lc => lc.LineID == lineChange.LineID && lc.ProtocolInstanceID == lineChange.ProtocolInstanceID).FirstOrDefaultAsync();
+                using (var transaction = await _context.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        if(lineChangeDB==null)
+                        {
+                            _context.Entry(lineChange).State = EntityState.Added;
+                        }
+                        else
+                        {
+                            lineChangeDB.ChangeText = lineChange.ChangeText;
+                            _context.Entry(lineChangeDB).State = EntityState.Modified;
+                        }
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception ex)
+                    {
+
+                        await transaction.RollbackAsync();
+                        var viewmodel = await OrderLinesForViewAsync(false, protocolInstance.ProtocolID, AppUtility.ProtocolModalType.CheckListMode, guid, protocolInstance);
+                        viewmodel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                        return PartialView("_Lines",  viewmodel);
+                    }
+                }
+            }
+
+            return PartialView("_Lines",  await OrderLinesForViewAsync(false, protocolInstance.ProtocolID, AppUtility.ProtocolModalType.CheckListMode, guid, protocolInstance));
+
         }
         private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(CreateProtocolsViewModel createProtocolsViewModel, int typeID, int protocolID = 0)
         {
@@ -497,44 +547,36 @@ namespace PrototypeWithAuth.Controllers
             createProtocolsViewModel.ProtocolSubCategories = _context.ProtocolSubCategories;
             createProtocolsViewModel.MaterialCategories = _context.MaterialCategories;
             createProtocolsViewModel.LineTypes = _context.LineTypes.ToList();
-           
             foreach (var functionType in Enum.GetValues(typeof(AppUtility.ProtocolFunctionTypes)))
             {
                 functionTypes.Add(_context.FunctionTypes.Where(ft => ft.DescriptionEnum == functionType.ToString()).FirstOrDefault());
             }
             createProtocolsViewModel.FunctionTypes = functionTypes;
-            await CopySelectedLinesToTempLineTable(protocol.ProtocolID);
-            createProtocolsViewModel.TempLines = OrderLinesForView(protocolID, createProtocolsViewModel.ModalType, createProtocolsViewModel.ProtocolInstance);
+            if(createProtocolsViewModel.UniqueGuid ==Guid.Empty)
+            {
+                createProtocolsViewModel.UniqueGuid = Guid.NewGuid(); 
+                var functionLines = await _context.FunctionLines.Where(fl => fl.Line.ProtocolID == protocolID && fl.IsTemporaryDeleted == false).Include(fl => fl.FunctionType).ToListAsync();
+                var lines = await  _context.Lines.Where(l => l.ProtocolID == protocolID && l.IsTemporaryDeleted == false).Select(l=> 
+                new ProtocolsLineViewModel { Line = l, Functions =  AppUtility.GetFunctionsByLineID(l.LineID, functionLines)}).ToListAsync();
+                 //create new tempjson 
+                TempLinesJson tempLinesJson = new TempLinesJson{TempLinesJsonID =createProtocolsViewModel.UniqueGuid };
+                tempLinesJson.SerializeViewModel(new ProtocolsLinesViewModel { Lines = lines});
+                _context.Add(tempLinesJson);
+                await _context.SaveChangesAsync();
+                createProtocolsViewModel.Lines = await OrderLinesForViewAsync(true, protocolID, createProtocolsViewModel.ModalType, createProtocolsViewModel.UniqueGuid, createProtocolsViewModel.ProtocolInstance);
+            }
+            else
+            {
+                createProtocolsViewModel.Lines = await OrderLinesForViewAsync(false, protocolID, createProtocolsViewModel.ModalType, createProtocolsViewModel.UniqueGuid, createProtocolsViewModel.ProtocolInstance);
+            }
             AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Materials;
-            string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
-            string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, protocol.ProtocolID.ToString());
+            string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString()); string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, protocol.ProtocolID.ToString());
             FillDocumentsInfo(createProtocolsViewModel, parentFolderName, uploadProtocolsFolder2, protocolID.ToString());
             Dictionary<Material, List<DocumentFolder>> MaterialFolders = FillMaterialDocumentsModel(protocol.Materials, uploadProtocolsFolder);
             createProtocolsViewModel.MaterialDocuments = (Lookup<Material, List<DocumentFolder>>)MaterialFolders.ToLookup(o => o.Key, o => o.Value);
             return createProtocolsViewModel;
         }
-        private TempLine TurnLineIntoTempLine(Line line)
-        {
-            TempLine tempLine = new TempLine();
-            tempLine.PermanentLineID = line.LineID;
-            tempLine.Content = line.Content;
-            tempLine.LineNumber = line.LineNumber;
-            tempLine.LineTypeID = line.LineTypeID;
-            tempLine.ProtocolID = line.ProtocolID;
-            tempLine.ParentLineID = line.ParentLineID;
-            return tempLine;
-        }
-        private Line TurnTempLineToLine(TempLine tempLine)
-        {
-            Line line = new Line();
-            line.LineID = tempLine.PermanentLineID ?? tempLine.LineID;
-            line.Content = tempLine.Content;
-            line.LineNumber = tempLine.LineNumber;
-            line.LineTypeID = tempLine.LineTypeID;
-            line.ProtocolID = tempLine.ProtocolID;
-            line.ParentLineID = tempLine.ParentLineID;
-            return line;
-        }
+
         private List<LineType> GetOrderLineTypeFromParentToChild()
         {
             List<LineType> orderedLineTypes = new List<LineType>();
@@ -561,23 +603,7 @@ namespace PrototypeWithAuth.Controllers
             }
             return orderedLineTypes;
         }
-
-        private async Task CopySelectedLinesToTempLineTable(int protocolID)
-        {
-            await ClearTempLinesTableAsync();
-            var lines = _context.Lines.Where(l => l.ProtocolID == protocolID);
-            var lineTypes = GetOrderLineTypeFromParentToChild();
-            foreach (var lineType in lineTypes)
-            {
-                var linesByType = lines.Where(l => l.LineTypeID == lineType.LineTypeID);
-                foreach (var line in linesByType)
-                {
-                    _context.Add(TurnLineIntoTempLine(line));
-                }
-                await _context.SaveChangesAsync();
-            }
-        }
-        public async Task SaveTempLines(List<TempLine> TempLines, int ProtocolID)
+        public async Task SaveTempLines(List<Line> Lines, int ProtocolID, Guid guid)
         {
             try
             {
@@ -585,18 +611,39 @@ namespace PrototypeWithAuth.Controllers
                 {
                     try
                     {
-                        await UpdateLineContentAsync(TempLines);
-                        var tempLines = _context.TempLines;
-                        foreach (var line in tempLines)
+                        var tempLines = _context.TempLinesJsons.Where(tl=>tl.TempLinesJsonID == guid).FirstOrDefault().DeserializeJson<ProtocolsLinesViewModel>();
+                       
+                        await UpdateLineContentAsync(tempLines, Lines);
+                        foreach (var line in tempLines.Lines)
                         {
-                            _context.Update(TurnTempLineToLine(line));
+                            if(_context.Lines.Where(l=>l.LineID == line.Line.LineID).Any())
+                            {
+                                _context.Entry(line.Line).State = EntityState.Modified;
+                            }
+                            else
+                            {
+                                _context.Entry(line.Line).State = EntityState.Added;
+                            }
+                            if(line.Functions !=null)
+                            {
+                                foreach (var function in line.Functions)
+                                {
+                                    if (_context.FunctionLines.Where(fl => fl.ID == function.ID).Any())
+                                    {
+                                        _context.Entry(function).State = EntityState.Modified;
+                                    }
+                                    else
+                                    {
+                                        _context.Entry(function).State = EntityState.Added;
+                                    }
+                                }
+                            }
+
                         }
                         await _context.SaveChangesAsync();
-                        await _context.FunctionLines.Where(fl => fl.IsTemporary && fl.Line.IsTemporaryDeleted == false).ForEachAsync(fl => { fl.IsTemporary = false; _context.Update(fl); });
                         await _context.FunctionLines.Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted == true).ForEachAsync(fl => { _context.Remove(fl); });
                         await _context.SaveChangesAsync();
                         await DeleteTemporaryDeletedLinesAsync();
-
                         await transaction.CommitAsync();
                     }
                     catch (Exception ex)
@@ -606,7 +653,6 @@ namespace PrototypeWithAuth.Controllers
                         //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                     }
                 }
-                await CopySelectedLinesToTempLineTable(ProtocolID);
             }
             catch (Exception ex)
             {
@@ -614,40 +660,24 @@ namespace PrototypeWithAuth.Controllers
                 await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
             }
         }
-
-
-
-        private async Task ClearTempLinesTableAsync()
+        private async Task ClearTempLinesJsonAsync(Guid guid)
         {
             var lineTypes = GetOrderLineTypeFromChildToParent();
-
-            await _context.FunctionLines.Where(fl => fl.IsTemporary || fl.Line.IsTemporary).ForEachAsync(fl => { _context.Remove(fl); });
             await _context.FunctionLines.Where(fl => fl.IsTemporaryDeleted).ForEachAsync(fl => { fl.IsTemporaryDeleted = false; _context.Update(fl); });
-
             await _context.SaveChangesAsync();
-            foreach (var lineType in lineTypes)
-            {
-                var linesByType = _context.TempLines.Where(l => l.LineTypeID == lineType.LineTypeID);
-                foreach (var line in linesByType)
-                {
-                    _context.Remove(line);
-                }
-                await _context.SaveChangesAsync();
-                var tempLines = _context.Lines.Where(l => l.LineTypeID == lineType.LineTypeID).Where(tl => tl.IsTemporary);
-                foreach (var tempLine in tempLines)
-                {
-                    _context.Remove(tempLine);
-                }
-                await _context.SaveChangesAsync();
-                var tempDeletedLines = _context.Lines.Where(l => l.LineTypeID == lineType.LineTypeID).Where(tl => tl.IsTemporaryDeleted);
-                foreach (var tempDeleted in tempDeletedLines)
-                {
-                    tempDeleted.IsTemporaryDeleted = false;
-                    _context.Update(tempDeleted);
-                }
-                await _context.SaveChangesAsync();
-            }
 
+            var tempLinesJson = await _context.TempLinesJsons.Where(l => l.TempLinesJsonID==guid).FirstOrDefaultAsync();
+            _context.Remove(tempLinesJson);
+            await _context.SaveChangesAsync();
+
+            var tempDeletedLines = _context.Lines.Where(tl => tl.IsTemporaryDeleted);
+
+            foreach (var tempDeleted in tempDeletedLines)
+            {
+                tempDeleted.IsTemporaryDeleted = false;
+                _context.Update(tempDeleted);
+            }
+            await _context.SaveChangesAsync();
         }
         private Dictionary<Material, List<DocumentFolder>> FillMaterialDocumentsModel(IEnumerable<Material> Materials, string uploadProtocolsFolder)
         {
@@ -687,8 +717,6 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(new AddMaterialViewModel { Material = material });
         }
 
-
-
         [HttpPost]
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> MaterialInfoModal(AddMaterialViewModel addMaterialViewModel)
@@ -715,46 +743,48 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> _Lines(List<TempLine> TempLines, int lineTypeID, int currentLineID, int protocolID, AppUtility.ProtocolModalType modalType)
+        public async Task<IActionResult> _Lines(List<Line> Lines, int lineTypeID, int currentLineID, int protocolID, AppUtility.ProtocolModalType modalType, Guid guid)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    var currentLine = _context.TempLines.Include(tl => tl.ParentLine).Include(tl => tl.PermanentLine).Where(tl => tl.PermanentLineID == currentLineID).FirstOrDefault();
                     var orderedLineTypes = GetOrderLineTypeFromParentToChild();
-                    if (TempLines != null)
+                    var listOfLineTypeIDs = orderedLineTypes.Select(lt => lt.LineTypeID).ToList();
+                    var tempLinesJson = await _context.TempLinesJsons.Where(tlj => tlj.TempLinesJsonID == guid).FirstOrDefaultAsync();
+                    var tempLines = tempLinesJson.DeserializeJson<ProtocolsLinesViewModel>();
+                    var currentLine = tempLines.Lines.Where(tl => tl.Line.LineID == currentLineID).FirstOrDefault().Line;
+                    if (Lines != null)
                     {
                         //save all temp line data 
-                        await UpdateLineContentAsync(TempLines);
+                        await UpdateLineContentAsync(tempLines, Lines);
                     }
+
                     if (lineTypeID == -1)
                     {
-                        await DeleteTempLineWithChildrenAsync(currentLine);
+                        await DeleteTempLineWithChildrenAsync(tempLines, currentLine);
                     }
                     else
                     {
                         var newLineType = _context.LineTypes.Where(lt => lt.LineTypeID == lineTypeID).FirstOrDefault();
 
-                        TempLine newLine = new TempLine();
+                        Line newLine = new Line();
+                        ///this is to keep track of the last lineid
+                        var tempLineGlobalInfo = new GlobalInfo() { GlobalInfoType = AppUtility.GlobalInfoType.LastProtocolLine.ToString(), Date = DateTime.Now };
+                        _context.Add(tempLineGlobalInfo);
+                        await _context.SaveChangesAsync();
+                        newLine.LineID = tempLineGlobalInfo.ID;
                         newLine.LineTypeID = lineTypeID;
                         newLine.ProtocolID = protocolID;
                         if (newLine.LineNumber == 0)
                         {
                             newLine.LineNumber = 1;
                         }
-                        _context.Add(newLine);
-                        await _context.SaveChangesAsync();
-                        _context.Add(new Line { LineID = newLine.LineID, LineTypeID = lineTypeID, ProtocolID = protocolID, IsTemporary = true });
-                        await _context.SaveChangesAsync();
-                        newLine.PermanentLineID = newLine.LineID;
-                        _context.Update(newLine);
-                        await _context.SaveChangesAsync();
 
                         if (currentLine != null)
-                        {
-                            var currentLineTypeIndex = orderedLineTypes.IndexOf(currentLine.LineType);
-                            var newLineTypeIndex = orderedLineTypes.IndexOf(newLineType);
+                        {                       
+                            var currentLineTypeIndex = listOfLineTypeIDs.IndexOf(currentLine.LineTypeID);
+                            var newLineTypeIndex = listOfLineTypeIDs.IndexOf(newLineType.LineTypeID);
                             if (newLineTypeIndex <= currentLineTypeIndex)
                             {
                                 //new line is parent of child
@@ -768,61 +798,61 @@ namespace PrototypeWithAuth.Controllers
                                     {
                                         newLine.LineNumber = (parent.LineNumber + 1);
                                         newLine.ParentLineID = parent.ParentLineID;
-                                        _context.Update(newLine);
+                                        newLine.ParentLine = parent.ParentLine;
                                         //we have to increment all the sibling parents
-                                        var siblings = _context.TempLines.Where(tl => tl.LineNumber > parent.LineNumber && tl.ParentLineID == newLine.ParentLineID);
-                                        await siblings.ForEachAsync(tl => { tl.LineNumber += 1; _context.Update(tl); });
-                                        await _context.SaveChangesAsync();
-
+                                        var siblings = await tempLines.Lines.Where(tl => tl.Line.LineNumber > parent.LineNumber && tl.Line.ParentLineID == newLine.ParentLineID).ToListAsync();
+                                        siblings.ForEach(tl => { tl.Line.LineNumber += 1; });
                                         break;
                                     }
-                                    parent = _context.TempLines.Where(tl => tl.PermanentLineID == parent.ParentLineID).FirstOrDefault();
+                                    parent = tempLines.Lines.Where(tl => tl.Line.LineID == parent.ParentLineID).FirstOrDefault().Line;
                                 }
 
 
                                 if (newLineTypeIndex < currentLineTypeIndex)
                                 {
                                     //get currentline siblings and make their parent point to new line
-                                    var currentLineSiblings = _context.TempLines.Where(lt => lt.ParentLineID == currentLine.PermanentLineID && lt.LineNumber > currentLine.LineNumber);
-                                    await currentLineSiblings.ForEachAsync(tl =>
+                                    var currentLineSiblings = tempLines.Lines.Where(lt => lt.Line.ParentLineID == currentLine.LineID && lt.Line.LineNumber > currentLine.LineNumber).ToList();
+                                    currentLineSiblings.ForEach(tl =>
                                     {
-                                        tl.LineNumber -= currentLine.LineNumber;
-                                        tl.ParentLineID = newLine.LineID;
-                                        _context.Update(tl);
+                                        tl.Line.LineNumber -= currentLine.LineNumber;
+                                        tl.Line.ParentLineID = newLine.LineID;
+                                        tl.Line.ParentLine = newLine;
                                     });
-                                    await _context.SaveChangesAsync();
-
-                                    currentLine.ParentLine = _context.TempLines.Where(tl => tl.PermanentLineID == currentLine.ParentLineID).Include(tl => tl.LineType).FirstOrDefault();
-                                    if (orderedLineTypes.IndexOf(currentLine.ParentLine.LineType) < newLineTypeIndex)
+                                    currentLine.ParentLine = tempLines.Lines.Where(tl => tl.Line.LineID == currentLine.ParentLineID).FirstOrDefault().Line;
+                                    if (listOfLineTypeIDs.IndexOf(currentLine.ParentLine.LineTypeID) < newLineTypeIndex)
                                     {
                                         //make new line currents parent
                                         newLine.ParentLineID = currentLine.ParentLineID;
+                                        newLine.ParentLine = currentLine.ParentLine;
                                         currentLine.ParentLineID = newLine.LineID;
-                                        _context.Update(currentLine);
-                                        _context.Update(newLine);
-                                        await _context.SaveChangesAsync();
+                                        currentLine.ParentLine = newLine;
                                     }
                                 }
                                 else // types are the same
                                 {
-                                    //all curents children should pount to new line
-                                    await _context.TempLines.Where(tl => tl.ParentLineID == currentLine.PermanentLineID).ForEachAsync(tl => { tl.ParentLineID = newLine.LineID; _context.Update(tl); });
-                                    await _context.SaveChangesAsync();
+                                    //all curents children should point to new line
+                                    tempLines.Lines.Where(tl => tl.Line.ParentLineID == currentLine.LineID).ToList().ForEach(tl => { tl.Line.ParentLineID = newLine.LineID; tl.Line.ParentLine = newLine; });
                                 }
                             }
                             else
                             {
                                 newLine.LineNumber = 1;
-                                newLine.ParentLineID = currentLine.PermanentLineID;
-                                _context.Update(newLine);
-                                var siblings = _context.TempLines.Where(tl => tl.ParentLineID == newLine.ParentLineID);
-                                await siblings.ForEachAsync(tl => { tl.LineNumber += 1; _context.Update(tl); });
-                                await _context.SaveChangesAsync();
+                                newLine.ParentLineID = currentLine.LineID;
+                                var siblings = await tempLines.Lines.Where(tl => tl.Line.ParentLineID == newLine.ParentLineID).ToListAsync();
+                                siblings.ForEach(tl => { tl.Line.LineNumber += 1; });
                             }
 
+                            ProtocolsLineViewModel newLineViewModel = new ProtocolsLineViewModel
+                            {
+                                Line = newLine
+                            };
+                            tempLines.Lines.Add(newLineViewModel);
                         }
 
                     }
+                    tempLinesJson.SerializeViewModel(tempLines);
+                    _context.Update(tempLinesJson);
+                    await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
@@ -830,13 +860,13 @@ namespace PrototypeWithAuth.Controllers
                     Response.StatusCode = 500;
                     await transaction.RollbackAsync();
                     //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
-                    return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView(protocolID, modalType), ErrorMessage = AppUtility.GetExceptionMessage(ex) });
+                    var viewmodel = await OrderLinesForViewAsync(false, protocolID, modalType, guid);
+                    viewmodel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                    return PartialView("_Lines", viewmodel);
                 }
-            }
+            }           
 
-            List<ProtocolsLineViewModel> refreshedLines = OrderLinesForView(protocolID, modalType );
-
-            return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = refreshedLines });
+            return PartialView("_Lines", await OrderLinesForViewAsync(true, protocolID, modalType, guid));
         }
 
 
@@ -848,57 +878,85 @@ namespace PrototypeWithAuth.Controllers
         {
             return _context.Protocols.Where(p => p.UniqueCode.Equals(uniqueNumber)).ToList().Any();
         }
-        private async Task UpdateLineContentAsync(List<TempLine> TempLines)
+        private async Task UpdateLineContentAsync(ProtocolsLinesViewModel protocolsLinesViewModel, List<Line> Lines)
         {
-            foreach (var line in TempLines)
+            foreach (var line in Lines)
             {
-                var temp = _context.TempLines.Where(tl => tl.PermanentLineID == line.PermanentLineID).FirstOrDefault();
+                var temp = protocolsLinesViewModel.Lines.Where(l => l.Line.LineID == line.LineID ).Select(l=>l.Line).FirstOrDefault();
                 if (temp != null)
                 {
                     temp.Content = line.Content ?? "";
-                    _context.Update(temp);
                 }
             }
-            await _context.SaveChangesAsync();
         }
 
-        private List<ProtocolsLineViewModel> OrderLinesForView(int protocolID, AppUtility.ProtocolModalType modalType, ProtocolInstance protocolInstance =null)
+        private async Task<ProtocolsLinesViewModel> OrderLinesForViewAsync(bool needsReordering, int protocolID, AppUtility.ProtocolModalType modalType, Guid guid, ProtocolInstance protocolInstance =null)
         {
             var currentLineID = protocolInstance?.CurrentLineID;
-            var functionLine = _context.FunctionLines.Where(fl => fl.Line.ProtocolID == protocolID && fl.IsTemporaryDeleted == false).Include(fl => fl.FunctionType).ToList();
+            var protocolInstanceID = protocolInstance?.ProtocolInstanceID;
             List<ProtocolsLineViewModel> refreshedLines = new List<ProtocolsLineViewModel>();
-            Stack<TempLine> parentNodes = new Stack<TempLine>();
-            var lineTypes = _context.LineTypes.ToList();
-            _context.TempLines.Where(tl => tl.ParentLineID == null).OrderByDescending(tl => tl.LineNumber).ToList().ForEach(tl => { parentNodes.Push(tl); });
-            int count = 0;
-            while (!parentNodes.IsEmpty())
-            {
-                var node = parentNodes.Pop();
-                //if protocolinstance is finished we will set them all and not according to currentline
-                if(currentLineID == node.PermanentLineID && !protocolInstance.IsFinished)
+            Stack<ProtocolsLineViewModel> parentNodes = new Stack<ProtocolsLineViewModel>();
+            ProtocolsLinesViewModel viewmodel = new ProtocolsLinesViewModel();
+            var lineTypes = await _context.LineTypes.ToListAsync();
+            var tlj = await _context.TempLinesJsons.Where(tlj => tlj.TempLinesJsonID == guid).FirstOrDefaultAsync();
+            viewmodel = tlj.DeserializeJson<ProtocolsLinesViewModel>();
+            if (needsReordering)
+            { 
+                viewmodel.Lines.Where(tl => tl.Line.ParentLineID == null).OrderByDescending(tl => tl.Line.LineNumber).ToList().ForEach(tl => { parentNodes.Push(tl); });
+                int count = 0;
+                while (!parentNodes.IsEmpty())
                 {
-                    refreshedLines.ForEach(l => l.IsDone = true);
+                    var node = parentNodes.Pop();
+                    //if protocolinstance is finished we will set them all and not according to currentline
+                    if (currentLineID == node.Line.LineID && !protocolInstance.IsFinished)
+                    {
+                        refreshedLines.ForEach(l => l.IsDone = true);
+                    }
+                    viewmodel.Lines.Where(c => c.Line.ParentLineID == node.Line.LineID).OrderByDescending(tl => tl.Line.LineNumber).ToList().ForEach(c => { parentNodes.Push(c); });
+                    node.LineTypes = lineTypes;
+                    node.Index = count++;
+                    node.LineNumberString = refreshedLines.Where(rl => rl.Line.LineID == node.Line.ParentLineID)?.FirstOrDefault()?.LineNumberString + node.Line.LineNumber + ".";
+                    node.ModalType = modalType;
+                    node.IsLast = parentNodes.IsEmpty();
+                    node.IsDone = protocolInstance?.IsFinished ?? false;
+                    node.LineChange = await _context.LineChanges.Where(lc => lc.LineID == node.Line.LineID && lc.ProtocolInstanceID == protocolInstanceID).FirstOrDefaultAsync();
+                    refreshedLines.Add(node);
                 }
-                _context.TempLines.Where(c => c.ParentLineID == (node.PermanentLineID)).OrderByDescending(tl => tl.LineNumber).ToList().ForEach(c => { parentNodes.Push(c); });
-
-                refreshedLines.Add(new ProtocolsLineViewModel()
+                if (refreshedLines.Count == 0)
                 {
-                    LineTypes = lineTypes,
-                    TempLine = node,
-                    Index = count++,
-                    LineNumberString = refreshedLines.Where(rl => rl.TempLine.PermanentLineID == node.ParentLineID)?.FirstOrDefault()?.LineNumberString + node.LineNumber + ".",
-                    Functions = functionLine.Where(fl => fl.LineID == node.PermanentLineID),
-                    ModalType = modalType,
-                    IsLast = parentNodes.IsEmpty(),
-                    IsDone = protocolInstance?.IsFinished??false
-                });
+                    refreshedLines.Add(new ProtocolsLineViewModel() { LineTypes = lineTypes, Index = 0, LineNumberString = 1 + "", IsLast = true });
+                    viewmodel.Lines = refreshedLines;
+                }
+                viewmodel.Lines = refreshedLines;
             }
-            if (refreshedLines.Count == 0)
+            else
             {
-                refreshedLines.Add(new ProtocolsLineViewModel() { LineTypes = lineTypes, Index = 0, LineNumberString = 1 + "", IsLast = true });
+                bool endMarkDone = false ;
+                for(int i=0; i< viewmodel.Lines.Count; i++ )
+                {
+                    if (viewmodel.Lines[i].Line.LineID == currentLineID && !protocolInstance.IsFinished)
+                    {
+                        endMarkDone = true;
+                    }
+                    if(!endMarkDone)
+                    {
+                        viewmodel.Lines[i].IsDone = true;
+                    }
+                    if(viewmodel.Lines[i].IsLast)
+                    {
+                        viewmodel.Lines[i].IsDone = protocolInstance?.IsFinished ?? false;
+                    }
+                    viewmodel.Lines[i].LineChange = await _context.LineChanges.Where(lc => lc.LineID == viewmodel.Lines[i].Line.LineID && lc.ProtocolInstanceID == protocolInstanceID).FirstOrDefaultAsync();
+                }
+
             }
-            return refreshedLines;
+            tlj.SerializeViewModel(viewmodel);
+            _context.Update(tlj);
+            //save the viewmodel to json
+            await _context.SaveChangesAsync();
+            return viewmodel;
         }
+        
         private async Task DeleteTemporaryDeletedLinesAsync()
         {
             var linesToDelete = await _context.Lines.Where(l => l.IsTemporaryDeleted).ToListAsync();
@@ -913,48 +971,35 @@ namespace PrototypeWithAuth.Controllers
                 await _context.SaveChangesAsync();
             }
         }
-        private async Task DeleteTempLineWithChildrenAsync(TempLine line)
-        {
-            var siblingsAfter = _context.TempLines.Where(tl => tl.ParentLineID == line.ParentLineID && tl.LineNumber > line.LineNumber).Include(tl => tl.PermanentLine).ToList();
-            Stack<TempLine> nodes = new Stack<TempLine>();
-            List<TempLine> nodeInOrderOfChildrenToParent = new List<TempLine>();
-            nodes.Push(line);
+        private async Task DeleteTempLineWithChildrenAsync(ProtocolsLinesViewModel tempLines, Line line)
+        {        
+            var siblingsAfter = tempLines.Lines.Where(tl => tl.Line.ParentLineID == line.ParentLineID && tl.Line.LineNumber > line.LineNumber).ToList();
+            Stack<ProtocolsLineViewModel> nodes = new Stack<ProtocolsLineViewModel>();
+            List<ProtocolsLineViewModel> nodeInOrderOfChildrenToParent = new List<ProtocolsLineViewModel>();
+            var currLine = tempLines.Lines.Where(tl => tl.Line.LineID == line.LineID).FirstOrDefault();
+            nodes.Push(currLine);
+            //push all children on the stack
             while (!nodes.IsEmpty())
             {
                 var curr = nodes.Pop();
                 nodeInOrderOfChildrenToParent.Add(curr);
-                var children = await _context.TempLines.Where(tl => tl.ParentLineID == curr.PermanentLineID).Include(tl => tl.PermanentLine).ToListAsync();
+                var children = await tempLines.Lines.Where(tl => tl.Line.ParentLineID == curr.Line.LineID).ToListAsync();
                 children.ForEach(tl => { nodes.Push(tl); });
             }
-            var lineTypes = GetOrderLineTypeFromChildToParent();
-            foreach (var lineType in lineTypes)
+            foreach (var node in nodeInOrderOfChildrenToParent)
             {
-                var nodesByType = nodeInOrderOfChildrenToParent.Where(n => n.LineTypeID == lineType.LineTypeID);
-                foreach (var node in nodesByType)
-                {
-                    var permanentLine = node.PermanentLine;
-                    _context.Remove(node);
-                    if (node.PermanentLine != null)
-                    {
-                        if (node.PermanentLine.IsTemporary)
-                        {
-                            _context.Remove(permanentLine);
-                        }
-                        else
-                        {
-                            permanentLine.IsTemporaryDeleted = true;
-                            _context.Update(permanentLine);
-                        }
-
-                    }
-
+                var permanentLine = await _context.Lines.Where(l => l.LineID == node.Line.LineID).FirstOrDefaultAsync();
+   
+                if (permanentLine != null)
+                {                    
+                    permanentLine.IsTemporaryDeleted = true;
+                    _context.Update(permanentLine);
                 }
-                await _context.SaveChangesAsync();
+                tempLines.Lines.Remove(node);
             }
 
             //update all the siblings after number--
-            siblingsAfter.ForEach(sa => { sa.LineNumber--; _context.Update(sa); });
-            await _context.SaveChangesAsync();
+            siblingsAfter.ForEach(sa => { sa.Line.LineNumber--; });
         }
 
         [Authorize(Roles = "Protocols")]
@@ -989,11 +1034,12 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddFunctionModal(int FunctionTypeID, int LineID, int functionLineID, AppUtility.ProtocolModalType modalType)
+        public async Task<IActionResult> AddFunctionModal(int FunctionTypeID, int LineID, int functionLineID, AppUtility.ProtocolModalType modalType, Guid guid)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
-            var tempLine = _context.TempLines.Where(tl => tl.PermanentLineID == LineID).FirstOrDefault();
-            var line = TurnTempLineToLine(tempLine);
+            var tempLinesJson = await _context.TempLinesJsons.Where(tlj => tlj.TempLinesJsonID == guid).FirstOrDefaultAsync();
+            var tempLines = tempLinesJson.DeserializeJson<ProtocolsLinesViewModel>();
+            var tempLine = tempLines.Lines.Where(tl => tl.Line.LineID == LineID).FirstOrDefault();
             FunctionLine functionLine = _context.FunctionLines.Where(fl => fl.ID == functionLineID).FirstOrDefault();
             if (functionLine == null)
             {
@@ -1001,7 +1047,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     FunctionType = functionType,
                     FunctionTypeID = FunctionTypeID,
-                    Line = line,
+                    Line = tempLine.Line,
                     LineID = LineID,                   
                 };
             }
@@ -1009,7 +1055,9 @@ namespace PrototypeWithAuth.Controllers
             var viewmodel = new AddFunctionViewModel
             {
                 FunctionLine = functionLine,
-                ModalType = modalType
+                ModalType = modalType,
+                UniqueGuid = guid,
+                FunctionIndex = tempLine.Functions.Count()
             };
             AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.FunctionLine;
             string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
@@ -1123,34 +1171,35 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddFunctionModal(AddFunctionViewModel addFunctionViewModel, List<TempLine> TempLines)
+        public async Task<IActionResult> AddFunctionModal(AddFunctionViewModel addFunctionViewModel, List<Line> Lines)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
-                await UpdateLineContentAsync(TempLines);
-                var line = _context.TempLines.Where(l => l.PermanentLineID == addFunctionViewModel.FunctionLine.LineID).FirstOrDefault();
-                var protocolID = line.ProtocolID;
+                var tempLinesJson = await _context.TempLinesJsons.Where(tlj => tlj.TempLinesJsonID == addFunctionViewModel.UniqueGuid).FirstOrDefaultAsync();
+                var tempLines = tempLinesJson.DeserializeJson<ProtocolsLinesViewModel>();
+
+                await UpdateLineContentAsync(tempLines, Lines);
+                var tempLine = tempLines.Lines.Where(tl => tl.Line.LineID == addFunctionViewModel.FunctionLine.LineID).FirstOrDefault();
+                var protocolID = tempLine.Line.ProtocolID;
                 try
                 {
                     if (addFunctionViewModel.IsRemove)
                     {
                         addFunctionViewModel.FunctionLine.IsTemporaryDeleted = true;
-                        _context.Entry(addFunctionViewModel.FunctionLine).State = EntityState.Modified;
                     }
                     else
                     {
-                        await SaveTempFunctionLineAsync(addFunctionViewModel);
                         var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
 
                         switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
                         {
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
                                 var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
-                                line.Content += " <a href='#' class='open-line-product function-line-node' functionline='" + addFunctionViewModel.FunctionLine.ID + "' value='" + product.ProductID + "'>" + product.ProductName + "</a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>";
+                                tempLine.Line.Content += " <a href='#' class='open-line-product function-line-node' functionline='" + addFunctionViewModel.FunctionLine.ID + "' value='" + product.ProductID + "'>" + product.ProductName + "</a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>";
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
                                 var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
-                                line.Content += " <a href='#' functionline='" + addFunctionViewModel.FunctionLine.ID + "' class='open-line-protocol function-line-node' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>"; ;
+                                tempLine.Line.Content += " <a href='#' functionline='" + addFunctionViewModel.FunctionLine.ID + "' class='open-line-protocol function-line-node' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>"; ;
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddFile:
                             case AppUtility.ProtocolFunctionTypes.AddImage:
@@ -1163,11 +1212,21 @@ namespace PrototypeWithAuth.Controllers
                             case AppUtility.ProtocolFunctionTypes.AddComment:
                                 break;
                         }
-                        _context.Update(line);
-
+                        addFunctionViewModel.FunctionLine.FunctionType = functionType;
                     }
-                    await _context.SaveChangesAsync();
+                  
 
+                    if(tempLine.Functions.Count() < addFunctionViewModel.FunctionIndex)
+                    {
+                        tempLine.Functions[addFunctionViewModel.FunctionIndex] = addFunctionViewModel.FunctionLine; 
+                    }
+                    else
+                    {
+                        tempLine.Functions.Add(addFunctionViewModel.FunctionLine);
+                    }
+                    tempLinesJson.SerializeViewModel(tempLines);
+                    _context.Update(tempLinesJson);
+                    await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
@@ -1176,19 +1235,9 @@ namespace PrototypeWithAuth.Controllers
                     await transaction.RollbackAsync();
                     //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                 }
-                return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView(line.ProtocolID, addFunctionViewModel.ModalType) });
+                return PartialView("_Lines", await OrderLinesForViewAsync(false, tempLine.Line.ProtocolID, addFunctionViewModel.ModalType, addFunctionViewModel.UniqueGuid));
 
             }
-        }
-
-        private async Task SaveTempFunctionLineAsync(AddFunctionViewModel addFunctionViewModel)
-        {
-            if (addFunctionViewModel.FunctionLine.ID == 0)
-            {
-                addFunctionViewModel.FunctionLine.IsTemporary = true;
-            }
-            _context.Entry(addFunctionViewModel.FunctionLine).State = EntityState.Added;
-            await _context.SaveChangesAsync();
         }
 
         [HttpGet]
@@ -1310,10 +1359,8 @@ namespace PrototypeWithAuth.Controllers
                     {
                         _context.Entry(createProtocolsViewModel.Protocol).State = EntityState.Added;
                         await _context.SaveChangesAsync();
-                        var tempLine = new TempLine() { ProtocolID = createProtocolsViewModel.Protocol.ProtocolID, LineNumber = 1, LineTypeID = 1 };
-                        _context.Add(tempLine);
-                        await _context.SaveChangesAsync();
-                        _context.Add(TurnTempLineToLine(tempLine));
+                        var line = new Line() { ProtocolID = createProtocolsViewModel.Protocol.ProtocolID, LineNumber = 1, LineTypeID = 1 };
+                        _context.Add(line);
                         await _context.SaveChangesAsync();
                     }
                     else

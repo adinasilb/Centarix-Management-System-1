@@ -170,7 +170,7 @@ namespace PrototypeWithAuth.AppData
 
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
         { Request, Resource, Protocol }
-        public enum GlobalInfoType { ExchangeRate, LoginUpdates }
+        public enum GlobalInfoType { ExchangeRate, LoginUpdates, LastProtocolLine }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -750,16 +750,21 @@ namespace PrototypeWithAuth.AppData
             return dateRange;
         }
 
-        public static string FormatDate(DateTime? date)
+        public static string GetElixirDateFormat(this DateTime? date)
         {
-            if (date != null)
-            {
-                return date?.ToString("d MMM yyyy");
-            }
-            else
-            {
-                return "";
-            }
+            return date?.ToString("d MMM yyyy")??"";
+        }
+        public static string GetElixirDateFormat(this DateTime date)
+        {
+            return date.ToString("d MMM yyyy");
+        }
+        public static string GetElixirDateFormatWithTime(this DateTime? date)
+        {
+            return date?.ToString("d MMM yyyy HH:mm")??"";
+        }
+        public static string GetElixirDateFormatWithTime(this DateTime date)
+        {
+            return date.ToString("d MMM yyyy HH:mm");
         }
         public static T DeepClone<T>(T obj)
         {
@@ -767,6 +772,11 @@ namespace PrototypeWithAuth.AppData
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             }));
+        }
+
+        public static List<FunctionLine> GetFunctionsByLineID (int lineID, List<FunctionLine> functionLines)
+        {
+            return functionLines.Where(fl => fl.LineID == lineID).ToList();
         }
     }
 }
