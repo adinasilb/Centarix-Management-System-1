@@ -138,13 +138,13 @@
     $(".cancel-quote").on("click", function (e) {
         e.preventDefault();
         //alert("in cancel quote");
-        $.fn.CloseModal('step-1');
         var selector = '.temprequesthiddenfors';
-        if ($('#RequestIndexObject_IsReorder').val() === 'true') {
+        if ($('#RequestIndexObject_IsReorder').val() === 'True') {
             selector = '.modal .temprequesthiddenfors';
         }
         console.log(selector)
-        $.fn.AddTempRequestHiddenFors($("#TempRequestListViewModel_GUID").val(), selector);
+        $.fn.CloseModal('step-1');
+        $.fn.AddTempRequestHiddenFors($('.hidden-guid').val(), selector);
     });
     
     $(".submitQuote").off('click').on("click", function (e) {

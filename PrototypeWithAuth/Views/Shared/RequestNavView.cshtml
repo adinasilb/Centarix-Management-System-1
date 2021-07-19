@@ -464,8 +464,8 @@
                 url = $(this).attr("href")
             }
             url = encodeURIComponent(url)
-            alert("GUID: " + $("#GUID").val());
-            $itemurl = "/Requests/ConfirmExit/?TempRequestGUID=" + $("#GUID").val() +"&MenuItem=" + $("#masterSectionType").val() + "&url=" + url;
+            alert("GUID: " + $(".hidden-guid").val());
+            $itemurl = "/Requests/ConfirmExit/?TempRequestGUID=" + $(".hidden-guid").val() +"&MenuItem=" + $("#masterSectionType").val() + "&url=" + url;
             console.log($itemurl);
             $.fn.CloseModal("confirm-exit");
             $.ajax({
