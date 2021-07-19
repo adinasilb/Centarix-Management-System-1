@@ -987,7 +987,7 @@ namespace PrototypeWithAuth.Controllers
                                     r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(),
                                     _context.ShareRequests.Where(sr => sr.RequestID == r.RequestID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user,
                                     r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)
-                           ).ToLookup(r => r.r.ProductID).Select(e => e.Last()).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
+                           ).ToLookup(r => r.r.ProductID).Select(e => e.First()).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                            /// .GroupBy(r => r.ProductID, (key, value) => value.OrderByDescending(v => v.ParentRequest.OrderDate).First()).AsQueryable();
                             break;
                     }
