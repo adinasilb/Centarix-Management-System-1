@@ -23,6 +23,7 @@
 $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".saveFunction, .removeFunction",function (e) {
     e.preventDefault();
     var removing = $(this).hasClass("removeFunction");
+    console.log("removing: "+removing)
     if(removing)
     {
         $(".isRemove").val(true);

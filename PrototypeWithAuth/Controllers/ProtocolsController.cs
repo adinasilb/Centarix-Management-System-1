@@ -917,6 +917,7 @@ namespace PrototypeWithAuth.Controllers
                     node.Index = count++;
                     node.LineNumberString = refreshedLines.Where(rl => rl.Line.LineID == node.Line.ParentLineID)?.FirstOrDefault()?.LineNumberString + node.Line.LineNumber + ".";
                     node.ModalType = modalType;
+                    node.UniqueGuid = guid;
                     node.IsLast = parentNodes.IsEmpty();
                     node.IsDone = protocolInstance?.IsFinished ?? false;
                     node.LineChange = await _context.LineChanges.Where(lc => lc.LineID == node.Line.LineID && lc.ProtocolInstanceID == protocolInstanceID).FirstOrDefaultAsync();
@@ -934,6 +935,7 @@ namespace PrototypeWithAuth.Controllers
                 bool endMarkDone = false ;
                 for(int i=0; i< viewmodel.Lines.Count; i++ )
                 {
+                    viewmodel.Lines[i].ModalType = modalType;
                     if (viewmodel.Lines[i].Line.LineID == currentLineID && !protocolInstance.IsFinished)
                     {
                         endMarkDone = true;
@@ -1186,6 +1188,11 @@ namespace PrototypeWithAuth.Controllers
                     if (addFunctionViewModel.IsRemove)
                     {
                         addFunctionViewModel.FunctionLine.IsTemporaryDeleted = true;
+                        if(_context.FunctionLines.Where( fl=>fl.ID == addFunctionViewModel.FunctionLine.ID).Any())
+                        {
+                            _context.Entry(addFunctionViewModel.FunctionLine).State = EntityState.Modified;
+                        }
+                        tempLine.Functions.Remove(addFunctionViewModel.FunctionLine);
                     }
                     else
                     {
@@ -1213,17 +1220,17 @@ namespace PrototypeWithAuth.Controllers
                                 break;
                         }
                         addFunctionViewModel.FunctionLine.FunctionType = functionType;
-                    }
-                  
 
-                    if(tempLine.Functions.Count() < addFunctionViewModel.FunctionIndex)
-                    {
-                        tempLine.Functions[addFunctionViewModel.FunctionIndex] = addFunctionViewModel.FunctionLine; 
-                    }
-                    else
-                    {
-                        tempLine.Functions.Add(addFunctionViewModel.FunctionLine);
-                    }
+                        if (tempLine.Functions.Count() < addFunctionViewModel.FunctionIndex)
+                        {
+                            tempLine.Functions[addFunctionViewModel.FunctionIndex] = addFunctionViewModel.FunctionLine;
+                        }
+                        else
+                        {
+                            tempLine.Functions.Add(addFunctionViewModel.FunctionLine);
+                        }
+                    }                  
+
                     tempLinesJson.SerializeViewModel(tempLines);
                     _context.Update(tempLinesJson);
                     await _context.SaveChangesAsync();
