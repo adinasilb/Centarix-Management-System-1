@@ -88,6 +88,8 @@ namespace PrototypeWithAuth.AppData
             LabQuotes,
             LabOrders
         }
+
+
         public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }

@@ -84,11 +84,11 @@ namespace PrototypeWithAuth.Controllers
                     },
                     new TDViewModel()
                     {
-                        Value =e.EndDateTime.GetElixirDateFormat()
+                        Value = e.EndDateTime.GetElixirDateFormat()
                     }
                 }
                 )
-            );
+            ); ;
 
             return View(experimentListViewModel);
         }
@@ -187,7 +187,7 @@ namespace PrototypeWithAuth.Controllers
                         },
                         new TDViewModel()
                         {
-                            Value = p.DOB.GetElixirDateFormat()
+                            Value = AppUtility.FormatDate(p.DOB)
                         },
                         new TDViewModel()
                         {
