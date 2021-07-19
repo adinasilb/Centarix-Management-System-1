@@ -187,7 +187,7 @@ namespace PrototypeWithAuth.Controllers
                         },
                         new TDViewModel()
                         {
-                            Value = AppUtility.FormatDate(p.DOB)
+                            Value = p.DOB.GetElixirDateFormat()
                         },
                         new TDViewModel()
                         {
@@ -207,7 +207,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                      }
                      )
-                 );
+                 ) ;
             return rows;
         }
 
