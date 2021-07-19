@@ -13,7 +13,7 @@ namespace PrototypeWithAuth.Models
         public int ProtocolInstanceID { get; set; }
         public string ApplicationUserID { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
-        public int ProtocolID {get; set;}
+        public int ProtocolID { get; set; }
         public Protocol Protocol { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -23,6 +23,7 @@ namespace PrototypeWithAuth.Models
         public string TemporaryResultDescription { get; set; }
         public bool IsFinished { get; set; }
         public bool ResultsReported { get; set; }
+        public IEnumerable<LineChange> LineChange { get ;set;}
 
     }
 }

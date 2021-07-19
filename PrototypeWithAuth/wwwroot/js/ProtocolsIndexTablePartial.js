@@ -1,5 +1,6 @@
-﻿
-function $.fn.ajaxPartialIndexTable(url, viewClass, type, formdata, modalClass = "") {
+﻿$(function () {
+
+$.fn.ajaxPartialIndexTable = function(url, viewClass, type, formdata, modalClass = ""){
 
 	var contentType = true;
 	var processType = true;
@@ -189,4 +190,4 @@ $(".popover-more").off('click').click(function (e) {
 	});
 });
 
- 
+ });

@@ -381,6 +381,14 @@
     <Compile Remove="Data\Migrations\20210623062422_changedGuidStringToGuid.Designer.cs" />
     <Compile Remove="Data\Migrations\20210623063851_changedGuidStringToGuid2.cs" />
     <Compile Remove="Data\Migrations\20210623063851_changedGuidStringToGuid2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210713100739_TempLinesJson.cs" />
+    <Compile Remove="Data\Migrations\20210713100739_TempLinesJson.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210714080923_TempLinesJson.cs" />
+    <Compile Remove="Data\Migrations\20210714080923_TempLinesJson.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210714082255_TempLinesJson.cs" />
+    <Compile Remove="Data\Migrations\20210714082255_TempLinesJson.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210714083341_TempLinesJson.cs" />
+    <Compile Remove="Data\Migrations\20210714083341_TempLinesJson.Designer.cs" />
     <Compile Remove="Data\Migrations\20210712091959_Test.cs" />
     <Compile Remove="Data\Migrations\20210712091959_Test.Designer.cs" />
     <Compile Remove="Data\Migrations\20210712102451_ParentRequestIsShippingPaidBoolean.cs" />

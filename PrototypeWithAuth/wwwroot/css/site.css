@@ -3043,3 +3043,7 @@ body.modal-open .popover {
 .focused-line {
     border-bottom: 2px solid var(--protocol-color) !important;
 }
+
+.addFunctionModal .doc-card-outer-div {
+    min-width: 100% !important;
+}

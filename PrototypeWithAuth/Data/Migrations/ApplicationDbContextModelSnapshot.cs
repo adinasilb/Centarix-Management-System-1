@@ -1205,9 +1205,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("FunctionTypeID")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsTemporary")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsTemporaryDeleted")
                         .HasColumnType("bit");
 
@@ -1985,9 +1982,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsTemporary")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsTemporaryDeleted")
                         .HasColumnType("bit");
 
@@ -2003,9 +1997,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ProtocolID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TempLineLineID")
-                        .HasColumnType("int");
-
                     b.HasKey("LineID");
 
                     b.HasIndex("LineTypeID");
@@ -2014,9 +2005,25 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ProtocolID");
 
-                    b.HasIndex("TempLineLineID");
-
                     b.ToTable("Lines");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.LineChange", b =>
+                {
+                    b.Property<int>("LineID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProtocolInstanceID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ChangeText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("LineID", "ProtocolInstanceID");
+
+                    b.HasIndex("ProtocolInstanceID");
+
+                    b.ToTable("LineChanges");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LineType", b =>
@@ -4988,43 +4995,18 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("TagProtocols");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.TempLine", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.TempLinesJson", b =>
                 {
-                    b.Property<int>("LineID")
+                    b.Property<Guid>("TempLinesJsonID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Json")
+                        .HasColumnType("ntext");
 
-                    b.Property<int>("LineNumber")
-                        .HasColumnType("int");
+                    b.HasKey("TempLinesJsonID");
 
-                    b.Property<int>("LineTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ParentLineID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PermanentLineID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProtocolID")
-                        .HasColumnType("int");
-
-                    b.HasKey("LineID");
-
-                    b.HasIndex("LineTypeID");
-
-                    b.HasIndex("ParentLineID");
-
-                    b.HasIndex("PermanentLineID")
-                        .IsUnique();
-
-                    b.HasIndex("ProtocolID");
-
-                    b.ToTable("TempLines");
+                    b.ToTable("TempLinesJsons");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.TempRequestJson", b =>
@@ -5046,7 +5028,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsOriginal")
                         .HasColumnType("bit");
 
-                    b.Property<string>("RequestJson")
+                    b.Property<string>("Json")
                         .HasColumnType("ntext");
 
                     b.HasKey("TempRequestJsonID");
@@ -6442,11 +6424,21 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
 
-                    b.HasOne("PrototypeWithAuth.Models.TempLine", "TempLine")
-                        .WithMany()
-                        .HasForeignKey("TempLineLineID")
-                        .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity("PrototypeWithAuth.Models.LineChange", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Line", "Line")
+                        .WithMany("LineChange")
+                        .HasForeignKey("LineID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.ProtocolInstance", "ProtocolInstance")
+                        .WithMany("LineChange")
+                        .HasForeignKey("ProtocolInstanceID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LineType", b =>
@@ -6954,31 +6946,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Tag", "Tag")
                         .WithMany()
                         .HasForeignKey("TagID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.TempLine", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.LineType", "LineType")
-                        .WithMany()
-                        .HasForeignKey("LineTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.TempLine", "ParentLine")
-                        .WithMany("TempLines")
-                        .HasForeignKey("ParentLineID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Line", "PermanentLine")
-                        .WithOne()
-                        .HasForeignKey("PrototypeWithAuth.Models.TempLine", "PermanentLineID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany()
-                        .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

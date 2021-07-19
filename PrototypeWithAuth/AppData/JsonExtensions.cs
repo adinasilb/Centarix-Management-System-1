@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.AppData
 {
-    public static class TempRequestExtensions
+    public static class JsonExtensions
     {
-        public static void SerializeViewModel(this TempRequestJson jsonRequest, object value)
+        public static void SerializeViewModel(this TempJson tempJson, object value)
          {
             //var jsonstring = JsonConvert.SerializeObject(value,
             //           Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings()
@@ -24,12 +24,12 @@ namespace PrototypeWithAuth.AppData
                 {
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                 });
-            jsonRequest.RequestJson = jsonstring;
+            tempJson.Json = jsonstring;
         }
 
-        public static T DeserializeJson<T>(this TempRequestJson jsonRequest)
+        public static T DeserializeJson<T>(this TempJson tempJson)
         {
-            var value = jsonRequest.RequestJson;
+            var value = tempJson.Json;
             return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);
             //dynamic data = Jso
         }

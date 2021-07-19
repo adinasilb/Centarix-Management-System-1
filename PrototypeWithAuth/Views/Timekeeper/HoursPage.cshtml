@@ -82,7 +82,7 @@
                     @eh.EmployeeHours.Date.DayOfWeek
                 </div>
                 <div class="py-3" style="width:15%;">
-                    @AppUtility.FormatDate(eh.EmployeeHours.Date)
+                    @eh.EmployeeHours.Date.GetElixirDateFormat()
                 </div>
                 <div class="" style="width:15%;">
                     @{ var hoursType = "";

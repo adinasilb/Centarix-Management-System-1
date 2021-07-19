@@ -1,0 +1,70 @@
+﻿@model PrototypeWithAuth.Models.LineChange
+<div class="modal modal-document fader" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+    <div class="elixir-modal-sm modal-dialog-centered mx-auto">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+            <button type="button" class="close modal-close-padding modal-close-style" aria-label="Close" onclick="$.fn.CloseModal('add-change-div');">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form addChangeForm">
+                @Html.HiddenFor(r => r.ProtocolInstanceID)
+                @Html.HiddenFor(r => r.LineID)
+                <div class="modal-header border-0 pt-0 px-0 modal-header-padding text-center">
+                    <div class="container p-0">
+              
+                        <div>
+                            <span class="heading-1"><i class="icon-sync-24px"></i>&ensp;Add Change</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-bodym-0 p-0">
+                    <textarea class="p-3 text rounded-reorder border form-control-plaintext  w-100" asp-for="ChangeText" rows="6">                            
+                    </textarea>
+                </div>
+                <div class="modal-footer border-0 p-0">
+                    <div class="mx-auto modal-footer-mt">
+                        <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin saveChange" value="Save" />
+                        <button type="button" class="custom-button custom-cancel " data-dismiss="modal" onclick="$.fn.CloseModal('add-change-div');">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(".saveChange").click(function (e) {
+        e.preventDefault();
+        //$('.addChangeForm').data("validator").settings.ignore = "";
+        //var valid = $('.addChangeForm').valid();
+        //console.log("valid form: " + valid)
+        //if (!valid) {
+        //    e.preventDefault();
+        //    if (!$('.activeSubmit').hasClass('disabled-submit')) {
+        //        $('.activeSubmit').addClass('disabled-submit')
+        //    }
+
+        //}
+        //else {
+           // $('.activeSubmit').removeClass('disabled-submit')
+            var formData = new FormData($(".addChangeForm")[0]);
+            $.ajax({
+                url: "/Protocols/AddChangeModal?guid=" + $(".createProtocolMasterGuid").val(),
+                traditional: true,
+                data: formData,
+                contentType: false,
+                processData: false,
+                type: "POST",
+                success: function (data) {
+                    $.fn.CloseModal('add-change-div');
+                    $("._Lines").html(data);
+                },
+                error: function (jqxhr) {
+                    $.fn.CloseModal('add-change-div');
+                    $("._Lines").html(jqxhr.responseText);
+           
+                }
+            });
+        //}
+        //$('.addChangeForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+        return true;
+    });
+</script>
