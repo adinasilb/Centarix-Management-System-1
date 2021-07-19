@@ -119,14 +119,14 @@ namespace PrototypeWithAuth.AppData
         }
         public static List<StringWithName> ProtocolRoleEnums()
         {
-            List<StringWithName> ore = new List<StringWithName>()
+            List<StringWithName> pre = new List<StringWithName>()
             {
                 new StringWithName(){StringName = "General", StringDefinition = "Protocols"},
                 new StringWithName(){StringName = "Biomarkers", StringDefinition = "ProtocolsBiomarkers"},
                 new StringWithName(){StringName = "Rejuvenation", StringDefinition = "ProtocolsRejuvenation"},
                 new StringWithName(){StringName = "Delivery Systems", StringDefinition = "ProtocolsDeliverySystems"}
             };
-            return ore;
+            return pre;
         }
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum { NIS, USD }
