@@ -20,6 +20,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<TestFieldHeader> TestFieldHeaders { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<TestCategory> TestCategories { get; set; }
         public DbSet<Division> Divisions { get; set; }
@@ -192,6 +193,10 @@ namespace PrototypeWithAuth.Data
                 .HasForeignKey(r => r.ApplicationUserCreatorID);
 
 
+            //modelBuilder.Entity<Test>()
+            //    .HasOne(t => t.TestFieldHeader)
+            //    .WithOne(tfh => tfh.Test)
+            //    .HasForeignKey<Test>(t => t.TestFieldHeaderID);
 
             modelBuilder.Entity<Line>()
                   .Property(e => e.LineID)

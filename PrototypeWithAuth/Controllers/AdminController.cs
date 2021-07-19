@@ -659,6 +659,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> EditUser(RegisterUserViewModel registerUserViewModel)
+        
         {
             using (var transaction = _context.Database.BeginTransaction())
             {

@@ -387,6 +387,8 @@
     <Compile Remove="Data\Migrations\20210712102451_ParentRequestIsShippingPaidBoolean.Designer.cs" />
     <Compile Remove="Data\Migrations\20210712104603_AdditionalTempRequestMigration.cs" />
     <Compile Remove="Data\Migrations\20210712104603_AdditionalTempRequestMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210719080027_addedTestFieldHeader.cs" />
+    <Compile Remove="Data\Migrations\20210719080027_addedTestFieldHeader.Designer.cs" />
   </ItemGroup>
 
 

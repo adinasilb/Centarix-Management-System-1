@@ -15,5 +15,7 @@ namespace PrototypeWithAuth.Models
         public Experiment Experiment { get; set; }
         public int TestCategoryID { get; set; }
         public TestCategory TestCategory { get; set; }
+        //public int TestFieldHeaderID { get; set; }
+        //public TestFieldHeader TestFieldHeader { get; set; }
     }
 }
