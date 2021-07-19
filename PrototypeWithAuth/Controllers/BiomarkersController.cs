@@ -80,11 +80,11 @@ namespace PrototypeWithAuth.Controllers
                     },
                     new TDViewModel()
                     {
-                        Value = AppUtility.FormatDate(e.StartDateTime)
+                        Value = e.StartDateTime.GetElixirDateFormat()
                     },
                     new TDViewModel()
                     {
-                        Value = AppUtility.FormatDate(e.EndDateTime)
+                        Value =e.EndDateTime.GetElixirDateFormat()
                     }
                 }
                 )
@@ -187,7 +187,7 @@ namespace PrototypeWithAuth.Controllers
                         },
                         new TDViewModel()
                         {
-                            Value = AppUtility.FormatDate(p.DOB)
+                            Value = p.DOB.GetElixirDateFormat()
                         },
                         new TDViewModel()
                         {
