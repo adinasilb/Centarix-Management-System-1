@@ -1036,15 +1036,24 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddFunctionModal(int FunctionTypeID, int LineID, int functionLineID, AppUtility.ProtocolModalType modalType, Guid guid)
+        public async Task<IActionResult> AddFunctionModal(int FunctionTypeID, int LineID, int functionIndex, AppUtility.ProtocolModalType modalType, Guid guid)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
             var tempLinesJson = await _context.TempLinesJsons.Where(tlj => tlj.TempLinesJsonID == guid).FirstOrDefaultAsync();
             var tempLines = tempLinesJson.DeserializeJson<ProtocolsLinesViewModel>();
             var tempLine = tempLines.Lines.Where(tl => tl.Line.LineID == LineID).FirstOrDefault();
-            FunctionLine functionLine = _context.FunctionLines.Where(fl => fl.ID == functionLineID).FirstOrDefault();
+            if (tempLine.Functions.Count() < functionIndex)
+            {
+                tempLine.Functions[functionIndex] = addFunctionViewModel.FunctionLine;
+            }
+            else
+            {
+                tempLine.Functions.Add(addFunctionViewModel.FunctionLine);
+            }
             if (functionLine == null)
             {
+               
+
                 functionLine = new FunctionLine
                 {
                     FunctionType = functionType,
