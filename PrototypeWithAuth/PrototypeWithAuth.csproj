@@ -399,6 +399,24 @@
     <Compile Remove="Data\Migrations\20210719080027_addedTestFieldHeader.Designer.cs" />
     <Compile Remove="Data\Migrations\20210719093255_sdfs.cs" />
     <Compile Remove="Data\Migrations\20210719093255_sdfs.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210719124650_test1.cs" />
+    <Compile Remove="Data\Migrations\20210719124650_test1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210719124953_test1.cs" />
+    <Compile Remove="Data\Migrations\20210719124953_test1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210719125231_test1.cs" />
+    <Compile Remove="Data\Migrations\20210719125231_test1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210719125718_test.cs" />
+    <Compile Remove="Data\Migrations\20210719125718_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210720074831_test.cs" />
+    <Compile Remove="Data\Migrations\20210720074831_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210720080406_test.cs" />
+    <Compile Remove="Data\Migrations\20210720080406_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210720081118_changedSharedTimestamp.cs" />
+    <Compile Remove="Data\Migrations\20210720081118_changedSharedTimestamp.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210720081359_changedSharedTimestamp.cs" />
+    <Compile Remove="Data\Migrations\20210720081359_changedSharedTimestamp.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210720083007_changedSharedTimestamp3.cs" />
+    <Compile Remove="Data\Migrations\20210720083007_changedSharedTimestamp3.Designer.cs" />
   </ItemGroup>
 
 

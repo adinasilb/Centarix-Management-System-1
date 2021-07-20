@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210720082126_changedSharedTimestamp")]
+    partial class changedSharedTimestamp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4772,18 +4774,19 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("SalariedEmployees");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.ShareProtocol", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareBase", b =>
                 {
                     b.Property<int>("ShareID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FromApplicationUserID")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ProtocolID")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
                         .ValueGeneratedOnAddOrUpdate()
@@ -4795,77 +4798,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasKey("ShareID");
 
-                    b.HasIndex("FromApplicationUserID");
+                    b.ToTable("ShareBase");
 
-                    b.HasIndex("ProtocolID");
-
-                    b.HasIndex("ToApplicationUserID");
-
-                    b.ToTable("ShareProtocols");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequest", b =>
-                {
-                    b.Property<int>("ShareID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("FromApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("RequestID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<string>("ToApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ShareID");
-
-                    b.HasIndex("FromApplicationUserID");
-
-                    b.HasIndex("RequestID");
-
-                    b.HasIndex("ToApplicationUserID");
-
-                    b.ToTable("ShareRequests");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ShareResource", b =>
-                {
-                    b.Property<int>("ShareID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("FromApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ResourceID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<string>("ToApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ShareID");
-
-                    b.HasIndex("FromApplicationUserID");
-
-                    b.HasIndex("ResourceID");
-
-                    b.HasIndex("ToApplicationUserID");
-
-                    b.ToTable("ShareResources");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("ShareBase");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Site", b =>
@@ -6101,6 +6036,58 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareProtocol", b =>
+                {
+                    b.HasBaseType("PrototypeWithAuth.Models.ShareBase");
+
+                    b.Property<int>("ProtocolID")
+                        .HasColumnType("int");
+
+                    b.HasIndex("FromApplicationUserID");
+
+                    b.HasIndex("ProtocolID");
+
+                    b.HasIndex("ToApplicationUserID");
+
+                    b.HasDiscriminator().HasValue("ShareProtocol");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequest", b =>
+                {
+                    b.HasBaseType("PrototypeWithAuth.Models.ShareBase");
+
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    b.HasIndex("FromApplicationUserID")
+                        .HasName("IX_ShareBase_FromApplicationUserID1");
+
+                    b.HasIndex("RequestID");
+
+                    b.HasIndex("ToApplicationUserID")
+                        .HasName("IX_ShareBase_ToApplicationUserID1");
+
+                    b.HasDiscriminator().HasValue("ShareRequest");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareResource", b =>
+                {
+                    b.HasBaseType("PrototypeWithAuth.Models.ShareBase");
+
+                    b.Property<int>("ResourceID")
+                        .HasColumnType("int");
+
+                    b.HasIndex("FromApplicationUserID")
+                        .HasName("IX_ShareBase_FromApplicationUserID2");
+
+                    b.HasIndex("ResourceID");
+
+                    b.HasIndex("ToApplicationUserID")
+                        .HasName("IX_ShareBase_ToApplicationUserID2");
+
+                    b.HasDiscriminator().HasValue("ShareResource");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -6875,63 +6862,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.ShareProtocol", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("FromApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany()
-                        .HasForeignKey("ProtocolID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ToApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequest", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
-                        .WithMany("ShareRequestsCreated")
-                        .HasForeignKey("FromApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
-                        .WithMany("ShareRequests")
-                        .HasForeignKey("RequestID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
-                        .WithMany("ShareRequestsReceived")
-                        .HasForeignKey("ToApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ShareResource", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
-                        .WithMany("ShareResourcesCreated")
-                        .HasForeignKey("FromApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Resource", "Resource")
-                        .WithMany()
-                        .HasForeignKey("ResourceID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
-                        .WithMany("ShareResourcesReceived")
-                        .HasForeignKey("ToApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.SubProject", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.Project", "Project")
@@ -7114,6 +7044,67 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.MaritalStatus", "MaritalStatus")
                         .WithMany("Employees")
                         .HasForeignKey("MaritalStatusID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareProtocol", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("FromApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
+                        .WithMany()
+                        .HasForeignKey("ProtocolID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ToApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequest", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
+                        .WithMany("ShareRequestsCreated")
+                        .HasForeignKey("FromApplicationUserID")
+                        .HasConstraintName("FK_ShareBase_AspNetUsers_FromApplicationUserID1")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
+                        .WithMany("ShareRequests")
+                        .HasForeignKey("RequestID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
+                        .WithMany("ShareRequestsReceived")
+                        .HasForeignKey("ToApplicationUserID")
+                        .HasConstraintName("FK_ShareBase_AspNetUsers_ToApplicationUserID1")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareResource", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
+                        .WithMany("ShareResourcesCreated")
+                        .HasForeignKey("FromApplicationUserID")
+                        .HasConstraintName("FK_ShareBase_AspNetUsers_FromApplicationUserID2")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Resource", "Resource")
+                        .WithMany()
+                        .HasForeignKey("ResourceID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
+                        .WithMany("ShareResourcesReceived")
+                        .HasForeignKey("ToApplicationUserID")
+                        .HasConstraintName("FK_ShareBase_AspNetUsers_ToApplicationUserID2")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618

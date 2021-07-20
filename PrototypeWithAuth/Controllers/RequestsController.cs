@@ -2214,12 +2214,12 @@ namespace PrototypeWithAuth.Controllers
                                 RequestID = shareModalViewModel.ID,
                                 FromApplicationUserID = _userManager.GetUserId(User),
                                 ToApplicationUserID = userID,
-                                TimeStamp = DateTime.Now
+                                //TimeStamp = DateTime.Now
                             };
                         }
                         else
                         {
-                            sharedRequest.TimeStamp = DateTime.Now;
+                            //sharedRequest.TimeStamp = DateTime.Now;
                         }
                         _context.Update(sharedRequest);
                     }

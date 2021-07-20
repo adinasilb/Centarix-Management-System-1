@@ -173,6 +173,7 @@ namespace PrototypeWithAuth.AppData
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
         { Request, Resource, Protocol }
         public enum GlobalInfoType { ExchangeRate, LoginUpdates, LastProtocolLine }
+        public enum DataTypeEnum { String, Double, DateTime, Bool }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -754,7 +755,7 @@ namespace PrototypeWithAuth.AppData
 
         public static string GetElixirDateFormat(this DateTime? date)
         {
-            return date?.ToString("d MMM yyyy")??"";
+            return date?.ToString("d MMM yyyy") ?? "";
         }
         public static string GetElixirDateFormat(this DateTime date)
         {
@@ -762,7 +763,7 @@ namespace PrototypeWithAuth.AppData
         }
         public static string GetElixirDateFormatWithTime(this DateTime? date)
         {
-            return date?.ToString("d MMM yyyy HH:mm")??"";
+            return date?.ToString("d MMM yyyy HH:mm") ?? "";
         }
         public static string GetElixirDateFormatWithTime(this DateTime date)
         {
@@ -776,7 +777,7 @@ namespace PrototypeWithAuth.AppData
             }));
         }
 
-        public static List<FunctionLine> GetFunctionsByLineID (int lineID, List<FunctionLine> functionLines)
+        public static List<FunctionLine> GetFunctionsByLineID(int lineID, List<FunctionLine> functionLines)
         {
             return functionLines.Where(fl => fl.LineID == lineID).ToList();
         }
