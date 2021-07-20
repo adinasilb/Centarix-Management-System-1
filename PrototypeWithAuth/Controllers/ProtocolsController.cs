@@ -1046,7 +1046,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 ModalType = modalType,
                 UniqueGuid = guid,
-                FunctionIndex = tempLine.Functions.Count()
+                FunctionIndex = tempLine.Functions?.Count()??0
             };
             if (tempLine.Functions.Count() > functionIndex && functionIndex !=-1)
             {
@@ -1199,17 +1199,25 @@ namespace PrototypeWithAuth.Controllers
                     }
                     else
                     {
+
                         var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
 
+                        if (addFunctionViewModel.FunctionLine.ID==0)
+                        {
+                            var functionLineID = new FunctionLineID();
+                            _context.Add(functionLineID);
+                            await _context.SaveChangesAsync();
+                            addFunctionViewModel.FunctionLine.ID = functionLineID.ID;
+                        }
                         switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
                         {
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
                                 var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
-                                tempLine.Line.Content += " <a href='#' class='open-line-product function-line-node' functionline='" + addFunctionViewModel.FunctionIndex + "' value='" + product.ProductID + "'>" + product.ProductName + "</a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>";
+                                tempLine.Line.Content += " <a href='#' class='open-line-product function-line-node' functionline='" + addFunctionViewModel.FunctionLine.ID + "' value='" + product.ProductID + "'>" + product.ProductName + "</a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>";
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
                                 var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
-                                tempLine.Line.Content += " <a href='#' functionline='" + addFunctionViewModel.FunctionIndex + "' class='open-line-protocol function-line-node' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>"; ;
+                                tempLine.Line.Content += " <a href='#' functionline='" + addFunctionViewModel.FunctionLine.ID + "' class='open-line-protocol function-line-node' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>"; ;
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddFile:
                             case AppUtility.ProtocolFunctionTypes.AddImage:
@@ -1229,11 +1237,7 @@ namespace PrototypeWithAuth.Controllers
                             tempLine.Functions[addFunctionViewModel.FunctionIndex] = addFunctionViewModel.FunctionLine;
                         }
                         else
-                        {
-                            var functionLineID = new FunctionLineID();
-                            _context.Add(functionLineID);
-                            await _context.SaveChangesAsync();
-                            addFunctionViewModel.FunctionLine.ID = functionLineID.ID;                          
+                        {                      
                             tempLine.Functions.Add(addFunctionViewModel.FunctionLine);
                         }
                     }                  
