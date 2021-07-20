@@ -316,7 +316,7 @@ $(function () {
         var pageNumber = parseInt($(this).html());
         $('.page-number').val(pageNumber);
         selectedFilters = $.fn.BindSelectedFilters("");
-        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "POST", undefined, "", null, null, false, selectedFilters);
+        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET", undefined, "", null, null, false, selectedFilters);
         return false;
     });
 
@@ -379,54 +379,60 @@ $(function () {
         $("#priceSortContent1 .priceSort:checked").each(function (e) {
             selectedPriceSort.push($(this).attr("enum"));
         })
-        var contentType = false;
-        if (formdata == undefined) {
-            console.log("formdata is undefined");
-            var newFormData = new FormData();
-            newFormData.append('RequestStatusId', status)
-            newFormData.append('PageNumber',$('.page-number').val())
-            //newFormData.append('RequestStatusID'] = status;
-            newFormData.append('PageType', $('#masterPageType').val())
-            newFormData.append('SectionType', $('#masterSectionType').val())
-            newFormData.append('SidebarType', $('#masterSidebarType').val())
-            newFormData.append('SelectedPriceSort', selectedPriceSort)
-            newFormData.append('SelectedCurrency', $('#tempCurrency').val())
-            newFormData.append('SidebarFilterID', $('.sideBarFilterID').val())
-            newFormData.append('CategorySelected', $('#categorySortContent .select-category').is(":checked"))
-            newFormData.append('SubCategorySelected', $('#categorySortContent .select-subcategory').is(":checked"))
-            newFormData.append('months', months)
-            newFormData.append('years', years)
-            newFormData.append('IsArchive', isArchive)
+       var contentType = true;
+		var processType = true;
+		if (formdata == undefined) {
+			console.log("formdata is undefined");
+			formdata = {
+				PageNumber: $('.page-number').val(),
+				RequestStatusID: status,
+				PageType: $('#masterPageType').val(),
+				SectionType: $('#masterSectionType').val(),
+				SidebarType: $('#masterSidebarType').val(),
+				SelectedPriceSort: selectedPriceSort,
+				SelectedCurrency: $('#tempCurrency').val(),
+				SidebarFilterID: $('.sideBarFilterID').val(),
+				CategorySelected: $('#categorySortContent .select-category').is(":checked"),
+				SubCategorySelected: $('#categorySortContent .select-subcategory').is(":checked"),
+				months: months,
+				years: years,
+				IsArchive: isArchive
+			};
+			console.log(formdata);
+		}
+		else {
+			$.fn.CloseModal(modalClass);
+			contentType = false;
+			processType = false;
+		}
+        if(selectedFilters !=undefined)
+        {
+            var newFormData = formdata;
+            Object.assign(newFormData, selectedFilters);
+           var formdata = new FormData();
 
-            //console.log(formdata);
-        }
-        else {
-            $.fn.CloseModal(modalClass);
-            contentType = false;
-            var newFormData = formData;
-        }
-        
-
-        //var continueflag = true;
-        if (selectedFilters != undefined) {
-            console.log(selectedFilters);
-            for (const [key, value] of Object.entries(selectedFilters)) {
-                //while (continueflag) {
-                console.log("key: " + key);
-                console.log("value: " + value);
-                newFormData.append(key, value);
-                    //continueflag = false;
-                //}
+            for ( var key in newFormData ) {
+              
+                if(Array.isArray(newFormData[key]))
+                {
+                    for (const val of newFormData[key].values()) {
+                            formdata.append(key, val);
+                    }
+                }
+                else{
+                      formdata.append(key,newFormData[key]);
+                }              
             }
+            type="POST"
+            processType = false;
+            contentType=false;
         }
-        console.log(...newFormData);
-
         $.ajax({
             contentType: contentType,
-            processData: false,
+            processData: processType,
             async: true,
             url: url,
-            data: newFormData,
+            data: formdata,
             traditional: true,
             type: type,
             cache: false,
