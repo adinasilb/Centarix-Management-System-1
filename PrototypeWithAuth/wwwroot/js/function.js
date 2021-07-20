@@ -39,7 +39,7 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
 	        functionSelect =$("div.line-input[data-val="+$(".lineID").val()+"]").find("a.function-line-node[functionline="+$(".function-lineID").val()+"]");   
             changeToTriggerSelect=$("div.line-input[data-val="+$(".lineID").val()+"]")
          }
-         var prev = functionSelect.prev();
+        var prev = functionSelect.prev();
         var next = functionSelect.next();
         var html = prev.html() + next.html();
          prev.html(html);

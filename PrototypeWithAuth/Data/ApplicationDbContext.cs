@@ -20,6 +20,8 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+
+        public DbSet<TempLineID> TempLineIDs { get; set; }
         public DbSet<TestFieldHeader> TestFieldHeaders { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<TestCategory> TestCategories { get; set; }
@@ -349,6 +351,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
             modelBuilder.Entity<Request>().Property(r => r.ExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Product>().Property(r => r.ProductCreationDate).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<TempLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             /*PROTOCOLS*/
             ///set up composite keys
 
