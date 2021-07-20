@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PrototypeWithAuth.AppData.UtilityModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ namespace PrototypeWithAuth.AppData
 {
     public class RequestIndexObject
     {
+        //do not put any extra complex objects into this class
         public string ErrorMessage { get; set; }
         private int _PageNumber;
         private int _RequestStatusID;
@@ -108,6 +110,8 @@ namespace PrototypeWithAuth.AppData
         public bool IsReorder { get; set; }
         public bool IsArchive { get; set; }
         public Guid GUID { get; set; } //THIS IS ONLY FOR PASSING BETWEEN CONTROLLERS ---> NOT FOR USE IN REMEMBERING DATA/REFERENCING ETC.
-        //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
+
+        public SelectedFilters SelectedFilters { get; set; }
+                                       //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
     }
 }

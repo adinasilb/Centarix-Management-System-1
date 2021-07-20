@@ -1258,14 +1258,18 @@
             });
         };
 
-        $.fn.BindSelectedFilters = function () {
+        $.fn.BindSelectedFilters = function (className) {
             console.log('in bind selected filters');
-            var selectedVendor = $(".popover .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
-            var selectedOwner = $(".popover .owner-col .selected button").map(function () { return $(this).attr("value"); }).get();
-            var selectedLocation = $(".popover .location-col .selected button").map(function () { return $(this).attr("value"); }).get();
-            var selectedCategory = $(".popover .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
-            var selectedSubCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedVendor = $(className + " .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedOwner = $(className + " .owner-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedLocation = $(className + " .location-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedCategory = $(className + " .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedSubCategory = $(className + " .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            console.log(selectedVendor);
             var archived = $('.archive-check').val();
+            if (archived == undefined) {
+                archived = false;
+            }
             console.log('archived ' + archived);
             return { SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived }
         }

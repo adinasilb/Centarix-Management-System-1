@@ -10,7 +10,7 @@ $('body').off('click').on('click', '.btn-filter', function () {
 	//alert("in filter function")
 	//var archived = $('.archive-check').val();
 	//console.log('archived ' + archived);
-	var data = $.fn.BindSelectedFilters();
+	var data = $.fn.BindSelectedFilters('.popover');
 	var id = $(this).val();
 	var col = $(this).parent().parent();
 	var arr;
@@ -143,7 +143,7 @@ $.fn.SearchColumns = function (searchText, colName) {
 }
 
 $("body").on("click", "#inventoryFilterContentDiv .popover-close", function (e) {
-	console.log('x button')
+	//alert('x button')
 	$('[data-toggle="popover"]').popover('dispose');
 	$('body').removeClass('popover-open');
 	$('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
@@ -163,13 +163,13 @@ $(".popover").off("click").on("click", ".archive-button", function (e) {
 		$(this).attr("checked", !checked);
 		$(this).val(!checked);
 		/*var numFilters = $('.numFilters').attr("value");
-		var data = $.fn.BindSelectedFilters();
+		var data = $.fn.BindSelectedFilters('.popover');
 		$.fn.ReloadFilterDiv(numFilters, data);*/
 	})
 });
 $('body').on('click', "#applyFilter", function () {
 	console.log('clicked!')
-	var data = $.fn.BindSelectedFilters();
+	var data = $.fn.BindSelectedFilters('.popover');
 	var searchText = $('.popover .search-requests-in-filter').val();
 	var numFilters = $('.numFilters').attr("value");
 	console.log('search text ' + searchText);
