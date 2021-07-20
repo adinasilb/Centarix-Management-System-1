@@ -379,55 +379,69 @@ $(function () {
         $("#priceSortContent1 .priceSort:checked").each(function (e) {
             selectedPriceSort.push($(this).attr("enum"));
         })
-        var contentType = false;
         if (formdata == undefined) {
             console.log("formdata is undefined");
-            var newFormData = new FormData();
-            newFormData.append('RequestStatusId', status)
-            newFormData.append('PageNumber',$('.page-number').val())
-            //newFormData.append('RequestStatusID'] = status;
-            newFormData.append('PageType', $('#masterPageType').val())
-            newFormData.append('SectionType', $('#masterSectionType').val())
-            newFormData.append('SidebarType', $('#masterSidebarType').val())
-            newFormData.append('SelectedPriceSort', selectedPriceSort)
-            newFormData.append('SelectedCurrency', $('#tempCurrency').val())
-            newFormData.append('SidebarFilterID', $('.sideBarFilterID').val())
-            newFormData.append('CategorySelected', $('#categorySortContent .select-category').is(":checked"))
-            newFormData.append('SubCategorySelected', $('#categorySortContent .select-subcategory').is(":checked"))
-            newFormData.append('months', months)
-            newFormData.append('years', years)
-            newFormData.append('IsArchive', isArchive)
-
+            if (type === 'GET') {
+                var contentType = true;
+                var processData = true;
+                var newFormData = {
+                    PageNumber: $('.page-number').val(),
+                    RequestStatusID: status,
+                    PageType: $('#masterPageType').val(),
+                    SectionType: $('#masterSectionType').val(),
+                    SidebarType: $('#masterSidebarType').val(),
+                    SelectedPriceSort: selectedPriceSort,
+                    SelectedCurrency: $('#tempCurrency').val(),
+                    SidebarFilterID: $('.sideBarFilterID').val(),
+                    CategorySelected: $('#categorySortContent .select-category').is(":checked"),
+                    SubCategorySelected: $('#categorySortContent .select-subcategory').is(":checked"),
+                    months: months,
+                    years: years,
+                    IsArchive: isArchive
+                };
+            } else {
+                var contentType = false;
+                var processData = false;
+                var newFormData = new FormData();
+                newFormData.append('RequestStatusId', status)
+                newFormData.append('PageNumber', $('.page-number').val())
+                newFormData.append('PageType', $('#masterPageType').val())
+                newFormData.append('SectionType', $('#masterSectionType').val())
+                newFormData.append('SidebarType', $('#masterSidebarType').val())
+                newFormData.append('SelectedPriceSort', selectedPriceSort)
+                newFormData.append('SelectedCurrency', $('#tempCurrency').val())
+                newFormData.append('SidebarFilterID', $('.sideBarFilterID').val())
+                newFormData.append('CategorySelected', $('#categorySortContent .select-category').is(":checked"))
+                newFormData.append('SubCategorySelected', $('#categorySortContent .select-subcategory').is(":checked"))
+                newFormData.append('months', months)
+                newFormData.append('years', years)
+                newFormData.append('IsArchive', isArchive);
+                if (selectedFilters != undefined) {
+                    console.log(selectedFilters);
+                    for (const [key, arr] of Object.entries(selectedFilters)) {
+                        console.log("key: " + key);
+                        console.log("value: " + arr);
+                        if (arr != undefined && arr != "" && arr != null) {
+                            for (const val of arr.values()) {
+                                newFormData.append(key, val);
+                            }
+                        }
+                    }
+                }
+            }
             //console.log(formdata);
         }
         else {
             $.fn.CloseModal(modalClass);
             contentType = false;
+            processData = false;
             var newFormData = formData;
-        }
-        
-
-        //var continueflag = true;
-        if (selectedFilters != undefined) {
-            console.log(selectedFilters);
-            for (const [key, arr] of Object.entries(selectedFilters)) {
-                //while (continueflag) {
-                console.log("key: " + key);
-                console.log("value: " + arr);
-                if (arr != undefined && arr != "" && arr != null) {
-                    for (const val of arr.values()) {
-                        newFormData.append(key, val);
-                    }
-                }
-                    //continueflag = false;
-                //}
-            }
         }
         console.log(...newFormData);
 
         $.ajax({
             contentType: contentType,
-            processData: false,
+            processData: processData,
             async: true,
             url: url,
             data: newFormData,
