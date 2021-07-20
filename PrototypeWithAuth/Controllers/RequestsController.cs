@@ -5089,14 +5089,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadOrderViewModel, TempRequestListViewModel tempRequestListViewModel, bool isCancel = false)
         {
-            if (isCancel)
-            {
-                //tempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.RequestStatusID = 6;
-                 
-                //await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
-                //DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
-                return new EmptyResult();
-            }
+            
             try
             {
                 var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
@@ -5108,20 +5101,31 @@ namespace PrototypeWithAuth.Controllers
                 };
                 foreach (var tempRequest in deserializedTempRequestListViewModel.TempRequestViewModels)
                 {
-                    if (uploadOrderViewModel.ExpectedSupplyDays != null)
+                    if (isCancel)
                     {
-                        tempRequest.Request.ExpectedSupplyDays = uploadOrderViewModel.ExpectedSupplyDays;
+                        tempRequest.Request.RequestStatusID = 6;
                     }
-                    if (uploadOrderViewModel.ParentRequest.OrderDate == DateTime.Today) //if it's today, add seconds to be now so it shows up on top
+                    else
                     {
-                        uploadOrderViewModel.ParentRequest.OrderDate = DateTime.Now;
+                        if (uploadOrderViewModel.ExpectedSupplyDays != null)
+                        {
+                            tempRequest.Request.ExpectedSupplyDays = uploadOrderViewModel.ExpectedSupplyDays;
+                        }
+                        if (uploadOrderViewModel.ParentRequest.OrderDate == DateTime.Today) //if it's today, add seconds to be now so it shows up on top
+                        {
+                            uploadOrderViewModel.ParentRequest.OrderDate = DateTime.Now;
+                        }
+                        tempRequest.Request.ParentRequest = uploadOrderViewModel.ParentRequest;
+                        tempRequest.Request.ParentQuote = parentQuote;
                     }
-                    tempRequest.Request.ParentRequest = uploadOrderViewModel.ParentRequest;
-                    tempRequest.Request.ParentQuote = parentQuote;
                 }
 
                 await SetTempRequestAsync(newTempRequestJson, deserializedTempRequestListViewModel);
                 await KeepTempRequestJsonCurrentAsOriginal(newTempRequestJson.GuidID);
+                if (isCancel)
+                {
+                    return new EmptyResult();
+                }
                 //do we need this current/original here??
                 //var requests = new List<Request>();
                 //var isRequests = true;
