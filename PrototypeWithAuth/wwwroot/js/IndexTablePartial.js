@@ -410,11 +410,15 @@ $(function () {
         //var continueflag = true;
         if (selectedFilters != undefined) {
             console.log(selectedFilters);
-            for (const [key, value] of Object.entries(selectedFilters)) {
+            for (const [key, arr] of Object.entries(selectedFilters)) {
                 //while (continueflag) {
                 console.log("key: " + key);
-                console.log("value: " + value);
-                newFormData.append(key, value);
+                console.log("value: " + arr);
+                if (arr != undefined && arr != "" && arr != null) {
+                    for (const val of arr.values()) {
+                        newFormData.append(key, val);
+                    }
+                }
                     //continueflag = false;
                 //}
             }
