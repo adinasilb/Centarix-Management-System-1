@@ -1042,18 +1042,13 @@ namespace PrototypeWithAuth.Controllers
             var tempLinesJson = await _context.TempLinesJsons.Where(tlj => tlj.TempLinesJsonID == guid).FirstOrDefaultAsync();
             var tempLines = tempLinesJson.DeserializeJson<ProtocolsLinesViewModel>();
             var tempLine = tempLines.Lines.Where(tl => tl.Line.LineID == LineID).FirstOrDefault();
-            if (tempLine.Functions.Count() < functionIndex)
+            FunctionLine functionLine = null;
+            if (tempLine.Functions.Count() > functionIndex && functionIndex !=-1)
             {
-                tempLine.Functions[functionIndex] = addFunctionViewModel.FunctionLine;
+                functionLine = tempLine.Functions[functionIndex];
             }
             else
-            {
-                tempLine.Functions.Add(addFunctionViewModel.FunctionLine);
-            }
-            if (functionLine == null)
-            {
-               
-
+            {                
                 functionLine = new FunctionLine
                 {
                     FunctionType = functionType,
@@ -1072,7 +1067,7 @@ namespace PrototypeWithAuth.Controllers
             };
             AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.FunctionLine;
             string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
-            string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, functionLineID.ToString());
+            string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, functionLine.ID.ToString());
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
             {
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
@@ -1083,11 +1078,11 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddFile:
                     viewmodel.DocumentsInfo = new List<DocumentFolder>();
-                    base.GetExistingFileStrings(viewmodel.DocumentsInfo, AppUtility.FolderNamesEnum.Files, parentFolderName, uploadProtocolsFolder2, functionLineID.ToString());
+                    base.GetExistingFileStrings(viewmodel.DocumentsInfo, AppUtility.FolderNamesEnum.Files, parentFolderName, uploadProtocolsFolder2, functionLine.ID.ToString());
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddImage:
                     viewmodel.DocumentsInfo = new List<DocumentFolder>();
-                    base.GetExistingFileStrings(viewmodel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, parentFolderName, uploadProtocolsFolder2, functionLineID.ToString());
+                    base.GetExistingFileStrings(viewmodel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, parentFolderName, uploadProtocolsFolder2, functionLine.ID.ToString());
                     break;
             }
             return PartialView(viewmodel);
