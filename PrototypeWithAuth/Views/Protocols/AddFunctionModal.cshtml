@@ -34,12 +34,12 @@
                     <div class="mx-auto modal-footer-mt">
                         @if ((Model.ModalType == AppUtility.ProtocolModalType.Edit ||
                            Model.ModalType == AppUtility.ProtocolModalType.Create)
-                           && ((Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProduct.ToString() && Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProtocol.ToString()) || Model.IsNew))
+                           && ((Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProduct.ToString() && Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProtocol.ToString()) || Model.FunctionLine.ID==0))
                         {
                             <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin saveFunction" value="Save" />
                         }
 
-                        @if ((Model.ModalType == AppUtility.ProtocolModalType.Edit || Model.ModalType == AppUtility.ProtocolModalType.Create) && !Model.IsNew)
+                        @if ((Model.ModalType == AppUtility.ProtocolModalType.Edit || Model.ModalType == AppUtility.ProtocolModalType.Create) && Model.FunctionLine.ID >0)
                         {
                             <input type="submit" class="custom-button custom-cancel removeFunction" value="Remove" />
                         }

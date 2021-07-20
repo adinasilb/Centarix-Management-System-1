@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210720122202_AddTempIDsTable")]
+    partial class AddTempIDsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1190,45 +1192,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasFilter("[EmployeeId] IS NOT NULL");
 
                     b.ToTable("Freelancers");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.FunctionLine", b =>
-                {
-                    b.Property<int>("ID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("FunctionTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsTemporaryDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LineID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProtocolID")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("Timer")
-                        .HasColumnType("time");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("FunctionTypeID");
-
-                    b.HasIndex("LineID");
-
-                    b.HasIndex("ProductID");
-
-                    b.HasIndex("ProtocolID");
-
-                    b.ToTable("FunctionLines");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FunctionLineID", b =>
@@ -6376,31 +6339,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
                         .WithOne("Freelancer")
                         .HasForeignKey("PrototypeWithAuth.Models.Freelancer", "EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.FunctionLine", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.FunctionType", "FunctionType")
-                        .WithMany()
-                        .HasForeignKey("FunctionTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Line", "Line")
-                        .WithMany()
-                        .HasForeignKey("LineID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany()
-                        .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

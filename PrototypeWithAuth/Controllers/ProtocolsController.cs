@@ -641,7 +641,6 @@ namespace PrototypeWithAuth.Controllers
 
                         }
                         await _context.SaveChangesAsync();
-                        await _context.FunctionLines.Where(fl => fl.IsTemporary && fl.Line.IsTemporaryDeleted == false).ForEachAsync(fl => { fl.IsTemporary = false; _context.Update(fl); });
                         await _context.FunctionLines.Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted == true).ForEachAsync(fl => { _context.Remove(fl); });
                         await _context.SaveChangesAsync();
                         await DeleteTemporaryDeletedLinesAsync();
@@ -1062,7 +1061,6 @@ namespace PrototypeWithAuth.Controllers
                     Line = tempLine.Line,
                     LineID = LineID,                   
                 };
-                viewmodel.IsNew =true;
             }
 
         
@@ -1226,12 +1224,16 @@ namespace PrototypeWithAuth.Controllers
                         }
                         addFunctionViewModel.FunctionLine.FunctionType = functionType;
 
-                        if (tempLine.Functions.Count() < addFunctionViewModel.FunctionIndex)
+                        if (addFunctionViewModel.FunctionLine.ID >0)
                         {
                             tempLine.Functions[addFunctionViewModel.FunctionIndex] = addFunctionViewModel.FunctionLine;
                         }
                         else
                         {
+                            var functionLineID = new FunctionLineID();
+                            _context.Add(functionLineID);
+                            await _context.SaveChangesAsync();
+                            addFunctionViewModel.FunctionLine.ID = functionLineID.ID;                          
                             tempLine.Functions.Add(addFunctionViewModel.FunctionLine);
                         }
                     }                  
