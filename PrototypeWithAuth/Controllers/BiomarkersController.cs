@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -25,9 +26,19 @@ namespace PrototypeWithAuth.Controllers
             _context = context;
         }
 
-        public void AddData()
+        public void _1InsertExeriments()
         {
-
+            //DateTime startDate; 
+            //DateTime.TryParseExact("20210408", "yyyyMMdd", CultureInfo.InvariantCulture, );
+            //Experiment CrossSectionalAgingStudy = new Experiment()
+            //{
+            //    Description = "Cross Sectional Aging Study",
+            //    ExperimentCode = "ex1",
+            //    NumberOfParticipants = 128,
+            //    MinimumAge = 20,
+            //    MaximumAge = 60,
+            //    StartDateTime = "20210408".ToString("yyyy.MM.dd", CultureInfo.InvariantCulture)
+            //};
         }
 
         [HttpGet]
