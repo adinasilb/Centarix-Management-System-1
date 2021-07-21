@@ -316,7 +316,7 @@ $(function () {
         var pageNumber = parseInt($(this).html());
         $('.page-number').val(pageNumber);
         selectedFilters = $.fn.BindSelectedFilters("");
-        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET", undefined, "", null, null, false, selectedFilters);
+        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "POST", undefined, "", null, null, false, selectedFilters);
         return false;
     });
 
@@ -375,12 +375,16 @@ $(function () {
     $.fn.ajaxPartialIndexTable = function (status, url, viewClass, type, formdata, modalClass = "", months, years, isArchive, selectedFilters) {
         console.log("in ajax partial index call" + url);
         console.log('selected filters: ' + selectedFilters);
+        /*var selectedPriceSort = {};
+        $("#priceSortContent1 .priceSort:checked").each(function (e) {
+            selectedPriceSort["SelectedPriceSort"] = $(this).attr("enum");
+        })*/
         var selectedPriceSort = [];
         $("#priceSortContent1 .priceSort:checked").each(function (e) {
             selectedPriceSort.push($(this).attr("enum"));
         })
-       var contentType = true;
-		var processType = true;
+        var selectedPriceSortObj = { "SelectedPriceSort": selectedPriceSort }
+        console.log(selectedPriceSortObj)
 		if (formdata == undefined) {
 			console.log("formdata is undefined");
 			formdata = {
@@ -389,7 +393,7 @@ $(function () {
 				PageType: $('#masterPageType').val(),
 				SectionType: $('#masterSectionType').val(),
 				SidebarType: $('#masterSidebarType').val(),
-				SelectedPriceSort: selectedPriceSort,
+				//SelectedPriceSort: selectedPriceSort,
 				SelectedCurrency: $('#tempCurrency').val(),
 				SidebarFilterID: $('.sideBarFilterID').val(),
 				CategorySelected: $('#categorySortContent .select-category').is(":checked"),
@@ -402,30 +406,17 @@ $(function () {
 		}
 		else {
 			$.fn.CloseModal(modalClass);
-			contentType = false;
-			processType = false;
-		}
-        if(selectedFilters !=undefined)
-        {
-            var newFormData = formdata;
-            Object.assign(newFormData, selectedFilters);
-           var formdata = new FormData();
+        }
+        var objectsToAdd = [];
+        if (selectedFilters != undefined) { objectsToAdd.push(selectedFilters) }
+        if (selectedPriceSortObj != undefined) { objectsToAdd.push(selectedPriceSortObj) }
+        formdata = $.fn.AddObjectsToFormdata(formdata, objectsToAdd);
 
-            for ( var key in newFormData ) {
-              
-                if(Array.isArray(newFormData[key]))
-                {
-                    for (const val of newFormData[key].values()) {
-                            formdata.append(key, val);
-                    }
-                }
-                else{
-                      formdata.append(key,newFormData[key]);
-                }              
-            }
-            type="POST"
+        var contentType = true;
+        var processType = true;
+        if (type === "POST") {
             processType = false;
-            contentType=false;
+            contentType = false;
         }
         $.ajax({
             contentType: contentType,
@@ -445,6 +436,36 @@ $(function () {
         });
 
         return false;
+    }
+    $.fn.AddObjectsToFormdata = function (formdata, arrayOfObjects) {
+        if (arrayOfObjects.length) {
+            console.log('in add object to formdata')
+            console.log(arrayOfObjects)
+            var newFormData = formdata;
+            for (var obj of arrayOfObjects) {
+                Object.assign(newFormData, obj);
+                console.log('obj ' + obj)
+            }
+            var formdata = new FormData();
+
+            for (var key in newFormData) {
+
+                if (Array.isArray(newFormData[key])) {
+                    for (const val of newFormData[key].values()) {
+                        formdata.append(key, val);
+                        console.log('key' + key);
+                        console.log('val' + val)
+                    }
+                }
+                else {
+                    formdata.append(key, newFormData[key]);
+                    console.log('key ' + key);
+                    console.log('value ' + newFormData[key])
+                }
+            }
+            console.log(...formdata);
+        }
+        return formdata;
     }
 
 });

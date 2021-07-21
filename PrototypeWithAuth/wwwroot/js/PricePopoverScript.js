@@ -30,11 +30,11 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
     }
     else if ($("#masterSidebarType").val() == "Favorites" || $("#masterSidebarType").val() == "SharedRequests")
     {
-        $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "GET");
+        $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "POST");
     }
     else if ($('#masterPageType').val() == "RequestCart" || $('#masterPageType').val() == "LabManagementQuotes" || $('#masterPageType').val() == "AccountingPayments" || $('#masterPageType').val() == "AccountingNotifications") {
     
-            $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableDataByVendor", "._IndexTableDataByVendor", "GET");
+        $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableDataByVendor", "._IndexTableDataByVendor", "POST");
     }
     else {
         if ($('#masterPageType').val() == "AccountingGeneral") {
@@ -42,7 +42,7 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
             var month = $("#Months").val();
 
         }
-        $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "GET", undefined, "", month, year);
+        $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "POST", undefined, "", month, year);
     }
     return false;
 
@@ -80,7 +80,7 @@ $(".open-price-popover").off('click').click(function () {
                 var month = $("#Months").val();
 
             }
-            $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "GET", undefined, "", month, year);
+            $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "POST", undefined, "", month, year);
         }
         return false;
     })

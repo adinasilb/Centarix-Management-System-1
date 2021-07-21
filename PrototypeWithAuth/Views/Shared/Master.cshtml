@@ -1108,19 +1108,22 @@
             }
         };
         $.fn.getRequestIndexString = function(){
-            var selectedPriceSort = [];
+            var selectedPriceSort = "";
             $("#priceSortContent1 .priceSort:checked").each(function (e) {
-                selectedPriceSort.push($(this).attr("enum"));
+                selectedPriceSort += "&SelectedPriceSort=" + $(this).attr("enum");
             })
-            return(
+            console.log(selectedPriceSort)
+            var queryString =
                 "PageNumber=" + $('.page-number').val() +
                 "&RequestStatusID=" + $(".request-status-id").val() +
                 "&PageType=" + $('#masterPageType').val() +
                 "&SectionType=" + $('#masterSectionType').val() +
                 "&SidebarType=" + $('#masterSidebarType').val() +
-                "&SelectedPriceSort=" + selectedPriceSort +
                 "&SelectedCurrency=" + $('#tempCurrency').val() +
-                "&SidebarFilterID=" + $('.sideBarFilterID').val());
+                "&SidebarFilterID=" + $('.sideBarFilterID').val();
+            queryString += selectedPriceSort;
+            console.log(queryString)
+            return queryString;
         }
         $.fn.formatDateForSubmit = function(val)
         {
