@@ -36,9 +36,14 @@ namespace PrototypeWithAuth.AppData
                     MenuDescription = AppUtility.MenuItems.Protocols.ToString(),
                     MenuViewName = "Protocols",
                     ControllerName = "Protocols",
-                    ActionName = "CurrentProtocols",
+                    ActionName = "ReportsCategories",
                     MenuImageURL = "/images/css/main_menu_icons/protocols.png",
-                    SmallMenuImageURL = "/images/css/main_menu_small_icons/protocols_menu_button.png"
+                    SmallMenuImageURL = "/images/css/main_menu_small_icons/protocols_menu_button.png",
+                    RouteValues = new Microsoft.AspNetCore.Routing.RouteValueDictionary()
+                    {
+                        {"PageType",  AppUtility.PageTypeEnum.ProtocolsReports },
+                        { "SidebarType", AppUtility.SidebarEnum.WeeklyReports },
+                    },
                 },
                 new Menu()
                 {
