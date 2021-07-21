@@ -186,13 +186,20 @@ namespace PrototypeWithAuth.ViewModels
         private string GetLocationInstanceNameBefore(Request r)
         {
             var newLIName = "";
-            if (r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParentID == null)//is temporary location
+            try
             {
-                newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName;
+                if (r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParentID == null)//is temporary location
+                {
+                    newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName;
+                }
+                else
+                {
+                    newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationInstanceName;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationInstanceName;
+                newLIName = "Location Error";
             }
             return newLIName;
         }
