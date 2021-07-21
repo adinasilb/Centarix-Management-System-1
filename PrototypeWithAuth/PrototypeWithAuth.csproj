@@ -417,6 +417,8 @@
     <Compile Remove="Data\Migrations\20210720081359_changedSharedTimestamp.Designer.cs" />
     <Compile Remove="Data\Migrations\20210720083007_changedSharedTimestamp3.cs" />
     <Compile Remove="Data\Migrations\20210720083007_changedSharedTimestamp3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210720124451_addedTestGroupFK.cs" />
+    <Compile Remove="Data\Migrations\20210720124451_addedTestGroupFK.Designer.cs" />
   </ItemGroup>
 
 

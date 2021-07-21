@@ -25,6 +25,11 @@ namespace PrototypeWithAuth.Controllers
             _context = context;
         }
 
+        public void AddData()
+        {
+
+        }
+
         [HttpGet]
         [Authorize(Roles = "Biomarkers")]
         public IActionResult HumanTrialsList()

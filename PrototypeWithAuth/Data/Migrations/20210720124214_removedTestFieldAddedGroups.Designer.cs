@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210720124214_removedTestFieldAddedGroups")]
+    partial class removedTestFieldAddedGroups
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5054,6 +5056,18 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ExperimentID")
                         .HasColumnType("int");
 
+                    b.Property<string>("Header1GroupID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Header1ID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Header1Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Header1Type")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -5096,91 +5110,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("IsNone")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TestOuterGroupID")
-                        .HasColumnType("int");
 
                     b.HasKey("TestGroupID");
 
-                    b.HasIndex("TestOuterGroupID");
-
-                    b.ToTable("TestGroups");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.TestHeader", b =>
-                {
-                    b.Property<int>("TestHeaderID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("List")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TestGroupID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("TestHeaderID");
-
-                    b.HasIndex("TestGroupID");
-
-                    b.ToTable("TestHeaders");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.TestOuterGroup", b =>
-                {
-                    b.Property<int>("TestOuterGroupID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("IsNone")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TestID")
-                        .HasColumnType("int");
-
-                    b.HasKey("TestOuterGroupID");
-
-                    b.HasIndex("TestID");
-
-                    b.ToTable("TestOuterGroups");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.TestValue", b =>
-                {
-                    b.Property<int>("TestValueID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ParticipantID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TestHeaderID")
-                        .HasColumnType("int");
-
-                    b.HasKey("TestValueID");
-
-                    b.HasIndex("ParticipantID");
-
-                    b.HasIndex("TestHeaderID");
-
-                    b.ToTable("TestValues");
+                    b.ToTable("TestGroup");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.TimekeeperNotification", b =>
@@ -7052,48 +6987,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Division", "Division")
                         .WithMany("TestCategories")
                         .HasForeignKey("DivisionID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.TestGroup", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.TestOuterGroup", "TestOuterGroup")
-                        .WithMany("TestGroups")
-                        .HasForeignKey("TestOuterGroupID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.TestHeader", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.TestGroup", "TestGroup")
-                        .WithMany("TestHeaders")
-                        .HasForeignKey("TestGroupID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.TestOuterGroup", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.Test", "Test")
-                        .WithMany("TestOuterGroups")
-                        .HasForeignKey("TestID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.TestValue", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.Participant", "Participant")
-                        .WithMany()
-                        .HasForeignKey("ParticipantID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.TestHeader", "TestHeader")
-                        .WithMany()
-                        .HasForeignKey("TestHeaderID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

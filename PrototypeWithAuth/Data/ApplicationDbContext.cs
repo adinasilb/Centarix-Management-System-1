@@ -20,7 +20,10 @@ namespace PrototypeWithAuth.Data
         {
 
         }
-        public DbSet<TestFieldHeader> TestFieldHeaders { get; set; }
+        public DbSet<TestValue> TestValues { get; set; }
+        public DbSet<TestHeader> TestHeaders { get; set; }
+        public DbSet<TestOuterGroup> TestOuterGroups { get; set; }
+        public DbSet<TestGroup> TestGroups { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<TestCategory> TestCategories { get; set; }
         public DbSet<Division> Divisions { get; set; }
