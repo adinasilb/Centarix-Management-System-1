@@ -40,7 +40,7 @@
             console.log(selectedTab);
             $(".selectedTab").val(selectedTab);
             var formData = new FormData($(".createProtocolForm")[0]);
-                      var modalType = $(".modalType").val();
+            var modalType = $(".modalType").val();
             $.ajax({
                 url: "/Protocols/CreateProtocol",
                 traditional: true,

@@ -508,7 +508,6 @@ namespace PrototypeWithAuth.Controllers
                     }
                     catch (Exception ex)
                     {
-
                         await transaction.RollbackAsync();
                         var viewmodel = await OrderLinesForViewAsync(false, protocolInstance.ProtocolID, AppUtility.ProtocolModalType.CheckListMode, guid, protocolInstance);
                         viewmodel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
@@ -556,8 +555,17 @@ namespace PrototypeWithAuth.Controllers
             {
                 createProtocolsViewModel.UniqueGuid = Guid.NewGuid(); 
                 var functionLines = await _context.FunctionLines.Where(fl => fl.Line.ProtocolID == protocolID && fl.IsTemporaryDeleted == false).Include(fl => fl.FunctionType).ToListAsync();
+                
                 var lines = await  _context.Lines.Where(l => l.ProtocolID == protocolID && l.IsTemporaryDeleted == false).Select(l=> 
                 new ProtocolsLineViewModel { Line = l, Functions =  AppUtility.GetFunctionsByLineID(l.LineID, functionLines)}).ToListAsync();
+                if (lines.Count() == 0)
+                {
+                    var lineID = new TempLineID();
+                    _context.Add(lineID);
+                    await _context.SaveChangesAsync();
+                    var line = new Line() { LineID = lineID.ID, ProtocolID = createProtocolsViewModel.Protocol.ProtocolID, LineNumber = 1, LineTypeID = 1 };
+                    lines.Add(new ProtocolsLineViewModel { Line = line });
+                }
                  //create new tempjson 
                 TempLinesJson tempLinesJson = new TempLinesJson{TempLinesJsonID =createProtocolsViewModel.UniqueGuid };
                 tempLinesJson.SerializeViewModel(new ProtocolsLinesViewModel { Lines = lines});
@@ -1048,7 +1056,7 @@ namespace PrototypeWithAuth.Controllers
                 UniqueGuid = guid,
                 FunctionIndex = tempLine.Functions?.Count()??0
             };
-            if (tempLine.Functions.Count() > functionIndex && functionIndex !=-1)
+            if (tempLine.Functions?.Count() > functionIndex && functionIndex !=-1)
             {
                 viewmodel.FunctionLine = tempLine.Functions[functionIndex];
             }
@@ -1214,10 +1222,12 @@ namespace PrototypeWithAuth.Controllers
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
                                 var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
                                 tempLine.Line.Content += " <a href='#' class='open-line-product function-line-node' functionline='" + addFunctionViewModel.FunctionLine.ID + "' value='" + product.ProductID + "'>" + product.ProductName + "</a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>";
+                                addFunctionViewModel.FunctionLine.Product = product;
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
                                 var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
                                 tempLine.Line.Content += " <a href='#' functionline='" + addFunctionViewModel.FunctionLine.ID + "' class='open-line-protocol function-line-node' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>"; ;
+                                addFunctionViewModel.FunctionLine.Protocol = protocol;
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddFile:
                             case AppUtility.ProtocolFunctionTypes.AddImage:
@@ -1231,8 +1241,12 @@ namespace PrototypeWithAuth.Controllers
                                 break;
                         }
                         addFunctionViewModel.FunctionLine.FunctionType = functionType;
+                        if(tempLine.Functions== null)
+                        {
+                            tempLine.Functions = new List<FunctionLine>();
+                        }
 
-                        if (addFunctionViewModel.FunctionLine.ID >0)
+                        if (tempLine.Functions?.Count() > addFunctionViewModel.FunctionIndex && addFunctionViewModel.FunctionIndex != -1)
                         {
                             tempLine.Functions[addFunctionViewModel.FunctionIndex] = addFunctionViewModel.FunctionLine;
                         }
@@ -1363,7 +1377,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> CreateProtocol(CreateProtocolsViewModel createProtocolsViewModel)
+        public async Task<IActionResult> CreateProtocol(CreateProtocolsViewModel createProtocolsViewModel, List<Line> Lines)
         {
 
             using (var transaction = _context.Database.BeginTransaction())
@@ -1377,9 +1391,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         _context.Entry(createProtocolsViewModel.Protocol).State = EntityState.Added;
                         await _context.SaveChangesAsync();
-                        var line = new Line() { ProtocolID = createProtocolsViewModel.Protocol.ProtocolID, LineNumber = 1, LineTypeID = 1 };
-                        _context.Add(line);
-                        await _context.SaveChangesAsync();
+                        Lines.ForEach(l => { l.ProtocolID = createProtocolsViewModel.Protocol.ProtocolID; _context.Add(l); _context.SaveChanges(); });
                     }
                     else
                     {
@@ -1402,15 +1414,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
                     await transaction.CommitAsync();
-                    createProtocolsViewModel = await FillCreateProtocolsViewModel(createProtocolsViewModel, createProtocolsViewModel.Protocol.ProtocolTypeID, createProtocolsViewModel.Protocol.ProtocolID);
-                    if(createProtocolsViewModel.ModalType == AppUtility.ProtocolModalType.Create)
-                    {
-                        return PartialView("_CreateProtocolTabs", createProtocolsViewModel);
-                    }
-                    else
-                    {
-                        return PartialView("_IndexTableWithEditProtocol", createProtocolsViewModel);
-                    }
+                    
                 }
                 catch (Exception ex)
                 {
@@ -1429,6 +1433,15 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
 
+                createProtocolsViewModel = await FillCreateProtocolsViewModel(createProtocolsViewModel, createProtocolsViewModel.Protocol.ProtocolTypeID, createProtocolsViewModel.Protocol.ProtocolID);
+                if (createProtocolsViewModel.ModalType == AppUtility.ProtocolModalType.Create)
+                {
+                    return PartialView("_CreateProtocolTabs", createProtocolsViewModel);
+                }
+                else
+                {
+                    return PartialView("_IndexTableWithEditProtocol", createProtocolsViewModel);
+                }
             }
 
         }
