@@ -696,12 +696,9 @@ namespace PrototypeWithAuth.Controllers
 
                 if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 3)
                 {
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 3, 50);
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 3);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 4);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 5);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
+                    
                 }
 
             }
@@ -822,41 +819,41 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters, requestIndexObject.SectionType, isProprietary);
             return requestIndexViewModel;
         }
-        protected static IQueryable<Request> filterListBySelectFilters(SelectedFilters selectedFilters, IQueryable<Request> fullRequestsListProprietary)
+        protected static IQueryable<Request> filterListBySelectFilters(SelectedFilters selectedFilters, IQueryable<Request> fullRequestsList)
         {
             if (selectedFilters != null)
             {
                 if (selectedFilters.SelectedCategoriesIDs.Count() > 0)
                 {
-                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedCategoriesIDs.Contains(r.Product.ProductSubcategory.ParentCategoryID));
+                    fullRequestsList = fullRequestsList.Where(r => selectedFilters.SelectedCategoriesIDs.Contains(r.Product.ProductSubcategory.ParentCategoryID));
                 }
                 if (selectedFilters.SelectedSubcategoriesIDs.Count() > 0)
                 {
-                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedSubcategoriesIDs.Contains(r.Product.ProductSubcategoryID));
+                    fullRequestsList = fullRequestsList.Where(r => selectedFilters.SelectedSubcategoriesIDs.Contains(r.Product.ProductSubcategoryID));
                 }
                 if (selectedFilters.SelectedVendorsIDs.Count() > 0)
                 {
-                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedVendorsIDs.Contains(r.Product.VendorID ?? 0));
+                    fullRequestsList = fullRequestsList.Where(r => selectedFilters.SelectedVendorsIDs.Contains(r.Product.VendorID ?? 0));
                 }
                 if (selectedFilters.SelectedLocationsIDs.Count() > 0)
                 {
-                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedLocationsIDs.Contains((int)(Math.Floor(r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationTypeID / 100.0) * 100)));
+                    fullRequestsList = fullRequestsList.Where(r => selectedFilters.SelectedLocationsIDs.Contains((int)(Math.Floor(r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationTypeID / 100.0) * 100)));
                 }
                 if (selectedFilters.SelectedOwnersIDs.Count() > 0)
                 {
-                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedOwnersIDs.Contains(r.ApplicationUserCreatorID));
+                    fullRequestsList = fullRequestsList.Where(r => selectedFilters.SelectedOwnersIDs.Contains(r.ApplicationUserCreatorID));
                 }
                 
             }
             if (selectedFilters?.Archived == true)
             {
-                fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.IsArchived == true);
+                fullRequestsList = fullRequestsList.Where(r => r.IsArchived == true);
             }
             else
             {
-                fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.IsArchived == false);
+                fullRequestsList = fullRequestsList.Where(r => r.IsArchived == false);
             }
-            return fullRequestsListProprietary;
+            return fullRequestsList;
         }
 
         private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude)
@@ -922,7 +919,7 @@ namespace PrototypeWithAuth.Controllers
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                           r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(),
                                             _context.ShareRequests.Where(sr => sr.RequestID == r.RequestID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user,
-                                            r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
+                                            r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 5);
                             break;
 
                     }
