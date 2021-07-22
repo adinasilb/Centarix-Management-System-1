@@ -340,7 +340,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.CurrentProtocols;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsWorkflow;
             var user = await _userManager.GetUserAsync(User);
-            var viewmodel = _context.ProtocolInstances.Where(p => p.ApplicationUserID == user.Id && !p.IsFinished).Include(p=>p.Protocol).ToList();
+            var viewmodel = _context.ProtocolInstances.Where(p => p.ApplicationUserID == user.Id && !p.IsFinished).Include(p => p.Protocol).ToList().Select(p => new WorkFlowViewModel() { ProtocolInstance = p, CurrentLineString = GetLineNumberString(p.CurrentLineID) });
             return View(viewmodel);
         }
         [Authorize(Roles = "Protocols")]
@@ -554,7 +554,7 @@ namespace PrototypeWithAuth.Controllers
             if(createProtocolsViewModel.UniqueGuid ==Guid.Empty)
             {
                 createProtocolsViewModel.UniqueGuid = Guid.NewGuid(); 
-                var functionLines = await _context.FunctionLines.Where(fl => fl.Line.ProtocolID == protocolID && fl.IsTemporaryDeleted == false).Include(fl => fl.FunctionType).ToListAsync();
+                var functionLines = await _context.FunctionLines.Where(fl => fl.Line.ProtocolID == protocolID && fl.IsTemporaryDeleted == false).Include(fl => fl.FunctionType).Include(fl=>fl.Protocol).Include(fl => fl.Product).ToListAsync();
                 
                 var lines = await  _context.Lines.Where(l => l.ProtocolID == protocolID && l.IsTemporaryDeleted == false).Select(l=> 
                 new ProtocolsLineViewModel { Line = l, Functions =  AppUtility.GetFunctionsByLineID(l.LineID, functionLines)}).ToListAsync();
@@ -624,6 +624,7 @@ namespace PrototypeWithAuth.Controllers
                         await UpdateLineContentAsync(tempLines, Lines);
                         foreach (var line in tempLines.Lines)
                         {
+                            line.Line.ProtocolID = ProtocolID;
                             if(_context.Lines.Where(l=>l.LineID == line.Line.LineID).Any())
                             {
                                 _context.Entry(line.Line).State = EntityState.Modified;
@@ -967,6 +968,19 @@ namespace PrototypeWithAuth.Controllers
             return viewmodel;
         }
         
+        private string GetLineNumberString(int LineID)
+        {
+            string lineNumberString="";
+            var line = _context.Lines.Where(l => l.LineID == LineID).FirstOrDefault();
+            lineNumberString = line.LineNumber +  ".";
+            while (line.ParentLineID != null)
+            {              
+                line = _context.Lines.Where(l => l.LineID == line.ParentLineID).FirstOrDefault();
+                lineNumberString = line.LineNumber + "." + lineNumberString;
+            }            
+            return lineNumberString;
+        }
+
         private async Task DeleteTemporaryDeletedLinesAsync()
         {
             var linesToDelete = await _context.Lines.Where(l => l.IsTemporaryDeleted).ToListAsync();
