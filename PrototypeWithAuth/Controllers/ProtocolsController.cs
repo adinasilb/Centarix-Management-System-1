@@ -2396,7 +2396,8 @@ namespace PrototypeWithAuth.Controllers
                         SectionType = AppUtility.MenuItems.Protocols,
                         IsEdittable = true,
                         DontAllowMultiple = true,
-                        ShowSwitch = false
+                        ShowSwitch = false,
+                        Guid = Guid.NewGuid()
                     };
                     base.FillDocumentsViewModel(documentsModalViewModel);
                     viewmodel.DocumentsModalViewModel = documentsModalViewModel;
@@ -2407,7 +2408,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddReportFunctionModal(AddReportFunctionViewModel addReportsFunctionViewModel, CreateReportViewModel createReportViewModel)
+        public async Task<IActionResult> AddReportFunctionModal(AddReportFunctionViewModel addReportsFunctionViewModel, CreateReportViewModel createReportViewModel, Guid guid)
         {
             var functionType = _context.FunctionTypes.FirstOrDefault();
 
@@ -2443,14 +2444,16 @@ namespace PrototypeWithAuth.Controllers
                             case AppUtility.ProtocolFunctionTypes.AddImage:
                                 _context.Entry(functionReport).State = EntityState.Added;
                                 await _context.SaveChangesAsync();
-                                MoveDocumentsOutOfTempFolder(functionReport.ID, AppUtility.ParentFolderName.Reports);
+                                MoveDocumentsOutOfTempFolder(functionReport.ID, AppUtility.ParentFolderName.Reports, guid: guid);
 
                                 DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
                                 {
                                     ObjectID = functionReport.ID.ToString(),
                                     ParentFolderName = AppUtility.ParentFolderName.Reports,
                                     SectionType = AppUtility.MenuItems.Protocols,
-                                    IsEdittable = true
+                                    IsEdittable = true, 
+                                    Guid = guid
+                                    
                                 };
 
                                 base.FillDocumentsViewModel(documentsModalViewModel);
@@ -2465,14 +2468,18 @@ namespace PrototypeWithAuth.Controllers
                                     closingTags += "</" + tag + ">";
                                     openingTags = "<" + tag + ">" + openingTags;
                                 }
-                                var addedText = closingTags + renderedView +" <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none text added-div start-div'></div>" + openingTags;
-                                if(createReportViewModel.Report.TemporaryReportText == null)
-                                {
-                                    createReportViewModel.Report.TemporaryReportText = "";
-                                }
-                                report.TemporaryReportText = createReportViewModel.Report.TemporaryReportText.Replace(replaceableText, addedText);
-                                _context.Update(report);
+                                var addedText = renderedView + " <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none text added-div start-div'></div>" + openingTags;
 
+                                if (createReportViewModel.Report.TemporaryReportText == null)
+                                {
+                                    report.TemporaryReportText = addedText;
+                                }
+                                else
+                                {
+                                    addedText = closingTags + addedText;
+                                    report.TemporaryReportText = createReportViewModel.Report.TemporaryReportText.Replace(replaceableText, addedText);
+                                }
+                                _context.Update(report);
                                 break;
                         }
                     }

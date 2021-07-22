@@ -1144,7 +1144,7 @@
                 urltogo = urlbeginning + "DocumentsModal?id=" + requestId + "&Guid=" + guid + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
                     "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
             }
-
+     
             console.log(urltogo);
             $.ajax({
                 async: true,
@@ -1154,6 +1154,7 @@
                 success: function (data) {
                     $('#loading').hide();
                     console.log("isreopen: " + isReopen);
+          
                     if(isReopen)
                     {
                         //alert("._DocumentsModalData")
@@ -1169,17 +1170,34 @@
                     if (numCards < 1) {
                         $.fn.RemoveColorsOfDocs(enumString);
                     }
-                    else if (dontAllowMultipleFiles == 'True' || dontAllowMultipleFiles == 'true') {
-                        console.log("don't allow multiples")
-                        $(".upload-file").attr('disabled', true)
-                        $(".upload-file").addClass('disabled-background-color')
-                        $(".upload-file").removeClass('protocols-background-color')
-                        $(".file-select").attr('disabled', true)
-                    }
+                    //else if (dontAllowMultipleFiles == 'True' || dontAllowMultipleFiles == 'true') {
+                    //    console.log("don't allow multiples")
+                    //    $(".upload-file").attr('disabled', true)
+                    //    $(".upload-file").addClass('disabled-background-color')
+                    //    $(".upload-file").removeClass('protocols-background-color')
+                    //    $(".file-select").attr('disabled', true)
+                    //}
                     if ($(".addFunctionForm").length >0)
-                    {
-                        $(".upload-file").addClass("d-none");
-                        $(".saveFunction").removeClass("d-none");
+                    {      
+                        if (numCards < 1) {
+                            $(".upload-file").attr('disabled', false)
+                            $(".upload-file").removeClass('disabled-background-color')
+                            $(".upload-file").addClass('protocols-background-color')
+                            $(".file-select").attr('disabled', false)
+                            $(".upload-file").removeClass("d-none");
+                            $(".saveFunction").addClass("d-none");
+                            $(".saveFunction").attr('disabled', true)
+                        }
+                        else {
+                            $(".upload-file").attr('disabled', true)
+                            $(".upload-file").addClass('disabled-background-color')
+                            $(".upload-file").removeClass('protocols-background-color')
+                            $(".file-select").attr('disabled', true)
+                            $(".upload-file").addClass("d-none");
+                            $(".saveFunction").attr('disabled', false)
+                            $(".saveFunction").removeClass("d-none");
+                        }
+                   
                     }
                     return true;
                 }

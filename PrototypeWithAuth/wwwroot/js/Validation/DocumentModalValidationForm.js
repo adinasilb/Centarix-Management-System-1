@@ -4,6 +4,6 @@
   },
     rules :{
 
-        "FilesToSave": { required: true, extension: "jpg|jpeg|png|pdf" }
+        "FilesToSave": { required: true, extension: "jpg|jpeg|png|pdf|ppt|pptx" }
     }
 })

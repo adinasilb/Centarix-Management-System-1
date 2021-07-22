@@ -33,7 +33,7 @@
 					FilesInput :{
 			fileRequired : true			
 		},
-	},
+					},
 	messages:{
 	   "FunctionLine.Product.SerialNumber": {
             remote: "This serial number does not exist."
@@ -41,6 +41,7 @@
 		"FunctionLine.Protocol.UniqueCode": {
             remote: "This unique code does not exist."
         },
-	}
+	},
+	 ignore: "input[type='file']"
 });
 })

@@ -1743,7 +1743,7 @@ td .btn {
 
 .upload-btn-wrapper {
     position: relative;
-    overflow: hidden;
+/*    overflow: hidden;*/
     display: inline-block;
 }
 

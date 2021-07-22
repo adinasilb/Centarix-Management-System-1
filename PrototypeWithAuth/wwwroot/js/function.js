@@ -88,7 +88,7 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
             functionFormData = new FormData($(".deleteFunctionForm")[0]);
         }
         else {
-            functionName = "AddReportFunctionModal";
+            functionName = "AddReportFunctionModal?guid="+$(".guid").val();
         }
         for (var pair of reportFormData.entries()) {
             functionFormData.append(pair[0], pair[1]);
