@@ -18,7 +18,7 @@
         }
        @Html.Raw(lineContent)
     </span>
-    <input type="hidden" id="TemporaryReportText" name="Report.TemporaryReportText" value="@lineContent" />
+    <input type="hidden" id="TemporaryReportText" name="Report.TemporaryReportText" value="@Model.TemporaryReportText" />
     <input type="hidden" id="closingTags" value="div" />
 </div>
 
@@ -84,8 +84,9 @@
         return nodeString + "div";
     }
     $(document).ready(function (e) {
-        //$(".report-text").trigger("change")
         $(".report-text").trigger("focus")
+        $(".report-text").trigger("change")
+  
     })
     $('.reports-iframe').on("load", function () {
         console.log("iframe")
