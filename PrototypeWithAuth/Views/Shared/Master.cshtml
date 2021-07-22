@@ -1107,20 +1107,26 @@
                 $("label[for='Clarify']").removeClass("white-background");
             }
         };
-        $.fn.getRequestIndexString = function(){
+        $.fn.getRequestIndexString = function(status){
             var selectedPriceSort = "";
             $("#priceSortContent1 .priceSort:checked").each(function (e) {
                 selectedPriceSort += "&SelectedPriceSort=" + $(this).attr("enum");
             })
             console.log(selectedPriceSort)
+            var requestStatusId = status;
+            if (status === undefined) {
+                requestStatusId = $(".request-status-id").val();
+            }
             var queryString =
                 "PageNumber=" + $('.page-number').val() +
-                "&RequestStatusID=" + $(".request-status-id").val() +
+                "&RequestStatusID=" + requestStatusId +
                 "&PageType=" + $('#masterPageType').val() +
                 "&SectionType=" + $('#masterSectionType').val() +
                 "&SidebarType=" + $('#masterSidebarType').val() +
                 "&SelectedCurrency=" + $('#tempCurrency').val() +
-                "&SidebarFilterID=" + $('.sideBarFilterID').val();
+                "&SidebarFilterID=" + $('.sideBarFilterID').val() +
+                "&CategorySelected=" + $('#categorySortContent .select-category').is(":checked") + 
+                "&SubCategorySelected=" + $('#categorySortContent .select-subcategory').is(":checked");
             queryString += selectedPriceSort;
             console.log(queryString)
             return queryString;
@@ -1281,6 +1287,7 @@
 
         $.fn.ClearFilter = function (sectionType, isProprietary) {
             //alert(sectionType);
+            console.log('clearing filter');
             $.ajax({
                 async: true,
                 url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType + "&isProprietary=" + isProprietary,

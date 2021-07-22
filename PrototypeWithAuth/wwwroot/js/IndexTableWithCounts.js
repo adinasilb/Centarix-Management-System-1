@@ -9,11 +9,11 @@
     var isProprietary = requestStatusId == 7 ? true : false;
     var sectionType = $('#masterSectionType').val();
     //alert(sectionType);
-    $.fn.ClearFilter(sectionType, isProprietary);
+    //$.fn.ClearFilter(sectionType, isProprietary);
     var pageType = $('#masterPageType').val();
     var viewClass = pageType != 'RequestSummary' ? '_IndexTableWithCounts' : '_IndexTableWithProprietaryTabs';
     console.log("viewclass: " + viewClass);
-    $.fn.ajaxPartialIndexTable(requestStatusId, "/Requests/" + viewClass, "." + viewClass, 'POST')
+    $.fn.ajaxPartialIndexTable(requestStatusId, "/Requests/" + viewClass, "." + viewClass, 'GET')
 });
 
 /*$('.view-archived-requests').off('click').on('click', function () {

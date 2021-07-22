@@ -315,8 +315,7 @@ $(function () {
         $("#loading").show();
         var pageNumber = parseInt($(this).html());
         $('.page-number').val(pageNumber);
-        selectedFilters = $.fn.BindSelectedFilters("");
-        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "POST", undefined, "", null, null, false, selectedFilters);
+        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "POST");
         return false;
     });
 
@@ -372,22 +371,20 @@ $(function () {
     })
 
 
-    $.fn.ajaxPartialIndexTable = function (status, url, viewClass, type, formdata, modalClass = "", months, years, isArchive, selectedFilters) {
+    $.fn.ajaxPartialIndexTable = function (status, url, viewClass, type, formdata, modalClass = "", months, years, isArchive) {
         console.log("in ajax partial index call" + url);
-        console.log('selected filters: ' + selectedFilters);
-        /*var selectedPriceSort = {};
-        $("#priceSortContent1 .priceSort:checked").each(function (e) {
-            selectedPriceSort["SelectedPriceSort"] = $(this).attr("enum");
-        })*/
-        var selectedPriceSort = [];
+        //alert('before bind filter')
+        var selectedFilters = $.fn.BindSelectedFilters("");
+
+/*        var selectedPriceSort = [];
         $("#priceSortContent1 .priceSort:checked").each(function (e) {
             selectedPriceSort.push($(this).attr("enum"));
         })
         var selectedPriceSortObj = { "SelectedPriceSort": selectedPriceSort }
-        console.log(selectedPriceSortObj)
+        console.log(selectedPriceSortObj)*/
 		if (formdata == undefined) {
 			console.log("formdata is undefined");
-			formdata = {
+			/*formdata = {
 				PageNumber: $('.page-number').val(),
 				RequestStatusID: status,
 				PageType: $('#masterPageType').val(),
@@ -402,22 +399,28 @@ $(function () {
 				years: years,
 				IsArchive: isArchive
 			};
-			console.log(formdata);
+			console.log(formdata);*/
+            url += "?" + $.fn.getRequestIndexString(status) + "&isArchive=" + isArchive;
+            //formdata = selectedFilters;
+            formdata = {}; //so won't crash when do object.assign()
+            console.log(formdata)
 		}
 		else {
 			$.fn.CloseModal(modalClass);
         }
         var objectsToAdd = [];
         if (selectedFilters != undefined) { objectsToAdd.push(selectedFilters) }
-        if (selectedPriceSortObj != undefined) { objectsToAdd.push(selectedPriceSortObj) }
+        //if (selectedPriceSortObj != undefined) { objectsToAdd.push(selectedPriceSortObj) }
         formdata = $.fn.AddObjectsToFormdata(formdata, objectsToAdd);
 
         var contentType = true;
         var processType = true;
-        if (type === "POST") {
+        if (!jQuery.isEmptyObject(formdata)) {
+            type = "POST"
             processType = false;
-            contentType = false;
+            contentType = false; 
         }
+        
         $.ajax({
             contentType: contentType,
             processData: processType,

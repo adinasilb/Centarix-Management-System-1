@@ -3289,7 +3289,8 @@ namespace PrototypeWithAuth.Controllers
         {
             return PartialView(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Orders }));
         }
-
+        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> _IndexTableDataByVendor(RequestIndexObject requestIndexObject)
         {
             return PartialView(await GetIndexViewModelByVendor(requestIndexObject));

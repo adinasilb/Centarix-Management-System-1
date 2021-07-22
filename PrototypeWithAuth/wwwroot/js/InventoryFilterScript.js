@@ -167,12 +167,16 @@ $(".popover").off("click").on("click", ".archive-button", function (e) {
 		$.fn.ReloadFilterDiv(numFilters, data);*/
 	})
 });
-$('body').on('click', "#applyFilter", function () {
+$('body').on('click', "#applyFilter", function (e) {
+	e.stopImmediatePropagation();
 	console.log('clicked!')
 	var data = $.fn.BindSelectedFilters('.popover');
 	var searchText = $('.popover .search-requests-in-filter').val();
 	var numFilters = $('.numFilters').attr("value");
 	console.log('search text ' + searchText);
+	//reset page number
+	$('.page-number').val(1);
+
 	var url;
 	switch ($('#masterPageType').val()) {
 		case 'RequestSummary':
