@@ -467,7 +467,7 @@
                 $.fn.EnableMaterialSelect('#protocolParentList', 'select-options-protocolParentList');
                 $.fn.EnableMaterialSelect('#protocolSubList', 'select-options-protocolSubList');
                 $(".Materials").addClass("saveProtocol");
-                $(".Protocols").addClass("saveProtocol"); 
+                $(".Protocols").addClass("saveProtocol");
                 var modalType = $(".modalType").val();
                 $("." + modalType).addClass("d-none")
                 var attrString = "[modaltype=" + modalType + "]";
@@ -1117,6 +1117,19 @@
             if (status === undefined) {
                 requestStatusId = $(".request-status-id").val();
             }
+            var searchText = $('.search-requests').val();
+            console.log(searchText);
+            console.log('searchtext length before if' + searchText.length)
+            if (!searchText.length) {
+                searchText = $('.popover .search-requests-in-filter').val();
+                console.log(searchText)
+                if (searchText == undefined || !searchText.length) {
+                    searchText = $('.search-requests-in-filter').val();
+                    if (searchText == undefined || !searchText.length) {
+                        searchText = "";
+                    }
+                }
+            }
             var queryString =
                 "PageNumber=" + $('.page-number').val() +
                 "&RequestStatusID=" + requestStatusId +
@@ -1125,8 +1138,9 @@
                 "&SidebarType=" + $('#masterSidebarType').val() +
                 "&SelectedCurrency=" + $('#tempCurrency').val() +
                 "&SidebarFilterID=" + $('.sideBarFilterID').val() +
-                "&CategorySelected=" + $('#categorySortContent .select-category').is(":checked") + 
-                "&SubCategorySelected=" + $('#categorySortContent .select-subcategory').is(":checked");
+                "&CategorySelected=" + $('#categorySortContent .select-category').is(":checked") +
+                "&SubCategorySelected=" + $('#categorySortContent .select-subcategory').is(":checked") +
+                "&searchText=" + searchText;
             queryString += selectedPriceSort;
             console.log(queryString)
             return queryString;
@@ -1281,7 +1295,10 @@
                 archived = false;
             }
             console.log('archived ' + archived);
-            return { SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived }
+            return {
+                SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation,
+                SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived
+            }
         }
 
 

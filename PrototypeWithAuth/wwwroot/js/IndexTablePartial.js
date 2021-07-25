@@ -372,10 +372,12 @@ $(function () {
 
 
     $.fn.ajaxPartialIndexTable = function (status, url, viewClass, type, formdata, modalClass = "", months, years, isArchive) {
-        console.log("in ajax partial index call" + url);
+        console.log("in ajax partial index call " + url);
         //alert('before bind filter')
-        var selectedFilters = $.fn.BindSelectedFilters("");
-
+        if ($("#inventoryFilterContent").length) {
+            var selectedFilters = $.fn.BindSelectedFilters("");
+            console.log('in if')
+        }
 /*        var selectedPriceSort = [];
         $("#priceSortContent1 .priceSort:checked").each(function (e) {
             selectedPriceSort.push($(this).attr("enum"));
@@ -400,22 +402,29 @@ $(function () {
 				IsArchive: isArchive
 			};
 			console.log(formdata);*/
-            url += "?" + $.fn.getRequestIndexString(status) + "&isArchive=" + isArchive;
-            //formdata = selectedFilters;
-            formdata = {}; //so won't crash when do object.assign()
-            console.log(formdata)
+            if (!url.includes("?")) {
+                url += "?"
+            } else {
+                url += "&";
+            }
+            url += $.fn.getRequestIndexString(status) + "&isArchive=" + isArchive;
+            //formdata = {}; //so won't crash when do object.assign()
+            //console.log(formdata)
 		}
 		else {
 			$.fn.CloseModal(modalClass);
         }
-        var objectsToAdd = [];
-        if (selectedFilters != undefined) { objectsToAdd.push(selectedFilters) }
+        //var objectsToAdd = [];
+        //if (selectedFilters != undefined/*should also somehow check if anything is chosen...*/) { objectsToAdd.push(selectedFilters) }
         //if (selectedPriceSortObj != undefined) { objectsToAdd.push(selectedPriceSortObj) }
-        formdata = $.fn.AddObjectsToFormdata(formdata, objectsToAdd);
+        if (selectedFilters != undefined/*should also somehow check if anything is chosen...*/) {
+            formdata = $.fn.AddObjectToFormdata(formdata, selectedFilters);
+            console.log(...formdata);
+        }
 
         var contentType = true;
         var processType = true;
-        if (!jQuery.isEmptyObject(formdata)) {
+        if (formdata != undefined) {
             type = "POST"
             processType = false;
             contentType = false; 
@@ -440,34 +449,35 @@ $(function () {
 
         return false;
     }
-    $.fn.AddObjectsToFormdata = function (formdata, arrayOfObjects) {
-        if (arrayOfObjects.length) {
+    $.fn.AddObjectToFormdata = function (formdata, object) {
+
             console.log('in add object to formdata')
-            console.log(arrayOfObjects)
+            /*console.log(arrayOfObjects)
             var newFormData = formdata;
             for (var obj of arrayOfObjects) {
                 Object.assign(newFormData, obj);
                 console.log('obj ' + obj)
-            }
+            } */
+        if (formdata == undefined) {
             var formdata = new FormData();
+        }
+        for (var key in object) {
 
-            for (var key in newFormData) {
-
-                if (Array.isArray(newFormData[key])) {
-                    for (const val of newFormData[key].values()) {
-                        formdata.append(key, val);
-                        console.log('key' + key);
-                        console.log('val' + val)
-                    }
-                }
-                else {
-                    formdata.append(key, newFormData[key]);
-                    console.log('key ' + key);
-                    console.log('value ' + newFormData[key])
+            if (Array.isArray(object[key])) {
+                for (const val of object[key].values()) {
+                    formdata.append(key, val);
+                    console.log('key' + key);
+                    console.log('val' + val)
                 }
             }
-            console.log(...formdata);
+            else {
+                formdata.append(key, object[key]);
+                console.log('key ' + key);
+                console.log('value ' + object[key])
+            }
         }
+        console.log(...formdata);
+    
         return formdata;
     }
 

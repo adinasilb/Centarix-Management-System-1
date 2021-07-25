@@ -26,11 +26,11 @@
             <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('delete-item');">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding" id="myForm">
                 @{ await Html.RenderPartialAsync("_DeleteModal", Model);}
                 <div class="modal-footer">
                     <div class="text-center mx-auto modal-footer-mt">
-                        <button type="submit" asp-action="DeleteModal" class="custom-button custom-button-font @bcColor between-button-margin" value="@Model.Request.RequestID">Confirm</button>
+                        <button type="submit"  class="custom-button custom-button-font @bcColor between-button-margin submit-delete" value="@Model.Request.RequestID">Confirm</button>
                         <button type="button" class="custom-cancel custom-button " @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('delete-item');">Cancel</button>
                     </div>
                 </div>
@@ -48,12 +48,7 @@
         var SidebarType = $('#masterSidebarType').val();
         var viewClass = ""
         if (PageType == "LabManagementQuotes") {
-            if (SidebarType == "Quotes") {
-
-            }
-            else {
-
-            }
+            viewClass = "_IndexTableByVendor";
         }
         else if (PageType == "RequestInventory" || PageType == "OperationsInventory") {
 
@@ -62,7 +57,8 @@
         else {
             viewClass = "_IndexTableWithCounts";
         }
-        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/DeleteModal?id=" + $(this).attr("value"), "._IndexTableData", "POST");
+        var formdata = new FormData($("#myForm")[0])
+        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/DeleteModal", viewClass, "POST", formdata, "delete-item");
         return false;
     });
 </script>
