@@ -28,8 +28,13 @@
                 await Html.RenderPartialAsync("_DocumentsModalData", Model.DocumentsModalViewModel);
             }
         </div>
-        break;
-    case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
+                    break;
+                case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
+                    if (Model.FunctionLine.ID > 0)
+                    {
+                        disabled = " mark-readonly ";
+                    }
+
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
@@ -95,8 +100,12 @@
                 <input class="border-bottom form-control-plaintext unique-number @disabled" rows="6" asp-for="FunctionLine.Product.SerialNumber" />
             </div>
         </div>
-        break;
-    case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
+                    break;
+                case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
+                    if (Model.FunctionLine.ID >0)
+                    {
+                        disabled = " mark-readonly ";
+                    }
         <div class="row">
             <div class="col-6">
                 <div class="form-group">

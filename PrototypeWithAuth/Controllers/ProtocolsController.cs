@@ -651,7 +651,7 @@ namespace PrototypeWithAuth.Controllers
 
                         }
                         await _context.SaveChangesAsync();
-                        await _context.FunctionLines.Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted == true).ForEachAsync(fl => { _context.Remove(fl); });
+                        await _context.FunctionLines.Where(fl=>fl.ProtocolID == ProtocolID).Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted == true).ForEachAsync(fl => { _context.Remove(fl); });
                         await _context.SaveChangesAsync();
                         await DeleteTemporaryDeletedLinesAsync();
                         await transaction.CommitAsync();
@@ -1105,17 +1105,16 @@ namespace PrototypeWithAuth.Controllers
                     {
                         folderName = AppUtility.FolderNamesEnum.Pictures;
                     }
-                    DeleteTemporaryDocuments(AppUtility.ParentFolderName.FunctionLine, Guid.Empty);
                     DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
                     {
                         FolderName = folderName,
                         ParentFolderName = AppUtility.ParentFolderName.FunctionLine,
                         ObjectID = viewmodel.FunctionLine.ID.ToString(),
                         SectionType = AppUtility.MenuItems.Protocols,
-                        IsEdittable = true,
+                        IsEdittable = modalType!=AppUtility.ProtocolModalType.Summary,
                         DontAllowMultiple = true,
                         ShowSwitch = false,
-                        Guid = Guid.NewGuid()
+                        Guid = guid
                     };
                     base.FillDocumentsViewModel(documentsModalViewModel);
                     viewmodel.DocumentsModalViewModel = documentsModalViewModel;
@@ -1227,7 +1226,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     if (addFunctionViewModel.IsRemove)
                     {
-                        var functionType = _context.FunctionTypes.Where(f => f.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionType.FunctionTypeID).FirstOrDefault();
+                        var functionType = _context.FunctionTypes.Where(f => f.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
                         addFunctionViewModel.FunctionLine.IsTemporaryDeleted = true;
                         if (_context.FunctionLines.Where(fl => fl.ID == addFunctionViewModel.FunctionLine.ID).Any())
                         {
@@ -2407,7 +2406,6 @@ namespace PrototypeWithAuth.Controllers
                     viewmodel.Protocols = _context.Protocols.ToList();
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddFile:
-                    DeleteTemporaryDocuments(AppUtility.ParentFolderName.Reports, Guid.Empty);
                     DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
                     {
                         FolderName = AppUtility.FolderNamesEnum.Files,
@@ -2551,7 +2549,7 @@ namespace PrototypeWithAuth.Controllers
                     _context.Update(report);
 
                     await _context.SaveChangesAsync();
-                    base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.Reports, ObjectID: report.ReportID);
+                    base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.Reports, ObjectID: deleteDocumentViewModel.FunctionReport.ID);
 
                     await transaction.CommitAsync();
                 }
