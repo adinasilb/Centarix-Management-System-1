@@ -2468,15 +2468,15 @@ namespace PrototypeWithAuth.Controllers
                                     closingTags += "</" + tag + ">";
                                     openingTags = "<" + tag + ">" + openingTags;
                                 }
-                                var addedText = renderedView + " <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none text added-div start-div'></div>" + openingTags;
+                                var addedText = renderedView + " <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none text added-div start-div'></div>";
 
-                                if (createReportViewModel.Report.TemporaryReportText == null)
+                                if (!createReportViewModel.Report.TemporaryReportText.Contains(replaceableText))
                                 {
-                                    report.TemporaryReportText = addedText;
+                                    report.TemporaryReportText = createReportViewModel.Report.TemporaryReportText +addedText;
                                 }
                                 else
                                 {
-                                    addedText = closingTags + addedText;
+                                    addedText = closingTags + addedText+ openingTags; 
                                     report.TemporaryReportText = createReportViewModel.Report.TemporaryReportText.Replace(replaceableText, addedText);
                                 }
                                 _context.Update(report);

@@ -253,3 +253,4 @@ paket-files/
 .idea/
 *.sln.iml
 /PrototypeWithAuth/Models/Resource
+/PrototypeWithAuth/wwwroot/Reports/2121/Files

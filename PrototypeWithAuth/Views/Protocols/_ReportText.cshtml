@@ -5,7 +5,7 @@
 }
 
 <div class="col-12">
-    <span role="textbox" contenteditable="false" class="editable-span report-text form-control-plaintext h-100 text-transform-none">
+    <span role="textbox" contenteditable="false" id="reportText" class="editable-span report-text form-control-plaintext h-100 text-transform-none">
         @{ var lineContent = "";
             if (Model.TemporaryReportText == null || Model.TemporaryReportText == "")
             {
@@ -65,8 +65,9 @@
     }
     $.fn.GetCurrentPositionParents = function (e) {
         var nodeString = "";
-            var target = null;
-        if (window.getSelection) {
+        var target = null;
+        if ($(window.getSelection().baseNode).closest("#reportText").attr("id") == "reportText"){
+            console.log("inside-div")
             if (window.getSelection().rangeCount > 0) {
                 target = window.getSelection().getRangeAt(0).commonAncestorContainer;
                 if (target.nodeType != 1) {
@@ -80,12 +81,13 @@
                     target = target.parentNode
                 }
             }
+            return nodeString + "div";
         }
-        return nodeString + "div";
+      
     }
     $(document).ready(function (e) {
         $(".report-text").trigger("focus")
-        $(".report-text").trigger("change")
+        $("#TemporaryReportText").val($(".report-text").html());
   
     })
     $('.reports-iframe').on("load", function () {
