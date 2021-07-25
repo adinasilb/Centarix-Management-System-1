@@ -30,7 +30,7 @@
 <div id="Theory@(Model.ModalType)" class="tab-pane fade in @theory">
     <div class="container-fluid theory-container m-0" style="@theoryContainerStyle">
         <input type="hidden" class="createProtocolMasterProtocolID" value="@Model.Protocol.ProtocolID" />
-        <input type="hidden" class="createProtocolMasterGuid" value="@Model.UniqueGuid" />
+        <input type="hidden" class="createProtocolMasterGuid hidden-guid" value="@Model.UniqueGuid" />
         <input type="hidden" asp-for="Tab" class="selectedTab" />
         <input type="hidden" asp-for="UniqueGuid"/>
         <input type="hidden" asp-for="Protocol.ProtocolID" value="@Model.Protocol.ProtocolID" />

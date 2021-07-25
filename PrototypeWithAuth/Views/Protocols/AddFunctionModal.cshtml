@@ -4,7 +4,7 @@
 <script src="~/js/Validation/AddFunctionValidation.js"></script>
 <script src="~/js/validate.js"></script>
 <div class="modal modal-document fader addFunctionModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
-    <div class=" modal-dialog-centered mx-auto" style="width:30%">
+    <div class=" modal-dialog-centered mx-auto elixir-modal-sm">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style"  aria-label="Close" onclick="$.fn.CloseModal('add-function');">
                 <span aria-hidden="true">&times;</span>
@@ -32,14 +32,24 @@
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
-                        @if ((Model.ModalType == AppUtility.ProtocolModalType.Edit ||
-                           Model.ModalType == AppUtility.ProtocolModalType.Create)
-                           && ((Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProduct.ToString() && Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProtocol.ToString()) || Model.FunctionLine.ID==0))
+                        @{var dnone = "";}
+                        @if (Model.FunctionLine.FunctionType.DescriptionEnum == AppUtility.ProtocolFunctionTypes.AddFile.ToString() ||Model.FunctionLine.FunctionType.DescriptionEnum == AppUtility.ProtocolFunctionTypes.AddImage.ToString())
                         {
-                            <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin saveFunction" value="Save" />
+                            dnone = "d-none";
+                            <div class="upload-btn-wrapper between-button-margin">
+                                <button class="custom-button custom-button-font protocols-background-color upload-file document-modal-buttons" data-string="@AppUtility.FolderNamesEnum.Files">Upload A File</button>
+                                <input type="file" name="FilesToSave" id="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" />
+                            </div>
+
+                        }
+                        @if ((Model.ModalType == AppUtility.ProtocolModalType.Edit ||
+                         Model.ModalType == AppUtility.ProtocolModalType.Create)
+                         && ((Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProduct.ToString() && Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProtocol.ToString() && Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddStop.ToString()) || Model.FunctionLine.ID == 0))
+                        {
+                            <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin @dnone saveFunction" value="Save" />
                         }
 
-                        @if ((Model.ModalType == AppUtility.ProtocolModalType.Edit || Model.ModalType == AppUtility.ProtocolModalType.Create) && Model.FunctionLine.ID >0)
+                        @if ((Model.ModalType == AppUtility.ProtocolModalType.Edit || Model.ModalType == AppUtility.ProtocolModalType.Create) && Model.FunctionLine.ID > 0)
                         {
                             <input type="submit" class="custom-button custom-cancel removeFunction" value="Remove" />
                         }
@@ -47,6 +57,7 @@
                         {
                             <button type="button" class="custom-button custom-cancel " onclick="$.fn.CloseModal('add-function');">Cancel</button>
                         }
+                                    
 
                     </div>
                 </div>
