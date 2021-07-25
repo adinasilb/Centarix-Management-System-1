@@ -388,6 +388,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ProtocolInstance>().Property(r => r.ResultDescription).HasColumnType("ntext");
             modelBuilder.Entity<TempRequestJson>().Property(t => t.Json).HasColumnType("ntext");
             modelBuilder.Entity<TempLinesJson>().Property(t => t.Json).HasColumnType("ntext");
+            modelBuilder.Entity<Protocol>().HasIndex(p => p.UniqueCode).IsUnique();
             //modelBuilder.Entity<TempLine>().HasIndex(r => r.PermanentLineID).IsUnique();
             modelBuilder.Seed();
 

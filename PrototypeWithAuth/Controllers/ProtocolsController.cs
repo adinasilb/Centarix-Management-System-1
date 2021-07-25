@@ -888,6 +888,10 @@ namespace PrototypeWithAuth.Controllers
         {
             return _context.Protocols.Where(p => p.UniqueCode.Equals(uniqueNumber)).ToList().Any();
         }
+        public bool ValidateUniqueProtocolNumber(string uniqueNumber, int protocolID)
+        {
+            return !_context.Protocols.Where(p => p.UniqueCode.Equals(uniqueNumber) && p.ProtocolID!=protocolID).ToList().Any();
+        }
         private async Task UpdateLineContentAsync(ProtocolsLinesViewModel protocolsLinesViewModel, List<Line> Lines)
         {
             foreach (var line in Lines)

@@ -24,7 +24,7 @@
 					url: '/Protocols/CheckIfProtocolUniqueNumberExists',
 					type: 'POST',
 					async: false,
-					data: { "UniqueNumber":function(){ return $("#FunctionLine_Protocol_UniqueCode").val()}},
+					data: { "UniqueNumber":function(){ return $("#FunctionLine_Protocol_UniqueCode").val()}}
 				}
 			},
 				PicturesInput :{
