@@ -1821,6 +1821,7 @@ namespace PrototypeWithAuth.Controllers
                         transaction.Rollback();
                         throw new Exception(AppUtility.GetExceptionMessage(e));
                     }
+                    
                 }
 /*                if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
                 {
@@ -1847,37 +1848,21 @@ namespace PrototypeWithAuth.Controllers
                     return RedirectToAction("Index", deleteRequestViewModel.RequestIndexObject);
                 }*/
             }
+            
             catch (Exception ex)
             {
                 deleteRequestViewModel.RequestIndexObject.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
             }
-            if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
+            switch (deleteRequestViewModel.RequestIndexObject.SidebarType)
             {
-                if (deleteRequestViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
-                {
-                    return RedirectToAction("LabManageQuotes", new { errorMessage = deleteRequestViewModel.RequestIndexObject.ErrorMessage });
-                }
-                else
-                {
-                    return RedirectToAction("LabManageOrders", new { errorMessage = deleteRequestViewModel.RequestIndexObject.ErrorMessage });
-                }
-
+                case AppUtility.SidebarEnum.Quotes:
+                case AppUtility.SidebarEnum.Orders:
+                case AppUtility.SidebarEnum.Cart:
+                    return RedirectToAction("_IndexTableDataByVendor", deleteRequestViewModel.RequestIndexObject);
+                default:
+                    return RedirectToAction("_IndexTableData", deleteRequestViewModel.RequestIndexObject);
             }
-            else if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
-            {
-                return RedirectToAction("Cart", new { errorMessage = deleteRequestViewModel.RequestIndexObject.ErrorMessage });
-            }
-            else if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
-            {
-                return RedirectToAction("IndexInventory", deleteRequestViewModel.RequestIndexObject);
-            }
-            else
-            {
-                return RedirectToAction("IndexTableData", deleteRequestViewModel.RequestIndexObject);
-            }
-
-
         }
 
         [HttpGet]

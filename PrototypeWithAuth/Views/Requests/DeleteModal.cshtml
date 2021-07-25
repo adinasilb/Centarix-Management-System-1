@@ -44,18 +44,11 @@
         console.log("submit delete");
         e.preventDefault();
         $("#loading").show();
-        var PageType = $('#masterPageType').val();
-        var SidebarType = $('#masterSidebarType').val();
-        var viewClass = ""
-        if (PageType == "LabManagementQuotes") {
-            viewClass = "_IndexTableByVendor";
-        }
-        else if (PageType == "RequestInventory" || PageType == "OperationsInventory") {
-
-            viewClass = "_IndexTableData";
-        }
-        else {
-            viewClass = "_IndexTableWithCounts";
+        //var PageType = $('#masterPageType').val();
+        var sidebarType = $('#masterSidebarType').val();
+        var viewClass = "._IndexTableData";
+        if (sidebarType == "Quotes" || sidebarType == "Orders" || sidebarType == "Cart") {
+            viewClass = "._IndexTableDataByVendor";
         }
         var formdata = new FormData($("#myForm")[0])
         $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/DeleteModal", viewClass, "POST", formdata, "delete-item");
