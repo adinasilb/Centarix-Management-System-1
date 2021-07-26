@@ -1,25 +1,56 @@
 ﻿@model PrototypeWithAuth.ViewModels.CreateProtocolsViewModel
 @using PrototypeWithAuth.ViewModels
+@using PrototypeWithAuth.AppData
+@{
+    string theory = "";
+    string material = "";
+    string protocols = "";
+    switch (Model.Tab)
+    {
+        case 1:
+            theory = " active show ";
+            break;
+        case 2:
+            material = " active show ";
+            break;
+        case 3:
+            protocols = " active show ";
+            break;
+
+    }
+
+    var theoryContainerStyle = "width:50%";
+    if (Model.ModalType == AppUtility.ProtocolModalType.SummaryFloat)
+    {
+        theoryContainerStyle = "";
+    }
 
 
-<div id="Theory" class="tab-pane fade in active show">
-    <div class="container-fluid new-modal-body m-0" style="width:55%">
+}
+<div id="Theory@(Model.ModalType)" class="tab-pane fade in @theory">
+    <div class="container-fluid theory-container m-0" style="@theoryContainerStyle">
         <input type="hidden" class="createProtocolMasterProtocolID" value="@Model.Protocol.ProtocolID" />
-        <input type="hidden" asp-for="Protocol.ProtocolID" />
+        <input type="hidden" class="createProtocolMasterGuid hidden-guid" value="@Model.UniqueGuid" />
+        <input type="hidden" asp-for="Tab" class="selectedTab" />
+        <input type="hidden" asp-for="UniqueGuid"/>
+        <input type="hidden" asp-for="Protocol.ProtocolID" value="@Model.Protocol.ProtocolID" />
+        <input type="hidden" asp-for="ModalType" class="modalType" />
+        <input type="hidden" asp-for="Protocol.CreationDate" />
+        <input type="hidden" asp-for="ProtocolInstance.ProtocolInstanceID" class="protocolInstanceID" />
         <div class="row under-row-margin">
             <div class="col-4">
                 <label asp-for="Protocol.Name" class="control-label"></label>
-                <input asp-for="Protocol.Name" class="form-control-plaintext border-bottom" />
+                <input asp-for="Protocol.Name" class="form-control-plaintext border-bottom mark-readonly" />
                 <span asp-validation-for="Protocol.Name" class="text-danger-centarix"></span>
             </div>
             @*<div class="col-4">
-                    <label asp-for="Protocol.VersionNumber" class="control-label"></label>
-                    <input asp-for="Protocol.VersionNumber" class="form-control-plaintext border-bottom" />
-                    <span asp-validation-for="Protocol.VersionNumber" class="text-danger-centarix"></span>
-                </div>*@
+                <label asp-for="Protocol.VersionNumber" class="control-label"></label>
+                <input asp-for="Protocol.VersionNumber" class="form-control-plaintext border-bottom" />
+                <span asp-validation-for="Protocol.VersionNumber" class="text-danger-centarix"></span>
+            </div>*@
             <div class="col-4">
                 <label asp-for="Protocol.UniqueCode" class="control-label"></label>
-                <input asp-for="Protocol.UniqueCode" class="form-control-plaintext border-bottom" />
+                <input asp-for="Protocol.UniqueCode" class="form-control-plaintext border-bottom mark-readonly" />
                 <span asp-validation-for="Protocol.UniqueCode" class="text-danger-centarix"></span>
             </div>
         </div>
@@ -33,7 +64,7 @@ Model.ProtocolCategories,
 "ProtocolCategoryTypeID",
 "ProtocolCategoryDescription"
 ), "Select Category",
-new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolParentList", @searchable = "Select Category" })
+new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "protocolParentList", @searchable = "Select Category" })
             </div>
             <div class="col-4">
                 <label class="control-label">Sub Category</label>
@@ -43,25 +74,25 @@ Model.ProtocolSubCategories,
 "ProtocolSubCategoryTypeID",
 "ProtocolSubCategoryTypeDescription"
 ), "Select Category",
-new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolSubList", @searchable = "Select Category" })
+new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "protocolSubList", @searchable = "Select Category" })
             </div>
             @*<div class="col-4">
-                    <label asp-for="Tags" class="control-label"></label>
-                    <input asp-for="Tags" class="form-control-plaintext border-bottom" />
-                    <span asp-validation-for="Tags" class="text-danger-centarix"></span>
-                </div>*@
+                <label asp-for="Tags" class="control-label"></label>
+                <input asp-for="Tags" class="form-control-plaintext border-bottom" />
+                <span asp-validation-for="Tags" class="text-danger-centarix"></span>
+            </div>*@
         </div>
         <div class="row ">
             <div class="col-12">
                 <label asp-for="Protocol.ShortDescription" class="control-label"></label>
-                <input asp-for="Protocol.ShortDescription" class="form-control-plaintext border-bottom " />
+                <input asp-for="Protocol.ShortDescription" class="form-control-plaintext border-bottom mark-readonly" />
                 <span asp-validation-for="Protocol.ShortDescription" class="text-danger-centarix"></span>
             </div>
         </div>
         <div class="row ">
             <div class="col-12">
                 <label asp-for="Protocol.Theory" class="control-label"></label>
-                <textarea asp-for="Protocol.Theory" class="form-control-plaintext border-bottom border" rows="15"></textarea>
+                <textarea asp-for="Protocol.Theory" class="form-control-plaintext border-bottom border mark-readonly" rows="15"></textarea>
                 <span asp-validation-for="Protocol.Theory" class="text-danger-centarix"></span>
             </div>
         </div>
@@ -123,12 +154,12 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                         <div class="row">
                             <div class="col-6">
                                 <label asp-for="Protocol.Urls[i].LinkDescription" class="control-label">Link Description</label>
-                                <input asp-for="Protocol.Urls[i].LinkDescription" class="form-control-plaintext border-bottom" />
+                                <input asp-for="Protocol.Urls[i].LinkDescription" class="form-control-plaintext border-bottom mark-readonly" />
                                 <span asp-validation-for="Protocol.Urls[i].LinkDescription" class="text-danger-centarix"></span>
                             </div>
                             <div class="col-6">
                                 <label asp-for="Protocol.Urls[i].Url" class="control-label"></label>
-                                <input asp-for="Protocol.Urls[i].Url" class="form-control-plaintext border-bottom" />
+                                <input asp-for="Protocol.Urls[i].Url" class="form-control-plaintext border-bottom mark-readonly" />
                                 <span asp-validation-for="Protocol.Urls[i].Url" class="text-danger-centarix"></span>
                             </div>
                         </div>
@@ -144,84 +175,35 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
     </div>
 </div>
 
-<div id="Materials" class="tab-pane fade in ">
-    @{ await Html.RenderPartialAsync("_MaterialTab", new MaterialTabViewModel { Materials = Model.Protocol.Materials.ToList(), MaterialCategories = Model.MaterialCategories, Folders = Model.MaterialDocuments });
+<div id="Materials@(Model.ModalType)" class="_MaterialTab tab-pane fade in @material">
+    @{ await Html.RenderPartialAsync("_MaterialTab", new MaterialTabViewModel { Materials = Model.Protocol.Materials.ToList(), MaterialCategories = Model.MaterialCategories, Folders = Model.MaterialDocuments, ModalType = Model.ModalType });
     }
 </div>
-<div id="Protocol" class="tab-pane fade in ">
+
+
+<div id="Protocol@(Model.ModalType)" class="tab-pane fade in @protocols">
 
     <div class="lines">
         <div class="heading-1">@Model.Protocol.Name</div>
         <div class="_Lines">
-            @{await Html.RenderPartialAsync("_Lines", new ProtocolsLinesViewModel { Lines = Model.TempLines.ToList() });}
+            @{await Html.RenderPartialAsync("_Lines",  Model.Lines );}
         </div>
 
 
     </div>
 </div>
+<div id="Results@(Model.ModalType)" class="tab-pane fade in @AppUtility.ProtocolModalType.CheckListMode d-none">
+    <div class="row text-editor-div" style="min-height:50px; width:100%">
+        @{
+            await Html.RenderPartialAsync("_ResultsText", Model.ProtocolInstance);
+        }
+    </div>
+</div>
+<script src="~/js/Validation/CreateProtocolValidation.js"></script>
+<script src="~/js/validate.js"></script>
+
+
+
+<script src="~/js/function.js"></script>
 
 <script src="~/js/CreateProtocol.js"></script>
-<script>
-    $(".saveProtocol").off("click").click(function (e) {
-        e.preventDefault();
-        $('.createProtocolForm').data("validator").settings.ignore = "";
-        var valid = $('.createProtocolForm').valid();
-        console.log("valid form: " + valid)
-        if (!valid) {
-            e.preventDefault();
-            if (!$('.activeSubmit').hasClass('disabled-submit')) {
-                $('.activeSubmit').addClass('disabled-submit')
-            }
-
-        }
-        else {
-            $('.activeSubmit').removeClass('disabled-submit')
-            var formData = new FormData($(".createProtocolForm")[0]);
-            $.ajax({
-                url: "/Protocols/CreateProtocol",
-                traditional: true,
-                data: formData,
-                contentType: false,
-                processData: false,
-                type: "POST",
-                success: function (data) {
-                    $("._CreateProtocolTabs").html(data)
-                    $(".mdb-select").materialSelect();
-                    $('#Theory').removeClass("active");
-                    $('#Theory').removeClass("show");
-                    $('#Materials').addClass("active");
-                    $('#Materials').addClass("show");
-                },
-                error: function (jqxhr) {
-                    if (jqxhr.status == 500) {
-                        $("._CreateProtocol").html(jqxhr.responseText)
-                    }
-                    $(".mdb-select").materialSelect();
-                    return true;
-                }
-            });
-        }
-        $('.createProtocolForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
-
-
-    });
-
-    $(".saveLines").off("click").click(function (e) {
-        e.preventDefault();
-        $.ajax({
-            processData: false,
-            contentType: false,
-            data: new FormData($("#myForm")[0]),
-            url: "/Protocols/SaveTempLines",
-            type: 'POST',
-            success: function (data) {
-                //$("._Lines").html(data);
-            },
-            error: function (jqxhr) {
-                //if(jqxhr.responst)
-            }
-        });
-    });
-
-
-</script>

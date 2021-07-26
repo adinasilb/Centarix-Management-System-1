@@ -2,15 +2,15 @@
 @using PrototypeWithAuth.AppData
 @{
     var bcColor = "order-inv-background-color";
-    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
+    if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
         bcColor = "oper-background-color";
     }
-    else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.LabManagement)
+    else if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.LabManagement)
     {
         bcColor = "lab-man-background-color";
     }
-    else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Requests)
+    else if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Requests)
     {
         bcColor = "order-inv-background-color";
     }
@@ -24,36 +24,30 @@
         <div class="modal-content d-inline-block" style="width:58.96rem;">
 
             <div class="modal-header pb-0 border-bottom-0">
-                <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$('.confirm-email').html('');">
+                <button type="button" class="close modal-close-padding modal-close-style cancelEmail" @*data-dismiss="modal"*@ aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; ">
+                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel);}
                 <input asp-for="RequestID" style="display: none;" />
-                @Html.HiddenFor(model => model.RequestIndexObject.PageType)
-                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
-                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
-                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
-                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
-                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
-                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
-                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
+
                 <div>
                     @{await Html.RenderPartialAsync("_OrderEmail", Model); }
                 </div>
-                
+
                 <div class="modal-footer p-4">
                     <div class="m-auto">
                         <input type="submit" class="custom-button custom-button-font @bcColor between-button-margin complete-order" asp-action="ConfirmEmailModal" value="Confirm & Send Email" />
 
-                        <input type="button" class="custom-cancel custom-button cancel-email" onclick="$('.confirm-email').html('');" asp-action="CancelEmailModal @bcColor" value="Cancel Email" />
+                        <input type="button" class="custom-cancel custom-button cancel-email cancelEmail"  asp-action="CancelEmailModal @bcColor" value="Cancel Email" />
                     </div>
                 </div>
                 <script>
                     var today = new Date();
-                    var date = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
-                    document.getElementById("date").innerHTML = date;
+                    var date = moment(today);
+                    document.getElementById("date").innerHTML = date.format("D MMM YYYY");
                 </script>
 
 
@@ -63,3 +57,12 @@
     </div>
 </div>
 <script src="~/js/CreateItem.js"></script>
+<script>
+    $('.cancelEmail').off('click').on('click', function (e) {
+        e.preventDefault();
+        console.log("in cancel email");
+        var guid = $('#GUID').val();
+        $.fn.CloseModal('confirm-email');
+        $.fn.AddTempRequestHiddenFors(guid, '.termsModal .temprequesthiddenfors');
+    })
+</script>

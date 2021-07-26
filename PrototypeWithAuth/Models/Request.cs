@@ -108,7 +108,7 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<RequestNotification> RequestNotifications { get; set; }
         public string OrderType { get; set; }
 
-
+      
 
 
         //payment info
@@ -213,5 +213,6 @@ namespace PrototypeWithAuth.Models
 
         public IEnumerable<ShareRequest> ShareRequests { get; set; }
         public IEnumerable<FavoriteRequest> FavoriteRequests { get; set; }
+        public bool IsArchived { get; set; }
     }
 }

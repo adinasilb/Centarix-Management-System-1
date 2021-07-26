@@ -1,0 +1,67 @@
+﻿@model InventoryFilterViewModel
+
+@using PrototypeWithAuth.AppData;
+@using PrototypeWithAuth.ViewModels;
+
+@using PrototypeWithAuth.Data;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@using System.Globalization
+@using X.PagedList.Mvc.Core @* import this so we get our HTML Helper *@
+
+@{ 
+    var colorClass = "custom-order-inv";
+    var sectionClass = "orders";
+    var formClass = "order-inv-form";
+    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    {
+        colorClass = "custom-oper";
+        sectionClass = "operations";
+        formClass = "oper-form";
+
+    }
+}
+<div class="container-fluid @formClass">
+    <div class="row">
+        <ul class="list-unstyled mb-0 ">
+            <li class="filter-and-search @sectionClass">
+                <input type="text" placeholder="Search" class="text @colorClass custom-button mx-3 search-requests"  />
+                <button type="button" id="invFilterPopover" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-container="body"
+                        class="text custom-button @colorClass" value="Filter">
+                    Filter
+                </button>
+            </li>
+
+            <div style="display:none;" id="inventoryFilterContent" class="container-fluid">
+                @{
+                    await Html.RenderPartialAsync("_InventoryFilterResults", Model);
+                }
+            </div>
+
+        </ul>
+        <div id="inventoryFilterContentDiv" class="container inventoryFilterDiv">
+
+        </div>
+    </div>
+</div>
+<script>
+    
+  
+    $("#invFilterPopover").click(function () {
+        $('[data-toggle="popover"]').popover('dispose');
+        $('#invFilterPopover').popover({
+            sanitize: false,
+            placement: 'bottom',
+            container: '#inventoryFilterContentDiv',
+            html: true,
+            trigger: 'manual',
+            content: function () {
+                return $('#inventoryFilterContent').html();
+            }
+        });
+        $('#invFilterPopover').popover('toggle');
+        $('#invFilterPopover').addClass('order-inv-background-color custom-button-font');
+        $('#invFilterPopover').removeClass('custom-order-inv');
+        //$('#inventoryFilterContent').style.display = "block";
+    });
+</script>

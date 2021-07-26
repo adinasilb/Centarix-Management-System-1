@@ -1,0 +1,154 @@
+﻿@model PrototypeWithAuth.ViewModels.ReceivedModalSublocationsViewModel
+    <script src="~/js/customDropdown.js"></script>
+<script src="~/js/site.js" ></script>
+<script src="~/js/receivedmodal.js"></script>
+
+<div class="row">
+    @for (int i = 0; i < Model.locationTypeNames.Count - 1; i++) //do count - 1 because we don't want them to select the smallest instances
+    {
+        var id = i;
+        var hasRackBlock = "";
+        if (i > 1)
+        {
+            hasRackBlock = "hasRackBlock";
+        }
+
+    <div class="form-group col-3 @hasRackBlock ">
+        <label class="control-label">@Model.locationTypeNames[i]</label>
+        @if (i == 0)
+        {
+
+            <div class="">
+                <div class=" form-control-plaintext border-bottom p-0">
+                    <span class="choose p-0"></span>
+                    <div class="dropdown dropdown-main">
+                        <div class="select d-inline-flex" id="@id">
+                            <span class="caret py-0">
+                                ▼
+                            </span>
+                            <span class="overflow-hidden">Select Name:</span>
+
+                        </div>
+
+                        <ul class="p-0 locationinstance dropdown-menu ">
+                            @foreach (var locationType in Model.locationInstancesDepthZero)
+                            {
+                                var locationName = locationType.LocationInstanceName;
+                                if(locationType.LocationTypeID == 500)
+                                {
+                                    locationName = locationType.LocationRoomInstance.LocationRoomInstanceName;
+                                }
+
+                                var description = locationType.LocationInstanceAbbrev;
+                                if(locationType.LocationInstanceParent == null)
+                                {
+                                    description = locationType.LocationInstanceName;
+                                }
+                                <li id="@locationType.LocationInstanceID" class="SLI-click " data-string="@description" @*onclick="SLI(this.id)"*@ value="@locationType.LocationInstanceID">
+                                    @locationName
+                                </li>
+                            }
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+        <div class="">
+            <div class=" form-control-plaintext border-bottom p-0">
+                <span class="choose p-0"></span>
+                <div class="dropdown dropdown-main">
+                    <div class="select d-inline-flex" id="@id" style="padding-right:1.25rem;">
+                        <span class="caret py-0">
+                            ▼
+                        </span>
+                        <span class="overflow-hidden ">select</span>
+
+                    </div>
+
+                    <ul class="p-0 locationinstance dropdown-menu " style="display:none">
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+
+    }
+</div>
+<script>
+    //function SLI(el) {
+    //    var nextSelect = $(el).parents('.form-group').nextAll().first().find('.dropdown-menu')
+    //    //alert("nextSelect: " + nextSelect);
+    //    var html = nextSelect.html();
+    //    alert("html of next select: " + html);
+    //}
+    //function SLI(id) {
+    //    //ONE ---> GET THE NEXT DROPDOWNLIST
+    //    //var nextSelect = $(el).parents('.form-group').nextAll().first().find('.dropdown-menu')
+    //    var nextSelectID = id + 1;
+    //    var nextSelect = $("#" + nextSelectID + " .dropdown-menu");
+    //    $(nextSelect).html('');
+    //    console.log(nextSelect);
+    //    //var locationInstanceParentId = $(el).val();
+    //    var url = "/Requests/GetSublocationInstancesList";/*/?LocationInstanceParentID=" + locationInstanceParentId;*/
+
+    //    if (nextSelect != undefined) { //if there is another one
+    //        alert("next select is not undefined");
+    //        $(nextSelect).html('');
+    //        $(nextSelect).parents('.dropdown-main').find('span:not(.caret)').text('select');
+    //        $.getJSON(url, { locationInstanceParentId, locationInstanceParentId }, function (result) {
+    //            var item = "<li>Select Location Instance</li>";
+    //            $.each(result, function (i, field) {
+    //                alert("next option: " + field.locationInstanceName);
+    //                item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' " onclick="SLI(this.id)">' + field.locationInstanceName + '</li>'
+    //            });
+    //            $(nextSelect).append(item);
+    //        });
+
+    //    }
+    //    //TWO ---> FILL VISUAL VIEW
+    //    var myDiv = $(".visualView");
+    //    if (locationInstanceParentId == 0) { //if zero was selected
+    //        console.log("selected was 0");
+    //        //check if there is a previous select box
+    //        var oldSelectClass = name.replace(place.toString(), (place - 1).toString());
+    //        var oldSelect = $("select[name='" + oldSelectClass + "']");
+    //        if (oldSelect.length) {
+    //            console.log("oldSelectClass " + oldSelectClass + " exists and refilling with that");
+    //            var oldSelected = $("." + oldSelect).children("option:selected").val();
+    //            console.log("oldSelected: " + oldSelected);
+    //            $.ajax({
+    //                url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + oldSelected,
+    //                type: 'GET',
+    //                cache: false,
+    //                context: myDiv,
+    //                success: function (result) {
+    //                    $(this).html(result);
+    //                }
+    //            });
+    //        }
+    //        else {
+    //            console.log("oldSelectClass " + oldSelectClass + " does not exist and clearing");
+    //            myDiv.html("");
+    //        }
+    //    }
+    //    else {
+    //        console.log("regular visual");
+    //        $.ajax({
+    //            url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId,
+    //            type: 'GET',
+    //            cache: false,
+    //            context: myDiv,
+    //            success: function (result) {
+    //                $(this).html(result);
+    //            }
+    //        });
+    //    }
+
+    //    $(el).parents('.dropdown-main').find('span:not(.caret)').text($(el).text());
+    //};
+</script>

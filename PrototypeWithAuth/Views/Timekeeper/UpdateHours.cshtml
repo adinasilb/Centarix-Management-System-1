@@ -2,7 +2,7 @@
 @using PrototypeWithAuth.AppData
 
 <div class="modal modal-document fader on-form-modal timekeeper-form" id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
-    <div class="modal-dialog-centered mx-auto work-from-home-modal" style="width:50% !important">
+    <div class="modal-dialog-centered mx-auto elixir-modal-md">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('update-time-worked');">
                 <span aria-hidden="true">&times;</span>
@@ -41,12 +41,12 @@
                             <label asp-for="EmployeeHour.Date" class="control-label"></label>
                             @if (disabled)
                             {
-                                <input asp-for="EmployeeHour.Date" asp-format="{0:dd/MM/yyyy}" class="form-control-plaintext  border-bottom update-hour-date datepicker " type="text" disabled />
+                                <input asp-for="EmployeeHour.Date" asp-format="@AppUtility.AspDateFormatString" class="form-control-plaintext  border-bottom update-hour-date datepicker " type="text" disabled />
                                 <input type="hidden" asp-for="EmployeeHour.Date" asp-format="{0:dd/MM/yyyy}" />
                             }
                             else
                             {
-                                <input asp-for="EmployeeHour.Date" asp-format="{0:dd/MM/yyyy}" type="text" data-workday="@Model.AutoFillEntry1Type" class="form-control-plaintext  border-bottom update-hour-date datepicker " />
+                                <input asp-for="EmployeeHour.Date" asp-format="@AppUtility.AspDateFormatString" type="text" data-workday="@Model.AutoFillEntry1Type" class="form-control-plaintext  border-bottom update-hour-date datepicker " />
                             }
 
                             <span asp-validation-for="EmployeeHour.Date" class="text-danger-centarix " />

@@ -8,12 +8,11 @@ $('#invFilterPopover').on('shown.bs.popover', function () {
 })
 $('body').off('click').on('click', '.btn-filter', function () {
 	//alert("in filter function")
-	var data = $.fn.BindSelectedFilters();
+	//var archived = $('.archive-check').val();
+	//console.log('archived ' + archived);
+	var data = $.fn.BindSelectedFilters('.popover');
 	var id = $(this).val();
 	var col = $(this).parent().parent();
-	var sectionType = $('#masterSectionType').val();
-	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
-	console.log('status ' + $(".request-status-id").attr("value"));
 	var arr;
 	if (col.hasClass('vendor-col')) {
 			arr = data.SelectedVendorsIDs;
@@ -34,31 +33,50 @@ $('body').off('click').on('click', '.btn-filter', function () {
 		arr.splice($.inArray(id, arr), 1);
 		numFilters = Number($('.numFilters').attr("value")) - 1;
 	}
-	//console.log(data);
-    $.ajax({
+	//console.log('archived ' + archived);
+	$.fn.ReloadFilterDiv(numFilters, data);
+});
+$.fn.ReloadFilterDiv = function (numFilters, data) {
+	console.log('in reload filter function');
+	var sectionType = $('#masterSectionType').val();
+	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
+	console.log('status ' + $(".request-status-id").attr("value"));
+	var searchText = $('.popover .search-requests-in-filter').val();
+	console.log('search: ' + searchText);
+/*	var searchText2 = $('.popover .search-requests-in-filter').attr('value');
+	console.log('search 2: ' + searchText2);*/
+	$.ajax({
 		//processData: false,
 		//contentType: false,
 		data: data,
-		traditional:true,
+		traditional: true,
 		async: true,
-		url: "/Requests/_InventoryFilterResults?numFilters=" + numFilters + "&sectionType=" + sectionType + "&isProprietary="+ isProprietary,
+		url: "/Requests/_InventoryFilterResults?numFilters=" + numFilters + "&sectionType=" + sectionType + "&isProprietary=" + isProprietary,
 		type: 'POST',
 		cache: false,
 		success: function (newData) {
 			$('#inventoryFilterContent').html(newData);
+			$('.search-requests-in-filter').attr('value', searchText);
+			//$('.search-requests-in-filter').val(searchText);
 			$('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
-        }
-     });
-
-});
-$('.search-requests').on('change', function () {
+		}
+	});
+}
+$('.search-requests').on('change', function (e) {
+	e.stopImmediatePropagation();
 	var searchText = $(this).val().toLowerCase();
 	console.log(searchText);
+	console.log('searchtext length' + searchText.length)
 	/*if (searchText.length < 3 && searchText != "") {
 		return;
     }*/
+	//clear search in filter so doesn't mess things up
+	$('.search-requests-in-filter').attr('value', "");
+	//reset page number
+	$('.page-number').val(1);
+	var data = $.fn.BindSelectedFilters('');
 	var url;
-	switch ($('#masterPageType').val()) {
+	/*switch ($('#masterPageType').val()) {
 		case 'RequestSummary':
 			url = "_IndexTableWithProprietaryTabs";
 			break;
@@ -69,20 +87,21 @@ $('.search-requests').on('change', function () {
 		case 'OperationsInventory':
 			url = "_IndexTable";
 			break;
-	}
+	}*/
+	url = '_IndexTableData';
 	//console.log(url);
 	$.ajax({
 		//processData: false,
 		//contentType: false,
-		//data: data,
+		data: data,
 		traditional: true,
 		async: true,
-		url: "/Requests/"+url+"?" + $.fn.getRequestIndexString() + "&searchText=" + searchText,
-		type: 'GET',
+		url: "/Requests/"+url+"?" + $.fn.getRequestIndexString(),
+		type: 'POST',
 		cache: false,
-		success: function (data) {
-			$("." + url).html(data);
-			$('.search-requests').val(searchText);
+		success: function (newData) {
+			$("." + url).html(newData);
+			//$('.search-requests').val(searchText);
 			$('.search-requests').focus();
 		}
 	});
@@ -149,5 +168,66 @@ $('body').on('click', '.clear-filters', function () {
 	var sectionType = $('#masterSectionType').val();
 	$.fn.ClearFilter(sectionType, isProprietary);
 });
+$(".popover").off("click").on("click", ".archive-button", function (e) {
+	console.log('check archive!')
+	$(".archive-check").each(function () {
+		console.log(this);
+		var checked = $(this).prop("checked");
+		$(this).attr("checked", !checked);
+		$(this).val(!checked);
+		/*var numFilters = $('.numFilters').attr("value");
+		var data = $.fn.BindSelectedFilters('.popover');
+		$.fn.ReloadFilterDiv(numFilters, data);*/
+	})
+});
+$('body').on('click', "#applyFilter", function (e) {
+	e.stopImmediatePropagation();
+	console.log('clicked!')
+	var data = $.fn.BindSelectedFilters('.popover');
+	var searchText = $('.popover .search-requests-in-filter').val();
+	console.log('search text here' + searchText)
+	if (searchText!= undefined && searchText.length) {
+		//clear other search box
+		$('.search-requests').val("");
+    }
+	var numFilters = $('.numFilters').attr("value");
+	console.log('search text ' + searchText);
+	//reset page number
+	$('.page-number').val(1);
 
+/*	var url;
+	switch ($('#masterPageType').val()) {
+		case 'RequestSummary':
+			url = "_IndexTableWithProprietaryTabs";
+			break;
+		case 'RequestRequest':
+		case 'OperationsRequest':
+			url = "_IndexTableWithCounts"
+			break;
+		case 'OperationsInventory':
+			url = "_IndexTable";
+			break;
+	}*/
+	var url = '_IndexTableData';
+	//console.log(data);
+	$.ajax({
+		//    processData: false,
+		//    contentType: false,
+		data: data,
+		async: true,
+		traditional: true,
+		url: "/Requests/" + url + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
+		type: 'POST',
+		cache: false,
+		success: function (data) {
+			$('.' + url).html(data);
+			$('[data-toggle="popover"]').popover('dispose');
+			console.log($.type(searchText))
+			$('.search-requests-in-filter').attr('value', searchText);
+			$('body').removeClass('popover-open');
+			$('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
+			$('#invFilterPopover').addClass('custom-order-inv');
+		}
+	});
+});
 

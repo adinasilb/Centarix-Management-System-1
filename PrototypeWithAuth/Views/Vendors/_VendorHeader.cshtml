@@ -1,0 +1,10 @@
+﻿@model PrototypeWithAuth.ViewModels.CreateSupplierViewModel
+
+<div class="row modal-title-line">
+    <div class="modal-product-title" @*style="margin-left: 2rem !important;"*@>
+        <input type="hidden" asp-for="Vendor.VendorID" />
+        <input asp-for="Vendor.VendorEnName" class="form-control-plaintext heading-1 border-bottom mark-readonly name" disabled />
+        <span asp-validation-for="Vendor.VendorEnName" class="text-danger-centarix"></span>
+    </div>
+
+</div>

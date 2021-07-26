@@ -144,6 +144,7 @@ $(function () {
 			case "3":
 				$(".wire").removeClass("d-none");
 				$(".bank-check").addClass("d-none");
+				$("#Payment_CheckNumber").attr("disabled", true);
 				$(".credit-card").addClass("d-none");
 				$(".cardNum").attr("disabled", true);
 				$("#Payment_Reference").attr("disabled", false);

@@ -1286,7 +1286,7 @@ namespace PrototypeWithAuth.Data
                 }
 
               );
-            
+
             modelBuilder.Entity<RequestStatus>().HasData
           (
               new RequestStatus
@@ -2648,7 +2648,8 @@ namespace PrototypeWithAuth.Data
                     ResourceCategoryDescription = "Rejuvenation",
                     IsMain = true,
                     IsResourceType = false,
-                    ImageUrl = "rejuvenation_image.svg"
+                    ImageUrl = "rejuvenation_image.svg",
+                    IsReportsCategory = true
                 },
                 new ResourceCategory
                 {
@@ -2656,7 +2657,8 @@ namespace PrototypeWithAuth.Data
                     ResourceCategoryDescription = "Biomarkers",
                     IsMain = true,
                     IsResourceType = false,
-                    ImageUrl = "biomarkers_image.svg"
+                    ImageUrl = "biomarkers_image.svg",
+                    IsReportsCategory = true
                 },
                 new ResourceCategory
                 {
@@ -2664,7 +2666,8 @@ namespace PrototypeWithAuth.Data
                     ResourceCategoryDescription = "Delivery Systems",
                     IsMain = true,
                     IsResourceType = false,
-                    ImageUrl = "delivery_systems_image.svg"
+                    ImageUrl = "delivery_systems_image.svg",
+                    IsReportsCategory = true
                 },
                 new ResourceCategory
                 {
@@ -2771,7 +2774,23 @@ namespace PrototypeWithAuth.Data
                 }
                 );
 
-
+            modelBuilder.Entity<ReportType>().HasData(
+               new ReportType
+               {
+                   ReportTypeID = 1,
+                   ReportTypeDescription = "Daily"
+               },
+               new ReportType
+               {
+                   ReportTypeID = 2,
+                   ReportTypeDescription = "Weekly"
+               },
+               new ReportType
+               {
+                   ReportTypeID = 3,
+                   ReportTypeDescription = "Monthly"
+               }
+        );
             modelBuilder.Entity<MaterialCategory>().HasData(
                 new MaterialCategory
                 {
@@ -2821,9 +2840,9 @@ namespace PrototypeWithAuth.Data
                 {
                     FunctionTypeID = 1,
                     FunctionDescription = "Add Image",
-                    Icon = "",
+                    Icon = "icon-account_box-24px1",
                     IconActionClass = "add-image-to-line",
-                    DescriptionEnum ="AddImage"
+                    DescriptionEnum = "AddImage"
                 },
                 new FunctionType
                 {
@@ -2906,6 +2925,32 @@ namespace PrototypeWithAuth.Data
                     DescriptionEnum = "AddFile"
                 }
           );
+
+          modelBuilder.Entity<Gender>().HasData(
+                new Gender
+                {
+                    GenderID = 1,
+                    Description = "Male"
+                },
+                new Gender
+                {
+                    GenderID = 2,
+                    Description = "Female"
+                }
+           );
+
+            modelBuilder.Entity<ParticipantStatus>().HasData(
+                  new ParticipantStatus
+                  {
+                      ParticipantStatusID = 1,
+                      Description = "Active"
+                  },
+                  new ParticipantStatus
+                  {
+                      ParticipantStatusID = 2,
+                      Description = "Dropout"
+                  }
+             );
         }
     }
 }

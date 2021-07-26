@@ -1,0 +1,28 @@
+﻿@model List<List<PrototypeWithAuth.ViewModels.TDViewModel>> 
+<table class="table table-headerspaced table-noheaderlines table-hover ">
+    <tbody>
+        @foreach (var row in Model)
+        {
+            <tr class="text-center one-row" style="height: 7.313rem;">
+                @foreach (var value in row)
+                {
+
+                    <td width="10%" class="p-0">
+                        @if (value.Link != "" && value.Link != null)
+                        {
+                            <a class="btn p-0 m-0 inv-link-clr @value.Link no-box-shadow" value="@value.ID" data-toggle="tooltip" data-placement="top" data-target="item" href="@Url.Action(value.Link, "Biomarkers", new { ID = value.ID })">
+                                <div class="d-block" style="/*overflow:hidden; text-overflow:ellipsis; white-space:nowrap;max-width:200px;*/">
+                                    <p class="m-0 text-center" style="overflow: hidden; text-overflow: ellipsis; -webkit-line-clamp: 3; -webkit-box-orient: vertical; max-height: 5rem; display: -webkit-box; /*white-space:nowrap*/">@value.Value</p>
+                                </div>
+                            </a>
+                        }
+                        else
+                        {
+                            <label class="m-0 p-0">@value.Value</label>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

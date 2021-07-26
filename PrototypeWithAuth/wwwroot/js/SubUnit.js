@@ -397,7 +397,7 @@ $(function () {
 			shekelSelector = ".shekel-cost";
 			dollarSelector = ".dollar-cost";
 		}
-		var isRequestQuote = $(".isRequest").is(":checked")
+		var isRequestQuote = false; //always false for now $(".isRequest").is(":checked")
 		switch (currencyType) {
 			case "USD":
 				$(shekelSelector).prop("readonly", true);
@@ -473,7 +473,7 @@ $(function () {
 	});
 
 	$("#unit-type-select").on("change", function () {
-		alert('in id function');
+		//alert('in id function');
 		$.fn.ChangeSubUnitDropdown();
 		$.fn.ChangeSubSubUnitDropdown();
 	});

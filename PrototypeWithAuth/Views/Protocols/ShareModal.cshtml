@@ -1,3 +1,5 @@
 ﻿
 @model PrototypeWithAuth.ViewModels.ShareModalViewModel;
-@{await Html.RenderPartialAsync("~/Views/Shared/_ShareModal.cshtml", Model);}
+<div class="protocol-form">
+    @{await Html.RenderPartialAsync("~/Views/Shared/_ShareModal.cshtml", Model);}
+</div>

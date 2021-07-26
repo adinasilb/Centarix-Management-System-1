@@ -14,18 +14,17 @@ using Microsoft.CodeAnalysis;
 using Project = PrototypeWithAuth.Models.Project;
 using Request = PrototypeWithAuth.Models.Request;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 
 namespace PrototypeWithAuth.Controllers
 {
     public class ExpensesController : SharedController
     {
-        private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
-        public ExpensesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context)
+        public ExpensesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+           : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
-            _context = context;
-            _userManager = userManager;
         }
 
         [HttpGet]
@@ -89,7 +88,7 @@ namespace PrototypeWithAuth.Controllers
             pieChartViewModel.SectionName = new List<String>();
             pieChartViewModel.SectionValue = new List<decimal>();
             pieChartViewModel.Currency = currency;
-            var latestExchangeRate = GetExchangeRate();
+            var latestExchangeRate = base.GetExchangeRate();
             if (summaryChartsViewModel.SelectedEmployees != null)
             {
                 var employees = _context.Employees.Where(e => summaryChartsViewModel.SelectedEmployees.Contains(e.Id));
@@ -380,7 +379,7 @@ namespace PrototypeWithAuth.Controllers
                 decimal plastics = 0;
                 decimal reusables = 0;
                 decimal total = 0;
-                var latestExchangeRate = GetExchangeRate();
+                var latestExchangeRate = base.GetExchangeRate();
                 switch (currencyEnum)
                 {
                     case AppUtility.CurrencyEnum.NIS:

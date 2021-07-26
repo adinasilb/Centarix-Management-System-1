@@ -72,7 +72,7 @@
                 @employee.Employee.PhoneNumber
             </td>
             <td width="10%">
-                @employee.Employee.StartedWorking.ToString("dd'/'MM'/'yyyy")<br/> 
+                @employee.Employee.StartedWorking.GetElixirDateFormat()<br/> 
                 @(DateTime.Now.Subtract(employee.Employee.StartedWorking).Days/365).@(((DateTime.Now.Year - employee.Employee.StartedWorking.Year) *12 + DateTime.Now.Month - employee.Employee.StartedWorking.Month)%12)
             </td>
             <td width="9%">

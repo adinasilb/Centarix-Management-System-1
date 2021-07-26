@@ -46,6 +46,7 @@
     --timekeeper-filter: brightness(0) saturate(100%) invert(72%) sepia(32%) saturate(7497%) hue-rotate(1deg) brightness(106%) contrast(104%);
     --expense-filter: brightness(0) saturate(100%) invert(45%) sepia(67%) saturate(926%) hue-rotate(146deg) brightness(108%) contrast(101%);
     --protocol-filter: brightness(0) invert(39%) sepia(20%) saturate(3905%) hue-rotate(142deg) brightness(98%) contrast(101%);
+    --biomarkers-filter: invert(28%) sepia(71%) saturate(3526%) hue-rotate(346deg) brightness(119%) contrast(91%);
     --notifications-orderlate-color: #DB2127;
     --notifications-ordered-color: #5F79E2;
     --notifications-approved-color: #00CA72;
@@ -184,6 +185,22 @@
 
 .users-border-color {
     border: solid 2px var(--user-color) !important;
+}
+
+.biomarkers-color{
+    color: var(--biomarkers-color) !important;
+}
+
+.biomarkers-background-color{
+    background-color: var(--biomarkers-color) !important;
+}
+
+.biomarkers-filter{
+    filter: var(--biomarkers-filter) !important;
+}
+
+.biomarkers-border-color{
+    border-color: var(--biomarkers-color) !important;
 }
 
 .lab-man-filter {
@@ -351,6 +368,11 @@ body {
     font-weight: var(--bold-regular);
 }
 
+.sub-header {
+    font-size: 1.25rem;
+    font-weight: var(--bold-regular);
+}
+
 .side-menu {
     font-size: .906rem;
     font-weight: var(--bold-regular)
@@ -447,6 +469,14 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     color: var(--operations-color) !important;
 }
 
+.custom-protocols {
+    border: .125rem solid var(--protocols-color) !important;
+    background-color: transparent;
+    font-weight: var(--bold-light);
+    font-size: 1.438rem;
+    color: var(--protocols-color) !important;
+}
+
 .custom-clear-button-table {
     background-color: transparent;
     font-weight: var(--bold-medium);
@@ -532,6 +562,11 @@ table td, table td .btn, .text, table th {
     height: 2.875rem;
     border-radius: 1.438rem;
     border: none;
+}
+
+.bio-form .clear-custom-button{
+    background-color: white !important;
+    border: solid 2px var(--biomarkers-color) !important;
 }
 
 .inverted-custom-button {
@@ -645,6 +680,13 @@ table td, table td .btn, .text, table th {
     margin-left: 5rem;
     margin-right: 5rem;
     margin-bottom: 3.5rem;
+}
+
+.small-modal-padding {
+    margin-top: 3rem;
+    margin-left: 3rem;
+    margin-right: 3rem;
+    margin-bottom: 1.5rem;
 }
 
 .modal-close-padding {
@@ -796,3 +838,29 @@ span.resources-tags-big {
         padding: 10px 15px;
         border-radius: 30px;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+    
+****BIOMARKERS****
+
+
+*/
+.open-experiment{
+    color: var(--biomarkers-25) !important;
+    text-decoration: underline !important;
+}
+

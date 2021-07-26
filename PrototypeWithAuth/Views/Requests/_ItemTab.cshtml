@@ -103,7 +103,7 @@
 
 @{ var request = Model.Requests[0];}
 <span class="heading-1 modal-tab-name">Item</span>
-@if (modalType == AppUtility.RequestModalType.Create && !Model.IsProprietary)
+@*@if (modalType == AppUtility.RequestModalType.Create && !Model.IsProprietary)
 {
     <div class="row">
         <div class="col-4 offset-8">
@@ -112,7 +112,7 @@
             <input type="hidden" value="@Model.IsRequestQuote.ToString().ToLower()" id="requestQuoteValue" />
         </div>
     </div>
-}
+}*@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
@@ -129,7 +129,7 @@
              "ParentCategoryID",
              "ParentCategoryDescription"
              ), "Select Category",
-             new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "parentlist", @searchable = "Select Category" })
+             new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "parentlist", @searchable = "Select Category", @data_stop_refresh = "true" })
             }
             <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" />
             <span asp-validation-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
@@ -138,14 +138,14 @@
     <div class="col-md-6 px-4">
         <div class="form-group sublist">
             <label asp-for="Requests[0].Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
-            @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategory.ProductSubcategoryID,
+            @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategoryID,
                 new SelectList(
                 Model.ProductSubcategories,
                 "ProductSubcategoryID",
                 "ProductSubcategoryDescription"
                 ), "Select Sub Category",
-                new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category" })
-            <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ProductSubcategoryID" disabled class="proprietryHidenCategory" />
+                new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category", @data_stop_refresh = "true" })
+            <input type="hidden" asp-for="Requests[0].Product.ProductSubcategoryID" disabled class="proprietryHidenCategory" />
             <span asp-validation-for="Requests[0].Product.ProductSubcategoryID" class="text-danger-centarix"></span>
         </div>
     </div>
@@ -173,7 +173,7 @@
                                     <label class="control-label">Sub Project:</label>
                                     @Html.DropDownListFor(vm => vm.Requests[0].SubProjectID,
         Enumerable.Empty<SelectListItem>(), "Select Sub Project",
-        new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext " + subProjectCategories + " " + markReadOnlyClass, @id = "SubProject", @searchable = "Select Sub Project" })-->
+        new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext " + subProjectCategories + " " + markReadOnlyClass, @id = "SubProject", @searchable = "Select Sub Project", @data_stop_refresh = "true" })-->
         @*<select asp-for="Request.SubProjectID" id="SubProject" class="mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext" searchable="Select Sub Project">
             </select>*@
         <!--<span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
@@ -190,7 +190,7 @@
     dataTextField: "VendorEnName"),
     //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
     "Select a Vendor",
-    htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext " + vendorCategories + " " + markReadOnlyClass, @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
+    htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext " + vendorCategories + " " + markReadOnlyClass, @id = "vendorList", @size = 1, @searchable = "Select A Vendor", @data_stop_refresh = "true" }
     )
                 <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
             </div>
@@ -260,17 +260,17 @@
                     <label class="control-label">Expected supply date</label>
                     @if (modalType == AppUtility.RequestModalType.Create)
                     {
-                        <input value="" class="form-control-plaintext border-bottom datepicker requestPriceQuote @supplyDaysCategories " disabled type="text" name="expected-supply-days" id="expected-supply-date" />
+                        <input value="" class="form-control-plaintext border-bottom datepicker expected-supply-date requestPriceQuote @supplyDaysCategories " disabled type="text" name="expected-supply-days"/>
                     }
                     else
                     {
                         if (Model.Requests[0].RequestStatusID == 2)
                         {
-                            <input value="@Model.Requests[0].ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy")" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories  " type="text" name="expected-supply-days" id="expected-supply-date" />
+                            <input value="@Model.Requests[0].ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).GetElixirDateFormat()" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories  " type="text" name="expected-supply-days" id="expected-supply-date" />
                         }
                         else
                         {
-                            <input value="@DateTime.Now.AddDays(request.ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy")" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories " type="text" name="expected-supply-days" id="expected-supply-date" />
+                            <input value="@DateTime.Now.AddDays(request.ExpectedSupplyDays ?? 0).GetElixirDateFormat()" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories " type="text" name="expected-supply-days" id="expected-supply-date" />
                         }
                     }
                 </div>
@@ -293,7 +293,7 @@
                 </div>
                 <div class="col-md-3 ">
                     <label asp-for="Requests[0].Payments[0].Invoice.InvoiceDate" class="control-label"></label>
-                    <input asp-for="Requests[0].Payments[0].Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" type="text" asp-format="{0:dd/MM/yyyy}" />
+                    <input asp-for="Requests[0].Payments[0].Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" type="text" asp-format="@AppUtility.AspDateFormatString" />
                     <span asp-validation-for="Requests[0].Payments[0].Invoice.InvoiceDate" class="text-danger-centarix"></span>
                 </div>
             }
@@ -306,7 +306,7 @@
                 </div>
                 <div class="col-md-3">
                     <label asp-for="Requests[0].ParentRequest.OrderDate" class="control-label"></label>
-                    <input type="text" asp-for="Requests[0].ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" asp-format="{0:dd/MM/yyyy}"  />
+                    <input type="text" asp-for="Requests[0].ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" asp-format="@AppUtility.AspDateFormatString"  />
                     <span asp-validation-for="Requests[0].ParentRequest.OrderDate" class="text-danger-centarix"></span>
                 </div>
             }
@@ -318,7 +318,7 @@
         <div class="row">
             <div class="col-md-3 ">
                 <label asp-for="Requests[0].ArrivalDate" class="control-label"></label>
-                <input asp-for="Requests[0].ArrivalDate" class="form-control-plaintext border-bottom" asp-format="{0:dd/MM/yyyy}" disabled type="text" />
+                <input asp-for="Requests[0].ArrivalDate" class="form-control-plaintext border-bottom" asp-format="@AppUtility.AspDateFormatString" disabled type="text" />
             </div>
             <div class="col-md-3">
                 <label class="control-label">Received By</label>
@@ -361,7 +361,7 @@ else
     <div class="row">
         <div class="col-md-3 ">
             <label asp-for="Requests[0].CreationDate" class="control-label">Creation Date</label>
-            <input asp-for="Requests[0].CreationDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass @dateCreatedCategories"  asp-format="{0:dd/MM/yyyy}"  type="text" />
+            <input asp-for="Requests[0].CreationDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass @dateCreatedCategories"  asp-format="@AppUtility.AspDateFormatString"  type="text" />
         </div>
     </div>
 }

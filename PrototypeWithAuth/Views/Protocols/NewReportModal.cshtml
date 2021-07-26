@@ -1,0 +1,61 @@
+﻿@model PrototypeWithAuth.ViewModels.CreateReportViewModel
+
+
+<div class="modal modal-view fader new-report-modal" id="myModal" data-backdrop="false">
+    <div class="modal-dialog-centered mx-auto" style="width:38rem;">
+        <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
+            <form action="" method="post" id="myForm" class="modal-padding mt-4 on-form-modal createReportForm" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Report.DateCreated" />
+                <input type="hidden" asp-for="Report.ReportType.ReportTypeID" />
+                <input type="hidden" asp-for="Report.ReportCategoryID" />
+                <div class="row justify-content-end">
+                    <button type="button" class="close  modal-close-style " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('new-report')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="row heading-1 my-3 justify-content-center">
+                    <span>Enter Report Title:</span>
+                </div>
+                <div>
+                    <input asp-for="Report.ReportTitle" class="form-control-plaintext border-bottom heading-1 protocols-color" />
+                    <span asp-validation-for="Report.ReportTitle" class="text-danger-centarix"></span>
+                </div>
+                <br />
+                <div class="row justify-content-around">
+                    <button type="submit" class="custom-button custom-protocols open-new-report">Yes</button>
+                    <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('new-report')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="~/js/Validation/CreateReportValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<script>
+    $(".open-new-report").off('click').on('click', function (e) {
+        e.preventDefault();
+        $('.createReportForm').data("validator").settings.ignore = "";
+        var valid = $('.createReportForm').valid();
+        console.log(valid)
+        if (valid) {
+            var formData = new FormData($("#myForm")[0]);
+            console.log(...formData)
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: "/Protocols/NewReportModal",
+                data: formData,
+                traditional: true,
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    $.fn.CloseModal("new-report");
+                    $(".render-body").html(data);
+                    console.log("focus")
+                    $(".start-div").trigger("focus")
+                }
+            });
+        }
+    })
+</script>

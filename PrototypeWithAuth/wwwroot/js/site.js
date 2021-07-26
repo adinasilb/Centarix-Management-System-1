@@ -294,7 +294,6 @@ $(function () {
 	});
 
 	$(".open-document-modal").off('click').on("click", function (e) {
-
 		e.preventDefault();
 		e.stopPropagation();
 		console.log("clicked open doc modal 2");
@@ -305,11 +304,17 @@ $(function () {
 		console.log("enumString: " + enumString);
 		var requestId = $(this).data("id");
 		console.log("requestId: " + requestId);
+		var guid = $(".hidden-guid").val();
+		console.log("guid: " + guid);
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
 		var showSwitch = $(".active-document-modal").attr("showSwitch");
 		var parentFolder = $(".active-document-modal").attr("parentfolder");
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder);
+		console.log('parentfolder' + parentFolder)
+		var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
+		console.log(dontAllowMultipleFiles)
+		//alert("before open doc modal");
+		$.fn.OpenDocumentsModal(false, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles);
 		return true;
 	});
 
@@ -1438,8 +1443,10 @@ $(function () {
 			section = "Requests";
 		}
 		else if ($(this).hasClass('locations')) {
+			console.log("has locations");
 			url = "/Requests/ReceivedModalVisual";
-			section = "Requests";
+			section = $(".turn-edit-on-off").attr("section-type"); //"Requests";
+			console.log("section: " + section);
         }
 		if ($(this).hasClass('orders') && $(this).hasClass('equipment')) {
 			url = "/Requests/EditModalView";
@@ -1460,19 +1467,19 @@ $(function () {
 					$("#loading").hide();
 					$.fn.OpenModal('confirm-edit-modal', 'confirm-edit', data)
 					$(".modal-open-state").attr("text", "open");
-
 				}
-
 			});
-
 
 		}
 		else if (type == 'details') {
 			if ($(this).hasClass('locations')) {
+				console.log('locations');
 				$(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
 				$('#location .mark-readonly').removeClass("disabled")
+				$('#location .mark-readonly').attr("disabled", false);
 				$('.edit-mode-switch-description').text("Edit Mode On");
 				$('.turn-edit-on-off').attr('name', 'edit');
+				$('.location-icon').removeClass('d-none');
 			}
 			else {
 				enableMarkReadonly($(this));
@@ -1493,6 +1500,7 @@ $(function () {
     }
 
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
+		console.log("enable " + selectID)
 		var selectedElements = $('#' + dataActivates).find(".active")
 		var selectedIndex = $('#' + dataActivates).find(".active").index();
 		var dataActivatesLength = $('#' + dataActivates).children('li').length;

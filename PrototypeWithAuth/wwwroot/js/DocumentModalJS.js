@@ -6,20 +6,27 @@
 		return false;
 	});
 
-	$(".file-select").on("change", function (e) {
+	$(".file-select").off("change").on("change", function (e) {
 		e.preventDefault();
-		e.stopPropagation();
+		e.stopImmediatePropagation();
 		console.log("upload file submitted");
+		var dontAllowMultipleFiles = $("#DontAllowMultiple").val();
+		if (dontAllowMultipleFiles == false) {
+			console.log("disable more files")
+        }
 
 		var inputButton = $('#save-documents');
 		var filePath = $(".file-select")[0].value;
-		if ($("#masterSidebarType").val() == "NoInvoice") {
-			var fileName = filePath.split("\\")[2]
-			$(".invoice-image-name").text(fileName)
-        }
+
+		var fileName = filePath.split("\\")[2]
+		$(".document-name").text(fileName)
+
+		$(".document-name#FileName").val(fileName)
+
+
 		var extn = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
 		console.log("extn: " + extn);
-		if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn !="") {
+		if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn != "ppt" && extn != "pptx" && extn !="") {
 			alert("invalid file extension");
 			return;
 		}
@@ -31,23 +38,31 @@
 		//var url = $("#documentModalForm").data('string');
 		console.log("input button: " + inputButton);
 		var url = inputButton.attr("href");
-		var $isEdittable = $('.active-document-modal.withinDocModal').data("val");
+		var $isEdittable = $('.isEdittable').val();
 		//alert($isEdittable)
-		var $showSwitch =  $('.active-document-modal.withinDocModal').attr("showSwitch");
+		var $showSwitch =  $('.showSwitch').val();
 		console.log("url : " + url);
-		var formData = new FormData($(".documentModalForm")[0]);
+	    var formData = new FormData($(".documentModalForm")[0]);
+		//for(var i=0; i< $(this).get(0).files.length; i++)
+		//{
+		//	formData.append("FilesToSave", $(this).get(0).files[i])
+		//}
+
+		console.log(...formData)
 		$.ajax({
 			url: url,
 			method: 'POST',
 			data: formData,
 			success: (partialResult) => {
+		
 				//this.options.noteModalElement.modal('hide');
 				$(".carousel-item").remove();
-				$("#documentsModal").replaceWith('');
+				
 
-				var $enumString = $(".open-document-modal.active-document-modal").data("string");
-				var $requestId = $(".open-document-modal.active-document-modal").data("id");
+				var $enumString =  $('.folderName').val();
+				var $requestId =  $('.objectID').val();
 				var section = $("#masterSectionType").val();
+				var guid = $("#Guid").val();
 				
 				if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
 					section = "Operations"
@@ -55,39 +70,15 @@
 					section = "LabManagement"
 				}
 				$.fn.ChangeColorsOfModal($enumString, section);
-				var parentFolder = $(".active-document-modal").attr("parentfolder");
-				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, section, $showSwitch, parentFolder);
+				var parentFolder =  $('.parentFolderName').val();
+				$.fn.OpenDocumentsModal(true, $enumString, $requestId, guid, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles);
 				return true;
 			},
 			processData: false,
 			contentType: false
 		});
 		return true;
-
-	});
-
-	
-	//seems to not be used. only diff is that other one has $(".open-document-modal").removeClass("active-document-modal");
-	$(".open-document-modal").off('click').on("click", function (e) {
-
-		e.preventDefault();
-		e.stopPropagation();
-		console.log("clicked open doc modal 1");
-		var section = $("#masterSectionType").val();
-		console.log("section"+section)
-		$(this).addClass("active-document-modal");
-		var enumString = $(this).data("string");
-		console.log("enumString: " + enumString);
-		var requestId = $(this).data("id");
-		console.log("requestId: " + requestId);
-		var isEdittable = $(".active-document-modal").attr("data-val");
-		console.log($("#masterSidebarType").val())
-		var showSwitch = $(".active-document-modal").attr("showSwitch");
-		var parentFolder = $(".active-document-modal").attr("parentFolder");
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder);
-		return true;
-	});
-
+	})
 
 	$(".file-select").on("change", function (e) {
 		console.log("file was changed");
@@ -101,7 +92,7 @@
 	$.fn.ChangeColorsOfModal = function ($foldername, section) {
 		//alert("section: " + section)
 		console.log("foldername: " + $foldername);
-		var numCards = $(".card.document-border").length;
+		var numCards = $(".documentsModal .card.document-border").length;
 		console.log("numcards: " + numCards);
 		var folder = "#" + $foldername + ".active-document-modal";
 		var div = $(folder + " i");
@@ -109,7 +100,6 @@
 		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter") || div.hasClass("contains-file" || $(".active-document-modal .material-image-icon").hasClass("protocols-filter"))) {
 			console.log("has class already");
 		} else {
-			console.log("does not class already");
 			console.log("does not class already");
 			$(folder +".active-document-modal" + " div.card.document-border").addClass("hasFile");
 			if (section=="Operations") {
@@ -132,9 +122,15 @@
 		}
 	};
 
-	$(".modal").on("click",".delete-document", function (e) {
+	$("body, .modal").off("click").on("click",".delete-document", function (e) {
 		e.preventDefault();
 		var hasClass = $(this).hasClass("delete-file-document");
+		var reportFile = $(this).hasClass("report-file");
+		console.log(reportFile)
+		if (reportFile == true) {
+			console.log($(this).parent())
+			$(this).parent().parent(".report-file-card").addClass("delete-card");
+        }
 		if (hasClass ==true) {
 			console.log("delete doc clicked");
 			var link = $(this).attr("url");
@@ -146,7 +142,6 @@
 				cache: false,
 				success: function (data) {
 					$.fn.OpenModal('modal-document-delete', "documents-delete", data)
-					
 				}
 			});
 		}
@@ -199,7 +194,7 @@
 			$(".documents-delete-icon.icon-delete-24px").addClass($color);
 		    $(".view-img i").removeClass("disabled-filter");
 			$(".view-img i").addClass($color);
-			$(".active-document-modal.withinDocModal").attr("data-val", true);
+			$(".active-document-modal").attr("data-val", true);
 			$(".delete-document").addClass("delete-file-document");
 			$(this).prev('.edit-mode-switch-description').text("Edit Mode On");
 		}
@@ -213,7 +208,7 @@
 			$(".file-select").attr("disabled", true);
 			$(".document-modal-cancel").removeClass("d-none");
 			$(".document-modal-save").addClass("d-none");
-			$(".active-document-modal.withinDocModal").attr("data-val", false);
+			$(".active-document-modal").attr("data-val", false);
 			$(".documents-delete-icon.icon-delete-24px").addClass("disabled-filter");
 			$(".documents-delete-icon.icon-delete-24px").removeClass($color);
 			$("i.view-img").addClass("disabled-filter");

@@ -21,7 +21,7 @@
             </div>
             <div class="col-md-3 offset-3 pt-3 company-info">
                 <span style="font-weight: 700; font-size:1.5rem;">Centarix Biotech</span><br>
-                <span>ID: 51565512</span><br>
+                <span>ID: 515655215</span><br>
                 <span>Hamarpeh 3, Jerusalem</span><br>
                 <span>Tel: 073-7896888</span>
             </div>
@@ -30,8 +30,8 @@
     </header>
     <div class="row">
         <div class="col-6">
-            @if (Model.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes &&
-Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
+            @if (Model.TempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes &&
+Model.TempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
             {
                 <span style="font-weight: 700; font-size:2rem;">Price Quote Request</span>
                 showPrice = "d-none";

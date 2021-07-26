@@ -82,7 +82,7 @@
                     @eh.EmployeeHours.Date.DayOfWeek
                 </div>
                 <div class="py-3" style="width:15%;">
-                    @eh.EmployeeHours.Date.ToString("dd'/'MM'/'yyyy")
+                    @eh.EmployeeHours.Date.GetElixirDateFormat()
                 </div>
                 <div class="" style="width:15%;">
                     @{ var hoursType = "";
@@ -183,32 +183,40 @@
                 <div class="py-3" style="width:15%;">
                     @{ var exit = "";}
                     @eh.EmployeeHours.Exit1?.ToString("HH:mm")
-                    @if ((eh.EmployeeHours.Entry2 != null && eh.EmployeeHours.Exit2 == null) || (eh.EmployeeHours.Entry1 != null && eh.EmployeeHours.Exit1 == null))
+                    @if (eh.EmployeeHours.Entry2 != null && eh.EmployeeHours.Exit2 == null)
+                    { 
+                        <br/>
+                    }
+                    @if((eh.EmployeeHours.Entry2 != null && eh.EmployeeHours.Exit2 == null) || (eh.EmployeeHours.Entry1 != null && eh.EmployeeHours.Exit1 == null))
                     {
-                        <button type="button" class="custom-button-table-font table-button @pageColor-color  open-update-hours-modal @disabled @AppUtility.SidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">
+                        <button type = "button" class="custom-button-table-font table-button @pageColor-color  open-update-hours-modal @disabled @AppUtility.SidebarEnum.SummaryHours"
+                                value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">
                             Update Hours
                         </button>
                     }
-                    else if ((eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.Exit1 == null && (eh.EmployeeHours.OffDayTypeID == 1 || eh.EmployeeHours.OffDayTypeID == 2 || eh.EmployeeHours.OffDayTypeID == 4 || eh.EmployeeHours.OffDayTypeID == 5)))
-                    {
-                        <a href="" class="open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours @pageColor-font-color @disabled" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</a>
-                        @*<button type="button" class="open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</button>*@
+            else if ((eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.Exit1 == null &&
+                (eh.EmployeeHours.OffDayTypeID == 1 || eh.EmployeeHours.OffDayTypeID == 2 || eh.EmployeeHours.OffDayTypeID == 4 || eh.EmployeeHours.OffDayTypeID == 5)))
+            {
+                <a href = "" class="open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours @pageColor-font-color @disabled" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">
+                    Update Hours
+                </a>
+                @*<button type="button" class="open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</button>*@
                     }
                     else if (eh.EmployeeHours.Exit1 == null)
                     {
-                        exit = "n/a";
+                    exit = "n/a";
                     }
                     @exit
                     @if (eh.EmployeeHours.Exit2 != null)
-                    {
-                        <br />
-                    }
+                                        {
+                    <br />
+                                        }
                     @eh.EmployeeHours.Exit2?.ToString("HH:mm")
                     @if (eh.EmployeeHours.PartialOffDayTypeID != null)
-                    {
+{
                         <br />
                         @Html.Raw("N/A");
-                    }
+}
                 </div>
 
                 <div class="py-3 @pageColor-font-color" style="width:12%;">
@@ -248,7 +256,7 @@
                 </div>
                 <div class="table-icon-div pt-2">
                     <a class="@disabled btn p-0 m-0 no-box-shadow load-delete-hour-modal" data-toggle="tooltip" data-placement="top"
-                       title="More" value="@eh.EmployeeHours.EmployeeHoursID">
+                       title="Delete" value="@eh.EmployeeHours.EmployeeHoursID">
                         <i style="font-size:2rem; color:black" class="icon-delete-24px hover-bold"></i>
                     </a>
                 </div>
@@ -277,10 +285,13 @@
         <div class="col">
             Total Hours
         </div>
+        <div class="col">
+            Percentage
+        </div>
     </div>
     <div class="row mt-2 py-4  border  text-center" style="border-color: @borderColor !important;">
         <div class="col">
-            @Model.EmployeeHours.Where(eh => eh.EmployeeHours.OffDayTypeID == null).Count()
+            @Model.WorkingDays / @Model.TotalWorkingDaysInThisMonth
         </div>
         <div class="col">
             @Model.TotalHolidaysInMonth
@@ -301,13 +312,26 @@
             @{ var sum = new TimeSpan(Model.EmployeeHours.Select(eh => new { TimeSpan = eh.EmployeeHours.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan)); }
             @{var totalHours = sum.Days * 24 + sum.Hours;
                 String? totalInMonthString = null;
+                TimeSpan totalInMonth = new TimeSpan();
                 if (Model.TotalHoursInMonth != null)
                 {
-                    var totalInMonth = TimeSpan.FromHours(Model.TotalHoursInMonth ?? 0);
+                    totalInMonth = TimeSpan.FromHours(Model.TotalHoursInMonth ?? 0);
                     totalInMonthString = " / " + Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
                 }
             }
             @totalHours:@sum.ToString("mm")@totalInMonthString
+        </div>
+        <div class="col">
+            @{
+                var totalHoursPercentDisplay = "N/A";
+                if (Model.User.EmployeeStatusID == 1)
+                {
+                    double totalHoursDecimalWithMinutes = totalHours + (sum.Minutes / 60);
+                    var totalHoursPercent = Math.Round((totalHoursDecimalWithMinutes / totalInMonth.TotalHours) * 100, 2);
+                    totalHoursPercentDisplay = totalHoursPercent + "%";
+                }
+            }
+            @totalHoursPercentDisplay
         </div>
 
     </div>

@@ -8,6 +8,7 @@ using PrototypeWithAuth.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Abp.Domain.Entities;
+using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Data
 {
@@ -19,6 +20,22 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<TempLineID> TempLineIDs { get; set; }
+        public DbSet<FunctionLineID> FunctionLineIDs { get; set; }
+        public DbSet<TestFieldHeader> TestFieldHeaders { get; set; }
+        public DbSet<Test> Tests { get; set; }
+        public DbSet<TestCategory> TestCategories { get; set; }
+        public DbSet<Division> Divisions { get; set; }
+        public DbSet<ParticipantStatus> ParticipantStatuses { get; set; }
+        public DbSet<Gender> Genders { get; set; }
+        public DbSet<Participant> Participants { get; set; }
+        public DbSet<Timepoint> Timepoints { get; set; }
+        public DbSet<Site> Sites { get; set; }
+        public DbSet<Experiment> Experiments { get; set; }
+        public DbSet<TempLinesJson> TempLinesJsons { get; set; }
+        public DbSet<TempRequestJson> TempRequestJsons { get; set; }
+        public DbSet<LineChange> LineChanges { get; set; }
+        public DbSet<ShareProtocol> ShareProtocols { get; set; }
         public DbSet<ShareResource> ShareResources { get; set; }
         public DbSet<FavoriteResource> FavoriteResources { get; set; }
         public DbSet<FavoriteProtocol> FavoriteProtocols { get; set; }
@@ -26,7 +43,6 @@ namespace PrototypeWithAuth.Data
         public DbSet<ResourceCategory> ResourceCategories { get; set; }
         public DbSet<FavoriteRequest> FavoriteRequests { get; set; }
         public DbSet<ShareRequest> ShareRequests { get; set; }
-        public DbSet<ProtocolInstanceResult> ProtocolInstanceResults { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<AuthorProtocol> AuthorProtocols { get; set; }
         public DbSet<ProtocolType> ProtocolTypes { get; set; }
@@ -34,6 +50,8 @@ namespace PrototypeWithAuth.Data
         public DbSet<TagProtocol> TagProtocols { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Report> Reports { get; set; }
+        public DbSet<ReportType> ReportTypes { get; set; }
+        public DbSet<FunctionReport> FunctionReports { get; set; }
         public DbSet<ResourceType> ResourceTypes { get; set; }
         public DbSet<Resource> Resources { get; set; }
         public DbSet<Material> Materials { get; set; }
@@ -44,8 +62,6 @@ namespace PrototypeWithAuth.Data
         public DbSet<FunctionLine> FunctionLines { get; set; }
         public DbSet<ProtocolComment> ProtocolComments { get; set; }
         public DbSet<Line> Lines { get; set; }
-        public DbSet<TempLine> TempLines { get; set; }
-        //public DbSet<LineBase> LineBases { get; set; }
         public DbSet<ProtocolInstance> ProtocolInstances { get; set; }
         public DbSet<Link> Links { get; set; }
         public DbSet<FunctionType> FunctionTypes { get; set; }
@@ -111,6 +127,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<LocationRoomInstance> LocationRoomInstances { get; set; }
         public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; }
         public DbSet<TemporaryLocationInstance> TemporaryLocationInstances { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -136,23 +153,19 @@ namespace PrototypeWithAuth.Data
                 .HasForeignKey(rrc => rrc.ResourceID);
 
             modelBuilder.Entity<RequestLocationInstance>()
-                .HasQueryFilter(item => !item.IsDeleted)
                 .HasKey(rl => new { rl.RequestID, rl.LocationInstanceID });
 
             modelBuilder.Entity<RequestLocationInstance>()
-                .HasQueryFilter(item => !item.IsDeleted)
                 .HasOne(rl => rl.Request)
                 .WithMany(r => r.RequestLocationInstances)
                 .HasForeignKey(rl => rl.RequestID);
 
             modelBuilder.Entity<RequestLocationInstance>()
-                .HasQueryFilter(item => !item.IsDeleted)
                 .HasOne(rl => rl.LocationInstance)
                 .WithMany(l => l.RequestLocationInstances)
                 .HasForeignKey(rl => rl.LocationInstanceID);
 
             modelBuilder.Entity<RequestLocationInstance>()
-                .HasQueryFilter(item => !item.IsDeleted)
                 .HasOne(rl => rl.ParentLocationInstance)
                 .WithMany(l => l.AllRequestLocationInstances)
                 .HasForeignKey(rl => rl.ParentLocationInstanceID);
@@ -182,10 +195,18 @@ namespace PrototypeWithAuth.Data
                 .HasForeignKey(r => r.ApplicationUserCreatorID);
 
 
+            //modelBuilder.Entity<Test>()
+            //    .HasOne(t => t.TestFieldHeader)
+            //    .WithOne(tfh => tfh.Test)
+            //    .HasForeignKey<Test>(t => t.TestFieldHeaderID);
 
             modelBuilder.Entity<Line>()
                   .Property(e => e.LineID)
                   .ValueGeneratedNever();
+
+            modelBuilder.Entity<FunctionLine>()
+                .Property(e => e.ID)
+                .ValueGeneratedNever();
 
             modelBuilder.Entity<Request>()
                 .HasOne(r => r.ApplicationUserReceiver)
@@ -334,14 +355,13 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
             modelBuilder.Entity<Request>().Property(r => r.ExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Product>().Property(r => r.ProductCreationDate).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<TempLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<FunctionLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             /*PROTOCOLS*/
             ///set up composite keys
 
             modelBuilder.Entity<TagProtocol>()
               .HasKey(t => new { t.TagID, t.ProtocolID });
-
-            modelBuilder.Entity<FunctionLine>()
-              .HasKey(f => new { f.FunctionTypeID, f.LineID });
 
             modelBuilder.Entity<AuthorProtocol>()
                 .HasKey(a => new { a.AuthorID, a.ProtocolID });
@@ -357,24 +377,18 @@ namespace PrototypeWithAuth.Data
                .WithMany()
                .HasForeignKey(ltc => ltc.LineTypeChildID);
 
+            modelBuilder.Entity<LineChange>()
+           .HasKey(lc => new { lc.LineID, lc.ProtocolInstanceID });
 
-            modelBuilder.Entity<TempLine>().HasIndex(tl => tl.PermanentLineID).IsUnique().HasFilter(null);
 
-            modelBuilder.Entity<TempLine>()
-               .HasOne(tl => tl.ParentLine)
-               .WithMany()
-               .HasForeignKey(tl => tl.ParentLineID);
-               //.HasPrincipalKey(tl => tl.PermanentLineID).IsRequired(false);--edditted migration directly
 
-            modelBuilder.Entity<TempLine>()
-               .HasOne(tl => tl.PermanentLine)
-               .WithOne()
-               .HasForeignKey<TempLine>(tl => tl.PermanentLineID);
-
-            modelBuilder.Entity<Report>().Property(r => r.ReportDescription).HasColumnType("ntext");
+            modelBuilder.Entity<Report>().Property(r => r.ReportText).HasColumnType("ntext");
             modelBuilder.Entity<Resource>().Property(r => r.Summary).HasColumnType("ntext");
             modelBuilder.Entity<ResourceNote>().Property(r => r.Note).HasColumnType("ntext");
-            modelBuilder.Entity<ProtocolInstanceResult>().Property(r => r.ResultDesciption).HasColumnType("ntext");
+            modelBuilder.Entity<ProtocolInstance>().Property(r => r.ResultDescription).HasColumnType("ntext");
+            modelBuilder.Entity<TempRequestJson>().Property(t => t.Json).HasColumnType("ntext");
+            modelBuilder.Entity<TempLinesJson>().Property(t => t.Json).HasColumnType("ntext");
+            modelBuilder.Entity<Protocol>().HasIndex(p => p.UniqueCode).IsUnique();
             //modelBuilder.Entity<TempLine>().HasIndex(r => r.PermanentLineID).IsUnique();
             modelBuilder.Seed();
 
@@ -385,6 +399,8 @@ namespace PrototypeWithAuth.Data
             }
 
         }
+
+
     }
 }
 

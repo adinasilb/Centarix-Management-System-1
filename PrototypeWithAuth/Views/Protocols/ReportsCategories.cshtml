@@ -1,0 +1,40 @@
+﻿@model PrototypeWithAuth.ViewModels.ReportCategoriesViewModel;
+@using PrototypeWithAuth.AppData;
+@{
+    ViewData["Title"] = "Weekly Reports";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+@{ 
+    var reportType = "Weekly";
+    if(Model.SidebarType == AppUtility.SidebarEnum.DailyReports.ToString())
+    {
+        reportType = "Daily";
+    }
+    else if (Model.SidebarType == AppUtility.SidebarEnum.MonthlyReports.ToString())
+    {
+        reportType = "Monthly";
+    }
+}
+<div class="container-fluid">
+    <label class="m-2 heading-1 mb-lg-4">@reportType Reports</label>
+    <div class="under-row-margin row text-center">
+        @foreach (var category in Model.ReportCategories)
+        {
+            <div class="type-div">
+                <a href='@Url.Action("IndexReports", "Protocols", new { ReportCategoryID = category.ResourceCategoryID, SidebarType = Model.SidebarType })' class="text text-dark">
+                    <fieldset class=" main-type-fieldset">
+                        @{
+                            var imageUrl = "/images/protocol_images/" + category.ImageUrl;
+                            var altImage = category.ResourceCategoryDescription;
+                        }
+
+                        @*<img class=" main-type-img" src="@imageUrl" alt="@altImage" />*@
+                        <img class=" main-type-img" src="@imageUrl" alt="@altImage" />
+                        @*  }*@
+                        <label class="main-type-label top-menu protocols-filter text-center"> @category.ResourceCategoryDescription</label>
+                    </fieldset>
+                </a>
+            </div>
+        }
+    </div>
+</div>

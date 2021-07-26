@@ -1,0 +1,152 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
+@using PrototypeWithAuth.Data;
+@using PrototypeWithAuth.AppData
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Core.Common
+@if (AppUtility.IsAjaxRequest(Context.Request))
+{
+    <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text error-msg"></span></div>
+    <br />
+}
+<div class="">
+    <input type="hidden" asp-for="PageNumber" class="page-number" />
+    <table class="table table-headerspaced table-noheaderlines table-hover ">
+        <tbody>
+            @for (int i = 0; i < Model.PagedList.Count; i++)
+            {
+                <tr class="text-center one-row">
+                    @*<td width="7%">
+                        <div class="form-check order-inv-form">
+                            <input type="checkbox" class="form-check-input filled-in" id="@Model.PagedList[itemNum].RequestID">
+                            <label class="form-check-label" for="@Model.PagedList[itemNum].RequestID">@Model.PagedList[itemNum].RequestID</label>
+                        </div>
+                    *@
+                    @foreach (var col in Model.PagedList[i].Columns)
+                    {
+                        <td width="@col.Width%" class="@(col.Width==0 ? "p-0" :"")">
+                            @if (col.Image != "")
+                            {
+                                <img src="@col.Image" alt="Image" width="75" class="category-image" />
+                            }
+                            else if (col.Icons != null)
+                            {
+                                <div class="d-inline-flex">
+
+                                    @foreach (var icon in col.Icons)
+                                    {
+                                        //if (icon. !col.Favorite)
+                                        if (icon.IconPopovers?.Count >= 1)
+                                        {
+                                            <div class="table-icon-div">
+                                                <ul class="list-unstyled p-0 m-0">
+                                                    <li>
+                                                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" value="@(col.AjaxID + "more")">
+                                                            <i class="@icon.IconClass hover-bold px-1" style="font-size:2rem;">
+                                                            </i>
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <div style="display:none;" id="@(col.AjaxID + "more")">
+                                                            @foreach (var iconpopover in icon.IconPopovers)
+                                                            {
+                                                                <div class="row px-3 icon-more-popover accounting-popover">
+                                                                    @*<a asp-action="@iconpopover.Action" asp-controller="@iconpopover.Controller" asp-route-currentStatus="@iconpopover.CurrentLocation"
+                                                                           asp-route-request="@col.AjaxID" asp-route-newStatus="@iconpopover.Description" class="btn-link text no-hover">
+                                                                            <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
+                                                                            <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
+                                                                        </a>*@
+                                                                    <a class="btn-link text no-hover requests @iconpopover.AjaxCall" value="@col.AjaxID" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation" data-share-resource-id="@col.AjaxID"
+                                                                       data-route-request="@col.AjaxID" data-route-newStatus="@iconpopover.Description">
+                                                                        <i class="@iconpopover.Icon @iconpopover.AjaxCall" style="color: @iconpopover.Color"></i>
+                                                                        <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
+                                                                    </a>
+                                                                </div>
+                                                            }
+                                                            @*<a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                                                   title="@icon.TooltipTitle" value="@col.AjaxID">
+                                                                    <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                                                </a>*@
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="table-icon-div">
+                                                <a class="btn p-0 m-0 no-box-shadow requests @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                                   title="@icon.TooltipTitle" value="@col.AjaxID">
+                                                    <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                                </a>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                for (int val = 0; val < col.Value.Count; val++)
+                                {
+                                    if (val != 0)
+                                    {
+                                        <br />
+                                    }
+                                    if ((col.AjaxLink != null && col.AjaxLink != "") || col.ShowTooltip == true)
+                                    {
+                                        var title = col.ShowTooltip ? col.Value[val] : "";
+                                        <a class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" data-toggle="tooltip" data-placement="top" title="@title" value="@col.AjaxID" data-target="item" href="item">
+                                            <div class="d-block" style="/*overflow:hidden; text-overflow:ellipsis; white-space:nowrap;max-width:200px;*/">
+                                                <p class="m-0 text-center" style="overflow: hidden; text-overflow: ellipsis; -webkit-line-clamp: 3; -webkit-box-orient: vertical; max-height: 5rem; display: -webkit-box; /*white-space:nowrap*/">@col.Value[val]</p>
+                                            </div>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <label class="m-0 p-0">@col.Value[val]</label>
+                                    }
+                                }
+
+                            }
+                        </td>
+                    }
+
+
+
+                    @*@if (IsEquipment)
+                        {
+                            <div class="table-icon-div">
+                                <a class="btn p-0 m-0 no-box-shadow" data-toggle="tooltip" data-placement="top"
+                                   title="Add" href="@Url.Action("CreateCalibration","Calibrations", new { requestid = Model.PagedList[itemNum].RequestID })">
+                                    <i style="        font-size: 2rem;
+                            color: var(--lab-man-color);" class="icon-settings-24px-1"></i>
+                                </a>
+                            </div>
+                        }*@
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+    <div class="col-12 justify-content-center d-flex">
+        @Html.PagedListPager(Model.PagedList, page => Url.Action(" "), new PagedListRenderOptions { LiElementClasses = new string[] { "page-item pr-4" }, DisplayLinkToNextPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToPreviousPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToLastPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToFirstPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, MaximumPageNumbersToDisplay = 10, DisplayEllipsesWhenNotShowingAllPageNumbers = true })
+    </div>
+</div>
+<script src="~/js/IndexTablePartial.js"></script>
+<script src="~/js/ConfirmDeleteScript.js"></script>
+@*<script src="~/js/accounting.js"></script>*@
+@if (AppUtility.IsAjaxRequest(this.Context.Request))
+{
+    <script>$('[data-toggle="tooltip"]').tooltip()</script>
+}
+
+@*<script>
+        $(".share-request").on('click', function (e) {
+            alert("hi");
+        });
+    </script>*@

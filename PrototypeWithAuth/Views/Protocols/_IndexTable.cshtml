@@ -1,6 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.ProtocolsIndexViewModel
 @using PrototypeWithAuth.AppData
 <input type="hidden" value="@Model.SidebarFilterID" class="sideBarFilterID" />
+
 @if (Model.PagedList.Count() > 0)
 {
 
@@ -10,7 +11,7 @@
                 @foreach (var col in Model.PagedList[0].Columns)
                 {
 
-                    <th width="@col.Width%">                 
+                    <th width="@col.Width%">
                         <label>@col.Title</label>
                     </th>
 
@@ -32,3 +33,4 @@ else
         }
     </div>
 }
+<script src="~/js/PricePopoverScript.js"></script>

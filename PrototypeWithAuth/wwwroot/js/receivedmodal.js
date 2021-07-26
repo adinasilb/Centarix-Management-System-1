@@ -38,7 +38,8 @@
 			if (valid) {
 				$('.activeSubmit').removeClass('disabled-submit')
 			}
-        }
+		}
+		$(".locationFullName").html("");
 	});
 
 	//AJAX load full partial view for modalview manage locations
@@ -59,23 +60,14 @@
 	};
 
 	//FROM THE RECEIVED MODAL SUBLOCATIONS
-	$("body").off("click",".SLI-click").on("click",".SLI-click", function (e) {
+	$("form").off("click",".SLI-click").on("click",".SLI-click", function (e) {
 		//alert("clicked SLI");
 		console.log("clicked SLI")
 		SLI($(this));
-			var name = ""
-		$(".dropdown.dropdown-main span:not(.caret)").each(function(){
-		if($(this).html()!="select")
-		{
-			if($(this).attr("description") !=undefined)
-			{
-				name+=$(this).attr("description");
-			}
+		var prevName = $(".locationFullName").html()
+		var name = $(this).html();
 
-		}
-			
-		});
-		$(".locationFullName").html(name);
+		$(".locationFullName").html(prevName + name);
 	});
 
 	function SLI(el) {
@@ -103,6 +95,7 @@
 		console.log(nextSelect)
 		console.log("selected")
 		var locationInstanceParentId = $(el).val();
+		var requestID = $("#Requests_0__RequestID").val();
 
 		if (nextSelect != undefined) { //if there is another one
 			$(nextSelect).html('');
@@ -122,7 +115,7 @@
 				var oldSelected = $("." + oldSelect).children("option:selected").val();
 				console.log("oldSelected: " + oldSelected);
 				$.ajax({
-					url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + oldSelected,
+					url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + oldSelected + "&RequestID=" + requestID + "&ShowIcons=true",
 					type: 'GET',
 					cache: false,
 					context: myDiv,
@@ -140,7 +133,7 @@
 		
 			console.log("regular visual");
 			$.ajax({
-				url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId,
+				url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId + "&RequestID=" + requestID + "&ShowIcons=true",
 				type: 'GET',
 				cache: false,
 				context: myDiv,
@@ -201,7 +194,7 @@
 				}
 				if (field.isEmptyShelf && field.labPartID<=0) {
 					emptyText = " (nr)";
-					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" isNoRack="true" data-string="'+description+'" >' + field.locationInstanceName + emptyText + '</li>'
+					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" isNoRack="true" data-string="' + description +'">' + field.locationInstanceAbbrev + emptyText + '</li>'
 				}
 				else if (field.locationTypeID == 501)
 				{
@@ -209,7 +202,7 @@
                 }
 				else
 				{
-					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" data-string="'+description+'" >' + field.locationInstanceName + emptyText + '</li>'
+					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" data-string="' + description +'">' + field.locationInstanceAbbrev + emptyText + '</li>'
 				}
 				
 			});
@@ -251,6 +244,7 @@
 					$(this).children('div').first().children(".row-1").children("i").removeClass("icon-delete-24px");
 					$(this).removeClass('location-selected')
 					var hasLocationSelected = $('.liid[value="true"]').length;
+					console.log("locations selected " + hasLocationSelected)
 					if (hasLocationSelected <= 0) {
 						$(".submit-received").addClass("disabled-submit")
 						$('#locationSelected').val('');
@@ -309,7 +303,8 @@
 			if ($("#LocationTypeID").val() != 0)
 			{
 				$("#locationSelected").val(true)
-            }
+			}
+			$('.visualView').html('');
 		}
 		else {
 			$("#locationSelected").val("")

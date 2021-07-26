@@ -1,0 +1,66 @@
+﻿@using PrototypeWithAuth.AppData;
+@model PrototypeWithAuth.ViewModels.ConfirmArchiveViewModel
+@{
+    Layout = null;
+    var bcColor = "order-inv-background-color";
+    
+}
+<script src="~/js/site.js"></script>
+<div class="modal modal-view confirm-archive-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index:9999;display:block">
+
+    <div class="modal-dialog-centered mx-auto elixir-modal-xs" role="document" >
+
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow">
+            <button type="button" class="close modal-close-padding modal-close-style" onclick="$.fn.CloseModal('confirm-archive')" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-padding">
+                <div class="modal-header pt-0" style="border-bottom: 0;">
+                    <div class="row heading-1">
+                        Archive Item
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        Are you sure you want to archive this item in location @Model.LocationName ?
+                    </div>
+                    <div class="row text-center">
+
+                        <button class="text custom-button custom-button-font @bcColor archive-request between-button-margin">Save</button>
+                        <button class="custom-button custom-cancel text" onclick="$.fn.CloseModal('confirm-archive')">Cancel</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('body, .modal').off('click', '.archive-request').on('click', '.archive-request', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('archive request.'); 
+        var formData = new FormData($("#myForm")[0]);
+        console.log(...formData);
+        $("#loading").show();
+        $.ajax({
+            processData: false,
+            contentType: false,
+            async: true,
+            url: "/Requests/ArchiveRequest?requestId=" + $('#Requests_0__RequestID').attr('value'),
+            type: 'POST',
+            data: formData,
+            cache: true,
+            success: function (data) {
+                console.log('success!');
+                $("#loading").hide();
+                $.fn.CloseModal('confirm-archive');
+                $('#location').html(data);
+                $.fn.ajaxPartialIndexTable($(".request-status-id").val(), '/Requests/_IndexTableWithProprietaryTabs/', "._IndexTableWithProprietaryTabs", "GET", undefined);
+            }
+        });
+
+    });
+
+</script>

@@ -64,7 +64,7 @@
 			cache: true,
 			success: function (data) {
 				$.fn.OpenModal("shared-modal", "share-modal", data);
-				$.fn.EnableMaterialSelect('#userlist', 'select-options-userlist')
+				$.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs')
 			}
 		});
 	});

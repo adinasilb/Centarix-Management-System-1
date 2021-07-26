@@ -1,33 +1,115 @@
-﻿@model PrototypeWithAuth.ViewModels.AddMaterialViewModel
-<div class="modal modal-document fader" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
-    <div class="sm-modal modal-dialog-centered mx-auto">
+﻿@model PrototypeWithAuth.ViewModels.AddFunctionViewModel
+@using PrototypeWithAuth.AppData
+<script src="~/js/site.js"></script>
+<script src="~/js/Validation/AddFunctionValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<div class="modal modal-document fader addFunctionModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+    <div class=" modal-dialog-centered mx-auto elixir-modal-sm">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('add-function');">
+            <button type="button" class="close modal-close-padding modal-close-style" aria-label="Close" onclick="$.fn.CloseModal('add-function');">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form materialForm">
-                @Html.HiddenFor(r => r.Material.MaterialID)
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form addFunctionForm on-form-modal  documentModalForm ">
+                <input type="hidden" asp-for="FunctionLine.FunctionTypeID" class="function-typeID" />
+                <input type="hidden" asp-for="FunctionLine.LineID" class="lineID" />
+                <input type="hidden" asp-for="FunctionLine.ID" class="function-lineID" />
+                <input type="hidden" asp-for="IsRemove" class="isRemove" />
+                <input type="hidden" asp-for="ModalType" />
+                <input type="hidden" asp-for="UniqueGuid" />
+                <input type="hidden" asp-for="FunctionIndex" class="function-indexID" />
                 <div class="modal-header border-0 pt-0 px-0 modal-header-padding text-center">
                     <div class="container p-0">
+
                         <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessage</label>
 
                         <div>
-                            <span class="heading-1"><i class="icon-info-24px-2"></i>&ensp;Info</span>
+                            <span class="heading-1"><i class="@Model.FunctionLine.FunctionType.Icon"></i>&ensp;@Model.FunctionLine.FunctionType.FunctionDescription</span>
                         </div>
                     </div>
                 </div>
-                <div class="modal-bodym-0 p-0">
-                    <textarea class="p-3 text rounded-reorder border form-control-plaintext  w-100" asp-for="Material.Info" rows="6">
-                            
-                        </textarea>
+                <div class="modal-body m-0 p-0 _AddFunctionModal">
+                    @{await Html.RenderPartialAsync("_AddFunctionModal", Model); }
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
-                        <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin " value="Save" />
-                        <button type="button" class="custom-button custom-cancel " data-dismiss="modal" onclick="$.fn.CloseModal('add-function');">Cancel</button>
+                        @{
+                            var saveDnone = "d-none";
+                            var uploadDnone = "d-none";
+                            var removeDnone = "d-none";
+                            var cancelDnone = "d-none";
+                        }
+
+
+
+                        @if ((Model.ModalType == AppUtility.ProtocolModalType.Edit ||
+               Model.ModalType == AppUtility.ProtocolModalType.Create))
+                        {
+                            @if ((Model.FunctionLine.FunctionType.DescriptionEnum == AppUtility.ProtocolFunctionTypes.AddFile.ToString() || Model.FunctionLine.FunctionType.DescriptionEnum == AppUtility.ProtocolFunctionTypes.AddImage.ToString()))
+                            {
+                                if ((Model.FunctionLine.ID == 0 || Model.DocumentsModalViewModel.FileStrings ==null || Model.DocumentsModalViewModel.FileStrings.Count() == 0))
+                                {
+                                    uploadDnone = "";
+                                    if(Model.FunctionLine.ID==0)
+                                    {
+                                        cancelDnone = "";
+                                    }
+                                    else
+                                    {
+                                        removeDnone = "";
+                                    }
+                                }
+                                else
+                                {
+                                    saveDnone = "";
+                                    removeDnone = "";
+                                }
+                            }
+
+                            else if (Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProduct.ToString() && Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProtocol.ToString() && Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddStop.ToString())
+                            {
+                                if (Model.FunctionLine.ID == 0)
+                                {
+                                    saveDnone = "";
+                                    cancelDnone = "";
+                                }
+                                else
+                                {
+                                    removeDnone = "";
+                                }
+                            }
+                            else
+                            {
+
+                                if (Model.FunctionLine.ID == 0)
+                                {
+                                    saveDnone = "";
+                                    cancelDnone = "";
+                                }
+                                else
+                                {
+
+                                    removeDnone = "";
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            cancelDnone = "";
+                        }
+                        <div class="upload-btn-wrapper between-button-margin @uploadDnone ">
+                            <button class="custom-button custom-button-font protocols-background-color upload-file document-modal-buttons @uploadDnone" data-string="@AppUtility.FolderNamesEnum.Files">Upload A File</button>
+                            <input type="file" name="FilesToSave" id="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" />
+                        </div>
+                        <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin @saveDnone saveFunction" value="Save" />
+                        <input type="submit" class="custom-button custom-cancel removeFunction @removeDnone" value="Remove" />
+                        <button type="button" class="custom-button custom-cancel @cancelDnone " onclick="$.fn.CloseModal('add-function');">Cancel</button>
+
+
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script src="~/js/function.js"></script>

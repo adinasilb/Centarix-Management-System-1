@@ -2,6 +2,7 @@
 @model PrototypeWithAuth.ViewModels.UserIndexViewModel
 @using PrototypeWithAuth.Data
 @using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> UserManager
 
 <script src="~/js/UserIndexPartial.js"></script>
@@ -45,7 +46,7 @@
                 </td>
                 <td>
                     <a href="" class="open-user-modal" value="@user.Employee.Id" style="display:block;">
-                        @user.Employee.DateCreated.ToString("dd'/'MM'/'yyyy")
+                        @user.Employee.DateCreated.GetElixirDateFormat()
                     </a>
                 </td>
                 <td>

@@ -193,7 +193,7 @@ span.choose {
     border-radius: 18px;
     border-color: var(--acc-color) !important;
 }
-.protocol-form .RequestUnitCard div:first-child, .accounting-form .RequestSubunitCard div:first-child, .protocol-form .RequestSubsubunitCard div:first-child {
+.protocol-form .RequestUnitCard div:first-child, .protocol-form .RequestSubunitCard div:first-child, .protocol-form .RequestSubsubunitCard div:first-child {
     border-radius: 18px;
     border-color: var(--protocol-color) !important;
 }
@@ -367,6 +367,9 @@ center-horizontally {
 
 .clicked-border-orders-inv {
     border: 2px double var(--order-inv-color) !important;
+}
+.clicked-border-lab-man {
+    border: 2px double var(--lab-man-color) !important;
 }
 
 .carousel.vertical .item {
@@ -862,6 +865,10 @@ a.bold-hover-effects {
     color: black !important;
 }
 
+.text-transform-none {
+    text-transform: none !important;
+}
+
 a.bold-hover-effects:hover,
 ul li button.bold-hover-effects:hover {
     /*color: black !important;*/
@@ -1236,6 +1243,25 @@ a.nav-link {
 
 .new-protocols-button:hover {
     color: var(--protocol-color);
+}
+
+.bio-form .new-button-text {
+    padding-left: .5rem !important;
+    padding-right: .5rem !important;
+}
+
+.bio-form .new-button.active {
+    color: var(--biomarkers-color) !important;
+    border-bottom: 3px solid var(--biomarkers-color);
+}
+
+.bio-form .new-button:hover {
+    color: var(--biomarkers-color);
+}
+
+.bio-form .item-table a{
+    padding: 0;
+    margin-right: 2rem !important;
 }
 
 .zoom-in-btn {
@@ -1698,7 +1724,7 @@ td .btn {
     top: 15%;
 }
 
-.sm-modal {
+.elixir-modal-sm {
     width: 45.63rem;
     height: 35.31rem;
 }
@@ -1717,7 +1743,7 @@ td .btn {
 
 .upload-btn-wrapper {
     position: relative;
-    overflow: hidden;
+/*    overflow: hidden;*/
     display: inline-block;
 }
 
@@ -2052,6 +2078,9 @@ span.caret {
 .protocol-form .form-control-plaintext:focus {
     box-shadow: 0 2px 0 0 var(--protocol-color) !important;
 }
+.protocol-form.createReportForm .form-control-plaintext:focus {
+    box-shadow: none !important;
+}
 
 .dropdown .select, .dropdown-multiple .select {
     z-index: 2;
@@ -2261,7 +2290,7 @@ span.caret {
     border: 2px solid var(--expense-color) !important;
 }
 
-.expenses.reports-filters {
+.expenses.reports-filters, .protocols.reports-filters {
     width: 13rem;
 }
 /*end change to reports*/
@@ -2488,6 +2517,16 @@ span.caret {
     border: .5px solid #f3f3f3 !important;
 }
 
+.protocol-form .switch label input[type="checkbox"]:checked + .lever:after {
+    background-color: var(--protocol-color) !important;
+}
+
+.protocol-form .switch label input[type="checkbox"]:checked + .lever {
+    background-color: var(--protocols-25) !important;
+    opacity: 50 !important;
+    border: .5px solid #f3f3f3 !important;
+}
+
 .select-wrapper input.select-dropdown:disabled {
     color: var(--black-87) !important;
 }
@@ -2505,8 +2544,16 @@ span.caret {
     box-shadow: 6px 0px 10px #0000008C;
 }
 
-.add-invoice-modal {
+.elixir-modal-xl {
     width: 93.31rem;
+}
+
+.elixir-modal-md {
+    width: 60rem;
+}
+
+.elixir-modal-xs {
+    width:32rem;
 }
 
 .add-resource-modal .modal-dialog {
@@ -2646,6 +2693,7 @@ a {
 .form-check {
     padding-left: 0 !important; /*Overridding bootstrap*/
 }
+
 /*Login*/
 .login .form-check-input[type="checkbox"].filled-in:checked + label:after, .orders-and-inv label.btn input[type="checkbox"].filled-in:checked + label:after, .order-inv-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .order-inv-form label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid black;
@@ -2746,6 +2794,10 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
 
 .order-inv-form .location-selected {
     background-color: var(--order-inv-color);
+}
+
+.supplier-form .location-selected {
+    background-color: var(--lab-man-color);
 }
 
 .visual-locations tr {
@@ -2956,7 +3008,7 @@ body.modal-open .popover {
 .line-input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
-    border-bottom: 2px solid var(--protocol-color) !important;
+  
 }
 .line-header {
     font-size: 1.40rem;
@@ -2968,7 +3020,7 @@ body.modal-open .popover {
     font-size:1rem
 }
 .line-input {
-    min-width: 10%;
+   /* min-width: 10%;*/
     align-items: center;
     display: flex;
     padding-right: 1rem;
@@ -2987,4 +3039,11 @@ body.modal-open .popover {
 
 .gray-background {
     background-color: rgba(0, 0, 0, 0.075) !important;
+}
+.focused-line {
+    border-bottom: 2px solid var(--protocol-color) !important;
+}
+
+.addFunctionModal .doc-card-outer-div {
+    min-width: 100% !important;
 }

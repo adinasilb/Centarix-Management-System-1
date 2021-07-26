@@ -6,14 +6,19 @@ $('.ordersItemForm').validate({
   },
 	rules: {
 		"Requests[0].Product.ProductName": "required",
+		/*"Requests[0].Product.ProductName": "required",*/ //insert val here?? has there
 		"Requests[0].Product.CatalogNumber": {
 			required: true,
-				remote:{
-		url: '/Requests/CheckUniqueVendorAndCatalogNumber',
-		type: 'POST',
-		data: { "VendorID":function(){ return $("#vendorList").val()}, "CatalogNumber": function(){return $("#Requests_0__Product_CatalogNumber").val() } , "ProductID": function(){if ($(".turn-edit-on-off").length > 0) {
-		return $(".turn-edit-on-off").attr("productID");
-	}else{return null}}},
+			remote:{
+				url: '/Requests/CheckUniqueVendorAndCatalogNumber',
+				type: 'POST',
+				data: {
+					"VendorID": function () { return $("#vendorList").val() },
+					"CatalogNumber": function () { return $("#Requests_0__Product_CatalogNumber").val() },
+					"ProductID": function () {
+						if ($(".turn-edit-on-off").length > 0) {
+							return $(".turn-edit-on-off").attr("productID");
+						}else{return null}}},
 			},
 		},
 		"Requests[0].Product.ProductSubcategory.ParentCategoryID": "selectRequired",
@@ -29,7 +34,7 @@ $('.ordersItemForm').validate({
 			//mindate: new Date('1900-12-17T03:24:00')
 		},
 		"Requests[0].ExpectedSupplyDays": {
-			min: 1,
+			min: 0,
 			integer: true,
 			required: true
 		},
@@ -81,7 +86,7 @@ $('.ordersItemForm').validate({
 		"Requests[0].SubSubUnitTypeID": "selectRequired",
 		"locationSelected": {
 			required: true
-			}
+		}
 
 	},
 	messages:{
@@ -93,9 +98,9 @@ $('.ordersItemForm').validate({
 });
 
 
-$("body, .modal").off("change", '#vendorList').on("change", '#vendorList' , function(){
-	//alert("in change vendor")
-	//$('#Request_0__Product_CatalogNumber').valid();
+	$("body, .modal").off("change", '#vendorList').on("change", '#vendorList' , function(){
+		//console.log("in change vendor")
+		//$('#Request_0__Product_CatalogNumber').valid();
 		$('.error').addClass("beforeCallValid");
 		$('.catalog-number').valid();
 		$(".error:not(.beforeCallValid)").addClass("afterCallValid")
@@ -105,7 +110,7 @@ $("body, .modal").off("change", '#vendorList').on("change", '#vendorList' , func
 		$(".afterCallValid").removeClass('error')
 		$(".afterCallValid").removeClass('afterCallValid')
 
-});
+	});
 	
 });
 

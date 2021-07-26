@@ -4,7 +4,7 @@
 <script src="~/js/Validation/AddMaterialValidation.js"></script>
 <script src="~/js/validate.js"></script>
 <div class="modal modal-document fader on-form-modal protocol-form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
-    <div class="modal-dialog-centered mx-auto" style="width:45% !important">
+    <div class="modal-dialog-centered mx-auto elixir-modal-md" >
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('add-material');">
                 <span aria-hidden="true">&times;</span>
@@ -111,15 +111,17 @@
             $('.activeSubmit').removeClass('disabled-submit')
             var formData = new FormData($(".materialForm")[0]);
             $.ajax({
-                url: "/Protocols/AddMaterialModal",
+                url: "/Protocols/AddMaterialModal?guid="+$(".hidden-guid").val(),
                 traditional: true,
                 data: formData,
                 contentType: false,
                 processData: false,
                 type: "POST",
                 success: function (data) {
-                    $("#Materials").html(data);
+                    $("._MaterialTab").html(data);
                     $.fn.CloseModal('add-material');
+                    $(".saveProtocol").bind("click");
+                    return true;
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {
@@ -130,6 +132,7 @@
             }); 
         }
         $('.materialForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+        return true;
     });
 
 </script>

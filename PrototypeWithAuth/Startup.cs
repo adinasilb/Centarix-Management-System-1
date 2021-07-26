@@ -51,6 +51,7 @@ namespace PrototypeWithAuth
             ////Set database Connection from application json file
 
             //add identity
+
             services.AddDefaultIdentity<ApplicationUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
@@ -86,7 +87,20 @@ namespace PrototypeWithAuth
             //services.AddApplicationInsightsTelemetry();
 
             // in order to be able to customize the aspnetcore identity
+            //services.Configure<CookiePolicyOptions>(options =>
+            //{
+            //    options.CheckConsentNeeded = context => false; // consent required
+            //    options.MinimumSameSitePolicy = SameSiteMode.None;
+            //});
 
+            //services.AddSession(opts =>
+            //{
+            //    opts.Cookie.IsEssential = true;
+            //    opts.IdleTimeout = TimeSpan.FromHours(10);
+            //    opts.IOTimeout = TimeSpan.FromHours(10);
+            //    //opts.Cookie.HttpOnly = false;
+            //    //opts.Cookie.Name = "Sessions" + Guid.NewGuid().ToString();
+            //});
             services.AddMvc(config => //this creates a global authorzation - meaning only registered users can use view the application
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -95,12 +109,8 @@ namespace PrototypeWithAuth
                 config.Filters.Add(new AuthorizeFilter(policy));
                 // config.AllowValidatingTopLevelNodes = true;
             });
-            services.AddSession(/*opts =>
-            {
-                opts.Cookie.IsEssential = true;
-
-            }*/);
-
+            services.AddDistributedMemoryCache();
+            services.AddSession();
             ////allow for data anotations validations
             //services.AddMvcCore()
             //   .AddDataAnnotations();
@@ -118,7 +128,11 @@ namespace PrototypeWithAuth
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
                 options.Cookie.Name = "LoginCookie";
-            });
+            }); 
+
+            //CookieOptions cookieOptions = new CookieOptions();
+            //string GUID = new Guid().ToString();
+            //string Key = "SessionCookie";
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -159,6 +173,7 @@ namespace PrototypeWithAuth
             });
 
             //ChangePassword(serviceProvider).Wait();
+
             CreateRoles(serviceProvider).Wait();
             //AddRoles(serviceProvider).Wait();
 
@@ -169,10 +184,10 @@ namespace PrototypeWithAuth
         //private async Task ChangePassword(IServiceProvider serviceProvider)
         //{
         //    var _userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        //    var user = await _userManager.FindByEmailAsync("adina@centarix.com");
+        //    var user = await _userManager.FindByEmailAsync("debbie@centarix.com");
         //    var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-        //    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        //    var result = _userManager.ResetPasswordAsync(user, code, "adinabCE2063*");
+        //    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        //    var result = await _userManager.ResetPasswordAsync(user, code, "Centarix.2020");
         //}
 
 
@@ -196,10 +211,12 @@ namespace PrototypeWithAuth
             string[] roleNames1 = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
             string[] roleNames2 = AppUtility.RequestRoleEnums().Select(x => x.StringDefinition).ToArray();
             string[] roleNames3 = AppUtility.OperationRoleEnums().Select(x => x.StringDefinition).ToArray();
-            string[] roleNames = new string[roleNames1.Length + roleNames2.Length + roleNames3.Length];
+            string[] roleNames4 = AppUtility.ProtocolRoleEnums().Select(x => x.StringDefinition).ToArray();
+            string[] roleNames = new string[roleNames1.Length + roleNames2.Length + roleNames3.Length + roleNames4.Length];
             roleNames1.CopyTo(roleNames, 0);
             roleNames2.CopyTo(roleNames, roleNames1.Length);
             roleNames3.CopyTo(roleNames, roleNames1.Length + roleNames2.Length);
+            roleNames4.CopyTo(roleNames, roleNames1.Length + roleNames2.Length + roleNames3.Length);
 
             IdentityResult roleResult;
             //var roleCheck = await RoleManager.RoleExistsAsync("Admin");

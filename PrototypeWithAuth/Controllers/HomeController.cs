@@ -6,8 +6,11 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PrototypeWithAuth.AppData;
@@ -20,17 +23,12 @@ namespace PrototypeWithAuth.Controllers
 {
     public class HomeController : SharedController
     {
-        private readonly ApplicationDbContext _context;
-        private readonly ILogger<HomeController> _logger;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly UrlEncoder _urlEncoder;
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
-        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, UrlEncoder urlEncoder):base(context)
+        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, UrlEncoder urlEncoder, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
+            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
-            _context = context;
-            _logger = logger;
-            _userManager = userManager;
             _urlEncoder = urlEncoder;
         }
 
@@ -40,13 +38,13 @@ namespace PrototypeWithAuth.Controllers
             var usersLoggedIn = _context.Employees.Where(u => u.LastLogin.Date == DateTime.Today.Date).Count();
             var users = _context.Employees.ToList();
             var lastUpdateToTimekeeper = _context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.LoginUpdates.ToString()).FirstOrDefault();
-            if(lastUpdateToTimekeeper==null)
+            if (lastUpdateToTimekeeper == null)
             {
                 lastUpdateToTimekeeper = new GlobalInfo { GlobalInfoType = AppUtility.GlobalInfoType.LoginUpdates.ToString(), Date = DateTime.Now.AddDays(-1) };
                 _context.Update(lastUpdateToTimekeeper);
                 await _context.SaveChangesAsync();
             }
-            else if(lastUpdateToTimekeeper.Date.Date < DateTime.Today)
+            else if (lastUpdateToTimekeeper.Date.Date < DateTime.Today)
             {
                 foreach (Employee employee in users)
                 {
@@ -61,7 +59,7 @@ namespace PrototypeWithAuth.Controllers
                 _context.Update(lastUpdateToTimekeeper);
                 await _context.SaveChangesAsync();
             }
-  
+
             if (user.LastLogin.Date < DateTime.Today)
             {
                 fillInOrderLate(user);
@@ -77,13 +75,13 @@ namespace PrototypeWithAuth.Controllers
             //}
             //else
             //{
-                menu =CreateMainMenu.GetMainMenu().Where(m => rolesList.Contains(m.MenuDescription));
+            menu = CreateMainMenu.GetMainMenu().Where(m => rolesList.Contains(m.MenuDescription));
             //}
 
             //update latest exchange rate if need be
             var latestRate = _context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.ExchangeRate.ToString()).FirstOrDefault();
 
-          
+
             if (latestRate == null)
             {
                 latestRate = new GlobalInfo();
@@ -92,10 +90,14 @@ namespace PrototypeWithAuth.Controllers
             var updateDate = latestRate.Date;
             if (updateDate.Date != DateTime.Today)
             {
-                latestRate.Date = DateTime.Now;
-                latestRate.Description = AppUtility.GetExchangeRateFromApi().ToString();
-                _context.Update(latestRate);
-                await _context.SaveChangesAsync();
+                decimal currentRate = AppUtility.GetExchangeRateFromApi();
+                if (currentRate != 0)
+                {
+                    latestRate.Date = DateTime.Now;
+                    latestRate.Description = currentRate.ToString();
+                    _context.Update(latestRate);
+                    await _context.SaveChangesAsync();
+                }
             }
             return View(menu);
         }
@@ -110,12 +112,12 @@ namespace PrototypeWithAuth.Controllers
             //}
             //else
             //{
-                menu = CreateMainMenu.GetMainMenu().Where(m => rolesList.Contains(m.MenuDescription));
+            menu = CreateMainMenu.GetMainMenu().Where(m => rolesList.Contains(m.MenuDescription));
             //}
 
             return PartialView(menu);
         }
-        
+
 
         public IActionResult Privacy()
         {
@@ -180,7 +182,6 @@ namespace PrototypeWithAuth.Controllers
             return Json(rnotification.OrderByDescending(n => n.timeStamp).ToList().Take(4));
         }
         [HttpPost]
-
         public bool UpdateLastReadNotifications()
         {
             ApplicationUser currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
@@ -203,7 +204,7 @@ namespace PrototypeWithAuth.Controllers
             DateTime nextDay = lastUpdate.AddDays(1);
             var year = nextDay.Year;
             var companyDaysOff = await _context.CompanyDayOffs.Where(d => d.Date.Year == year).ToListAsync();
-            
+
             while (nextDay.Date <= DateTime.Today)
             {
                 if (year != nextDay.Year)
@@ -252,7 +253,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         private void fillInOrderLate(ApplicationUser user)
-        
+
         {
             if (user.LastLogin.Date != DateTime.Now.Date)
             {
@@ -267,7 +268,7 @@ namespace PrototypeWithAuth.Controllers
                     requestNotification.IsRead = false;
                     requestNotification.RequestName = request.Product.ProductName;
                     requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                    requestNotification.Description = "should have arrived " + request.ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).ToString("dd/MM/yyyy");
+                    requestNotification.Description = "should have arrived " + request.ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).GetElixirDateFormat();
                     requestNotification.NotificationStatusID = 1;
                     requestNotification.TimeStamp = DateTime.Now;
                     requestNotification.Controller = "Requests";
@@ -284,14 +285,15 @@ namespace PrototypeWithAuth.Controllers
         {
 
                 var eh = _context.EmployeeHours.Where(r => r.EmployeeID == user.Id).Where(r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null && r.TotalHours == null) || (r.Entry2 != null && r.Exit2 == null))
-                    .Where(r => r.Date.Date >=lastUpdate.Date && r.Date.Date < DateTime.Today);
+                    .Where(r => r.Date.Date >=lastUpdate.Date && r.Date.Date < DateTime.Today).Where(r => r.CompanyDayOffID==null)
+                    .Where(r => r.EmployeeHoursAwaitingApproval == null);
                 foreach (var e in eh)
                 {
                     TimekeeperNotification timekeeperNotification = new TimekeeperNotification();
                     timekeeperNotification.EmployeeHoursID = e.EmployeeHoursID;
                     timekeeperNotification.IsRead = false;
                     timekeeperNotification.ApplicationUserID = e.EmployeeID;
-                    timekeeperNotification.Description = "no hours reported for " + e.Date.ToString("dd/MM/yyyy");
+                    timekeeperNotification.Description = "no hours reported for " + e.Date.GetElixirDateFormat();
                     timekeeperNotification.NotificationStatusID = 5;
                     timekeeperNotification.TimeStamp = DateTime.Now;
                     timekeeperNotification.Controller = "Timekeeper";
@@ -307,7 +309,7 @@ namespace PrototypeWithAuth.Controllers
         {
             return null;
         }
-        
+
 
     }
 }

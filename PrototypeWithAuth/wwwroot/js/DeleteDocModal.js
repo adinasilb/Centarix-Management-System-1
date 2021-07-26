@@ -11,9 +11,11 @@
 	$parentfoldername = $("#ParentFolderName").val();
 	$objectId = $("#ObjectID").val();
 	var $SectionType = $("#masterSectionType").val();
-	console.log($SectionType);
-		var $isEdittable = $('.active-document-modal').attr("data-val");
-		var $showSwitch =  $('.active-document-modal').attr("showSwitch");
+	var guid = $("#Guid").val();
+	var $isEdittable = $('.active-document-modal').attr("data-val");
+	var $showSwitch = $('.active-document-modal').attr("showSwitch");
+	var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
+	console.log("allowmultiple " + dontAllowMultipleFiles);
 	console.log("$requestId: " + $objectId);
 	$.ajax({
 		url: link,
@@ -21,8 +23,19 @@
 		data: formData,
 		success: (partialResult) => {
 			$.fn.CloseModal("documents-delete");
-			$.fn.OpenDocumentsModal($foldername, $objectId, $isEdittable, $SectionType, $showSwitch, $parentfoldername);
+			var deletedReportFile = $(".report-file-card.delete-card");
+			if (deletedReportFile.length > 0) {
+				deletedReportFile.prev().remove();
+				deletedReportFile.next().remove();
+				deletedReportFile.remove();
+				$(".text-editor").trigger("change");
+			}
+			else {
+				$.fn.OpenDocumentsModal(true, $foldername, $objectId, guid, $isEdittable, $SectionType, $showSwitch, $parentfoldername, dontAllowMultipleFiles);
+			}
 			//$.fn.ChangeColorsOfDocs($foldername);
+			$(".document-name").text('')
+			$(".document-name#FileName").val('')
 		},
 		processData: false,
 		contentType: false
@@ -36,6 +49,7 @@ $.fn.RemoveColorsOfDocs = function ($foldername) {
 	$("#" + $foldername + " i").removeClass('oper-filter');
 	$("#" + $foldername + " i").removeClass('order-inv-filter')
 	$("#" + $foldername + " i").removeClass('lab-man-filter')
+	$("#" + $foldername + " i").removeClass('protocols-filter')
 	$(".active-document-modal .material-image-icon").removeClass("protocols-filter");
 	$(".active-document-modal .material-image-icon").addClass("disabled-text");
 	$("#" + $foldername + " i").addClass('opac87');

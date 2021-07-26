@@ -45,8 +45,8 @@ namespace PrototypeWithAuth.AppData
             UsersUser, UsersWorkers,
             OperationsRequest, OperationsInventory, OperationsSearch,
             ExpensesSummary, ExpensesStatistics, ExpensesCost, ExpensesWorkers,
-            ProtocolsWorkflow, ProtocolsProtocols, ProtocolsCreate, ProtocolsReports, ProtocolsResources, ProtocolsSearch, ProtocolsTask
-
+            ProtocolsWorkflow, ProtocolsProtocols, ProtocolsCreate, ProtocolsReports, ProtocolsResources, ProtocolsSearch, ProtocolsTask,
+            BiomarkersExperiments
         }
         public enum SidebarEnum
         {
@@ -76,16 +76,30 @@ namespace PrototypeWithAuth.AppData
             SpecifyPayment,
             CurrentProtocols, Projects, SharedProjects, Calendar, MyProtocols, ResearchProtocol, KitProtocol,
             SOPProtocol, BufferCreating, RoboticProtocol, MaintenanceProtocol, DailyReports, WeeklyReports, MonthlyReports,
-            Library, Personal, SharedWithMe, Active, Done, LastProtocol, SharedRequests
+            Library, Personal, SharedWithMe, Active, Done, LastProtocol, SharedRequests,
+            HumanTrials
         }
+        public enum IndexTableTypes
+        {
+            Approved, Ordered, ReceivedInventory, ReceivedInventoryFavorites, ReceivedInventoryShared, Summary, AccountingGeneral, SummaryProprietary, ReceivedInventoryOperations, OrderedOperations, Cart,
+            AccountingNotifications,
+            AccountingPaymentsDefault,
+            AccountingPaymentsInstallments,
+            LabQuotes,
+            LabOrders
+        }
+
+
         public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
-        public enum FolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
-        public enum ParentFolderName { Protocols, Requests, Materials }
+        public enum FolderNamesEnum { Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
+        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
+        public enum ModalType { Terms, UploadOrder, UploadQuote, ConfirmEmail, Reorder }
+        public static string AspDateFormatString = "{0:d MMM yyyy}";
         public static List<StringWithName> RequestRoleEnums()
         {
             List<StringWithName> rre = new List<StringWithName>()
@@ -101,6 +115,17 @@ namespace PrototypeWithAuth.AppData
             {
                 new StringWithName(){StringName = "General", StringDefinition = "Operations"},
                 new StringWithName(){StringName = "Approve Orders", StringDefinition = "OperationsApproveOrders"}
+            };
+            return ore;
+        }
+        public static List<StringWithName> ProtocolRoleEnums()
+        {
+            List<StringWithName> ore = new List<StringWithName>()
+            {
+                new StringWithName(){StringName = "General", StringDefinition = "Protocols"},
+                new StringWithName(){StringName = "Biomarkers", StringDefinition = "ProtocolsBiomarkers"},
+                new StringWithName(){StringName = "Rejuvenation", StringDefinition = "ProtocolsRejuvenation"},
+                new StringWithName(){StringName = "Delivery Systems", StringDefinition = "ProtocolsDeliverySystems"}
             };
             return ore;
         }
@@ -124,14 +149,19 @@ namespace PrototypeWithAuth.AppData
         public enum CategoryTypeEnum { Operations, Lab }
         public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusables, Equipment, Operation, Biological, Safety, General, Clinical }
         public enum RequestModalType { Create, Edit, Summary }
+        public enum ProtocolModalType { Create, CheckListMode, Summary, Edit, SummaryFloat }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
-        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare }
+        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue }
         public enum PopoverEnum { None }
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
         public enum FavoriteIconTitle { FilledIn, Empty }
-        public enum FuctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddTable, AddTemplate, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
+        public enum ProtocolFunctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
+        public enum ReportsFunctionTypes { AddFile }
+        public enum ResultsFunctionTypes { AddImage, AddComment, AddWarning, AddTip, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
+
+        public enum ReportTypes { Daily, Weekly, Monthly }
         public static List<StringWithName> FavoriteIcons()
         {
             var StringsWithName = new List<StringWithName>(){
@@ -145,7 +175,7 @@ namespace PrototypeWithAuth.AppData
 
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
         { Request, Resource, Protocol }
-        public enum GlobalInfoType { ExchangeRate, LoginUpdates }
+        public enum GlobalInfoType { ExchangeRate, LoginUpdates, LastProtocolLine }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -271,6 +301,7 @@ namespace PrototypeWithAuth.AppData
             decimal rate = 0.0m;
             try //try is b/c sometimes the api is down
             {
+                //throw new Exception();
                 dynamic tmp = JsonConvert.DeserializeObject(response.Content);
                 String stringRate = (string)tmp.quotes.USDILS;
                 stringRate = stringRate.Replace("{", "");
@@ -323,7 +354,7 @@ namespace PrototypeWithAuth.AppData
             }
             else if (!RequestListToCheck1.IsEmpty() && !RequestListToCheck2.IsEmpty())
             {
-                ReturnList = RequestListToCheck1.Concat(RequestListToCheck2).OrderByDescending(r => r.ParentRequest.OrderDate);
+                ReturnList = RequestListToCheck1.Concat(RequestListToCheck2);
             }
             return ReturnList;
         }
@@ -392,6 +423,10 @@ namespace PrototypeWithAuth.AppData
             return newFileName;
         }
 
+        private static bool IsInThisMonth(DateTime dateCreated)
+        {
+            throw new NotImplementedException();
+        }
 
         public static DateTime ZeroSeconds(this DateTime value)
         {
@@ -477,7 +512,8 @@ namespace PrototypeWithAuth.AppData
             var cost = request.Cost;
             var total = request.TotalWithVat;
             var vat = request.VAT;
-            var exchangeRate = request.ExchangeRate;
+            var exchangeRate = request.ExchangeRate == 0 ? 1 : request.ExchangeRate;
+
             if (currency == AppUtility.CurrencyEnum.USD)
             {
                 currencyFormat = "en-US";
@@ -507,10 +543,10 @@ namespace PrototypeWithAuth.AppData
             return priceColumn;
         }
 
-        public static List<string> GetCategoryColumn(bool categorySelected, bool subcategorySelected, ProductSubcategory ps)
+        public static List<string> GetCategoryColumn(bool categorySelected, bool subcategorySelected, ProductSubcategory ps, ParentCategory pc)
         {
             List<string> categoryColumn = new List<String>();
-            var category = ps.ParentCategory.ParentCategoryDescription;
+            var category = pc.ParentCategoryDescription;
             var subcategory = ps.ProductSubcategoryDescription;
             if (categorySelected)
             {
@@ -556,6 +592,7 @@ namespace PrototypeWithAuth.AppData
             }
             return amountColumn;
         }
+
         public static string GetNote(SidebarEnum sidebarEnum, Request request)
         {
             if (sidebarEnum == SidebarEnum.PartialDelivery)
@@ -730,6 +767,43 @@ namespace PrototypeWithAuth.AppData
             }
             previousPayment = currentInstallment;
             return currentInstallment;
+        }
+
+        public static string GetWeekStartEndDates(DateTime date)
+        {
+            var startDate = date.AddDays(-(int)date.DayOfWeek);
+            var endDate = date.AddDays(6 - (int)date.DayOfWeek);
+            var dateRange = startDate.ToString("MMMM dd") + " - " + endDate.ToString("MMMM dd") + ", " + date.Year;
+            return dateRange;
+        }
+
+        public static string GetElixirDateFormat(this DateTime? date)
+        {
+            return date?.ToString("d MMM yyyy")??"";
+        }
+        public static string GetElixirDateFormat(this DateTime date)
+        {
+            return date.ToString("d MMM yyyy");
+        }
+        public static string GetElixirDateFormatWithTime(this DateTime? date)
+        {
+            return date?.ToString("d MMM yyyy HH:mm")??"";
+        }
+        public static string GetElixirDateFormatWithTime(this DateTime date)
+        {
+            return date.ToString("d MMM yyyy HH:mm");
+        }
+        public static T DeepClone<T>(T obj)
+        {
+            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
+        }
+
+        public static List<FunctionLine> GetFunctionsByLineID (int lineID, List<FunctionLine> functionLines)
+        {
+            return functionLines.Where(fl => fl.LineID == lineID).ToList();
         }
     }
 }
