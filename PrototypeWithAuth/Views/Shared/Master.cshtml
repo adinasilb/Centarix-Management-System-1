@@ -14,6 +14,7 @@
 
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/jquery/dist/popper.min.js"></script>
+        <script src="~/lib/jquery/dist/popper.min.js"></script>
         <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
         <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
 
@@ -466,7 +467,7 @@
                 $.fn.EnableMaterialSelect('#protocolParentList', 'select-options-protocolParentList');
                 $.fn.EnableMaterialSelect('#protocolSubList', 'select-options-protocolSubList');
                 $(".Materials").addClass("saveProtocol");
-                $(".Protocols").addClass("saveProtocol"); 
+                $(".Protocols").addClass("saveProtocol");
                 var modalType = $(".modalType").val();
                 $("." + modalType).addClass("d-none")
                 var attrString = "[modaltype=" + modalType + "]";
@@ -1106,20 +1107,43 @@
                 $("label[for='Clarify']").removeClass("white-background");
             }
         };
-        $.fn.getRequestIndexString = function(){
-            var selectedPriceSort = [];
+        $.fn.getRequestIndexString = function(status){
+            var selectedPriceSort = "";
             $("#priceSortContent1 .priceSort:checked").each(function (e) {
-                selectedPriceSort.push($(this).attr("enum"));
+                selectedPriceSort += "&SelectedPriceSort=" + $(this).attr("enum");
             })
-            return(
+            console.log(selectedPriceSort)
+            var requestStatusId = status;
+            if (status === undefined) {
+                requestStatusId = $(".request-status-id").val();
+            }
+            var searchText = $('.search-requests').val();
+            console.log(searchText);
+            console.log('searchtext length before if' + searchText.length)
+            if (!searchText.length) {
+                searchText = $('.popover .search-requests-in-filter').val();
+                console.log(searchText)
+                if (searchText == undefined || !searchText.length) {
+                    searchText = $('.search-requests-in-filter').val();
+                    if (searchText == undefined || !searchText.length) {
+                        searchText = "";
+                    }
+                }
+            }
+            var queryString =
                 "PageNumber=" + $('.page-number').val() +
-                "&RequestStatusID=" + $(".request-status-id").val() +
+                "&RequestStatusID=" + requestStatusId +
                 "&PageType=" + $('#masterPageType').val() +
                 "&SectionType=" + $('#masterSectionType').val() +
                 "&SidebarType=" + $('#masterSidebarType').val() +
-                "&SelectedPriceSort=" + selectedPriceSort +
                 "&SelectedCurrency=" + $('#tempCurrency').val() +
-                "&SidebarFilterID=" + $('.sideBarFilterID').val());
+                "&SidebarFilterID=" + $('.sideBarFilterID').val() +
+                "&CategorySelected=" + $('#categorySortContent .select-category').is(":checked") +
+                "&SubCategorySelected=" + $('#categorySortContent .select-subcategory').is(":checked") +
+                "&searchText=" + searchText;
+            queryString += selectedPriceSort;
+            console.log(queryString)
+            return queryString;
         }
         $.fn.formatDateForSubmit = function(val)
         {
@@ -1276,21 +1300,29 @@
             });
         };
 
-        $.fn.BindSelectedFilters = function () {
+        $.fn.BindSelectedFilters = function (className) {
             console.log('in bind selected filters');
-            var selectedVendor = $(".popover .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
-            var selectedOwner = $(".popover .owner-col .selected button").map(function () { return $(this).attr("value"); }).get();
-            var selectedLocation = $(".popover .location-col .selected button").map(function () { return $(this).attr("value"); }).get();
-            var selectedCategory = $(".popover .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
-            var selectedSubCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedVendor = $(className + " .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedOwner = $(className + " .owner-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedLocation = $(className + " .location-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedCategory = $(className + " .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedSubCategory = $(className + " .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            console.log(selectedVendor);
             var archived = $('.archive-check').val();
+            if (archived == undefined) {
+                archived = false;
+            }
             console.log('archived ' + archived);
-            return { SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived }
+            return {
+                SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation,
+                SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived
+            }
         }
 
 
         $.fn.ClearFilter = function (sectionType, isProprietary) {
             //alert(sectionType);
+            console.log('clearing filter');
             $.ajax({
                 async: true,
                 url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType + "&isProprietary=" + isProprietary,
@@ -1301,6 +1333,23 @@
                     $('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
                 }
             });
+        }
+
+        $.fn.CancelModal = function (modalClass) {
+            var modalType = $('#RequestIndexObject_ModalType').val();
+            var guid = $('#GUID').val();
+            $.ajax({
+                contentType: true,
+                processData: true,
+                async: true,
+                url: '/Shared/CancelModal?Guid=' + guid + '&ModalType=' + modalType,
+                traditional: true,
+                type: 'GET',
+                cache: false,
+                success: function () {
+                    $.fn.CloseModal(modalClass);
+                }
+            })
         }
     </script>
 

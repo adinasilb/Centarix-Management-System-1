@@ -9,11 +9,12 @@
     var isProprietary = requestStatusId == 7 ? true : false;
     var sectionType = $('#masterSectionType').val();
     //alert(sectionType);
-    $.fn.ClearFilter(sectionType, isProprietary);
+    //$.fn.ClearFilter(sectionType, isProprietary);
     var pageType = $('#masterPageType').val();
-    var viewClass = pageType != 'RequestSummary' ? '_IndexTableWithCounts' : '_IndexTableWithProprietaryTabs';
+    //var viewClass = pageType != 'RequestSummary' ? '_IndexTableWithCounts' : '_IndexTableWithProprietaryTabs';
+    var viewClass = '_IndexTable'; //don't use counts now anyways so just reload data so search button doesn't get messed up
     console.log("viewclass: " + viewClass);
-    $.fn.ajaxPartialIndexTable(requestStatusId, "/Requests/" + viewClass, "." + viewClass, "GET")
+    $.fn.ajaxPartialIndexTable(requestStatusId, "/Requests/" + viewClass, "." + viewClass, 'GET')
 });
 
 /*$('.view-archived-requests').off('click').on('click', function () {

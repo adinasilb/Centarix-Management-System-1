@@ -26,11 +26,11 @@
             <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('delete-item');">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding" id="myForm">
                 @{ await Html.RenderPartialAsync("_DeleteModal", Model);}
                 <div class="modal-footer">
                     <div class="text-center mx-auto modal-footer-mt">
-                        <button type="submit" asp-action="DeleteModal" class="custom-button custom-button-font @bcColor between-button-margin" value="@Model.Request.RequestID">Confirm</button>
+                        <button type="submit"  class="custom-button custom-button-font @bcColor between-button-margin submit-delete" value="@Model.Request.RequestID">Confirm</button>
                         <button type="button" class="custom-cancel custom-button " @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('delete-item');">Cancel</button>
                     </div>
                 </div>
@@ -44,25 +44,14 @@
         console.log("submit delete");
         e.preventDefault();
         $("#loading").show();
-        var PageType = $('#masterPageType').val();
-        var SidebarType = $('#masterSidebarType').val();
-        var viewClass = ""
-        if (PageType == "LabManagementQuotes") {
-            if (SidebarType == "Quotes") {
-
-            }
-            else {
-
-            }
+        //var PageType = $('#masterPageType').val();
+        var sidebarType = $('#masterSidebarType').val();
+        var viewClass = "._IndexTableData";
+        if (sidebarType == "Quotes" || sidebarType == "Orders" || sidebarType == "Cart") {
+            viewClass = "._IndexTableDataByVendor";
         }
-        else if (PageType == "RequestInventory" || PageType == "OperationsInventory") {
-
-            viewClass = "_IndexTableData";
-        }
-        else {
-            viewClass = "_IndexTableWithCounts";
-        }
-        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/DeleteModal?id=" + $(this).attr("value"), "._IndexTableData", "POST");
+        var formdata = new FormData($("#myForm")[0])
+        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/DeleteModal", viewClass, "POST", formdata, "delete-item");
         return false;
     });
 </script>
