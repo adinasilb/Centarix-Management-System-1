@@ -10,17 +10,15 @@
 			min: 1,
 			integer: true
 		},
-		"Request.SubUnit": {
+		"Request.Product.SubUnit": {
 			required: true,
 			number: true,
-			min: 1,
-			integer: true
+			min: 1
 		},
-		"Request.SubSubUnit": {
+		"Request.Product.SubSubUnit": {
 			required: true,
 			number: true,
 			min: 1,
-			integer: true
 		},
 		"Request.Cost": {
 			required: true,
@@ -28,9 +26,9 @@
 			min: 1
 		},
 
-		"Request.UnitTypeID": "selectRequired",
-		"Request.SubUnitTypeID": "selectRequired",
-		"Request.SubSubUnitTypeID": "selectRequired"
+		"Request.Product.UnitTypeID": "selectRequired",
+		"Request.Product.SubUnitTypeID": "selectRequired",
+		"Request.Product.SubSubUnitTypeID": "selectRequired"
 
 	},
 
