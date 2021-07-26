@@ -1113,14 +1113,15 @@
                 selectedPriceSort += "&SelectedPriceSort=" + $(this).attr("enum");
             })
             console.log(selectedPriceSort)
+
             var requestStatusId = status;
             if (status === undefined) {
                 requestStatusId = $(".request-status-id").val();
             }
             var searchText = $('.search-requests').val();
             console.log(searchText);
-            console.log('searchtext length before if' + searchText.length)
-            if (!searchText.length) {
+            //console.log('searchtext length before if' + searchText.length)
+            if (searchText == undefined || !searchText.length) {
                 searchText = $('.popover .search-requests-in-filter').val();
                 console.log(searchText)
                 if (searchText == undefined || !searchText.length) {
