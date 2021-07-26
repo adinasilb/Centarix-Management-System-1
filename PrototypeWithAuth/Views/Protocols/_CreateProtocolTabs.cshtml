@@ -193,7 +193,11 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
     </div>
 </div>
 <div id="Results@(Model.ModalType)" class="tab-pane fade in @AppUtility.ProtocolModalType.CheckListMode d-none">
-
+    <div class="row text-editor-div" style="min-height:50px; width:100%">
+        @{
+            await Html.RenderPartialAsync("_ResultsText", Model.ProtocolInstance);
+        }
+    </div>
 </div>
 <script src="~/js/Validation/CreateProtocolValidation.js"></script>
 <script src="~/js/validate.js"></script>
