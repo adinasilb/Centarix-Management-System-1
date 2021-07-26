@@ -84,6 +84,11 @@ namespace PrototypeWithAuth.Controllers
             _context.SaveChanges();
         }
 
+        public void _3Add02Tests()
+        {
+
+        }
+
         [HttpGet]
         [Authorize(Roles = "Biomarkers")]
         public IActionResult HumanTrialsList()
@@ -243,7 +248,9 @@ namespace PrototypeWithAuth.Controllers
                      {
                         new TDViewModel()
                         {
-                            Value = p.CentarixID
+                            Value = p.CentarixID,
+                            Link = "open-participant-entries",
+                            ID = p.ParticipantID
                         },
                         new TDViewModel()
                         {
