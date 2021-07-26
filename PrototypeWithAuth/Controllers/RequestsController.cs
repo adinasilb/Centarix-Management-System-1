@@ -2495,108 +2495,98 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReOrderFloatModalView(ReorderViewModel reorderViewModel, TempRequestListViewModel tempRequestListViewModel, AppUtility.OrderTypeEnum OrderTypeEnum, bool isCancel = false)
         {
-            if (isCancel)
+            try
             {
-                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
-                DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
-                await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
-                return new EmptyResult();
-            }
-            else
-            {
-                try
+                //  ReorderViewModel reorderViewModel = JsonConvert.DeserializeObject<ReorderViewModel>(json);
+                //get the old request that we are reordering
+                var oldRequest = _context.Requests.Where(r => r.RequestID == reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID)
+                    .Include(r => r.Product)
+                    .ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor).FirstOrDefault();
+
+
+                var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
+                //need to include product to check if in budget
+                //   reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
+
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID = 0;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ProductID = oldRequest.ProductID;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ApplicationUserCreatorID = currentUser.Id;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubProjectID = oldRequest.SubProjectID;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SerialNumber = oldRequest.Product.SerialNumber;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().URL = oldRequest.URL;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Warranty = oldRequest.Warranty;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ExchangeRate = oldRequest.ExchangeRate;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Currency = oldRequest.Currency;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().IncludeVAT = oldRequest.IncludeVAT;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().UnitTypeID = oldRequest.UnitTypeID;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubUnitTypeID = oldRequest.SubUnitTypeID;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubSubUnitTypeID = oldRequest.SubSubUnitTypeID;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubUnit = oldRequest.SubUnit;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubSubUnit = oldRequest.SubSubUnit;
+                var isInBudget = checkIfInBudget(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), oldRequest.Product);
+
+
+
+                TempRequestViewModel newTrvm = await AddItemAccordingToOrderType(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), OrderTypeEnum, isInBudget, tempRequestListViewModel);
+                if (OrderTypeEnum != AppUtility.OrderTypeEnum.RequestPriceQuote)
                 {
-                    //  ReorderViewModel reorderViewModel = JsonConvert.DeserializeObject<ReorderViewModel>(json);
-                    //get the old request that we are reordering
-                    var oldRequest = _context.Requests.Where(r => r.RequestID == reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID)
-                        .Include(r => r.Product)
-                        .ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor).FirstOrDefault();
-
-
-                    var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
-                    //need to include product to check if in budget
-                    //   reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
-
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID = 0;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ProductID = oldRequest.ProductID;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ApplicationUserCreatorID = currentUser.Id;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubProjectID = oldRequest.SubProjectID;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SerialNumber = oldRequest.Product.SerialNumber;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().URL = oldRequest.URL;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Warranty = oldRequest.Warranty;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ExchangeRate = oldRequest.ExchangeRate;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Currency = oldRequest.Currency;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().IncludeVAT = oldRequest.IncludeVAT;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().UnitTypeID = oldRequest.UnitTypeID;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubUnitTypeID = oldRequest.SubUnitTypeID;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubSubUnitTypeID = oldRequest.SubSubUnitTypeID;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubUnit = oldRequest.SubUnit;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubSubUnit = oldRequest.SubSubUnit;
-                    var isInBudget = checkIfInBudget(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), oldRequest.Product);
-
-
-
-                    TempRequestViewModel newTrvm = await AddItemAccordingToOrderType(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), OrderTypeEnum, isInBudget, tempRequestListViewModel);
-                    if(OrderTypeEnum != AppUtility.OrderTypeEnum.RequestPriceQuote)
+                    using (var transaction = _context.Database.BeginTransaction())
                     {
-                        using (var transaction = _context.Database.BeginTransaction())
+                        try
                         {
-                            try
-                            {
-                                TempRequestJson trj = CreateTempRequestJson(tempRequestListViewModel.GUID);
-                                await SetTempRequestAsync(trj,
-                                new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() { newTrvm } });
+                            TempRequestJson trj = CreateTempRequestJson(tempRequestListViewModel.GUID);
+                            await SetTempRequestAsync(trj,
+                            new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() { newTrvm } });
 
-                                await transaction.CommitAsync(); //IF SAVEITEM OR REQUEST ITEM
+                            await transaction.CommitAsync(); //IF SAVEITEM OR REQUEST ITEM
 
-                                //if (!deserializedTemp.TempRequestViewModels.Any()) //DO WE NEED THIS IF???
-                                //{
-                                //    MoveDocumentsOutOfTempFolder(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID, AppUtility.ParentFolderName.Requests);
-                                //    await transaction.CommitAsync();
-                                //    base.RemoveRequestWithCommentsAndEmailSessions();
-                                //}
-                            }
-                            catch (Exception ex)
-                            {
-                                transaction.Rollback();
-                                await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
-                                throw new Exception(AppUtility.GetExceptionMessage(ex)); ;
-                            }
+                            //if (!deserializedTemp.TempRequestViewModels.Any()) //DO WE NEED THIS IF???
+                            //{
+                            //    MoveDocumentsOutOfTempFolder(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID, AppUtility.ParentFolderName.Requests);
+                            //    await transaction.CommitAsync();
+                            //    base.RemoveRequestWithCommentsAndEmailSessions();
+                            //}
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
+                            throw new Exception(AppUtility.GetExceptionMessage(ex)); ;
                         }
                     }
-                    //should this be added?
-                    /*//uncurrent the one we're on
-                    await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);*/
+                }
+                //should this be added?
+                /*//uncurrent the one we're on
+                await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);*/
 
-                    var action = tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary ? "IndexInventory" : "Index";
-                    switch (OrderTypeEnum)
-                    {
-                        case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                            action = "UploadOrderModal";
-                            break;
-                        case AppUtility.OrderTypeEnum.OrderNow:
-                            action = "UploadQuoteModal";
-                            break;
-                        case AppUtility.OrderTypeEnum.AddToCart:
-                            action = "UploadQuoteModal";
-                            break;
-                    }
-                    tempRequestListViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
-                    tempRequestListViewModel.RequestIndexObject.IsReorder = true;
-                    tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
-                    return RedirectToAction(action, "Requests", tempRequestListViewModel.RequestIndexObject);
-                }
-                catch (Exception ex)
+                var action = tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary ? "IndexInventory" : "Index";
+                switch (OrderTypeEnum)
                 {
-                    await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
-                    reorderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
-                    Response.StatusCode = 500;
-                    var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-                    reorderViewModel.RequestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
-                    return PartialView("ReOrderFloatModalView", reorderViewModel);
+                    case AppUtility.OrderTypeEnum.AlreadyPurchased:
+                        action = "UploadOrderModal";
+                        break;
+                    case AppUtility.OrderTypeEnum.OrderNow:
+                        action = "UploadQuoteModal";
+                        break;
+                    case AppUtility.OrderTypeEnum.AddToCart:
+                        action = "UploadQuoteModal";
+                        break;
                 }
+                tempRequestListViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
+                tempRequestListViewModel.RequestIndexObject.IsReorder = true;
+                tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
+                return RedirectToAction(action, "Requests", tempRequestListViewModel.RequestIndexObject);
+            }
+            catch (Exception ex)
+            {
+                await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
+                reorderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                Response.StatusCode = 500;
+                var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+                reorderViewModel.RequestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
+                return PartialView("ReOrderFloatModalView", reorderViewModel);
             }
         }
 
@@ -5075,8 +5065,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadOrderViewModel, TempRequestListViewModel tempRequestListViewModel, bool isCancel = false)
-        {
-            
+        {  
             try
             {
                 var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
@@ -5109,10 +5098,6 @@ namespace PrototypeWithAuth.Controllers
 
                 await SetTempRequestAsync(newTempRequestJson, deserializedTempRequestListViewModel);
                 await KeepTempRequestJsonCurrentAsOriginal(newTempRequestJson.GuidID);
-                if (isCancel)
-                {
-                    return new EmptyResult();
-                }
                 //do we need this current/original here??
                 //var requests = new List<Request>();
                 //var isRequests = true;
@@ -5323,6 +5308,42 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("_LocationTab", new { id = requestId });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> CancelModal(Guid Guid, AppUtility.ModalType ModalType)
+        {
+            //if (ModalType != AppUtility.ModalType.Reorder) //no point in doing it for reorder....
+            
+                var oldTempRequestJson = await GetTempRequestAsync(Guid);
+                var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
+                var deserializedTempRequestListViewModel = new TempRequestListViewModel()
+                {
+                    TempRequestViewModels = newTempRequestJson.DeserializeJson<List<TempRequestViewModel>>()
+                };
+            
+            switch (ModalType)
+            {
+                case AppUtility.ModalType.Reorder:
+                    DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, Guid);
+                    DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, Guid);
+                    await RemoveTempRequestAsync(Guid);
+                    return new EmptyResult();
+                case AppUtility.ModalType.UploadOrder:
+                    foreach (var tempRequest in deserializedTempRequestListViewModel.TempRequestViewModels)
+                    {
+                        tempRequest.Request.RequestStatusID = 6;
+                    }
+                    break;
+                case AppUtility.ModalType.UploadQuote:
+                    break;
+                case AppUtility.ModalType.ConfirmEmail:
+                    break;
+                case AppUtility.ModalType.Terms:
+                    break;
+            }
+            await SetTempRequestAsync(newTempRequestJson, deserializedTempRequestListViewModel);
+            await KeepTempRequestJsonCurrentAsOriginal(newTempRequestJson.GuidID);
+            return new EmptyResult();
+        }
 
 
         //public async Task<bool> PopulateProductSerialNumber()
