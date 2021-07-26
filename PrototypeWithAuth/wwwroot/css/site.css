@@ -2337,6 +2337,20 @@ span.caret {
     box-shadow: .5px .5px 0.323rem #707070;
 }
 
+.biomarkers-fieldset {
+    border-radius: .75rem;
+    width: 100%;
+    box-shadow: 4px 4px 9px -2px #707070;
+    /*display: flex;*/
+    padding: 2rem;
+    align-items: center;
+    justify-content: center;
+}
+
+    .biomarkers-fieldset.small-size {
+        height: 6.563rem;
+    }
+
 .resource-fieldset {
     border-radius: .75rem;
     /*height: 29.75rem;*/

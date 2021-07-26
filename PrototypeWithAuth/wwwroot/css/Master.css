@@ -594,7 +594,8 @@ table td, table td .btn, .text, table th {
     margin-bottom: 2.063rem;
 }
 
-.under-td-padding {
+.under-td-padding,
+.under-row-padding{
     padding-bottom: 2.063rem !important;
 }
 

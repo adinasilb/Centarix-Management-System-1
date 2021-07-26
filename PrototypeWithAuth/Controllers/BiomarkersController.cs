@@ -28,17 +28,60 @@ namespace PrototypeWithAuth.Controllers
 
         public void _1InsertExeriments()
         {
-            //DateTime startDate; 
-            //DateTime.TryParseExact("20210408", "yyyyMMdd", CultureInfo.InvariantCulture, );
-            //Experiment CrossSectionalAgingStudy = new Experiment()
-            //{
-            //    Description = "Cross Sectional Aging Study",
-            //    ExperimentCode = "ex1",
-            //    NumberOfParticipants = 128,
-            //    MinimumAge = 20,
-            //    MaximumAge = 60,
-            //    StartDateTime = "20210408".ToString("yyyy.MM.dd", CultureInfo.InvariantCulture)
-            //};
+            DateTime startDate;
+            DateTime.TryParseExact("20210106", "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
+            DateTime endDate;
+            DateTime.TryParseExact("20240106", "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate);
+            Experiment CrossSectionalAgingStudy = new Experiment()
+            {
+                Description = "Cross Sectional Aging Study",
+                ExperimentCode = "ex1",
+                NumberOfParticipants = 128,
+                MinimumAge = 20,
+                MaximumAge = 60,
+                StartDateTime = startDate,
+                EndDateTime = endDate
+            };
+            _context.Add(CrossSectionalAgingStudy);
+            DateTime.TryParseExact("20210106", "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
+            DateTime.TryParseExact("20240106", "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate);
+            Experiment LongitudinalAgingStudy = new Experiment()
+            {
+                Description = "Longitudinal Aging Study",
+                ExperimentCode = "ex2",
+                NumberOfParticipants = 32,
+                MinimumAge = 20,
+                MaximumAge = 80,
+                StartDateTime = startDate,
+                EndDateTime = endDate
+            };
+            _context.Add(LongitudinalAgingStudy);
+            _context.SaveChanges();
+        }
+
+        public void _2InsertSites()
+        {
+            Site Centarix = new Site()
+            {
+                Name = "Centarix Biotech",
+                Line1Address = "Hamarpe 3",
+                City = "Har Hotzvim",
+                Country = "Jerusalem",
+                PrimaryContactID = _context.Users.Where(u => u.Email == "adina@centarix.com").FirstOrDefault().Id,
+                PhoneNumber = "077-2634302"
+            };
+            _context.Add(Centarix);
+            Site O2 = new Site()
+            {
+                Name = "O2",
+                Line1Address = "",
+                City = "Har Hazofim",
+                Country = "Jerusalem",
+                PrimaryContactID = _context.Users.Where(u => u.Email == "adina@centarix.com").FirstOrDefault().Id,
+                PhoneNumber = "055-9876543"
+            };
+            _context.Add(O2);
+            _context.SaveChanges();
         }
 
         [HttpGet]
@@ -48,6 +91,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.HumanTrials;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.BiomarkersExperiments;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Biomarkers;
+
 
             ExperimentListViewModel experimentListViewModel = new ExperimentListViewModel();
             experimentListViewModel.Headers = new List<TDViewModel>()
@@ -223,7 +267,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                      }
                      )
-                 ) ;
+                 );
             return rows;
         }
 
