@@ -67,7 +67,7 @@
             </li>
             <li class="only-protocol-tab li-function-bar  @editMode @createMode d-none">
                 <div class=" function-bar">
-                    @foreach (var type in Model.FunctionTypes)
+                    @foreach (var type in Model.ProtocolFunctionTypes)
                     {
                         <button class="function" type="button" typeID="@type.FunctionTypeID" modalType="@Model.ModalType" guid="@Model.UniqueGuid" value="-1"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
                     }

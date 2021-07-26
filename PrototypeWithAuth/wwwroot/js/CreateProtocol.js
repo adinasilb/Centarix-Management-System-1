@@ -35,7 +35,7 @@
         else {
             $('.activeSubmit').removeClass('disabled-submit')
             var tab= $(this);
-            var selectedTab = tab.parent().index() +1;
+            var selectedTab = tab.parent(".nav-item").index() +1;
           
             console.log(selectedTab);
             $(".selectedTab").val(selectedTab);
@@ -59,13 +59,14 @@
 
                     $(".mdb-select").materialSelect();
           
+                    console.log(tab.hasClass("lines-tab"));
                     if (tab.hasClass("lines-tab")/* && $(".createProtocolMasterProtocolID").val()=="0"*/) {
                         $("."+modalType+".only-protocol-tab.li-function-bar").removeClass("d-none");
                     }
                     else {
                         $("."+modalType+".only-protocol-tab").addClass("d-none");
                     }
-                     $("."+modalType).removeClass("d-none");
+                     $("."+modalType+":not(.only-protocol-tab)").removeClass("d-none");
 
                 },
                 error: function (jqxhr) {

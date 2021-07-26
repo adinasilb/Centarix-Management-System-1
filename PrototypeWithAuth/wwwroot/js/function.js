@@ -33,7 +33,7 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
             var functionReportID = $(".function-reportID").val()
             functionSelect = $(".report-function[functionReportid=" + functionReportID + "]")
             console.log(functionSelect)
-            changeToTriggerSelect = $(".report-text")
+            changeToTriggerSelect = $(".text-editor")
          }
          else {
 	        functionSelect =$("div.line-input[data-val="+$(".lineID").val()+"]").find("a.function-line-node[functionline="+$(".function-lineID").val()+"]");   
@@ -109,7 +109,7 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
         type: "POST",
         success: function (data) {
             if ($("#masterPageType").val() == "ProtocolsReports") {
-                $(".report-text-div").html(data);
+                $(".text-editor-div").html(data);
                 if (!removing) {
                     var newDiv = $(".added-div");
 
@@ -127,7 +127,7 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
                     newDiv.html(newDiv.html()+newDivText)
                     newDiv[0].nextSibling?.remove();
                     newDiv.removeClass("added-div");
-                    $('.report-text').trigger("change")
+                    $('.text-editor').trigger("change")
                 }
                 
                 //functionSelect.append(" <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none'></div>")

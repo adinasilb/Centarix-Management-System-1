@@ -1,4 +1,4 @@
-﻿@model Report
+﻿@model ProtocolInstance
 @using PrototypeWithAuth.AppData
 @{
     Layout = null;
@@ -7,24 +7,24 @@
 <div class="col-12">
     <span role="textbox" contenteditable="false" id="freeText" class="editable-span text-editor form-control-plaintext h-100 text-transform-none">
         @{ var lineContent = "";
-            if (Model.TemporaryReportText == null || Model.TemporaryReportText == "")
+            if (Model.ResultDescription == null || Model.ResultDescription == "")
             {
                 lineContent = " <div contenteditable='true' class='editable-span text form-control-plaintext text-transform-none start-div'><span class='focusedText'></span></div>";
             }
             else
             {
-                lineContent = Model.TemporaryReportText;
+                lineContent = Model.ResultDescription;
             }
         }
-       @Html.Raw(lineContent)
+        @Html.Raw(lineContent)
     </span>
-    <input type="hidden" id="TemporaryReportText" name="Report.TemporaryReportText" value="@Model.TemporaryReportText" />
+    <input type="hidden" id="TemporaryResultDescription" name="Report.TemporaryResultDescription" value="@Model.TemporaryResultDescription" />
     <input type="hidden" id="closingTags" value="div" />
 </div>
 <script>
     $(document).ready(function (e) {
         $(".text-editor").trigger("focus")
-        $("#TemporaryReportText").val($(".text-editor").html());
+        $("#TemporaryResultDescription").val($(".text-editor").html());
     });
 </script>
 <script src="~/js/TextEditor.js"></script>

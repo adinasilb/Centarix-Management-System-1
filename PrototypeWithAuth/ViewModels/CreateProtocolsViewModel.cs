@@ -21,7 +21,8 @@ namespace PrototypeWithAuth.ViewModels
         public Lookup<Material, List<DocumentFolder>> MaterialDocuments { get; set; }
         public List<LineType> LineTypes { get; set; }
         public ProtocolsLinesViewModel Lines { get; set; }
-        public IEnumerable<FunctionType> FunctionTypes { get; set; }
+        public IEnumerable<FunctionType> ProtocolFunctionTypes { get; set; }
+        public IEnumerable<FunctionType> ResultsFunctionTypes { get; set; }
         private int _Tab;
         public int Tab
         {

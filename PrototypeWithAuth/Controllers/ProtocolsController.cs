@@ -550,7 +550,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 functionTypes.Add(_context.FunctionTypes.Where(ft => ft.DescriptionEnum == functionType.ToString()).FirstOrDefault());
             }
-            createProtocolsViewModel.FunctionTypes = functionTypes;
+            createProtocolsViewModel.ProtocolFunctionTypes = functionTypes;
             if (createProtocolsViewModel.UniqueGuid == Guid.Empty)
             {
                 createProtocolsViewModel.UniqueGuid = Guid.NewGuid();
