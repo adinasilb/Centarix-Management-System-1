@@ -264,7 +264,7 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
         }
-        protected void DeleteTemporaryDocuments(AppUtility.ParentFolderName parentFolderName, Guid guid, int ObjectID = 0)
+        protected void DeleteTemporaryDocuments(AppUtility.ParentFolderName parentFolderName, Guid? guid = null, int ObjectID = 0)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
             String FolderName = guid == Guid.Empty ? ObjectID.ToString() : guid.ToString();

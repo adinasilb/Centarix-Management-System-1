@@ -20,6 +20,8 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<TempLineID> TempLineIDs { get; set; }
+        public DbSet<FunctionLineID> FunctionLineIDs { get; set; }
         public DbSet<TestFieldHeader> TestFieldHeaders { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<TestCategory> TestCategories { get; set; }
@@ -202,6 +204,10 @@ namespace PrototypeWithAuth.Data
                   .Property(e => e.LineID)
                   .ValueGeneratedNever();
 
+            modelBuilder.Entity<FunctionLine>()
+                .Property(e => e.ID)
+                .ValueGeneratedNever();
+
             modelBuilder.Entity<Request>()
                 .HasOne(r => r.ApplicationUserReceiver)
                 .WithMany(au => au.RequestsReceived)
@@ -349,6 +355,8 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
             modelBuilder.Entity<Request>().Property(r => r.ExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Product>().Property(r => r.ProductCreationDate).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<TempLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<FunctionLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             /*PROTOCOLS*/
             ///set up composite keys
 
@@ -380,6 +388,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ProtocolInstance>().Property(r => r.ResultDescription).HasColumnType("ntext");
             modelBuilder.Entity<TempRequestJson>().Property(t => t.Json).HasColumnType("ntext");
             modelBuilder.Entity<TempLinesJson>().Property(t => t.Json).HasColumnType("ntext");
+            modelBuilder.Entity<Protocol>().HasIndex(p => p.UniqueCode).IsUnique();
             //modelBuilder.Entity<TempLine>().HasIndex(r => r.PermanentLineID).IsUnique();
             modelBuilder.Seed();
 

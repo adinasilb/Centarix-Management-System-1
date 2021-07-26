@@ -111,7 +111,7 @@
             $('.activeSubmit').removeClass('disabled-submit')
             var formData = new FormData($(".materialForm")[0]);
             $.ajax({
-                url: "/Protocols/AddMaterialModal",
+                url: "/Protocols/AddMaterialModal?guid="+$(".hidden-guid").val(),
                 traditional: true,
                 data: formData,
                 contentType: false,

@@ -20,6 +20,8 @@
 {
     <input name="@(dynamicName)LineID" id="@(dynamicID)LineID" value="@Model.Line.LineID" type="hidden" />
     <input name="@(dynamicName)UniqueGuid" id="@(dynamicID)UniqueGuid" value="@Model.UniqueGuid" type="hidden" />
+    <input name="@(dynamicName)LineTypeID" id="@(dynamicID)LineTypeID" value="@Model.Line.LineTypeID" type="hidden" />
+    <input name="@(dynamicName)LineNumber" id="@(dynamicID)LineNumber" value="@Model.Line.LineNumber" type="hidden" />
 }
 <input type="hidden" name="@(dynamicName)IsDone" id="@(dynamicID)IsDone" value="@Model.IsDone" />
 
@@ -60,7 +62,16 @@
 </div>
 @if (Model.Line != null)
 {
-    <input type="hidden" name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.Line.Content" />
+    string lineContent = "";
+    if (Model.Line?.Content == null || Model.Line?.Content == "")
+    {
+        lineContent = "<div role='textbox'contenteditable class='editable-span line input line-input text-transform-none p-0 mark-readonly'>&ensp;</div>";
+    }
+    else
+    {
+        lineContent = Model.Line.Content;
+    }
+    <input type="hidden" name="@(dynamicName)Content" id="@(dynamicID)Content" value="@lineContent" />
     var typeClass = "";
     switch (Model.Line?.LineTypeID)
     {
@@ -79,7 +90,7 @@
 
         @if (Model.ModalType == AppUtility.ProtocolModalType.CheckListMode)
         {
-            <div class=" d-flex align-items-center  mr-2 move-to-next-step pointer-event @moveToNextStepColor" nextLineID='@("TempLines_"+(Model.Index+1)+"__LineID")' is-last='@(Model.IsLast.ToString())'> <span class=" checklist-mode-only"><i class="icon-done-24px"></i></span></div>
+            <div class=" d-flex align-items-center  mr-2 move-to-next-step pointer-event @moveToNextStepColor" nextLineID='@("Lines_"+(Model.Index+1)+"__LineID")' is-last='@(Model.IsLast.ToString())'> <span class=" checklist-mode-only"><i class="icon-done-24px"></i></span></div>
 
             <div class=" d-flex align-items-center mr-2 add-change  pointer-event @hasChangeColor" currentLineID='@Model.Line.LineID'>  <span class=" checklist-mode-only"><i class="icon-sync-24px"></i></span></div>
         }
@@ -87,25 +98,16 @@
         <div class=" d-flex align-items-center  ">@Model.LineNumberString</div>
         <div role='textbox'
              contenteditable='false' line-id='@(dynamicID)Content' class='editable-span line input line-input text-transform-none p-0 mark-readonly' data-val='@Model.Line?.LineID'>
-            @if (Model.Line?.Content == null || Model.Line?.Content == "")
-            {
-                <div role='textbox'
-                     contenteditable class='editable-span line input line-input text-transform-none p-0 mark-readonly'>
-                    &ensp;
-                </div>
-            }
-            else
-            {
-                @Html.Raw(Model.Line?.Content)
-            }
+
+            @Html.Raw(lineContent)
 
         </div>
         @if (Model.Functions != null)
         {
-            foreach (var function in Model.Functions)
+            for (int i = 0; i < Model.Functions.Count; i++)
             {
-                <button class="function btn-link btn no-box-shadow p-0 m-0" type="button" typeID="@function.FunctionTypeID" value="@function.ID" lineID="@function.LineID" modalType="@Model.ModalType" guid="@Model.UniqueGuid"> <div functionID="@function.FunctionTypeID" class="@function.FunctionType?.IconActionClass line-function"><i class="@function.FunctionType?.Icon" data-toggle="popover" data-trigger="hover" data-placement="top" data-container="body"></i></div></button>
-
+                var function = Model.Functions[i];
+                <button class="function btn-link btn no-box-shadow p-0 m-0" type="button" typeID="@function.FunctionTypeID" value="@i" lineID="@function.LineID" modalType="@Model.ModalType" guid="@Model.UniqueGuid"> <div functionID="@function.FunctionTypeID" class="@function.FunctionType?.IconActionClass line-function"><i class="@function.FunctionType?.Icon" data-toggle="popover" data-trigger="hover" data-placement="top" data-container="body"></i></div></button>
             }
         }
 

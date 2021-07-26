@@ -30,8 +30,9 @@
 <div id="Theory@(Model.ModalType)" class="tab-pane fade in @theory">
     <div class="container-fluid theory-container m-0" style="@theoryContainerStyle">
         <input type="hidden" class="createProtocolMasterProtocolID" value="@Model.Protocol.ProtocolID" />
-        <input type="hidden" class="createProtocolMasterGuid" value="@Model.UniqueGuid" />
+        <input type="hidden" class="createProtocolMasterGuid hidden-guid" value="@Model.UniqueGuid" />
         <input type="hidden" asp-for="Tab" class="selectedTab" />
+        <input type="hidden" asp-for="UniqueGuid"/>
         <input type="hidden" asp-for="Protocol.ProtocolID" value="@Model.Protocol.ProtocolID" />
         <input type="hidden" asp-for="ModalType" class="modalType" />
         <input type="hidden" asp-for="Protocol.CreationDate" />
@@ -192,7 +193,11 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
     </div>
 </div>
 <div id="Results@(Model.ModalType)" class="tab-pane fade in @AppUtility.ProtocolModalType.CheckListMode d-none">
-
+    <div class="row text-editor-div" style="min-height:50px; width:100%">
+        @{
+            await Html.RenderPartialAsync("_ResultsText", Model.ProtocolInstance);
+        }
+    </div>
 </div>
 <script src="~/js/Validation/CreateProtocolValidation.js"></script>
 <script src="~/js/validate.js"></script>
