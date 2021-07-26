@@ -912,7 +912,7 @@ namespace PrototypeWithAuth.Controllers
                         case 3:
                             //iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
-                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder, popoverDelete };
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder/*, popoverDelete*/ };
                             iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).Select(r =>
                             new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
@@ -976,7 +976,7 @@ namespace PrototypeWithAuth.Controllers
 
                             break;
                         default:
-                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder, popoverDelete };
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder, /*popoverDelete*/ };
                             iconList.Add(favoriteIcon);
                             iconList.Add(popoverMoreIcon);
                             onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Summary,
@@ -1022,7 +1022,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         case AppUtility.SidebarEnum.Favorites:
                             iconList.Add(favoriteIcon);
-                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverReorder, popoverShare, popoverDelete };
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverReorder, popoverShare/*, popoverDelete*/ };
                             iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r =>
                            new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryFavorites,
@@ -1033,7 +1033,7 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.SidebarEnum.SharedRequests:
                             //iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
-                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverReorder, popoverShare, popoverRemoveShare, popoverDelete };
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverReorder, popoverShare, popoverRemoveShare/*, popoverDelete*/ };
                             iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r =>
                             new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryShared,
