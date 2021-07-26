@@ -324,6 +324,7 @@ $(function () {
         years = $("#Years").val();
         var months = [];
         months = $("#Months").val();*/
+        $('.page-number').val(1);
         $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET" /*, undefined, "", months, years*/);
         return false;
     });
@@ -380,9 +381,14 @@ $(function () {
         }
         var monthsString = "";
         var yearsString = "";
-        $("#Months").val().forEach(month => monthsString += "&months=" + month)
-        $("#Years").val().forEach(year => yearsString += "&years=" + year)
-
+        var months = $("#Months").val();
+        var years = $("#Years").val();
+        if (months != undefined) {
+            months.forEach(month => monthsString += "&months=" + month)
+        }
+        if (years != undefined) {
+            years.forEach(year => yearsString += "&years=" + year)
+        }
 /*        var selectedPriceSort = [];
         $("#priceSortContent1 .priceSort:checked").each(function (e) {
             selectedPriceSort.push($(this).attr("enum"));
