@@ -551,24 +551,33 @@ namespace PrototypeWithAuth.AppData
             return newCopy;
         }
 
-        public static List<String> GetAmountColumn(Request request, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType)
-        {
+        public static List<String> GetAmountColumn(Request request)
+        { 
             List<String> amountColumn = new List<String>();
             if (request.Unit != null)
             {
-                amountColumn.Add(request.Unit + " " + unitType.UnitTypeDescription);
-                if (request.SubUnit != null)
+                amountColumn.Add(request.Unit + " " + request.Product.UnitType.UnitTypeDescription);
+                if (request.Product.SubUnit != null)
                 {
-                    amountColumn.Add(request.SubUnit + " " + subUnitType.UnitTypeDescription);
-                    if (request.SubSubUnit != null)
+                    amountColumn.Add(request.Product.SubUnit + " " + request.Product.SubUnitType.UnitTypeDescription);
+                    if (request.Product.SubSubUnit != null)
                     {
-                        amountColumn.Add(request.SubSubUnit + " " + subSubUnitType.UnitTypeDescription);
+                        amountColumn.Add(request.Product.SubSubUnit + " " + request.Product.SubSubUnitType.UnitTypeDescription);
                     }
 
                 }
 
             }
             return amountColumn;
+        }
+
+        public static decimal GetPricePerSubUnit (Request request)
+        {
+            return request.Product.SubUnit != null ? request.PricePerUnit / request.Product.SubUnit??1:0;
+        }
+        public static decimal GetPricePerSubSubUnit(Request request)
+        {
+            return request.Product.SubSubUnit != null ? GetPricePerSubUnit(request) / request.Product.SubUnit ?? 1 :0;
         }
 
         public static string GetNote(SidebarEnum sidebarEnum, Request request)

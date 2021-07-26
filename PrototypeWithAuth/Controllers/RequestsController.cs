@@ -39,6 +39,7 @@ using PrototypeWithAuth.AppData.Exceptions;
 using System.Drawing;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Text;
+using LinqToExcel;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -157,12 +158,12 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.SidebarEnum.Orders:
                             var ordersRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
                                      .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-                                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator);
+                                     .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType).Include(r => r.ApplicationUserCreator);
 
                             iconList.Add(deleteIcon);
                             viewModelByVendor.RequestsByVendor = ordersRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel
                              (AppUtility.IndexTableTypes.LabOrders, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString)
+                        r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString)
 
                             {
                                 ButtonClasses = " load-terms-modal lab-man-background-color ",
@@ -174,13 +175,13 @@ namespace PrototypeWithAuth.Controllers
                                 .Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
                                 .Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID == 6)
                                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-                                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                                .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType)
                                 .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator);
                             iconList.Add(resendIcon);
                             iconList.Add(editQuoteDetailsIcon);
                             iconList.Add(deleteIcon);
                             viewModelByVendor.RequestsByVendor = quoteRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.LabQuotes, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString, r.ParentQuote)
+                        r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString, r.ParentQuote)
 
                             {
                                 ButtonClasses = " confirm-quote lab-man-background-color ",
@@ -211,7 +212,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     viewModelByVendor.RequestsByVendor = accountingNotificationsList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
                     (AppUtility.IndexTableTypes.AccountingNotifications, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString)
+                        r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString)
                     {
                         ButtonClasses = " invoice-add-all accounting-background-color ",
                         ButtonText = buttonText
@@ -231,7 +232,7 @@ namespace PrototypeWithAuth.Controllers
                             var requestPaymentList =
                             viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.Request.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
                              (AppUtility.IndexTableTypes.AccountingPaymentsInstallments, r.Request, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
-                                r.Request.Product.ProductSubcategory.ParentCategory, r.Request.UnitType, r.Request.SubUnitType, r.Request.SubSubUnitType, requestIndexObject, iconList,
+                                r.Request.Product.ProductSubcategory.ParentCategory, r.Request.Product.UnitType, r.Request.Product.SubUnitType, r.Request.Product.SubSubUnitType, requestIndexObject, iconList,
                                 defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
 
                             {
@@ -243,7 +244,7 @@ namespace PrototypeWithAuth.Controllers
                             iconList.Add(popoverMoreIcon);
                             viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.Request.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
                              (AppUtility.IndexTableTypes.AccountingPaymentsDefault, r.Request, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
-                        r.Request.Product.ProductSubcategory.ParentCategory, r.Request.UnitType, r.Request.SubUnitType, r.Request.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
+                        r.Request.Product.ProductSubcategory.ParentCategory, r.Request.Product.UnitType, r.Request.Product.SubUnitType, r.Request.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
 
                             {
                                 ButtonClasses = " payments-pay-now accounting-background-color ",
@@ -258,7 +259,7 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.PageTypeEnum.RequestCart:
                     var cartRequests = _context.Requests
               .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-              .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+              .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType)
               .Include(r => r.ApplicationUserCreator)
               .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
               .Where(r => r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString())
@@ -266,7 +267,7 @@ namespace PrototypeWithAuth.Controllers
 
                     iconList.Add(deleteIcon);
                     viewModelByVendor.RequestsByVendor = cartRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Cart, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString)
+                        r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString)
                     {
                         ButtonClasses = " load-terms-modal order-inv-background-color ",
                         ButtonText = "Order",
@@ -1098,7 +1099,7 @@ namespace PrototypeWithAuth.Controllers
                     newRequest.RequestStatusID = 7;
                     newRequest.OrderType = AppUtility.OrderTypeEnum.Save.ToString();
                     newRequest.Unit = 1;
-                    newRequest.UnitTypeID = 5;
+                    newRequest.Product.UnitTypeID = 5;
                     _context.Add(newRequest);
                     await _context.SaveChangesAsync();
                     MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests, false, guid);
@@ -1148,7 +1149,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         request.RequestStatusID = 2;
                     }
-                    request.UnitTypeID = 5;
+                    request.Product.UnitTypeID = 5;
                     request.OrderType = AppUtility.OrderTypeEnum.SaveOperations.ToString();
 
                     return new TempRequestViewModel() { Request = request };
@@ -2520,11 +2521,11 @@ namespace PrototypeWithAuth.Controllers
                 reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ExchangeRate = oldRequest.ExchangeRate;
                 reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Currency = oldRequest.Currency;
                 reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().IncludeVAT = oldRequest.IncludeVAT;
-                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().UnitTypeID = oldRequest.UnitTypeID;
-                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubUnitTypeID = oldRequest.SubUnitTypeID;
-                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubSubUnitTypeID = oldRequest.SubSubUnitTypeID;
-                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubUnit = oldRequest.SubUnit;
-                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubSubUnit = oldRequest.SubSubUnit;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.UnitTypeID = oldRequest.Product.UnitTypeID;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SubUnitTypeID = oldRequest.Product.SubUnitTypeID;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SubSubUnitTypeID = oldRequest.Product.SubSubUnitTypeID;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SubUnit = oldRequest.Product.SubUnit;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SubSubUnit = oldRequest.Product.SubSubUnit;
                 var isInBudget = checkIfInBudget(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), oldRequest.Product);
 
 
@@ -2614,9 +2615,9 @@ namespace PrototypeWithAuth.Controllers
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             Request request = _context.Requests
                 .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory)
-                .Include(r => r.UnitType)
-                .Include(r => r.SubUnitType)
-                .Include(r => r.SubSubUnitType)
+                .Include(r => r.Product.UnitType)
+                .Include(r => r.Product.SubUnitType)
+                .Include(r => r.Product.SubSubUnitType)
                 .SingleOrDefault(x => x.RequestID == id);
 
             trlvm.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
@@ -4038,7 +4039,7 @@ namespace PrototypeWithAuth.Controllers
                 var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => requestIds.Contains(r.RequestID))
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.ParentQuote)
-                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList();
+                    .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType).ToList();
                 var exchangeRate = GetExchangeRate();
                 foreach (var request in requests)
                 {
@@ -4063,7 +4064,7 @@ namespace PrototypeWithAuth.Controllers
                 var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
               .Where(r => r.Product.VendorID == id && (r.ParentQuote.QuoteStatusID == 2 || r.ParentQuote.QuoteStatusID == 1))
               .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product).ThenInclude(p => p.ProductSubcategory)
-              .Include(r => r.ParentQuote).Include(r => r.UnitType).Include(r => r.SubSubUnitType).Include(r => r.SubUnitType).ToList();
+              .Include(r => r.ParentQuote).Include(r => r.Product.UnitType).Include(r => r.Product.SubSubUnitType).Include(r => r.Product.SubUnitType).ToList();
 
                 return PartialView(requests);
             }
@@ -4125,7 +4126,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 var previousRequest = _context.Requests.Where(r => r.RequestID == editQuoteDetailsViewModel.Requests.FirstOrDefault().RequestID)
               .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product).ThenInclude(p => p.ProductSubcategory)
-              .Include(r => r.ParentQuote).Include(r => r.UnitType).Include(r => r.SubSubUnitType).Include(r => r.SubUnitType).FirstOrDefault();
+              .Include(r => r.ParentQuote).Include(r => r.Product.UnitType).Include(r => r.Product.SubSubUnitType).Include(r => r.Product.SubUnitType).FirstOrDefault();
                 var newRequest = editQuoteDetailsViewModel.Requests.FirstOrDefault();
                 previousRequest.Cost = newRequest.Cost;
                 previousRequest.Currency = newRequest.Currency;
@@ -4337,7 +4338,7 @@ namespace PrototypeWithAuth.Controllers
             var requests = _context.Requests
                   .Include(r => r.ParentRequest)
                   .Include(r => r.Product).ThenInclude(p => p.Vendor)
-                  .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                  .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType)
                   .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory).Include(r => r.Payments)
                   .Where(r => r.RequestStatusID != 7 && r.Payments.Where(p => !p.IsPaid).Count() > 0);
             var requestList = new List<RequestPaymentsViewModel>();
@@ -4393,7 +4394,7 @@ namespace PrototypeWithAuth.Controllers
             var requestsList = _context.Requests
                 .Include(r => r.ParentRequest)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor)
-                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
                 .Where(r => r.RequestStatusID != 7);
             switch (accountingNotificationsEnum)
@@ -4621,7 +4622,7 @@ namespace PrototypeWithAuth.Controllers
             var payment = _context.Payments.Where(p => p.PaymentID == paymentid).FirstOrDefault();
             var requestToPay = _context.Requests.Where(r => r.RequestID == payment.RequestID).Include(r => r.ParentRequest)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.Payments).ToList();
+                    .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType).Include(r => r.Payments).ToList();
 
             var paidSum = requestToPay.FirstOrDefault().Payments.Where(p => p.IsPaid).Select(p => p.Sum).Sum();
             var amtLeftToFullPayment = (decimal)requestToPay.FirstOrDefault().Cost - paidSum;
@@ -4738,7 +4739,7 @@ namespace PrototypeWithAuth.Controllers
             var queryableRequests = _context.Requests
                 .Include(r => r.ParentRequest)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.Payments)
+                    .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType).Include(r => r.Payments)
                     .Where(r => r.IsDeleted == false && r.Payments.FirstOrDefault().HasInvoice == false && ((r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3))).Where(r => r.RequestStatusID != 7);
             if (vendorid != null)
             {
@@ -5380,13 +5381,14 @@ namespace PrototypeWithAuth.Controllers
             {
                 var data = from r in excel.Worksheet("Requests") select r;
 
-                foreach (var r in data)
+                foreach (var reader in data)
                 {
                     lineNumber++;
                     using (var transaction = _context.Database.BeginTransaction())
                     {
                         try
                         {
+                           
                             var sample = reader[0]?.ToString().Trim() == "Sample"; //required
                             var productName = reader[1]?.ToString(); //required
                             var vendorID = _context.Vendors.Where(v => v.VendorEnName == (reader[2] != null ? reader[2].ToString() : "")).FirstOrDefault()?.VendorID; //nullable samples
@@ -5407,6 +5409,7 @@ namespace PrototypeWithAuth.Controllers
                             var parentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == reader[17].ToString().Trim()).FirstOrDefault(); //required
                             var productSubcategoryID = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryDescription == reader[18].ToString().Trim() //required
                             && ps.ParentCategoryID == parentCategory.ParentCategoryID).FirstOrDefault().ProductSubcategoryID;
+                            var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == parentCategory.CategoryTypeID).OrderBy(p => p.ProductCreationDate).LastOrDefault()?.SerialNumber ?? "L" + "0").Substring(1));
 
                             var productID = 0;
                             var uniqueCatalogNumber = CheckUniqueVendorAndCatalogNumber(vendorID ?? 0, catalogNumber);
@@ -5419,7 +5422,12 @@ namespace PrototypeWithAuth.Controllers
                                     ProductSubcategoryID = productSubcategoryID,
                                     CatalogNumber = catalogNumber,
                                     SerialNumber = "L" + lastSerialNumber,
-                                    ProductCreationDate = DateTime.Now
+                                    ProductCreationDate = DateTime.Now,
+                                    SubUnit = subunitAmount, //nullable
+                                    SubUnitTypeID = subunitTypeID, //nullable
+                                    SubSubUnit = subsubunitAmount, //nullable
+                                    SubSubUnitTypeID = subsubunitTypeID, //nullable
+                                    UnitTypeID = unitTypeID ?? 5,
                                 };
                                 _context.Update(product);
                                 _context.SaveChanges();
@@ -5432,18 +5440,22 @@ namespace PrototypeWithAuth.Controllers
                                 throw new Exception("Catalog Number already exists for this vendor");
                             }
                             var orderType = "";
+                            int lastOrderNumber = 0;
+                            //var prs = _context.ParentRequests;
+                            if (_context.ParentRequests.Any())
+                            {
+                                lastOrderNumber = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber ?? 0;
+                            }
                             var parentRequest = new ParentRequest();
-                            var exchangeRate = AppUtility.GetExchangeRateByDate(exchangeRateDay);
+                         //   var exchangeRate = AppUtility.GetExchangeRateByDate(exchangeRateDay);
                             if (!sample)
                             {
-                                parentRequest.OrderNumber = lastOrderNumber;
+                                parentRequest.OrderNumber = ++lastOrderNumber;
                                 parentRequest.ApplicationUserID = ownerUserID;
                                 _context.Update(parentRequest);
                                 _context.SaveChanges();
 
-
-                                lastOrderNumber++;
-                                cost = cost * exchangeRate; //always from quartzy in dollars
+                                //cost = cost * exchangeRate; //always from quartzy in dollars
                                 orderType = AppUtility.OrderTypeEnum.AlreadyPurchased.ToString();
                             }
                             else
@@ -5458,13 +5470,8 @@ namespace PrototypeWithAuth.Controllers
                                 RequestStatusID = sample ? 7 : 3,
                                 Cost = cost,
                                 Currency = currency,
-                                UnitTypeID = unitTypeID ?? 5,
-                                Unit = unitAmount ?? 1,
-                                SubUnit = subunitAmount, //nullable
-                                SubUnitTypeID = subunitTypeID, //nullable
-                                SubSubUnit = subsubunitAmount, //nullable
-                                SubSubUnitTypeID = subsubunitTypeID, //nullable
-                                ExchangeRate = exchangeRate,
+                                Unit = unitAmount ?? 1,                 
+                               // ExchangeRate = exchangeRate,
                                 ArrivalDate = new DateTime(2020, 1, 1),
                                 ApplicationUserReceiverID = ownerUserID,
                                 CreationDate = new DateTime(2020, 1, 1),
@@ -5520,7 +5527,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                var errorFilePath = "C:\\Users\\strauss\\Desktop\\InventoryError.txt";
+                var errorFilePath = "C:\\Users\\debbie\\Desktop\\InventoryError.txt";
                 if (!System.IO.File.Exists(errorFilePath))
                 {
                     var errorFile = System.IO.File.Create(errorFilePath);
