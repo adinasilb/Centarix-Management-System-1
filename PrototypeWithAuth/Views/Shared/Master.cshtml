@@ -1335,14 +1335,14 @@
             });
         }
 
-        $.fn.CancelModal = function (modalClass) {
+        $.fn.CancelModal = function (modalClass, orderType, orderOrigin) {
             var modalType = $('#RequestIndexObject_ModalType').val();
             var guid = $('#GUID').val();
             $.ajax({
                 contentType: true,
                 processData: true,
                 async: true,
-                url: '/Shared/CancelModal?Guid=' + guid + '&ModalType=' + modalType,
+                url: '/Requests/CancelModal?Guid=' + guid + '&ModalType=' + modalType,
                 traditional: true,
                 type: 'GET',
                 cache: false,

@@ -4872,7 +4872,7 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
 
-            return PartialView(uploadQuoteViewModel);
+             return PartialView(uploadQuoteViewModel);
         }
 
         [HttpPost]
