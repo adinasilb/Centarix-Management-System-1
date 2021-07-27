@@ -1245,6 +1245,25 @@ a.nav-link {
     color: var(--protocol-color);
 }
 
+.bio-form .new-button-text {
+    padding-left: .5rem !important;
+    padding-right: .5rem !important;
+}
+
+.bio-form .new-button.active {
+    color: var(--biomarkers-color) !important;
+    border-bottom: 3px solid var(--biomarkers-color);
+}
+
+.bio-form .new-button:hover {
+    color: var(--biomarkers-color);
+}
+
+.bio-form .item-table a{
+    padding: 0;
+    margin-right: 2rem !important;
+}
+
 .zoom-in-btn {
     color: black;
     text-decoration: none;
@@ -1724,7 +1743,7 @@ td .btn {
 
 .upload-btn-wrapper {
     position: relative;
-    overflow: hidden;
+/*    overflow: hidden;*/
     display: inline-block;
 }
 
@@ -3023,4 +3042,8 @@ body.modal-open .popover {
 }
 .focused-line {
     border-bottom: 2px solid var(--protocol-color) !important;
+}
+
+.addFunctionModal .doc-card-outer-div {
+    min-width: 100% !important;
 }

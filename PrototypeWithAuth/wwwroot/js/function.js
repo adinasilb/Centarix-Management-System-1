@@ -13,7 +13,7 @@
     else {
 	    if(lineID != undefined)
 	    {
-		    url = "/Protocols/AddFunctionModal?FunctionTypeID=" + $(this).attr("typeID") + "&LineID=" + lineID+"&functionLineID="+$(this).attr("value")+"&modalType="+$(this).attr("modaltype");
+		    url = "/Protocols/AddFunctionModal?FunctionTypeID=" + $(this).attr("typeID") + "&LineID=" + lineID+"&functionIndex="+$(this).attr("value")+"&modalType="+$(this).attr("modaltype")+"&guid="+$(this).attr("guid")
         	$.fn.CallPageRequest( url , "addFunction"); 
         }
 	}
@@ -23,6 +23,7 @@
 $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".saveFunction, .removeFunction",function (e) {
     e.preventDefault();
     var removing = $(this).hasClass("removeFunction");
+    console.log("removing: "+removing)
     if(removing)
     {
         $(".isRemove").val(true);
@@ -32,13 +33,13 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
             var functionReportID = $(".function-reportID").val()
             functionSelect = $(".report-function[functionReportid=" + functionReportID + "]")
             console.log(functionSelect)
-            changeToTriggerSelect = $(".report-text")
+            changeToTriggerSelect = $(".text-editor")
          }
          else {
 	        functionSelect =$("div.line-input[data-val="+$(".lineID").val()+"]").find("a.function-line-node[functionline="+$(".function-lineID").val()+"]");   
             changeToTriggerSelect=$("div.line-input[data-val="+$(".lineID").val()+"]")
          }
-         var prev = functionSelect.prev();
+        var prev = functionSelect.prev();
         var next = functionSelect.next();
         var html = prev.html() + next.html();
          prev.html(html);
@@ -87,7 +88,7 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
             functionFormData = new FormData($(".deleteFunctionForm")[0]);
         }
         else {
-            functionName = "AddReportFunctionModal";
+            functionName = "AddReportFunctionModal?guid="+$(".guid").val();
         }
         for (var pair of reportFormData.entries()) {
             functionFormData.append(pair[0], pair[1]);
@@ -108,7 +109,7 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
         type: "POST",
         success: function (data) {
             if ($("#masterPageType").val() == "ProtocolsReports") {
-                $(".report-text-div").html(data);
+                $(".text-editor-div").html(data);
                 if (!removing) {
                     var newDiv = $(".added-div");
 
@@ -126,7 +127,7 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
                     newDiv.html(newDiv.html()+newDivText)
                     newDiv[0].nextSibling?.remove();
                     newDiv.removeClass("added-div");
-                    $('.report-text').trigger("change")
+                    $('.text-editor').trigger("change")
                 }
                 
                 //functionSelect.append(" <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none'></div>")

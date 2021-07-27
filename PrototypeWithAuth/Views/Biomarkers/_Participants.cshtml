@@ -1,0 +1,53 @@
+﻿@model PrototypeWithAuth.ViewModels._ParticipantsViewModel
+
+@{
+    var numberOfParticipants = Model.Experiment.Participants == null ? "0" : Model.Experiment.Participants.Count().ToString();
+}
+
+<div class="row under-row-margin">
+    <div class="col-12">
+        <label class="heading-1 mr-4">
+            @Model.Experiment.Description
+        </label>
+        <label class="sub-header align-bottom pt-2">
+            Participants &nbsp;&nbsp; <span class="biomarkers-color"><span id="NumberOfParticipants">@numberOfParticipants</span>/@Model.Experiment.NumberOfParticipants.ToString()</span>
+        </label>
+        <button value="@Model.Experiment.ExperimentID" type="button" class="add-new float-right custom-button custom-button-font clear-custom-button biomarkers-color white-background biomarkers-border-color">+ Add New Participant</button>
+    </div>
+</div>
+
+<table class="table table-headerspaced table-noheaderlines table-hover mb-0">
+    <thead>
+        <tr class="text-center">
+            @foreach (var header in Model.Headers)
+            {
+                <th width="10%" class="p-0">
+                    <label>@header.Value</label>
+                </th>
+            }
+        </tr>
+    </thead>
+</table>
+
+<div class="_BiomarkersRows">
+    @{ await Html.RenderPartialAsync("_BiomarkersRows", Model.Rows); }
+</div>
+
+<script>
+    $(".add-new").off("click").on("click", function (e) {
+        e.preventDefault();
+        console.log(" $(this).val() " + $(this).val());
+        $.ajax({
+            async: true,
+            url: "/Biomarkers/AddParticipantModal?ExperimentID=" + $(this).val(),
+            traditional: true,
+            type: "GET",
+            cache: false,
+            success: function (data) {
+                $.fn.OpenModal('add-participant-modal', 'add-participant', data);
+                $(".mdb-select").materialSelect();
+                return false;
+            }
+        });
+    });
+</script>

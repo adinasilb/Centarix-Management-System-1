@@ -45,8 +45,8 @@ namespace PrototypeWithAuth.AppData
             UsersUser, UsersWorkers,
             OperationsRequest, OperationsInventory, OperationsSearch,
             ExpensesSummary, ExpensesStatistics, ExpensesCost, ExpensesWorkers,
-            ProtocolsWorkflow, ProtocolsProtocols, ProtocolsCreate, ProtocolsReports, ProtocolsResources, ProtocolsSearch, ProtocolsTask
-
+            ProtocolsWorkflow, ProtocolsProtocols, ProtocolsCreate, ProtocolsReports, ProtocolsResources, ProtocolsSearch, ProtocolsTask,
+            BiomarkersExperiments
         }
         public enum SidebarEnum
         {
@@ -76,23 +76,29 @@ namespace PrototypeWithAuth.AppData
             SpecifyPayment,
             CurrentProtocols, Projects, SharedProjects, Calendar, MyProtocols, ResearchProtocol, KitProtocol,
             SOPProtocol, BufferCreating, RoboticProtocol, MaintenanceProtocol, DailyReports, WeeklyReports, MonthlyReports,
-            Library, Personal, SharedWithMe, Active, Done, LastProtocol, SharedRequests
+            Library, Personal, SharedWithMe, Active, Done, LastProtocol, SharedRequests,
+            HumanTrials
         }
-        public enum IndexTableTypes { Approved, Ordered, ReceivedInventory, ReceivedInventoryFavorites, ReceivedInventoryShared, Summary, AccountingGeneral, SummaryProprietary, ReceivedInventoryOperations, OrderedOperations, Cart,
+        public enum IndexTableTypes
+        {
+            Approved, Ordered, ReceivedInventory, ReceivedInventoryFavorites, ReceivedInventoryShared, Summary, AccountingGeneral, SummaryProprietary, ReceivedInventoryOperations, OrderedOperations, Cart,
             AccountingNotifications,
             AccountingPaymentsDefault,
             AccountingPaymentsInstallments,
             LabQuotes,
             LabOrders
         }
+
+
         public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
-        public enum FolderNamesEnum {Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
+        public enum FolderNamesEnum { Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
         public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
+        public enum ModalType { Terms, UploadOrder, UploadQuote, ConfirmEmail, Reorder }
         public static string AspDateFormatString = "{0:d MMM yyyy}";
         public static List<StringWithName> RequestRoleEnums()
         {
@@ -143,7 +149,7 @@ namespace PrototypeWithAuth.AppData
         public enum CategoryTypeEnum { Operations, Lab }
         public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusables, Equipment, Operation, Biological, Safety, General, Clinical }
         public enum RequestModalType { Create, Edit, Summary }
-        public enum ProtocolModalType { Create, CheckListMode, Summary, Edit , SummaryFloat}
+        public enum ProtocolModalType { Create, CheckListMode, Summary, Edit, SummaryFloat }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
         public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue }
@@ -152,8 +158,10 @@ namespace PrototypeWithAuth.AppData
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
         public enum FavoriteIconTitle { FilledIn, Empty }
         public enum ProtocolFunctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
-        public enum ReportsFunctionTypes {AddFile }
-        public enum ReportTypes {Daily, Weekly, Monthly}
+        public enum ReportsFunctionTypes { AddFile }
+        public enum ResultsFunctionTypes { AddImage, AddComment, AddWarning, AddTip, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
+
+        public enum ReportTypes { Daily, Weekly, Monthly }
         public static List<StringWithName> FavoriteIcons()
         {
             var StringsWithName = new List<StringWithName>(){
@@ -167,7 +175,7 @@ namespace PrototypeWithAuth.AppData
 
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
         { Request, Resource, Protocol }
-        public enum GlobalInfoType { ExchangeRate, LoginUpdates }
+        public enum GlobalInfoType { ExchangeRate, LoginUpdates, LastProtocolLine }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -482,7 +490,7 @@ namespace PrototypeWithAuth.AppData
             var cost = request.Cost;
             var total = request.TotalWithVat;
             var vat = request.VAT;
-            var exchangeRate = request.ExchangeRate == 0 ? 1: request.ExchangeRate;
+            var exchangeRate = request.ExchangeRate == 0 ? 1 : request.ExchangeRate;
 
             if (currency == AppUtility.CurrencyEnum.USD)
             {
@@ -747,16 +755,21 @@ namespace PrototypeWithAuth.AppData
             return dateRange;
         }
 
-        public static string FormatDate(DateTime? date)
+        public static string GetElixirDateFormat(this DateTime? date)
         {
-            if(date != null)
-            {
-                return date?.ToString("d MMM yyyy");
-            }
-            else
-            {
-                return "";
-            }
+            return date?.ToString("d MMM yyyy")??"";
+        }
+        public static string GetElixirDateFormat(this DateTime date)
+        {
+            return date.ToString("d MMM yyyy");
+        }
+        public static string GetElixirDateFormatWithTime(this DateTime? date)
+        {
+            return date?.ToString("d MMM yyyy HH:mm")??"";
+        }
+        public static string GetElixirDateFormatWithTime(this DateTime date)
+        {
+            return date.ToString("d MMM yyyy HH:mm");
         }
         public static T DeepClone<T>(T obj)
         {
@@ -764,6 +777,11 @@ namespace PrototypeWithAuth.AppData
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             }));
+        }
+
+        public static List<FunctionLine> GetFunctionsByLineID (int lineID, List<FunctionLine> functionLines)
+        {
+            return functionLines.Where(fl => fl.LineID == lineID).ToList();
         }
     }
 }

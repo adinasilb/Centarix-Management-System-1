@@ -187,6 +187,10 @@
     {
         SidebarMenuItems = CreateMenus.CreateProtocolsResourcesSidebar(sidebarType, originalNavClasses, "protocols-filter");
     }
+    else if (pageType == AppUtility.PageTypeEnum.BiomarkersExperiments)
+    {
+        SidebarMenuItems = CreateMenus.CreateBiomarkersExperimentsSidebar(sidebarType, originalNavClasses, "biomarkers-filter");
+    }
 
     var sidebarWidth = "119px";
 
@@ -460,7 +464,8 @@
                 url = $(this).attr("href")
             }
             url = encodeURIComponent(url)
-            $itemurl = "/Requests/ConfirmExit/?TempRequestGUID=" + $("#GUID").val() +"&MenuItem=" + $("#masterSectionType").val() + "&url=" + url;
+
+            $itemurl = "/Requests/ConfirmExit/?TempRequestGUID=" + $(".hidden-guid").val() +"&MenuItem=" + $("#masterSectionType").val() + "&url=" + url;
             console.log($itemurl);
             $.fn.CloseModal("confirm-exit");
             $.ajax({

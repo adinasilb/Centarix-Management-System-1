@@ -266,11 +266,11 @@
                     {
                         if (Model.Requests[0].RequestStatusID == 2)
                         {
-                            <input value="@AppUtility.FormatDate(Model.Requests[0].ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0))" disabled class="form-control-plaintext border-bottom datepicker expected-supply-date @supplyDaysCategories  " type="text" name="expected-supply-days"/>
+                            <input value="@Model.Requests[0].ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).GetElixirDateFormat()" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories  " type="text" name="expected-supply-days" id="expected-supply-date" />
                         }
                         else
                         {
-                            <input value="@AppUtility.FormatDate(DateTime.Now.AddDays(request.ExpectedSupplyDays ?? 0))" disabled class="form-control-plaintext border-bottom datepicker expected-supply-date @supplyDaysCategories " type="text" name="expected-supply-days" />
+                            <input value="@DateTime.Now.AddDays(request.ExpectedSupplyDays ?? 0).GetElixirDateFormat()" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories " type="text" name="expected-supply-days" id="expected-supply-date" />
                         }
                     }
                 </div>

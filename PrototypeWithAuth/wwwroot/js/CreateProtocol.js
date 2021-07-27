@@ -35,11 +35,12 @@
         else {
             $('.activeSubmit').removeClass('disabled-submit')
             var tab= $(this);
-            var selectedTab = tab.parent().index() +1;
+            var selectedTab = tab.parent(".nav-item").index() +1;
           
             console.log(selectedTab);
             $(".selectedTab").val(selectedTab);
             var formData = new FormData($(".createProtocolForm")[0]);
+            var modalType = $(".modalType").val();
             $.ajax({
                 url: "/Protocols/CreateProtocol",
                 traditional: true,
@@ -48,16 +49,25 @@
                 processData: false,
                 type: "POST",
                 success: function (data) {
-                    $("._CreateProtocolTabs").html(data)
+                    if(modalType == "Create")
+                    {
+                        $("._CreateProtocolTabs").html(data)
+                    }
+                    else{
+                        $("._IndexTable").html(data)
+                    }
+
                     $(".mdb-select").materialSelect();
-                    var modalType = $(".modalType").val();
+          
+                    console.log(tab.hasClass("lines-tab"));
                     if (tab.hasClass("lines-tab")/* && $(".createProtocolMasterProtocolID").val()=="0"*/) {
                         $("."+modalType+".only-protocol-tab.li-function-bar").removeClass("d-none");
                     }
                     else {
                         $("."+modalType+".only-protocol-tab").addClass("d-none");
                     }
-                    
+                     $("."+modalType+":not(.only-protocol-tab)").removeClass("d-none");
+
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {
@@ -80,7 +90,7 @@
             processData: false,
             contentType: false,
             data: new FormData($("#myForm")[0]),
-            url: "/Protocols/SaveTempLines?ProtocolID=" + $(".createProtocolMasterProtocolID").val(),
+            url: "/Protocols/SaveTempLines?ProtocolID=" + $(".createProtocolMasterProtocolID").val()+"&guid=" + $(".createProtocolMasterGuid").val(),
             type: 'POST',
             success: function (data) {
                 //$("._Lines").html(data);

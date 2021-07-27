@@ -20,8 +20,9 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<MaterialCategory> MaterialCategories { get; set; }
         public Lookup<Material, List<DocumentFolder>> MaterialDocuments { get; set; }
         public List<LineType> LineTypes { get; set; }
-        public IEnumerable<ProtocolsLineViewModel> TempLines { get; set; }
-        public IEnumerable<FunctionType> FunctionTypes { get; set; }
+        public ProtocolsLinesViewModel Lines { get; set; }
+        public IEnumerable<FunctionType> ProtocolFunctionTypes { get; set; }
+        public IEnumerable<FunctionType> ResultsFunctionTypes { get; set; }
         private int _Tab;
         public int Tab
         {
@@ -36,5 +37,6 @@ namespace PrototypeWithAuth.ViewModels
             set { _Tab = value; }
         }
         public AppUtility.ProtocolModalType ModalType { get; set; }
+        public Guid UniqueGuid { get; set; }
     }
 }

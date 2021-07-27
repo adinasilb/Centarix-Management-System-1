@@ -123,26 +123,26 @@
                                 break;
                         }
 
-                        for (int i = 0; i < EndCount; i++)
-                        {
-                            var carouselItemClass = "carousel-item";
-                            if (i == 0)
-                            {
-                                carouselItemClass += " active";
-                            }
-                            <div class="@carouselItemClass">
-                                <div class="col-12 col-md-4 m-0">
-                                    @if (ModelCount > i)
+                                for (int i = 0; i < EndCount; i++)
+                                {
+                                    var carouselItemClass = "carousel-item";
+                                    if (i == 0)
                                     {
-                                        var iframeFilestring = Model.FileStrings[i];
-                                        var ext = iframeFilestring.Split(".").Last();
-                                        if (ext == "pptx" || ext == "ppt")
-                                        {
-                                            iframeFilestring = "";
-                                        }
-                                        <div class="card iframe-container document-border m-0">
-                                            <div class="card-body responsive-iframe-container">
-                                                @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
+                                        carouselItemClass += " active";
+                                    }
+                                    <div class="@carouselItemClass">
+                                        <div class=" doc-card-outer-div col-md-4 m-0">
+                                            @if (ModelCount > i)
+                                            {
+                                                var iframeFilestring = Model.FileStrings[i];
+                                                var ext = iframeFilestring.Split(".").Last();
+                                                if (ext == "pptx" || ext == "ppt")
+                                                {
+                                                    iframeFilestring = "images/powerpoint.png";
+                                                }
+                                                <div class="card iframe-container document-border m-0">
+                                                    <div class="card-body responsive-iframe-container">
+                                                        @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
 
                                                 @*<a href="@Model.FileStrings[i]" class="linkwrap" target="_blank">
                                                     <div class="blocker"></div>*@

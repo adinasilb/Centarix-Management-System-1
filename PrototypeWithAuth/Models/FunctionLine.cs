@@ -13,7 +13,7 @@ namespace PrototypeWithAuth.Models
         public Line Line { get; set; }
         public TimeSpan Timer { get; set; }
         public string Description {get; set;}
-        
-        
+       // public bool IsTemporary { get; set; }
+
     }
 }

@@ -7,16 +7,14 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class TempRequestJson
+    public class TempRequestJson:TempJson
     {
         [Key]
         public int TempRequestJsonID { get; set; }
         public Guid GuidID { get; set; }
         public String ApplicationUserID { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
-        public String RequestJson { get; set; }
         public bool IsOriginal { get; set; }
         public bool IsCurrent { get; set; }
-
     }
 }

@@ -24,7 +24,7 @@
 					url: '/Protocols/CheckIfProtocolUniqueNumberExists',
 					type: 'POST',
 					async: false,
-					data: { "UniqueNumber":function(){ return $("#FunctionLine_Protocol_UniqueCode").val()}},
+					data: { "UniqueNumber":function(){ return $("#FunctionLine_Protocol_UniqueCode").val()}}
 				}
 			},
 				PicturesInput :{
@@ -33,7 +33,7 @@
 					FilesInput :{
 			fileRequired : true			
 		},
-	},
+					},
 	messages:{
 	   "FunctionLine.Product.SerialNumber": {
             remote: "This serial number does not exist."
@@ -41,6 +41,7 @@
 		"FunctionLine.Protocol.UniqueCode": {
             remote: "This unique code does not exist."
         },
-	}
+	},
+	 ignore: "input[type='file']"
 });
 })

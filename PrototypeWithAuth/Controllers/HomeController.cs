@@ -268,7 +268,7 @@ namespace PrototypeWithAuth.Controllers
                     requestNotification.IsRead = false;
                     requestNotification.RequestName = request.Product.ProductName;
                     requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                    requestNotification.Description = "should have arrived " + AppUtility.FormatDate(request.ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0));
+                    requestNotification.Description = "should have arrived " + request.ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).GetElixirDateFormat();
                     requestNotification.NotificationStatusID = 1;
                     requestNotification.TimeStamp = DateTime.Now;
                     requestNotification.Controller = "Requests";
@@ -284,23 +284,23 @@ namespace PrototypeWithAuth.Controllers
         private void fillInTimekeeperNotifications(ApplicationUser user, DateTime lastUpdate)
         {
 
-            var eh = _context.EmployeeHours.Where(r => r.EmployeeID == user.Id).Where(r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null && r.TotalHours == null) || (r.Entry2 != null && r.Exit2 == null))
-                .Where(r => r.Date.Date >= lastUpdate.Date && r.Date.Date < DateTime.Today).Where(r => r.CompanyDayOffID == null)
-                .Where(r => r.EmployeeHoursAwaitingApproval == null);
-            foreach (var e in eh)
-            {
-                TimekeeperNotification timekeeperNotification = new TimekeeperNotification();
-                timekeeperNotification.EmployeeHoursID = e.EmployeeHoursID;
-                timekeeperNotification.IsRead = false;
-                timekeeperNotification.ApplicationUserID = e.EmployeeID;
-                timekeeperNotification.Description = "no hours reported for " + AppUtility.FormatDate(e.Date);
-                timekeeperNotification.NotificationStatusID = 5;
-                timekeeperNotification.TimeStamp = DateTime.Now;
-                timekeeperNotification.Controller = "Timekeeper";
-                timekeeperNotification.Action = "SummaryHours";
-                _context.Update(timekeeperNotification);
-            }
-            _context.SaveChanges();
+                var eh = _context.EmployeeHours.Where(r => r.EmployeeID == user.Id).Where(r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null && r.TotalHours == null) || (r.Entry2 != null && r.Exit2 == null))
+                    .Where(r => r.Date.Date >=lastUpdate.Date && r.Date.Date < DateTime.Today).Where(r => r.CompanyDayOffID==null)
+                    .Where(r => r.EmployeeHoursAwaitingApproval == null);
+                foreach (var e in eh)
+                {
+                    TimekeeperNotification timekeeperNotification = new TimekeeperNotification();
+                    timekeeperNotification.EmployeeHoursID = e.EmployeeHoursID;
+                    timekeeperNotification.IsRead = false;
+                    timekeeperNotification.ApplicationUserID = e.EmployeeID;
+                    timekeeperNotification.Description = "no hours reported for " + e.Date.GetElixirDateFormat();
+                    timekeeperNotification.NotificationStatusID = 5;
+                    timekeeperNotification.TimeStamp = DateTime.Now;
+                    timekeeperNotification.Controller = "Timekeeper";
+                    timekeeperNotification.Action = "SummaryHours";
+                    _context.Update(timekeeperNotification);
+                }
+                _context.SaveChanges();
 
         }
 

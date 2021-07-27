@@ -128,7 +128,7 @@
 
 					} else if ($('.turn-edit-on-off').hasClass('orders')) {
 						var viewClass = "_IndexTableData";
-						if ($('#masterSidebarType').val()) {
+						if ($('#masterSidebarType').val() === 'Cart') {
 							viewClass = "_IndexTableDataByVendor";
 						}
 						$.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass + "/", "." + viewClass, "GET");

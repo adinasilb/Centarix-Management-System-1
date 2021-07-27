@@ -54,7 +54,7 @@
                         </a>
                     </td>
                     <td>
-                        @AppUtility.FormatDate(item.ParentRequest?.OrderDate)
+                        @item.ParentRequest?.OrderDate.GetElixirDateFormat()
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.FirstName)&nbsp;

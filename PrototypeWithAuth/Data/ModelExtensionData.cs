@@ -1286,7 +1286,7 @@ namespace PrototypeWithAuth.Data
                 }
 
               );
-            
+
             modelBuilder.Entity<RequestStatus>().HasData
           (
               new RequestStatus
@@ -2842,7 +2842,7 @@ namespace PrototypeWithAuth.Data
                     FunctionDescription = "Add Image",
                     Icon = "icon-account_box-24px1",
                     IconActionClass = "add-image-to-line",
-                    DescriptionEnum ="AddImage"
+                    DescriptionEnum = "AddImage"
                 },
                 new FunctionType
                 {
@@ -2925,6 +2925,32 @@ namespace PrototypeWithAuth.Data
                     DescriptionEnum = "AddFile"
                 }
           );
+
+          modelBuilder.Entity<Gender>().HasData(
+                new Gender
+                {
+                    GenderID = 1,
+                    Description = "Male"
+                },
+                new Gender
+                {
+                    GenderID = 2,
+                    Description = "Female"
+                }
+           );
+
+            modelBuilder.Entity<ParticipantStatus>().HasData(
+                  new ParticipantStatus
+                  {
+                      ParticipantStatusID = 1,
+                      Description = "Active"
+                  },
+                  new ParticipantStatus
+                  {
+                      ParticipantStatusID = 2,
+                      Description = "Dropout"
+                  }
+             );
         }
     }
 }

@@ -1,0 +1,106 @@
+﻿@model PrototypeWithAuth.ViewModels.AddParticipantViewModel
+@{
+}
+<script src="~/js/Validation/addnewparticipant.js"></script>
+
+<div class="modal modal-view add-participant-modal" id="myModal" data-backdrop="false" style="z-index: 9100">
+    <div class="elixir-modal-sm modal-dialog-centered mx-auto" style="width:27rem;">
+        <div class="modal-content d-inline-block modal-box-shadow ">
+            <div class="modal-header biomarkers-background-color">
+                <span class="heading-1 text-white">Add New Participant</span>
+                <button type="button" class="close modal-close-padding modal-close-style cancel-add" @*data-dismiss="modal"*@ aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="small-modal-padding addparticipantform on-form-modal">
+                @Html.HiddenFor(m => m.Participant.ExperimentID)
+                <div class="row">
+                    <div class="col-12">
+                        <label asp-for="Participant.CentarixID" class="control-label"></label>
+                        <input asp-for="Participant.CentarixID" class="form-control-plaintext border-bottom" value="" />
+                        <span asp-validation-for="Participant.CentarixID" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <label asp-for="Participant.DOB" class="control-label"></label>
+                        <input asp-for="Participant.DOB" class="form-control-plaintext border-bottom" value="" />
+                        <span asp-validation-for="Participant.DOB" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="row under-row-margin">
+                    <div class="col-12">
+                        <label asp-for="Participant.Gender" class="control-label"></label>
+                        @Html.DropDownListFor(m => m.Participant.GenderID,
+                            new SelectList(
+                       Model.Genders,
+                       dataValueField: "GenderID",
+                       dataTextField: "Description"),
+                       optionLabel: "Select Option",
+                            new { @class = "mdb-select custom select-dropdown form-control-plaintext ", @searchable = "default value" }
+                        )
+
+                        @*<label asp-for="Participant.Gender" class="control-label"></label>
+                        <input asp-for="Participant.Gender" class="form-control-plaintext border-bottom" value="" />
+                        <span asp-validation-for="Participant.Gender" class="text-danger-centarix"></span>*@
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <input type="submit" class="cancel-add custom-button custom-cancel text-black custom-button-small-font px-5" value="Cancel" />
+                    </div>
+                    <div class="col-6">
+                        <input type="submit" class="submit-add custom-button custom-button-font biomarkers-background-color" value="Save" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(".cancel-add").on("click", function (e) {
+        e.preventDefault();
+        $.fn.CloseModal('add-participant');
+    });
+    $(".submit-add").on("click", function (e) {
+        e.preventDefault();
+        $('.addparticipantform').data("validator").settings.ignore = "";
+        var ExperimentID = $("#Participant_ExperimentID").val();
+        var valid = $('.addparticipantform').valid();
+        if (valid) {
+            $("#loading").show();
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: "/Biomarkers/AddParticipantModal",
+                data: new FormData($("#myForm")[0]),
+                traditional: true,
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    $("#loading").hide();
+                    $.fn.CloseModal('add-participant');
+                    $("._BiomarkersRows").html(data);
+                    $.ajax({
+                        async: true,
+                        url: "/Biomarkers/GetParticipantsCount?ExperimentID=" + ExperimentID,
+                        traditional: true,
+                        type: "GET",
+                        cache: false,
+                        success: function (data) {
+                            $("#NumberOfParticipants").html(data);
+                            return false;
+                        }
+                    });
+                    return true;
+                },
+                error: function (jqxhr) {
+                    $("#loading").hide();
+                    return true;
+                }
+            });
+        }
+    });
+</script>

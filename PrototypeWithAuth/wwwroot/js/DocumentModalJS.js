@@ -62,7 +62,7 @@
 				var $enumString =  $('.folderName').val();
 				var $requestId =  $('.objectID').val();
 				var section = $("#masterSectionType").val();
-				var guid = $("#GUID").val();
+				var guid = $("#Guid").val();
 				
 				if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
 					section = "Operations"

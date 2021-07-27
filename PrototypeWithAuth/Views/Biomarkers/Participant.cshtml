@@ -1,0 +1,13 @@
+﻿@model PrototypeWithAuth.ViewModels.ParticipantViewModel
+@{
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+
+<div class="row under-row-margin">
+    <div class="col-12">
+        <label class="sub-header align-bottom pt-2">
+            Serial Number: <span class="biomarkers-color">@Model.Participant.CentarixID</span>
+        </label>
+       @* <button value="@Model.Experiment.ExperimentID" type="button" class="add-new float-right custom-button custom-button-font clear-custom-button biomarkers-color white-background biomarkers-border-color">+ Add New Participant</button>*@
+    </div>
+</div>

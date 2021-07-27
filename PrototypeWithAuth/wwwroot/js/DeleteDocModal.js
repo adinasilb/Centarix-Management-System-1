@@ -11,7 +11,7 @@
 	$parentfoldername = $("#ParentFolderName").val();
 	$objectId = $("#ObjectID").val();
 	var $SectionType = $("#masterSectionType").val();
-	var guid = $("#GUID").val();
+	var guid = $("#Guid").val();
 	var $isEdittable = $('.active-document-modal').attr("data-val");
 	var $showSwitch = $('.active-document-modal').attr("showSwitch");
 	var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
@@ -28,7 +28,7 @@
 				deletedReportFile.prev().remove();
 				deletedReportFile.next().remove();
 				deletedReportFile.remove();
-				$(".report-text").trigger("change");
+				$(".text-editor").trigger("change");
 			}
 			else {
 				$.fn.OpenDocumentsModal(true, $foldername, $objectId, guid, $isEdittable, $SectionType, $showSwitch, $parentfoldername, dontAllowMultipleFiles);
