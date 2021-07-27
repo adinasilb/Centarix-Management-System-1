@@ -88,12 +88,12 @@
                                             @Request.Product.ProductName
                                         </td>
                                         <td style="width:15%;">
-                                            @Request.Unit @if (Request.UnitType != null)
-                                            {@Request.UnitType.UnitTypeDescription<br />}
-                                            @Request.SubUnit @if (Request.SubUnitType != null)
-                                            {@Request.SubUnitType.UnitTypeDescription<br />}
-                                            @Request.SubSubUnit @if (Request.SubSubUnitType != null)
-                                            {@Request.SubSubUnitType.UnitTypeDescription<br />}
+                                            @Request.Unit @if (Request.Product.UnitType != null)
+                                            {@Request.Product.UnitType.UnitTypeDescription<br />}
+                                            @Request.Product.SubUnit @if (Request.Product.SubUnitType != null)
+                                            {@Request.Product.SubUnitType.UnitTypeDescription<br />}
+                                            @Request.Product.SubSubUnit @if (Request.Product.SubSubUnitType != null)
+                                            {@Request.Product.SubSubUnitType.UnitTypeDescription<br />}
                                         </td>
                                         <td style="width:15%;">
                                             <div class="input-group">

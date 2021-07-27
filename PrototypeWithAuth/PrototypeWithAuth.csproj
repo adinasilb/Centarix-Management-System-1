@@ -407,6 +407,10 @@
     <Compile Remove="Data\Migrations\20210720114811_AddTempIDsTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20210720124045_AddTempIDsTable3.cs" />
     <Compile Remove="Data\Migrations\20210720124045_AddTempIDsTable3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210726130426_MoveUnitToProduct.cs" />
+    <Compile Remove="Data\Migrations\20210726130426_MoveUnitToProduct.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210726131100_MoveUnitToProduct.cs" />
+    <Compile Remove="Data\Migrations\20210726131100_MoveUnitToProduct.Designer.cs" />
   </ItemGroup>
 
 
@@ -419,6 +423,7 @@
     <PackageReference Include="GoogleAuthenticator" Version="2.0.1" />
     <PackageReference Include="jQuery.Fullcalendar" Version="3.9.0" />
     <PackageReference Include="jQuery.Validation" Version="1.19.2" />
+    <PackageReference Include="LinqToExcel" Version="1.11.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.16.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />

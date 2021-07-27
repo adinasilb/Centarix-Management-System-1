@@ -1283,8 +1283,112 @@ namespace PrototypeWithAuth.Data
                     ParentCategoryID = 14,
                     ProductSubcategoryDescription = "Media",
                     ImageURL = "/images/css/CategoryImages/samples/media2.png"
-                }
+                },
 
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1501,
+                    ParentCategoryID = 1,
+                    ProductSubcategoryDescription = "Old Subcategory",
+                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    IsOldSubCategory = true
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1502,
+                    ParentCategoryID = 2,
+                    ProductSubcategoryDescription = "Old Subcategory",
+                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    IsOldSubCategory = true
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1503,
+                    ParentCategoryID = 3,
+                    ProductSubcategoryDescription = "Old Subcategory",
+                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    IsOldSubCategory = true
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1504,
+                    ParentCategoryID = 4,
+                    ProductSubcategoryDescription = "Old Subcategory",
+                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    IsOldSubCategory = true
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1505,
+                    ParentCategoryID = 5,
+                    ProductSubcategoryDescription = "Old Subcategory",
+                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    IsOldSubCategory = true
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1506,
+                    ParentCategoryID = 6,
+                    ProductSubcategoryDescription = "Old Subcategory",
+                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    IsOldSubCategory = true
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1507,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Old Subcategory",
+                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    IsOldSubCategory = true
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1508,
+                    ParentCategoryID = 8,
+                    ProductSubcategoryDescription = "Old Subcategory",
+                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    IsOldSubCategory = true
+                }, 
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1509,
+                    ParentCategoryID = 9,
+                    ProductSubcategoryDescription = "Old Subcategory",
+                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    IsOldSubCategory = true
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1510,
+                    ParentCategoryID = 10,
+                    ProductSubcategoryDescription = "Old Subcategory",
+                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    IsOldSubCategory = true
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1511,
+                    ParentCategoryID = 11,
+                    ProductSubcategoryDescription = "Old Subcategory",
+                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    IsOldSubCategory = true
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1512,
+                    ParentCategoryID = 12,
+                    ProductSubcategoryDescription = "Old Subcategory",
+                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    IsOldSubCategory = true
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1513,
+                    ParentCategoryID = 13,
+                    ProductSubcategoryDescription = "Old Subcategory",
+                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    IsOldSubCategory = true
+                }
               );
 
             modelBuilder.Entity<RequestStatus>().HasData
@@ -1326,23 +1430,23 @@ namespace PrototypeWithAuth.Data
                 }
              );
             modelBuilder.Entity<UnitParentType>().HasData
-         (
-         new UnitParentType
-         {
-             UnitParentTypeID = 1,
-             UnitParentTypeDescription = "Units"
-         },
-         new UnitParentType
-         {
-             UnitParentTypeID = 2,
-             UnitParentTypeDescription = "Weight/Volume"
-         },
-         new UnitParentType
-         {
-             UnitParentTypeID = 3,
-             UnitParentTypeDescription = "Test"
-         }
-         );
+            (
+                new UnitParentType
+                {
+                    UnitParentTypeID = 1,
+                    UnitParentTypeDescription = "Units"
+                },
+                new UnitParentType
+                {
+                    UnitParentTypeID = 2,
+                    UnitParentTypeDescription = "Weight/Volume"
+                },
+                new UnitParentType
+                {
+                    UnitParentTypeID = 3,
+                    UnitParentTypeDescription = "Test"
+                }
+            );
 
             modelBuilder.Entity<UnitType>().HasData
          (
@@ -1489,7 +1593,13 @@ namespace PrototypeWithAuth.Data
                  UnitTypeID = 18,
                  UnitParentTypeID = 3,
                  UnitTypeDescription = "assays"
-             }
+             },
+              new UnitType
+              {
+                  UnitTypeID = -1,
+                  UnitParentTypeID =1,
+                  UnitTypeDescription = "Quartzy Unit"
+              }
             );
 
             modelBuilder.Entity<Project>().HasData
@@ -1815,6 +1925,15 @@ namespace PrototypeWithAuth.Data
                     LocationTypeNameAbbre = "S",
                     LocationTypeParentID = 501,
                     Depth = 3
+                },
+                new LocationType
+                {
+                    LocationTypeID = 600,
+                    LocationTypeName = "Quartzy",
+                    LocationTypePluralName = "Quartzy",
+                    LocationTypeNameAbbre = "Q",
+                    LocationTypeParentID = null,
+                    Depth = 0
                 }
             );
             modelBuilder.Entity<LocationRoomType>().HasData(
@@ -1855,7 +1974,17 @@ namespace PrototypeWithAuth.Data
                         LocationAbbreviation = "S"
                     }
                 );
-
+            modelBuilder.Entity<TemporaryLocationInstance>().HasData(
+                 new LocationInstance
+                 {
+                     LocationInstanceID = -1,
+                     LocationInstanceAbbrev = "Quartzy",
+                     LocationInstanceName = "Quartzy Temporary",
+                     LocationTypeID = 600,
+                     LocationNumber = 1,
+                     IsEmptyShelf = true
+                 }
+             );
             modelBuilder.Entity<LabPart>().HasData(
                     new LabPart
                     {
