@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210727113912_AddQuartzyFields")]
+    partial class AddQuartzyFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6284,21 +6286,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasBaseType("PrototypeWithAuth.Models.LocationInstance");
 
                     b.HasDiscriminator().HasValue("TemporaryLocationInstance");
-
-                    b.HasData(
-                        new
-                        {
-                            LocationInstanceID = -1,
-                            ContainsItems = false,
-                            Height = 0,
-                            IsEmptyShelf = true,
-                            IsFull = false,
-                            LocationInstanceAbbrev = "Quartzy",
-                            LocationInstanceName = "Quartzy Temporary",
-                            LocationNumber = 1,
-                            LocationTypeID = 600,
-                            Width = 0
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestNotificationStatus", b =>

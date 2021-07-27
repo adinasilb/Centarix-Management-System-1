@@ -1218,6 +1218,7 @@ namespace PrototypeWithAuth.Controllers
             tempRequestJson.SerializeViewModel(tempRequestListViewModel.TempRequestViewModels);
 
             _context.Update(tempRequestJson);
+            var entries = _context.ChangeTracker.Entries();
             await _context.SaveChangesAsync();
         }
         public async Task<TempRequestJson> GetTempRequestAsync(Guid cookieID)
@@ -2502,33 +2503,32 @@ namespace PrototypeWithAuth.Controllers
                 //get the old request that we are reordering
                 var oldRequest = _context.Requests.Where(r => r.RequestID == reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID)
                     .Include(r => r.Product)
-                    .ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor).FirstOrDefault();
+                    .ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor).AsNoTracking().FirstOrDefault();
 
 
                 var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
                 //need to include product to check if in budget
                 //   reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
 
-                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID = 0;
-                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ProductID = oldRequest.ProductID;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID = 0;            
                 reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ApplicationUserCreatorID = currentUser.Id;
                 reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;
                 reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubProjectID = oldRequest.SubProjectID;
-                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
-                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SerialNumber = oldRequest.Product.SerialNumber;
                 reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().URL = oldRequest.URL;
                 reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Warranty = oldRequest.Warranty;
                 reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ExchangeRate = oldRequest.ExchangeRate;
                 reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Currency = oldRequest.Currency;
                 reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().IncludeVAT = oldRequest.IncludeVAT;
-                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.UnitTypeID = oldRequest.Product.UnitTypeID;
-                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SubUnitTypeID = oldRequest.Product.SubUnitTypeID;
-                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SubSubUnitTypeID = oldRequest.Product.SubSubUnitTypeID;
-                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SubUnit = oldRequest.Product.SubUnit;
-                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SubSubUnit = oldRequest.Product.SubSubUnit;
+                //var entries = _context.ChangeTracker.Entries();
+                oldRequest.Product.UnitTypeID = reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.UnitTypeID;
+                oldRequest.Product.SubUnitTypeID = reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SubUnitTypeID;
+                oldRequest.Product.SubSubUnitTypeID = reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SubSubUnitTypeID; 
+                oldRequest.Product.SubUnit = reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SubUnit;
+                oldRequest.Product.SubSubUnit = reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SubSubUnit;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ProductID = oldRequest.ProductID;
+                reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
+                var entries = _context.ChangeTracker.Entries();
                 var isInBudget = checkIfInBudget(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), oldRequest.Product);
-
-
 
                 TempRequestViewModel newTrvm = await AddItemAccordingToOrderType(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), OrderTypeEnum, isInBudget, tempRequestListViewModel);
                 if (OrderTypeEnum != AppUtility.OrderTypeEnum.RequestPriceQuote)
@@ -2540,9 +2540,8 @@ namespace PrototypeWithAuth.Controllers
                             TempRequestJson trj = CreateTempRequestJson(tempRequestListViewModel.GUID);
                             await SetTempRequestAsync(trj,
                             new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() { newTrvm } });
-
+                          
                             await transaction.CommitAsync(); //IF SAVEITEM OR REQUEST ITEM
-
                             //if (!deserializedTemp.TempRequestViewModels.Any()) //DO WE NEED THIS IF???
                             //{
                             //    MoveDocumentsOutOfTempFolder(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID, AppUtility.ParentFolderName.Requests);
@@ -2926,6 +2925,10 @@ namespace PrototypeWithAuth.Controllers
                                         if (deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.Product.ProductID == 0)
                                         {
                                             _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.Product).State = EntityState.Added;
+                                        }
+                                        else
+                                        {
+                                            _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.Product).State = EntityState.Modified;
                                         }
                                         _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request).State = EntityState.Added;
                                         //deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentRequest.OrderDate = DateTime.Now;

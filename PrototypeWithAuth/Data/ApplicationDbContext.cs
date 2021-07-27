@@ -327,6 +327,15 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Material>()
                 .HasQueryFilter(item => !item.IsDeleted);
 
+            modelBuilder.Entity<ProductSubcategory>()
+           .HasQueryFilter(item => !item.IsOldSubCategory);
+
+            modelBuilder.Entity<LocationType>()
+           .HasQueryFilter(item => item.LocationTypeID !=600);
+
+            modelBuilder.Entity<LocationInstance>()
+        .HasQueryFilter(item => item.LocationTypeID != 600);
+
             modelBuilder.Entity<SalariedEmployee>().Ignore(e => e.WorkScope);
             modelBuilder.Entity<Employee>().Ignore(e => e.NetSalary);
             modelBuilder.Entity<Employee>().Ignore(e => e.TotalCost);

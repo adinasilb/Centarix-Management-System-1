@@ -755,20 +755,17 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.SidebarEnum.Vendors:
                     sidebarFilterDescription = _context.Vendors.Where(v => v.VendorID == sideBarID).Select(v => v.VendorEnName).FirstOrDefault();
                     RequestsPassedIn = RequestsPassedIn
-                     .OrderByDescending(r => r.ProductID)
                      .Where(r => r.Product.VendorID == sideBarID);
                     break;
                 case AppUtility.SidebarEnum.Type:
                     sidebarFilterDescription = _context.ProductSubcategories.Where(p => p.ProductSubcategoryID == sideBarID).Select(p => p.ProductSubcategoryDescription).FirstOrDefault();
                     RequestsPassedIn = RequestsPassedIn
-                   .OrderByDescending(r => r.ProductID)
                    .Where(r => r.Product.ProductSubcategoryID == sideBarID);
                     break;
                 case AppUtility.SidebarEnum.Owner:
                     var owner = _context.Employees.Where(e => e.Id.Equals(requestIndexObject.SidebarFilterID)).FirstOrDefault();
                     sidebarFilterDescription = owner.FirstName + " " + owner.LastName;
                     RequestsPassedIn = RequestsPassedIn
-                    .OrderByDescending(r => r.ProductID)
                     .Where(r => r.ApplicationUserCreatorID == requestIndexObject.SidebarFilterID);
                     break;
             }
