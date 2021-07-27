@@ -27,8 +27,8 @@
 		},
 
 		"RequestItemViewModel.Requests[0].Product.UnitTypeID": "selectRequired",
-		"Product.SubUnitTypeID": "selectRequired",
-		"Product.SubSubUnitTypeID": "selectRequired"
+		"RequestItemViewModel.Requests[0].Product.SubUnitTypeID": "selectRequired",
+		"RequestItemViewModel.Requests[0].Product.SubSubUnitTypeID": "selectRequired"
 
 	},
 
