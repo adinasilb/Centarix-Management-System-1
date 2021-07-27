@@ -1189,11 +1189,11 @@ namespace PrototypeWithAuth.Controllers
             {
                 _context.Entry(tempRequest.Request.Product).State = EntityState.Unchanged;
             }
-            if (tempRequest.Request.ParentQuote.ParentQuoteID == 0)
+            if (tempRequest.Request.ParentQuoteID == 0)
             {
                 _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Added;
             }
-            else
+            else if((tempRequest.Request.ParentQuoteID != null))
             {
                 _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Unchanged;
             }
@@ -5074,7 +5074,6 @@ namespace PrototypeWithAuth.Controllers
             {
                 var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
                 var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
-                var parentQuote = new ParentQuote() { QuoteStatusID = -1 };
                 var deserializedTempRequestListViewModel = new TempRequestListViewModel()
                 {
                     TempRequestViewModels = newTempRequestJson.DeserializeJson<List<TempRequestViewModel>>()
@@ -5096,7 +5095,6 @@ namespace PrototypeWithAuth.Controllers
                             uploadOrderViewModel.ParentRequest.OrderDate = DateTime.Now;
                         }
                         tempRequest.Request.ParentRequest = uploadOrderViewModel.ParentRequest;
-                        tempRequest.Request.ParentQuote = parentQuote;
                     }
                 }
 
