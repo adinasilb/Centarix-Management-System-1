@@ -21,10 +21,11 @@
     <div class="col-12 create-user mx-auto @form on-form-modal  " style="width: 60%">
         <div class="on-form-modal-border">
             <form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style=" ">
-                <input type="hidden" asp-for="TempRequestListViewModel.GUID" class="hidden-guid" /> @*for reloading the partial view*@
-
+                <!--<input type="hidden" asp-for="TempRequestListViewModel.GUID" class="hidden-guid" />--> @*for reloading the partial view*@
+                <div class="_temprequesthiddenfors">
+                    @{ await Html.RenderPartialAsync("_TempRequestHiddenFors", Model.TempRequestListViewModel); }
+                </div>
                 <div class="outer-partial">
-
                     @{ await Html.RenderPartialAsync("CreateItemTabs", Model.RequestItemViewModel); }
                 </div>
             </form>
@@ -33,14 +34,14 @@
 </div>
 
 <script>
-    
+
     //$(".submitOrderHidden").off('click').on("click", function (e) {
     //    var formData = new FormData($("#myForm")[0]);
     //    console.log(...formData);
     //    for (var pair of formData.entries()) {
     //        console.log(pair[0] + ', ' + pair[1]);
     //    }
-        
+
 
     //    //return false;
     //});

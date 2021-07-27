@@ -682,7 +682,7 @@ namespace PrototypeWithAuth.Controllers
                         //{
                         //if (isInBudget)
                         //{
-                        TempRequestJson trj = CreateTempRequestJson(requestItemViewModel.TempRequestListViewModel.GUID);
+                        TempRequestJson trj = CreateTempRequestJson(requestItemViewModel.TempRequestListViewModel.GUID, 1);
                         await SetTempRequestAsync(trj, trlvm);
                         await saveItemTransaction.CommitAsync();
                         //}
@@ -721,7 +721,7 @@ namespace PrototypeWithAuth.Controllers
                 SectionType = requestItemViewModel.SectionType
             };
             //uncurrent the one we're on
-            await KeepTempRequestJsonCurrentAsOriginal(requestItemViewModel.TempRequestListViewModel.GUID);
+            //await KeepTempRequestJsonCurrentAsOriginal(requestItemViewModel.TempRequestListViewModel.GUID);
             requestItemViewModel.TempRequestListViewModel.RequestIndexObject.GUID = requestItemViewModel.TempRequestListViewModel.GUID;
             switch (OrderType)
             {
@@ -1167,12 +1167,13 @@ namespace PrototypeWithAuth.Controllers
                 return tempRequestListViewModel.TempRequestViewModels[0];
             }
         }
-        public TempRequestJson CreateTempRequestJson(Guid guid)
+        public TempRequestJson CreateTempRequestJson(Guid guid, int SequencePosition = 0) //NEW!! --check after
         {
             return new TempRequestJson()
             {
                 GuidID = guid,
                 ApplicationUserID = _userManager.GetUserId(User),
+                SequencePosition = SequencePosition,
                 IsCurrent = true,
                 IsOriginal = true
             };
@@ -1223,6 +1224,7 @@ namespace PrototypeWithAuth.Controllers
         {
             return await _context.TempRequestJsons
                 .Where(t => t.GuidID == cookieID && t.ApplicationUserID == _userManager.GetUserId(User))
+                .OrderByDescending(t => t.SequencePosition)
                 .FirstOrDefaultAsync();
         }
         public async Task RollbackCurrentTempAsync(Guid GUID)
@@ -1238,7 +1240,7 @@ namespace PrototypeWithAuth.Controllers
                 await _context.SaveChangesAsync();
             }
         }
-        public async Task<TempRequestJson> CopyToNewCurrentTempRequestAsync(TempRequestJson original)
+        public async Task<TempRequestJson> CopyToNewCurrentTempRequestAsync(TempRequestJson original, int SequencePosition = 0)
         {
             original.IsCurrent = false; //just to make sure but i think this should be taken out here b/c it's done before...
             original.IsOriginal = true; //just to make sure that there wont be any mistakes...
@@ -1250,6 +1252,7 @@ namespace PrototypeWithAuth.Controllers
                 Json = original.Json,
                 ApplicationUserID = original.ApplicationUserID,
                 GuidID = original.GuidID,
+                SequencePosition = SequencePosition,
                 IsOriginal = false,
                 IsCurrent = true
             };
@@ -1264,38 +1267,38 @@ namespace PrototypeWithAuth.Controllers
             var trlvm = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
             return PartialView(trlvm);
         }
-        public async Task KeepTempRequestJsonCurrentAsOriginal(Guid GUID)
-        //take away current from original
-        //or switch current to original and remove current from table
-        {
-            var allGUIDTRJs = _context.TempRequestJsons.Where(t => t.GuidID == GUID && t.ApplicationUserID == _userManager.GetUserId(User)).ToList();
-            var origAndCurrent = allGUIDTRJs.Where(t => t.IsCurrent && t.IsOriginal).FirstOrDefault();
-            if (origAndCurrent != null)
-            {
-                var olderTemps = allGUIDTRJs.Where(t => !t.IsCurrent);
-                foreach (var temp in olderTemps)
-                {
-                    _context.Remove(temp);
-                };
-                await _context.SaveChangesAsync();
-                origAndCurrent.IsCurrent = false;
-                _context.Update(origAndCurrent);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                var current = allGUIDTRJs.Where(t => t.IsCurrent).FirstOrDefault();
-                var original = allGUIDTRJs.Where(t => t.IsOriginal).FirstOrDefault();
-                if (current != null)
-                {
-                    current.IsCurrent = false;
-                    current.IsOriginal = true;
-                    _context.Update(current);
-                    _context.Remove(original);
-                    await _context.SaveChangesAsync();
-                }
-            }
-        }
+        //public async Task KeepTempRequestJsonCurrentAsOriginal(Guid GUID)
+        ////take away current from original
+        ////or switch current to original and remove current from table
+        //{
+        //    var allGUIDTRJs = _context.TempRequestJsons.Where(t => t.GuidID == GUID && t.ApplicationUserID == _userManager.GetUserId(User)).ToList();
+        //    var origAndCurrent = allGUIDTRJs.Where(t => t.IsCurrent && t.IsOriginal).FirstOrDefault();
+        //    if (origAndCurrent != null)
+        //    {
+        //        var olderTemps = allGUIDTRJs.Where(t => !t.IsCurrent);
+        //        foreach (var temp in olderTemps)
+        //        {
+        //            _context.Remove(temp);
+        //        };
+        //        await _context.SaveChangesAsync();
+        //        origAndCurrent.IsCurrent = false;
+        //        _context.Update(origAndCurrent);
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    else
+        //    {
+        //        var current = allGUIDTRJs.Where(t => t.IsCurrent).FirstOrDefault();
+        //        var original = allGUIDTRJs.Where(t => t.IsOriginal).FirstOrDefault();
+        //        if (current != null)
+        //        {
+        //            current.IsCurrent = false;
+        //            current.IsOriginal = true;
+        //            _context.Update(current);
+        //            _context.Remove(original);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //    }
+        //}
         public async Task RemoveTempRequestAsync(Guid GUID)
         //This will remove ALL --> Do not use it until you are completely done with this GUID
         {
@@ -1365,8 +1368,8 @@ namespace PrototypeWithAuth.Controllers
             //    requestNum++;
             //}
 
-            TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
-            await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
+            //TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID, 3);
+            //await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
 
 
             var termsList = new List<SelectListItem>() { };
@@ -1389,7 +1392,7 @@ namespace PrototypeWithAuth.Controllers
                 tempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Currency);
             termsViewModel.TempRequestListViewModel = tempRequestListViewModel;
 
-            await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);
+            //await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);
 
             return termsViewModel;
         }
@@ -1401,7 +1404,7 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
-                var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
+                var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson, 3);
                 //var newTRLVM = await LoadTempListFromRequestIndexObjectAsync(tempRequestListViewModel.RequestIndexObject);
 
                 var newTRLVM = new TempRequestListViewModel { TempRequestViewModels = newTempRequestJson.DeserializeJson<List<TempRequestViewModel>>() };
@@ -1564,7 +1567,7 @@ namespace PrototypeWithAuth.Controllers
                 //
                 if (!needsToBeApproved)
                 {
-                    await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);
+                    //await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);
                     //get rid of old trlvm?
                     tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
                     return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("ConfirmEmailModal", controller, tempRequestListViewModel.RequestIndexObject) };
@@ -1890,10 +1893,11 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.SectionType = SectionType;
             //RemoveRequestWithCommentsAndEmailSessions();
 
-            TempRequestJson tempRequestJson = CreateTempRequestJson(Guid.NewGuid());
+            TempRequestJson tempRequestJson = CreateTempRequestJson(Guid.NewGuid(), 0);
             TempRequestListViewModel tempRequestListViewModel = new TempRequestListViewModel()
             {
                 GUID = tempRequestJson.GuidID,
+                SequencePosition = tempRequestJson.SequencePosition,
                 TempRequestViewModels = new List<TempRequestViewModel>()
             };
             using (var transaction = _context.Database.BeginTransaction())
@@ -1920,7 +1924,7 @@ namespace PrototypeWithAuth.Controllers
                 RequestItemViewModel = requestItemViewModel
             };
 
-            await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);
+            //await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);
             return View(tempViewModel);
         }
 
@@ -2717,8 +2721,8 @@ namespace PrototypeWithAuth.Controllers
                     allRequests.Add(tempRequest.Request);
                 }
 
-                updatedTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
-                await SetTempRequestAsync(updatedTempRequestJson, newTRLVM);
+                //updatedTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson, 3);
+                await SetTempRequestAsync(oldTempRequestJson, newTRLVM);
             }
 
             //IMPORTANT!!! Check that payments and comments are coming in
@@ -4831,10 +4835,11 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<TempRequestListViewModel> LoadTempListFromRequestIndexObjectAsync(RequestIndexObject requestIndexObject)
         {
-            var oldJson = _context.TempRequestJsons.Where(trj => trj.GuidID == requestIndexObject.GUID).FirstOrDefault();
+            var oldJson = _context.TempRequestJsons.Where(trj => trj.GuidID == requestIndexObject.GUID).OrderByDescending(trj => trj.SequencePosition).FirstOrDefault();
             return new TempRequestListViewModel()
             {
                 GUID = requestIndexObject.GUID,
+                SequencePosition = oldJson.SequencePosition,
                 RequestIndexObject = requestIndexObject,
                 TempRequestViewModels = oldJson.DeserializeJson<List<TempRequestViewModel>>()
             };
@@ -4890,7 +4895,7 @@ namespace PrototypeWithAuth.Controllers
             {
 
                 var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
-                var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
+                var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson, 2);
 
                 var deserializedTempRequestListViewModel = new TempRequestListViewModel()
                 {
@@ -4916,7 +4921,7 @@ namespace PrototypeWithAuth.Controllers
                     //    var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
                     //    _httpContextAccessor.HttpContext.Session.SetObject(requestNum, request);
                     await SetTempRequestAsync(newTempRequestJson, deserializedTempRequestListViewModel);
-                    await KeepTempRequestJsonCurrentAsOriginal(newTempRequestJson.GuidID);
+                    //await KeepTempRequestJsonCurrentAsOriginal(newTempRequestJson.GuidID);
                     //tempRequestListViewModel.TempRequestViewModels = deserializedTempRequestListViewModel.TempRequestViewModels;
                     tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
                     return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
@@ -5097,7 +5102,7 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 await SetTempRequestAsync(newTempRequestJson, deserializedTempRequestListViewModel);
-                await KeepTempRequestJsonCurrentAsOriginal(newTempRequestJson.GuidID);
+                //await KeepTempRequestJsonCurrentAsOriginal(newTempRequestJson.GuidID);
                 //do we need this current/original here??
                 //var requests = new List<Request>();
                 //var isRequests = true;
@@ -5341,7 +5346,7 @@ namespace PrototypeWithAuth.Controllers
                     break;
             }
             await SetTempRequestAsync(newTempRequestJson, deserializedTempRequestListViewModel);
-            await KeepTempRequestJsonCurrentAsOriginal(newTempRequestJson.GuidID);
+            //await KeepTempRequestJsonCurrentAsOriginal(newTempRequestJson.GuidID);
             return new EmptyResult();
         }
 

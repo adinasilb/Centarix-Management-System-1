@@ -1,6 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.TempRequestListViewModel
 <div class="temprequesthiddenfors">
     @Html.HiddenFor(r => r.GUID)
+    @Html.HiddenFor(r => r.SequencePosition)
 
     @if (Model.TempRequestViewModels != null)
     {
