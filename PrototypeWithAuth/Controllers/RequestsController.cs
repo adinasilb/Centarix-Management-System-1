@@ -1240,6 +1240,20 @@ namespace PrototypeWithAuth.Controllers
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<TempRequestListViewModel> RollbackTempAndReturnTRLVM(Guid Guid, int SequencePosition)
+        {
+            var current = _context.TempRequestJsons.Where(t => t.GuidID == Guid && t.SequencePosition == SequencePosition).FirstOrDefault();
+            _context.Remove(current);
+            var oneStepBack = _context.TempRequestJsons.Where(t => t.GuidID == Guid && t.SequencePosition == SequencePosition - 1).FirstOrDefault();
+            return new TempRequestListViewModel()
+            {
+                GUID = Guid,
+                SequencePosition = SequencePosition - 1,
+                //RequestIndexObject = requestIndexObject,
+                TempRequestViewModels = oneStepBack.DeserializeJson<List<TempRequestViewModel>>()
+            };
+        }
         public async Task<TempRequestJson> CopyToNewCurrentTempRequestAsync(TempRequestJson original, int SequencePosition = 0)
         {
             original.IsCurrent = false; //just to make sure but i think this should be taken out here b/c it's done before...
@@ -1262,9 +1276,10 @@ namespace PrototypeWithAuth.Controllers
             return newTempRequestJson;
         }
 
-        public async Task<PartialViewResult> _TempRequestHiddenFors(RequestIndexObject requestIndexObject)
+        public async Task<PartialViewResult> _TempRequestHiddenFors(Guid Guid, int SequencePosition)
         {
-            var trlvm = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
+            var trlvm = await RollbackTempAndReturnTRLVM(Guid, SequencePosition);
+            //var trlvm = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
             return PartialView(trlvm);
         }
         //public async Task KeepTempRequestJsonCurrentAsOriginal(Guid GUID)
