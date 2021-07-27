@@ -618,16 +618,41 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID == 2)
             {
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, quoteParentFolderName, quoteFolder, parentQuoteId);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, requestParentFolderName, requestFolder, requestId);
+                
+                if(requestItemViewModel.Requests.FirstOrDefault().ParentRequestID !=null)
+                {
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, quoteParentFolderName, quoteFolder, requestItemViewModel.Requests.FirstOrDefault().ParentRequestID.ToString());
+                }
+                if (requestItemViewModel.Requests.FirstOrDefault().Payments != null && requestItemViewModel.Requests.FirstOrDefault().Payments.Count() != 0)
+                {
+                    if (requestItemViewModel.Requests.FirstOrDefault().Payments.OrderBy(p => p.PaymentDate)?.FirstOrDefault().InvoiceID != null)
+                    {
+                        GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, requestParentFolderName, requestFolder, requestId);
+                    }
+                }
                 GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Details, requestParentFolderName, requestFolder, requestId);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, requestParentFolderName, requestFolder, requestId);
+                if (requestItemViewModel.Requests.FirstOrDefault().ParentQuoteID != null)
+                {
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, quoteParentFolderName, quoteFolder, parentQuoteId);
+                }
             }
             else
             {
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, quoteParentFolderName, quoteFolder, parentQuoteId);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, requestParentFolderName, requestFolder, requestId);
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, requestParentFolderName, requestFolder, requestId);
+                if (requestItemViewModel.Requests.FirstOrDefault().ParentQuoteID != null)
+                {
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, quoteParentFolderName, quoteFolder, parentQuoteId);
+                }
+                if (requestItemViewModel.Requests.FirstOrDefault().ParentRequestID != null)
+                {
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, quoteParentFolderName, quoteFolder, requestItemViewModel.Requests.FirstOrDefault().ParentRequestID.ToString());
+                }
+                if (requestItemViewModel.Requests.FirstOrDefault().Payments != null && requestItemViewModel.Requests.FirstOrDefault().Payments.Count() != 0)
+                {
+                    if (requestItemViewModel.Requests.FirstOrDefault().Payments.OrderBy(p => p.PaymentDate)?.FirstOrDefault().InvoiceID != null)
+                    {
+                        GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, requestParentFolderName, requestFolder, requestId);
+                    }
+                }
                 GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Shipments, requestParentFolderName, requestFolder, requestId);
                 GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, requestParentFolderName, requestFolder, requestId);
                 GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, requestParentFolderName, requestFolder, requestId);
