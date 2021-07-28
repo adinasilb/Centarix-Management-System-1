@@ -1289,7 +1289,7 @@
             alert("in $.fn.AddTempRequestHiddenFors : " + guid);
             $.ajax({
                 async: true,
-                url: "/Requests/_TempRequestHiddenFors?GUID=" + guid, "&SequencePosition=" + sequence,
+                url: "/Requests/_TempRequestHiddenFors?GUID=" + guid + "&SequencePosition=" + sequence,
                 traditional: true,
                 type: "GET",
                 cache: false,
