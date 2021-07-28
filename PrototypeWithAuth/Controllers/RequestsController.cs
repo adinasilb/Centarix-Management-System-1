@@ -593,7 +593,7 @@ namespace PrototypeWithAuth.Controllers
                 var trlvm = new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() };
                 foreach (var request in requestItemViewModel.Requests)
                 {
-                    throw new Exception();
+                    //throw new Exception();
                     if (!request.Ignore)
                     {
                         request.ApplicationUserCreatorID = currentUser.Id;
@@ -601,10 +601,10 @@ namespace PrototypeWithAuth.Controllers
                         {
                             request.Product.VendorID = vendor.VendorID;
                             request.Product.Vendor = vendor;
+                            request.CreationDate = DateTime.Now;
                         }
 
                         request.Product.ProductSubcategory = await _context.ProductSubcategories.Include(ps => ps.ParentCategory).Where(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategoryID).FirstOrDefaultAsync();
-                        request.CreationDate = DateTime.Now;
                         var isInBudget = false;
                         if (!request.Product.ProductSubcategory.ParentCategory.IsProprietary)
                         {
@@ -912,7 +912,7 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.OrderTypeEnum.RequestPriceQuote:
                             trvm = await RequestItem(newRequest, isInBudget);
                             break;
-                        case AppUtility.OrderTypeEnum.Save:
+                        case AppUtility.OrderTypeEnum.Save: //proprietary
                             trvm = await SaveItem(newRequest, tempRequestListViewModel.GUID);
                             break;
                         case AppUtility.OrderTypeEnum.SaveOperations:
