@@ -593,6 +593,7 @@ namespace PrototypeWithAuth.Controllers
                 var trlvm = new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() };
                 foreach (var request in requestItemViewModel.Requests)
                 {
+                    throw new Exception();
                     if (!request.Ignore)
                     {
                         request.ApplicationUserCreatorID = currentUser.Id;
@@ -627,7 +628,7 @@ namespace PrototypeWithAuth.Controllers
                             trvm.Comments = new List<Comment>();
                             foreach (var comment in requestItemViewModel.Comments)
                             {
-                                if (comment.CommentText.Length != 0)
+                                if (comment.CommentText != null && comment.CommentText?.Length != 0)
                                 {
                                     //save the new comment
                                     comment.ApplicationUserID = currentUser.Id;
@@ -706,15 +707,17 @@ namespace PrototypeWithAuth.Controllers
             catch (Exception ex)
             {
                 //Redirect Results Need to be checked here
-                requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
+                //requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 await RemoveTempRequestAsync(requestItemViewModel.TempRequestListViewModel.GUID);
                 //Response.WriteAsync(ex.Message?.ToString());
-                if (requestItemViewModel.RequestStatusID == 7)
+                /*if (requestItemViewModel.RequestStatusID == 7)
                 {
-                    return new RedirectToActionResult(actionName: "CreateItemTabs", controllerName: "Requests", routeValues: new { RequestItemViewModel = requestItemViewModel });
+                    return new RedirectToActionResult(actionName: "CreateItemTabs", controllerName: "Requests", routeValues: requestItemViewModel );
                 }
-                return new RedirectToActionResult(actionName: "_OrderTab", controllerName: "Requests", routeValues: new { RequestItemViewMOdel = requestItemViewModel });
+                return new RedirectToActionResult(actionName: "_OrderTab", controllerName: "Requests", routeValues: requestItemViewModel );*/
+                throw ex;
+                
             }
             requestItemViewModel.TempRequestListViewModel.RequestIndexObject = new RequestIndexObject()
             {
@@ -1941,8 +1944,16 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddItemView(AppUtility.OrderTypeEnum OrderType, TempRequestListViewModel tempRequestListViewModel, RequestItemViewModel requestItemViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             requestItemViewModel.TempRequestListViewModel = tempRequestListViewModel;
-            var redirectToActionResult = SaveAddItemView(requestItemViewModel, OrderType, receivedModalVisualViewModel).Result;
-            return RedirectToAction(redirectToActionResult.ActionName, redirectToActionResult.ControllerName, redirectToActionResult.RouteValues);
+            try
+            {
+                var redirectToActionResult = SaveAddItemView(requestItemViewModel, OrderType, receivedModalVisualViewModel).Result;
+                return RedirectToAction(redirectToActionResult.ActionName, redirectToActionResult.ControllerName, redirectToActionResult.RouteValues);
+            }
+            catch(Exception ex)
+            {
+                requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
+                return PartialView("_ErrorMessage", requestItemViewModel.ErrorMessage);
+            }
         }
 
         private static List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder, FavoriteRequest favoriteRequest = null, Request request = null, ApplicationUser user = null)
@@ -1982,7 +1993,8 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> CreateItemTabs(int productSubCategoryId, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, string itemName = "", bool isRequestQuote = false)
+        public async Task<IActionResult> CreateItemTabs(int productSubCategoryId, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, string itemName = "", 
+            bool isRequestQuote = false)
         { //TODO : CHECK IF WE NEED TO DELETE GUID DOCS HERE
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             var categoryType = 1;
