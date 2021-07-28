@@ -14,6 +14,7 @@ namespace PrototypeWithAuth.Models
         public Guid GuidID { get; set; }
         public String ApplicationUserID { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+        public int SequencePosition { get; set; }
         public bool IsOriginal { get; set; }
         public bool IsCurrent { get; set; }
     }

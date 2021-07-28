@@ -5269,6 +5269,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Json")
                         .HasColumnType("ntext");
 
+                    b.Property<int>("SequencePosition")
+                        .HasColumnType("int");
+
                     b.HasKey("TempRequestJsonID");
 
                     b.HasIndex("ApplicationUserID");
