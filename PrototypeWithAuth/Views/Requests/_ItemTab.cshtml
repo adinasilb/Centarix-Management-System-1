@@ -98,7 +98,7 @@
         + " d-none";
     var passageCategories = AppUtility.ParentCategoryEnum.Samples;
     var amountCategories = AppUtility.ParentCategoryEnum.Samples;
-    var dateCreatedCategories = AppUtility.ParentCategoryEnum.Samples;
+    var dateCreatedCategories = AppUtility.ParentCategoryEnum.Samples + " d-none";
 }
 
 @{ var request = Model.Requests[0];}
@@ -360,7 +360,7 @@ else
     }
     <div class="row">
         <div class="col-md-3 ">
-            <label asp-for="Requests[0].CreationDate" class="control-label">Creation Date</label>
+            <label asp-for="Requests[0].CreationDate" class="control-label @dateCreatedCategories">Creation Date</label>
             <input asp-for="Requests[0].CreationDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass @dateCreatedCategories"  asp-format="@AppUtility.AspDateFormatString"  type="text" />
         </div>
     </div>

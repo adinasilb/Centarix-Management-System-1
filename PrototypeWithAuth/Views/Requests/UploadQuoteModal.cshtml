@@ -58,7 +58,7 @@
                         var filterClass = "opac87";
                         var hasFileClass = "";
                         var containsFile = "";
-                        <input type="hidden" asp-for="FileStrings" />@*This is for reloading hte modal on error*@
+                        <input type="hidden" asp-for="FileStrings" />@*This is for reloading the modal on error*@
                         if (Model.FileStrings != null && Model.FileStrings.Count > 0)
                         {
                             filterClass = "order-inv-filter";
@@ -69,8 +69,12 @@
 
                     <div class="row">
                         <div class=" offset-4 text-center">
-                            <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" name="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
-                            <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-id="0" id="@AppUtility.FolderNamesEnum.Quotes.ToString()" name="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-val="@true" showSwitch="@false" parentfolder="@AppUtility.ParentFolderName.ParentQuote.ToString()">
+                            <div class="d-inline-block" style="max-width:150px">
+                            <input type="text" readonly id="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" name="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" class="@containsFile" 
+                                   style="pointer-events:none; background:none; border:none;" />
+                            </div>
+                            <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-id="0" id="@AppUtility.FolderNamesEnum.Quotes.ToString()" 
+                               name="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-val="@true" showSwitch="@false" parentfolder="@AppUtility.ParentFolderName.ParentQuote.ToString()">
 
                                 <div class="card document-border @hasFileClass">
                                     <div class="document-card text-center">
