@@ -138,13 +138,17 @@
     $(".cancel-quote").on("click", function (e) {
         e.preventDefault();
         //alert("in cancel quote");
+        var guid = $("#GUID").val();
+        var sequence = $("#SequencePosition").val();
+        console.log("guid: " + guid);
+        console.log("sequence: " + sequence);
         var selector = '.temprequesthiddenfors';
         if ($('#RequestIndexObject_IsReorder').val() === 'True') {
             selector = '.modal .temprequesthiddenfors';
         }
         console.log(selector)
         $.fn.CloseModal('step-1');
-        $.fn.AddTempRequestHiddenFors($('.hidden-guid').val(), selector);
+        $.fn.AddTempRequestHiddenFors(guid, sequence, selector);
     });
     
     $(".submitQuote").off('click').on("click", function (e) {

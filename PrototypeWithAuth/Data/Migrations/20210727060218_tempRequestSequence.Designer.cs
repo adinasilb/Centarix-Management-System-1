@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210727060218_tempRequestSequence")]
+    partial class tempRequestSequence
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2458,15 +2460,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationTypeNameAbbre = "S",
                             LocationTypeParentID = 501,
                             LocationTypePluralName = "Sections"
-                        },
-                        new
-                        {
-                            LocationTypeID = 600,
-                            Depth = 0,
-                            Limit = 0,
-                            LocationTypeName = "Quartzy",
-                            LocationTypeNameAbbre = "Q",
-                            LocationTypePluralName = "Quartzy"
                         });
                 });
 
@@ -2840,10 +2833,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ApplicationUserID");
 
-                    b.HasIndex("OrderNumber")
-                        .IsUnique()
-                        .HasFilter("[OrderNumber] IS NOT NULL");
-
                     b.ToTable("ParentRequests");
                 });
 
@@ -3091,6 +3080,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("CatalogNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Handeling")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -3115,22 +3107,19 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ProductSubcategoryID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("QuantityPerUnit")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ReorderLevel")
+                        .HasColumnType("int");
+
                     b.Property<string>("SerialNumber")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("SubSubUnit")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("SubSubUnitTypeID")
+                    b.Property<int?>("UnitsInOrder")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("SubUnit")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("SubUnitTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UnitTypeID")
+                    b.Property<int?>("UnitsInStock")
                         .HasColumnType("int");
 
                     b.Property<int?>("VendorID")
@@ -3139,16 +3128,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("ProductID");
 
                     b.HasIndex("ProductSubcategoryID");
-
-                    b.HasIndex("SerialNumber")
-                        .IsUnique()
-                        .HasFilter("[SerialNumber] IS NOT NULL");
-
-                    b.HasIndex("SubSubUnitTypeID");
-
-                    b.HasIndex("SubUnitTypeID");
-
-                    b.HasIndex("UnitTypeID");
 
                     b.HasIndex("VendorID");
 
@@ -3164,9 +3143,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("ImageURL")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsOldSubCategory")
-                        .HasColumnType("bit");
 
                     b.Property<int>("ParentCategoryID")
                         .HasColumnType("int");
@@ -3186,7 +3162,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 101,
                             ImageURL = "/images/css/CategoryImages/consumables/pcr_consumables.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "PCR"
                         },
@@ -3194,7 +3169,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 102,
                             ImageURL = "/images/css/CategoryImages/consumables/culture_plates.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Cell Culture Plates"
                         },
@@ -3202,7 +3176,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 103,
                             ImageURL = "/images/css/CategoryImages/consumables/petri_dish.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Petri Dish"
                         },
@@ -3210,7 +3183,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 104,
                             ImageURL = "/images/css/CategoryImages/consumables/tips2.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Tips"
                         },
@@ -3218,7 +3190,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 105,
                             ImageURL = "/images/css/CategoryImages/consumables/pipettes.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Pipets"
                         },
@@ -3226,7 +3197,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 106,
                             ImageURL = "/images/css/CategoryImages/consumables/tubes.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Tubes"
                         },
@@ -3234,7 +3204,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 107,
                             ImageURL = "/images/css/CategoryImages/consumables/robot_consumables_tips.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Robot Consumables(Tips,Microplates, Reservoirs)"
                         },
@@ -3242,7 +3211,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 108,
                             ImageURL = "/images/css/CategoryImages/consumables/ddpcr_consumables.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "DdPCR Consumables (Gaskets, Cartridges, Microplates, Foil seal)"
                         },
@@ -3250,7 +3218,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 109,
                             ImageURL = "/images/css/CategoryImages/consumables/rtpcr_consumables.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "RT-PCR"
                         },
@@ -3258,7 +3225,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 110,
                             ImageURL = "/images/css/CategoryImages/consumables/fplc_consumables.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "FPLC Consumables"
                         },
@@ -3266,7 +3232,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 111,
                             ImageURL = "/images/css/CategoryImages/consumables/tff_consumables.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "TFF Consumables"
                         },
@@ -3274,7 +3239,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 112,
                             ImageURL = "/images/css/CategoryImages/consumables/column.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Column"
                         },
@@ -3282,7 +3246,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 113,
                             ImageURL = "/images/css/CategoryImages/consumables/filteration_system.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Filtration system"
                         },
@@ -3290,7 +3253,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 114,
                             ImageURL = "/images/css/CategoryImages/consumables/flasks.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Flasks"
                         },
@@ -3298,7 +3260,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 115,
                             ImageURL = "/images/css/CategoryImages/consumables/bags.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Bags"
                         },
@@ -3306,7 +3267,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 116,
                             ImageURL = "/images/css/CategoryImages/consumables/syringes.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Syringes"
                         },
@@ -3314,7 +3274,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 117,
                             ImageURL = "/images/css/CategoryImages/consumables/covaris_consumables.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Covaris Consumables"
                         },
@@ -3322,7 +3281,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 118,
                             ImageURL = "/images/css/CategoryImages/consumables/tapestation_consumables.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Tapestation Consumables (Screentapes: gDNA/HS/RNA; Markers, Loading Buffers, Loading Tips)"
                         },
@@ -3330,7 +3288,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 119,
                             ImageURL = "/images/css/CategoryImages/consumables/sequencing.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Sequencing"
                         },
@@ -3338,7 +3295,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 120,
                             ImageURL = "/images/css/CategoryImages/consumables/general.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "General"
                         },
@@ -3346,7 +3302,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 201,
                             ImageURL = "/images/css/CategoryImages/reagents/chemical_powder.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Chemical Powder"
                         },
@@ -3354,7 +3309,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 202,
                             ImageURL = "/images/css/CategoryImages/reagents/antibody.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Antibodies"
                         },
@@ -3362,7 +3316,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 203,
                             ImageURL = "/images/css/CategoryImages/reagents/cell_media.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Cell Media"
                         },
@@ -3370,7 +3323,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 204,
                             ImageURL = "/images/css/CategoryImages/reagents/chemical_solution2.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Solution"
                         },
@@ -3378,7 +3330,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 205,
                             ImageURL = "/images/css/CategoryImages/reagents/kit.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Kit"
                         },
@@ -3386,7 +3337,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 206,
                             ImageURL = "/images/css/CategoryImages/reagents/PCR_reagent.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "PCR"
                         },
@@ -3394,7 +3344,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 207,
                             ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent2.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "RT-PCR"
                         },
@@ -3402,7 +3351,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 208,
                             ImageURL = "/images/css/CategoryImages/reagents/dna_probes2.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Probes"
                         },
@@ -3410,7 +3358,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 209,
                             ImageURL = "/images/css/CategoryImages/reagents/primer.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Primers"
                         },
@@ -3418,7 +3365,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 210,
                             ImageURL = "/images/css/CategoryImages/reagents/media_supplement.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Media Supplement"
                         },
@@ -3426,7 +3372,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 211,
                             ImageURL = "/images/css/CategoryImages/reagents/antibiotics.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Antibiotics"
                         },
@@ -3434,7 +3379,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 212,
                             ImageURL = "/images/css/CategoryImages/reagents/restriction_enzyme.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Enzyme Restriction"
                         },
@@ -3442,7 +3386,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 213,
                             ImageURL = "/images/css/CategoryImages/reagents/rna_enzyme.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Enzyme RNA"
                         },
@@ -3450,7 +3393,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 214,
                             ImageURL = "/images/css/CategoryImages/reagents/fplc_reagent.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "FPLC Reagent"
                         },
@@ -3458,7 +3400,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 215,
                             ImageURL = "/images/css/CategoryImages/reagents/TFF_reagent.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "TFF Reagent"
                         },
@@ -3466,7 +3407,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 216,
                             ImageURL = "/images/css/CategoryImages/reagents/nucleic_acid_quantitation.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Nucleic Acid Quantitation (DNA/RNA qubit assay, Picogreen assay)"
                         },
@@ -3474,7 +3414,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 217,
                             ImageURL = "/images/css/CategoryImages/reagents/general_reagents.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "General"
                         },
@@ -3482,7 +3421,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 301,
                             ImageURL = "/images/css/CategoryImages/biological/cell1.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 3,
                             ProductSubcategoryDescription = "Cells"
                         },
@@ -3490,7 +3428,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 302,
                             ImageURL = "/images/css/CategoryImages/biological/virus.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 3,
                             ProductSubcategoryDescription = "Virus"
                         },
@@ -3498,7 +3435,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 303,
                             ImageURL = "/images/css/CategoryImages/biological/plasmid2.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 3,
                             ProductSubcategoryDescription = "Plasmid"
                         },
@@ -3506,7 +3442,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 304,
                             ImageURL = "/images/css/CategoryImages/biological/bacteria.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 3,
                             ProductSubcategoryDescription = "Bacteria"
                         },
@@ -3514,7 +3449,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 305,
                             ImageURL = "/images/css/CategoryImages/biological/general.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 3,
                             ProductSubcategoryDescription = "General"
                         },
@@ -3522,7 +3456,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 401,
                             ImageURL = "/images/css/CategoryImages/reusable/all_reusables.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 4,
                             ProductSubcategoryDescription = "Reusable"
                         },
@@ -3530,7 +3463,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 501,
                             ImageURL = "/images/css/CategoryImages/safety/protective_wear.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 5,
                             ProductSubcategoryDescription = "PPE (Personal Protective Equipment)"
                         },
@@ -3538,7 +3470,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 502,
                             ImageURL = "/images/css/CategoryImages/safety/safety.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 5,
                             ProductSubcategoryDescription = "Lab Safety"
                         },
@@ -3546,7 +3477,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 601,
                             ImageURL = "/images/css/CategoryImages/general/general.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 6,
                             ProductSubcategoryDescription = "General"
                         },
@@ -3554,7 +3484,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 701,
                             ImageURL = "/images/css/CategoryImages/clinical/edta_tubes3.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 7,
                             ProductSubcategoryDescription = "EDTA Tubes"
                         },
@@ -3562,7 +3491,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 702,
                             ImageURL = "/images/css/CategoryImages/clinical/serum_tubes.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 7,
                             ProductSubcategoryDescription = "Serum Tubes"
                         },
@@ -3570,7 +3498,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 703,
                             ImageURL = "/images/css/CategoryImages/clinical/sample_collection.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 7,
                             ProductSubcategoryDescription = "Sample Collection and Processing (Blood, Saliva Collection, Swabsticks, Sepmate, and Ficoll for PBMC, Extraction kits for DNA/RNA)"
                         },
@@ -3578,7 +3505,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 801,
                             ImageURL = "/images/css/CategoryImages/it/communications.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 8,
                             ProductSubcategoryDescription = "Communications"
                         },
@@ -3586,7 +3512,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 802,
                             ImageURL = "/images/css/CategoryImages/it/cybersecurity.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 8,
                             ProductSubcategoryDescription = "Cybersecurity"
                         },
@@ -3594,7 +3519,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 803,
                             ImageURL = "/images/css/CategoryImages/it/hardware3.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 8,
                             ProductSubcategoryDescription = "Hardware"
                         },
@@ -3602,7 +3526,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 804,
                             ImageURL = "/images/css/CategoryImages/it/general.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 8,
                             ProductSubcategoryDescription = "General"
                         },
@@ -3610,7 +3533,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 901,
                             ImageURL = "/images/css/CategoryImages/daytoday/taxes2.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Bookeeping"
                         },
@@ -3618,7 +3540,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 902,
                             ImageURL = "/images/css/CategoryImages/daytoday/books.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Books"
                         },
@@ -3626,7 +3547,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 903,
                             ImageURL = "/images/css/CategoryImages/daytoday/branding.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Branding"
                         },
@@ -3634,7 +3554,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 904,
                             ImageURL = "/images/css/CategoryImages/daytoday/company_events.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Company Events"
                         },
@@ -3642,7 +3561,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 905,
                             ImageURL = "/images/css/CategoryImages/daytoday/electricity2.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Electricity"
                         },
@@ -3650,7 +3568,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 906,
                             ImageURL = "/images/css/CategoryImages/daytoday/fees.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Fees"
                         },
@@ -3658,7 +3575,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 907,
                             ImageURL = "/images/css/CategoryImages/daytoday/food.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Food"
                         },
@@ -3666,7 +3582,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 908,
                             ImageURL = "/images/css/CategoryImages/daytoday/furniture2.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Furniture"
                         },
@@ -3674,7 +3589,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 909,
                             ImageURL = "/images/css/CategoryImages/daytoday/general.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "General"
                         },
@@ -3682,7 +3596,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 910,
                             ImageURL = "/images/css/CategoryImages/daytoday/graphics.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Graphic"
                         },
@@ -3690,7 +3603,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 911,
                             ImageURL = "/images/css/CategoryImages/daytoday/insurance.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Insurance"
                         },
@@ -3698,7 +3610,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 912,
                             ImageURL = "/images/css/CategoryImages/daytoday/parking2.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Parking"
                         },
@@ -3706,7 +3617,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 913,
                             ImageURL = "/images/css/CategoryImages/daytoday/renovation.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Renovation"
                         },
@@ -3714,7 +3624,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 914,
                             ImageURL = "/images/css/CategoryImages/daytoday/rent2.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Rent"
                         },
@@ -3722,7 +3631,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 915,
                             ImageURL = "/images/css/CategoryImages/daytoday/shippment.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Shipment"
                         },
@@ -3730,7 +3638,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1001,
                             ImageURL = "/images/css/CategoryImages/travel/conference3.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 10,
                             ProductSubcategoryDescription = "Conference"
                         },
@@ -3738,7 +3645,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1002,
                             ImageURL = "/images/css/CategoryImages/travel/flight_tickets.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 10,
                             ProductSubcategoryDescription = "Flight Tickets"
                         },
@@ -3746,7 +3652,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1003,
                             ImageURL = "/images/css/CategoryImages/travel/food.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 10,
                             ProductSubcategoryDescription = "Food"
                         },
@@ -3754,7 +3659,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1004,
                             ImageURL = "/images/css/CategoryImages/travel/hotels3.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 10,
                             ProductSubcategoryDescription = "Hotels"
                         },
@@ -3762,7 +3666,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1005,
                             ImageURL = "/images/css/CategoryImages/travel/travel.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 10,
                             ProductSubcategoryDescription = "Travel"
                         },
@@ -3770,7 +3673,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1006,
                             ImageURL = "/images/css/CategoryImages/travel/general.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 10,
                             ProductSubcategoryDescription = "General"
                         },
@@ -3778,7 +3680,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1101,
                             ImageURL = "/images/css/CategoryImages/advice/business_advice.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 11,
                             ProductSubcategoryDescription = "Business Advice"
                         },
@@ -3786,7 +3687,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1102,
                             ImageURL = "/images/css/CategoryImages/advice/clinical_regulation2.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 11,
                             ProductSubcategoryDescription = "Clinical Regulations"
                         },
@@ -3794,7 +3694,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1103,
                             ImageURL = "/images/css/CategoryImages/advice/general.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 11,
                             ProductSubcategoryDescription = "General"
                         },
@@ -3802,7 +3701,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1104,
                             ImageURL = "/images/css/CategoryImages/advice/legal.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 11,
                             ProductSubcategoryDescription = "Legal"
                         },
@@ -3810,7 +3708,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1105,
                             ImageURL = "/images/css/CategoryImages/advice/scientific_advice3.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 11,
                             ProductSubcategoryDescription = "Scientific Advice"
                         },
@@ -3818,7 +3715,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1201,
                             ImageURL = "/images/css/CategoryImages/regulations/regulations.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 12,
                             ProductSubcategoryDescription = "Regulations"
                         },
@@ -3826,7 +3722,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1202,
                             ImageURL = "/images/css/CategoryImages/regulations/safety.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 12,
                             ProductSubcategoryDescription = "Safety"
                         },
@@ -3834,7 +3729,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1203,
                             ImageURL = "/images/css/CategoryImages/regulations/general.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 12,
                             ProductSubcategoryDescription = "General"
                         },
@@ -3842,7 +3736,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1301,
                             ImageURL = "/images/css/CategoryImages/government/taxes4.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 13,
                             ProductSubcategoryDescription = "Taxes"
                         },
@@ -3850,7 +3743,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1302,
                             ImageURL = "/images/css/CategoryImages/government/general.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 13,
                             ProductSubcategoryDescription = "General"
                         },
@@ -3858,7 +3750,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1401,
                             ImageURL = "/images/css/CategoryImages/samples/virus.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 14,
                             ProductSubcategoryDescription = "Virus"
                         },
@@ -3866,7 +3757,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1402,
                             ImageURL = "/images/css/CategoryImages/samples/plasmid.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 14,
                             ProductSubcategoryDescription = "Plasmid"
                         },
@@ -3874,7 +3764,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1403,
                             ImageURL = "/images/css/CategoryImages/samples/dna_probes2.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 14,
                             ProductSubcategoryDescription = "Probes"
                         },
@@ -3882,7 +3771,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1404,
                             ImageURL = "/images/css/CategoryImages/samples/cell1.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 14,
                             ProductSubcategoryDescription = "Cells"
                         },
@@ -3890,7 +3778,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1405,
                             ImageURL = "/images/css/CategoryImages/samples/bacteria2.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 14,
                             ProductSubcategoryDescription = "Bacteria with Plasmids"
                         },
@@ -3898,7 +3785,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1406,
                             ImageURL = "/images/css/CategoryImages/samples/blood.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 14,
                             ProductSubcategoryDescription = "Blood"
                         },
@@ -3906,7 +3792,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1407,
                             ImageURL = "/images/css/CategoryImages/samples/serum.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 14,
                             ProductSubcategoryDescription = "Serum"
                         },
@@ -3914,7 +3799,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1408,
                             ImageURL = "/images/css/CategoryImages/samples/buffer2.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 14,
                             ProductSubcategoryDescription = "Buffer"
                         },
@@ -3922,113 +3806,8 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 1409,
                             ImageURL = "/images/css/CategoryImages/samples/media2.png",
-                            IsOldSubCategory = false,
                             ParentCategoryID = 14,
                             ProductSubcategoryDescription = "Media"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1501,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1502,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1503,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1504,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1505,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 5,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1506,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1507,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 7,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1508,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 8,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1509,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1510,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 10,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1511,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 11,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1512,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 12,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1513,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 13,
-                            ProductSubcategoryDescription = "Old Subcategory"
                         });
                 });
 
@@ -4548,6 +4327,18 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("SubProjectID")
                         .HasColumnType("int");
 
+                    b.Property<long?>("SubSubUnit")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("SubSubUnitTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("SubUnit")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("SubUnitTypeID")
+                        .HasColumnType("int");
+
                     b.Property<int?>("Terms")
                         .HasColumnType("int");
 
@@ -4556,6 +4347,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<long>("Unit")
                         .HasColumnType("bigint");
+
+                    b.Property<int?>("UnitTypeID")
+                        .HasColumnType("int");
 
                     b.Property<byte?>("Warranty")
                         .HasColumnType("tinyint");
@@ -4579,6 +4373,12 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("RequestStatusID");
 
                     b.HasIndex("SubProjectID");
+
+                    b.HasIndex("SubSubUnitTypeID");
+
+                    b.HasIndex("SubUnitTypeID");
+
+                    b.HasIndex("UnitTypeID");
 
                     b.ToTable("Requests");
                 });
@@ -5269,7 +5069,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Json")
                         .HasColumnType("ntext");
 
-                    b.Property<int>("SequencePosition")
+                    b.Property<int>("SequenceSaved")
                         .HasColumnType("int");
 
                     b.HasKey("TempRequestJsonID");
@@ -5610,12 +5410,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             UnitTypeID = 18,
                             UnitParentTypeID = 3,
                             UnitTypeDescription = "assays"
-                        },
-                        new
-                        {
-                            UnitTypeID = -1,
-                            UnitParentTypeID = 1,
-                            UnitTypeDescription = "Quartzy Unit"
                         });
                 });
 
@@ -6287,21 +6081,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasBaseType("PrototypeWithAuth.Models.LocationInstance");
 
                     b.HasDiscriminator().HasValue("TemporaryLocationInstance");
-
-                    b.HasData(
-                        new
-                        {
-                            LocationInstanceID = -1,
-                            ContainsItems = false,
-                            Height = 0,
-                            IsEmptyShelf = true,
-                            IsFull = false,
-                            LocationInstanceAbbrev = "Quartzy",
-                            LocationInstanceName = "Quartzy Temporary",
-                            LocationNumber = 1,
-                            LocationTypeID = 600,
-                            Width = 0
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestNotificationStatus", b =>
@@ -6893,21 +6672,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Models.UnitType", "SubSubUnitType")
-                        .WithMany()
-                        .HasForeignKey("SubSubUnitTypeID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.UnitType", "SubUnitType")
-                        .WithMany()
-                        .HasForeignKey("SubUnitTypeID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.UnitType", "UnitType")
-                        .WithMany()
-                        .HasForeignKey("UnitTypeID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("PrototypeWithAuth.Models.Vendor", "Vendor")
                         .WithMany("Products")
                         .HasForeignKey("VendorID")
@@ -7042,6 +6806,21 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.SubProject", "SubProject")
                         .WithMany("Requests")
                         .HasForeignKey("SubProjectID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.UnitType", "SubSubUnitType")
+                        .WithMany()
+                        .HasForeignKey("SubSubUnitTypeID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.UnitType", "SubUnitType")
+                        .WithMany()
+                        .HasForeignKey("SubUnitTypeID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.UnitType", "UnitType")
+                        .WithMany()
+                        .HasForeignKey("UnitTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

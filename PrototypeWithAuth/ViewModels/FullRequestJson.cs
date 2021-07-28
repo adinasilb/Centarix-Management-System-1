@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class TempRequestListViewModel
+    public class FullRequestJson
     {
-        public Guid GUID { get; set; }
-        public int SequencePosition { get; set; }
         public List<TempRequestViewModel> TempRequestViewModels { get; set; }
         public RequestIndexObject RequestIndexObject { get; set; }
     }
