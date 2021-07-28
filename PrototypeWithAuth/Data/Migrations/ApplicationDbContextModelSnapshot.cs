@@ -3119,13 +3119,13 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal?>("SubSubUnit")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,10)");
 
                     b.Property<int?>("SubSubUnitTypeID")
                         .HasColumnType("int");
 
                     b.Property<decimal?>("SubUnit")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,10)");
 
                     b.Property<int?>("SubUnitTypeID")
                         .HasColumnType("int");

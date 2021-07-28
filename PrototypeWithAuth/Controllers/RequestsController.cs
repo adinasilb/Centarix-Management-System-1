@@ -4798,7 +4798,8 @@ namespace PrototypeWithAuth.Controllers
                 Invoice = new Invoice()
                 {
                     InvoiceDate = DateTime.Today
-                }
+                },
+                Guid = Guid.NewGuid()
             };
             return PartialView(addInvoiceViewModel);
         }
@@ -4814,6 +4815,9 @@ namespace PrototypeWithAuth.Controllers
                     _context.Add(addInvoiceViewModel.Invoice);
                     await _context.SaveChangesAsync();
 
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+                    string uploadFolderFrom = Path.Combine(uploadFolder, addInvoiceViewModel.Guid.ToString());
+                    string uplaodFolderPathFrom = Path.Combine(uploadFolderFrom, AppUtility.FolderNamesEnum.Invoices.ToString());
 
                     foreach (var request in addInvoiceViewModel.Requests)
                     {
@@ -4823,29 +4827,8 @@ namespace PrototypeWithAuth.Controllers
                         RequestToSave.Payments.FirstOrDefault().HasInvoice = true;
                         _context.Update(RequestToSave);
 
-                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-                        string requestFolder = Path.Combine(uploadFolder, request.RequestID.ToString());
-                        Directory.CreateDirectory(requestFolder);
-                        if (addInvoiceViewModel.InvoiceImage != null)
-                        {
-                            int x = 1;
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Invoices.ToString());
-                            if (Directory.Exists(folderPath))
-                            {
-                                var filesInDirectory = Directory.GetFiles(folderPath);
-                                x = filesInDirectory.Length + 1;
-                            }
-                            else
-                            {
-                                Directory.CreateDirectory(folderPath);
-                            }
-                            string uniqueFileName = x + addInvoiceViewModel.InvoiceImage.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            FileStream filestream = new FileStream(filePath, FileMode.Create);
-                            addInvoiceViewModel.InvoiceImage.CopyTo(filestream);
-                            filestream.Close();
-                        }
+                        MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, AppUtility.FolderNamesEnum.Invoices, true, addInvoiceViewModel.Guid);
+
                         await _context.SaveChangesAsync();
 
                     }

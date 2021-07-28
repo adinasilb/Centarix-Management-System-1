@@ -1216,6 +1216,34 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+        protected void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, AppUtility.FolderNamesEnum folderName, bool additionalRequests = false, Guid? guid = null)
+        {
+            //rename temp folder to the request id
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());   
+            var TempFolderName = guid == null ? "0" : guid.ToString();
+            string requestFolderFrom = Path.Combine(uploadFolder, TempFolderName);
+            string uplaodFolderPathFrom = Path.Combine(requestFolderFrom, folderName.ToString());
+            string requestFolderTo = Path.Combine(uploadFolder, id.ToString());
+            string uplaodFolderPathTo = Path.Combine(requestFolderTo, folderName.ToString());
+            if (Directory.Exists(uplaodFolderPathFrom))
+            {
+                if (Directory.Exists(uplaodFolderPathTo))
+                {
+                    //for now we are overwriting becuase it will never enter this if
+                    Directory.Delete(uplaodFolderPathTo, true);
+                }
+                if (additionalRequests)
+                {
+                    AppUtility.DirectoryCopy(uplaodFolderPathFrom, uplaodFolderPathTo, true);
+                }
+                else if (uplaodFolderPathFrom != uplaodFolderPathTo)
+                {
+                    Directory.Move(requestFolderFrom, uplaodFolderPathTo);
+                }
+            }
+        }
+
+
         protected async Task<RequestItemViewModel> FillRequestDropdowns(RequestItemViewModel requestItemViewModel, ProductSubcategory productSubcategory, int categoryTypeId)
         {
             var parentcategories = new List<ParentCategory>();
