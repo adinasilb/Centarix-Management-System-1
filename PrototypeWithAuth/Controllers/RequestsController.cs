@@ -5052,7 +5052,7 @@ namespace PrototypeWithAuth.Controllers
             uploadOrderViewModel.TempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
             uploadOrderViewModel.ParentRequest = pr;
 
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentRequest.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, requestIndexObject.GUID.ToString());
             string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Orders.ToString());
 
