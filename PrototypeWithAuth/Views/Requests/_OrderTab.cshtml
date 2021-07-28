@@ -8,13 +8,13 @@
 
 
 }
-<div class="row">
+@*<div class="row">
     @if (Model.ErrorMessage != null)
     {
         <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
 
     }
-</div>
+</div>*@
 <div class="row">
     <div class="col-12">
         <span class="heading-1 modal-tab-name">Order</span>
@@ -159,12 +159,9 @@
             error: function (jqxhr) {
                 console.log("in error of ajax call ");
                 $("#loading").hide();
-                if (jqxhr.status == 500) {
-                    // alert("made it to error")
-                    $("#order").html(jqxhr.responseText);
-                    $(".order-tab").trigger("click");
-                }
+                $('.error-message').html(jqxhr.responseText);
             }
+            
         });
     };
 </script>

@@ -593,6 +593,7 @@ namespace PrototypeWithAuth.Controllers
                 var trlvm = new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() };
                 foreach (var request in requestItemViewModel.Requests)
                 {
+                    //throw new Exception();
                     if (!request.Ignore)
                     {
                         request.ApplicationUserCreatorID = currentUser.Id;
@@ -600,10 +601,10 @@ namespace PrototypeWithAuth.Controllers
                         {
                             request.Product.VendorID = vendor.VendorID;
                             request.Product.Vendor = vendor;
+                            request.CreationDate = DateTime.Now;
                         }
 
                         request.Product.ProductSubcategory = await _context.ProductSubcategories.Include(ps => ps.ParentCategory).Where(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategoryID).FirstOrDefaultAsync();
-                        request.CreationDate = DateTime.Now;
                         var isInBudget = false;
                         if (!request.Product.ProductSubcategory.ParentCategory.IsProprietary)
                         {
@@ -627,7 +628,7 @@ namespace PrototypeWithAuth.Controllers
                             trvm.Comments = new List<Comment>();
                             foreach (var comment in requestItemViewModel.Comments)
                             {
-                                if (comment.CommentText.Length != 0)
+                                if (comment.CommentText != null && comment.CommentText?.Length != 0)
                                 {
                                     //save the new comment
                                     comment.ApplicationUserID = currentUser.Id;
@@ -706,15 +707,17 @@ namespace PrototypeWithAuth.Controllers
             catch (Exception ex)
             {
                 //Redirect Results Need to be checked here
-                requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
+                //requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 await RemoveTempRequestAsync(requestItemViewModel.TempRequestListViewModel.GUID);
                 //Response.WriteAsync(ex.Message?.ToString());
-                if (requestItemViewModel.RequestStatusID == 7)
+                /*if (requestItemViewModel.RequestStatusID == 7)
                 {
-                    return new RedirectToActionResult(actionName: "CreateItemTabs", controllerName: "Requests", routeValues: new { RequestItemViewModel = requestItemViewModel });
+                    return new RedirectToActionResult(actionName: "CreateItemTabs", controllerName: "Requests", routeValues: requestItemViewModel );
                 }
-                return new RedirectToActionResult(actionName: "_OrderTab", controllerName: "Requests", routeValues: new { RequestItemViewMOdel = requestItemViewModel });
+                return new RedirectToActionResult(actionName: "_OrderTab", controllerName: "Requests", routeValues: requestItemViewModel );*/
+                throw ex;
+                
             }
             requestItemViewModel.TempRequestListViewModel.RequestIndexObject = new RequestIndexObject()
             {
@@ -909,7 +912,7 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.OrderTypeEnum.RequestPriceQuote:
                             trvm = await RequestItem(newRequest, isInBudget);
                             break;
-                        case AppUtility.OrderTypeEnum.Save:
+                        case AppUtility.OrderTypeEnum.Save: //proprietary
                             trvm = await SaveItem(newRequest, tempRequestListViewModel.GUID);
                             break;
                         case AppUtility.OrderTypeEnum.SaveOperations:
@@ -1578,7 +1581,12 @@ namespace PrototypeWithAuth.Controllers
                                     _context.Add(requestNotification);
                                 }
                             }
-                            MoveDocumentsOutOfTempFolder((int)newTRLVM.TempRequestViewModels[0].Request.ParentQuoteID, AppUtility.ParentFolderName.ParentQuote, false, newTRLVM.GUID); //either they all have same parentquote, or the parentquotes are already outof the temp folder
+                            MoveDocumentsOutOfTempFolder((int)newTRLVM.TempRequestViewModels[0].Request.ParentRequestID, AppUtility.ParentFolderName.ParentRequest, false, newTRLVM.GUID); //either they all have same parentrequests are already outof the temp folder
+                           if(newTRLVM.TempRequestViewModels[0].Request.ParentQuoteID !=null)
+                            {
+                                MoveDocumentsOutOfTempFolder((int)newTRLVM.TempRequestViewModels[0].Request.ParentQuoteID, AppUtility.ParentFolderName.ParentQuote, false, newTRLVM.GUID); //either they all have same parentrequests are already outof the temp folder
+
+                            }
                             await _context.SaveChangesAsync();
                             await transaction.CommitAsync();
 
@@ -1981,8 +1989,16 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddItemView(AppUtility.OrderTypeEnum OrderType, TempRequestListViewModel tempRequestListViewModel, RequestItemViewModel requestItemViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             requestItemViewModel.TempRequestListViewModel = tempRequestListViewModel;
-            var redirectToActionResult = SaveAddItemView(requestItemViewModel, OrderType, receivedModalVisualViewModel).Result;
-            return RedirectToAction(redirectToActionResult.ActionName, redirectToActionResult.ControllerName, redirectToActionResult.RouteValues);
+            try
+            {
+                var redirectToActionResult = SaveAddItemView(requestItemViewModel, OrderType, receivedModalVisualViewModel).Result;
+                return RedirectToAction(redirectToActionResult.ActionName, redirectToActionResult.ControllerName, redirectToActionResult.RouteValues);
+            }
+            catch(Exception ex)
+            {
+                requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
+                return PartialView("_ErrorMessage", requestItemViewModel.ErrorMessage);
+            }
         }
 
         private static List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder, FavoriteRequest favoriteRequest = null, Request request = null, ApplicationUser user = null)
@@ -2022,7 +2038,8 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> CreateItemTabs(int productSubCategoryId, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, string itemName = "", bool isRequestQuote = false)
+        public async Task<IActionResult> CreateItemTabs(int productSubCategoryId, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, string itemName = "", 
+            bool isRequestQuote = false)
         { //TODO : CHECK IF WE NEED TO DELETE GUID DOCS HERE
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             var categoryType = 1;
@@ -4808,7 +4825,8 @@ namespace PrototypeWithAuth.Controllers
                 Invoice = new Invoice()
                 {
                     InvoiceDate = DateTime.Today
-                }
+                },
+                Guid = Guid.NewGuid()
             };
             return PartialView(addInvoiceViewModel);
         }
@@ -4824,6 +4842,9 @@ namespace PrototypeWithAuth.Controllers
                     _context.Add(addInvoiceViewModel.Invoice);
                     await _context.SaveChangesAsync();
 
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+                    string uploadFolderFrom = Path.Combine(uploadFolder, addInvoiceViewModel.Guid.ToString());
+                    string uplaodFolderPathFrom = Path.Combine(uploadFolderFrom, AppUtility.FolderNamesEnum.Invoices.ToString());
 
                     foreach (var request in addInvoiceViewModel.Requests)
                     {
@@ -4833,29 +4854,8 @@ namespace PrototypeWithAuth.Controllers
                         RequestToSave.Payments.FirstOrDefault().HasInvoice = true;
                         _context.Update(RequestToSave);
 
-                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-                        string requestFolder = Path.Combine(uploadFolder, request.RequestID.ToString());
-                        Directory.CreateDirectory(requestFolder);
-                        if (addInvoiceViewModel.InvoiceImage != null)
-                        {
-                            int x = 1;
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Invoices.ToString());
-                            if (Directory.Exists(folderPath))
-                            {
-                                var filesInDirectory = Directory.GetFiles(folderPath);
-                                x = filesInDirectory.Length + 1;
-                            }
-                            else
-                            {
-                                Directory.CreateDirectory(folderPath);
-                            }
-                            string uniqueFileName = x + addInvoiceViewModel.InvoiceImage.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            FileStream filestream = new FileStream(filePath, FileMode.Create);
-                            addInvoiceViewModel.InvoiceImage.CopyTo(filestream);
-                            filestream.Close();
-                        }
+                        MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, AppUtility.FolderNamesEnum.Invoices, true, addInvoiceViewModel.Guid);
+
                         await _context.SaveChangesAsync();
 
                     }
@@ -5089,7 +5089,7 @@ namespace PrototypeWithAuth.Controllers
             uploadOrderViewModel.TempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
             uploadOrderViewModel.ParentRequest = pr;
 
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentRequest.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, requestIndexObject.GUID.ToString());
             string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Orders.ToString());
 

@@ -158,8 +158,9 @@
                             <div class="col-5">
                                 <label asp-for="InvoiceImage" class="control-label"></label>
                                 <br />
+                                <input type="hidden" asp-for="Guid" class="hidden-guid" />
                                 <button class="my-2 accounting-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()"
-                                        data-id="@Model.Requests[0].RequestID" parentfolder="@AppUtility.ParentFolderName.Requests"
+                                        data-id="0"     parentfolder="@AppUtility.ParentFolderName.Requests"
                                         id="@AppUtility.FolderNamesEnum.Invoices.ToString()" data-val="@true" show-switch="@false">
                                     Select File
                                 </button>

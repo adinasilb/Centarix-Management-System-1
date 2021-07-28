@@ -588,13 +588,20 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
             string quoteFolder = "";
             string requestFolder = "";
+            string ordersFolder = "";
             AppUtility.ParentFolderName quoteParentFolderName = AppUtility.ParentFolderName.ParentQuote;
             AppUtility.ParentFolderName requestParentFolderName = AppUtility.ParentFolderName.Requests;
+            AppUtility.ParentFolderName parentRequestFolderName = AppUtility.ParentFolderName.ParentRequest;
 
             if (parentQuoteId != null)
             {
                 string quoteParentFolder = Path.Combine(_hostingEnvironment.WebRootPath, quoteParentFolderName.ToString());
                 quoteFolder = Path.Combine(quoteParentFolder, parentQuoteId.ToString());
+            }
+            if (requestItemViewModel.Requests.FirstOrDefault().ParentRequestID != null)
+            {
+                string parentRequestFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentRequestFolderName.ToString());
+                ordersFolder = Path.Combine(parentRequestFolder, requestItemViewModel.Requests.FirstOrDefault().ParentRequestID.ToString());
             }
             if (requestId != null) //eventually change to/add? parent request...
             {
@@ -603,17 +610,14 @@ namespace PrototypeWithAuth.Controllers
             }
             if (productSubcategory.ParentCategory.IsProprietary)
             {
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, requestParentFolderName, requestFolder, requestId);
                 if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
                 {
                     GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.S, requestParentFolderName, requestFolder, requestId);
                 }
-                else if (!new List<string>() { "Blood", "Serum", "Cells", "Buffer", "Media" }.Contains(productSubcategory.ProductSubcategoryDescription))
+                else if (new List<string>() { "Virus", "Plasmid", "Bacteria with Plasmids" }.Contains(productSubcategory.ProductSubcategoryDescription))
                 {
-                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, requestParentFolderName, requestFolder, requestId);
-                    if (productSubcategory.ProductSubcategoryDescription != "Probes")
-                    {
-                        GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Map, requestParentFolderName, requestFolder, requestId);
-                    }
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Map, requestParentFolderName, requestFolder, requestId);
                 }
             }
             else if (requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID == 2)
@@ -621,7 +625,7 @@ namespace PrototypeWithAuth.Controllers
                 
                 if(requestItemViewModel.Requests.FirstOrDefault().ParentRequestID !=null)
                 {
-                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, quoteParentFolderName, quoteFolder, requestItemViewModel.Requests.FirstOrDefault().ParentRequestID.ToString());
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, AppUtility.ParentFolderName.ParentRequest, ordersFolder, requestItemViewModel.Requests.FirstOrDefault().ParentRequestID.ToString());
                 }
                 if (requestItemViewModel.Requests.FirstOrDefault().Payments != null && requestItemViewModel.Requests.FirstOrDefault().Payments.Count() != 0)
                 {
@@ -644,7 +648,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 if (requestItemViewModel.Requests.FirstOrDefault().ParentRequestID != null)
                 {
-                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, quoteParentFolderName, quoteFolder, requestItemViewModel.Requests.FirstOrDefault().ParentRequestID.ToString());
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, AppUtility.ParentFolderName.ParentRequest, ordersFolder, requestItemViewModel.Requests.FirstOrDefault().ParentRequestID.ToString());
                 }
                 if (requestItemViewModel.Requests.FirstOrDefault().Payments != null && requestItemViewModel.Requests.FirstOrDefault().Payments.Count() != 0)
                 {
@@ -1208,6 +1212,34 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
         }
+
+        protected void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, AppUtility.FolderNamesEnum folderName, bool additionalRequests = false, Guid? guid = null)
+        {
+            //rename temp folder to the request id
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());   
+            var TempFolderName = guid == null ? "0" : guid.ToString();
+            string requestFolderFrom = Path.Combine(uploadFolder, TempFolderName);
+            string uplaodFolderPathFrom = Path.Combine(requestFolderFrom, folderName.ToString());
+            string requestFolderTo = Path.Combine(uploadFolder, id.ToString());
+            string uplaodFolderPathTo = Path.Combine(requestFolderTo, folderName.ToString());
+            if (Directory.Exists(uplaodFolderPathFrom))
+            {
+                if (Directory.Exists(uplaodFolderPathTo))
+                {
+                    //for now we are overwriting becuase it will never enter this if
+                    Directory.Delete(uplaodFolderPathTo, true);
+                }
+                if (additionalRequests)
+                {
+                    AppUtility.DirectoryCopy(uplaodFolderPathFrom, uplaodFolderPathTo, true);
+                }
+                else if (uplaodFolderPathFrom != uplaodFolderPathTo)
+                {
+                    Directory.Move(requestFolderFrom, uplaodFolderPathTo);
+                }
+            }
+        }
+
 
         protected async Task<RequestItemViewModel> FillRequestDropdowns(RequestItemViewModel requestItemViewModel, ProductSubcategory productSubcategory, int categoryTypeId)
         {
