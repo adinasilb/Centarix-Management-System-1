@@ -320,11 +320,12 @@ $(function () {
     });
 
     $("#Months, #Years").off("change").on("change", function (e) {
-        var years = [];
+        /*var years = [];
         years = $("#Years").val();
         var months = [];
-        months = $("#Months").val();
-        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET", undefined, "", months, years);
+        months = $("#Months").val();*/
+        $('.page-number').val(1);
+        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET" /*, undefined, "", months, years*/);
         return false;
     });
 
@@ -371,12 +372,22 @@ $(function () {
     })
 
 
-    $.fn.ajaxPartialIndexTable = function (status, url, viewClass, type, formdata, modalClass = "", months, years, isArchive) {
+    $.fn.ajaxPartialIndexTable = function (status, url, viewClass, type, formdata, modalClass = "", /*months, years, */) {
         console.log("in ajax partial index call " + url);
         //alert('before bind filter')
         if ($("#inventoryFilterContent").length) {
             var selectedFilters = $.fn.BindSelectedFilters("");
             console.log('in if')
+        }
+        var monthsString = "";
+        var yearsString = "";
+        var months = $("#Months").val();
+        var years = $("#Years").val();
+        if (months != undefined) {
+            months.forEach(month => monthsString += "&months=" + month)
+        }
+        if (years != undefined) {
+            years.forEach(year => yearsString += "&years=" + year)
         }
 /*        var selectedPriceSort = [];
         $("#priceSortContent1 .priceSort:checked").each(function (e) {
@@ -407,7 +418,9 @@ $(function () {
             } else {
                 url += "&";
             }
-            url += $.fn.getRequestIndexString(status) + "&isArchive=" + isArchive;
+            url += $.fn.getRequestIndexString(status);
+            url += monthsString;
+            url += yearsString;
             //formdata = {}; //so won't crash when do object.assign()
             //console.log(formdata)
 		}

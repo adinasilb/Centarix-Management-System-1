@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrototypeWithAuth.Models
 {
@@ -30,16 +31,29 @@ namespace PrototypeWithAuth.Models
         public ProductSubcategory ProductSubcategory { get; set; }
         
         public IEnumerable<Request> Requests { get; set; }
-        public string Handeling { get; set; }
 
+        public int? UnitTypeID { get; set; }
+        [ForeignKey("UnitTypeID")]
+        [Display(Name = "Unit")]
 
-        public int? QuantityPerUnit { get; set; }
+        public UnitType UnitType { get; set; }
+        // public int[] UnitTypes { get; set; }
+        [Display(Name = "Amount")]
+        [Range(0, double.MaxValue)]
+        public decimal? SubUnit { get; set; } // if this is not null, then it this is the smallest unit - amount of subunit
+        public int? SubUnitTypeID { get; set; }
+        [ForeignKey("SubUnitTypeID")]
+        [Display(Name = "Unit")]
+        public UnitType SubUnitType { get; set; }
+        [Display(Name = "Amount")]
+        [Range(0, Double.MaxValue)]
+        public decimal? SubSubUnit { get; set; } // if this is not null, then it this is the smallest unit - amount of subsubunit
 
-        public int? UnitsInStock { get; set; }
+        public int? SubSubUnitTypeID { get; set; }
 
-        public int? UnitsInOrder { get; set; }
-
-        public int ?ReorderLevel { get; set; }
+        [ForeignKey("SubSubUnitTypeID")]
+        [Display(Name = "Unit")]
+        public UnitType SubSubUnitType { get; set; }
 
         public string ProductComment { get; set; }
         

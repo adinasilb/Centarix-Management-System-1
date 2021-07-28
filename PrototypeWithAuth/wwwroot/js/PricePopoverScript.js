@@ -37,12 +37,12 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
         $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableDataByVendor", "._IndexTableDataByVendor", "POST");
     }
     else {
-        if ($('#masterPageType').val() == "AccountingGeneral") {
+        /*if ($('#masterPageType').val() == "AccountingGeneral") {
             var year = $("#Years").val();
             var month = $("#Months").val();
 
-        }
-        $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "POST", undefined, "", month, year);
+        }*/
+        $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "POST"/*, undefined, "", month, year*/);
     }
     return false;
 
@@ -75,12 +75,12 @@ $(".open-price-popover").off('click').click(function () {
             $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableDataByVendor", "._IndexTableDataByVendor", "GET");
         }
         else {
-            if ($('#masterPageType').val() == "AccountingGeneral") {
+            /*if ($('#masterPageType').val() == "AccountingGeneral") {
                 var year = $("#Years").val();
                 var month = $("#Months").val();
 
-            }
-            $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "POST", undefined, "", month, year);
+            }*/
+            $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "POST"/*, undefined, "", month, year*/);
         }
         return false;
     })

@@ -327,6 +327,15 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Material>()
                 .HasQueryFilter(item => !item.IsDeleted);
 
+            modelBuilder.Entity<ProductSubcategory>()
+           .HasQueryFilter(item => !item.IsOldSubCategory);
+
+            modelBuilder.Entity<LocationType>()
+           .HasQueryFilter(item => item.LocationTypeID !=600);
+
+            modelBuilder.Entity<LocationInstance>()
+        .HasQueryFilter(item => item.LocationTypeID != 600);
+
             modelBuilder.Entity<SalariedEmployee>().Ignore(e => e.WorkScope);
             modelBuilder.Entity<Employee>().Ignore(e => e.NetSalary);
             modelBuilder.Entity<Employee>().Ignore(e => e.TotalCost);
@@ -335,8 +344,6 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Employee>().Ignore(e => e.VacationDaysPerMonth);
             modelBuilder.Entity<Request>().Ignore(e => e.VAT);
             modelBuilder.Entity<Request>().Ignore(e => e.PricePerUnit);
-            modelBuilder.Entity<Request>().Ignore(e => e.PricePerSubUnit);
-            modelBuilder.Entity<Request>().Ignore(e => e.PricePerSubSubUnit);
             modelBuilder.Entity<Request>().Ignore(e => e.TotalWithVat);
             modelBuilder.Entity<Request>().Ignore(e => e.Ignore);
             modelBuilder.Entity<Request>().Ignore(e => e.IsReceived);
@@ -357,6 +364,8 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Product>().Property(r => r.ProductCreationDate).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<TempLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<FunctionLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<ParentRequest>().HasIndex(p => p.OrderNumber).IsUnique();
+            modelBuilder.Entity<Product>().HasIndex(p => p.SerialNumber).IsUnique();
             /*PROTOCOLS*/
             ///set up composite keys
 

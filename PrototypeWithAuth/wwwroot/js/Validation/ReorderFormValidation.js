@@ -4,33 +4,31 @@
     return $.trim( value );
   },
 
-		"Request.Unit": {
+		"RequestItemViewModel.Requests[0].Unit": {
 			required: true,
 			number: true,
 			min: 1,
 			integer: true
 		},
-		"Request.SubUnit": {
+		"RequestItemViewModel.Requests[0].Product.SubUnit": {
 			required: true,
 			number: true,
-			min: 1,
-			integer: true
+			min: 0
 		},
-		"Request.SubSubUnit": {
+		"RequestItemViewModel.Requests[0].Product.SubSubUnit": {
 			required: true,
 			number: true,
-			min: 1,
-			integer: true
+			min: 0,
 		},
-		"Request.Cost": {
+		"RequestItemViewModel.Requests[0].Cost": {
 			required: true,
 			number: true,
 			min: 1
 		},
 
-		"Request.UnitTypeID": "selectRequired",
-		"Request.SubUnitTypeID": "selectRequired",
-		"Request.SubSubUnitTypeID": "selectRequired"
+		"RequestItemViewModel.Requests[0].Product.UnitTypeID": "selectRequired",
+		"RequestItemViewModel.Requests[0].Product.SubUnitTypeID": "selectRequired",
+		"RequestItemViewModel.Requests[0].Product.SubSubUnitTypeID": "selectRequired"
 
 	},
 

@@ -151,14 +151,14 @@
                                         @Model.Requests[i].Product.ProductName
                                     </td>
                                     <td width="15%">
-                                        @Model.Requests[i].Unit &nbsp;@Model.Requests[i].UnitType.UnitTypeDescription
-                                        @if (Model.Requests[i].SubUnitType != null)
+                                        @Model.Requests[i].Unit &nbsp;@Model.Requests[i].Product.UnitType.UnitTypeDescription
+                                        @if (Model.Requests[i].Product.SubUnitType != null)
                                         {
                                             <br />
-                                            @Model.Requests[i].SubUnit @Model.Requests[i].SubUnitType.UnitTypeDescription
-                                            @if (Model.Requests[i].SubSubUnitType != null)
+                                            @Model.Requests[i].Product.SubUnit @Model.Requests[i].Product.SubUnitType.UnitTypeDescription
+                                            @if (Model.Requests[i].Product.SubSubUnitType != null)
                                             {
-                                                <br />@Model.Requests[i].SubSubUnit @Model.Requests[i].SubSubUnitType.UnitTypeDescription
+                                                <br />@Model.Requests[i].Product.SubSubUnit @Model.Requests[i].Product.SubSubUnitType.UnitTypeDescription
                                             }
                                         }
                                     </td>
