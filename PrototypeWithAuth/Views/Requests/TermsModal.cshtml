@@ -36,6 +36,7 @@
         e.preventDefault();
         console.log("in cancel terms");
         var guid = $('#GUID').val();
+        var sequencePosition = $("#SequencePosition").val();
         if ($("#masterSectionType").val() == "LabManagement") {
             var formData = new FormData($(".termsModalForm")[0]);
             $.ajax({
@@ -48,13 +49,17 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
+                    alert("data: " + data);
                     $.fn.CloseModal("terms");
                 }
             });
         }
         else if ($('#masterSidebarType').val() != 'Cart') {
-            $.fn.AddTempRequestHiddenFors(guid, '.modal .temprequesthiddenfors');
-            $.fn.CloseModal('terms');
+            var e = $.fn.AddTempRequestHiddenFors(guid, sequencePosition, '.modal .temprequesthiddenfors');
+            console.log("error: " + e);
+            if (!e) {
+                $.fn.CloseModal('terms');
+            }
         }
         else {
             $.fn.CloseModal('terms');
