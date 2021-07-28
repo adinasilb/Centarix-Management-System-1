@@ -621,7 +621,7 @@ namespace PrototypeWithAuth.Controllers
                 
                 if(requestItemViewModel.Requests.FirstOrDefault().ParentRequestID !=null)
                 {
-                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, quoteParentFolderName, quoteFolder, requestItemViewModel.Requests.FirstOrDefault().ParentRequestID.ToString());
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, AppUtility.ParentFolderName.ParentRequest, quoteFolder, requestItemViewModel.Requests.FirstOrDefault().ParentRequestID.ToString());
                 }
                 if (requestItemViewModel.Requests.FirstOrDefault().Payments != null && requestItemViewModel.Requests.FirstOrDefault().Payments.Count() != 0)
                 {
@@ -644,7 +644,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 if (requestItemViewModel.Requests.FirstOrDefault().ParentRequestID != null)
                 {
-                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, quoteParentFolderName, quoteFolder, requestItemViewModel.Requests.FirstOrDefault().ParentRequestID.ToString());
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, AppUtility.ParentFolderName.ParentRequest, quoteFolder, requestItemViewModel.Requests.FirstOrDefault().ParentRequestID.ToString());
                 }
                 if (requestItemViewModel.Requests.FirstOrDefault().Payments != null && requestItemViewModel.Requests.FirstOrDefault().Payments.Count() != 0)
                 {

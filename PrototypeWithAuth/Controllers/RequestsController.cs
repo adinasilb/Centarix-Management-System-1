@@ -1539,7 +1539,12 @@ namespace PrototypeWithAuth.Controllers
                                     _context.Add(requestNotification);
                                 }
                             }
-                            MoveDocumentsOutOfTempFolder((int)newTRLVM.TempRequestViewModels[0].Request.ParentQuoteID, AppUtility.ParentFolderName.ParentQuote, false, newTRLVM.GUID); //either they all have same parentquote, or the parentquotes are already outof the temp folder
+                            MoveDocumentsOutOfTempFolder((int)newTRLVM.TempRequestViewModels[0].Request.ParentRequestID, AppUtility.ParentFolderName.ParentRequest, false, newTRLVM.GUID); //either they all have same parentrequests are already outof the temp folder
+                           if(newTRLVM.TempRequestViewModels[0].Request.ParentQuoteID !=null)
+                            {
+                                MoveDocumentsOutOfTempFolder((int)newTRLVM.TempRequestViewModels[0].Request.ParentQuoteID, AppUtility.ParentFolderName.ParentQuote, false, newTRLVM.GUID); //either they all have same parentrequests are already outof the temp folder
+
+                            }
                             await _context.SaveChangesAsync();
                             await transaction.CommitAsync();
 
