@@ -38,7 +38,7 @@
             </button>
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
                 @{ await Html.RenderPartialAsync("_TempRequestHiddenFors", Model.TempRequestListViewModel);}
-                
+
                 @Html.HiddenFor(model => model.ParentRequest.ApplicationUserID)
                 @Html.HiddenFor(model => model.ParentRequest.OrderNumber)
                 <div>
@@ -85,45 +85,45 @@
                             <label class="control-label text-center text document-text-margin" style="width:100%;">Order</label>
                         </div>
                         <div class="col-4 pl-5 pt-4">
+                            <div class="row">
+                                <div class=" col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="@Model.ParentRequest.SupplierOrderNumber" class=" control-label m-0 mt-2" style="width:100%;">Order Number</label>
+                                        <input asp-for="@Model.ParentRequest.SupplierOrderNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" />
+                                        <span asp-validation-for="@Model.ParentRequest.SupplierOrderNumber" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>
+                                <div class=" col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="@Model.ParentRequest.OrderDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                        <input asp-for="@Model.ParentRequest.OrderDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" asp-format="@AppUtility.AspDateFormatString" data-val="@Model.ParentRequest.OrderDate.ToString("yyyy-MM-dd")" />
+                                        <span asp-validation-for="@Model.ParentRequest.OrderDate" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (Model.TempRequestListViewModel.RequestIndexObject.IsReorder)
+                            {
                                 <div class="row">
-                                    <div class=" col-md-6">
-                                        <div class="form-group">
-                                            <label asp-for="@Model.ParentRequest.SupplierOrderNumber" class=" control-label m-0 mt-2" style="width:100%;">Order Number</label>
-                                            <input asp-for="@Model.ParentRequest.SupplierOrderNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" />
-                                            <span asp-validation-for="@Model.ParentRequest.SupplierOrderNumber" class="text-danger-centarix"></span>
+                                    <div class="col-md-6">
+                                        <div class="form-group ">
+                                            <label asp-for="@Model.ExpectedSupplyDays" class=" control-label m-0 mt-2" style="width:100%;"></label>
+                                            <input asp-for="@Model.ExpectedSupplyDays" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0 expected-supply-days" min="1" />
+                                            <span asp-validation-for="@Model.ExpectedSupplyDays" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class=" col-md-6">
                                         <div class="form-group">
-                                            <label asp-for="@Model.ParentRequest.OrderDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                            <input asp-for="@Model.ParentRequest.OrderDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" asp-format="@AppUtility.AspDateFormatString" data-val="@Model.ParentRequest.OrderDate.ToString("yyyy-MM-dd")" />
-                                            <span asp-validation-for="@Model.ParentRequest.OrderDate" class="text-danger-centarix"></span>
+                                            <label class="control-label">Expected supply date</label>
+                                            <input value="" class="form-control-plaintext border-bottom datepicker expected-supply-date" type="text" name="expected-supply-days" />
                                         </div>
                                     </div>
                                 </div>
+                            }
 
-                                @if (Model.TempRequestListViewModel.RequestIndexObject.IsReorder)
-                                {
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group ">
-                                                <label asp-for="@Model.ExpectedSupplyDays" class=" control-label m-0 mt-2" style="width:100%;"></label>
-                                                <input asp-for="@Model.ExpectedSupplyDays" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0 expected-supply-days" min="1" />
-                                                <span asp-validation-for="@Model.ExpectedSupplyDays" class="text-danger-centarix"></span>
-                                            </div>
-                                        </div>
-                                        <div class=" col-md-6">
-                                            <div class="form-group">
-                                                <label class="control-label">Expected supply date</label>
-                                                <input value="" class="form-control-plaintext border-bottom datepicker expected-supply-date" type="text" name="expected-supply-days" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                 }
-                                    
-                               
+
                         </div>
-                            </div>
+                    </div>
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
@@ -203,27 +203,32 @@
     $(".cancel-order").click(function (e) {
         e.preventDefault();
         console.log("in cancel order");
+        var guid = $("#GUID").val();
+        var sequence = $("#SequencePosition").val();
         var selector = '.temprequesthiddenfors';
         if ($('#RequestIndexObject_IsReorder').attr('value') === 'True') {
             selector = '.modal .temprequesthiddenfors';
         }
-        console.log(selector);
-        var formData = new FormData($(".uploadQuoteForm")[0]);
-        $.ajax({
-            contentType: false,
-            processData: false,
-            async: true,
-            url: "/Requests/UploadOrderModal?isCancel=true",
-            data: formData,
-            traditional: true,
-            type: "POST",
-            cache: false,
-            success: function (data) {
-                $.fn.CloseModal('step-1');
-                $.fn.AddTempRequestHiddenFors($('.hidden-guid').val(), selector);
-            }
-        });
-        
+        //console.log(selector);
+        //var formData = new FormData($(".uploadQuoteForm")[0]);
+        //$.ajax({
+        //    contentType: false,
+        //    processData: false,
+        //    async: true,
+        //    url: "/Requests/UploadOrderModal?isCancel=true",
+        //    data: formData,
+        //    traditional: true,
+        //    type: "POST",
+        //    cache: false,
+        //    success: function (data) {
+        //        $.fn.CloseModal('step-1');
+        var e = $.fn.AddTempRequestHiddenFors(guid, sequence, selector);
+        if (!e) {
+            $.fn.CloseModal('step-1');
+        }
+        //    }
+        //});
+
     });
 </script>
 
