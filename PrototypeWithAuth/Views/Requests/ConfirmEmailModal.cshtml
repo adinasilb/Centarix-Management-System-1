@@ -41,7 +41,7 @@
                     <div class="m-auto">
                         <input type="submit" class="custom-button custom-button-font @bcColor between-button-margin complete-order" asp-action="ConfirmEmailModal" value="Confirm & Send Email" />
 
-                        <input type="button" class="custom-cancel custom-button cancel-email cancelEmail"  asp-action="CancelEmailModal @bcColor" value="Cancel Email" />
+                        <input type="button" class="custom-cancel custom-button cancel-email cancelEmail" asp-action="CancelEmailModal @bcColor" value="Cancel Email" />
                     </div>
                 </div>
                 <script>
@@ -62,7 +62,10 @@
         e.preventDefault();
         console.log("in cancel email");
         var guid = $('#GUID').val();
-        $.fn.CloseModal('confirm-email');
-        $.fn.AddTempRequestHiddenFors(guid, '.termsModal .temprequesthiddenfors');
+        var sequence = $("#SequencePosition").val();
+        var e = $.fn.AddTempRequestHiddenFors(guid, sequence, '.termsModal .temprequesthiddenfors');
+        if (!e) {
+            $.fn.CloseModal('confirm-email');
+        }
     })
 </script>

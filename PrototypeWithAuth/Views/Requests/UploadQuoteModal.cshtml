@@ -151,8 +151,10 @@
             selector = '.modal .temprequesthiddenfors';
         }
         console.log(selector)
-        $.fn.CloseModal('step-1');
-        $.fn.AddTempRequestHiddenFors(guid, sequence, selector);
+        var e = $.fn.AddTempRequestHiddenFors(guid, sequence, selector);
+        if (!e) {
+            $.fn.CloseModal('step-1');
+        }
     });
     
     $(".submitQuote").off('click').on("click", function (e) {

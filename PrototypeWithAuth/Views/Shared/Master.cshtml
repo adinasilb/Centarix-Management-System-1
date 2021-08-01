@@ -1285,18 +1285,28 @@
 
         $.fn.AddTempRequestHiddenFors = function (guid, sequence, selector) {
             //var guid = $('.hidden-guid').val();
+            var error = "";
             alert("in $.fn.AddTempRequestHiddenFors : " + guid);
             $.ajax({
-                async: true,
-                url: "/Requests/_TempRequestHiddenFors?GUID=" + guid + "&SequencePosition=" + sequence,
+                async: false,
+                url: "/Requests/RollbackTempRequestHiddenFors?GUID=" + guid + "&SequencePosition=" + sequence,
                 traditional: true,
                 type: "GET",
                 cache: false,
                 success: function (data) {
-                    $(selector).replaceWith(data);
-                    return false;
+                    alert("data; " + data);
+                    if (data == "Error" ) {
+                        alert("in error");
+                        error = true;
+                    }
+                    else {
+                        alert("not in error");
+                        $(selector).replaceWith(data);
+                        error = false;
+                    }
                 }
             });
+            return error;
         };
 
         $.fn.BindSelectedFilters = function (className) {
