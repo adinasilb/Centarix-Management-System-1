@@ -131,11 +131,11 @@
                                         {
                                             @if (Model.DontAllowMultiple)
                                             {
-                                                <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf .docx .doc" disabled />
+                                                <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" disabled />
                                             }
                                             else
                                             {
-                                                <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf .docx .doc" multiple disabled />
+                                                <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" multiple disabled />
                                             }
                                         }
                                         else
@@ -143,11 +143,11 @@
                                             @if (Model.DontAllowMultiple)
                                             {
 
-                                                <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" />
+                                                <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" />
                                             }
                                             else
                                             {
-                                                <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" multiple />
+                                                <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls"  multiple />
                                             }
                                         }
 

@@ -1072,7 +1072,10 @@ namespace PrototypeWithAuth.Controllers
                     newRequest.ParentQuote = new ParentQuote();
                     newRequest.ParentQuote.QuoteStatusID = 1;
                     newRequest.OrderType = AppUtility.OrderTypeEnum.RequestPriceQuote.ToString();
-                    _context.Add(newRequest);
+                    //this is assuming that we only reorder request price quotes
+                    _context.Entry(newRequest).State = EntityState.Added;
+                    _context.Entry(newRequest.ParentQuote).State = EntityState.Added;
+                    _context.Entry(newRequest.Product).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
@@ -3905,6 +3908,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpPost]
+        [RequestFormLimits(ValueCountLimit = int.MaxValue)]
         public void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
         {
             base.DocumentsModal(documentsModalViewModel);

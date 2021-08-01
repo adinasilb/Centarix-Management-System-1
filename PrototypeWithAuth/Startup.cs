@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace PrototypeWithAuth
 {
@@ -116,7 +117,6 @@ namespace PrototypeWithAuth
             //   .AddDataAnnotations();
             // //.AddMvcOptions(opt =>
             // //       opt.Filters.Add<RequestFilterAttribute>());
-
 
 
             services.ConfigureApplicationCookie(options =>

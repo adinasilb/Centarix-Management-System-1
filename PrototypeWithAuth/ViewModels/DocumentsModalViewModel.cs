@@ -19,6 +19,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<string> FileStrings { get; set; }
         public List<FileInfo> Files { get; set; }
         public List<IFormFile> FilesToSave { get; set; }
+        //public List<IFormFile> Zip { get; set; }
         public bool IsEdittable { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }

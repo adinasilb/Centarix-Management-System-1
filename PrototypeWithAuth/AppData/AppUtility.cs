@@ -815,5 +815,18 @@ namespace PrototypeWithAuth.AppData
                 return 0.0m;
             }
         }
+
+        public static String GetDateOrderedString(ParentRequest parentRequest)
+        {
+            if (parentRequest == null)
+            {
+                return "Something went wrong with this order";
+            }
+            else
+            {
+                return parentRequest.OrderDate.GetElixirDateFormat();
+            }
+        }
     }
+
 }
