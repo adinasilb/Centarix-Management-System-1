@@ -115,13 +115,13 @@
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text border-bottom request-cost-dollar-icon @disableDollar" >&#36;</span>
-                                    <input class="form-control-plaintext border-bottom @dollarReadOnly  @disableDollar requestPriceQuote" name="unit-price-dollars" id="unit-price-dollars" value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].PricePerUnit / Model.Requests[0].ExchangeRate,2))" @disabledDollarProperty />
+                                    <input type="number" class="form-control-plaintext border-bottom @dollarReadOnly  @disableDollar requestPriceQuote" name="unit-price-dollars" id="unit-price-dollars" value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].PricePerUnit / Model.Requests[0].ExchangeRate,2))" @disabledDollarProperty />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text request-cost-shekel-icon @disableShekel" >&#x20aa;</span>
-                                    <input class="form-control-plaintext border-bottom requestPriceQuote @shekelReadOnly @disableShekel" name="unit-price-shekel" id="unit-price-shekel" value="@Math.Round(Model.Requests[0].PricePerUnit, 2)" @disabledShekelProperty />
+                                    <input type="number" class="form-control-plaintext border-bottom requestPriceQuote @shekelReadOnly @disableShekel" name="unit-price-shekel" id="unit-price-shekel" value="@Math.Round(Model.Requests[0].PricePerUnit, 2)" @disabledShekelProperty />
                                 </div>
                             </div>
                         </div>

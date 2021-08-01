@@ -1416,9 +1416,6 @@ namespace PrototypeWithAuth.Controllers
             //    requestNum++;
             //}
 
-            //TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID, 3);
-            //await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
-
 
             var termsList = new List<SelectListItem>() { };
             await _context.PaymentStatuses.ForEachAsync(ps =>
@@ -1568,6 +1565,7 @@ namespace PrototypeWithAuth.Controllers
                         if (SaveUsingTempRequest)
                         {
                             await SetTempRequestAsync(newTempRequestJson, newTRLVM, tempRequestListViewModel.RequestIndexObject);
+                            await transaction.CommitAsync();
                             //await KeepTempRequestJsonCurrentAsOriginal(newTRLVM.GUID);
                         }
                         if (!SaveUsingTempRequest)
@@ -1630,6 +1628,7 @@ namespace PrototypeWithAuth.Controllers
                     //await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);
                     //get rid of old trlvm?
                     tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
+                    
                     return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("ConfirmEmailModal", controller, tempRequestListViewModel.RequestIndexObject) };
                 }
                 else
@@ -4895,7 +4894,8 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<TempRequestListViewModel> LoadTempListFromRequestIndexObjectAsync(RequestIndexObject requestIndexObject)
         {
-            var oldJson = _context.TempRequestJsons.Where(trj => trj.GuidID == requestIndexObject.GUID).OrderByDescending(trj => trj.SequencePosition).FirstOrDefault();
+            var oldJson = _context.TempRequestJsons.Where(trj => trj.GuidID == requestIndexObject.GUID)
+                .OrderByDescending(trj => trj.SequencePosition).FirstOrDefault();
             return new TempRequestListViewModel()
             {
                 GUID = requestIndexObject.GUID,
