@@ -15,7 +15,8 @@ namespace PrototypeWithAuth.Models
         public Experiment Experiment { get; set; }
         public int TestCategoryID { get; set; }
         public TestCategory TestCategory { get; set; }
-        
+        public int SiteID { get; set; }
+        public Site Site { get; set; }
         public List<TestOuterGroup> TestOuterGroups { get; set; }
     }
 }

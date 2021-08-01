@@ -18,6 +18,7 @@ namespace PrototypeWithAuth.Models
         public string PhoneNumber { get; set; }
         public string PrimaryContactID { get; set; }
         public ApplicationUser PrimaryContact { get; set; }
+        public List<Test> Tests { get; set; }
 
     }
 }

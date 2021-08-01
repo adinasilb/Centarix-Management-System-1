@@ -12,7 +12,7 @@ namespace PrototypeWithAuth.Models
         public int TestValueID { get; set; }
         public int TestHeaderID { get; set; }
         public TestHeader TestHeader { get; set; }
-        public int ParticipantID { get; set; }
-        public Participant Participant { get; set; }
+        public int ExperimentEntryID { get; set; }
+        public ExperimentEntry ExperimentEntry { get; set; }
     }
 }
