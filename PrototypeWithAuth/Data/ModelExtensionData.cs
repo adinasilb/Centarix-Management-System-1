@@ -175,7 +175,7 @@ namespace PrototypeWithAuth.Data
                 new ParentCategory
                 {
                     ParentCategoryID = 4,
-                    ParentCategoryDescription = "Reusables",
+                    ParentCategoryDescription = "Reusable",
                     CategoryTypeID = 1
                 },
                 new ParentCategory
@@ -678,21 +678,21 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 107,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "Robot Consumables(Tips,Microplates, Reservoirs)",
+                    ProductSubcategoryDescription = "Robot Consumables",
                     ImageURL = "/images/css/CategoryImages/consumables/robot_consumables_tips.png"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 108,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "DdPCR Consumables (Gaskets, Cartridges, Microplates, Foil seal)",
+                    ProductSubcategoryDescription = "DD-PCR Plastics",
                     ImageURL = "/images/css/CategoryImages/consumables/ddpcr_consumables.png"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 109,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "RT-PCR",
+                    ProductSubcategoryDescription = "RT-PCR Plastics",
                     ImageURL = "/images/css/CategoryImages/consumables/rtpcr_consumables.png"
                 },
                 new ProductSubcategory
@@ -755,7 +755,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 118,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "Tapestation Consumables (Screentapes: gDNA/HS/RNA; Markers, Loading Buffers, Loading Tips)",
+                    ProductSubcategoryDescription = "Tapestation consumables",
                     ImageURL = "/images/css/CategoryImages/consumables/tapestation_consumables.png"
                 },
                 new ProductSubcategory
@@ -769,7 +769,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 120,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "General",
+                    ProductSubcategoryDescription = "General Consumables",
                     ImageURL = "/images/css/CategoryImages/consumables/general.png" // update
                 },
                 new ProductSubcategory
@@ -811,14 +811,14 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 206,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "PCR",
+                    ProductSubcategoryDescription = "PCR Reagents",
                     ImageURL = "/images/css/CategoryImages/reagents/PCR_reagent.png"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 207,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "RT-PCR",
+                    ProductSubcategoryDescription = "RT-PCR Reagents",
                     ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent2.png"
                 },
                 new ProductSubcategory
@@ -839,7 +839,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 210,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Media Supplement",
+                    ProductSubcategoryDescription = "Cell Media Supplements",
                     ImageURL = "/images/css/CategoryImages/reagents/media_supplement.png"
                 },
                 new ProductSubcategory
@@ -853,14 +853,14 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 212,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Enzyme Restriction",
+                    ProductSubcategoryDescription = "Restriction Enzyme",
                     ImageURL = "/images/css/CategoryImages/reagents/restriction_enzyme.png"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 213,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Enzyme RNA",
+                    ProductSubcategoryDescription = "RNA Enzyme",
                     ImageURL = "/images/css/CategoryImages/reagents/rna_enzyme.png"
                 },
                 new ProductSubcategory
@@ -888,8 +888,29 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 217,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "General",
+                    ProductSubcategoryDescription = "General Reagents and Chemicals",
                     ImageURL = "/images/css/CategoryImages/reagents/general_reagents.png"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 218,
+                    ParentCategoryID = 2,
+                    ProductSubcategoryDescription = "DNA Enzyme",
+                    ImageURL = "/images/css/CategoryImages/reagents/dna_enzyme.png"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 219,
+                    ParentCategoryID = 2,
+                    ProductSubcategoryDescription = "Gas Refilling",
+                    ImageURL = "/images/css/CategoryImages/reagents/gas_refilling2.png"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 220,
+                    ParentCategoryID = 2,
+                    ProductSubcategoryDescription = "DD-PCR  Reagents",
+                    ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent3.png"
                 },
                 new ProductSubcategory
                 {
@@ -916,14 +937,14 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 304,
                     ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Bacteria",
+                    ProductSubcategoryDescription = "Bacterial Stock",
                     ImageURL = "/images/css/CategoryImages/biological/bacteria.png"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 305,
                     ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "General",
+                    ProductSubcategoryDescription = "General Biological",
                     ImageURL = "/images/css/CategoryImages/biological/general.png"
                 },
                 new ProductSubcategory
@@ -952,7 +973,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 601,
                     ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "General",
+                    ProductSubcategoryDescription = "General Safety",
                     ImageURL = "/images/css/CategoryImages/general/general.png"
                 },
                 new ProductSubcategory
@@ -1064,7 +1085,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 909,
                     ParentCategoryID = 9,
-                    ProductSubcategoryDescription = "General",
+                    ProductSubcategoryDescription = "General Day To Day",
                     ImageURL = "/images/css/CategoryImages/daytoday/general.png"
                 },
                 new ProductSubcategory
@@ -1141,7 +1162,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 1005,
                     ParentCategoryID = 10,
-                    ProductSubcategoryDescription = "Travel",
+                    ProductSubcategoryDescription = "General Travel",
                     ImageURL = "/images/css/CategoryImages/travel/travel.png"
                 },
                 new ProductSubcategory
