@@ -118,7 +118,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                     </div>
                                 </div>
                                 <div class="form-group mb-4">
-                                    <label class="control-label">Price Per Unit:</label>
+                                    <label class="control-label">Price Per @Model.RequestItemViewModel.Requests[0].Product.UnitType.UnitTypeDescription:</label>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="input-group">
@@ -162,7 +162,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label">Price Per Subunit:</label>
+                                                <label class="control-label">Price Per @Model.RequestItemViewModel.Requests[0].Product.SubUnitType.UnitTypeDescription:</label>
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="input-group">
@@ -215,7 +215,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label class="control-label">Price Per Sub-Subunit:</label>
+                                                    <label class="control-label">Price Per @Model.RequestItemViewModel.Requests[0].Product.SubSubUnitType.UnitTypeDescription:</label>
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="input-group">
