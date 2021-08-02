@@ -11,6 +11,6 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int QuoteStatusID { get; set; }
         public string QuoteStatusDescription { get; set; }
-        public IEnumerable<ParentQuote> ParentQuotes { get; set; }
+        public IEnumerable<Request> Requests { get; set; }
     }
 }

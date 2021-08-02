@@ -10,8 +10,8 @@ using PrototypeWithAuth.Data;
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210802093434_moveQuoteStatusOver")]
-    partial class moveQuoteStatusOver
+    [Migration("20210802103400_RemoveQuoteStatusFromParentQuote")]
+    partial class RemoveQuoteStatusFromParentQuote
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -2789,14 +2789,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("QuoteNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("QuoteStatusID")
-                        .HasColumnType("int");
-
                     b.HasKey("ParentQuoteID");
 
                     b.HasIndex("ApplicationUserID");
-
-                    b.HasIndex("QuoteStatusID");
 
                     b.ToTable("ParentQuotes");
                 });
@@ -6813,12 +6808,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany()
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.QuoteStatus", "QuoteStatus")
-                        .WithMany("ParentQuotes")
-                        .HasForeignKey("QuoteStatusID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentRequest", b =>
