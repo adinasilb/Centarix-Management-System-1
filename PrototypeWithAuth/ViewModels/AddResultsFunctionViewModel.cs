@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class AddReportFunctionViewModel : AddFunctionViewModel<FunctionReport>
+    public class AddResultsFunctionViewModel : AddFunctionViewModel<FunctionResult>
     {
-        public int ReportID { get; set; }
         public string ClosingTags { get; set; }
-
+     
     }
 }

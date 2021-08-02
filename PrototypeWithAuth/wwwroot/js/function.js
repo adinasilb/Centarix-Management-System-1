@@ -16,6 +16,11 @@
 		    url = "/Protocols/AddFunctionModal?FunctionTypeID=" + $(this).attr("typeID") + "&LineID=" + lineID+"&functionIndex="+$(this).attr("value")+"&modalType="+$(this).attr("modaltype")+"&guid="+$(this).attr("guid")
         	$.fn.CallPageRequest( url , "addFunction"); 
         }
+        else if($("results-tab").hasClass("show"))
+        {
+             url = "/Protocols/AddResultsFunctionModal?FunctionTypeID=" + $(this).val() + "&ProtocolInstanceID=" + $("#ReportID").val() +"&closingTags="+$('#closingTags').val();
+        	$.fn.CallPageRequest( url , "addFunction");
+        }
 	}
 });
 

@@ -20,6 +20,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<FunctionResult> FunctionResults { get; set; }
         public DbSet<TempLineID> TempLineIDs { get; set; }
         public DbSet<FunctionLineID> FunctionLineIDs { get; set; }
         public DbSet<TestFieldHeader> TestFieldHeaders { get; set; }

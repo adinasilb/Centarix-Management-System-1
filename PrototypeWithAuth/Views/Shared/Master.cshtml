@@ -683,6 +683,10 @@
                     var modalType=$(".modalType").val();
                     $.fn.ProtocolsMarkReadonly("_IndexTable");
                     $("."+modalType).removeClass("d-none");
+                    if(tab == 4)
+                    {
+                        $(".only-results-tab").removeClass("d-none");
+                    }
                     return false;
                 }
             });

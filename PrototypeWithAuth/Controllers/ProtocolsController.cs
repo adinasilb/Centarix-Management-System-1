@@ -539,7 +539,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 protocol.ProtocolTypeID = typeID;
             }
-            List<FunctionType> functionTypes = new List<FunctionType>();
+            List<FunctionType> protocolsFunctionTypes = new List<FunctionType>();
+            List<FunctionType> resultsFunctionTypes = new List<FunctionType>();
 
             createProtocolsViewModel.Protocol = protocol;
             createProtocolsViewModel.ProtocolCategories = _context.ProtocolCategories;
@@ -548,9 +549,14 @@ namespace PrototypeWithAuth.Controllers
             createProtocolsViewModel.LineTypes = _context.LineTypes.ToList();
             foreach (var functionType in Enum.GetValues(typeof(AppUtility.ProtocolFunctionTypes)))
             {
-                functionTypes.Add(_context.FunctionTypes.Where(ft => ft.DescriptionEnum == functionType.ToString()).FirstOrDefault());
+                protocolsFunctionTypes.Add(_context.FunctionTypes.AsNoTracking().Where(ft => ft.DescriptionEnum == functionType.ToString()).FirstOrDefault());
             }
-            createProtocolsViewModel.ProtocolFunctionTypes = functionTypes;
+            createProtocolsViewModel.ProtocolFunctionTypes = protocolsFunctionTypes;
+            foreach (var functionType in Enum.GetValues(typeof(AppUtility.ResultsFunctionTypes)))
+            {
+                resultsFunctionTypes.Add(_context.FunctionTypes.AsNoTracking().Where(ft => ft.DescriptionEnum == functionType.ToString()).FirstOrDefault());
+            }
+            createProtocolsViewModel.ResultsFunctionTypes = resultsFunctionTypes;
             if (createProtocolsViewModel.UniqueGuid == Guid.Empty)
             {
                 createProtocolsViewModel.UniqueGuid = Guid.NewGuid();
@@ -1069,7 +1075,7 @@ namespace PrototypeWithAuth.Controllers
             var tempLinesJson = await _context.TempLinesJsons.Where(tlj => tlj.TempLinesJsonID == guid).FirstOrDefaultAsync();
             var tempLines = tempLinesJson.DeserializeJson<ProtocolsLinesViewModel>();
             var tempLine = tempLines.Lines.Where(tl => tl.Line.LineID == LineID).FirstOrDefault();
-            var viewmodel = new AddFunctionViewModel
+            var viewmodel = new AddLineFunctionViewModel
             {
                 ModalType = modalType,
                 UniqueGuid = guid,
@@ -1077,11 +1083,11 @@ namespace PrototypeWithAuth.Controllers
             };
             if (tempLine.Functions?.Count() > functionIndex && functionIndex != -1)
             {
-                viewmodel.FunctionLine = tempLine.Functions[functionIndex];
+                viewmodel.Function = tempLine.Functions[functionIndex];
             }
             else
             {
-                viewmodel.FunctionLine = new FunctionLine
+                viewmodel.Function = new FunctionLine
                 {
                     FunctionType = functionType,
                     FunctionTypeID = FunctionTypeID,
@@ -1093,14 +1099,14 @@ namespace PrototypeWithAuth.Controllers
 
             AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.FunctionLine;
             string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
-            string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, viewmodel.FunctionLine.ID.ToString());
+            string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, viewmodel.Function.ID.ToString());
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
             {
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
-                    GetLinkToProductDDls(viewmodel);
+                    GetLinkToProductDDls(viewmodel.ConvertToBaseClass());
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
-                    GetLineToProtocolDDLs(viewmodel);
+                    GetLineToProtocolDDLs(viewmodel.ConvertToBaseClass());
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddFile:
                 case AppUtility.ProtocolFunctionTypes.AddImage:
@@ -1113,7 +1119,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         FolderName = folderName,
                         ParentFolderName = AppUtility.ParentFolderName.FunctionLine,
-                        ObjectID = viewmodel.FunctionLine.ID.ToString(),
+                        ObjectID = viewmodel.Function.ID.ToString(),
                         SectionType = AppUtility.MenuItems.Protocols,
                         IsEdittable = modalType!=AppUtility.ProtocolModalType.Summary,
                         DontAllowMultiple = true,
@@ -1127,7 +1133,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(viewmodel);
         }
 
-        private void GetLineToProtocolDDLs(AddFunctionViewModel viewmodel)
+        private void GetLineToProtocolDDLs(AddFunctionViewModel<FunctionBase> viewmodel)
         {
             viewmodel.ProtocolCategories = _context.ProtocolCategories.ToList();
             viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.ToList();
@@ -1136,7 +1142,7 @@ namespace PrototypeWithAuth.Controllers
             viewmodel.Protocols = _context.Protocols.ToList();
         }
 
-        private void GetLinkToProductDDls(AddFunctionViewModel viewmodel)
+        private void GetLinkToProductDDls(AddFunctionViewModel<FunctionBase> viewmodel)
         {
             viewmodel.ParentCategories = _context.ParentCategories.ToList();
             viewmodel.ProductSubcategories = _context.ProductSubcategories.ToList();
@@ -1182,18 +1188,18 @@ namespace PrototypeWithAuth.Controllers
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == functionTypeID).FirstOrDefault();
 
-            var viewmodel = new AddFunctionViewModel
+            var viewmodel = new AddFunctionViewModel<FunctionBase>
             {
-                FunctionLine = new FunctionLine()
+                Function = new FunctionBase()
             };
-            viewmodel.FunctionLine.FunctionType = functionType;
+            viewmodel.Function.FunctionType = functionType;
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
             {
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
                     var product = _context.Products.Where(p => p.ProductID == objectID || p.SerialNumber == uniqueNumber)
                          .Include(p => p.ProductSubcategory).FirstOrDefault();
-                    viewmodel.FunctionLine.Product = product;
-                    viewmodel.FunctionLine.ProductID = product.ProductID;
+                    viewmodel.Function.Product = product;
+                    viewmodel.Function.ProductID = product.ProductID;
                     viewmodel.ParentCategories = _context.ParentCategories.ToList();
                     viewmodel.ProductSubcategories = _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == product.ProductSubcategory.ParentCategoryID).ToList();
                     viewmodel.Products = _context.Products.Where(p => p.ProductSubcategoryID == product.ProductSubcategoryID && product.VendorID == p.VendorID).ToList();
@@ -1202,8 +1208,8 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
                     var protocol = _context.Protocols.Where(p => p.ProtocolID == objectID || p.UniqueCode == uniqueNumber).Include(ps => ps.ProtocolSubCategory).FirstOrDefault();
-                    viewmodel.FunctionLine.Protocol = protocol;
-                    viewmodel.FunctionLine.ProtocolID = protocol.ProtocolID;
+                    viewmodel.Function.Protocol = protocol;
+                    viewmodel.Function.ProtocolID = protocol.ProtocolID;
                     viewmodel.ProtocolCategories = _context.ProtocolCategories.ToList();
                     viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.Where(ps => ps.ProtocolCategoryTypeID == protocol.ProtocolSubCategory.ProtocolCategoryTypeID).ToList();
                     viewmodel.Creators = _context.Users.Select(u =>
@@ -1216,7 +1222,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddFunctionModal(AddFunctionViewModel addFunctionViewModel, List<Line> Lines)
+        public async Task<IActionResult> AddFunctionModal(AddLineFunctionViewModel addFunctionViewModel, List<Line> Lines)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -1224,51 +1230,51 @@ namespace PrototypeWithAuth.Controllers
                 var tempLines = tempLinesJson.DeserializeJson<ProtocolsLinesViewModel>();
 
                 await UpdateLineContentAsync(tempLines, Lines);
-                var tempLine = tempLines.Lines.Where(tl => tl.Line.LineID == addFunctionViewModel.FunctionLine.LineID).FirstOrDefault();
+                var tempLine = tempLines.Lines.Where(tl => tl.Line.LineID == addFunctionViewModel.Function.LineID).FirstOrDefault();
                 var protocolID = tempLine.Line.ProtocolID;
                 try
                 {
                     if (addFunctionViewModel.IsRemove)
                     {
-                        var functionType = _context.FunctionTypes.Where(f => f.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
-                        addFunctionViewModel.FunctionLine.IsTemporaryDeleted = true;
-                        if (_context.FunctionLines.Where(fl => fl.ID == addFunctionViewModel.FunctionLine.ID).Any())
+                        var functionType = _context.FunctionTypes.Where(f => f.FunctionTypeID == addFunctionViewModel.Function.FunctionTypeID).FirstOrDefault();
+                        addFunctionViewModel.Function.IsTemporaryDeleted = true;
+                        if (_context.FunctionLines.Where(fl => fl.ID == addFunctionViewModel.Function.ID).Any())
                         {
-                            _context.Entry(addFunctionViewModel.FunctionLine).State = EntityState.Modified;
+                            _context.Entry(addFunctionViewModel.Function).State = EntityState.Modified;
                         }
                         tempLine.Functions.RemoveAt(addFunctionViewModel.FunctionIndex);
                         if (functionType.DescriptionEnum == AppUtility.ProtocolFunctionTypes.AddFile.ToString() || functionType.DescriptionEnum == AppUtility.ProtocolFunctionTypes.AddImage.ToString())
                         {
-                            base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.FunctionLine, ObjectID: addFunctionViewModel.FunctionLine.ID);
+                            base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.FunctionLine, ObjectID: addFunctionViewModel.Function.ID);
                         }
                     }
                     else
                     {
 
-                        var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
+                        var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.Function.FunctionTypeID).FirstOrDefault();
 
-                        if (addFunctionViewModel.FunctionLine.ID == 0)
+                        if (addFunctionViewModel.Function.ID == 0)
                         {
                             var functionLineID = new FunctionLineID();
                             _context.Add(functionLineID);
                             await _context.SaveChangesAsync();
-                            addFunctionViewModel.FunctionLine.ID = functionLineID.ID;
+                            addFunctionViewModel.Function.ID = functionLineID.ID;
                         }
                         switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
                         {
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
-                                var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
-                                tempLine.Line.Content += " <a href='#' class='open-line-product function-line-node' functionline='" + addFunctionViewModel.FunctionLine.ID + "' value='" + product.ProductID + "'>" + product.ProductName + "</a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>";
-                                addFunctionViewModel.FunctionLine.Product = product;
+                                var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.Function.ProductID).FirstOrDefault();
+                                tempLine.Line.Content += " <a href='#' class='open-line-product function-line-node' functionline='" + addFunctionViewModel.Function.ID + "' value='" + product.ProductID + "'>" + product.ProductName + "</a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>";
+                                addFunctionViewModel.Function.Product = product;
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
-                                var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
-                                tempLine.Line.Content += " <a href='#' functionline='" + addFunctionViewModel.FunctionLine.ID + "' class='open-line-protocol function-line-node' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>"; ;
-                                addFunctionViewModel.FunctionLine.Protocol = protocol;
+                                var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.Function.ProtocolID).FirstOrDefault();
+                                tempLine.Line.Content += " <a href='#' functionline='" + addFunctionViewModel.Function.ID + "' class='open-line-protocol function-line-node' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>"; ;
+                                addFunctionViewModel.Function.Protocol = protocol;
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddFile:
                             case AppUtility.ProtocolFunctionTypes.AddImage:
-                                MoveDocumentsOutOfTempFolder(addFunctionViewModel.FunctionLine.ID, AppUtility.ParentFolderName.FunctionLine, guid: addFunctionViewModel.UniqueGuid);
+                                MoveDocumentsOutOfTempFolder(addFunctionViewModel.Function.ID, AppUtility.ParentFolderName.FunctionLine, guid: addFunctionViewModel.UniqueGuid);
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddStop:
                             case AppUtility.ProtocolFunctionTypes.AddTimer:
@@ -1277,7 +1283,7 @@ namespace PrototypeWithAuth.Controllers
                             case AppUtility.ProtocolFunctionTypes.AddComment:
                                 break;
                         }
-                        addFunctionViewModel.FunctionLine.FunctionType = functionType;
+                        addFunctionViewModel.Function.FunctionType = functionType;
                         if (tempLine.Functions == null)
                         {
                             tempLine.Functions = new List<FunctionLine>();
@@ -1285,11 +1291,11 @@ namespace PrototypeWithAuth.Controllers
 
                         if (tempLine.Functions?.Count() > addFunctionViewModel.FunctionIndex && addFunctionViewModel.FunctionIndex != -1)
                         {
-                            tempLine.Functions[addFunctionViewModel.FunctionIndex] = addFunctionViewModel.FunctionLine;
+                            tempLine.Functions[addFunctionViewModel.FunctionIndex] = addFunctionViewModel.Function;
                         }
                         else
                         {
-                            tempLine.Functions.Add(addFunctionViewModel.FunctionLine);
+                            tempLine.Functions.Add(addFunctionViewModel.Function);
                         }
                     }
 
@@ -2391,7 +2397,7 @@ namespace PrototypeWithAuth.Controllers
             var viewmodel = new AddReportFunctionViewModel
             {
                 ReportID = ReportID,
-                FunctionReport = functionReport,
+                Function = functionReport,
                 ClosingTags = closingTags
             };
 
@@ -2436,7 +2442,7 @@ namespace PrototypeWithAuth.Controllers
             var functionType = _context.FunctionTypes.FirstOrDefault();
 
             var report = _context.Reports.Where(r => r.ReportID == addReportsFunctionViewModel.ReportID).FirstOrDefault();
-            var functionReport = addReportsFunctionViewModel.FunctionReport;
+            var functionReport = addReportsFunctionViewModel.Function;
 
             functionReport.IsTemporary = true;
             functionReport.ReportID = report.ReportID;
@@ -2476,7 +2482,6 @@ namespace PrototypeWithAuth.Controllers
                                     SectionType = AppUtility.MenuItems.Protocols,
                                     IsEdittable = true,
                                     Guid = guid
-
                                 };
 
                                 base.FillDocumentsViewModel(documentsModalViewModel);
@@ -2517,6 +2522,7 @@ namespace PrototypeWithAuth.Controllers
             }
             return PartialView("_ReportText", report);
         }
+
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]

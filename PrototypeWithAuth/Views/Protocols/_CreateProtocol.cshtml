@@ -60,7 +60,7 @@
                 </a>
             </li>
             <li class="list-inline-item m-0 nav-item @checkListMode has-modal-type d-none">
-                <a data-toggle="tab" href="#Results@(Model.ModalType) " class="next-tab nav-link new-button new-protocols-button protocol-tab lines-tab @results ">
+                <a data-toggle="tab" href="#Results@(Model.ModalType) " class="next-tab nav-link new-button new-protocols-button results-tab lines-tab @results ">
                     <i class="new-icon icon-protocol-tab-24px"></i>
                     <label class="new-button-text">Results</label>
                 </a>
@@ -68,6 +68,14 @@
             <li class="only-protocol-tab li-function-bar  @editMode @createMode d-none">
                 <div class=" function-bar">
                     @foreach (var type in Model.ProtocolFunctionTypes)
+                    {
+                        <button class="function" type="button" typeID="@type.FunctionTypeID" modalType="@Model.ModalType" guid="@Model.UniqueGuid" value="-1"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
+                    }
+                </div>
+            </li>
+            <li class="only-results-tab li-function-bar  @editMode @createMode d-none">
+                <div class=" function-bar">
+                    @foreach (var type in Model.ResultsFunctionTypes)
                     {
                         <button class="function" type="button" typeID="@type.FunctionTypeID" modalType="@Model.ModalType" guid="@Model.UniqueGuid" value="-1"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
                     }
@@ -92,7 +100,8 @@
                     <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin start-protocol-fx " value="@Model.Protocol.ProtocolID">Start</button>
                 </div>
             </li>
-            @{ var isChecked = "";
+            @{ 
+                var isChecked = "";
                 if (Model.ModalType == AppUtility.ProtocolModalType.Edit)
                 {
                     isChecked = "checked";
@@ -102,7 +111,7 @@
                 <div class="switch col-12 switch-margin">
                     <label>
                         <label class="edit-mode-switch-description">Edit Mode Off</label>
-                        <input type="checkbox" class="turn-edit-on-off protocols" value="@Model.Protocol.ProtocolID" name="details" @isChecked >
+                        <input type="checkbox" class="turn-edit-on-off protocols" value="@Model.Protocol.ProtocolID" name="details" @isChecked>
                         <span class="lever"></span>
                     </label>
                 </div>

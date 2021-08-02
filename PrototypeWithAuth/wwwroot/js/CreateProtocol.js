@@ -83,6 +83,17 @@
 
     });
 
+
+    $("form").off("click", ".results-tab").on("click", ".results-tab", function (e) {     
+      
+      
+    }); 
+
+    $("form").off("click", ".protocol-tab").on("click", ".protocol-tab", function (e) {     
+      
+      
+    }); 
+
     $(".saveLines").off("click").click(function (e) {
         e.preventDefault();
         $(".saving-spinner").removeClass("d-none");

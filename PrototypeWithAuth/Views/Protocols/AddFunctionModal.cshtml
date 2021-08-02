@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.ViewModels.AddFunctionViewModel
+﻿@model PrototypeWithAuth.ViewModels.AddLineFunctionViewModel
 @using PrototypeWithAuth.AppData
 <script src="~/js/site.js"></script>
 <script src="~/js/Validation/AddFunctionValidation.js"></script>
@@ -10,9 +10,9 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form addFunctionForm on-form-modal  documentModalForm ">
-                <input type="hidden" asp-for="FunctionLine.FunctionTypeID" class="function-typeID" />
-                <input type="hidden" asp-for="FunctionLine.LineID" class="lineID" />
-                <input type="hidden" asp-for="FunctionLine.ID" class="function-lineID" />
+                <input type="hidden" asp-for="Function.FunctionTypeID" class="function-typeID" />
+                <input type="hidden" asp-for="Function.LineID" class="lineID" />
+                <input type="hidden" asp-for="Function.ID" class="function-lineID" />
                 <input type="hidden" asp-for="IsRemove" class="isRemove" />
                 <input type="hidden" asp-for="ModalType" />
                 <input type="hidden" asp-for="UniqueGuid" />
@@ -23,12 +23,12 @@
                         <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessage</label>
 
                         <div>
-                            <span class="heading-1"><i class="@Model.FunctionLine.FunctionType.Icon"></i>&ensp;@Model.FunctionLine.FunctionType.FunctionDescription</span>
+                            <span class="heading-1"><i class="@Model.Function.FunctionType.Icon"></i>&ensp;@Model.Function.FunctionType.FunctionDescription</span>
                         </div>
                     </div>
                 </div>
                 <div class="modal-body m-0 p-0 _AddFunctionModal">
-                    @{await Html.RenderPartialAsync("_AddFunctionModal", Model); }
+                    @{await Html.RenderPartialAsync("_AddFunctionModal", Model.ConvertToBaseClass()); }
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
@@ -44,12 +44,12 @@
                         @if ((Model.ModalType == AppUtility.ProtocolModalType.Edit ||
                Model.ModalType == AppUtility.ProtocolModalType.Create))
                         {
-                            @if ((Model.FunctionLine.FunctionType.DescriptionEnum == AppUtility.ProtocolFunctionTypes.AddFile.ToString() || Model.FunctionLine.FunctionType.DescriptionEnum == AppUtility.ProtocolFunctionTypes.AddImage.ToString()))
+                            @if ((Model.Function.FunctionType.DescriptionEnum == AppUtility.ProtocolFunctionTypes.AddFile.ToString() || Model.Function.FunctionType.DescriptionEnum == AppUtility.ProtocolFunctionTypes.AddImage.ToString()))
                             {
-                                if ((Model.FunctionLine.ID == 0 || Model.DocumentsModalViewModel.FileStrings ==null || Model.DocumentsModalViewModel.FileStrings.Count() == 0))
+                                if ((Model.Function.ID == 0 || Model.DocumentsModalViewModel.FileStrings ==null || Model.DocumentsModalViewModel.FileStrings.Count() == 0))
                                 {
                                     uploadDnone = "";
-                                    if(Model.FunctionLine.ID==0)
+                                    if(Model.Function.ID==0)
                                     {
                                         cancelDnone = "";
                                     }
@@ -65,9 +65,9 @@
                                 }
                             }
 
-                            else if (Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProduct.ToString() && Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProtocol.ToString() && Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddStop.ToString())
+                            else if (Model.Function.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProduct.ToString() && Model.Function.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProtocol.ToString() && Model.Function.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddStop.ToString())
                             {
-                                if (Model.FunctionLine.ID == 0)
+                                if (Model.Function.ID == 0)
                                 {
                                     saveDnone = "";
                                     cancelDnone = "";
@@ -80,7 +80,7 @@
                             else
                             {
 
-                                if (Model.FunctionLine.ID == 0)
+                                if (Model.Function.ID == 0)
                                 {
                                     saveDnone = "";
                                     cancelDnone = "";

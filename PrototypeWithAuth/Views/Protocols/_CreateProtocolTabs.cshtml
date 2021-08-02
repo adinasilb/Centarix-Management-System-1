@@ -5,6 +5,7 @@
     string theory = "";
     string material = "";
     string protocols = "";
+    string results = "";
     switch (Model.Tab)
     {
         case 1:
@@ -15,6 +16,9 @@
             break;
         case 3:
             protocols = " active show ";
+            break;
+        case 4:
+            results = " active show ";
             break;
 
     }
@@ -192,10 +196,15 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
 
     </div>
 </div>
-<div id="Results@(Model.ModalType)" class="tab-pane fade in @AppUtility.ProtocolModalType.CheckListMode d-none">
+<div id="Results@(Model.ModalType)" class="tab-pane fade in @AppUtility.ProtocolModalType.CheckListMode @results d-none">
     <div class="row text-editor-div" style="min-height:50px; width:100%">
+       
         @{
-            await Html.RenderPartialAsync("_ResultsText", Model.ProtocolInstance);
+            if(Model.ProtocolInstance !=null)
+            {
+                await Html.RenderPartialAsync("_ResultsText", Model.ProtocolInstance);
+            }
+
         }
     </div>
 </div>

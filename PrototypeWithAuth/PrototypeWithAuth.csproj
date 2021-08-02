@@ -411,6 +411,8 @@
     <Compile Remove="Data\Migrations\20210726130426_MoveUnitToProduct.Designer.cs" />
     <Compile Remove="Data\Migrations\20210726131100_MoveUnitToProduct.cs" />
     <Compile Remove="Data\Migrations\20210726131100_MoveUnitToProduct.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802074407_sdsdf.cs" />
+    <Compile Remove="Data\Migrations\20210802074407_sdsdf.Designer.cs" />
   </ItemGroup>
 
 

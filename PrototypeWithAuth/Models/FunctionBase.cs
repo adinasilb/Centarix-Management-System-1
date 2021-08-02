@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public abstract class FunctionBase
+    public  class FunctionBase
     {
         [Key]
         public int ID { get; set; }
@@ -16,6 +16,8 @@ namespace PrototypeWithAuth.Models
         public Protocol Protocol { get; set; }
         public int? ProductID { get; set; }
         public Product Product { get; set; }
+        public TimeSpan Timer { get; set; }
+        public string Description { get; set; }
         public bool IsTemporaryDeleted { get; set; }
     }
 }
