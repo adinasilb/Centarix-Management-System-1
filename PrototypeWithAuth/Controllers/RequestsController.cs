@@ -1069,12 +1069,12 @@ namespace PrototypeWithAuth.Controllers
                         newRequest.RequestStatusID = 1;
                     }
                     newRequest.Cost = 0;
-                    newRequest.ParentQuote = new ParentQuote();
+                    //newRequest.ParentQuote = new ParentQuote();
                     newRequest.QuoteStatusID = 1;
                     newRequest.OrderType = AppUtility.OrderTypeEnum.RequestPriceQuote.ToString();
                     //this is assuming that we only reorder request price quotes
                     _context.Entry(newRequest).State = EntityState.Added;
-                    _context.Entry(newRequest.ParentQuote).State = EntityState.Added;
+                    //_context.Entry(newRequest.ParentQuote).State = EntityState.Added;
                     _context.Entry(newRequest.Product).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
@@ -4132,8 +4132,8 @@ namespace PrototypeWithAuth.Controllers
                 EditQuoteDetailsViewModel editQuoteDetailsViewModel = new EditQuoteDetailsViewModel()
                 {
                     Requests = requests,
-                    QuoteDate = DateTime.Now,
-                    ParentQuoteID = requests.FirstOrDefault().ParentQuoteID
+                    QuoteDate = DateTime.Now
+                    //ParentQuoteID = requests.FirstOrDefault().ParentQuoteID
                 };
 
                 return PartialView(editQuoteDetailsViewModel);
@@ -4161,24 +4161,33 @@ namespace PrototypeWithAuth.Controllers
                 using (var transaction = _context.Database.BeginTransaction())
                 {
                     var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Include(x => x.ParentQuote).Select(r => r);
-                    var firstRequest = requests.Where(r => r.RequestID == editQuoteDetailsViewModel.Requests[0].RequestID).FirstOrDefault();
-                    int? parentQuoteId = firstRequest.ParentQuoteID;
+                    /*var firstRequest = requests.Where(r => r.RequestID == editQuoteDetailsViewModel.Requests[0].RequestID).FirstOrDefault();
+                    int? parentQuoteId = firstRequest.ParentQuoteID;*/
                     try
                     {
                         //var quoteDate = editQuoteDetailsViewModel.QuoteDate;
-                        var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
-                        firstRequest.QuoteStatusID = 4;
+                        //var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
                         //firstRequest.ParentQuote.QuoteDate = quoteDate;
-                        firstRequest.ParentQuote.QuoteNumber = quoteNumber.ToString();
+                        var parentQuote = new ParentQuote()
+                        {
+                            QuoteNumber = editQuoteDetailsViewModel.QuoteNumber
+                        };
                         foreach (var quote in editQuoteDetailsViewModel.Requests)
                         {
                             //throw new Exception();
                             var request = requests.Where(r => r.RequestID == quote.RequestID).FirstOrDefault();
-                            if(request.ParentQuoteID != parentQuoteId)
+                            request.ParentQuote = parentQuote;
+                            if (request.ParentQuote.ParentQuoteID == 0)
                             {
-                                _context.Remove(request.ParentQuote);
+                                _context.Entry(request.ParentQuote).State = EntityState.Added;
                             }
-                            request.ParentQuoteID = parentQuoteId;
+                            else
+                            {
+                                _context.Entry(request.ParentQuote).State = EntityState.Unchanged;
+                            }
+                            request.QuoteStatusID = 4;
+                            //request.ParentQuote.QuoteNumber = quoteNumber.ToString();
+                            //request.ParentQuoteID = parentQuoteId;
                             request.Cost = quote.Cost;
                             request.Currency = editQuoteDetailsViewModel.Requests[0].Currency;
                             request.ExchangeRate = editQuoteDetailsViewModel.Requests[0].ExchangeRate;
@@ -4190,7 +4199,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         //save file
                         string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
-                        string requestFolder = Path.Combine(uploadFolder, parentQuoteId.ToString());
+                        string requestFolder = Path.Combine(uploadFolder, requests.Where(r => r.RequestID == editQuoteDetailsViewModel.Requests[0].RequestID).FirstOrDefault().ParentQuoteID.ToString());
                         string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Quotes.ToString());
                         Directory.CreateDirectory(folderPath);
                         string uniqueFileName = 1 + editQuoteDetailsViewModel.QuoteFileUpload.FileName;
@@ -4203,7 +4212,7 @@ namespace PrototypeWithAuth.Controllers
                     catch (Exception ex)
                     {
                         transaction.RollbackAsync();
-                        DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, Guid.Empty, (int)parentQuoteId);
+                        DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, Guid.Empty, (int)requests.FirstOrDefault().ParentQuoteID);
                         throw new Exception(AppUtility.GetExceptionMessage(ex));
                     }
                 }
