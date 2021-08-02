@@ -5460,14 +5460,16 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public void UploadRequestsFromExcel()
         {
-            var fileName = @"C:\Users\strauss\Desktop\testInventory.xlsx";
+            var InventoryFileName = @"C:\Users\debbie\Desktop\אקסל לטסט\inventoryexcel.csv";
+            var POFileName = @"C:\Users\debbie\Desktop\אקסל לטסט\_2019.csv";
+
             var lineNumber = 0;
 
-            var excel = new ExcelQueryFactory(fileName);
+            var excel = new ExcelQueryFactory(InventoryFileName);
             try
             {
-                var data = from r in excel.Worksheet("Requests") select r;
-
+                var data = from r in excel.Worksheet("inventory excel") select r;                
+                var columnNames = excel.GetColumnNames("inventory excel", "A1:AM1").ToList()
                 foreach (var reader in data)
                 {
                     lineNumber++;
@@ -5475,11 +5477,10 @@ namespace PrototypeWithAuth.Controllers
                     {
                         try
                         {
-
-                            var sample = reader[0]?.ToString().Trim() == "Sample"; //required
-                            var productName = reader[1]?.ToString(); //required
-                            var vendorID = _context.Vendors.Where(v => v.VendorEnName == (reader[2] != null ? reader[2].ToString() : "")).FirstOrDefault()?.VendorID; //nullable samples
-                            var catalogNumber = reader[3]?.ToString().Trim(); //nullable samples
+                            var applicationCreatorEmail = reader[1]?.ToString().Trim();
+                            var productName = reader[0]?.ToString().Trim();
+                            var vendorName = reader[3]?.ToString().Trim();
+                            var catalogNumber = reader[4]?.ToString().Trim(); //nullable samples
                             var ownerUserID = _context.Employees.Where(e => e.Email == reader[4].ToString().Trim()).FirstOrDefault()?.Id; //required
                             var locationParent = _context.LocationInstances.Where(li => li.LocationInstanceName == reader[5].ToString()).FirstOrDefault(); //required
                             var locationUnits = reader[6]?.ToString().Split(','); //required
@@ -5487,7 +5488,6 @@ namespace PrototypeWithAuth.Controllers
                             var cost = reader[8] != null ? Convert.ToDecimal(reader[8].ToString().Trim()) : 0; //nullable samples
                             var includeVAT = reader[9]?.ToString().Trim();
                             var unitAmount = reader[10] != null ? Convert.ToUInt32(reader[10].ToString().Trim()) : (uint?)null; //nullable samples
-                            var unitTypeID = _context.UnitTypes.Where(ut => ut.UnitTypeDescription == (reader[11] != null ? reader[11].ToString() : "")).FirstOrDefault()?.UnitTypeID; //nullable samples
                             var subunitAmount = reader[12] != null ? Convert.ToUInt32(reader[12]?.ToString().Trim()) : (uint?)null; //nullable
                             var subunitTypeID = _context.UnitTypes.Where(ut => ut.UnitTypeDescription == (reader[13] != null ? reader[13].ToString() : "")).FirstOrDefault()?.UnitTypeID; //nullable
                             var subsubunitAmount = reader[14] != null ? Convert.ToUInt32(reader[14].ToString().Trim()) : (uint?)null; //nullable
@@ -5499,13 +5499,14 @@ namespace PrototypeWithAuth.Controllers
                             var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == parentCategory.CategoryTypeID).OrderBy(p => p.ProductCreationDate).LastOrDefault()?.SerialNumber ?? "L" + "0").Substring(1));
 
                             var productID = 0;
-                            var uniqueCatalogNumber = CheckUniqueVendorAndCatalogNumber(vendorID ?? 0, catalogNumber);
+                            var vendorID = _context.Vendors.Where(v => v.VendorEnName == vendorName).Select(v => v.VendorID).FirstOrDefault();
+                            var uniqueCatalogNumber = CheckUniqueVendorAndCatalogNumber(vendorID, catalogNumber);
                             if (uniqueCatalogNumber)
                             {
                                 var product = new Product()
                                 {
                                     ProductName = productName,
-                                    VendorID = vendorID,
+                                    VendorID =vendorID,
                                     ProductSubcategoryID = productSubcategoryID,
                                     CatalogNumber = catalogNumber,
                                     SerialNumber = "L" + lastSerialNumber,
@@ -5514,7 +5515,7 @@ namespace PrototypeWithAuth.Controllers
                                     SubUnitTypeID = subunitTypeID, //nullable
                                     SubSubUnit = subsubunitAmount, //nullable
                                     SubSubUnitTypeID = subsubunitTypeID, //nullable
-                                    UnitTypeID = unitTypeID ?? 5,
+                                    UnitTypeID =-1,
                                 };
                                 _context.Update(product);
                                 _context.SaveChanges();
