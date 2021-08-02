@@ -38,7 +38,7 @@
     <div class="modal-dialog-centered modal-xl mx-auto" role="document">
 
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius mx-auto">
-            <button type="button" class="close modal-close-padding modal-close-style cancelOrder" @*data-dismiss="modal"*@ aria-label="Close">
+            <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('reorder-item');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding reorderForm">
@@ -353,7 +353,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                             </div>
 
                             <div class="col-4">
-                                <button type="button" class="custom-cancel custom-button create-modal-submit cancelOrder" @*data-dismiss="modal"*@>Cancel</button>
+                                <button type="button" class="custom-cancel custom-button create-modal-submit" @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('reorder-item');">Cancel</button>
 
                             </div>
                         </div>
@@ -428,20 +428,5 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
 
         //return false;
     });
-    $(".cancelOrder").off('click').on("click", function (e) {
-        var formData = new FormData($(".reorderForm")[0]);
-        $.ajax({
-            contentType: false,
-            processData: false,
-            async: true,
-            url: "/Requests/ReOrderFloatModalView?isCancel=true",
-            data: formData,
-            traditional: true,
-            type: "POST",
-            cache: false,
-            success: function (data) {
-                $.fn.CloseModal("reorder-item");
-            }
-        });
-    })
+    
 </script>
