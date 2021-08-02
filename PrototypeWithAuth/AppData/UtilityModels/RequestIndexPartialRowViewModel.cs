@@ -227,7 +227,7 @@ namespace PrototypeWithAuth.ViewModels
                 }
                 //resend icon
                 var resendIconIndex = newIconList.FindIndex(ni => ni.IconClass.Equals("Resend"));
-                if (request.ParentQuote?.QuoteStatusID == 1)
+                if (request.QuoteStatusID == 1)
                 {
                     newIconList.RemoveAt(resendIconIndex);
                     newIconList.Insert(resendIconIndex, placeholder);

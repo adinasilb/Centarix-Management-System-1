@@ -8,3 +8,7 @@ delete from Requests
 delete from Products
 delete from Invoices
 delete from ParentQuotes
+update LocationInstances set 
+ContainsItems = 'false'
+update LocationInstances set 
+IsFull = 'false'
