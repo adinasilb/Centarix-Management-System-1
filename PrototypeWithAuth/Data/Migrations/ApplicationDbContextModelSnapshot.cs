@@ -2787,9 +2787,14 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("QuoteNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("QuoteStatusID")
+                        .HasColumnType("int");
+
                     b.HasKey("ParentQuoteID");
 
                     b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("QuoteStatusID");
 
                     b.ToTable("ParentQuotes");
                 });
@@ -4561,9 +4566,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("QuoteStatusID")
-                        .HasColumnType("int");
-
                     b.Property<int>("RequestStatusID")
                         .HasColumnType("int");
 
@@ -4597,8 +4599,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("PaymentStatusID");
 
                     b.HasIndex("ProductID");
-
-                    b.HasIndex("QuoteStatusID");
 
                     b.HasIndex("RequestStatusID");
 
@@ -6830,6 +6830,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany()
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.QuoteStatus", "QuoteStatus")
+                        .WithMany("ParentQuotes")
+                        .HasForeignKey("QuoteStatusID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentRequest", b =>
@@ -7050,11 +7056,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.QuoteStatus", "QuoteStatus")
-                        .WithMany()
-                        .HasForeignKey("QuoteStatusID")
-                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.RequestStatus", "RequestStatus")
                         .WithMany("Requests")

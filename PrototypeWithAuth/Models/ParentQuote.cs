@@ -30,5 +30,6 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Quote Number")]
 
         public string QuoteNumber { get; set; }
+
     }
 }
