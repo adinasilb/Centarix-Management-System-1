@@ -13,7 +13,7 @@
         Status: <span class="biomarkers-color">@Model.Participant.ParticipantStatus.Description </span>
     </div>
 </div>
-<div class="col-12">
+<div class="row">
     <div class="col-6">
         <button class="custom-button custom-button-font light-gray-background-color ml-0">
             <a href="@Url.Action("Experiment", "Biomarkers", new { ID = Model.Participant.ExperimentID })" class="text-black">
@@ -22,4 +22,24 @@
             </a>
         </button>
     </div>
+    <div class="col-6">
+        <button class="float-right custom-button custom-button-font clear-custom-button biomarkers-color white-background biomarkers-border-color">
+            <span class="add-new-entry" value="@Model.Participant.ParticipantID">
+                + Add New Entry
+            </span>
+        </button>
+    </div>
 </div>
+<script>
+    $(".add-new-entry").on("click", function (e) {
+        $.ajax({
+            async: true,
+            url: "/Biomarkers/_NewEntry?ID=" + $(this).attr("value"),
+            type: 'GET',
+            cache: false,
+            success: function (data) {
+
+            }
+        });
+    });
+</script>
