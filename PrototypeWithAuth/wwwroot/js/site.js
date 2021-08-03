@@ -1475,11 +1475,11 @@ $(function () {
 			if ($(this).hasClass('locations')) {
 				console.log('locations');
 				$(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
-				$('#location .mark-readonly').removeClass("disabled")
+				$('#location .mark-readonly').removeClass("not-clickable")
 				$('#location .mark-readonly').attr("disabled", false);
-				$('.edit-mode-switch-description').text("Edit Mode On");
-				$('.turn-edit-on-off').attr('name', 'edit');
-				$('.location-icon').removeClass('d-none');
+				$('dit-on-off').attr('name', 'edit');
+				$('.location-ico.edit-mode-switch-description').text("Edit Mode On");
+				$('.turn-en').removeClass('d-none');
 			}
 			else {
 				enableMarkReadonly($(this));

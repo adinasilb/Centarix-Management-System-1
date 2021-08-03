@@ -266,6 +266,9 @@
 				}
 			}
 		}
+		else{
+			console.log("not clickable")
+			}
 	});
 	$(".visual-locations td").on("click", function (e) {
 		var element = $(this);
@@ -277,6 +280,9 @@
 			$(".first-selected").removeClass("first-selected");
 			element.addClass("first-selected");
 		}
+		else{
+			console.log("not clickable")
+			}
 	});
 	function ToggleBoxUnitSelected(element, select) {
 		var locationInstanceId = element.children('div').first().children("input").first().attr("liid");
@@ -338,9 +344,14 @@ function MultipleLocation(element, ToggleBoxUnitSelected) {
 							end = true;
 						}
 						else {
-							if (!$(td).hasClass("graduated-table-background-color")) {
+							if (!$(td).hasClass("not-clickable")) {
+							
 								ToggleBoxUnitSelected($(td), select);
 							}
+							else{
+
+									console.log("not clickable")
+								}
 						}
 					}
 				});
@@ -354,9 +365,13 @@ function MultipleLocation(element, ToggleBoxUnitSelected) {
 							end = true;
 						}
 						else {
-							if (!$(this).hasClass("graduated-table-background-color")) {
+							if (!$(this).hasClass("not-clickable")) {
 								ToggleBoxUnitSelected($(this), select);
 							}
+							else{
+
+									console.log("not clickable")
+								}
 						}
 					}
 				});

@@ -123,16 +123,19 @@
                         else if (locationsList[z].IsFull || (!inReceivedModal && Model.RequestChildrenLocationInstances[z].IsThisRequest/*for archived*/))
                         {
                             var backgroundClass = "graduated-table-background-color  ";
-                            hideIcon = "d-none"; 
-                            var disabled = "disabled";
+                            hideIcon = "d-none";
+                            var disabled = "not-clickable ";
+                            var markReadonly = "";
+                            iconClass = "";
                             if (!inReceivedModal && Model.RequestChildrenLocationInstances[z].IsThisRequest)
                             {
                                 backgroundClass = "";
                                 disabled = "";
                                 iconClass = "icon-delete-24px";
                                 hideIcon = "";
+                                markReadonly = "mark-readonly";
                             }
-                            <td class="@outerClass mark-readonly location-selected @backgroundClass" style="padding:0px;  ">
+                            <td class="@outerClass @markReadonly @disabled location-selected @backgroundClass"  style="padding:0px;  ">
                                 <div class="">
                                     <input class="@classes @disabled" id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
                                     <div class="row-1">
