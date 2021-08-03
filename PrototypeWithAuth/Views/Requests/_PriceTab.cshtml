@@ -5,6 +5,7 @@
 @using PrototypeWithAuth.AppData
 
 @{
+    Model.PriceTabViewModel.Requests = Model.Requests;
     var Category = Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescription;
     var modalType = Model.ModalType;
     var markReadOnlyClass = "";
@@ -34,7 +35,7 @@
             shekelSelected = "";
         }
     }
-    if(modalType == AppUtility.RequestModalType.Edit && (Model.Requests[0].QuoteStatusID == 2 || Model.Requests[0].QuoteStatusID == 1))
+    if (modalType == AppUtility.RequestModalType.Edit && (Model.Requests[0].QuoteStatusID == 2 || Model.Requests[0].QuoteStatusID == 1))
     {
         hideNoQuote = "d-none";
     }
@@ -42,7 +43,7 @@
     {
         hideVat = "d-none";
     }
-    var color = Model.SectionType == AppUtility.MenuItems.Accounting ? "accounting-color" : Model.SectionType == AppUtility.MenuItems.LabManagement ? "lab-man-color"  : Model.SectionType == AppUtility.MenuItems.Protocols ? "protocols-color" : "order-inv-color";
+    var color = Model.SectionType == AppUtility.MenuItems.Accounting ? "accounting-color" : Model.SectionType == AppUtility.MenuItems.LabManagement ? "lab-man-color" : Model.SectionType == AppUtility.MenuItems.Protocols ? "protocols-color" : "order-inv-color";
 }
 <input type="hidden" id="quoteStatus" asp-for="Requests[0].QuoteStatusID" />
 
@@ -71,284 +72,9 @@
         </div>
     </div>
 </div>
+@{await Html.RenderPartialAsync("_PriceTabPartial", Model);}
 @* @if (Category != null && !Category.Equals(AppUtility.ParentCategoryEnum.Operation))
 {*@
-    <div class="row" id="edit">
-        <div class="col-md-4  RequestUnitCard ">
-            <div class="border h-100 pt-4" @*style="padding-right: 2rem; padding-left: 2rem;"*@>
-                <div class="mx-2rem">
-                    <div class="row">
-                        <div class="col-md-4 form-group">
-                            <label asp-for="Requests[0].Unit" class="control-label"></label>
-                            @Html.EditorFor(vm => vm.Requests[0].Unit, new { htmlAttributes = new { @class = "form-control-plaintext border-bottom " + @markReadOnlyClass, @min = "1", @id = "unit" } })
-                            <span asp-validation-for="Requests[0].Unit" class="text-danger-centarix"></span>
-                        </div>
-                        <div class="col-md-8 form-group dropdown-select-div">
-                            <label asp-for="Requests[0].Product.UnitType" class="control-label"></label>
-                            @*<select asp-for="Request.UnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass">
-                                    <option value=""></option>
-                                    @foreach (var unitparenttype in Model.UnitTypes)
-                                    {
-                                        <optgroup label="@unitparenttype.Key.UnitParentTypeDescription">
-                                            @foreach (var unittype in unitparenttype)
-                                            {
-                                                <option value="@unittype.UnitTypeID">@unittype.UnitTypeDescription</option>
-                                            }
-                                        </optgroup>
-                                    }
-                                </select>*@
-                            @Html.DropDownListFor(
-                                vm => vm.Requests[0].Product.UnitTypeID,
-                                Model.UnitTypeList,
-                                "",
-                                htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @id = "unitTypeID" }
-                                )
-                            <span asp-validation-for="Requests[0].Product.UnitType" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                    <div class="form-group requestPriceQuote @hideNoQuote">
-                        @{ 
-                            var unitLabel = Model.Requests[0].Product.UnitType != null ? Model.Requests[0].Product.UnitType.UnitTypeDescription : "Unit";
-                        } 
-                        <label class="control-label price-per-unit-label">Price Per @unitLabel:</label>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <span class="input-group-text border-bottom request-cost-dollar-icon @disableDollar" >&#36;</span>
-                                    <input type="number" class="form-control-plaintext border-bottom @dollarReadOnly  @disableDollar requestPriceQuote" name="unit-price-dollars" id="unit-price-dollars" value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].PricePerUnit / Model.Requests[0].ExchangeRate,2))" @disabledDollarProperty />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <span class="input-group-text request-cost-shekel-icon @disableShekel" >&#x20aa;</span>
-                                    <input type="number" class="form-control-plaintext border-bottom requestPriceQuote @shekelReadOnly @disableShekel" name="unit-price-shekel" id="unit-price-shekel" value="@Math.Round(Model.Requests[0].PricePerUnit, 2)" @disabledShekelProperty />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @{var cardDisplayNoneSub = "d-none";
-            var plusDisplayNoneSub = "";
-            var disabled = "";
-            var subMarkReadOnly = "";
-            if (Model.Requests[0].Product.SubUnit > 0)
-            {
-                cardDisplayNoneSub = "";
-                plusDisplayNoneSub = "d-none";
-                disabled = "disabled";
-                subMarkReadOnly = markReadOnlyClass;
-            }
-        }
-        <div class="col-4 pl-0 RequestSubunitCard">
-            <div class="border h-100 ">
-                <button type="button" class="close sub-close @cardDisplayNoneSub pr-2 pt-2  @markReadOnlyClass" aria-label="Close" style="/* display: flex; */float: right;">
-                    <span aria-hidden="true">×</span>
-                </button>
-                <div class="mx-2rem addSubUnitCard mt-4 @plusDisplayNoneSub">
-                    <div class="row " style="display:initial;">          
-                        <div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow @markReadOnlyClass" disabled style="font-size: 5rem; line-height:normal" />
-                        <br><span class="text-capitalize @color text">add sub unit</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="mx-2rem  subUnitsCard @cardDisplayNoneSub mt-4">
-
-
-                    <div class="row ">
-                        <div class="col-md-4 pl-0 form-group">
-                            <label asp-for="Requests[0].Product.SubUnit" class="control-label"></label>
-                            <input asp-for="Requests[0].Product.SubUnit" class="form-control-plaintext border-bottom @subMarkReadOnly " min="1" id="subUnit" disabled />
-                            <span asp-validation-for="Requests[0].Product.SubUnit" class="text-danger-centarix"></span>
-                        </div>
-                        <div class="col-md-8 form-group">
-                            <label asp-for="Requests[0].Product.SubUnitType" class="control-label"></label>
-                            @Html.DropDownListFor(
-                                vm => vm.Requests[0].Product.SubUnitTypeID,
-                                Model.UnitTypeList,
-                                "",
-                                 htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext subunit-type-select " + @subMarkReadOnly, @disabled = @disabled, @id = "subUnitTypeID" }
-                                 )
-                            <span asp-validation-for="Requests[0].Product.SubUnitType" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-
-                    <div class="form-group requestPriceQuote @hideNoQuote">
-                        @{
-                            var subunitLabel = Model.Requests[0].Product.SubUnitType != null ? Model.Requests[0].Product.SubUnitType.UnitTypeDescription : "Subunit";
-                        }
-                        <label class="control-label price-per-subunit-label">Price Per @subunitLabel:</label>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <span class="input-group-text disabled-text" disabled>&#36;</span>
-                                    <input class="form-control-plaintext border-bottom requestPriceQuote disabled-text" disabled name="subunit-price-dollars" id="subunit-price-dollars" value="@(Model.Requests[0].ExchangeRate == 0 || Model.Requests[0].Product.SubSubUnit== null ? 0 : Math.Round(AppUtility.GetPricePerSubUnit(Model.Requests[0]) / Model.Requests[0].ExchangeRate,2))" />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <span class="input-group-text requestPriceQuote disabled-text" disabled>&#x20aa;</span>
-                                    <input class="form-control-plaintext border-bottom disabled-text" disabled name="subunit-price-shekel" id="subunit-price-shekel" value="@(Model.Requests[0].Product.SubSubUnit!= null?Math.Round(AppUtility.GetPricePerSubUnit(Model.Requests[0]), 2):0)" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @{
-            var cardDivDisplayNone = "d-none";
-            var cardDisplayNoneSubSub = "d-none";
-            var plusDisplayNoneSubSub = "";
-            //var subsubdisabled = "";
-            var subsubMarkReadOnly = "";
-            if (Model.Requests[0].Product.SubUnit > 0)
-            {
-                cardDivDisplayNone = "";
-                if (Model.Requests[0].Product.SubSubUnit > 0)
-                {
-                    plusDisplayNoneSubSub = "d-none";
-                    cardDisplayNoneSubSub = "";
-                    subsubMarkReadOnly = markReadOnlyClass;
-                    //subsubdisabled = "disabled";
-                }
-            }
-        }
-        <div class="col-4 pl-0 RequestSubsubunitCard @cardDivDisplayNone">
-            <div class="border h-100">
-                <button type="button" class="close subsub-close @cardDisplayNoneSubSub pr-2 pt-2 @markReadOnlyClass" aria-label="Close" style="
-    /* display: flex; */
-    float: right;
-">
-                    <span aria-hidden="true">×</span>
-                </button>
-                <div class="mx-2rem addSubSubUnitCard mt-4 @plusDisplayNoneSubSub">
-                    <div class="row " style="display:initial;">
-                        <div class="col-8 offset-2 text-center font-weight-light">
-
-                            <input type="button" value="+" class=" addSubSubUnit btn m-0 p-0 no-box-shadow @markReadOnlyClass" disabled style="font-size: 5rem; line-height:normal" />
-                            <br>
-                            <span class="text-capitalize @color text">add sub unit</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="mx-2rem  subSubUnitsCard mt-4 @cardDisplayNoneSubSub">
-                    <div class="row">
-                        <div class="col-md-4 form-group">
-                            <label asp-for="Requests[0].Product.SubSubUnit" class="control-label"></label>
-                            <input asp-for="Requests[0].Product.SubSubUnit" class="form-control-plaintext border-bottom @subsubMarkReadOnly " min="1" disabled id="subSubUnit" />
-                            <span asp-validation-for="Requests[0].Product.SubSubUnit" class="text-danger-centarix"></span>
-                        </div>
-                        <div class="col-md-8 form-group">
-                            <label asp-for="Requests[0].Product.SubSubUnitType" class="control-label"></label>
-                            @Html.DropDownListFor(
-                                vm => vm.Requests[0].Product.SubSubUnitTypeID,
-                                Model.UnitTypeList,
-                                "",
-                                htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext sub-subunit-type-select " + @subsubMarkReadOnly, @disabled, @id = "subSubUnitTypeID" }
-                                )
-                            <span asp-validation-for="Requests[0].Product.SubSubUnitType" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-
-                    <div class="form-group requestPriceQuote @hideNoQuote">
-                        @{
-                            var subsubunitLabel = Model.Requests[0].Product.SubSubUnitType != null ? Model.Requests[0].Product.SubSubUnitType.UnitTypeDescription : "Sub-Subunit";
-                        }
-                        <label class="control-label price-per-sub-subunit-label">Price Per @subsubunitLabel:</label>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <span class="input-group-text disabled-text" disabled>&#36;</span>
-                                    <input class="form-control-plaintext border-bottom requestPriceQuote disabled-text" disabled name="subsubunit-price-dollars" id="subsubunit-price-dollars"
-                                           value="@(Model.Requests[0].ExchangeRate == 0 || Model.Requests[0].Product.SubSubUnit==null ? 0 : Math.Round(AppUtility.GetPricePerSubSubUnit(Model.Requests[0])/ Model.Requests[0].ExchangeRate,2))" />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="input-group ">
-                                    <span class="input-group-text requestPriceQuote disabled-text" disabled>&#x20aa;</span>
-                                    <input class="form-control-plaintext border-bottom disabled-text" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled
-                                           value="@(Model.Requests[0].Product.SubSubUnit!=null?Math.Round(AppUtility.GetPricePerSubSubUnit(Model.Requests[0])
-                                                  ):0)" />
-                                    <span asp-validation-for="Requests[0].Product.SubSubUnit" class="text-danger-centarix"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-@*}*@
-<div class="row requestPriceQuote @hideNoQuote">
-    <div class="col-md-2">
-        <div class="form-group">
-            <label asp-for="Requests[0].Cost" class="control-label">Total:</label>
-            <div class="input-group">
-                <span class="input-group-text request-cost-dollar-icon @disableDollar">&#36;</span>
-                <input class="form-control-plaintext border-bottom @dollarReadOnly @disableDollar requestPriceQuote" id="sum-dollars" name="sum-dollars" value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round((Model.Requests[0].Cost??0) / Model.Requests[0].ExchangeRate,2))" @disabledDollarProperty />
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="form-group">
-            <label class="control-label"></label>
-            <div class="input-group">
-                <span class="input-group-text request-cost-shekel-icon @disableShekel">&#x20aa;</span>
-                @if(disabledShekelProperty != "")
-                {
-                    <input asp-for="Requests[0].Cost" class="form-control-plaintext border-bottom  @disableShekel requestPriceQuote" min="1" readonly id="cost" />
-                }
-                else
-                {
-                    <input asp-for="Requests[0].Cost" class="form-control-plaintext border-bottom @shekelReadOnly requestPriceQuote" min="1" id="cost" />
-
-                }
-                <span class="text-danger-centarix" asp-validation-for="Requests[0].Cost"></span>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2 vat-info @hideVat">
-        <div class="form-group">
-            <label asp-for="Requests[0].VAT" class="control-label"></label>
-            <div class="input-group">
-                <span class="input-group-text disabled-text">&#36;</span>
-                <input class="form-control-plaintext border-bottom vatInDollars disabled-text requestPriceQuote" id="vatInDollars" disabled value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].VAT / Model.Requests[0].ExchangeRate, 2))" />
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2 vat-info @hideVat">
-        <div class="form-group">
-            <label class="control-label"></label>
-            <div class="input-group">
-                <span class="input-group-text disabled-text">&#x20aa;</span>
-                <input asp-for="Requests[0].VAT" class="form-control-plaintext border-bottom disabled-text requestPriceQuote" id="vat" disabled />
-                <span class="text-danger-centarix" asp-validation-for="Requests[0].VAT"></span>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2 vat-info @hideVat">
-        <div class="form-group">
-            <label class="control-label">Total + VAT:</label>
-            <div class="input-group">
-                <span class="input-group-text disabled-text">&#36;</span>
-                <input class="form-control-plaintext border-bottom disabled-text requestPriceQuote" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].TotalWithVat/Model.Requests[0].ExchangeRate,2))" />
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2 vat-info @hideVat">
-        <div class="form-group">
-            <label class="control-label"></label>
-            <div class="input-group">
-                <span class="input-group-text disabled-text">&#x20aa;</span>
-                <input asp-for="Requests[0].TotalWithVat" class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
-            </div>
-        </div>
-    </div>
-</div>
 <div class="row requestPriceQuote @hideNoQuote">
     <div class="col-md-2">
         <div class="form-group">
