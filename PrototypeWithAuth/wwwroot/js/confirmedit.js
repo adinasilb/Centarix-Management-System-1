@@ -23,6 +23,7 @@
 			url = "/Admin/EditUser";
 
 		} else if ($('.turn-edit-on-off').hasClass('orders')) {
+				$("#loading").show();
 			console.log("has class orders");
 			url = "/Requests/EditModalView";
 		}
@@ -60,6 +61,7 @@
 			type: 'POST',
 			cache: false,
 			success: function (data) {
+				$("#loading").hide();
 				if ($('.turn-edit-on-off').hasClass('locations')) {
 					//alert("got data for locations");
 					//console.log(data)

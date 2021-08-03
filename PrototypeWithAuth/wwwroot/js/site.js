@@ -1471,20 +1471,10 @@ $(function () {
 			});
 
 		}
-		else if (type == 'details') {
-			if ($(this).hasClass('locations')) {
-				console.log('locations');
-				$(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
-				$('#location .mark-readonly').removeClass("not-clickable")
-				$('#location .mark-readonly').attr("disabled", false);
-				$('dit-on-off').attr('name', 'edit');
-				$('.location-ico.edit-mode-switch-description').text("Edit Mode On");
-				$('.turn-en').removeClass('d-none');
-			}
-			else {
-				enableMarkReadonly($(this));
-				$(".proprietryHidenCategory").attr("disabled", false);
-			}
+		else if (type == 'details') {	
+
+			enableMarkReadonly($(this));
+			$(".proprietryHidenCategory").attr("disabled", false);
 		}
 		//}
 	});

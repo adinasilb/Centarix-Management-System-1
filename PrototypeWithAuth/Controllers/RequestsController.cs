@@ -156,7 +156,7 @@ namespace PrototypeWithAuth.Controllers
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.Orders:
-                            var ordersRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.QuoteStatusID == 4 && r.RequestStatusID == 6)
+                            var ordersRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
                                      .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
                                      .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType).Include(r => r.ApplicationUserCreator);
 
@@ -173,7 +173,7 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.SidebarEnum.Quotes:
                             var quoteRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                                 .Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
-                                .Where(r => (r.QuoteStatusID == 1 || r.QuoteStatusID == 2) && r.RequestStatusID == 6)
+                                .Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID == 6)
                                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
                                 .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType)
                                 .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator);
@@ -761,74 +761,68 @@ namespace PrototypeWithAuth.Controllers
 
         protected async Task SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived, bool archiveOneRequest)
         {
-            foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
+            try
             {
-                if (place.Placed)
+                foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
                 {
-                    //getting the parentlocationinstanceid
-                    var liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
-                    var mayHaveParent = true;
-                    while (mayHaveParent)
+                    if (place.Placed)
                     {
-                        if (liParent.LocationInstanceParentID != null)
+                        //getting the parentlocationinstanceid
+                        var liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
+                        var mayHaveParent = true;
+                        while (mayHaveParent)
                         {
-                            liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == liParent.LocationInstanceParentID).FirstOrDefault();
+                            if (liParent.LocationInstanceParentID != null)
+                            {
+                                liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == liParent.LocationInstanceParentID).FirstOrDefault();
+                            }
+                            else
+                            {
+                                mayHaveParent = false;
+                            }
                         }
-                        else
-                        {
-                            mayHaveParent = false;
-                        }
-                    }
 
-                    //adding the requestlocationinstance
-                    var rli = new RequestLocationInstance()
-                    {
-                        LocationInstanceID = place.LocationInstanceId,
-                        RequestID = requestReceived.RequestID,
-                        ParentLocationInstanceID = liParent.LocationInstanceID
-                    };
-                    _context.Add(rli);
-                    try
-                    {
+                        //adding the requestlocationinstance
+                        var rli = new RequestLocationInstance()
+                        {
+                            LocationInstanceID = place.LocationInstanceId,
+                            RequestID = requestReceived.RequestID,
+                            ParentLocationInstanceID = liParent.LocationInstanceID
+                        };
+
                         if (archiveOneRequest)
                         {
                             requestReceived.IsArchived = true;
                             _context.Update(requestReceived);
-                            await _context.SaveChangesAsync();
                             rli.IsArchived = true;
-                            _context.Update(rli);
-                            await _context.SaveChangesAsync();
                             MarkLocationAvailable(requestReceived.RequestID, place.LocationInstanceId);
+                            _context.Add(rli);
                             await _context.SaveChangesAsync();
                             return;
                         }
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
 
-                    //updating the locationinstance
-                    var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
-                    if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
-                    {
-                        locationInstance.IsFull = true;
-                    }
-                    else
-                    {
-                        locationInstance.ContainsItems = true;
-                    }
-                    _context.Update(locationInstance);
-                    try
-                    {
+                        _context.Add(rli);
+
+                        //updating the locationinstance
+                        var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
+                        if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+                        {
+                            locationInstance.IsFull = true;
+                        }
+                        else
+                        {
+                            locationInstance.ContainsItems = true;
+                        }
+                        _context.Update(locationInstance);
+
                         await _context.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
+
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 
@@ -1069,12 +1063,12 @@ namespace PrototypeWithAuth.Controllers
                         newRequest.RequestStatusID = 1;
                     }
                     newRequest.Cost = 0;
-                    //newRequest.ParentQuote = new ParentQuote();
-                    newRequest.QuoteStatusID = 1;
+                    newRequest.ParentQuote = new ParentQuote();
+                    newRequest.ParentQuote.QuoteStatusID = 1;
                     newRequest.OrderType = AppUtility.OrderTypeEnum.RequestPriceQuote.ToString();
                     //this is assuming that we only reorder request price quotes
                     _context.Entry(newRequest).State = EntityState.Added;
-                    //_context.Entry(newRequest.ParentQuote).State = EntityState.Added;
+                    _context.Entry(newRequest.ParentQuote).State = EntityState.Added;
                     _context.Entry(newRequest.Product).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
@@ -1377,7 +1371,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     reqsFromDB = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                           .Where(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString()
-                          && r.QuoteStatusID == 4)
+                          && r.ParentQuote.QuoteStatusID == 4)
                           .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
                           .Include(r => r.Product).ThenInclude(r => r.Vendor)
                           .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
@@ -1386,7 +1380,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     reqsFromDB = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                       .Where(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()
-                      && r.QuoteStatusID == 4)
+                      && r.ParentQuote.QuoteStatusID == 4)
                     .Include(r => r.Product).ThenInclude(r => r.Vendor)
                     .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
                 }
@@ -1631,7 +1625,7 @@ namespace PrototypeWithAuth.Controllers
                     //await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);
                     //get rid of old trlvm?
                     tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
-                    
+
                     return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("ConfirmEmailModal", controller, tempRequestListViewModel.RequestIndexObject) };
                 }
                 else
@@ -2040,7 +2034,7 @@ namespace PrototypeWithAuth.Controllers
                 //resend icon
                 var resendIcon = new IconColumnViewModel("Resend");
                 var placeholder = new IconColumnViewModel("Placeholder");
-                if (request.QuoteStatusID == 2)
+                if (request.ParentQuote?.QuoteStatusID == 2)
                 {
                     newIconList.Insert(0, resendIcon);
                 }
@@ -2372,7 +2366,6 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    TempData.Keep();
                     var request = requestItemViewModel.Requests.FirstOrDefault();
                     //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
                     request.ParentRequest = null;
@@ -3155,14 +3148,14 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
-                    .Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.QuoteStatusID == 1).Where(r => r.RequestStatusID == 6)
+                    .Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 1).Where(r => r.RequestStatusID == 6)
                      .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor)
                      .Include(r => r.ParentQuote).ToList();
             }
             if (requests.Count() == 0)
             {
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
-                    .Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.QuoteStatusID == 2).Where(r => r.RequestStatusID == 6)
+                    .Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 2).Where(r => r.RequestStatusID == 6)
                      .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
                      .Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
             }
@@ -3254,7 +3247,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         foreach (var quote in requests)
                         {
-                            quote.QuoteStatusID = 2;
+                            quote.ParentQuote.QuoteStatusID = 2;
                             quote.ParentQuote.ApplicationUserID = currentUser.Id;
                             //_context.Update(quote.ParentQuote);
                             //_context.SaveChanges();
@@ -3289,13 +3282,13 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == id && r.QuoteStatusID == 1)
+                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == id && r.ParentQuote.QuoteStatusID == 1)
                     .Where(r => r.RequestStatusID == 6).Include(r => r.Product).ThenInclude(p => p.Vendor)
                     .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).ToList();
             }
             if (requests.Count() == 0)
             {
-                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == id && r.QuoteStatusID == 2)
+                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == id && r.ParentQuote.QuoteStatusID == 2)
                     .Where(r => r.RequestStatusID == 6).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote)
                     .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).ToList();
             }
@@ -3865,8 +3858,8 @@ namespace PrototypeWithAuth.Controllers
                         await SaveLocations(receivedModalVisualViewModel, request, false);
                         await transaction.CommitAsync();
                     }
-
                 }
+
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
@@ -4132,8 +4125,8 @@ namespace PrototypeWithAuth.Controllers
                 EditQuoteDetailsViewModel editQuoteDetailsViewModel = new EditQuoteDetailsViewModel()
                 {
                     Requests = requests,
-                    QuoteDate = DateTime.Now
-                    //ParentQuoteID = requests.FirstOrDefault().ParentQuoteID
+                    QuoteDate = DateTime.Now,
+                    ParentQuoteID = requests.FirstOrDefault().ParentQuoteID
                 };
 
                 return PartialView(editQuoteDetailsViewModel);
@@ -4145,7 +4138,7 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
-              .Where(r => r.Product.VendorID == id && (r.QuoteStatusID == 2 || r.QuoteStatusID == 1))
+              .Where(r => r.Product.VendorID == id && (r.ParentQuote.QuoteStatusID == 2 || r.ParentQuote.QuoteStatusID == 1))
               .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product).ThenInclude(p => p.ProductSubcategory)
               .Include(r => r.ParentQuote).Include(r => r.Product.UnitType).Include(r => r.Product.SubSubUnitType).Include(r => r.Product.SubUnitType).ToList();
 
@@ -4161,33 +4154,19 @@ namespace PrototypeWithAuth.Controllers
                 using (var transaction = _context.Database.BeginTransaction())
                 {
                     var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Include(x => x.ParentQuote).Select(r => r);
-                    /*var firstRequest = requests.Where(r => r.RequestID == editQuoteDetailsViewModel.Requests[0].RequestID).FirstOrDefault();
-                    int? parentQuoteId = firstRequest.ParentQuoteID;*/
+                    int? parentQuoteId = requests.Where(r => r.RequestID == editQuoteDetailsViewModel.Requests[0].RequestID).Select(r => r.ParentQuoteID).FirstOrDefault();
                     try
                     {
                         //var quoteDate = editQuoteDetailsViewModel.QuoteDate;
-                        //var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
-                        //firstRequest.ParentQuote.QuoteDate = quoteDate;
-                        var parentQuote = new ParentQuote()
-                        {
-                            QuoteNumber = editQuoteDetailsViewModel.QuoteNumber
-                        };
+                        var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
                         foreach (var quote in editQuoteDetailsViewModel.Requests)
                         {
                             //throw new Exception();
                             var request = requests.Where(r => r.RequestID == quote.RequestID).FirstOrDefault();
-                            request.ParentQuote = parentQuote;
-                            if (request.ParentQuote.ParentQuoteID == 0)
-                            {
-                                _context.Entry(request.ParentQuote).State = EntityState.Added;
-                            }
-                            else
-                            {
-                                _context.Entry(request.ParentQuote).State = EntityState.Unchanged;
-                            }
-                            request.QuoteStatusID = 4;
-                            //request.ParentQuote.QuoteNumber = quoteNumber.ToString();
-                            //request.ParentQuoteID = parentQuoteId;
+
+                            request.ParentQuote.QuoteStatusID = 4;
+                            //request.ParentQuote.QuoteDate = quoteDate;
+                            request.ParentQuote.QuoteNumber = quoteNumber.ToString();
                             request.Cost = quote.Cost;
                             request.Currency = editQuoteDetailsViewModel.Requests[0].Currency;
                             request.ExchangeRate = editQuoteDetailsViewModel.Requests[0].ExchangeRate;
@@ -4199,7 +4178,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         //save file
                         string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
-                        string requestFolder = Path.Combine(uploadFolder, requests.Where(r => r.RequestID == editQuoteDetailsViewModel.Requests[0].RequestID).FirstOrDefault().ParentQuoteID.ToString());
+                        string requestFolder = Path.Combine(uploadFolder, parentQuoteId.ToString());
                         string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Quotes.ToString());
                         Directory.CreateDirectory(folderPath);
                         string uniqueFileName = 1 + editQuoteDetailsViewModel.QuoteFileUpload.FileName;
@@ -4212,7 +4191,7 @@ namespace PrototypeWithAuth.Controllers
                     catch (Exception ex)
                     {
                         transaction.RollbackAsync();
-                        DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, Guid.Empty, (int)requests.FirstOrDefault().ParentQuoteID);
+                        DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, Guid.Empty, (int)parentQuoteId);
                         throw new Exception(AppUtility.GetExceptionMessage(ex));
                     }
                 }
@@ -4962,6 +4941,13 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadQuoteModal(UploadQuoteViewModel uploadQuoteOrderViewModel, TempRequestListViewModel tempRequestListViewModel, bool isCancel = false)
         {
+            /*if (isCancel)
+            {
+                //RemoveRequestWithCommentsAndEmailSessions();
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
+                await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
+                return new EmptyResult();
+            }*/
             try
             {
 
@@ -4973,9 +4959,9 @@ namespace PrototypeWithAuth.Controllers
                     TempRequestViewModels = newTempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
                 };
 
+                uploadQuoteOrderViewModel.ParentQuote.QuoteStatusID = 4;
                 foreach (var tempRequestViewModel in deserializedTempRequestListViewModel.TempRequestViewModels)
                 {
-                    tempRequestViewModel.Request.QuoteStatusID = 4;
                     tempRequestViewModel.Request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
                     if (uploadQuoteOrderViewModel.ExpectedSupplyDays != null)
                     {
@@ -5258,7 +5244,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 tempRequestListViewModel.RequestIndexObject = requestIndexObject;
                 if (tempRequestListViewModel.GUID == Guid.Empty) { tempRequestListViewModel.GUID = Guid.NewGuid(); }
-                
+
             }
             //IF ANYTHING IS CHANGED TO THE JSON (RequestIndexObject or TempRequestViewModels) MUST BE UPDATED HERE
             return PartialView(await GetTermsViewModelAsync(vendorID, requestIds, tempRequestListViewModel));

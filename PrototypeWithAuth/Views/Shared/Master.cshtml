@@ -406,14 +406,12 @@
             console.log("in if details");
             $('.mark-readonly').attr("disabled", false);
             $('.mark-readonly').removeClass("disabled");
-            $(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
             //TODO: add in mark-readonly fields for subunits
             //$.fn.CheckUnitsFilled();
             //$.fn.CheckSubUnitsFilled();
             $('.mark-edditable').data("val", true);
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
-            $('.location-icon').removeClass('d-none');
 
             //turn off document modals
             if ($(element).hasClass('operations') || $(element).hasClass('orders')) {
@@ -445,6 +443,14 @@
                     console.log("no quote")
                     $(".requestPriceQuote").prop("disabled", true);
                 }
+            }
+            if ($(element).hasClass('has-location-tab')) {
+                console.log('locations');
+                $(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
+                $('#location .mark-readonly').removeClass("not-clickable")
+                $('#location .mark-readonly').attr("disabled", false);
+                $(".location-icon").removeClass("d-none");
+
             }
             if ($(element).hasClass('suppliers') || $(element).hasClass('accounting')) {
                 $.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
@@ -598,7 +604,7 @@
             $("." + modalClass+ ' .mark-readonly').prop("disabled", true);
             $("." + modalClass + ' .mark-readonly input').prop("disabled", true);
             $("." + modalClass + ' .choose-location').addClass("disable-custom-mdbselect");
-            $("." + modalClass + ' .visual-locations td.mark-readonly').addClass("disabled");
+            $("." + modalClass + ' .visual-locations td.mark-readonly').addClass("not-clickable");
             $("." + modalClass + ' .mark-edditable').attr("data-val", false)
             $("." + modalClass + ' .edit-mode-switch-description').text("Edit Mode Off");
             $("." + modalClass + ' .turn-edit-on-off').attr('name', 'details')
