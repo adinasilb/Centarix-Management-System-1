@@ -1,7 +1,25 @@
-﻿@model Participant;
+﻿@model PrototypeWithAuth.ViewModels.EntriesViewModel;
+@using PrototypeWithAuth.AppData;
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
-Serial Number: @Model.CentarixID
+<div class="_entries under-row-margin">
+    <div class="entries-header font-weight-medium text">
+        Serial Number: <span class="biomarkers-color">@Model.Participant.CentarixID </span> |
+        DOB: <span class="biomarkers-color">@Model.Participant.DOB.GetElixirDateFormat() </span> |
+        Gender: <span class="biomarkers-color">@Model.Participant.Gender.Description </span> |
+        Status: <span class="biomarkers-color">@Model.Participant.ParticipantStatus.Description </span>
+    </div>
+</div>
+<div class="col-12">
+    <div class="col-6">
+        <button class="custom-button custom-button-font light-gray-background-color ml-0">
+            <a href="@Url.Action("Experiment", "Biomarkers", new { ID = Model.Participant.ExperimentID })" class="text-black">
+                <i class="icon-arrow_back_ios-24px-1" style="font-size: 1.2rem;"></i>
+                Back
+            </a>
+        </button>
+    </div>
+</div>

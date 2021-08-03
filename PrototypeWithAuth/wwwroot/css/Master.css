@@ -491,7 +491,9 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     opacity: 0.67;
 }
 
-
+.font-weight-medium {
+    font-weight: 600 !important;
+}
 
 table td, table td .btn, .text, table th {
     font-size: var(--text-font-size) !important;

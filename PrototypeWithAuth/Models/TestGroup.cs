@@ -15,6 +15,7 @@ namespace PrototypeWithAuth.Models
         public int TestOuterGroupID { get; set; }
         public TestOuterGroup TestOuterGroup { get; set; }
         public List<TestHeader> TestHeaders { get; set; }
+        public int SequencePosition { get; set; }
 
     }
 }

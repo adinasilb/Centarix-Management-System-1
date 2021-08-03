@@ -15,5 +15,6 @@ namespace PrototypeWithAuth.Models
         public int TestID { get; set; }
         public Test Test { get; set; }
         public List<TestGroup> TestGroups { get; set; }
+        public int SequencePosition { get; set; }
     }
 }

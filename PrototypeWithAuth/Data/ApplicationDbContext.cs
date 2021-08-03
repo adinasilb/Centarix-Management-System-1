@@ -154,6 +154,19 @@ namespace PrototypeWithAuth.Data
                 .WithMany(r => r.ResourceResourceCategories)
                 .HasForeignKey(rrc => rrc.ResourceID);
 
+            modelBuilder.Entity<ExperimentTest>()
+                .HasKey(et => new { et.ExperimentID, et.TestID });
+
+            modelBuilder.Entity<ExperimentTest>()
+                .HasOne(et => et.Experiment)
+                .WithMany(e => e.ExperimentTests)
+                .HasForeignKey(et => et.ExperimentID);
+
+            modelBuilder.Entity<ExperimentTest>()
+                .HasOne(et => et.Test)
+                .WithMany(t => t.ExperimentTests)
+                .HasForeignKey(et => et.TestID);
+
             modelBuilder.Entity<RequestLocationInstance>()
                 .HasKey(rl => new { rl.RequestID, rl.LocationInstanceID });
 

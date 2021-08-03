@@ -84,9 +84,118 @@ namespace PrototypeWithAuth.Controllers
             _context.SaveChanges();
         }
 
-        public void _3Add02Tests()
+        public void _3Add02TestsBloodPressure()
         {
-
+            Test BloodPressure = new Test()
+            {
+                Name = "Blood Pressure",
+                SiteID = _context.Sites.Where(s => s.Name == "O2").FirstOrDefault().SiteID
+            };
+            _context.Add(BloodPressure);
+            _context.SaveChanges();
+            TestOuterGroup bptog1 = new TestOuterGroup()
+            {
+                IsNone = true,
+                TestID = _context.Tests.Where(t => t.Name == "Blood Pressure").FirstOrDefault().TestID,
+                SequencePosition = 1
+            };
+            _context.Add(bptog1);
+            _context.SaveChanges();
+            TestGroup bptg1 = new TestGroup()
+            {
+                Name = "First Measure",
+                SequencePosition = 1,
+                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID
+            };
+            TestGroup bptg2 = new TestGroup()
+            {
+                Name = "Second Measure",
+                SequencePosition = 2,
+                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID
+            };
+            TestGroup bptg3 = new TestGroup()
+            {
+                Name = "Third Measure",
+                SequencePosition = 3,
+                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID
+            };
+            _context.Add(bptg1);
+            _context.Add(bptg2);
+            _context.Add(bptg3);
+            _context.SaveChanges();
+            TestHeader Pulse1 = new TestHeader()
+            {
+                Name = "Pulse",
+                TestGroupID = _context.TestGroups.Where(tg => tg.SequencePosition == 1).FirstOrDefault().TestGroupID,
+                SequencePosition = 1,
+                Type = AppUtility.DataTypeEnum.Double.ToString()
+            };
+            _context.Add(Pulse1);
+            TestHeader Pulse2 = new TestHeader()
+            {
+                Name = "Pulse",
+                TestGroupID = _context.TestGroups.Where(tg => tg.SequencePosition == 2).FirstOrDefault().TestGroupID,
+                SequencePosition = 1,
+                Type = AppUtility.DataTypeEnum.Double.ToString()
+            };
+            _context.Add(Pulse2);
+            TestHeader Pulse3 = new TestHeader()
+            {
+                Name = "Pulse",
+                TestGroupID = _context.TestGroups.Where(tg => tg.SequencePosition == 3).FirstOrDefault().TestGroupID,
+                SequencePosition = 1,
+                Type = AppUtility.DataTypeEnum.Double.ToString()
+            };
+            _context.Add(Pulse3);
+            TestHeader Systolic1 = new TestHeader()
+            {
+                Name = "Systolic",
+                TestGroupID = _context.TestGroups.Where(tg => tg.SequencePosition == 1).FirstOrDefault().TestGroupID,
+                SequencePosition = 2,
+                Type = AppUtility.DataTypeEnum.Double.ToString()
+            };
+            _context.Add(Systolic1);
+            TestHeader Systolic2 = new TestHeader()
+            {
+                Name = "Systolic",
+                TestGroupID = _context.TestGroups.Where(tg => tg.SequencePosition == 2).FirstOrDefault().TestGroupID,
+                SequencePosition = 2,
+                Type = AppUtility.DataTypeEnum.Double.ToString()
+            };
+            _context.Add(Systolic2);
+            TestHeader Systolic3 = new TestHeader()
+            {
+                Name = "Systolic",
+                TestGroupID = _context.TestGroups.Where(tg => tg.SequencePosition == 3).FirstOrDefault().TestGroupID,
+                SequencePosition = 2,
+                Type = AppUtility.DataTypeEnum.Double.ToString()
+            };
+            _context.Add(Systolic3);
+            TestHeader Diastolic1 = new TestHeader()
+            {
+                Name = "Diastolic",
+                TestGroupID = _context.TestGroups.Where(tg => tg.SequencePosition == 1).FirstOrDefault().TestGroupID,
+                SequencePosition = 3,
+                Type = AppUtility.DataTypeEnum.Double.ToString()
+            };
+            _context.Add(Diastolic1);
+            TestHeader Diastolic2 = new TestHeader()
+            {
+                Name = "Diastolic",
+                TestGroupID = _context.TestGroups.Where(tg => tg.SequencePosition == 2).FirstOrDefault().TestGroupID,
+                SequencePosition = 3,
+                Type = AppUtility.DataTypeEnum.Double.ToString()
+            };
+            _context.Add(Diastolic2);
+            TestHeader Diastolic3 = new TestHeader()
+            {
+                Name = "Diastolic",
+                TestGroupID = _context.TestGroups.Where(tg => tg.SequencePosition == 3).FirstOrDefault().TestGroupID,
+                SequencePosition = 3,
+                Type = AppUtility.DataTypeEnum.Double.ToString()
+            };
+            _context.Add(Diastolic3);
+            _context.SaveChanges();
         }
 
         [HttpGet]
@@ -97,6 +206,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.BiomarkersExperiments;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Biomarkers;
 
+            //_3Add02TestsBloodPressure();
 
             ExperimentListViewModel experimentListViewModel = new ExperimentListViewModel();
             experimentListViewModel.Headers = new List<TDViewModel>()
@@ -249,7 +359,7 @@ namespace PrototypeWithAuth.Controllers
                         new TDViewModel()
                         {
                             Value = p.CentarixID,
-                            Link = "open-participant-entries",
+                            AjaxLink = "open-participant-entries",
                             ID = p.ParticipantID
                         },
                         new TDViewModel()
@@ -319,6 +429,16 @@ namespace PrototypeWithAuth.Controllers
         public async Task<int> GetParticipantsCount(int ExperimentID)
         {
             return _context.Participants.Where(p => p.ExperimentID == ExperimentID).Count();
+        }
+
+        public async Task<ActionResult> _Entries(int ParticipantID)
+        {
+            var entriesViewModel = new EntriesViewModel()
+            {
+                Participant = _context.Participants.Include(p => p.Gender).Include(p => p.ParticipantStatus)
+                    .Where(p => p.ParticipantID == ParticipantID).FirstOrDefault()
+            };
+            return PartialView(entriesViewModel);
         }
     }
 }

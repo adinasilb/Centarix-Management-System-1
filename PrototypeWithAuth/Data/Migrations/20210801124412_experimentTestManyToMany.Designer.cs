@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210801124412_experimentTestManyToMany")]
+    partial class experimentTestManyToMany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5117,7 +5119,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("SiteID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TestCategoryID")
+                    b.Property<int>("TestCategoryID")
                         .HasColumnType("int");
 
                     b.HasKey("TestID");
@@ -5162,9 +5164,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SequencePosition")
-                        .HasColumnType("int");
-
                     b.Property<int>("TestOuterGroupID")
                         .HasColumnType("int");
 
@@ -5187,9 +5186,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SequencePosition")
-                        .HasColumnType("int");
 
                     b.Property<int>("TestGroupID")
                         .HasColumnType("int");
@@ -5216,9 +5212,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SequencePosition")
-                        .HasColumnType("int");
 
                     b.Property<int>("TestID")
                         .HasColumnType("int");
@@ -7146,10 +7139,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Models.TestCategory", null)
+                    b.HasOne("PrototypeWithAuth.Models.TestCategory", "TestCategory")
                         .WithMany("Tests")
                         .HasForeignKey("TestCategoryID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.TestCategory", b =>
