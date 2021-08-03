@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.Models.ExperimentEntry
+﻿@model PrototypeWithAuth.ViewModels.NewEntryViewModel
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -7,6 +7,42 @@
 <div class="modal modal-view add-entry-modal" id="myModal" data-backdrop="false" style="z-index: 9100">
     <div class="elixir-modal-sm modal-dialog-centered mx-auto" style="width:27rem;">
         <div class="modal-content d-inline-block modal-box-shadow ">
+            <div class="modal-header biomarkers-background-color">
+                <span class="heading-1 text-white">Add New Entry</span>
+                <button type="button" class="close modal-close-padding modal-close-style cancel-add" @*data-dismiss="modal"*@ aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="small-modal-padding add-entry-form on-form-modal">
+                <div class="row">
+                    <div class="col-12">
+                        <label asp-for="DateTime" class="control-label"></label>
+                        <input asp-for="DateTime" class="form-control-plaintext border-bottom" />
+                        <span asp-validation-for="DateTime" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <label asp-for="DateTime" class="control-label"></label>
+                        <input asp-for="DateTime" class="form-control-plaintext border-bottom" />
+                        <span asp-validation-for="DateTime" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <label asp-for="DateTime" class="control-label"></label>
+                        <input asp-for="DateTime" class="form-control-plaintext border-bottom" />
+                        <span asp-validation-for="DateTime" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<script>
+    $(".cancel-add").on("click", function (e) {
+        e.preventDefault();
+        $.fn.CloseModal('new-entry');
+    });
+</script>

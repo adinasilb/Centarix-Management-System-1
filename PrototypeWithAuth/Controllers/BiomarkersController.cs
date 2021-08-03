@@ -440,5 +440,14 @@ namespace PrototypeWithAuth.Controllers
             };
             return PartialView(entriesViewModel);
         }
+
+        public async Task<ActionResult> _NewEntry(int ID)
+        {
+            NewEntryViewModel nevm = new NewEntryViewModel()
+            {
+                Sites = _context.Sites
+            };
+            return PartialView(nevm);
+        }
     }
 }
