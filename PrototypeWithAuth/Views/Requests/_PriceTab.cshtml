@@ -44,7 +44,7 @@
     }
     var color = Model.SectionType == AppUtility.MenuItems.Accounting ? "accounting-color" : Model.SectionType == AppUtility.MenuItems.LabManagement ? "lab-man-color"  : Model.SectionType == AppUtility.MenuItems.Protocols ? "protocols-color" : "order-inv-color";
 }
-<input type="hidden" id="quoteStatus" value="@Model.Requests[0].QuoteStatusID" />
+<input type="hidden" id="quoteStatus" asp-for="Requests[0].QuoteStatusID" />
 
 <div class="row no-mb">
     <div class="col-md-8">
