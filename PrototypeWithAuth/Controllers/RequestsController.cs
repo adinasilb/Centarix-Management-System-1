@@ -1194,7 +1194,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                _context.Entry(tempRequest.Request.Product).State = EntityState.Unchanged;
+                _context.Entry(tempRequest.Request.Product).State = EntityState.Modified;
             }
             if (tempRequest.Request.ParentQuoteID == 0)
             {
@@ -2614,6 +2614,13 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReOrderFloatModalView( RequestItemViewModel requestItemViewModel, TempRequestListViewModel tempRequestListViewModel,  AppUtility.OrderTypeEnum OrderTypeEnum/*, bool isCancel = false*/)
         {
+            /*if (isCancel)
+            {
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
+                await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
+                return new EmptyResult();
+            }*/
             try
             {
                 //  ReorderViewModel reorderViewModel = JsonConvert.DeserializeObject<ReorderViewModel>(json);

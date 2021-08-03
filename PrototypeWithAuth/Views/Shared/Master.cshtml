@@ -1300,7 +1300,7 @@
         $.fn.AddTempRequestHiddenFors = function (guid, sequence, selector) {
             //var guid = $('.hidden-guid').val();
             var error = "";
-            alert("in $.fn.AddTempRequestHiddenFors : " + guid);
+            //alert("in $.fn.AddTempRequestHiddenFors : " + guid);
             $.ajax({
                 async: false,
                 url: "/Requests/RollbackTempRequestHiddenFors?GUID=" + guid + "&SequencePosition=" + sequence,
@@ -1308,13 +1308,13 @@
                 type: "GET",
                 cache: false,
                 success: function (data) {
-                    alert("data; " + data);
+                    //alert("data; " + data);
                     if (data == "Error" ) {
                         alert("in error");
                         error = true;
                     }
                     else {
-                        alert("not in error");
+                        //alert("not in error");
                         $(selector).replaceWith(data);
                         error = false;
                     }
