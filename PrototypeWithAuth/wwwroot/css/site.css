@@ -2800,6 +2800,10 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     background-color: var(--lab-man-color);
 }
 
+.accounting-form .location-selected {
+    background-color: var(--acc-color);
+}
+
 .visual-locations tr {
     border: 1px solid var(--black-87) !important;
 }
