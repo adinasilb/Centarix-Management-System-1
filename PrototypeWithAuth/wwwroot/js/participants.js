@@ -2,6 +2,7 @@
     $(".open-participant-entries").on("click", function (e) {
         e.preventDefault();
         var particpantId = $(this).attr("value");
+        var particpantId = $(this).attr("value");
         alert("participant ID: " + particpantId);
         $.ajax({
             async: true,

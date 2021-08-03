@@ -4,6 +4,7 @@
     var numberOfParticipants = Model.Experiment.Participants == null ? "0" : Model.Experiment.Participants.Count().ToString();
 }
 <div class="_participants">
+    @Html.HiddenFor(m => m.Experiment.ExperimentID)
     <div class="row under-row-margin">
         <div class="col-12">
             <label class="heading-1 mr-4">

@@ -445,9 +445,27 @@ namespace PrototypeWithAuth.Controllers
         {
             NewEntryViewModel nevm = new NewEntryViewModel()
             {
-                Sites = _context.Sites
+                Sites = _context.Sites,
+                ParticipantID = ID
             };
             return PartialView(nevm);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> _NewEntry(NewEntryViewModel newEntryViewModel)
+        {
+            ExperimentEntry ee = new ExperimentEntry()
+            {
+                ParticipantID = newEntryViewModel.ParticipantID,
+                DateTime = newEntryViewModel.Date,
+                VisitNumber = newEntryViewModel.VisitNumber,
+                ApplicationUserID = _userManager.GetUserId(User)
+            };
+
+            _context.Add(ee);
+            await _context.SaveChangesAsync();
+
+            return PartialView();
         }
     }
 }
