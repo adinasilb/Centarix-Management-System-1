@@ -26,8 +26,8 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
         public IEnumerable<Vendor> Vendors { get; set; }
         public IEnumerable<RequestStatus> RequestStatuses { get; set; }
-        /*public IEnumerable<SelectListItem> UnitTypeList { get; set; }
-        public ILookup<UnitParentType, UnitType> UnitTypes { get; set; }*/
+        public IEnumerable<SelectListItem> UnitTypeList { get; set; }
+        public ILookup<UnitParentType, UnitType> UnitTypes { get; set; }
         public IEnumerable<Project> Projects { get; set; }
         public IEnumerable<SubProject> SubProjects { get; set; }
         public bool Paid { get; set; }
@@ -87,6 +87,5 @@ namespace PrototypeWithAuth.ViewModels
         public bool IsHistory { get; set; }
         public PricePopoverViewModel PricePopoverViewModel { get; set; }
         public TempRequestListViewModel TempRequestListViewModel { get; set; }
-        public PriceTabViewModel PriceTabViewModel { get; set; }
     }
 }

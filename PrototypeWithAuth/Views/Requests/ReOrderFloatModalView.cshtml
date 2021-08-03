@@ -1,7 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
 @using PrototypeWithAuth.AppData
 @{
-    Model.PriceTabViewModel.Requests = Model.Requests;
     var bcColor = "order-inv-background-color  ";
     var color = "order-inv-color";
     var form = "order-inv-form";
@@ -43,7 +42,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding reorderForm">
-                <input type="hidden" asp-for="TempRequestListViewModel.GUID" class="hidden-guid" /> @*for reloading the partial view*@
+                <!--<input type="hidden" asp-for="TempRequestListViewModel.GUID" class="hidden-guid" />--> @*for reloading the partial view*@
 
                 @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel); }
 

@@ -5,7 +5,6 @@
 @using PrototypeWithAuth.AppData
 
 @{
-    Model.PriceTabViewModel.Requests = Model.Requests;
     var Category = Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescription;
     var modalType = Model.ModalType;
     var markReadOnlyClass = "";

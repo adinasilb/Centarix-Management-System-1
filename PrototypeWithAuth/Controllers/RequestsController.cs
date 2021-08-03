@@ -2612,11 +2612,10 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReOrderFloatModalView(/*RequestItemViewModel requestItemViewModel,*/ReorderViewModel reorderViewModel,  TempRequestListViewModel tempRequestListViewModel, AppUtility.OrderTypeEnum OrderTypeEnum/*, bool isCancel = false*/)
+        public async Task<IActionResult> ReOrderFloatModalView( RequestItemViewModel requestItemViewModel, TempRequestListViewModel tempRequestListViewModel,  AppUtility.OrderTypeEnum OrderTypeEnum/*, bool isCancel = false*/)
         {
             try
             {
-                var requestItemViewModel = new RequestItemViewModel();
                 //  ReorderViewModel reorderViewModel = JsonConvert.DeserializeObject<ReorderViewModel>(json);
                 //get the old request that we are reordering
                 var oldRequest = _context.Requests.Where(r => r.RequestID == requestItemViewModel.Requests.FirstOrDefault().RequestID)
@@ -2700,8 +2699,6 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                var requestItemViewModel = new RequestItemViewModel();
-
                 await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
                 requestItemViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
