@@ -761,24 +761,24 @@ namespace PrototypeWithAuth.Controllers
 
         protected async Task SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived, bool archiveOneRequest)
         {
+            //getting the parentlocationinstanceid
+            var liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
+            var mayHaveParent = true;
+            while (mayHaveParent)
+            {
+                if (liParent.LocationInstanceParentID != null)
+                {
+                    liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == liParent.LocationInstanceParentID).FirstOrDefault();
+                }
+                else
+                {
+                    mayHaveParent = false;
+                }
+            }
             foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
             {
                 if (place.Placed)
-                {
-                    //getting the parentlocationinstanceid
-                    var liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
-                    var mayHaveParent = true;
-                    while (mayHaveParent)
-                    {
-                        if (liParent.LocationInstanceParentID != null)
-                        {
-                            liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == liParent.LocationInstanceParentID).FirstOrDefault();
-                        }
-                        else
-                        {
-                            mayHaveParent = false;
-                        }
-                    }
+                {                    
 
                     //adding the requestlocationinstance
                     var rli = new RequestLocationInstance()
