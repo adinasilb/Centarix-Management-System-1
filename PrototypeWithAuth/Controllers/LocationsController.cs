@@ -766,6 +766,14 @@ namespace PrototypeWithAuth.Controllers
             var room = await _context.LocationRoomInstances.Where(lp => lp.LocationRoomInstanceID == id).FirstOrDefaultAsync();
             return room.LocationRoomInstanceAbbrev;
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public string GetLocationName(int locationId)
+        {
+            string locationName = _context.LocationInstances.Where(li => li.LocationInstanceID == locationId).Select(li => li.LocationInstanceName).FirstOrDefault();
+            return locationName;
+        }
     }
 
 }

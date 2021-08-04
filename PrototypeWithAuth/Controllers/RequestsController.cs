@@ -5423,6 +5423,7 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("_LocationTab", new { id = requestId });
         }
 
+
         //[HttpGet]
         //public async Task<IActionResult> CancelModal(Guid Guid, AppUtility.ModalType ModalType)
         //{

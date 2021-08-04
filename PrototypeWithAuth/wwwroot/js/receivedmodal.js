@@ -60,15 +60,23 @@
 	};
 
 	//FROM THE RECEIVED MODAL SUBLOCATIONS
-	$("form").off("click",".SLI-click").on("click",".SLI-click", function (e) {
+	$("form").off("click", ".SLI-click").on("click", ".SLI-click", function (e) {
 		//alert("clicked SLI");
 		console.log("clicked SLI")
 		SLI($(this));
-		var prevName = $(".locationFullName").html()
+		/*var prevName = $(".locationFullName").html()
 		var name = $(this).html();
 
-		$(".locationFullName").html(prevName + name);
-	});
+		$(".locationFullName").html(prevName + name);*/
+		$.ajax({
+			url: "/Locations/GetLocationName?locationId=" + $(this).attr('id'),
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				$(".locationFullName").html(data);
+			}
+		});
+	})
 
 	function SLI(el) {
 	
