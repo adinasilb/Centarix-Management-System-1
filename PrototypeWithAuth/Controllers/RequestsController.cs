@@ -2720,7 +2720,7 @@ namespace PrototypeWithAuth.Controllers
             //var allRequests = new List<Request>();
             //var isRequests = true;
             //var RequestNum = 1;
-            int lastParentRequestOrderNum = 0;
+            long lastParentRequestOrderNum = 0;
             //var prs = _context.ParentRequests;
             if (_context.ParentRequests.Any())
             {
@@ -5104,7 +5104,7 @@ namespace PrototypeWithAuth.Controllers
 
             uploadOrderViewModel.TempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
 
-            int lastParentRequestOrderNum = 0;
+            long lastParentRequestOrderNum = 0;
             var prs = _context.ParentRequests;
             if (_context.ParentRequests.Any())
             {
@@ -5468,7 +5468,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task UploadRequestsFromExcel()
         {
             var InventoryFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\inventoryexcel2.csv";
-            var POFileName = @"C:\Users\debbie\Desktop\ExcelForTesting\_2019.xlsx";
+            var POFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\_2019.xlsx";
 
             var lineNumber = 0;
 
@@ -5477,8 +5477,13 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 var requests = from r in excelRequests.Worksheet<UploadExcelModel>("inventory excel") select r ;
-                var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == 1).OrderBy(p => p.ProductCreationDate).LastOrDefault()?.SerialNumber ?? serialLetter + "0").Substring(1));
+                var requestsInvoice = from i in excelInvoices.Worksheet("orders")
+                                      where DateTime.par( i["invoice date"])
+                                      select i;
+                var lastSerialNumber = int.Parse(_context.Products.IgnoreQueryFilters().Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == 1).OrderBy(p => p).LastOrDefault().SerialNumber.Substring(1));
                 var currency = AppUtility.CurrencyEnum.USD;
+                long lastParentRequestOrderNum = 1500;
+
                 foreach (var r in requests)
                 {
                     lineNumber++;
@@ -5499,7 +5504,7 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     ProductName = r.ItemName,
                                     VendorID = vendorID,
-                                    ProductSubcategoryID = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryDescription == r.ProductSubCategoryName && ps.ParentCategory.ParentCategoryDescription == r.ParentCategoryName).Select(ps => ps.ProductSubcategoryID).FirstOrDefault(),
+                                    ProductSubcategoryID = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryDescription.ToLower() == r.ProductSubCategoryName.ToLower() && ps.ParentCategory.ParentCategoryDescription.ToLower() == r.ParentCategoryName.ToLower()).Select(ps => ps.ProductSubcategoryID).FirstOrDefault(),
                                     CatalogNumber = r.CatalogNumber,
                                     SerialNumber = "L" + lastSerialNumber++,
                                     ProductCreationDate = DateTime.Now,
@@ -5519,14 +5524,27 @@ namespace PrototypeWithAuth.Controllers
                         
                             var exchangeRate = AppUtility.GetExchangeRateByDate(r.DateOrdered);
                             //cost = cost * exchangeRate; //always from quartzy in dollars        
-                            var parentRequestID = _context.ParentRequests.Where(pr => pr.OrderNumber == r.OrderNumber).Select(pr => pr.ParentRequestID).FirstOrDefault();
+                            int parentRequestID = 0;
+                            if(r.OrderNumber !="")
+                            {
+                               parentRequestID = _context.ParentRequests.Where(pr => pr.QuartzyOrderNumber == r.OrderNumber).Select(pr => pr.ParentRequestID).FirstOrDefault();
+
+                            }
                             if (parentRequestID != 0)
                             {
                                 request.ParentRequestID = parentRequestID;
                             }
                             else
                             {
-                                var parentRequest = new ParentRequest() { OrderNumber = r.OrderNumber, ApplicationUserID = orderedBy, OrderDate = r.DateOrdered };
+                                ParentRequest parentRequest = null;
+                                if(r.OrderNumber.StartsWith("1") && r.OrderNumber.Length == 8)
+                                {
+                                    parentRequest = new ParentRequest() { QuartzyOrderNumber = r.OrderNumber, OrderNumber = int.Parse(r.OrderNumber.Substring(3)), ApplicationUserID = orderedBy, OrderDate = r.DateOrdered };
+                                }
+                                else 
+                                {
+                                    parentRequest = new ParentRequest() { QuartzyOrderNumber = r.OrderNumber, OrderNumber = lastParentRequestOrderNum++, ApplicationUserID = orderedBy, OrderDate = r.DateOrdered };
+                                }
                                 _context.Entry(parentRequest).State = EntityState.Added;
                                 await _context.SaveChangesAsync();
                                 request.ParentRequestID = parentRequest.ParentRequestID;
@@ -5544,6 +5562,8 @@ namespace PrototypeWithAuth.Controllers
                             request.OrderType = orderType;
                             request.IncludeVAT = true;
                             request.URL = r.Url;
+                            request.PaymentStatusID = 2;
+                            request.Installments = 1;
                             _context.Entry(request).State = EntityState.Added;
                             await _context.SaveChangesAsync();
 
@@ -5554,21 +5574,92 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 try
                                 {
-                                    var requestsInvoice = from i in excelRequests.Worksheet<UploadExcelModel>("orders") select i;
-                                    var invoice =  requestsInvoice.Where(i => i.OrderNumber == r.OrderNumber).Distinct().FirstOrDefault();
+                                    if(r.OrderNumber !="")
+                                    {
+                                   
+                                        var invoiceRow = requestsInvoice.Where(i => i.OrderNumber == r.OrderNumber && i.CatalogNumber == r.CatalogNumber).FirstOrDefault();
+                                       // var invoiceNumbers = invoiceRows.Select(ir => ir.InvoiceNumber).ToList();
+                                        if(invoiceRow !=null)
+                                        {
+                                            await SetInvoiceAndPaymentsAccordingToResultsFromDB(r, request, invoiceRow);
+                                        }
+
+
+                                        //var invoiceIds= invoices.Select(i=>i.InvoiceID);
+                                        //if(invoiceIds.Count()==invoiceNumbers.Count() && invoiceNumbers.Count()>0)
+                                        //{
+                                        //    foreach(var invoiceID in invoiceIds)
+                                        //    {
+                                        //        var payment = new Payment() { InvoiceID = invoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
+                                        //        _context.Entry(payment).State = EntityState.Added;
+                                        //    }
+
+                                        //}
+                                        //else if (invoiceIds.Count() != invoiceNumbers.Count() && invoiceNumbers.Count() > 0)
+                                        //{
+                                        //    foreach (var invoiceID in invoiceIds)
+                                        //    {
+                                        //        var payment = new Payment() { InvoiceID = invoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
+                                        //        _context.Entry(payment).State = EntityState.Added;
+                                        //    }
+                                        //    var invoiceNumbersNotInDataBaseYet = invoiceRows.Where(i => !invoices.Select(i=>i.InvoiceNumber).Contains(i.InvoiceNumber));
+                                        //    foreach(var ie in invoiceNumbersNotInDataBaseYet)
+                                        //    {
+                                        //        var invoice = new Invoice() {InvoiceNumber = ie.InvoiceNumber, InvoiceDate = ie.InvoiceDate };
+                                        //        _context.Entry(invoice).State = EntityState.Added;
+                                        //        await _context.SaveChangesAsync();
+                                        //        var payment = new Payment() { InvoiceID = invoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID =3 , RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
+                                        //        _context.Entry(payment).State = EntityState.Added;
+
+                                        //    }
+                                        //    //upload the invoice documents ---
+                                        //}
+                                        else // no invoice in the excel
+                                        {
+                                            var invoiceRows = requestsInvoice.Where(i => i.OrderNumber == r.OrderNumber );
+                                            if(invoiceRows.Count()==0)
+                                            {
+                                                var emptyInvoice = new Invoice() { InvoiceNumber = "000000000", InvoiceDate = r.DateOrdered };
+                                                _context.Entry(emptyInvoice).State = EntityState.Added;
+                                                await _context.SaveChangesAsync();
+                                                var payment = new Payment() { InvoiceID = emptyInvoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
+                                                _context.Entry(payment).State = EntityState.Added;
+                                                //no docments either....
+                                                WriteErrorToFile("There is not matching catalog number and order number to row"+ lineNumber+" - added default invoice for requestID: "+request.RequestID );
+
+                                            }
+                                            else if(invoiceRows.Count() == 1)
+                                            {
+                                                await SetInvoiceAndPaymentsAccordingToResultsFromDB(r, request, invoiceRows.FirstOrDefault());
+                                            }
+                                            else
+                                            {
+                                                var emptyInvoice = new Invoice() { InvoiceNumber = "000000000", InvoiceDate = r.DateOrdered };
+                                                _context.Entry(emptyInvoice).State = EntityState.Added;
+                                                await _context.SaveChangesAsync();
+                                                var payment = new Payment() { InvoiceID = emptyInvoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
+                                                _context.Entry(payment).State = EntityState.Added;
+                                                //no docments either....
+                                                WriteErrorToFile("There are duplicate matching invoices for " + lineNumber + " - added default invoice for requestID: " + request.RequestID);
+                                            }
+                                        }
+                                        await _context.SaveChangesAsync();
+                                    }
+                                    else
+                                    {
+                                        var emptyInvoice = new Invoice() { InvoiceNumber = "000000000", InvoiceDate = r.DateOrdered };
+                                        _context.Entry(emptyInvoice).State = EntityState.Added;
+                                        await _context.SaveChangesAsync();
+                                        var payment = new Payment() { InvoiceID = emptyInvoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
+                                        _context.Entry(payment).State = EntityState.Added;
+                                        //no docments either....
+                                        WriteErrorToFile("This item has no order number" + lineNumber + " - added default invoice for requestID: " + request.RequestID);
+
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
-                                    var errorFilePath = "C:\\Users\\strauss\\Desktop\\InventoryError.txt";
-                                    if (!System.IO.File.Exists(errorFilePath))
-                                    {
-                                        var errorFile = System.IO.File.Create(errorFilePath);
-                                        errorFile.Close();
-
-                                    }
-                                    var sw = System.IO.File.AppendText(errorFilePath);
-                                    sw.WriteLine("Row " + lineNumber + " failed to enter database: " + AppUtility.GetExceptionMessage(ex));
-                                    sw.Close();
+                                    WriteErrorToFile("Row " + lineNumber + " failed to enter database: " + AppUtility.GetExceptionMessage(ex));
                                     _context.ChangeTracker.Entries()
                                         .Where(e => e.Entity != null).ToList()
                                         .ForEach(e => e.State = EntityState.Detached);
@@ -5576,35 +5667,15 @@ namespace PrototypeWithAuth.Controllers
 
                             }
                             catch (Exception ex)
-                            {
-                                var errorFilePath = "C:\\Users\\debbie\\Desktop\\InventoryError.txt";
-                                if (!System.IO.File.Exists(errorFilePath))
-                                {
-                                    var errorFile = System.IO.File.Create(errorFilePath);
-                                    errorFile.Close();
-                                }
-                                var sw = System.IO.File.AppendText(errorFilePath);
-                                sw.WriteLine("Error reading invoice file: " + AppUtility.GetExceptionMessage(ex));
-                                sw.Close();
+                            {                                
+                                WriteErrorToFile("Error reading invoice file: " + AppUtility.GetExceptionMessage(ex));
                             }
 
                             transaction.Commit();
                         }
                         catch (Exception ex)
                         {
-                            var errorFilePath = "C:\\Users\\strauss\\Desktop\\InventoryError.txt";
-                            if (!System.IO.File.Exists(errorFilePath))
-                            {
-                                var errorFile = System.IO.File.Create(errorFilePath);
-                                errorFile.Close();
-
-                            }
-                            var sw = System.IO.File.AppendText(errorFilePath);
-                            sw.WriteLine("Row " + lineNumber + " failed to enter database: " + AppUtility.GetExceptionMessage(ex));
-                            sw.Close();
-                            _context.ChangeTracker.Entries()
-                                .Where(e => e.Entity != null).ToList()
-                                .ForEach(e => e.State = EntityState.Detached);
+                            WriteErrorToFile("Row " + lineNumber + " failed to enter database: " + AppUtility.GetExceptionMessage(ex));
                         }
 
                     }
@@ -5612,18 +5683,40 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                var errorFilePath = "C:\\Users\\debbie\\Desktop\\InventoryError.txt";
-                if (!System.IO.File.Exists(errorFilePath))
-                {
-                    var errorFile = System.IO.File.Create(errorFilePath);
-                    errorFile.Close();
-                }
-                var sw = System.IO.File.AppendText(errorFilePath);
-                sw.WriteLine("Error reading requests file: " + AppUtility.GetExceptionMessage(ex));
-                sw.Close();
+                WriteErrorToFile("Error reading requests file: " + AppUtility.GetExceptionMessage(ex));
             }
         }
 
+        private async Task SetInvoiceAndPaymentsAccordingToResultsFromDB(UploadExcelModel r, Request request, UploadExcelModel invoiceRow)
+        {
+            var invoiceDB = _context.Invoices.Where(i => i.InvoiceNumber == invoiceRow.InvoiceNumber).AsNoTracking().FirstOrDefault();
+            if (invoiceDB != null)
+            {
+                var payment = new Payment() { InvoiceID = invoiceDB.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
+                _context.Entry(payment).State = EntityState.Added;
+            }
+            else
+            {
+                var invoice = new Invoice() { InvoiceNumber = invoiceRow.InvoiceNumber, InvoiceDate = invoiceRow.InvoiceDate };
+                _context.Entry(invoice).State = EntityState.Added;
+                await _context.SaveChangesAsync();
+                var payment = new Payment() { InvoiceID = invoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
+                _context.Entry(payment).State = EntityState.Added;
+            }
+        }
 
+        private static void WriteErrorToFile(string message)
+        {
+            var errorFilePath = "C:\\Users\\debbie\\Documents\\InventoryError.txt";
+            if (!System.IO.File.Exists(errorFilePath))
+            {
+                var errorFile = System.IO.File.Create(errorFilePath);
+                errorFile.Close();
+
+            }
+            var sw = System.IO.File.AppendText("\n"+errorFilePath);
+            sw.WriteLine(message);
+            sw.Close();
+        }
     }
 }

@@ -44,6 +44,7 @@ namespace PrototypeWithAuth.Models
         public double Credit { get; set; }
         public double Shipping { get; set; }
         public bool IsShippingPaid { get; set; }
+        public string QuartzyOrderNumber {get; set;}
     }
 }
 //list of request, owner, order date, (order number for an entire order or is it just for specific request) same for invoice number

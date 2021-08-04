@@ -86,6 +86,11 @@ namespace PrototypeWithAuth.Data
                 {
                     CompanyAccountID = 4,
                     CompanyBankName = "Payoneer"
+                },
+                new CompanyAccount
+                {
+                    CompanyAccountID = 5,
+                    CompanyBankName = "Quartzy Bank"
                 }
             );
 
