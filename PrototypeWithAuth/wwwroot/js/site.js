@@ -1508,15 +1508,15 @@ $(function () {
 				switch (optgroup) {
 					case "Units":
 						console.log("Units")
-						selectedIndex = selectedIndex - 1;
+						selectedIndex = selectedIndex;
 						break;
 					case "Weight/Volume":
 						console.log("Volume")
-						selectedIndex = selectedIndex - 2;
+						selectedIndex = selectedIndex - 1;
 						break;
 					case "Test":
 						console.log("Test")
-						selectedIndex = selectedIndex - 3;
+						selectedIndex = selectedIndex - 2;
 						break;
 				} 
 
