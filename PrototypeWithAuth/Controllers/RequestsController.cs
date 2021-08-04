@@ -2586,13 +2586,15 @@ namespace PrototypeWithAuth.Controllers
 
 
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
-            var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             Request request = _context.Requests
                 .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory)
                 .Include(r => r.Product.UnitType)
                 .Include(r => r.Product.SubUnitType)
                 .Include(r => r.Product.SubSubUnitType)
                 .SingleOrDefault(x => x.RequestID == id);
+
+            var unittypes = _context.UnitTypes.Where(ut => ut.UnitTypeParentCategory.Where(up => up.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).Count() > 0)
+                .Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
 
             trlvm.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
 
@@ -5021,6 +5023,10 @@ namespace PrototypeWithAuth.Controllers
                                 if (tempRequestViewModel.Request.Product.ProductID == 0)
                                 {
                                     _context.Entry(tempRequestViewModel.Request.Product).State = EntityState.Added;
+                                }
+                                else
+                                {
+                                    _context.Entry(tempRequestViewModel.Request.Product).State = EntityState.Modified;
                                 }
                                 _context.Entry(tempRequestViewModel.Request).State = EntityState.Added;
                                 await _context.SaveChangesAsync();
