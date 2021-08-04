@@ -106,12 +106,14 @@
         </div>
     </div>
     @{var cardDisplayNoneSub = "d-none";
+        var cardDisabledSub = "disabled";
         var plusDisplayNoneSub = "";
         //var disabled = "";
         var subMarkReadOnly = "";
         if (Model.Requests[0].Product.SubUnit > 0)
         {
             cardDisplayNoneSub = "";
+            cardDisabledSub = "";
             plusDisplayNoneSub = "d-none";
             subMarkReadOnly = markReadOnlyClass;
             //disabled = "disabled";
@@ -137,12 +139,12 @@
                     <div class="col-md-4 pl-0 form-group">
                         <label asp-for="Requests[0].Product.SubUnit" class="control-label"></label>
                         <input type="number" name="Requests[0].Product.SubUnit" value="@Model.Requests[0].Product.SubUnit" class="form-control-plaintext border-bottom @subMarkReadOnly " 
-                               min="1" id="subUnit" @disableIfNotReorder />
+                                id="subUnit" @disableIfNotReorder @cardDisabledSub/>
                         <span asp-validation-for="Requests[0].Product.SubUnit" class="text-danger-centarix"></span>
                     </div>
                     <div class="col-md-8 form-group">
                         <label asp-for="Requests[0].Product.SubUnitType" class="control-label"></label>
-                        @if (!Model.IsReorder)
+                        @if (!Model.IsReorder || cardDisabledSub == "disabled")
                         {
                             @Html.DropDownListFor(
                                 vm => vm.Requests[0].Product.SubUnitTypeID,
@@ -197,6 +199,7 @@
     @{
         var cardDivDisplayNone = "d-none";
         var cardDisplayNoneSubSub = "d-none";
+        var cardDisabledSubSub = "disabled";
         var plusDisplayNoneSubSub = "";
         //var subsubdisabled = "";
         var subsubMarkReadOnly = "";
@@ -206,6 +209,7 @@
             if (Model.Requests[0].Product.SubSubUnit > 0)
             {
                 plusDisplayNoneSubSub = "d-none";
+                cardDisabledSubSub = "";
                 cardDisplayNoneSubSub = "";
                 subsubMarkReadOnly = markReadOnlyClass;
                 //subsubdisabled = "disabled";
@@ -235,12 +239,12 @@
                     <div class="col-md-4 form-group">
                         <label asp-for="Requests[0].Product.SubSubUnit" class="control-label"></label>
                         <input type="number" name="Requests[0].Product.SubSubUnit" value="@Model.Requests[0].Product.SubSubUnit" class="form-control-plaintext border-bottom 
-                               @subsubMarkReadOnly " min="1" @disableIfNotReorder id="subSubUnit" />
+                               @subsubMarkReadOnly " @cardDisabledSubSub @disableIfNotReorder id="subSubUnit" />
                         <span asp-validation-for="Requests[0].Product.SubSubUnit" class="text-danger-centarix"></span>
                     </div>
                     <div class="col-md-8 form-group">
                         <label asp-for="Requests[0].Product.SubSubUnitType" class="control-label"></label>
-                        @if(!Model.IsReorder)
+                        @if(!Model.IsReorder || cardDisabledSubSub == "disabled")
                         {
                             @Html.DropDownListFor(
                                 vm => vm.Requests[0].Product.SubSubUnitTypeID,
