@@ -282,8 +282,9 @@
                 <span asp-validation-for="Requests[0].URL" class="text-danger-centarix"></span>
             </div>
         </div>
-        @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null || Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true)
-        {<div class="row">
+    @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null || Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true)
+    {
+        <div class="row">
             @if (Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true)
             {
                 <div class="col-md-3 ">

@@ -445,11 +445,7 @@
                 }
             }
             if ($(element).hasClass('has-location-tab')) {
-                console.log('locations');
-                $(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
-                $('#location .mark-readonly').removeClass("not-clickable")
-                $('#location .mark-readonly').attr("disabled", false);
-                $(".location-icon").removeClass("d-none");
+                $.fn.MakeLocationsEditable();
 
             }
             if ($(element).hasClass('suppliers') || $(element).hasClass('accounting')) {
@@ -484,7 +480,13 @@
             }
         }
 
-
+        $.fn.MakeLocationsEditable = function() {
+            console.log('locations');
+            $(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
+            $('#location .mark-readonly').removeClass("not-clickable")
+            $('#location .mark-readonly').attr("disabled", false);
+            $(".location-icon").removeClass("d-none");
+        }
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
             console.log("itemurl " + $itemurl);
