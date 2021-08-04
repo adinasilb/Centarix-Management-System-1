@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
@@ -339,12 +340,16 @@ namespace PrototypeWithAuth.Controllers
             return participantsViewModel;
         }
 
-        public async Task<ActionResult> _BiomarkersRows(int? ExperimentID)
+        public async Task<ActionResult> _BiomarkersRows(int? ExperimentID, int? ParticipantID)
         {
             List<List<TDViewModel>> BioRows = new List<List<TDViewModel>>();
             if (ExperimentID != null)
             {
                 BioRows = await GetParticipantsRows(_context.Participants.Include(p => p.Gender).Include(p => p.ParticipantStatus).Where(p => p.ExperimentID == ExperimentID));
+            }
+            else if (ParticipantID != null)
+            {
+                BioRows = await GetEntriesRows(Convert.ToInt32(ParticipantID));
             }
             return PartialView(BioRows);
         }
@@ -436,17 +441,93 @@ namespace PrototypeWithAuth.Controllers
             var entriesViewModel = new EntriesViewModel()
             {
                 Participant = _context.Participants.Include(p => p.Gender).Include(p => p.ParticipantStatus)
-                    .Where(p => p.ParticipantID == ParticipantID).FirstOrDefault()
+                    .Where(p => p.ParticipantID == ParticipantID).FirstOrDefault(),
+                EntryHeaders = await GetEntriesHeaders(),
+                EntryRows = await GetEntriesRows(ParticipantID)
             };
             return PartialView(entriesViewModel);
         }
 
+        public async Task<List<TDViewModel>> GetEntriesHeaders()
+        {
+            var headersList = new List<TDViewModel>()
+            {
+                new TDViewModel()
+                {
+                    Value = "Entry No."
+                },
+                new TDViewModel()
+                {
+                    Value = "Created By"
+                },
+                new TDViewModel()
+                {
+                    Value = "Date"
+                },
+                new TDViewModel()
+                {
+                    Value = "Site"
+                },
+                new TDViewModel()
+                {
+                    Value = "Visit No."
+                }
+            };
+            return headersList;
+        }
+
+        public async Task<List<List<TDViewModel>>> GetEntriesRows(int ParticipantID)
+        {
+            List<List<TDViewModel>> rows = new List<List<TDViewModel>>();
+            var experimentEntries = _context.ExperimentEntries
+                .Include(ee => ee.ApplicationUser).Include(ee => ee.Site)
+                .Where(ee => ee.ParticipantID == ParticipantID);
+            foreach (var ee in experimentEntries)
+            {
+                rows.Add(
+                    new List<TDViewModel>()
+                    {
+                        new TDViewModel()
+                        {
+                             Value = ee.VisitNumber.ToString()
+                        },
+                        new TDViewModel()
+                        {
+                             Value = ee.ApplicationUser.FirstName
+                        },
+                        new TDViewModel()
+                        {
+                             Value = ee.DateTime.GetElixirDateFormat()
+                        },
+                        new TDViewModel()
+                        {
+                             Value = ee.Site.Name.ToString()
+                        },
+                    }
+                    );
+            }
+            return rows;
+        }
+
         public async Task<ActionResult> _NewEntry(int ID)
         {
+            var visits = _context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.Experiment.AmountOfVisits).FirstOrDefault();
+            visits = visits == 0 || visits == null ? 10 : visits;
+            var visitList = new List<SelectListItem>();
+            for (int v = 1; v <= visits; v++)
+            {
+                visitList.Add(new SelectListItem()
+                {
+                    Text = v.ToString(),
+                    Value = v.ToString()
+                });
+            };
             NewEntryViewModel nevm = new NewEntryViewModel()
             {
                 Sites = _context.Sites,
-                ParticipantID = ID
+                ParticipantID = ID,
+                VisitNumbers = visitList,
+                Date = DateTime.Now
             };
             return PartialView(nevm);
         }
@@ -459,13 +540,14 @@ namespace PrototypeWithAuth.Controllers
                 ParticipantID = newEntryViewModel.ParticipantID,
                 DateTime = newEntryViewModel.Date,
                 VisitNumber = newEntryViewModel.VisitNumber,
-                ApplicationUserID = _userManager.GetUserId(User)
+                ApplicationUserID = _userManager.GetUserId(User),
+                SiteID = newEntryViewModel.SiteID
             };
 
             _context.Add(ee);
             await _context.SaveChangesAsync();
 
-            return PartialView();
+            return RedirectToAction("_BiomarkersRows", newEntryViewModel.ParticipantID);
         }
     }
 }

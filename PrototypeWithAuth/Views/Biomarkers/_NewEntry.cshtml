@@ -1,10 +1,12 @@
 ﻿@model PrototypeWithAuth.ViewModels.NewEntryViewModel
-@using PrototypeWithAuth.AppData 
+@using PrototypeWithAuth.AppData
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
+<script src="~/js/InitializeDatePicker.js"></script>
+<script src="~/js/Validation/_NewEntryFormValidation.js"></script>
 <div class="modal modal-view add-entry-modal" id="myModal" data-backdrop="false" style="z-index: 9100">
     <div class="elixir-modal-sm modal-dialog-centered mx-auto" style="width:27rem;">
         <div class="modal-content d-inline-block modal-box-shadow ">
@@ -16,15 +18,41 @@
             </div>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="small-modal-padding add-entry-form on-form-modal">
                 @Html.HiddenFor(m => m.ParticipantID)
-                <div class="row">
+                <div class="row under-row-margin">
                     <div class="col-12">
                         <label asp-for="Date" class="control-label"></label>
                         <input asp-for="Date" type="text" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
                         <span asp-validation-for="Date" class="text-danger-centarix"></span>
                     </div>
+                </div>
+                <div class="row under-row-margin">
                     <div class="col-12">
-                        @*<label asp-for="VisitNumber"
-                    *@</div>
+                        <label class="control-label ">Visit No.</label>
+                        @Html.DropDownListFor(
+                        m =>
+                   m.VisitNumber,
+                  Model.VisitNumbers,
+                   optionLabel: "Select Visit",
+                   htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext ", @searchable = "default value", }
+                   )
+                        <span asp-validation-for="VisitNumber" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="row under-row-margin">
+                    <div class="col-12">
+                        <label class="control-label">Site</label>
+                        @Html.DropDownListFor(
+                        m =>
+                   m.SiteID,
+                  new SelectList(
+                                            Model.Sites,
+                                            dataValueField: "SiteID",
+                                            dataTextField: "Name"),
+                   optionLabel: "Select Site",
+                   htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext ", @searchable = "default value", }
+                   )
+                        <span asp-validation-for="SiteID" class="text-danger-centarix"></span>
+                    </div>
                 </div>
 
                 <div class="row">
@@ -46,8 +74,9 @@
         $.fn.CloseModal('new-entry');
     });
     $(".submit-add").on("click", function (e) {
-        $('.addparticipantform').data("validator").settings.ignore = "";
-        var valid = $('.addparticipantform').valid();
+        e.preventDefault();
+        $('.add-entry-form').data("validator").settings.ignore = "";
+        var valid = $('.add-entry-form').valid();
         if (valid) {
             $("#loading").show();
             $.ajax({
@@ -61,18 +90,7 @@
                 cache: false,
                 success: function (data) {
                     $.fn.CloseModal('new-entry');
-                    $("._BiomarkersRows").html(data);
-                    $.ajax({
-                        async: true,
-                        url: "/Biomarkers/GetParticipantsCount?ExperimentID=" + ExperimentID,
-                        traditional: true,
-                        type: "GET",
-                        cache: false,
-                        success: function (data) {
-                            $("#NumberOfParticipants").html(data);
-                            return false;
-                        }
-                    });
+                    $(".entries-list ._BiomarkersRows").html(data);
                     $("#loading").hide();
                     return true;
                 },
@@ -80,6 +98,7 @@
                     $("#loading").hide();
                     return true;
                 }
+            });
         }
     });
 </script>

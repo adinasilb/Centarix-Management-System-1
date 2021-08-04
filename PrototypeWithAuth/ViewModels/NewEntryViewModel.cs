@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,5 +18,6 @@ namespace PrototypeWithAuth.ViewModels
         public int SiteID { get; set; }
         public IEnumerable<Site> Sites { get; set; }
         public int ParticipantID { get; set; }
+        public List<SelectListItem> VisitNumbers { get; set; }
     }
 }

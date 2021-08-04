@@ -17,5 +17,7 @@ namespace PrototypeWithAuth.Models
         public int VisitNumber { get; set; }
         public string ApplicationUserID { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+        public int SiteID { get; set; }
+        public Site Site { get; set; }
     }
 }

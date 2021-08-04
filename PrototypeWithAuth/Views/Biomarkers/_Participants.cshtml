@@ -38,7 +38,6 @@
 <script>
     $(".add-new").off("click").on("click", function (e) {
         e.preventDefault();
-        console.log(" $(this).val() " + $(this).val());
         $.ajax({
             async: true,
             url: "/Biomarkers/AddParticipantModal?ExperimentID=" + $(this).val(),

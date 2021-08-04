@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210803114931_addedVisitAmounts")]
+    partial class addedVisitAmounts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1126,9 +1128,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ParticipantID")
                         .HasColumnType("int");
 
-                    b.Property<int>("SiteID")
-                        .HasColumnType("int");
-
                     b.Property<int>("VisitNumber")
                         .HasColumnType("int");
 
@@ -1137,8 +1136,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ApplicationUserID");
 
                     b.HasIndex("ParticipantID");
-
-                    b.HasIndex("SiteID");
 
                     b.ToTable("ExperimentEntries");
                 });
@@ -6458,12 +6455,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Participant", "Participants")
                         .WithMany("ExperimentEntries")
                         .HasForeignKey("ParticipantID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Site", "Site")
-                        .WithMany("ExperimentEntries")
-                        .HasForeignKey("SiteID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

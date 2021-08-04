@@ -13,7 +13,7 @@
         Status: <span class="biomarkers-color">@Model.Participant.ParticipantStatus.Description </span>
     </div>
 </div>
-<div class="row">
+<div class="row under-row-margin">
     <div class="col-6">
         <button class="custom-button custom-button-font light-gray-background-color ml-0">
             <a href="@Url.Action("Experiment", "Biomarkers", new { ID = Model.Participant.ExperimentID })" class="text-black">
@@ -31,7 +31,22 @@
     </div>
 </div>
 <div class="entries-list">
-    Entries List
+    <table class="table table-headerspaced table-noheaderlines table-hover mb-0">
+        <thead>
+            <tr class="text-center">
+                @foreach (var header in Model.EntryHeaders)
+                {
+                    <th width="10%" class="p-0">
+                        <label>@header.Value</label>
+                    </th>
+                }
+            </tr>
+        </thead>
+    </table>
+
+    <div class="_BiomarkersRows">
+        @{ await Html.RenderPartialAsync("_BiomarkersRows", Model.EntryRows); }
+    </div>
 </div>
 <script>
     $(".add-new-entry").on("click", function (e) {
@@ -42,6 +57,7 @@
             cache: false,
             success: function (data) {
                 $.fn.OpenModal('add-entry-modal', 'new-entry', data);
+                $(".mdb-select").materialSelect();
             }
         });
     });
