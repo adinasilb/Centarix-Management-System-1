@@ -185,16 +185,24 @@ namespace PrototypeWithAuth.ViewModels
         public string ButtonText { get; set; }
         private string GetLocationInstanceNameBefore(Request r)
         {
-            var newLIName = "";
-            if (r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParentID == null)//is temporary location
+            try
             {
-                newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName;
+                var newLIName = "";
+                if (r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParentID == null)//is temporary location
+                {
+                    newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName;
+                }
+                else
+                {
+                    newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationInstanceName;
+                }
+                return newLIName;
             }
-            else
+            catch(Exception ex)
             {
-                newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationInstanceName;
+                return "location has an error";
             }
-            return newLIName;
+            
         }
         private static List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder, FavoriteRequest favoriteRequest = null, Request request = null, ApplicationUser user = null)
         {
@@ -227,7 +235,7 @@ namespace PrototypeWithAuth.ViewModels
                 }
                 //resend icon
                 var resendIconIndex = newIconList.FindIndex(ni => ni.IconClass.Equals("Resend"));
-                if (request.ParentQuote?.QuoteStatusID == 1)
+                if (request.QuoteStatusID == 1 && resendIconIndex != -1)
                 {
                     newIconList.RemoveAt(resendIconIndex);
                     newIconList.Insert(resendIconIndex, placeholder);
