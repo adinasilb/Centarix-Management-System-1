@@ -2406,6 +2406,12 @@ namespace PrototypeWithAuth.Controllers
                     product.CatalogNumber = request.Product.CatalogNumber;
                     //in case we need to return to the modal view
                     product.ProductName = request.Product.ProductName;
+                    product.UnitTypeID = request.Product.UnitTypeID;
+                    product.SubUnit = request.Product.SubUnit;
+                    product.SubUnitTypeID = request.Product.SubUnitTypeID;
+                    product.SubSubUnit = request.Product.SubSubUnit;
+                    product.SubSubUnitTypeID = request.Product.SubSubUnitTypeID;
+
                     var parentCategoryId = request.Product.ProductSubcategory.ParentCategoryID;
                     requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).Where(ps => ps.ParentCategoryID == parentCategoryId).ToListAsync();
                     requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
