@@ -62,12 +62,12 @@ $('.ordersItemForm').validate({
 		"Requests[0].Product.SubUnit": {
 			required: true,
 			number: true,
-			min: 0
+			greaterThan: 0
 		},
 		"Requests[0].Product.SubSubUnit": {
 			required: true,
 			number: true,
-			min: 0
+			greaterThan: 0
 		},
 		"Requests[0].Cost": {
 			required: false,
