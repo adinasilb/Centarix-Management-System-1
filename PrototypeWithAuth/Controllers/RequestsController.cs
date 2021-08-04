@@ -5458,139 +5458,129 @@ namespace PrototypeWithAuth.Controllers
         //}
 
         [HttpGet]
-        public void UploadRequestsFromExcel()
+        public async Task UploadRequestsFromExcel()
         {
-            var InventoryFileName = @"C:\Users\debbie\Desktop\אקסל לטסט\inventoryexcel.csv";
-            var POFileName = @"C:\Users\debbie\Desktop\אקסל לטסט\_2019.csv";
+            var InventoryFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\inventoryexcel2.csv";
+            var POFileName = @"C:\Users\debbie\Desktop\ExcelForTesting\_2019.xlsx";
 
             var lineNumber = 0;
 
-            var excel = new ExcelQueryFactory(InventoryFileName);
+            var excelRequests = new ExcelQueryFactory(InventoryFileName);
+            var excelInvoices = new ExcelQueryFactory(POFileName);
             try
             {
-                var data = from r in excel.Worksheet("inventory excel") select r;                
-                var columnNames = excel.GetColumnNames("inventory excel", "A1:AM1").ToList()
-                foreach (var reader in data)
+                var requests = from r in excelRequests.Worksheet<UploadExcelModel>("inventory excel") select r ;
+                var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == 1).OrderBy(p => p.ProductCreationDate).LastOrDefault()?.SerialNumber ?? serialLetter + "0").Substring(1));
+                var currency = AppUtility.CurrencyEnum.USD;
+                foreach (var r in requests)
                 {
                     lineNumber++;
                     using (var transaction = _context.Database.BeginTransaction())
                     {
                         try
                         {
-                            var applicationCreatorEmail = reader[1]?.ToString().Trim();
-                            var productName = reader[0]?.ToString().Trim();
-                            var vendorName = reader[3]?.ToString().Trim();
-                            var catalogNumber = reader[4]?.ToString().Trim(); //nullable samples
-                            var ownerUserID = _context.Employees.Where(e => e.Email == reader[4].ToString().Trim()).FirstOrDefault()?.Id; //required
-                            var locationParent = _context.LocationInstances.Where(li => li.LocationInstanceName == reader[5].ToString()).FirstOrDefault(); //required
-                            var locationUnits = reader[6]?.ToString().Split(','); //required
-                            var currency = reader[7]?.ToString().Trim(); //nullable samples
-                            var cost = reader[8] != null ? Convert.ToDecimal(reader[8].ToString().Trim()) : 0; //nullable samples
-                            var includeVAT = reader[9]?.ToString().Trim();
-                            var unitAmount = reader[10] != null ? Convert.ToUInt32(reader[10].ToString().Trim()) : (uint?)null; //nullable samples
-                            var subunitAmount = reader[12] != null ? Convert.ToUInt32(reader[12]?.ToString().Trim()) : (uint?)null; //nullable
-                            var subunitTypeID = _context.UnitTypes.Where(ut => ut.UnitTypeDescription == (reader[13] != null ? reader[13].ToString() : "")).FirstOrDefault()?.UnitTypeID; //nullable
-                            var subsubunitAmount = reader[14] != null ? Convert.ToUInt32(reader[14].ToString().Trim()) : (uint?)null; //nullable
-                            var subsubunitTypeID = _context.UnitTypes.Where(ut => ut.UnitTypeDescription == (reader[15] != null ? reader[15].ToString() : "")).FirstOrDefault()?.UnitTypeID; //nullable
-                            var url = reader[16]?.ToString().Trim();
-                            var parentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == reader[17].ToString().Trim()).FirstOrDefault(); //required
-                            var productSubcategoryID = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryDescription == reader[18].ToString().Trim() //required
-                            && ps.ParentCategoryID == parentCategory.ParentCategoryID).FirstOrDefault().ProductSubcategoryID;
-                            var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == parentCategory.CategoryTypeID).OrderBy(p => p.ProductCreationDate).LastOrDefault()?.SerialNumber ?? "L" + "0").Substring(1));
-
-                            var productID = 0;
-                            var vendorID = _context.Vendors.Where(v => v.VendorEnName == vendorName).Select(v => v.VendorID).FirstOrDefault();
-                            var uniqueCatalogNumber = CheckUniqueVendorAndCatalogNumber(vendorID, catalogNumber);
-                            if (uniqueCatalogNumber)
+                            var requestedBy = _context.Employees.Where(e => e.Email == r.RequstedBy).FirstOrDefault()?.Id;
+                            var receivedBy = _context.Employees.Where(e => e.Email == r.ReceivedBy).FirstOrDefault()?.Id;     
+                            var orderedBy = _context.Employees.Where(e => e.Email == r.OrderedBy).FirstOrDefault()?.Id;
+                            var vendorID = _context.Vendors.Where(v => v.VendorEnName == r.VendorName).Select(v => v.VendorID).FirstOrDefault();
+                            //check if product exists based on vendor catalog number
+                            var productID = _context.Products.Where(p => p.VendorID == vendorID && p.CatalogNumber == r.CatalogNumber).Select(p => p.ProductID).FirstOrDefault();
+                            var request = new Request() { };
+                            if (productID ==0)
                             {
                                 var product = new Product()
                                 {
-                                    ProductName = productName,
-                                    VendorID =vendorID,
-                                    ProductSubcategoryID = productSubcategoryID,
-                                    CatalogNumber = catalogNumber,
-                                    SerialNumber = "L" + lastSerialNumber,
+                                    ProductName = r.ItemName,
+                                    VendorID = vendorID,
+                                    ProductSubcategoryID = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryDescription == r.ProductSubCategoryName && ps.ParentCategory.ParentCategoryDescription == r.ParentCategoryName).Select(ps => ps.ProductSubcategoryID).FirstOrDefault(),
+                                    CatalogNumber = r.CatalogNumber,
+                                    SerialNumber = "L" + lastSerialNumber++,
                                     ProductCreationDate = DateTime.Now,
-                                    SubUnit = subunitAmount, //nullable
-                                    SubUnitTypeID = subunitTypeID, //nullable
-                                    SubSubUnit = subsubunitAmount, //nullable
-                                    SubSubUnitTypeID = subsubunitTypeID, //nullable
-                                    UnitTypeID =-1,
+                                    UnitTypeID = -1,
                                 };
-                                _context.Update(product);
-                                _context.SaveChanges();
-
-                                productID = product.ProductID;
-                                lastSerialNumber++;
+                                _context.Add(product); 
+                                await _context.SaveChangesAsync();
+                                request.ProductID = product.ProductID;
                             }
                             else
                             {
-                                throw new Exception("Catalog Number already exists for this vendor");
+                                request.ProductID = productID;
                             }
-                            var orderType = "";
-                            int lastOrderNumber = 0;
-                            //var prs = _context.ParentRequests;
-                            if (_context.ParentRequests.Any())
-                            {
-                                lastOrderNumber = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber ?? 0;
-                            }
-                            var parentRequest = new ParentRequest();
-                            //   var exchangeRate = AppUtility.GetExchangeRateByDate(exchangeRateDay);
-                            if (!sample)
-                            {
-                                parentRequest.OrderNumber = ++lastOrderNumber;
-                                parentRequest.ApplicationUserID = ownerUserID;
-                                _context.Update(parentRequest);
-                                _context.SaveChanges();
+                            
+                            var orderType = AppUtility.OrderTypeEnum.ExcelUpload.ToString();
 
-                                //cost = cost * exchangeRate; //always from quartzy in dollars
-                                orderType = AppUtility.OrderTypeEnum.AlreadyPurchased.ToString();
+                        
+                            var exchangeRate = AppUtility.GetExchangeRateByDate(r.DateOrdered);
+                            //cost = cost * exchangeRate; //always from quartzy in dollars        
+                            var parentRequestID = _context.ParentRequests.Where(pr => pr.OrderNumber == r.OrderNumber).Select(pr => pr.ParentRequestID).FirstOrDefault();
+                            if (parentRequestID != 0)
+                            {
+                                request.ParentRequestID = parentRequestID;
                             }
                             else
                             {
-                                orderType = AppUtility.OrderTypeEnum.Save.ToString();
+                                var parentRequest = new ParentRequest() { OrderNumber = r.OrderNumber, ApplicationUserID = orderedBy, OrderDate = r.DateOrdered };
+                                _context.Entry(parentRequest).State = EntityState.Added;
+                                await _context.SaveChangesAsync();
+                                request.ParentRequestID = parentRequest.ParentRequestID;
                             }
-                            var request = new Request()
-                            {
-                                ProductID = productID,
-                                ParentRequestID = parentRequest.ParentRequestID == 0 ? (int?)null : parentRequest.ParentRequestID,
-                                ApplicationUserCreatorID = ownerUserID,
-                                RequestStatusID = sample ? 7 : 3,
-                                Cost = cost,
-                                Currency = currency,
-                                Unit = unitAmount ?? 1,
-                                // ExchangeRate = exchangeRate,
-                                ArrivalDate = new DateTime(2020, 1, 1),
-                                ApplicationUserReceiverID = ownerUserID,
-                                CreationDate = new DateTime(2020, 1, 1),
-                                ParentQuoteID = null,
-                                OrderType = orderType,
-                                IncludeVAT = includeVAT?.ToLower() == "true"
-                            };
-                            _context.Update(request);
-                            _context.SaveChanges();
+                            request.ApplicationUserCreatorID = requestedBy;
+                            request.RequestStatusID = 3;
+                            request.ApplicationUserReceiverID = receivedBy;
+                            request.ArrivalDate = r.DateReceived;
+                            request.Cost = r.TotalPrice * exchangeRate;
+                            request.Currency = currency.ToString();
+                            request.Unit = r.Unit;
+                            request.ExchangeRate = exchangeRate;
+                            request.CreationDate = r.DateRequested;
+                            request.ParentQuoteID = null;
+                            request.OrderType = orderType;
+                            request.IncludeVAT = true;
+                            request.URL = r.Url;
+                            _context.Entry(request).State = EntityState.Added;
+                            await _context.SaveChangesAsync();
 
-                            foreach (var locationName in locationUnits)
+                            var requestLocationInstance = new RequestLocationInstance() { RequestID = request.RequestID, LocationInstanceID = -1 };
+                            _context.Entry(requestLocationInstance).State = EntityState.Added;
+                            await _context.SaveChangesAsync();
+                            try
                             {
-                                var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceName == locationParent.LocationInstanceName + locationName).FirstOrDefault();
-                                var requestLocationInstance = new RequestLocationInstance()
+                                try
                                 {
-                                    RequestID = request.RequestID,
-                                    LocationInstanceID = locationInstance.LocationInstanceID,
-                                    ParentLocationInstanceID = locationParent.LocationInstanceID
-                                };
-                                if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
-                                {
-                                    locationInstance.IsFull = true;
+                                    var requestsInvoice = from i in excelRequests.Worksheet<UploadExcelModel>("orders") select i;
+                                    var invoice =  requestsInvoice.Where(i => i.OrderNumber == r.OrderNumber).Distinct().FirstOrDefault();
                                 }
-                                else
+                                catch (Exception ex)
                                 {
-                                    locationInstance.ContainsItems = true;
+                                    var errorFilePath = "C:\\Users\\strauss\\Desktop\\InventoryError.txt";
+                                    if (!System.IO.File.Exists(errorFilePath))
+                                    {
+                                        var errorFile = System.IO.File.Create(errorFilePath);
+                                        errorFile.Close();
+
+                                    }
+                                    var sw = System.IO.File.AppendText(errorFilePath);
+                                    sw.WriteLine("Row " + lineNumber + " failed to enter database: " + AppUtility.GetExceptionMessage(ex));
+                                    sw.Close();
+                                    _context.ChangeTracker.Entries()
+                                        .Where(e => e.Entity != null).ToList()
+                                        .ForEach(e => e.State = EntityState.Detached);
                                 }
-                                _context.Update(locationInstance);
-                                _context.Add(requestLocationInstance);
-                                _context.SaveChanges();
+
                             }
+                            catch (Exception ex)
+                            {
+                                var errorFilePath = "C:\\Users\\debbie\\Desktop\\InventoryError.txt";
+                                if (!System.IO.File.Exists(errorFilePath))
+                                {
+                                    var errorFile = System.IO.File.Create(errorFilePath);
+                                    errorFile.Close();
+                                }
+                                var sw = System.IO.File.AppendText(errorFilePath);
+                                sw.WriteLine("Error reading invoice file: " + AppUtility.GetExceptionMessage(ex));
+                                sw.Close();
+                            }
+
                             transaction.Commit();
                         }
                         catch (Exception ex)
@@ -5622,7 +5612,7 @@ namespace PrototypeWithAuth.Controllers
                     errorFile.Close();
                 }
                 var sw = System.IO.File.AppendText(errorFilePath);
-                sw.WriteLine("Error reading file: " + AppUtility.GetExceptionMessage(ex));
+                sw.WriteLine("Error reading requests file: " + AppUtility.GetExceptionMessage(ex));
                 sw.Close();
             }
         }

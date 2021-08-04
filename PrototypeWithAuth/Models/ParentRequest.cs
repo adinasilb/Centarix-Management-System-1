@@ -25,7 +25,7 @@ namespace PrototypeWithAuth.Models
         public DateTime OrderDate_submit { get { return OrderDate; } set { OrderDate = value; } }
 
         [Display(Name = "Order Number")]
-        public int? OrderNumber { get; set; }
+        public long? OrderNumber { get; set; }
 
         //[RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
         //[Display(Name = "Invoice Number")]
