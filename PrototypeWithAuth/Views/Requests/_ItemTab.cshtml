@@ -311,6 +311,14 @@
                     <span asp-validation-for="Requests[0].ParentRequest.OrderDate" class="text-danger-centarix"></span>
                 </div>
             }
+            @if(Model.Requests[0].ParentRequest?.OrderNumber != null)
+            {
+                <div class="col-md-3 ">
+                    <label asp-for="Requests[0].ParentRequest.OrderNumber" class="control-label"></label>
+                    <input asp-for="Requests[0].ParentRequest.OrderNumber" class="form-control-plaintext border-bottom @markReadOnlyClass" type="text" />
+                    <span asp-validation-for="Requests[0].ParentRequest.OrderNumber" class="text-danger-centarix"></span>
+                </div>
+            }
 
         </div>
     }
