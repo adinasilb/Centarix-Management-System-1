@@ -778,8 +778,8 @@ namespace PrototypeWithAuth.Controllers
             foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
             {
                 if (place.Placed)
-                {                    
-
+                {
+                    
                     //adding the requestlocationinstance
                     var rli = new RequestLocationInstance()
                     {
@@ -787,7 +787,15 @@ namespace PrototypeWithAuth.Controllers
                         RequestID = requestReceived.RequestID,
                         ParentLocationInstanceID = liParent.LocationInstanceID
                     };
-                    _context.Add(rli);
+                    var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
+                    if (locationInstance.IsFull == false)
+                    {
+                        _context.Add(rli);
+                    }
+                    else
+                    {
+                        throw new LocationAlreadyFullException();
+                    }
                     try
                     {
                         if (archiveOneRequest)
@@ -810,7 +818,7 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                     //updating the locationinstance
-                    var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
+                    //var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
                     if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
                     {
                         locationInstance.IsFull = true;
