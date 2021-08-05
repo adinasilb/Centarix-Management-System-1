@@ -38,12 +38,7 @@ namespace PrototypeWithAuth.AppData.UtilityModels
         public DateTime DateReceived { get; set; }
         [ExcelColumn("Received By")]
         public string ReceivedBy { get; set; }
-        [ExcelColumn("invoice number")]
-        public string InvoiceNumber {get; set;}
-        [ExcelColumn("invoice date")]
-        public DateTime InvoiceDate { get; set; }
-        [ExcelColumn("document number")]
-        public int DocumentNumber { get; set; }
+      
 
     }
 }

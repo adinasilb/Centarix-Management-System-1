@@ -914,7 +914,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 220,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "DD-PCR  Reagents",
+                    ProductSubcategoryDescription = "DD-PCR Reagents",
                     ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent3.png"
                 },
                 new ProductSubcategory
@@ -1315,7 +1315,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 1501,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "Old Subcategory",
+                    ProductSubcategoryDescription = "Old Sub category",
                     ImageURL = "/images/css/CategoryImages/defaultCategory.png",
                     IsOldSubCategory = true
                 },
@@ -1323,7 +1323,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 1502,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Old Subcategory",
+                    ProductSubcategoryDescription = "Old Sub category",
                     ImageURL = "/images/css/CategoryImages/defaultCategory.png",
                     IsOldSubCategory = true
                 },
@@ -1331,7 +1331,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 1503,
                     ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Old Subcategory",
+                    ProductSubcategoryDescription = "Old Sub category",
                     ImageURL = "/images/css/CategoryImages/defaultCategory.png",
                     IsOldSubCategory = true
                 },
@@ -1339,7 +1339,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 1504,
                     ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Old Subcategory",
+                    ProductSubcategoryDescription = "Old Sub category",
                     ImageURL = "/images/css/CategoryImages/defaultCategory.png",
                     IsOldSubCategory = true
                 },
@@ -1347,7 +1347,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 1505,
                     ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Old Subcategory",
+                    ProductSubcategoryDescription = "Old Sub category",
                     ImageURL = "/images/css/CategoryImages/defaultCategory.png",
                     IsOldSubCategory = true
                 },
@@ -1355,7 +1355,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 1506,
                     ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "Old Subcategory",
+                    ProductSubcategoryDescription = "Old Sub category",
                     ImageURL = "/images/css/CategoryImages/defaultCategory.png",
                     IsOldSubCategory = true
                 },
@@ -1363,7 +1363,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 1507,
                     ParentCategoryID = 7,
-                    ProductSubcategoryDescription = "Old Subcategory",
+                    ProductSubcategoryDescription = "Old Sub category",
                     ImageURL = "/images/css/CategoryImages/defaultCategory.png",
                     IsOldSubCategory = true
                 },
@@ -1371,7 +1371,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 1508,
                     ParentCategoryID = 8,
-                    ProductSubcategoryDescription = "Old Subcategory",
+                    ProductSubcategoryDescription = "Old Sub category",
                     ImageURL = "/images/css/CategoryImages/defaultCategory.png",
                     IsOldSubCategory = true
                 }, 
@@ -1379,7 +1379,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 1509,
                     ParentCategoryID = 9,
-                    ProductSubcategoryDescription = "Old Subcategory",
+                    ProductSubcategoryDescription = "Old Sub category",
                     ImageURL = "/images/css/CategoryImages/defaultCategory.png",
                     IsOldSubCategory = true
                 },
@@ -1387,7 +1387,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 1510,
                     ParentCategoryID = 10,
-                    ProductSubcategoryDescription = "Old Subcategory",
+                    ProductSubcategoryDescription = "Old Sub category",
                     ImageURL = "/images/css/CategoryImages/defaultCategory.png",
                     IsOldSubCategory = true
                 },
@@ -1395,7 +1395,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 1511,
                     ParentCategoryID = 11,
-                    ProductSubcategoryDescription = "Old Subcategory",
+                    ProductSubcategoryDescription = "Old Sub category",
                     ImageURL = "/images/css/CategoryImages/defaultCategory.png",
                     IsOldSubCategory = true
                 },
@@ -1403,7 +1403,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 1512,
                     ParentCategoryID = 12,
-                    ProductSubcategoryDescription = "Old Subcategory",
+                    ProductSubcategoryDescription = "Old Sub category",
                     ImageURL = "/images/css/CategoryImages/defaultCategory.png",
                     IsOldSubCategory = true
                 },
@@ -1411,7 +1411,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 1513,
                     ParentCategoryID = 13,
-                    ProductSubcategoryDescription = "Old Subcategory",
+                    ProductSubcategoryDescription = "Old Sub category",
                     ImageURL = "/images/css/CategoryImages/defaultCategory.png",
                     IsOldSubCategory = true
                 }

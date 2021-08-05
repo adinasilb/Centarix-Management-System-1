@@ -1,0 +1,734 @@
+
+This item has no order number2 - added default invoice for requestID: 1633
+
+This item has no order number3 - added default invoice for requestID: 1634
+
+There are duplicate matching invoices for 4 - added default invoice for requestID: 1635
+
+This item has no order number5 - added default invoice for requestID: 1636
+
+This item has no order number6 - added default invoice for requestID: 1637
+
+This item has no order number7 - added default invoice for requestID: 1638
+
+This item has no order number8 - added default invoice for requestID: 1639
+
+This item has no order number9 - added default invoice for requestID: 1640
+
+This item has no order number10 - added default invoice for requestID: 1641
+
+There are duplicate matching invoices for 14 - added default invoice for requestID: 1645
+
+There are duplicate matching invoices for 15 - added default invoice for requestID: 1646
+
+There are duplicate matching invoices for 16 - added default invoice for requestID: 1647
+
+There are duplicate matching invoices for 21 - added default invoice for requestID: 1652
+
+There are duplicate matching invoices for 22 - added default invoice for requestID: 1653
+
+This item has no order number23 - added default invoice for requestID: 1654
+
+This item has no order number24 - added default invoice for requestID: 1655
+
+This item has no order number25 - added default invoice for requestID: 1656
+
+This item has no order number26 - added default invoice for requestID: 1657
+
+This item has no order number27 - added default invoice for requestID: 1658
+
+This item has no order number28 - added default invoice for requestID: 1659
+
+This item has no order number29 - added default invoice for requestID: 1660
+
+This item has no order number30 - added default invoice for requestID: 1661
+
+There are duplicate matching invoices for 31 - added default invoice for requestID: 1662
+
+This item has no order number33 - added default invoice for requestID: 1664
+
+This item has no order number34 - added default invoice for requestID: 1665
+
+This item has no order number35 - added default invoice for requestID: 1666
+
+This item has no order number36 - added default invoice for requestID: 1667
+
+This item has no order number37 - added default invoice for requestID: 1668
+
+This item has no order number38 - added default invoice for requestID: 1669
+
+This item has no order number39 - added default invoice for requestID: 1670
+
+There are duplicate matching invoices for 40 - added default invoice for requestID: 1671
+
+This item has no order number43 - added default invoice for requestID: 1674
+
+There are duplicate matching invoices for 44 - added default invoice for requestID: 1675
+
+There are duplicate matching invoices for 45 - added default invoice for requestID: 1676
+
+This item has no order number48 - added default invoice for requestID: 1679
+
+This item has no order number49 - added default invoice for requestID: 1680
+
+This item has no order number50 - added default invoice for requestID: 1681
+
+This item has no order number51 - added default invoice for requestID: 1682
+
+This item has no order number52 - added default invoice for requestID: 1683
+
+This item has no order number53 - added default invoice for requestID: 1684
+
+This item has no order number54 - added default invoice for requestID: 1685
+
+This item has no order number55 - added default invoice for requestID: 1686
+
+This item has no order number56 - added default invoice for requestID: 1687
+
+This item has no order number57 - added default invoice for requestID: 1688
+
+This item has no order number58 - added default invoice for requestID: 1689
+
+This item has no order number59 - added default invoice for requestID: 1690
+
+This item has no order number70 - added default invoice for requestID: 1701
+
+This item has no order number71 - added default invoice for requestID: 1702
+
+This item has no order number72 - added default invoice for requestID: 1703
+
+This item has no order number73 - added default invoice for requestID: 1704
+
+This item has no order number74 - added default invoice for requestID: 1705
+
+There are duplicate matching invoices for 75 - added default invoice for requestID: 1706
+
+There are duplicate matching invoices for 76 - added default invoice for requestID: 1707
+
+There are duplicate matching invoices for 77 - added default invoice for requestID: 1708
+
+There are duplicate matching invoices for 78 - added default invoice for requestID: 1709
+
+There are duplicate matching invoices for 79 - added default invoice for requestID: 1710
+
+This item has no order number81 - added default invoice for requestID: 1712
+
+This item has no order number82 - added default invoice for requestID: 1713
+
+This item has no order number83 - added default invoice for requestID: 1714
+
+This item has no order number84 - added default invoice for requestID: 1715
+
+This item has no order number85 - added default invoice for requestID: 1716
+
+This item has no order number86 - added default invoice for requestID: 1717
+
+This item has no order number87 - added default invoice for requestID: 1718
+
+This item has no order number88 - added default invoice for requestID: 1719
+
+There is not matching catalog number and order number to row89 - added default invoice for requestID: 1720
+
+This item has no order number90 - added default invoice for requestID: 1721
+
+This item has no order number92 - added default invoice for requestID: 1723
+
+This item has no order number93 - added default invoice for requestID: 1724
+
+This item has no order number94 - added default invoice for requestID: 1725
+
+This item has no order number95 - added default invoice for requestID: 1726
+
+There is not matching catalog number and order number to row96 - added default invoice for requestID: 1727
+
+This item has no order number97 - added default invoice for requestID: 1728
+
+This item has no order number98 - added default invoice for requestID: 1729
+
+There are duplicate matching invoices for 99 - added default invoice for requestID: 1730
+
+There are duplicate matching invoices for 100 - added default invoice for requestID: 1731
+
+This item has no order number103 - added default invoice for requestID: 1734
+
+This item has no order number104 - added default invoice for requestID: 1735
+
+This item has no order number105 - added default invoice for requestID: 1736
+
+This item has no order number106 - added default invoice for requestID: 1737
+
+There are duplicate matching invoices for 107 - added default invoice for requestID: 1738
+
+This item has no order number109 - added default invoice for requestID: 1740
+
+This item has no order number110 - added default invoice for requestID: 1741
+
+This item has no order number111 - added default invoice for requestID: 1742
+
+This item has no order number113 - added default invoice for requestID: 1744
+
+There are duplicate matching invoices for 116 - added default invoice for requestID: 1747
+
+There are duplicate matching invoices for 119 - added default invoice for requestID: 1750
+
+There are duplicate matching invoices for 120 - added default invoice for requestID: 1751
+
+There are duplicate matching invoices for 122 - added default invoice for requestID: 1753
+
+This item has no order number128 - added default invoice for requestID: 1759
+
+This item has no order number129 - added default invoice for requestID: 1760
+
+This item has no order number130 - added default invoice for requestID: 1761
+
+This item has no order number132 - added default invoice for requestID: 1763
+
+This item has no order number134 - added default invoice for requestID: 1765
+
+This item has no order number135 - added default invoice for requestID: 1766
+
+This item has no order number136 - added default invoice for requestID: 1767
+
+This item has no order number137 - added default invoice for requestID: 1768
+
+This item has no order number138 - added default invoice for requestID: 1769
+
+This item has no order number139 - added default invoice for requestID: 1770
+
+There are duplicate matching invoices for 140 - added default invoice for requestID: 1771
+
+This item has no order number143 - added default invoice for requestID: 1774
+
+This item has no order number144 - added default invoice for requestID: 1775
+
+There are duplicate matching invoices for 146 - added default invoice for requestID: 1777
+
+There are duplicate matching invoices for 147 - added default invoice for requestID: 1778
+
+There are duplicate matching invoices for 148 - added default invoice for requestID: 1779
+
+This item has no order number155 - added default invoice for requestID: 1786
+
+This item has no order number156 - added default invoice for requestID: 1787
+
+There are duplicate matching invoices for 166 - added default invoice for requestID: 1797
+
+This item has no order number168 - added default invoice for requestID: 1799
+
+This item has no order number169 - added default invoice for requestID: 1800
+
+This item has no order number170 - added default invoice for requestID: 1801
+
+This item has no order number171 - added default invoice for requestID: 1802
+
+This item has no order number172 - added default invoice for requestID: 1803
+
+There are duplicate matching invoices for 175 - added default invoice for requestID: 1806
+
+This item has no order number176 - added default invoice for requestID: 1807
+
+This item has no order number177 - added default invoice for requestID: 1808
+
+This item has no order number178 - added default invoice for requestID: 1809
+
+This item has no order number179 - added default invoice for requestID: 1810
+
+This item has no order number180 - added default invoice for requestID: 1811
+
+This item has no order number183 - added default invoice for requestID: 1814
+
+This item has no order number184 - added default invoice for requestID: 1815
+
+This item has no order number185 - added default invoice for requestID: 1816
+
+This item has no order number186 - added default invoice for requestID: 1817
+
+This item has no order number187 - added default invoice for requestID: 1818
+
+There are duplicate matching invoices for 188 - added default invoice for requestID: 1819
+
+There are duplicate matching invoices for 189 - added default invoice for requestID: 1820
+
+There are duplicate matching invoices for 190 - added default invoice for requestID: 1821
+
+This item has no order number195 - added default invoice for requestID: 1826
+
+There are duplicate matching invoices for 196 - added default invoice for requestID: 1827
+
+There are duplicate matching invoices for 197 - added default invoice for requestID: 1828
+
+There are duplicate matching invoices for 198 - added default invoice for requestID: 1829
+
+There are duplicate matching invoices for 199 - added default invoice for requestID: 1830
+
+There are duplicate matching invoices for 200 - added default invoice for requestID: 1831
+
+This item has no order number201 - added default invoice for requestID: 1832
+
+There are duplicate matching invoices for 202 - added default invoice for requestID: 1833
+
+There are duplicate matching invoices for 203 - added default invoice for requestID: 1834
+
+There are duplicate matching invoices for 205 - added default invoice for requestID: 1836
+
+This item has no order number208 - added default invoice for requestID: 1839
+
+This item has no order number209 - added default invoice for requestID: 1840
+
+This item has no order number210 - added default invoice for requestID: 1841
+
+This item has no order number211 - added default invoice for requestID: 1842
+
+This item has no order number212 - added default invoice for requestID: 1843
+
+This item has no order number213 - added default invoice for requestID: 1844
+
+There are duplicate matching invoices for 214 - added default invoice for requestID: 1845
+
+There are duplicate matching invoices for 215 - added default invoice for requestID: 1846
+
+This item has no order number217 - added default invoice for requestID: 1848
+
+This item has no order number218 - added default invoice for requestID: 1849
+
+This item has no order number219 - added default invoice for requestID: 1850
+
+This item has no order number220 - added default invoice for requestID: 1851
+
+This item has no order number221 - added default invoice for requestID: 1852
+
+There is not matching catalog number and order number to row222 - added default invoice for requestID: 1853
+
+This item has no order number226 - added default invoice for requestID: 1857
+
+This item has no order number227 - added default invoice for requestID: 1858
+
+This item has no order number228 - added default invoice for requestID: 1859
+
+This item has no order number229 - added default invoice for requestID: 1860
+
+This item has no order number230 - added default invoice for requestID: 1861
+
+There is not matching catalog number and order number to row231 - added default invoice for requestID: 1862
+
+This item has no order number233 - added default invoice for requestID: 1864
+
+There is not matching catalog number and order number to row234 - added default invoice for requestID: 1865
+
+This item has no order number242 - added default invoice for requestID: 1873
+
+There are duplicate matching invoices for 244 - added default invoice for requestID: 1875
+
+There are duplicate matching invoices for 245 - added default invoice for requestID: 1876
+
+There are duplicate matching invoices for 246 - added default invoice for requestID: 1877
+
+This item has no order number248 - added default invoice for requestID: 1879
+
+This item has no order number250 - added default invoice for requestID: 1881
+
+This item has no order number251 - added default invoice for requestID: 1882
+
+There are duplicate matching invoices for 257 - added default invoice for requestID: 1888
+
+This item has no order number259 - added default invoice for requestID: 1890
+
+This item has no order number260 - added default invoice for requestID: 1891
+
+This item has no order number261 - added default invoice for requestID: 1892
+
+There are duplicate matching invoices for 262 - added default invoice for requestID: 1893
+
+This item has no order number271 - added default invoice for requestID: 1902
+
+This item has no order number272 - added default invoice for requestID: 1903
+
+This item has no order number273 - added default invoice for requestID: 1904
+
+This item has no order number274 - added default invoice for requestID: 1905
+
+There are duplicate matching invoices for 276 - added default invoice for requestID: 1907
+
+This item has no order number277 - added default invoice for requestID: 1908
+
+This item has no order number279 - added default invoice for requestID: 1910
+
+This item has no order number283 - added default invoice for requestID: 1914
+
+This item has no order number284 - added default invoice for requestID: 1915
+
+This item has no order number285 - added default invoice for requestID: 1916
+
+This item has no order number286 - added default invoice for requestID: 1917
+
+This item has no order number287 - added default invoice for requestID: 1918
+
+This item has no order number288 - added default invoice for requestID: 1919
+
+There are duplicate matching invoices for 290 - added default invoice for requestID: 1921
+
+There are duplicate matching invoices for 291 - added default invoice for requestID: 1922
+
+This item has no order number292 - added default invoice for requestID: 1923
+
+There are duplicate matching invoices for 294 - added default invoice for requestID: 1925
+
+This item has no order number295 - added default invoice for requestID: 1926
+
+This item has no order number296 - added default invoice for requestID: 1927
+
+This item has no order number297 - added default invoice for requestID: 1928
+
+There is not matching catalog number and order number to row298 - added default invoice for requestID: 1929
+
+This item has no order number299 - added default invoice for requestID: 1930
+
+There is not matching catalog number and order number to row300 - added default invoice for requestID: 1931
+
+This item has no order number301 - added default invoice for requestID: 1932
+
+This item has no order number302 - added default invoice for requestID: 1933
+
+This item has no order number303 - added default invoice for requestID: 1934
+
+There are duplicate matching invoices for 304 - added default invoice for requestID: 1935
+
+There are duplicate matching invoices for 308 - added default invoice for requestID: 1939
+
+This item has no order number309 - added default invoice for requestID: 1940
+
+This item has no order number310 - added default invoice for requestID: 1941
+
+There are duplicate matching invoices for 316 - added default invoice for requestID: 1947
+
+There are duplicate matching invoices for 317 - added default invoice for requestID: 1948
+
+There are duplicate matching invoices for 318 - added default invoice for requestID: 1949
+
+There are duplicate matching invoices for 319 - added default invoice for requestID: 1950
+
+This item has no order number320 - added default invoice for requestID: 1951
+
+There are duplicate matching invoices for 321 - added default invoice for requestID: 1952
+
+This item has no order number322 - added default invoice for requestID: 1953
+
+There are duplicate matching invoices for 323 - added default invoice for requestID: 1954
+
+There are duplicate matching invoices for 324 - added default invoice for requestID: 1955
+
+There is not matching catalog number and order number to row342 - added default invoice for requestID: 1973
+
+There are duplicate matching invoices for 345 - added default invoice for requestID: 1976
+
+This item has no order number347 - added default invoice for requestID: 1978
+
+This item has no order number348 - added default invoice for requestID: 1979
+
+This item has no order number349 - added default invoice for requestID: 1980
+
+This item has no order number350 - added default invoice for requestID: 1981
+
+This item has no order number352 - added default invoice for requestID: 1983
+
+This item has no order number353 - added default invoice for requestID: 1984
+
+This item has no order number354 - added default invoice for requestID: 1985
+
+This item has no order number358 - added default invoice for requestID: 1989
+
+There are duplicate matching invoices for 359 - added default invoice for requestID: 1990
+
+There are duplicate matching invoices for 360 - added default invoice for requestID: 1991
+
+This item has no order number362 - added default invoice for requestID: 1993
+
+This item has no order number363 - added default invoice for requestID: 1994
+
+This item has no order number364 - added default invoice for requestID: 1995
+
+This item has no order number365 - added default invoice for requestID: 1996
+
+There are duplicate matching invoices for 370 - added default invoice for requestID: 2001
+
+There are duplicate matching invoices for 373 - added default invoice for requestID: 2004
+
+There are duplicate matching invoices for 374 - added default invoice for requestID: 2005
+
+There are duplicate matching invoices for 375 - added default invoice for requestID: 2006
+
+There are duplicate matching invoices for 380 - added default invoice for requestID: 2011
+
+There is not matching catalog number and order number to row382 - added default invoice for requestID: 2013
+
+There are duplicate matching invoices for 388 - added default invoice for requestID: 2019
+
+There are duplicate matching invoices for 389 - added default invoice for requestID: 2020
+
+There are duplicate matching invoices for 390 - added default invoice for requestID: 2021
+
+There are duplicate matching invoices for 391 - added default invoice for requestID: 2022
+
+There is not matching catalog number and order number to row400 - added default invoice for requestID: 2031
+
+There are duplicate matching invoices for 401 - added default invoice for requestID: 2032
+
+There are duplicate matching invoices for 402 - added default invoice for requestID: 2033
+
+There are duplicate matching invoices for 404 - added default invoice for requestID: 2035
+
+There are duplicate matching invoices for 405 - added default invoice for requestID: 2036
+
+There is not matching catalog number and order number to row406 - added default invoice for requestID: 2037
+
+There is not matching catalog number and order number to row407 - added default invoice for requestID: 2038
+
+There is not matching catalog number and order number to row408 - added default invoice for requestID: 2039
+
+There is not matching catalog number and order number to row409 - added default invoice for requestID: 2040
+
+This item has no order number410 - added default invoice for requestID: 2041
+
+There are duplicate matching invoices for 412 - added default invoice for requestID: 2043
+
+This item has no order number413 - added default invoice for requestID: 2044
+
+This item has no order number422 - added default invoice for requestID: 2053
+
+This item has no order number423 - added default invoice for requestID: 2054
+
+There are duplicate matching invoices for 424 - added default invoice for requestID: 2055
+
+There are duplicate matching invoices for 425 - added default invoice for requestID: 2056
+
+There are duplicate matching invoices for 426 - added default invoice for requestID: 2057
+
+There is not matching catalog number and order number to row432 - added default invoice for requestID: 2063
+
+There is not matching catalog number and order number to row437 - added default invoice for requestID: 2068
+
+There are duplicate matching invoices for 438 - added default invoice for requestID: 2069
+
+There are duplicate matching invoices for 439 - added default invoice for requestID: 2070
+
+This item has no order number442 - added default invoice for requestID: 2073
+
+There are duplicate matching invoices for 443 - added default invoice for requestID: 2074
+
+There are duplicate matching invoices for 444 - added default invoice for requestID: 2075
+
+There are duplicate matching invoices for 445 - added default invoice for requestID: 2076
+
+There are duplicate matching invoices for 446 - added default invoice for requestID: 2077
+
+There are duplicate matching invoices for 448 - added default invoice for requestID: 2079
+
+There are duplicate matching invoices for 449 - added default invoice for requestID: 2080
+
+There are duplicate matching invoices for 450 - added default invoice for requestID: 2081
+
+This item has no order number455 - added default invoice for requestID: 2086
+
+This item has no order number456 - added default invoice for requestID: 2087
+
+There is not matching catalog number and order number to row463 - added default invoice for requestID: 2094
+
+This item has no order number467 - added default invoice for requestID: 2098
+
+This item has no order number477 - added default invoice for requestID: 2108
+
+There is not matching catalog number and order number to row478 - added default invoice for requestID: 2109
+
+There is not matching catalog number and order number to row479 - added default invoice for requestID: 2110
+
+There is not matching catalog number and order number to row481 - added default invoice for requestID: 2112
+
+There is not matching catalog number and order number to row482 - added default invoice for requestID: 2113
+
+There is not matching catalog number and order number to row483 - added default invoice for requestID: 2114
+
+There is not matching catalog number and order number to row484 - added default invoice for requestID: 2115
+
+There is not matching catalog number and order number to row485 - added default invoice for requestID: 2116
+
+There are duplicate matching invoices for 486 - added default invoice for requestID: 2117
+
+This item has no order number488 - added default invoice for requestID: 2119
+
+There are duplicate matching invoices for 498 - added default invoice for requestID: 2129
+
+This item has no order number501 - added default invoice for requestID: 2132
+
+There are duplicate matching invoices for 502 - added default invoice for requestID: 2133
+
+This item has no order number504 - added default invoice for requestID: 2135
+
+There are duplicate matching invoices for 505 - added default invoice for requestID: 2136
+
+There is not matching catalog number and order number to row522 - added default invoice for requestID: 2153
+
+There are duplicate matching invoices for 524 - added default invoice for requestID: 2155
+
+There are duplicate matching invoices for 526 - added default invoice for requestID: 2157
+
+There are duplicate matching invoices for 527 - added default invoice for requestID: 2158
+
+There are duplicate matching invoices for 528 - added default invoice for requestID: 2159
+
+There are duplicate matching invoices for 529 - added default invoice for requestID: 2160
+
+There are duplicate matching invoices for 537 - added default invoice for requestID: 2168
+
+There are duplicate matching invoices for 538 - added default invoice for requestID: 2169
+
+There are duplicate matching invoices for 539 - added default invoice for requestID: 2170
+
+This item has no order number540 - added default invoice for requestID: 2171
+
+This item has no order number544 - added default invoice for requestID: 2175
+
+There are duplicate matching invoices for 545 - added default invoice for requestID: 2176
+
+There are duplicate matching invoices for 546 - added default invoice for requestID: 2177
+
+There is not matching catalog number and order number to row547 - added default invoice for requestID: 2178
+
+Row 549 failed to enter database: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 550 failed to enter database: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 551 failed to enter database: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 552 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 553 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 554 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 555 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 556 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 557 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 558 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 559 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 560 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 561 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 562 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 563 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 564 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 565 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 566 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 567 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 568 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 569 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 570 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 571 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 572 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 573 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 574 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 575 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 576 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 577 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 578 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 579 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 580 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 581 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 582 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 583 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 584 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 585 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 586 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 587 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 588 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 589 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 590 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 591 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 592 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 593 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Row 594 failed to enter database: The MERGE statement conflicted with the FOREIGN KEY constraint "FK_Products_ProductSubcategories_ProductSubcategoryID". The conflict occurred in database "NewDatabase", table "dbo.ProductSubcategories", column 'ProductSubcategoryID'.
+The statement has been terminated.
+
+Error reading requests file: The process cannot access the file 'C:\Users\debbie\Source\Repos\shimoncentarix\Centarix-Management-System\PrototypeWithAuth\InventoryError.txt' because it is being used by another process.
