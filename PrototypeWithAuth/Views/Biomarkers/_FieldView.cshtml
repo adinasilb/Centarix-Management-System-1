@@ -1,0 +1,13 @@
+﻿@model PrototypeWithAuth.ViewModels.FieldViewModel
+@using PrototypeWithAuth.AppData
+
+<label class="control-label">@Model.Header</label>
+@{
+    switch (Model.DataTypeEnum)
+    {
+        case AppUtility.DataTypeEnum.Double:
+            <input asp-for="Double" class="form-control-plaintext border-bottom" />
+            <span asp-validation-for="Double" class="text-danger-centarix mark-readonly"></span>
+            break;
+    }
+}

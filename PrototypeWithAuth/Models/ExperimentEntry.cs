@@ -13,7 +13,7 @@ namespace PrototypeWithAuth.Models
         public int ExperimentEntryID { get; set; }
         public DateTime DateTime { get; set; }
         public int ParticipantID { get; set; }
-        public Participant Participants { get; set; }
+        public Participant Participant { get; set; }
         public int VisitNumber { get; set; }
         public string ApplicationUserID { get; set; }
         public ApplicationUser ApplicationUser { get; set; }

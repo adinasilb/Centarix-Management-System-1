@@ -1,0 +1,8 @@
+﻿@using PrototypeWithAuth.AppData 
+@model Participant 
+<div class="entries-header font-weight-medium text">
+    Serial Number: <span class="biomarkers-color">@Model.CentarixID </span> |
+    DOB: <span class="biomarkers-color">@Model.DOB.GetElixirDateFormat() </span> |
+    Gender: <span class="biomarkers-color">@Model.Gender.Description </span> |
+    Status: <span class="biomarkers-color">@Model.ParticipantStatus.Description </span>
+</div>

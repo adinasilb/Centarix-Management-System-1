@@ -1,0 +1,71 @@
+﻿@model TestValuesViewModel
+@using PrototypeWithAuth.ViewModels
+@using PrototypeWithAuth.AppData
+
+<div class="row under-row-margin">
+    <div class="col-9 border-bottom heading-1">
+        @Model.Test.Name
+    </div>
+</div>
+@if (Model.Test.TestOuterGroups != null)
+{
+    <div class="row under-row-margin">
+        @if (Model.Test.TestOuterGroups.Count == 1)
+        {
+            @if (!Model.Test.TestOuterGroups[0].IsNone)
+            {
+                <span class="heading-1">
+                    @Model.Test.TestOuterGroups[0].Name
+                </span>
+            }
+
+            @if (Model.Test.TestOuterGroups[0].TestGroups.Count == 3)
+            {
+                @foreach (var tog in Model.Test.TestOuterGroups[0].TestGroups.OrderBy(tg => tg.SequencePosition))
+                {
+                    <div class="col-4 px-4">
+                        <span class="biomarkers-color">@tog.Name</span>
+                        @foreach (var header in tog.TestHeaders)
+                        {
+                            <div class="row p-3">
+
+                                @{ AppUtility.DataTypeEnum dataType;
+                                    Enum.TryParse(header.Type, out dataType);
+                                    FieldViewModel fieldViewModel = new FieldViewModel()
+                                    {
+                                        Header = header.Name,
+                                        DataTypeEnum = dataType
+                                    };
+                                    var data = Model.TestValues.Count > 0 ? Model.TestValues.Where(tv => tv.TestHeaderID == header.TestHeaderID).FirstOrDefault().Value : null;
+                                    switch (dataType)
+                                    {
+                                        case AppUtility.DataTypeEnum.Double:
+                                            var dbl = data == null ? "0" : data;
+                                            fieldViewModel.Double = Convert.ToDouble(dbl);
+                                            break;
+                                        case AppUtility.DataTypeEnum.String:
+                                            var str = data == null ? "" : data;
+                                            fieldViewModel.String = str;
+                                            break;
+                                        case AppUtility.DataTypeEnum.DateTime:
+                                            var dt = data == null ? DateTime.Now.GetElixirDateFormat() : data;
+                                            fieldViewModel.DateTime = Convert.ToDateTime(dt);
+                                            break;
+                                        case AppUtility.DataTypeEnum.Bool:
+                                            var boolean = data == null ? "0" : data;
+                                            fieldViewModel.Bool = Convert.ToBoolean(boolean);
+                                            break;
+                                        case AppUtility.DataTypeEnum.File:
+                                            //fieldViewModel.File
+                                            break;
+                                    }
+                                    await Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        }
+    </div>
+}

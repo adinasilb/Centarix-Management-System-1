@@ -421,6 +421,8 @@
     <Compile Remove="Data\Migrations\20210720124451_addedTestGroupFK.Designer.cs" />
     <Compile Remove="Data\Migrations\20210721113744_updatedSiteTable.cs" />
     <Compile Remove="Data\Migrations\20210721113744_updatedSiteTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210804092449_updatedParticipantOfExperimentEntry.cs" />
+    <Compile Remove="Data\Migrations\20210804092449_updatedParticipantOfExperimentEntry.Designer.cs" />
   </ItemGroup>
 
 

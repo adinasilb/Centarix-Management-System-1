@@ -10,6 +10,7 @@ namespace PrototypeWithAuth.Models
     {
         [Key]
         public int TestValueID { get; set; }
+        public string Value { get; set; }
         public int TestHeaderID { get; set; }
         public TestHeader TestHeader { get; set; }
         public int ExperimentEntryID { get; set; }

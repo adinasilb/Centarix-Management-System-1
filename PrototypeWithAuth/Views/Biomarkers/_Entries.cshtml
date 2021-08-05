@@ -6,12 +6,7 @@
 @{
 }
 <div class="_entries under-row-margin">
-    <div class="entries-header font-weight-medium text">
-        Serial Number: <span class="biomarkers-color">@Model.Participant.CentarixID </span> |
-        DOB: <span class="biomarkers-color">@Model.Participant.DOB.GetElixirDateFormat() </span> |
-        Gender: <span class="biomarkers-color">@Model.Participant.Gender.Description </span> |
-        Status: <span class="biomarkers-color">@Model.Participant.ParticipantStatus.Description </span>
-    </div>
+    @{ await Html.RenderPartialAsync("_participantsheader", Model.Participant);}
 </div>
 <div class="row under-row-margin">
     <div class="col-6">

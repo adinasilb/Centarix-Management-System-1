@@ -867,3 +867,16 @@ span.resources-tags-big {
     text-decoration: underline !important;
 }
 
+.biomarkers-test-name {
+    padding-top: .7rem;
+    padding-bottom: .7rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
+    border-radius: 15px !important;
+    border: 0 !important;
+}
+
+.biomarkers-test-name.selected {
+    background-color: var(--biomarkers-25);
+}
+

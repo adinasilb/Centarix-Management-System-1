@@ -1,0 +1,74 @@
+﻿@using PrototypeWithAuth.AppData
+@using PrototypeWithAuth.ViewModels
+@model PrototypeWithAuth.ViewModels.TestViewModel
+@{
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+<script src="~/js/biomarkerssave.js"></script>
+<form action="" method="POST" enctype="multipart/form-data" class="test-forms on-form-modal bio-form" id="myForm">
+    @Html.HiddenFor(m => m.ExperimentEntry.ExperimentEntryID)
+    @Html.HiddenFor(m => m.ExperimentEntry.ParticipantID)
+    @Html.HiddenFor(m => m.ExperimentEntry.SiteID)
+    @Html.HiddenFor(m => m.ExperimentEntry.VisitNumber)
+    <div class="row under-row-margin">
+        <div class="col-6">
+            @{ await Html.RenderPartialAsync("_participantsheader", Model.ExperimentEntry.Participant);}
+        </div>
+        <div class="col-6">
+            <div class="entries-header font-weight-medium text float-right">
+                Entry Number: <span class="biomarkers-color">@Model.ExperimentEntry.VisitNumber </span> |
+                Date: <span class="biomarkers-color">@Model.ExperimentEntry.DateTime.GetElixirDateFormat() </span>
+            </div>
+        </div>
+    </div>
+    <div class="row under-row-margin">
+        <div class="col-6">
+            <button class="custom-button custom-button-font light-gray-background-color ml-0">
+                <a href="@Url.Action("Biomarkers", "Experiment", new { ID = Model.ExperimentEntry.ParticipantID })" class="text-black">
+                    <i class="icon-arrow_back_ios-24px-1" style="font-size: 1.2rem;"></i>
+                    Back
+                </a>
+            </button>
+            <span class="col-2 heading-1">
+                @Model.ExperimentEntry.Site.Name
+            </span>
+        </div>
+        <div class="col-6 float-right">
+            <div class=" row text-right mb- ">
+                <div class="switch col-12 switch-margin">
+                    <label>
+                        <label class="edit-mode-label on">edit mode on</label>
+                        <input type="checkbox" class="biomarkers-color biomarkers-test edit-mode-input" checked value="true" productID="" name="edit">
+                        <span class="lever"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card border">
+        <div class="row">
+            <div class="col-3 border-right p-4">
+                <ul class="list-group">
+                    @{ var origClasses = "biomarkers-test-name list-group-item mb-2";
+                        var classes = origClasses + " selected";}
+                    @for (int t = 0; t < Model.Tests.Count; t++)
+                    {
+                        @Html.HiddenFor(m => m.Tests[t].TestID);
+                        <li class="@classes">@Model.Tests[t].Name</li>
+                        classes = origClasses;
+                    }
+                </ul>
+            </div>
+            <div class="col-7 small-modal-padding testvalues">
+                @{
+                    TestValuesViewModel testValuesViewModel = new TestValuesViewModel()
+                    {
+                        Test = Model.Tests.FirstOrDefault(),
+                        TestValues = Model.TestValues
+                    };
+                    await Html.RenderPartialAsync("_TestValues", testValuesViewModel);
+                }
+            </div>
+        </div>
+    </div>
+</form>

@@ -27,6 +27,69 @@ namespace PrototypeWithAuth.Controllers
             _context = context;
         }
 
+        public ActionResult RunScripts()
+        {
+            var testheaders = _context.TestHeaders;
+            foreach (var th in testheaders)
+            {
+                _context.Remove(th);
+            }
+            _context.SaveChanges();
+            var testgroups = _context.TestGroups;
+            foreach (var tg in testgroups)
+            {
+                _context.Remove(tg);
+            }
+            _context.SaveChanges();
+            var testoutergroups = _context.TestOuterGroups;
+            foreach (var tog in testoutergroups)
+            {
+                _context.Remove(tog);
+            }
+            _context.SaveChanges();
+            var experimentTests = _context.Experiments.SelectMany(e => e.ExperimentTests);
+            foreach (var et in experimentTests)
+            {
+                _context.Remove(et);
+            }
+            _context.SaveChanges();
+            var tests = _context.Tests;
+            foreach (var t in tests)
+            {
+                _context.Remove(t);
+            }
+            _context.SaveChanges();
+            var experimentEntries = _context.ExperimentEntries;
+            foreach (var ee in experimentEntries)
+            {
+                _context.Remove(ee);
+            }
+            _context.SaveChanges();
+            var sites = _context.Sites;
+            foreach (var s in sites)
+            {
+                _context.Remove(s);
+            }
+            _context.SaveChanges();
+            var particpants = _context.Participants;
+            foreach (var p in particpants)
+            {
+                _context.Remove(p);
+            }
+            _context.SaveChanges();
+            var experiments = _context.Experiments;
+            foreach (var e in experiments)
+            {
+                _context.Remove(e);
+            }
+
+            _1InsertExeriments();
+            _2InsertSites();
+            _3Add02TestsBloodPressure();
+            _4InsertECGTest();
+            return RedirectToAction("HumanTrialsList");
+        }
+
         public void _1InsertExeriments()
         {
             DateTime startDate;
@@ -93,6 +156,19 @@ namespace PrototypeWithAuth.Controllers
                 SiteID = _context.Sites.Where(s => s.Name == "O2").FirstOrDefault().SiteID
             };
             _context.Add(BloodPressure);
+            _context.SaveChanges();
+            ExperimentTest et1 = new ExperimentTest()
+            {
+                ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex1").Select(e => e.ExperimentID).FirstOrDefault(),
+                TestID = _context.Tests.Where(t => t.Name == "Blood Pressure").Select(t => t.TestID).FirstOrDefault()
+            };
+            ExperimentTest et2 = new ExperimentTest()
+            {
+                ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex2").Select(e => e.ExperimentID).FirstOrDefault(),
+                TestID = _context.Tests.Where(t => t.Name == "Blood Pressure").Select(t => t.TestID).FirstOrDefault()
+            };
+            _context.Add(et1);
+            _context.Add(et2);
             _context.SaveChanges();
             TestOuterGroup bptog1 = new TestOuterGroup()
             {
@@ -196,6 +272,90 @@ namespace PrototypeWithAuth.Controllers
                 Type = AppUtility.DataTypeEnum.Double.ToString()
             };
             _context.Add(Diastolic3);
+            _context.SaveChanges();
+        }
+
+        public void _4InsertECGTest()
+        {
+            var Test = new Test()
+            {
+                Name = "ECG",
+                SiteID = _context.Sites.Where(s => s.Name == "O2").Select(s => s.SiteID).FirstOrDefault()
+            };
+            _context.Add(Test);
+            _context.SaveChanges();
+            var testId = _context.Tests.Where(t => t.Name == "ECG").Select(t => t.TestID).FirstOrDefault();
+            var experimentTest = new ExperimentTest()
+            {
+                TestID = testId,
+                ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex1").Select(e => e.ExperimentID).FirstOrDefault()
+            };
+            var experimentTest2 = new ExperimentTest()
+            {
+                TestID = testId,
+                ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex2").Select(e => e.ExperimentID).FirstOrDefault()
+            };
+            _context.Add(experimentTest);
+            _context.Add(experimentTest2);
+            _context.SaveChanges();
+            var testoutergroup = new TestOuterGroup()
+            {
+                IsNone = true,
+                TestID = testId,
+                SequencePosition = 1
+            };
+            _context.Add(testoutergroup);
+            _context.SaveChanges();
+            var testgroup = new TestGroup()
+            {
+                IsNone = true,
+                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                    .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                SequencePosition = 1
+            };
+            _context.Add(testgroup);
+            _context.SaveChanges();
+            var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId).Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+            var avgHr = new TestHeader()
+            {
+                Name = "Average Hr",
+                Type = AppUtility.DataTypeEnum.Double.ToString(),
+                SequencePosition = 1,
+                TestGroupID = tgId,
+            };
+            var sdnn = new TestHeader()
+            {
+                Name = "SDNN",
+                Type = AppUtility.DataTypeEnum.Double.ToString(),
+                SequencePosition = 1,
+                TestGroupID = tgId,
+            };
+            var rnsdd = new TestHeader()
+            {
+                Name = "RNSDD",
+                Type = AppUtility.DataTypeEnum.Double.ToString(),
+                SequencePosition = 1,
+                TestGroupID = tgId,
+            };
+            var sdsd = new TestHeader()
+            {
+                Name = "SDSD",
+                Type = AppUtility.DataTypeEnum.Double.ToString(),
+                SequencePosition = 1,
+                TestGroupID = tgId,
+            };
+            var file = new TestHeader()
+            {
+                Name = "File",
+                Type = AppUtility.DataTypeEnum.File.ToString(),
+                SequencePosition = 1,
+                TestGroupID = tgId,
+            };
+            _context.Add(avgHr);
+            _context.Add(sdnn);
+            _context.Add(rnsdd);
+            _context.Add(sdsd);
+            _context.Add(file);
             _context.SaveChanges();
         }
 
@@ -436,7 +596,21 @@ namespace PrototypeWithAuth.Controllers
             return _context.Participants.Where(p => p.ExperimentID == ExperimentID).Count();
         }
 
+        public async Task<ActionResult> Entries(int ParticipantID)
+        {
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.HumanTrials;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.BiomarkersExperiments;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Biomarkers;
+
+            return View(await GetEntriesViewModelAsync(ParticipantID));
+        }
+
         public async Task<ActionResult> _Entries(int ParticipantID)
+        {
+            return PartialView(await GetEntriesViewModelAsync(ParticipantID));
+        }
+
+        public async Task<EntriesViewModel> GetEntriesViewModelAsync(int ParticipantID)
         {
             var entriesViewModel = new EntriesViewModel()
             {
@@ -445,7 +619,7 @@ namespace PrototypeWithAuth.Controllers
                 EntryHeaders = await GetEntriesHeaders(),
                 EntryRows = await GetEntriesRows(ParticipantID)
             };
-            return PartialView(entriesViewModel);
+            return entriesViewModel;
         }
 
         public async Task<List<TDViewModel>> GetEntriesHeaders()
@@ -489,7 +663,9 @@ namespace PrototypeWithAuth.Controllers
                     {
                         new TDViewModel()
                         {
-                             Value = ee.VisitNumber.ToString()
+                             Value = ee.VisitNumber.ToString(),
+                             Link = "Test",
+                             ID = ee.ExperimentEntryID
                         },
                         new TDViewModel()
                         {
@@ -503,6 +679,10 @@ namespace PrototypeWithAuth.Controllers
                         {
                              Value = ee.Site.Name.ToString()
                         },
+                        new TDViewModel()
+                        {
+                             Value = ee.VisitNumber.ToString()
+                        }
                     }
                     );
             }
@@ -548,6 +728,40 @@ namespace PrototypeWithAuth.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("_BiomarkersRows", newEntryViewModel.ParticipantID);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Test(int ID)
+        {
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.HumanTrials;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.BiomarkersExperiments;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Biomarkers;
+
+            var ee = _context.ExperimentEntries.Where(e => e.ExperimentEntryID == ID).Include(ee => ee.Site)
+                    .Include(ee => ee.Participant).ThenInclude(p => p.Gender).Include(ee => ee.Participant.ParticipantStatus)
+                    .FirstOrDefault();
+            var tests = _context.Tests.Where(t => t.SiteID == ee.SiteID)
+                    .Include(t => t.TestOuterGroups).ThenInclude(tog => tog.TestGroups).ThenInclude(tg => tg.TestHeaders)
+                    .Where(t => t.ExperimentTests.Select(et => et.ExperimentID).Contains(ee.Participant.ExperimentID))
+                    .ToList();
+            TestViewModel testViewModel = new TestViewModel()
+            {
+                ExperimentEntry = ee,
+                Tests = tests,
+                TestValues = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ID 
+                                && tv.TestHeader.TestGroup.TestOuterGroup.TestID == tests.FirstOrDefault().TestID).ToList()
+            };
+            return View(testViewModel);
+        }
+
+        public async Task<ActionResult> SaveTestModal()
+        {
+            return PartialView();
+        }
+
+        public async Task SaveTests(TestViewModel testViewModel, TestValuesViewModel testValuesViewModel, List<FieldViewModel> fieldViewModels)
+        {
+            var e = 1;
         }
     }
 }
