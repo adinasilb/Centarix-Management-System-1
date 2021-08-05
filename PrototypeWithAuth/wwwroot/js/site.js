@@ -1474,8 +1474,11 @@ $(function () {
 		else if (type == 'details') {	
 			if ($(this).hasClass('locations')) {
 				$.fn.MakeLocationsEditable();
+			}
+			else {
+				enableMarkReadonly($(this));
+				$(".proprietryHidenCategory").attr("disabled", false);
             }
-			$(".proprietryHidenCategory").attr("disabled", false);
 		}
 		//}
 	});
