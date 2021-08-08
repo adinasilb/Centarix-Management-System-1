@@ -314,4 +314,11 @@ $(function () {
 		return $(element).hasClass("contains-file");
 	}, 'Must upload a file before submitting');
 
+	$.validator.addMethod("locationRequired", function (value, element) {
+		console.log("in location required")
+		var locationSelected = $(element).attr("data-val") === 'true';
+		console.log($(element).attr("data-val"));
+		return locationSelected;
+	}, 'Please choose a location before submitting');
+
 });

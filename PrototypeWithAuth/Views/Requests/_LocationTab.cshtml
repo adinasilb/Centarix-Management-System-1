@@ -41,7 +41,18 @@
             name = Model.ReceivedModalSublocationsViewModel.locationInstancesSelected.ElementAt(0).LocationInstanceName;
         }
         <div class="col-12 heading-1 text-center locationFullName">@name</div>
+
+
+}
+</div>
+<div>
+    @{
+        var locationTypeSelected = "true";
+        if (Model.ParentDepthZeroOfSelected == null) {
+            locationTypeSelected = "";
+        }
     }
+        <input type="text" class="location-error" style="pointer-events: none; border: none" id="locationTypeSelected" name="locationTypeSelected" data-val="@locationTypeSelected"/>
 </div>
 <div class="row choose-locations">
     <div class="col-2">

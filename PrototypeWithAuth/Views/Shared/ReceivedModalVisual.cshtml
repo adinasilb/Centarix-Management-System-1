@@ -177,7 +177,7 @@
 
     }
 </table>
- <input type="hidden" style="pointer-events: none; position: absolute" class="mark-readonly" id="locationVisualSelected" name="locationVisualSelected" value="@locationSelected"/>
+ <input type="text" style="pointer-events: none; border: none" class="location-error mark-readonly" id="locationVisualSelected" name="locationVisualSelected" data-val="@locationSelected"/>
 }
 <script>
     $("body, .modal").off('click', ".open-archive-modal").on('click', ".open-archive-modal", function (e) {

@@ -280,7 +280,7 @@
 </div>-->
 @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID != 2)
 {
-    <input type="hidden" style="pointer-events:none" id="locationTypeSelected" name="locationTypeSelected" />
+    <input type="text" class="location-error" style="pointer-events: none; border: none" id="locationTypeSelected" name="locationTypeSelected" data-val=""/>
 }
 
 <script src="~/js/InitializeDatePicker.js"></script>

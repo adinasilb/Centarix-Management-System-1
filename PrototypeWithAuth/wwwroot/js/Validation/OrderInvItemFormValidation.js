@@ -82,17 +82,21 @@ $('.ordersItemForm').validate({
 		"Requests[0].Product.UnitTypeID": "selectRequired",
 		"Requests[0].Product.SubUnitTypeID": "selectRequired",
 		"Requests[0].Product.SubSubUnitTypeID": "selectRequired",
+		"locationTypeSelected": {
+			locationRequired: true
+		},
 		"subLocationSelected": {
-			required: true
+			locationRequired: true
 		},
 		"locationVisualSelected": {
-			required: true
+			locationRequired: true
 		}
 
 	},
 	messages:{
-		"subLocationSelected": "Please choose a location before submitting",
+/*		"subLocationSelected": "Please choose a location before submitting",
 		"locationVisualSelected": "Please choose a location before submitting",
+		"locationTypeSelected": "Please choose a location before submitting",*/
         "Requests[0].Product.CatalogNumber": {
             remote: "this product has already been created"
         },
