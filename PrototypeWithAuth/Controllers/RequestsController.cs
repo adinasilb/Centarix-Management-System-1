@@ -3814,8 +3814,14 @@ namespace PrototypeWithAuth.Controllers
                     {
                         requestReceived.RequestStatusID = 3;
                     }
-
-                    requestReceived.ArrivalDate = receivedLocationViewModel.Request.ArrivalDate;
+                    if(receivedLocationViewModel.Request.ArrivalDate == DateTime.Today)
+                    {
+                        requestReceived.ArrivalDate = DateTime.Now;
+                    }
+                    else
+                    {
+                        requestReceived.ArrivalDate = receivedLocationViewModel.Request.ArrivalDate;
+                    }
                     requestReceived.ApplicationUserReceiverID = receivedLocationViewModel.Request.ApplicationUserReceiverID;
                     requestReceived.ApplicationUserReceiver = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault();
                     requestReceived.NoteForPartialDelivery = receivedLocationViewModel.Request.NoteForPartialDelivery;
