@@ -32,7 +32,7 @@
 			loadReceivedModalSubLocations(id);
 		}
 		else {
-			$("#locationSelected").val(true);
+			$("#locationTypeSelected").val(true);
 			$("#myForm").data("validator").settings.ignore = "";
 			var valid = $("#myForm").valid();
 			if (valid) {
@@ -79,7 +79,6 @@
 	})
 
 	function SLI(el) {
-	
 		//alert("in SLI function");
 		//ONE ---> GET THE NEXT DROPDOWNLIST
 		if($(el).attr("isNoRack")=="true")
@@ -167,6 +166,11 @@
 					console.log("perc: " + parseFloat(perc));
 					visualBoxWidth = perc + "%";
 					visualBox.css('width', visualBoxWidth);
+					if (cols > 0) {
+						$('#subLocationSelected').val(true);
+					} else {
+						$('#subLocationSelected').val('');
+                    }
 					//var width = visualBox.width();
 					//console.log("width: " + width);
 					//var heightPx = width + "px";
@@ -255,7 +259,7 @@
 					console.log("locations selected " + hasLocationSelected)
 					if (hasLocationSelected <= 0) {
 						$(".submit-received").addClass("disabled-submit")
-						$('#locationSelected').val('');
+						$('#locationVisualSelected').val('');
 					}
 
 				}
@@ -268,8 +272,8 @@
 					$(this).children('div').first().children(".row-1").children("i").removeClass("icon-add_circle_outline-24px1");
 					$(this).children('div').first().children(".row-1").children("i").addClass("icon-delete-24px");
 					$(this).addClass('location-selected')
-					$('#locationSelected').val(true);
-					$('#locationSelected').removeClass("error")
+					$('#locationVisualSelected').val(true);
+					$('#locationVisualSelected').removeClass("error")
 					$("#locationSelected-error").replaceWith('');
 				}
 			}
@@ -316,12 +320,12 @@
 			console.log($("#LocationTypeID").val())
 			if ($("#LocationTypeID").val() != 0)
 			{
-				$("#locationSelected").val(true)
+				$("#locationTypeSelected").val(true)
 			}
 			$('.visualView').html('');
 		}
 		else {
-			$("#locationSelected").val("")
+			$("#locationTypeSelected").val("")
 		}
     })
 
