@@ -25,6 +25,7 @@
 
 	$(".open-sublocations-types").off('click').on("click", function () {
 		$("#LocationTypeID").val($(this).attr("id"))
+		$("#locationTypeSelected").val(true);
 		if (!$(".temporary-check").is(":checked")) {
 			console.log("select location")
 			var id = $(this).attr("id");
@@ -32,7 +33,6 @@
 			loadReceivedModalSubLocations(id);
 		}
 		else {
-			$("#locationTypeSelected").val(true);
 			$("#myForm").data("validator").settings.ignore = "";
 			var valid = $("#myForm").valid();
 			if (valid) {
