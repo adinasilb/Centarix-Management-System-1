@@ -1238,7 +1238,6 @@ namespace PrototypeWithAuth.Controllers
             tempRequestJson.SerializeViewModel(fullRequestJson);
 
             _context.Update(tempRequestJson);
-            var entries = _context.ChangeTracker.Entries();
             await _context.SaveChangesAsync();
         }
         public async Task<TempRequestJson> GetTempRequestAsync(Guid cookieID)
@@ -2748,7 +2747,7 @@ namespace PrototypeWithAuth.Controllers
             //var prs = _context.ParentRequests;
             if (_context.ParentRequests.Any())
             {
-                lastParentRequestOrderNum = _context.ParentRequests.IgnoreQueryFilters().OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber ?? 0;
+                lastParentRequestOrderNum = _context.ParentRequests.IgnoreQueryFilters().OrderByDescending(x => x.OrderNumber).Select(pr => pr.OrderNumber).FirstOrDefault() ?? 0;
             }
             ParentRequest pr = new ParentRequest()
             {
@@ -2756,18 +2755,22 @@ namespace PrototypeWithAuth.Controllers
                 OrderNumber = lastParentRequestOrderNum + 1,
                 OrderDate = DateTime.Now
             };
+
             TempRequestListViewModel newTRLVM = new TempRequestListViewModel() { RequestIndexObject = requestIndexObject };
             TempRequestJson updatedTempRequestJson = new TempRequestJson();
             var allRequests = new List<Request>();
             if (id != 0) //already has terms, being sent from approve order button -- not in a temprequestjson
             {
-                var request = _context.Requests.Where(r => r.RequestID == id).FirstOrDefault();
-                request.ParentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == request.ParentRequestID).FirstOrDefault();
-                if (request.ParentRequest != null)
+                var request = _context.Requests.Where(r => r.RequestID == id).AsNoTracking().FirstOrDefault();
+                var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == request.ParentRequestID).AsNoTracking().FirstOrDefault();
+                var entries2 = _context.ChangeTracker.Entries();
+                if (parentRequest != null)
                 {
-                    pr.Shipping = request.ParentRequest.Shipping;
+                    pr = parentRequest;
+                    entries2 = _context.ChangeTracker.Entries();
                 }
-                request.ParentRequest = pr;
+                 request.ParentRequest = pr;
+                entries2 = _context.ChangeTracker.Entries();
                 if (request.Product == null)
                 {
                     request.Product = _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor)
@@ -2786,8 +2789,10 @@ namespace PrototypeWithAuth.Controllers
                     }
                 };
                 updatedTempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID, 3);
+                var entrykll = _context.ChangeTracker.Entries();
                 await SetTempRequestAsync(updatedTempRequestJson, newTRLVM, tempRequestListViewModel.RequestIndexObject);
                 var payments = _context.Payments.Where(p => p.RequestID == id);
+             
                 allRequests.Add(request);
             }
             else
@@ -2843,7 +2848,6 @@ namespace PrototypeWithAuth.Controllers
             {
                 await writer.WriteAsync(renderedView);
             }
-            //WHY WAS THE NEXT LINE THERE?????
             //confirm.RequestIndexObject = requestIndexObject;
             return PartialView(confirm);
         }
@@ -2870,6 +2874,7 @@ namespace PrototypeWithAuth.Controllers
                     TempRequestViewModels =
                     newTempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
                 };
+                //var pr = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest; //eventually(when ready to test all cases) put this in instead of next line and put it in for loop below
                 deserializedTempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest);
 
                 var action = "Index";
@@ -3033,6 +3038,7 @@ namespace PrototypeWithAuth.Controllers
                                         {
                                             _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.Product).State = EntityState.Modified;
                                         }
+                                        //deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentRequest = pr;
                                         _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request).State = EntityState.Added;
                                         //deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentRequest.OrderDate = DateTime.Now;
                                         _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentQuote).State = EntityState.Added;
@@ -3112,7 +3118,16 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID == null ? 0 : Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, false, tempRequestListViewModel.GUID);
                                 }
-                                _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Added;
+
+                                if(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID == 0)
+                                {
+
+                                    _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Added;
+                                }
+                                else
+                                {
+                                    _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Modified;
+                                }
                                 await _context.SaveChangesAsync();
                                 if (System.IO.File.Exists(uploadFile))
                                 {

@@ -38,6 +38,7 @@
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.Currency)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.PaymentStatusID)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ParentRequestID)
+            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ParentRequest.ParentRequestID)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ParentRequest.ApplicationUserID)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ParentRequest.Discount)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ParentRequest.Credit)
