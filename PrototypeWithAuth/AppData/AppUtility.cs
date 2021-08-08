@@ -18,6 +18,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 //using System.Web.Script.Serialization;
@@ -791,6 +792,16 @@ namespace PrototypeWithAuth.AppData
         public static List<FunctionLine> GetFunctionsByLineID (int lineID, List<FunctionLine> functionLines)
         {
             return functionLines.Where(fl => fl.LineID == lineID).ToList();
+        }
+
+        public static byte[] ConvertToByteArray(string str, Encoding encoding)
+        {
+            return encoding.GetBytes(str);
+        }
+
+        public static String ToBinary(Byte[] data)
+        {
+            return string.Join(" ", data.Select(byt => Convert.ToString(byt, 2).PadLeft(8, '0')));
         }
 
         public static decimal GetExchangeRateByDate(DateTime date)

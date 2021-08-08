@@ -802,7 +802,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 204,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Solution",
+                    ProductSubcategoryDescription = "",
                     ImageURL = "/images/css/CategoryImages/reagents/chemical_solution2.png"
                 },
                 new ProductSubcategory
@@ -978,7 +978,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 601,
                     ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "General Safety",
+                    ProductSubcategoryDescription = "General",
                     ImageURL = "/images/css/CategoryImages/general/general.png"
                 },
                 new ProductSubcategory

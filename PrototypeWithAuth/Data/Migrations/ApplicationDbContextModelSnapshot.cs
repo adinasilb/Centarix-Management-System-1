@@ -3511,7 +3511,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent3.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "DD-PCR  Reagents"
+                            ProductSubcategoryDescription = "DD-PCR Reagents"
                         },
                         new
                         {
@@ -3583,7 +3583,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/general/general.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "General Safety"
+                            ProductSubcategoryDescription = "General"
                         },
                         new
                         {

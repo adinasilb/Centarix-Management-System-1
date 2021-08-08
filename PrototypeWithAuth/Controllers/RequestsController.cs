@@ -5489,12 +5489,13 @@ namespace PrototypeWithAuth.Controllers
                     {
                         try
                         {
+                            var categories = await _context.ProductSubcategories.IgnoreQueryFilters().Include(pc => pc.ParentCategory).Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
                             var requestedBy = _context.Employees.Where(e => e.Email == r.RequstedBy).FirstOrDefault()?.Id;
                             var receivedBy = _context.Employees.Where(e => e.Email == r.ReceivedBy).FirstOrDefault()?.Id;     
                             var orderedBy = _context.Employees.Where(e => e.Email == r.OrderedBy).FirstOrDefault()?.Id;
                             var vendorID = _context.Vendors.Where(v => v.VendorEnName == r.VendorName).Select(v => v.VendorID).FirstOrDefault();
                             //check if product exists based on vendor catalog number
-                            var productID = _context.Products.Where(p => p.VendorID == vendorID && p.CatalogNumber == r.CatalogNumber).Select(p => p.ProductID).FirstOrDefault();
+                            var productID = _context.Products.Where(p => p.VendorID == vendorID && p.CatalogNumber.ToLower() == r.CatalogNumber.ToLower()).Select(p => p.ProductID).FirstOrDefault();
                             var request = new Request() { };
                             if (productID ==0)
                             {
@@ -5502,13 +5503,17 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     ProductName = r.ItemName,
                                     VendorID = vendorID,
-                                    ProductSubcategoryID = _context.ProductSubcategories.IgnoreQueryFilters().Where(ps => ps.ProductSubcategoryDescription.ToLower() == r.ProductSubCategoryName.ToLower() && ps.ParentCategory.ParentCategoryDescription.ToLower() == r.ParentCategoryName.ToLower()).Select(ps => ps.ProductSubcategoryID).FirstOrDefault(),
+                                    ProductSubcategoryID = categories.Where(ps => new string(ps.ProductSubcategoryDescription.ToLower().Where(c => char.IsLetterOrDigit(c)).ToArray()) == new string(r.ProductSubCategoryName.ToLower().Where(c => char.IsLetterOrDigit(c)).ToArray()) && ps.ParentCategory.ParentCategoryDescription.ToLower() == r.ParentCategoryName.ToLower()).Select(ps => ps.ProductSubcategoryID).FirstOrDefault(),
                                     CatalogNumber = r.CatalogNumber,
                                     SerialNumber = "L" + lastSerialNumber++,
                                     ProductCreationDate = DateTime.Now,
                                     UnitTypeID = -1,
                                 };
-                                _context.Add(product); 
+                                if(lineNumber >548)
+                                {
+                                    lineNumber = lineNumber;
+                                }
+                                _context.Entry(product).State = EntityState.Added; 
                                 await _context.SaveChangesAsync();
                                 request.ProductID = product.ProductID;
                             }
@@ -5551,10 +5556,10 @@ namespace PrototypeWithAuth.Controllers
                             request.RequestStatusID = 3;
                             request.ApplicationUserReceiverID = receivedBy;
                             request.ArrivalDate = r.DateReceived;
-                            request.Cost = r.TotalPrice * exchangeRate;
+                            request.Cost = r.TotalPrice * 3.2M;
                             request.Currency = currency.ToString();
                             request.Unit = r.Unit;
-                            request.ExchangeRate = exchangeRate;
+                            request.ExchangeRate = 3.2M;
                             request.CreationDate = r.DateRequested;
                             request.ParentQuoteID = null;
                             request.OrderType = orderType;
@@ -5575,10 +5580,12 @@ namespace PrototypeWithAuth.Controllers
                                     if(r.OrderNumber!=null && r.OrderNumber !="")
                                     {
 
-                                        var invoiceRow = requestInvoiceList.Where(i => i.OrderNumber == r.OrderNumber && i.CatalogNumber == r.CatalogNumber && i.DocumentNumber!=0 && i.InvoiceNumber !="").FirstOrDefault();
+                                        var invoiceRow = requestInvoiceList.Where(i => i.OrderNumber == r.OrderNumber && new string(i.CatalogNumber.ToLower().Where(c => char.IsLetterOrDigit(c)).ToArray()) == new string(r.CatalogNumber.ToLower().Where(c => char.IsLetterOrDigit(c)).ToArray()) && i.DocumentNumber!=0 && i.InvoiceNumber !="").FirstOrDefault();
                                        // var invoiceNumbers = invoiceRows.Select(ir => ir.InvoiceNumber).ToList();
                                         if(invoiceRow !=null)
                                         {
+
+                                            WriteErrorToFile("this row went in perfectly");
                                             await SetInvoiceAndPaymentsAccordingToResultsFromDB(r, request, invoiceRow);
                                         }
 
@@ -5629,10 +5636,14 @@ namespace PrototypeWithAuth.Controllers
                                             }
                                             else if(invoiceRows.Count() == 1)
                                             {
+
+                                                WriteErrorToFile("this row went in okay - there was one row for the po # but not matching catlog number");
                                                 await SetInvoiceAndPaymentsAccordingToResultsFromDB(r, request, invoiceRows.FirstOrDefault());
                                             }
                                             else if(invoiceRows.Select(ir=>ir.InvoiceNumber).Distinct().Count()<2 && invoiceRows.Select(ir => ir.DocumentNumber).Distinct().Count() < 2)
                                             {
+                                                WriteErrorToFile("this row went in okay - there was one row for the po # but not matching catlog number");
+
                                                 await SetInvoiceAndPaymentsAccordingToResultsFromDB(r, request, invoiceRows.FirstOrDefault());
                                             }
                                             else
@@ -5692,6 +5703,33 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task SetInvoiceAndPaymentsAccordingToResultsFromDB(UploadExcelModel r, Request request, UploadInvoiceExcelModel invoiceRow)
         {
+            string sourceFile = @"C:\Users\debbie\OneDrive - Centarix\Desktop\DocumentsInvoices\"+invoiceRow.DocumentNumber+".pdf";
+           
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+            string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
+            string uploadFolderPathTo = Path.Combine(requestFolderTo, AppUtility.FolderNamesEnum.Invoices.ToString());
+           
+            try
+            {
+                if (!Directory.Exists(requestFolderTo))
+                {
+                    Directory.CreateDirectory(requestFolderTo);
+                    Directory.CreateDirectory(uploadFolderPathTo);
+                }
+                else
+                {
+                    if (!Directory.Exists(uploadFolderPathTo))
+                    {
+                        Directory.CreateDirectory(uploadFolderPathTo);
+                    }
+                }
+                System.IO.File.Copy(sourceFile, uploadFolderPathTo+ @"\"+invoiceRow.DocumentNumber + ".pdf", true);
+                WriteErrorToFile("file was addeded for request id:"+ request.RequestID);
+            }
+            catch (IOException iox)
+            {
+                WriteErrorToFile("error adding file" + request.RequestID);
+            }
             var invoiceDB = _context.Invoices.Where(i => i.InvoiceNumber == invoiceRow.InvoiceNumber).AsNoTracking().FirstOrDefault();
             if (invoiceDB != null)
             {
