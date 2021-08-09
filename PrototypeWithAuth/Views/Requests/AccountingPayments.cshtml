@@ -9,6 +9,7 @@
         Layout = null;
     }
 
+<input type="hidden" id="payNowCount" value="@TempData["PayNowCount"]" />
 @if (Model.RequestsByVendor.Count() == 0)
 {
     <div>
@@ -22,8 +23,6 @@ else
     <div class="_IndexTableByVendor">
         @{
             await Html.RenderPartialAsync("_IndexTableByVendor", Model);
-            <input type="hidden" id="payNowCount" value="@TempData["PayNowCount"]" />
-            
         }
     </div>
 
