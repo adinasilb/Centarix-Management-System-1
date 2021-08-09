@@ -28,7 +28,7 @@
 		var valid = $(".chartForm").valid();
 
 		if (!valid) {
-			$(".chartForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+			$(".chartForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';
 			if (!$('.activeSubmit').hasClass('disabled-submit')) {
 				$('.activeSubmit').addClass('disabled-submit')
 			}

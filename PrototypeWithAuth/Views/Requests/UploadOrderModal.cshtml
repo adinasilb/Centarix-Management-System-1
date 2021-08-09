@@ -198,7 +198,7 @@
                 }
             });
         }
-        $(".uploadQuoteForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+        $(".uploadQuoteForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';
     });
     $(".cancel-order").click(function (e) {
         e.preventDefault();

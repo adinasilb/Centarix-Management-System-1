@@ -206,7 +206,7 @@
                 }
             });
         }
-        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';
        
     })
     $('.ordersItemForm').off('click', '.remove-item').on('click','.remove-item', function (e) {

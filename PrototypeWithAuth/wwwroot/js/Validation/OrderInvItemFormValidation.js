@@ -82,15 +82,9 @@ $('.ordersItemForm').validate({
 		"Requests[0].Product.UnitTypeID": "selectRequired",
 		"Requests[0].Product.SubUnitTypeID": "selectRequired",
 		"Requests[0].Product.SubSubUnitTypeID": "selectRequired",
-		"locationTypeSelected": {
-			locationRequired: true
-		},
-		"subLocationSelected": {
-			locationRequired: true
-		},
-		"locationVisualSelected": {
-			locationRequired: true
-		}
+		"locationTypeSelected": "locationRequired",
+		"subLocationSelected": "locationRequired",
+		"locationVisualSelected": "locationRequired"
 
 	},
 	messages:{

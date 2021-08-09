@@ -56,7 +56,7 @@ $(function () {
 	
 	$.fn.AppendAsteriskToRequired();
 
-	$('#myForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled], #-error';
+	$('#myForm').data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden, input:visible, textarea:visible), [disabled], #-error';
 	$('#myForm').data("validator").settings.errorPlacement = function (error, element) {
 		if (element.hasClass('select-dropdown')) {
 			error.insertAfter(element);
@@ -216,7 +216,7 @@ $(function () {
 				$('.activeSubmit').addClass('disabled-submit')
 			}
 		}
-		$("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled]';
+		$("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden, input:visible, textarea:visible), [disabled]';
 	});
 
 	$('.next-tab').off("click").click(function () {
@@ -231,7 +231,13 @@ $(function () {
 			if ($(this).hasClass('order-tab-link') ) {
 				$('.activeSubmit').removeClass('disabled-submit')
 			}
-
+			//console.log($("#myForm").validate().settings.rules)
+			if ($(this).hasClass('request-location')) {
+				$('#locationTypeSelected').rules("remove", "locationRequired");
+				$('#locationVisualSelected').rules("remove", "locationRequired");
+				$('#subLocationSelected').rules("remove", "locationRequired");
+				console.log('removed locationrequired');
+			}
 			//change previous tabs to accessible --> only adding prev-tab in case we need to somehow get it after
 
 			if (!$(this).hasClass("prev-tab")) {
@@ -282,7 +288,13 @@ $(function () {
 			//work around for now - because select hidden are ignored
 				if ($(this).hasClass('request-price')) {
 					$('#unitTypeID').rules("add", "selectRequired");
-				}
+			}
+			if ($(this).hasClass('request-location')) {
+				$('#locationTypeSelected').rules("add", "locationRequired");
+				$('#locationVisualSelected').rules("add", "locationRequired");
+				$('#subLocationSelected').rules("add", "locationRequired");
+				console.log('added locationrequired');
+			}
 		}
 		
 
@@ -306,7 +318,7 @@ $(function () {
 		else {
 			$('.activeSubmit ').removeClass('disabled-submit')
 		}
-		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+		$(this).data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden, input:visible, textarea:visible)';
 	});
 
 	$.validator.addMethod("fileRequired", function (value, element) {

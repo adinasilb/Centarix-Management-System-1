@@ -8,7 +8,7 @@
 		var valid = $("#myForm").valid();
 		console.log("valid form: " + valid)
 		if (!valid) {
-			$("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+			$("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';
 			$('.turn-edit-on-off').prop('checked', true);
 			console.log("not valid data");
 			return false;

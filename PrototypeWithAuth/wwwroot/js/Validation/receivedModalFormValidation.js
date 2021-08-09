@@ -31,4 +31,4 @@ $('.receivedModalForm').validate({
 		"locationTypeSelected": "Please choose a location before submitting"
 }*/
 });
-$('#myForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled]';
+$('#myForm').data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible), [disabled]';

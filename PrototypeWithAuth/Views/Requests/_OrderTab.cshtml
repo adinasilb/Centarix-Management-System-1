@@ -122,7 +122,7 @@
             var orderType = $(this).attr("value");
             $.fn.SubmitOrderFromAddItemView(orderType);
         }
-        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,.location-error:hidden, input:visible, textarea:visible)';
     });
 
     $.fn.SubmitOrderFromAddItemView = function (orderType) {

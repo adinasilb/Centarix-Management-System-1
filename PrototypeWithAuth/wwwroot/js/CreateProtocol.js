@@ -78,7 +78,7 @@
                 }
             });
         }
-        $('.createProtocolForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+        $('.createProtocolForm').data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';
 
 
     });

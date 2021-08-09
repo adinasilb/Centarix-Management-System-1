@@ -145,7 +145,7 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
         }
     });
         }
-        $(".addFunctionForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';    
+        $(".addFunctionForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';    
 
 });
 
