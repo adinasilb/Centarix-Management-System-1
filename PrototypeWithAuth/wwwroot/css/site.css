@@ -2105,12 +2105,23 @@ span.caret {
     border-bottom: none !important;
     border: 2px solid var(--lab-man-color) !important;
 }
-
-.supplier-form .dropdown:focus, .supplier-form .dropdown-multiple:focus {
+.dropdown-multiple:focus, .dropdown:focus {
     outline: none;
     border-bottom: none !important;
-    border: 2px solid var(--lab-man-color) !important;
     border-radius: .25rem !important
+}
+.order-inv-form .dropdown:focus, .order-inv-form .dropdown-multiple:focus {
+    border: 2px solid var(--order-inv-color) !important;
+}
+.accounting-form .dropdown:focus, .accounting-form .dropdown-multiple:focus {
+    border: 2px solid var(--acc-color) !important;
+}
+.supplier-form .dropdown:focus, .supplier-form .dropdown-multiple:focus {
+    border: 2px solid var(--lab-man-color) !important;
+}
+
+.protocol-form .dropdown:focus, .protocol-form .dropdown-multiple:focus {
+    border: 2px solid var(--protocol-color) !important;
 }
 
 .protocol-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
@@ -2121,21 +2132,6 @@ span.caret {
 .protocol-form .select.form-control-plaintext:focus {
     border-bottom: none !important;
     border: 2px solid var(--protocol-color) !important;
-}
-
-.protocol-form .dropdown:focus, .protocol-form .dropdown-multiple:focus {
-    outline: none;
-    border-bottom: none !important;
-    border: 2px solid var(--protocol-color) !important;
-    border-radius: .25rem !important
-}
-  
-  
-  .order-inv-form .dropdown:focus, .supplier-form .dropdown-multiple:focus {
-    outline: none;
-    border-bottom: none !important;
-    border: 2px solid var(--lab-man-color) !important;
-    border-radius: .25rem !important
 }
 
 .supplier-form .input-group:focus-within > .input-group-text {
