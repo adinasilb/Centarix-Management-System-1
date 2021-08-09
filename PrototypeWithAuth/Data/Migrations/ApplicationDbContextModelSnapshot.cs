@@ -583,6 +583,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             CompanyAccountID = 4,
                             CompanyBankName = "Payoneer"
+                        },
+                        new
+                        {
+                            CompanyAccountID = 5,
+                            CompanyBankName = "Quartzy Bank"
                         });
                 });
 
@@ -2819,8 +2824,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("OrderNumber")
-                        .HasColumnType("int");
+                    b.Property<long?>("OrderNumber")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("QuartzyOrderNumber")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Shipping")
                         .HasColumnType("float");
@@ -2838,6 +2846,10 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("OrderNumber")
                         .IsUnique()
                         .HasFilter("[OrderNumber] IS NOT NULL");
+
+                    b.HasIndex("QuartzyOrderNumber")
+                        .IsUnique()
+                        .HasFilter("[QuartzyOrderNumber] IS NOT NULL");
 
                     b.ToTable("ParentRequests");
                 });
@@ -3147,6 +3159,10 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("VendorID");
 
+                    b.HasIndex("SerialNumber", "VendorID")
+                        .IsUnique()
+                        .HasFilter("[SerialNumber] IS NOT NULL AND [VendorID] IS NOT NULL");
+
                     b.ToTable("Products");
                 });
 
@@ -3367,7 +3383,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/chemical_solution2.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Solution"
+                            ProductSubcategoryDescription = ""
                         },
                         new
                         {
@@ -3495,7 +3511,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent3.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "DD-PCR  Reagents"
+                            ProductSubcategoryDescription = "DD-PCR Reagents"
                         },
                         new
                         {
@@ -3567,7 +3583,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/general/general.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "General Safety"
+                            ProductSubcategoryDescription = "General"
                         },
                         new
                         {
@@ -3948,106 +3964,42 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ProductSubcategoryID = 1501,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                            ImageURL = "/images/css/CategoryImages/consumables/general.png",
                             IsOldSubCategory = true,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Old Subcategory"
+                            ProductSubcategoryDescription = "Old Sub category"
                         },
                         new
                         {
                             ProductSubcategoryID = 1502,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                            ImageURL = "/images/css/CategoryImages/reagents/general_reagents.png",
                             IsOldSubCategory = true,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Old Subcategory"
+                            ProductSubcategoryDescription = "Old Sub category"
                         },
                         new
                         {
                             ProductSubcategoryID = 1503,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                            ImageURL = "/images/css/CategoryImages/biological/general.png",
                             IsOldSubCategory = true,
                             ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Old Subcategory"
+                            ProductSubcategoryDescription = "Old Sub category"
                         },
                         new
                         {
                             ProductSubcategoryID = 1504,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                            ImageURL = "/images/css/CategoryImages/reusable/all_reusables.png",
                             IsOldSubCategory = true,
                             ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Old Subcategory"
+                            ProductSubcategoryDescription = "Old Sub category"
                         },
                         new
                         {
                             ProductSubcategoryID = 1505,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                            ImageURL = "/images/css/CategoryImages/safety/safety.png",
                             IsOldSubCategory = true,
                             ParentCategoryID = 5,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1506,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1507,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 7,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1508,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 8,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1509,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1510,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 10,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1511,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 11,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1512,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 12,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1513,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 13,
-                            ProductSubcategoryDescription = "Old Subcategory"
+                            ProductSubcategoryDescription = "Old Sub category"
                         });
                 });
 
@@ -4473,12 +4425,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int?>("Amount")
                         .HasColumnType("int");
-
-                    b.Property<long?>("AmountWithInLocation")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("AmountWithOutLocation")
-                        .HasColumnType("bigint");
 
                     b.Property<string>("ApplicationUserCreatorID")
                         .HasColumnType("nvarchar(450)");

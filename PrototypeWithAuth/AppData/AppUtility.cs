@@ -18,6 +18,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 //using System.Web.Script.Serialization;
@@ -150,7 +151,7 @@ namespace PrototypeWithAuth.AppData
         public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusables, Equipment, Operation, Biological, Safety, General, Clinical }
         public enum RequestModalType { Create, Edit, Summary }
         public enum ProtocolModalType { Create, CheckListMode, Summary, Edit, SummaryFloat }
-        public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
+        public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
         public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue }
         public enum PopoverEnum { None }
@@ -791,6 +792,16 @@ namespace PrototypeWithAuth.AppData
         public static List<FunctionLine> GetFunctionsByLineID (int lineID, List<FunctionLine> functionLines)
         {
             return functionLines.Where(fl => fl.LineID == lineID).ToList();
+        }
+
+        public static byte[] ConvertToByteArray(string str, Encoding encoding)
+        {
+            return encoding.GetBytes(str);
+        }
+
+        public static String ToBinary(Byte[] data)
+        {
+            return string.Join(" ", data.Select(byt => Convert.ToString(byt, 2).PadLeft(8, '0')));
         }
 
         public static decimal GetExchangeRateByDate(DateTime date)
