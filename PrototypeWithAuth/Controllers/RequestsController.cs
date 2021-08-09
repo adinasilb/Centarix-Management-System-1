@@ -3919,7 +3919,8 @@ namespace PrototypeWithAuth.Controllers
                     throw new Exception(AppUtility.GetExceptionMessage(ex));
                 }
             }
-            return PartialView(receivedModalVisualViewModel);
+            //return PartialView(receivedModalVisualViewModel);
+            return new EmptyResult();
         }
 
         /*
