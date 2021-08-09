@@ -34,5 +34,6 @@ namespace PrototypeWithAuth.ViewModels
             };
             return baseObject;
         }
+        
     }
 }

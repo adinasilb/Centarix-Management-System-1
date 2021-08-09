@@ -1103,10 +1103,10 @@ namespace PrototypeWithAuth.Controllers
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
             {
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
-                    GetLinkToProductDDls(viewmodel.ConvertToBaseClass());
+                    GetFunctionLineLinkToProductDDls(viewmodel);
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
-                    GetLineToProtocolDDLs(viewmodel.ConvertToBaseClass());
+                    GetFunctionLineLinkToProtocolDDLs(viewmodel);
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddFile:
                 case AppUtility.ProtocolFunctionTypes.AddImage:
@@ -1133,7 +1133,68 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(viewmodel);
         }
 
-        private void GetLineToProtocolDDLs(AddFunctionViewModel<FunctionBase> viewmodel)
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> AddResultsFunctionModal(int FunctionTypeID, int protocolInstanceID, int functionResultID, AppUtility.ProtocolModalType modalType)
+        {
+            var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
+            var viewmodel = new AddResultsFunctionViewModel
+            {
+                ModalType = modalType
+            };
+            if (functionResultID !=0)
+            {
+                viewmodel.Function = _context.FunctionResults.Where(fr=>fr.ID == functionResultID).FirstOrDefault();
+            }
+            else
+            {
+                viewmodel.Function = new FunctionResult
+                {
+                    FunctionType = functionType,
+                    FunctionTypeID = FunctionTypeID,
+                    ID = protocolInstanceID,
+                    ProtocolInstance = _context.ProtocolInstances.Where(pi => pi.ProtocolInstanceID == protocolInstanceID).FirstOrDefault()
+                };
+            }
+
+
+            AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.FunctionLine;
+            string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
+            string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, viewmodel.Function.ID.ToString());
+            switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
+            {
+                case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
+                    GetFunctionLineLinkToProductDDls(viewmodel);
+                    break;
+                case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
+                    GetFunctionLineLinkToProtocolDDLs(viewmodel);
+                    break;
+                case AppUtility.ProtocolFunctionTypes.AddFile:
+                case AppUtility.ProtocolFunctionTypes.AddImage:
+                    var folderName = AppUtility.FolderNamesEnum.Files;
+                    if (functionType.DescriptionEnum == AppUtility.ProtocolFunctionTypes.AddImage.ToString())
+                    {
+                        folderName = AppUtility.FolderNamesEnum.Pictures;
+                    }
+                    DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
+                    {
+                        FolderName = folderName,
+                        ParentFolderName = AppUtility.ParentFolderName.FunctionReports,
+                        ObjectID = viewmodel.Function.ID.ToString(),
+                        SectionType = AppUtility.MenuItems.Protocols,
+                        IsEdittable = modalType != AppUtility.ProtocolModalType.Summary,
+                        DontAllowMultiple = true,
+                        ShowSwitch = false,
+                        Guid = Guid.NewGuid()
+                    };
+                    base.FillDocumentsViewModel(documentsModalViewModel);
+                    viewmodel.DocumentsModalViewModel = documentsModalViewModel;
+                    
+                    break;
+            }
+            return PartialView(viewmodel);
+        }
+
+        private void GetFunctionLineLinkToProtocolDDLs(AddFunctionViewModel<FunctionLine> viewmodel)
         {
             viewmodel.ProtocolCategories = _context.ProtocolCategories.ToList();
             viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.ToList();
@@ -1142,7 +1203,24 @@ namespace PrototypeWithAuth.Controllers
             viewmodel.Protocols = _context.Protocols.ToList();
         }
 
-        private void GetLinkToProductDDls(AddFunctionViewModel<FunctionBase> viewmodel)
+        private void GetFunctionLineLinkToProductDDls(AddFunctionViewModel<FunctionLine> viewmodel)
+        {
+            viewmodel.ParentCategories = _context.ParentCategories.ToList();
+            viewmodel.ProductSubcategories = _context.ProductSubcategories.ToList();
+            viewmodel.Products = _context.Products.ToList();
+            viewmodel.Vendors = _context.Vendors.ToList();
+        }
+
+        private void GetFunctionLineLinkToProtocolDDLs(AddFunctionViewModel<FunctionResult> viewmodel)
+        {
+            viewmodel.ProtocolCategories = _context.ProtocolCategories.ToList();
+            viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.ToList();
+            viewmodel.Creators = _context.Users.Select(u =>
+                new SelectListItem() { Value = u.Id, Text = u.FirstName + u.LastName }).ToList();
+            viewmodel.Protocols = _context.Protocols.ToList();
+        }
+
+        private void GetFunctionLineLinkToProductDDls(AddFunctionViewModel<FunctionResult> viewmodel)
         {
             viewmodel.ParentCategories = _context.ParentCategories.ToList();
             viewmodel.ProductSubcategories = _context.ProductSubcategories.ToList();

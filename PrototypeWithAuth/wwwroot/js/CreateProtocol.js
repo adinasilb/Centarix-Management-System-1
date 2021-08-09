@@ -59,14 +59,14 @@
 
                     $(".mdb-select").materialSelect();
           
-                    console.log(tab.hasClass("lines-tab"));
+      
                     if (tab.hasClass("lines-tab")/* && $(".createProtocolMasterProtocolID").val()=="0"*/) {
                         $("."+modalType+".only-protocol-tab.li-function-bar").removeClass("d-none");
                     }
                     else {
                         $("."+modalType+".only-protocol-tab").addClass("d-none");
                     }
-                     $("."+modalType+":not(.only-protocol-tab)").removeClass("d-none");
+                     $("."+modalType+":not(.only-protocol-tab):not(.only-results-tab)").removeClass("d-none");
 
                 },
                 error: function (jqxhr) {

@@ -475,8 +475,19 @@
                 $("[modaltype = " + modalType + "]").attr("modaltype", "Edit");
                 $(".modalType").val("Edit");
                 modalType = $(".modalType").val();
-                $("." + modalType).removeClass("d-none")
-
+                if ($(".next-tab.active").hasClass("lines-tab")) {
+                    $("." + modalType + ".only-protocol-tab.li-function-bar").removeClass("d-none");
+                }
+                else {
+                    $("." + modalType + ".only-protocol-tab").addClass("d-none");
+                }
+                if ($(".next-tab.active").hasClass("results-tab")) {
+                    $("." + modalType + ".only-results-tab.li-function-bar").removeClass("d-none");
+                }
+                else {
+                    $("." + modalType + ".only-results-tab").addClass("d-none");
+                }
+                $("." + modalType + ":not(.only-protocol-tab):not(.only-results-tab)").removeClass("d-none");
             }
         }
 
