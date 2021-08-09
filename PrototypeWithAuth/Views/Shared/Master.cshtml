@@ -632,8 +632,10 @@
             console.log("in detilas of case")
             $.fn.TurnToDetails("edits");
             $('.open-document-modal').attr("showSwitch", true);
-            $('.edits .mdb-select').materialSelect();
-            $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+            if (!$('.turn-edit-on-off').hasClass('locations')) {
+                $('.edits .mdb-select').materialSelect();
+                $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+            }
         }
 
 
