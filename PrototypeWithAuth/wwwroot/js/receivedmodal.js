@@ -318,14 +318,20 @@
 		if (checked) {
 			$(".divSublocations").html("")
 			console.log($("#LocationTypeID").val())
-			if ($("#LocationTypeID").val() != 0)
+			/*if ($("#LocationTypeID").val() != 0)
 			{
 				$("#locationTypeSelected").attr('data-val', true)
-			}
+			}*/
 			$('.visualView').html('');
 		}
 		else {
-			$("#locationTypeSelected").attr('data-val', false)
+			if ($("#LocationTypeID").val() != 0) {
+				//$("#locationTypeSelected").attr('data-val', false)
+				var id = $('#LocationTypeID').val();
+				console.log(id);
+				loadReceivedModalSubLocations(id);
+            }
+
 		}
     })
 
