@@ -15,13 +15,21 @@ $('.receivedModalForm').validate({
 		"Request.ApplicationUserReceiverID": {
 			required: true,
 		},
-		"locationSelected": {
+		"locationTypeSelected": {
 			required: true /*isRequests*/
+		},
+		"subLocationSelected": {
+			required: true
+		},
+		"locationVisualSelected": {
+			required: true
 		}
 
 	},
-	messages:{
-		"locationSelected": "Please choose a location before submitting"
+	messages: {
+		"subLocationSelected": "Please choose a location before submitting",
+		"locationVisualSelected": "Please choose a location before submitting",
+		"locationTypeSelected": "Please choose a location before submitting"
 }
 });
 $('#myForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled]';

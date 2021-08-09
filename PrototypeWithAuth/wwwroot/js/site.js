@@ -1471,20 +1471,14 @@ $(function () {
 			});
 
 		}
-		else if (type == 'details') {
+		else if (type == 'details') {	
 			if ($(this).hasClass('locations')) {
-				console.log('locations');
-				$(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
-				$('#location .mark-readonly').removeClass("disabled")
-				$('#location .mark-readonly').attr("disabled", false);
-				$('.edit-mode-switch-description').text("Edit Mode On");
-				$('.turn-edit-on-off').attr('name', 'edit');
-				$('.location-icon').removeClass('d-none');
+				$.fn.MakeLocationsEditable();
 			}
 			else {
 				enableMarkReadonly($(this));
 				$(".proprietryHidenCategory").attr("disabled", false);
-			}
+            }
 		}
 		//}
 	});
@@ -1518,15 +1512,15 @@ $(function () {
 				switch (optgroup) {
 					case "Units":
 						console.log("Units")
-						selectedIndex = selectedIndex - 1;
+						selectedIndex = selectedIndex;
 						break;
 					case "Weight/Volume":
 						console.log("Volume")
-						selectedIndex = selectedIndex - 2;
+						selectedIndex = selectedIndex - 1;
 						break;
 					case "Test":
 						console.log("Test")
-						selectedIndex = selectedIndex - 3;
+						selectedIndex = selectedIndex - 2;
 						break;
 				} 
 

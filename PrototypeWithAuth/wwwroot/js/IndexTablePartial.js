@@ -201,7 +201,7 @@ $(function () {
                 type: "GET",
                 cache: false,
                 success: function (data) {
-                    alert("about to open modal");
+                    //alert("about to open modal");
                     $.fn.OpenModal("emailModal", "confirm-email", data)
                     $("#loading").hide();
                 }

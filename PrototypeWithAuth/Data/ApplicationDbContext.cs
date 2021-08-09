@@ -366,7 +366,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<TempLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<FunctionLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<ParentRequest>().HasIndex(p => p.OrderNumber).IsUnique();
+            modelBuilder.Entity<ParentRequest>().HasIndex(p => p.QuartzyOrderNumber).IsUnique();
             modelBuilder.Entity<Product>().HasIndex(p => p.SerialNumber).IsUnique();
+            modelBuilder.Entity<Product>().HasIndex(p => new { p.SerialNumber, p.VendorID }).IsUnique();
             /*PROTOCOLS*/
             ///set up composite keys
 

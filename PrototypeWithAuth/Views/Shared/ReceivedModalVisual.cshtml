@@ -22,8 +22,8 @@
         }
     }
     @{
+        var locationSelected = "true";
         var inReceivedModal = Model.RequestChildrenLocationInstances == null;
-
         var locationsList = Model.ChildrenLocationInstances?.ToList();
         if (Model.ChildrenLocationInstances == null)
         {
@@ -33,6 +33,7 @@
         @Html.HiddenFor(vm => vm.IsEditModalTable)
         @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
         {
+            locationSelected = "";
             <tr class="p-0 m-0">
                 @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
                 {
@@ -60,42 +61,43 @@
                         @*@Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceName, @class="LocationInstanceName");*@
                         @*<input type="hidden" asp-for="ChildrenLocationInstances[z].LocationInstanceName" class="LocationInstanceName" />*@
 
-                    var link = "";
-                    var classes = "css-checkbox " + locationsList[z].LocationInstanceID;
-                    var outerClass = "visual-shelf";
-                    var iconClass = "icon-add_circle_outline-24px1 add-location tga";
-                    var hideIcon = "";
-                    if(!inReceivedModal && !Model.ShowIcons)
-                    {
-                        hideIcon = "d-none";
-                    }
-                    var description = locationsList[z].LocationInstanceAbbrev;
-                    var id = "ChildrenLocationInstances_" + z;
-                    var name = "ChildrenLocationInstances[" + z + "]";
-                    if (Model.ChildrenLocationInstances == null)
-                    {
-                        id = "Request" + id + "__LocationInstance";
-                        name = "Request" + name + ".LocationInstance";
-                    }
-
-                    var liID = locationsList[z].LocationInstanceID;
-                    if (locationsList[z].LocationTypeID == 103 || locationsList[z].LocationTypeID == 204)
-                    {
-                        outerClass = "visual-box " + is12X12Class;
-                    }
-                    var labelClass = "tiny-label-font-size m-0";
-
-                    if (locationsList[z].IsEmptyShelf)
-                    {
-                        if (!inReceivedModal && Model.RequestChildrenLocationInstances[z].IsThisRequest)
+                        var link = "";
+                        var classes = "css-checkbox " + locationsList[z].LocationInstanceID;
+                        var outerClass = "visual-shelf";
+                        var iconClass = "icon-add_circle_outline-24px1 add-location tga";
+                        var hideIcon = "";
+                        if (!inReceivedModal && !Model.ShowIcons)
                         {
-                            outerClass += " location-selected";
-                            iconClass = "icon-delete-24px ";
-                            if (!Model.ShowIcons)
-                            {
-                                hideIcon = "d-none";
-                            }
+                            hideIcon = "d-none";
                         }
+                        var description = locationsList[z].LocationInstanceAbbrev;
+                        var id = "ChildrenLocationInstances_" + z;
+                        var name = "ChildrenLocationInstances[" + z + "]";
+                        if (Model.ChildrenLocationInstances == null)
+                        {
+                            id = "Request" + id + "__LocationInstance";
+                            name = "Request" + name + ".LocationInstance";
+                        }
+
+                        var liID = locationsList[z].LocationInstanceID;
+                        if (locationsList[z].LocationTypeID == 103 || locationsList[z].LocationTypeID == 204)
+                        {
+                            outerClass = "visual-box " + is12X12Class;
+                        }
+                        var labelClass = "tiny-label-font-size m-0";
+
+                        if (locationsList[z].IsEmptyShelf)
+                        {
+                            if (!inReceivedModal && Model.RequestChildrenLocationInstances[z].IsThisRequest)
+                            {
+                                outerClass += " location-selected";
+                                iconClass = "icon-delete-24px ";
+                                locationSelected = "true";    
+                                if (!Model.ShowIcons)
+                                {
+                                    hideIcon = "d-none";
+                                }
+                            }
                             <td class="@outerClass mark-readonly" style="padding:0px;" id="@locationsList[z].LocationInstanceID">
                                 <div>
                                     <input class="@classes " id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
@@ -123,16 +125,20 @@
                         else if (locationsList[z].IsFull || (!inReceivedModal && Model.RequestChildrenLocationInstances[z].IsThisRequest/*for archived*/))
                         {
                             var backgroundClass = "graduated-table-background-color  ";
-                            hideIcon = "d-none"; 
-                            var disabled = "disabled";
+                            hideIcon = "d-none";
+                            var disabled = "not-clickable ";
+                            var markReadonly = "";
+                            iconClass = "";
                             if (!inReceivedModal && Model.RequestChildrenLocationInstances[z].IsThisRequest)
                             {
                                 backgroundClass = "";
                                 disabled = "";
                                 iconClass = "icon-delete-24px";
                                 hideIcon = "";
+                                markReadonly = "mark-readonly";
+                                locationSelected = "true";
                             }
-                            <td class="@outerClass mark-readonly location-selected @backgroundClass" style="padding:0px;  ">
+                            <td class="@outerClass @markReadonly @disabled location-selected @backgroundClass" style="padding:0px;  ">
                                 <div class="">
                                     <input class="@classes @disabled" id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
                                     <div class="row-1">
@@ -151,7 +157,8 @@
                             <td class="@outerClass mark-readonly" style="padding:0px;">
                                 <div>
                                     <input class="@classes " id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
-                                    <div class="row-1"> @*hide on load, show when turn edit on*@
+                                    <div class="row-1">
+                                        @*hide on load, show when turn edit on*@
                                         <i class="@iconClass @hideIcon location-icon "></i>
                                     </div>
                                     <div class="row-2 text-left">
@@ -160,7 +167,9 @@
                                 </div>
                             </td>
                         }
-
+                        if(y == Model.ParentLocationInstance.Width - 1 && X == Model.ParentLocationInstance.Height - 1)
+                        {
+                        }
                     }
                 }
             </tr>
@@ -168,6 +177,7 @@
 
     }
 </table>
+ <input type="hidden" style="pointer-events: none; position: absolute" class="mark-readonly" id="locationVisualSelected" name="locationVisualSelected" value="@locationSelected"/>
 }
 <script>
     $("body, .modal").off('click', ".open-archive-modal").on('click', ".open-archive-modal", function (e) {

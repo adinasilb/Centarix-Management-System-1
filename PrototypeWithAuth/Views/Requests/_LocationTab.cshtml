@@ -20,12 +20,12 @@
 <div class="row modal-tab-name" style="margin-bottom:0px">
     <span class="heading-1 col-4">Location</span>
     @{
-        if (Model.ModalType == AppUtility.RequestModalType.Summary && Model.IsHistory == false && Model.Requests.FirstOrDefault().IsArchived == false && Model.SectionType!= AppUtility.MenuItems.Protocols)
+        if (Model.ModalType == AppUtility.RequestModalType.Summary && Model.IsHistory == false && Model.Requests.FirstOrDefault().IsArchived == false && Model.SectionType != AppUtility.MenuItems.Protocols)
         {
             <div class="switch col-4 offset-4 switch-margin text-right">
                 <label>
                     <label class="edit-mode-switch-description">Edit Mode Off</label>
-                    <input type="checkbox" class="turn-edit-on-off  locations " section-type="@Model.SectionType" value="@Model.Requests.FirstOrDefault().RequestID" productID="@Model.Requests.FirstOrDefault().ProductID" name="details">
+                    <input type="checkbox" class="turn-edit-on-off  locations has-location-tab " section-type="@Model.SectionType" value="@Model.Requests.FirstOrDefault().RequestID" productID="@Model.Requests.FirstOrDefault().ProductID" name="details">
                     <span class="lever"></span>
                 </label>
             </div>
@@ -170,47 +170,47 @@
                         </div>
                     }
                 </div>
-                        }
+            }
         </div>
     </div>
 </div>
+    @*    string value = "";
 @{
-    string value = "";
-    if (Model.PageType != AppUtility.PageTypeEnum.RequestSummary)
-    {
-        value = "true";
-    }
-}
-<div class="row"><input type="hidden" style="pointer-events:none" class="mark-readonly" id="locationSelected" name="locationSelected" value="@value" /></div>
-<div class="row">
-    <div class="visualView col-6 m-auto text-center">
-        @if (Model.ReceivedModalVisualViewModel != null)
-        {
-            @*@if (Model.ReceivedModalVisualViewModel.ParentLocationInstance.Width == 9 || Model.ReceivedModalVisualViewModel.ParentLocationInstance.Width == 12)
-                {
-                    <div class="row">
-                        <div class="col-12">
-                            <button class="btn visual-locations-zoom
-                        float-lg-right mr-4" style="text-decoration:none; font-size:1.3rem;" value="@Model.ReceivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID">
-                                <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In
-                            </button>
-                        </div>
-                    </div>
-                }*@
-            <div>
-                @{ await Html.RenderPartialAsync("ReceivedModalVisual", Model.ReceivedModalVisualViewModel); }
-            </div>
+            if (Model.PageType != AppUtility.PageTypeEnum.RequestSummary)
+            {
+                value = "true";
+            }
         }
-    </div>
-
-</div>
-@if (Model.ModalType != AppUtility.RequestModalType.Create && Model.IsProprietary && Model.Requests[0].IsArchived == false)
-{
-    <div class="row justify-content-center">
-        <div class="">
-            <button class="open-archive-modal mark-readonly custom-button" disabled style="background: #8080809e; color: white; height: auto !important">Archive</button>
+        <div class="row"><input type="hidden" style="pointer-events:none" class="mark-readonly" id="locationSelected" name="locationSelected" value="@value" /></div>*@
+    <div class="row">
+        <div class="visualView col-6 m-auto text-center">
+            @if (Model.ReceivedModalVisualViewModel != null)
+            {
+                @*@if (Model.ReceivedModalVisualViewModel.ParentLocationInstance.Width == 9 || Model.ReceivedModalVisualViewModel.ParentLocationInstance.Width == 12)
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                <button class="btn visual-locations-zoom
+                            float-lg-right mr-4" style="text-decoration:none; font-size:1.3rem;" value="@Model.ReceivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID">
+                                    <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In
+                                </button>
+                            </div>
+                        </div>
+                    }*@
+                <div>
+                    @{ await Html.RenderPartialAsync("ReceivedModalVisual", Model.ReceivedModalVisualViewModel); }
+                </div>
+            }
         </div>
+
     </div>
-}
-<script src="~/js/receivedmodal.js"></script>
-<script src="~/js/site.js"></script>
+    @if (Model.ModalType != AppUtility.RequestModalType.Create && Model.IsProprietary && Model.Requests[0].IsArchived == false)
+    {
+        <div class="row justify-content-center">
+            <div class="">
+                <button class="open-archive-modal mark-readonly custom-button" disabled style="background: #8080809e; color: white; height: auto !important">Archive</button>
+            </div>
+        </div>
+    }
+    <script src="~/js/receivedmodal.js"></script>
+    <script src="~/js/site.js"></script>

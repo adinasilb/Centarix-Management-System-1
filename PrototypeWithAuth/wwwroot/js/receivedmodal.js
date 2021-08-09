@@ -25,6 +25,7 @@
 
 	$(".open-sublocations-types").off('click').on("click", function () {
 		$("#LocationTypeID").val($(this).attr("id"))
+		$("#locationTypeSelected").val(true);
 		if (!$(".temporary-check").is(":checked")) {
 			console.log("select location")
 			var id = $(this).attr("id");
@@ -32,7 +33,6 @@
 			loadReceivedModalSubLocations(id);
 		}
 		else {
-			$("#locationSelected").val(true);
 			$("#myForm").data("validator").settings.ignore = "";
 			var valid = $("#myForm").valid();
 			if (valid) {
@@ -60,18 +60,25 @@
 	};
 
 	//FROM THE RECEIVED MODAL SUBLOCATIONS
-	$("form").off("click",".SLI-click").on("click",".SLI-click", function (e) {
+	$("form").off("click", ".SLI-click").on("click", ".SLI-click", function (e) {
 		//alert("clicked SLI");
 		console.log("clicked SLI")
 		SLI($(this));
-		var prevName = $(".locationFullName").html()
+		/*var prevName = $(".locationFullName").html()
 		var name = $(this).html();
 
-		$(".locationFullName").html(prevName + name);
-	});
+		$(".locationFullName").html(prevName + name);*/
+		$.ajax({
+			url: "/Locations/GetLocationName?locationId=" + $(this).attr('id'),
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				$(".locationFullName").html(data);
+			}
+		});
+	})
 
 	function SLI(el) {
-	
 		//alert("in SLI function");
 		//ONE ---> GET THE NEXT DROPDOWNLIST
 		if($(el).attr("isNoRack")=="true")
@@ -159,6 +166,11 @@
 					console.log("perc: " + parseFloat(perc));
 					visualBoxWidth = perc + "%";
 					visualBox.css('width', visualBoxWidth);
+					if (cols > 0) {
+						$('#subLocationSelected').val(true);
+					} else {
+						$('#subLocationSelected').val('');
+                    }
 					//var width = visualBox.width();
 					//console.log("width: " + width);
 					//var heightPx = width + "px";
@@ -247,7 +259,7 @@
 					console.log("locations selected " + hasLocationSelected)
 					if (hasLocationSelected <= 0) {
 						$(".submit-received").addClass("disabled-submit")
-						$('#locationSelected').val('');
+						$('#locationVisualSelected').val('');
 					}
 
 				}
@@ -260,12 +272,15 @@
 					$(this).children('div').first().children(".row-1").children("i").removeClass("icon-add_circle_outline-24px1");
 					$(this).children('div').first().children(".row-1").children("i").addClass("icon-delete-24px");
 					$(this).addClass('location-selected')
-					$('#locationSelected').val(true);
-					$('#locationSelected').removeClass("error")
+					$('#locationVisualSelected').val(true);
+					$('#locationVisualSelected').removeClass("error")
 					$("#locationSelected-error").replaceWith('');
 				}
 			}
 		}
+		else{
+			console.log("not clickable")
+			}
 	});
 	$(".visual-locations td").on("click", function (e) {
 		var element = $(this);
@@ -277,6 +292,9 @@
 			$(".first-selected").removeClass("first-selected");
 			element.addClass("first-selected");
 		}
+		else{
+			console.log("not clickable")
+			}
 	});
 	function ToggleBoxUnitSelected(element, select) {
 		var locationInstanceId = element.children('div').first().children("input").first().attr("liid");
@@ -302,12 +320,12 @@
 			console.log($("#LocationTypeID").val())
 			if ($("#LocationTypeID").val() != 0)
 			{
-				$("#locationSelected").val(true)
+				$("#locationTypeSelected").val(true)
 			}
 			$('.visualView').html('');
 		}
 		else {
-			$("#locationSelected").val("")
+			$("#locationTypeSelected").val("")
 		}
     })
 
@@ -338,9 +356,14 @@ function MultipleLocation(element, ToggleBoxUnitSelected) {
 							end = true;
 						}
 						else {
-							if (!$(td).hasClass("graduated-table-background-color")) {
+							if (!$(td).hasClass("not-clickable")) {
+							
 								ToggleBoxUnitSelected($(td), select);
 							}
+							else{
+
+									console.log("not clickable")
+								}
 						}
 					}
 				});
@@ -354,9 +377,13 @@ function MultipleLocation(element, ToggleBoxUnitSelected) {
 							end = true;
 						}
 						else {
-							if (!$(this).hasClass("graduated-table-background-color")) {
+							if (!$(this).hasClass("not-clickable")) {
 								ToggleBoxUnitSelected($(this), select);
 							}
+							else{
+
+									console.log("not clickable")
+								}
 						}
 					}
 				});

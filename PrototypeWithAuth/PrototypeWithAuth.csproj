@@ -411,6 +411,24 @@
     <Compile Remove="Data\Migrations\20210726130426_MoveUnitToProduct.Designer.cs" />
     <Compile Remove="Data\Migrations\20210726131100_MoveUnitToProduct.cs" />
     <Compile Remove="Data\Migrations\20210726131100_MoveUnitToProduct.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802082857_quoteStatusOnRequest.cs" />
+    <Compile Remove="Data\Migrations\20210802082857_quoteStatusOnRequest.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802092205_testQuoteStatusBack.cs" />
+    <Compile Remove="Data\Migrations\20210802092205_testQuoteStatusBack.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802093434_moveQuoteStatusOver.cs" />
+    <Compile Remove="Data\Migrations\20210802093434_moveQuoteStatusOver.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802101525_RemoveQuoteStatusFromParentQuote.cs" />
+    <Compile Remove="Data\Migrations\20210802101525_RemoveQuoteStatusFromParentQuote.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802101837_RemoveQuoteStatusFromParentQuote.cs" />
+    <Compile Remove="Data\Migrations\20210802101837_RemoveQuoteStatusFromParentQuote.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802102104_RemoveQuoteStatusFromParentQuote.cs" />
+    <Compile Remove="Data\Migrations\20210802102104_RemoveQuoteStatusFromParentQuote.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802102412_RemoveQuoteStatusFromParentQuote.cs" />
+    <Compile Remove="Data\Migrations\20210802102412_RemoveQuoteStatusFromParentQuote.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802103031_RemoveQuoteStatusFromParentQuote.cs" />
+    <Compile Remove="Data\Migrations\20210802103031_RemoveQuoteStatusFromParentQuote.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210805073330_UpdatedOldSubcategoryName.cs" />
+    <Compile Remove="Data\Migrations\20210805073330_UpdatedOldSubcategoryName.Designer.cs" />
     <Compile Remove="Data\Migrations\20210802074407_sdsdf.cs" />
     <Compile Remove="Data\Migrations\20210802074407_sdsdf.Designer.cs" />
   </ItemGroup>
@@ -454,6 +472,7 @@
     <PackageReference Include="Select.HtmlToPdf.NetCore" Version="20.1.0" />
     <PackageReference Include="System-Web-Helpers.dll" Version="1.0.0" />
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
+    <PackageReference Include="System.Data.OleDb" Version="5.0.0" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0" />
     <PackageReference Include="WebcamCapturer.Controls.WPF" Version="1.1.1.2" />
     <PackageReference Include="WebcamCapturer.Core" Version="1.1.1.2" />

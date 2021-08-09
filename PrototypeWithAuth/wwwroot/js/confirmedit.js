@@ -23,6 +23,7 @@
 			url = "/Admin/EditUser";
 
 		} else if ($('.turn-edit-on-off').hasClass('orders')) {
+				$("#loading").show();
 			console.log("has class orders");
 			url = "/Requests/EditModalView";
 		}
@@ -60,30 +61,32 @@
 			type: 'POST',
 			cache: false,
 			success: function (data) {
+				$("#loading").hide();
 				if ($('.turn-edit-on-off').hasClass('locations')) {
 					//alert("got data for locations");
 					//console.log(data)
 					if ($('.turn-edit-on-off').attr("section-type") == "LabManagement") {
 						//Reload visual of labmanagement
-						var visualContainerId = $(".hasVisual").attr("parent-id");
-						var urlLocations = "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId;
-						$.ajax({
-							async: true,
-							url: urlLocations,
-							type: 'GET',
-							cache: true,
-							success: function (d) {
-								$(".hasVisual").html(d);
-								$("#loading").hide();
-							}
-						});
+						//var visualContainerId = $(".hasVisual").attr("parent-id");
+						//var urlLocations = "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId;
+						//$.ajax({
+						//	async: true,
+						//	url: urlLocations,
+						//	type: 'GET',
+						//	cache: true,
+						//	success: function (d) {
+						//		$(".hasVisual").html(d);
+						//		$("#loading").hide();
+						//	}
+						//});
 					}
 					else if ($('.turn-edit-on-off').attr("section-type") == "Requests") {
 						console.log("reloading ajax partial view...");
 						$.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
+					
                     }
 					else {
-						visualDiv.html(data);
+						//visualDiv.html(data);
                     }
 
 				}

@@ -9,7 +9,11 @@
     var isProprietary = requestStatusId == 7 ? true : false;
     var sectionType = $('#masterSectionType').val();
     //alert(sectionType);
-    //$.fn.ClearFilter(sectionType, isProprietary);
+    if ($(this).hasClass('reload-filter')) {
+        $.fn.ClearFilter(sectionType, isProprietary);
+        $('.search-requests').val("");
+    }
+    //alert('after clear filter');
     var pageType = $('#masterPageType').val();
     //var viewClass = pageType != 'RequestSummary' ? '_IndexTableWithCounts' : '_IndexTableWithProprietaryTabs';
     var viewClass = '_IndexTable'; //don't use counts now anyways so just reload data so search button doesn't get messed up

@@ -583,6 +583,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             CompanyAccountID = 4,
                             CompanyBankName = "Payoneer"
+                        },
+                        new
+                        {
+                            CompanyAccountID = 5,
+                            CompanyBankName = "Quartzy Bank"
                         });
                 });
 
@@ -2744,7 +2749,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ParentCategoryID = 4,
                             CategoryTypeID = 1,
                             IsProprietary = false,
-                            ParentCategoryDescription = "Reusables"
+                            ParentCategoryDescription = "Reusable"
                         },
                         new
                         {
@@ -2837,14 +2842,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("QuoteNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("QuoteStatusID")
-                        .HasColumnType("int");
-
                     b.HasKey("ParentQuoteID");
 
                     b.HasIndex("ApplicationUserID");
-
-                    b.HasIndex("QuoteStatusID");
 
                     b.ToTable("ParentQuotes");
                 });
@@ -2874,8 +2874,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("OrderNumber")
-                        .HasColumnType("int");
+                    b.Property<long?>("OrderNumber")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("QuartzyOrderNumber")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Shipping")
                         .HasColumnType("float");
@@ -2893,6 +2896,10 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("OrderNumber")
                         .IsUnique()
                         .HasFilter("[OrderNumber] IS NOT NULL");
+
+                    b.HasIndex("QuartzyOrderNumber")
+                        .IsUnique()
+                        .HasFilter("[QuartzyOrderNumber] IS NOT NULL");
 
                     b.ToTable("ParentRequests");
                 });
@@ -3202,6 +3209,10 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("VendorID");
 
+                    b.HasIndex("SerialNumber", "VendorID")
+                        .IsUnique()
+                        .HasFilter("[SerialNumber] IS NOT NULL AND [VendorID] IS NOT NULL");
+
                     b.ToTable("Products");
                 });
 
@@ -3286,7 +3297,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/consumables/robot_consumables_tips.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Robot Consumables(Tips,Microplates, Reservoirs)"
+                            ProductSubcategoryDescription = "Robot Consumables"
                         },
                         new
                         {
@@ -3294,7 +3305,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/consumables/ddpcr_consumables.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "DdPCR Consumables (Gaskets, Cartridges, Microplates, Foil seal)"
+                            ProductSubcategoryDescription = "DD-PCR Plastics"
                         },
                         new
                         {
@@ -3302,7 +3313,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/consumables/rtpcr_consumables.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "RT-PCR"
+                            ProductSubcategoryDescription = "RT-PCR Plastics"
                         },
                         new
                         {
@@ -3374,7 +3385,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/consumables/tapestation_consumables.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Tapestation Consumables (Screentapes: gDNA/HS/RNA; Markers, Loading Buffers, Loading Tips)"
+                            ProductSubcategoryDescription = "Tapestation consumables"
                         },
                         new
                         {
@@ -3390,7 +3401,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/consumables/general.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "General"
+                            ProductSubcategoryDescription = "General Consumables"
                         },
                         new
                         {
@@ -3422,7 +3433,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/chemical_solution2.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Solution"
+                            ProductSubcategoryDescription = ""
                         },
                         new
                         {
@@ -3438,7 +3449,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/PCR_reagent.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "PCR"
+                            ProductSubcategoryDescription = "PCR Reagents"
                         },
                         new
                         {
@@ -3446,7 +3457,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent2.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "RT-PCR"
+                            ProductSubcategoryDescription = "RT-PCR Reagents"
                         },
                         new
                         {
@@ -3470,7 +3481,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/media_supplement.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Media Supplement"
+                            ProductSubcategoryDescription = "Cell Media Supplements"
                         },
                         new
                         {
@@ -3486,7 +3497,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/restriction_enzyme.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Enzyme Restriction"
+                            ProductSubcategoryDescription = "Restriction Enzyme"
                         },
                         new
                         {
@@ -3494,7 +3505,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/rna_enzyme.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Enzyme RNA"
+                            ProductSubcategoryDescription = "RNA Enzyme"
                         },
                         new
                         {
@@ -3526,7 +3537,31 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/general_reagents.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "General"
+                            ProductSubcategoryDescription = "General Reagents and Chemicals"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 218,
+                            ImageURL = "/images/css/CategoryImages/reagents/dna_enzyme.png",
+                            IsOldSubCategory = false,
+                            ParentCategoryID = 2,
+                            ProductSubcategoryDescription = "DNA Enzyme"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 219,
+                            ImageURL = "/images/css/CategoryImages/reagents/gas_refilling2.png",
+                            IsOldSubCategory = false,
+                            ParentCategoryID = 2,
+                            ProductSubcategoryDescription = "Gas Refilling"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 220,
+                            ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent3.png",
+                            IsOldSubCategory = false,
+                            ParentCategoryID = 2,
+                            ProductSubcategoryDescription = "DD-PCR Reagents"
                         },
                         new
                         {
@@ -3558,7 +3593,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/biological/bacteria.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Bacteria"
+                            ProductSubcategoryDescription = "Bacterial Stock"
                         },
                         new
                         {
@@ -3566,7 +3601,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/biological/general.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "General"
+                            ProductSubcategoryDescription = "General Biological"
                         },
                         new
                         {
@@ -3726,7 +3761,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/daytoday/general.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "General"
+                            ProductSubcategoryDescription = "General Day To Day"
                         },
                         new
                         {
@@ -3814,7 +3849,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/travel/travel.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 10,
-                            ProductSubcategoryDescription = "Travel"
+                            ProductSubcategoryDescription = "General Travel"
                         },
                         new
                         {
@@ -3979,106 +4014,42 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ProductSubcategoryID = 1501,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                            ImageURL = "/images/css/CategoryImages/consumables/general.png",
                             IsOldSubCategory = true,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Old Subcategory"
+                            ProductSubcategoryDescription = "Old Sub category"
                         },
                         new
                         {
                             ProductSubcategoryID = 1502,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                            ImageURL = "/images/css/CategoryImages/reagents/general_reagents.png",
                             IsOldSubCategory = true,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Old Subcategory"
+                            ProductSubcategoryDescription = "Old Sub category"
                         },
                         new
                         {
                             ProductSubcategoryID = 1503,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                            ImageURL = "/images/css/CategoryImages/biological/general.png",
                             IsOldSubCategory = true,
                             ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Old Subcategory"
+                            ProductSubcategoryDescription = "Old Sub category"
                         },
                         new
                         {
                             ProductSubcategoryID = 1504,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                            ImageURL = "/images/css/CategoryImages/reusable/all_reusables.png",
                             IsOldSubCategory = true,
                             ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Old Subcategory"
+                            ProductSubcategoryDescription = "Old Sub category"
                         },
                         new
                         {
                             ProductSubcategoryID = 1505,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                            ImageURL = "/images/css/CategoryImages/safety/safety.png",
                             IsOldSubCategory = true,
                             ParentCategoryID = 5,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1506,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1507,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 7,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1508,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 8,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1509,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1510,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 10,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1511,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 11,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1512,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 12,
-                            ProductSubcategoryDescription = "Old Subcategory"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 1513,
-                            ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                            IsOldSubCategory = true,
-                            ParentCategoryID = 13,
-                            ProductSubcategoryDescription = "Old Subcategory"
+                            ProductSubcategoryDescription = "Old Sub category"
                         });
                 });
 
@@ -4505,12 +4476,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("Amount")
                         .HasColumnType("int");
 
-                    b.Property<long?>("AmountWithInLocation")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("AmountWithOutLocation")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("ApplicationUserCreatorID")
                         .HasColumnType("nvarchar(450)");
 
@@ -4592,6 +4557,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("QuoteStatusID")
+                        .HasColumnType("int");
+
                     b.Property<int>("RequestStatusID")
                         .HasColumnType("int");
 
@@ -4625,6 +4593,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("PaymentStatusID");
 
                     b.HasIndex("ProductID");
+
+                    b.HasIndex("QuoteStatusID");
 
                     b.HasIndex("RequestStatusID");
 
@@ -6881,12 +6851,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany()
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.QuoteStatus", "QuoteStatus")
-                        .WithMany("ParentQuotes")
-                        .HasForeignKey("QuoteStatusID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentRequest", b =>
@@ -7107,6 +7071,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.QuoteStatus", "QuoteStatus")
+                        .WithMany("Requests")
+                        .HasForeignKey("QuoteStatusID")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.RequestStatus", "RequestStatus")
                         .WithMany("Requests")

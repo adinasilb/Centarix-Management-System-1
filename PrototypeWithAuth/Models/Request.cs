@@ -43,9 +43,6 @@ namespace PrototypeWithAuth.Models
         }
         public RequestStatus RequestStatus { get; set; }
 
-        public uint? AmountWithInLocation { get; set; } // in order to place different request objects into a location in a box, only dependent on the largest unit
-        public uint? AmountWithOutLocation { get; set; } // in order to place different request objects into a location in a box
-
         public bool IsDeleted { get; set; } // check if this request's parentrequests requests are deleted - if so give parent request true for is deleted
         //  [Range(1, uint.MaxValue, ErrorMessage = "Field must be more than 0")]
         [Display(Name = "Amount")]
@@ -188,5 +185,8 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<ShareRequest> ShareRequests { get; set; }
         public IEnumerable<FavoriteRequest> FavoriteRequests { get; set; }
         public bool IsArchived { get; set; }
+        public int? QuoteStatusID { get; set; }
+        [ForeignKey("QuoteStatusID")]
+        public QuoteStatus QuoteStatus { get; set; }
     }
 }

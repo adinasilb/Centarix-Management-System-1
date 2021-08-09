@@ -4,6 +4,8 @@
 <script src="~/js/receivedmodal.js"></script>
 
 <div class="row">
+
+
     @for (int i = 0; i < Model.locationTypeNames.Count - 1; i++) //do count - 1 because we don't want them to select the smallest instances
     {
         var id = i;
@@ -13,71 +15,72 @@
             hasRackBlock = "hasRackBlock";
         }
 
-    <div class="form-group col-3 @hasRackBlock ">
-        <label class="control-label">@Model.locationTypeNames[i]</label>
-        @if (i == 0)
-        {
+        <div class="form-group col-3 @hasRackBlock ">
+            <label class="control-label">@Model.locationTypeNames[i]</label>
+            @if (i == 0)
+            {
 
-            <div class="">
-                <div class=" form-control-plaintext border-bottom p-0">
-                    <span class="choose p-0"></span>
-                    <div class="dropdown dropdown-main">
-                        <div class="select d-inline-flex" id="@id">
-                            <span class="caret py-0">
-                                ▼
-                            </span>
-                            <span class="overflow-hidden">Select Name:</span>
+                <div class="">
+                    <div class=" form-control-plaintext border-bottom p-0">
+                        <span class="choose p-0"></span>
+                        <div class="dropdown dropdown-main">
+                            <div class="select d-inline-flex" id="@id">
+                                <span class="caret py-0">
+                                    ▼
+                                </span>
+                                <span class="overflow-hidden">Select Name:</span>
+
+                            </div>
+
+                            <ul class="p-0 locationinstance dropdown-menu ">
+                                @foreach (var locationType in Model.locationInstancesDepthZero)
+                                {
+                                    var locationName = locationType.LocationInstanceName;
+                                    if (locationType.LocationTypeID == 500)
+                                    {
+                                        locationName = locationType.LocationRoomInstance.LocationRoomInstanceName;
+                                    }
+
+                                    var description = locationType.LocationInstanceAbbrev;
+                                    if (locationType.LocationInstanceParent == null)
+                                    {
+                                        description = locationType.LocationInstanceName;
+                                    }
+                                    <li id="@locationType.LocationInstanceID" class="SLI-click " data-string="@description" @*onclick="SLI(this.id)"*@ value="@locationType.LocationInstanceID">
+                                        @locationName
+                                    </li>
+                                }
+                            </ul>
 
                         </div>
-
-                        <ul class="p-0 locationinstance dropdown-menu ">
-                            @foreach (var locationType in Model.locationInstancesDepthZero)
-                            {
-                                var locationName = locationType.LocationInstanceName;
-                                if(locationType.LocationTypeID == 500)
-                                {
-                                    locationName = locationType.LocationRoomInstance.LocationRoomInstanceName;
-                                }
-
-                                var description = locationType.LocationInstanceAbbrev;
-                                if(locationType.LocationInstanceParent == null)
-                                {
-                                    description = locationType.LocationInstanceName;
-                                }
-                                <li id="@locationType.LocationInstanceID" class="SLI-click " data-string="@description" @*onclick="SLI(this.id)"*@ value="@locationType.LocationInstanceID">
-                                    @locationName
-                                </li>
-                            }
-                        </ul>
-
                     </div>
                 </div>
-            </div>
-        }
-        else
-        {
-        <div class="">
-            <div class=" form-control-plaintext border-bottom p-0">
-                <span class="choose p-0"></span>
-                <div class="dropdown dropdown-main">
-                    <div class="select d-inline-flex" id="@id" style="padding-right:1.25rem;">
-                        <span class="caret py-0">
-                            ▼
-                        </span>
-                        <span class="overflow-hidden ">select</span>
+            }
+            else
+            {
+                <div class="">
+                    <div class=" form-control-plaintext border-bottom p-0">
+                        <span class="choose p-0"></span>
+                        <div class="dropdown dropdown-main">
+                            <div class="select d-inline-flex" id="@id" style="padding-right:1.25rem;">
+                                <span class="caret py-0">
+                                    ▼
+                                </span>
+                                <span class="overflow-hidden ">select</span>
 
+                            </div>
+
+                            <ul class="p-0 locationinstance dropdown-menu " style="display:none">
+                            </ul>
+
+                        </div>
                     </div>
-
-                    <ul class="p-0 locationinstance dropdown-menu " style="display:none">
-                    </ul>
-
                 </div>
-            </div>
+            }
         </div>
-        }
-    </div>
 
     }
+    <input type="hidden" style="pointer-events:none" class="mark-readonly" id="subLocationSelected" name="subLocationSelected" />
 </div>
 <script>
     //function SLI(el) {

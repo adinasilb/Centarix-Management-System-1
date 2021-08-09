@@ -130,7 +130,9 @@ $(function () {
 			console.log("min date" + minDate)
 	return selectedDate <= minDate;
 }, 'Please select a valid date');
-
+	$.validator.addMethod('greaterThan', function (value, el, param) {
+		return value > param;
+	}, 'Please enter a value greater than {0}');
 	$.validator.addMethod("lowercase", function (value, element) {
 		if (this.optional(element)) {
 			return true;
