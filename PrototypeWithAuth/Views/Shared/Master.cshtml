@@ -486,6 +486,8 @@
             $('#location .mark-readonly').removeClass("not-clickable")
             $('#location .mark-readonly').attr("disabled", false);
             $(".location-icon").removeClass("d-none");
+            $('.edit-mode-switch-description').text("Edit Mode On");
+            $('.turn-edit-on-off').attr('name', 'edit');
         }
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
