@@ -206,7 +206,7 @@ namespace PrototypeWithAuth.ViewModels
         }
         private static List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder, FavoriteRequest favoriteRequest = null, Request request = null, ApplicationUser user = null)
         {
-            var newIconList = AppUtility.DeepClone(iconList);
+            var newIconList = AppUtility.DeepClone<List<IconColumnViewModel>>(iconList);
             //favorite icon
             var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink?.Contains("request-favorite") ?? false);
 
@@ -240,7 +240,27 @@ namespace PrototypeWithAuth.ViewModels
                     newIconList.RemoveAt(resendIconIndex);
                     newIconList.Insert(resendIconIndex, placeholder);
                 }
-
+               
+                var reorderIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink=="Reorder");
+                if(reorderIconIndex !=-1)
+                {
+                    if(request.Product.UnitTypeID ==-1 || request.Product.ProductSubcategory.IsOldSubCategory)
+                    {
+                        newIconList.RemoveAt(reorderIconIndex);
+                    }
+                }
+                var morePopoverIndex = newIconList.FindIndex(ni => ni.IconAjaxLink=="popover-more");
+                if (morePopoverIndex != -1)
+                {
+                    var popoverReorder = newIconList.ElementAt(morePopoverIndex).IconPopovers.FindIndex(ni => ni.Action =="Reorder");
+                    if (popoverReorder != -1)
+                    {
+                        if (request.Product.UnitTypeID == -1 || request.Product.ProductSubcategory.IsOldSubCategory)
+                        {
+                            newIconList[morePopoverIndex].IconPopovers.RemoveAt(popoverReorder);
+                        }
+                    }
+                }
             }
             return newIconList;
         }
@@ -319,7 +339,7 @@ namespace PrototypeWithAuth.ViewModels
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false),
+                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, request: r),
                 AjaxID = r.RequestID
             };
         }
@@ -331,17 +351,30 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, Value = AppUtility.GetAmountColumn(r) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, Value = new List<string>() { GetLocationInstanceNameBefore(r) } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, Value = new List<string>() { r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, Value = new List<string>() { GetApplicationUserName() } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width = 10, Value = new List<string>() { r.ArrivalDate.GetElixirDateFormat() } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, null, user),
+                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, request:r, user),
                 AjaxID = r.RequestID
             };
         }
+
+        private string GetApplicationUserName()
+        {
+            try
+            {
+                return r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName;
+            }
+            catch (Exception ex)
+            {
+                return "No Person Specified";
+            }
+        }
+
         private IEnumerable<RequestIndexPartialColumnViewModel> GetSummaryColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
@@ -350,14 +383,14 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, Value = AppUtility.GetAmountColumn(r) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, Value = new List<string>() { GetLocationInstanceNameBefore(r) } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, Value = new List<string>() { r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, Value = new List<string>() { GetApplicationUserName() } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 10, Value = new List<string>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, null, user),
+                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, r, user),
                 AjaxID = r.RequestID
             };
         }
@@ -437,7 +470,7 @@ namespace PrototypeWithAuth.ViewModels
             {
                 Title = "",
                 Width = 10,
-                Icons = iconList,
+                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, request: r, user),
                 AjaxID = r.RequestID,
             };
 
