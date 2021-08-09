@@ -222,8 +222,8 @@
 			url = "/Requests/ItemData?id=" + id + "&Tab=" + selectedTab + "&SectionType=" + section;
 
 		} else if ($('.turn-edit-on-off').hasClass('locations')) {
-			selectedTab = $('.tab-content').children('.active').attr("value");
-			console.log(selectedTab)
+			/*selectedTab = $('.tab-content').children('.active').attr("value");
+			console.log(selectedTab)*/
 			section = $("#masterSectionType").val();
 			url = "/Requests/_LocationTab?id=" + id;
 			reloadDiv = $("#location");
