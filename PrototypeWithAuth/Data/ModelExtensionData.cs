@@ -1316,7 +1316,7 @@ namespace PrototypeWithAuth.Data
                     ProductSubcategoryID = 1501,
                     ParentCategoryID = 1,
                     ProductSubcategoryDescription = "Old Sub category",
-                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    ImageURL = "/images/css/CategoryImages/consumables/general.png",
                     IsOldSubCategory = true
                 },
                 new ProductSubcategory
@@ -1324,7 +1324,7 @@ namespace PrototypeWithAuth.Data
                     ProductSubcategoryID = 1502,
                     ParentCategoryID = 2,
                     ProductSubcategoryDescription = "Old Sub category",
-                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    ImageURL = "/images/css/CategoryImages/reagents/general_reagents.png",
                     IsOldSubCategory = true
                 },
                 new ProductSubcategory
@@ -1332,7 +1332,7 @@ namespace PrototypeWithAuth.Data
                     ProductSubcategoryID = 1503,
                     ParentCategoryID = 3,
                     ProductSubcategoryDescription = "Old Sub category",
-                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    ImageURL = "/images/css/CategoryImages/biological/general.png",
                     IsOldSubCategory = true
                 },
                 new ProductSubcategory
@@ -1340,7 +1340,7 @@ namespace PrototypeWithAuth.Data
                     ProductSubcategoryID = 1504,
                     ParentCategoryID = 4,
                     ProductSubcategoryDescription = "Old Sub category",
-                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    ImageURL = "/images/css/CategoryImages/reusable/all_reusables.png",
                     IsOldSubCategory = true
                 },
                 new ProductSubcategory
@@ -1348,71 +1348,7 @@ namespace PrototypeWithAuth.Data
                     ProductSubcategoryID = 1505,
                     ParentCategoryID = 5,
                     ProductSubcategoryDescription = "Old Sub category",
-                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                    IsOldSubCategory = true
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 1506,
-                    ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "Old Sub category",
-                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                    IsOldSubCategory = true
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 1507,
-                    ParentCategoryID = 7,
-                    ProductSubcategoryDescription = "Old Sub category",
-                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                    IsOldSubCategory = true
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 1508,
-                    ParentCategoryID = 8,
-                    ProductSubcategoryDescription = "Old Sub category",
-                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                    IsOldSubCategory = true
-                }, 
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 1509,
-                    ParentCategoryID = 9,
-                    ProductSubcategoryDescription = "Old Sub category",
-                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                    IsOldSubCategory = true
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 1510,
-                    ParentCategoryID = 10,
-                    ProductSubcategoryDescription = "Old Sub category",
-                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                    IsOldSubCategory = true
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 1511,
-                    ParentCategoryID = 11,
-                    ProductSubcategoryDescription = "Old Sub category",
-                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                    IsOldSubCategory = true
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 1512,
-                    ParentCategoryID = 12,
-                    ProductSubcategoryDescription = "Old Sub category",
-                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
-                    IsOldSubCategory = true
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 1513,
-                    ParentCategoryID = 13,
-                    ProductSubcategoryDescription = "Old Sub category",
-                    ImageURL = "/images/css/CategoryImages/defaultCategory.png",
+                    ImageURL = "/images/css/CategoryImages/safety/safety.png",
                     IsOldSubCategory = true
                 }
               );

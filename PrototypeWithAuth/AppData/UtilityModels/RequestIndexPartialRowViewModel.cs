@@ -206,7 +206,7 @@ namespace PrototypeWithAuth.ViewModels
         }
         private static List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder, FavoriteRequest favoriteRequest = null, Request request = null, ApplicationUser user = null)
         {
-            var newIconList = AppUtility.DeepClone(iconList);
+            var newIconList = AppUtility.DeepClone<List<IconColumnViewModel>>(iconList);
             //favorite icon
             var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink?.Contains("request-favorite") ?? false);
 
@@ -240,7 +240,27 @@ namespace PrototypeWithAuth.ViewModels
                     newIconList.RemoveAt(resendIconIndex);
                     newIconList.Insert(resendIconIndex, placeholder);
                 }
-
+               
+                var reorderIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Equals("Reorder"));
+                if(reorderIconIndex !=-1)
+                {
+                    if(request.Product.UnitTypeID ==-1 || request.Product.ProductSubcategory.IsOldSubCategory)
+                    {
+                        newIconList.RemoveAt(reorderIconIndex);
+                    }
+                }
+                var morePopoverIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("popover-more"));
+                if (morePopoverIndex != -1)
+                {
+                    var popoverReorder = newIconList.ElementAt(morePopoverIndex).IconPopovers.FindIndex(ni => ni.Action =="Reorder");
+                    if (popoverReorder != -1)
+                    {
+                        if (request.Product.UnitTypeID == -1 || request.Product.ProductSubcategory.IsOldSubCategory)
+                        {
+                            newIconList[morePopoverIndex].IconPopovers.RemoveAt(popoverReorder);
+                        }
+                    }
+                }
             }
             return newIconList;
         }
@@ -319,7 +339,7 @@ namespace PrototypeWithAuth.ViewModels
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false),
+                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, request: r),
                 AjaxID = r.RequestID
             };
         }
@@ -338,7 +358,7 @@ namespace PrototypeWithAuth.ViewModels
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, null, user),
+                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, request:r, user),
                 AjaxID = r.RequestID
             };
         }
@@ -370,7 +390,7 @@ namespace PrototypeWithAuth.ViewModels
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, null, user),
+                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, r, user),
                 AjaxID = r.RequestID
             };
         }
@@ -450,7 +470,7 @@ namespace PrototypeWithAuth.ViewModels
             {
                 Title = "",
                 Width = 10,
-                Icons = iconList,
+                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, request: r, user),
                 AjaxID = r.RequestID,
             };
 
