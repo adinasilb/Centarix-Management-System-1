@@ -2418,6 +2418,7 @@ namespace PrototypeWithAuth.Controllers
                     product.SubUnitTypeID = request.Product.SubUnitTypeID;
                     product.SubSubUnit = request.Product.SubSubUnit;
                     product.SubSubUnitTypeID = request.Product.SubSubUnitTypeID;
+                    product.ProductSubcategoryID = request.Product.ProductSubcategoryID;
 
                     var parentCategoryId = request.Product.ProductSubcategory.ParentCategoryID;
                     requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).Where(ps => ps.ParentCategoryID == parentCategoryId).ToListAsync();
@@ -2448,7 +2449,7 @@ namespace PrototypeWithAuth.Controllers
                          * only need this if using an existing product
                          */
                         request.Product = product;
-                        request.Product.ProductSubcategoryID = request.Product.ProductSubcategory.ProductSubcategoryID;
+                        //request.Product.ProductSubcategoryID = request.Product.ProductSubcategory.ProductSubcategoryID;
                         // requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
                         request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == request.SubProjectID).FirstOrDefault();
 
