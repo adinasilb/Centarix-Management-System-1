@@ -241,7 +241,7 @@ namespace PrototypeWithAuth.ViewModels
                     newIconList.Insert(resendIconIndex, placeholder);
                 }
                
-                var reorderIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Equals("Reorder"));
+                var reorderIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink=="Reorder");
                 if(reorderIconIndex !=-1)
                 {
                     if(request.Product.UnitTypeID ==-1 || request.Product.ProductSubcategory.IsOldSubCategory)
@@ -249,7 +249,7 @@ namespace PrototypeWithAuth.ViewModels
                         newIconList.RemoveAt(reorderIconIndex);
                     }
                 }
-                var morePopoverIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("popover-more"));
+                var morePopoverIndex = newIconList.FindIndex(ni => ni.IconAjaxLink=="popover-more");
                 if (morePopoverIndex != -1)
                 {
                     var popoverReorder = newIconList.ElementAt(morePopoverIndex).IconPopovers.FindIndex(ni => ni.Action =="Reorder");
