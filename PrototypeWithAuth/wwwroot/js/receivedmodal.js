@@ -323,6 +323,7 @@
 				$("#locationTypeSelected").attr('data-val', true)
 			}*/
 			$('.visualView').html('');
+			$(".locationFullName").html("");
 		}
 		else {
 			if ($("#LocationTypeID").val() != 0) {
