@@ -7,8 +7,8 @@
     var fileButtonText = "Select File";
     var documentsDisabled = true;
     var disabled = "";
-    if (Model.ModalType == AppUtility.ProtocolModalType.CheckListMode
-        || Model.ModalType == AppUtility.ProtocolModalType.Summary)
+    if ((Model.ModalType == AppUtility.ProtocolModalType.CheckListMode
+        || Model.ModalType == AppUtility.ProtocolModalType.Summary) && Model.Function.ID !=0)
     {
         documentsDisabled = false;
         disabled = " mark-readonly ";

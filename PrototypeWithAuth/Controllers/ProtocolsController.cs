@@ -433,6 +433,7 @@ namespace PrototypeWithAuth.Controllers
             if (isContinue)
             {
                 viewmodel.ProtocolInstance = await _context.ProtocolInstances.Where(p => p.ProtocolInstanceID == ID).Include(p => p.Protocol).FirstOrDefaultAsync();
+                viewmodel.ProtocolInstance.TemporaryResultDescription = viewmodel.ProtocolInstance.ResultDescription;
                 protocol = viewmodel.ProtocolInstance.Protocol;
             }
             else
@@ -1134,12 +1135,13 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddResultsFunctionModal(int FunctionTypeID, int protocolInstanceID, int functionResultID, AppUtility.ProtocolModalType modalType)
+        public async Task<IActionResult> AddResultsFunctionModal(int FunctionTypeID, int protocolInstanceID, int functionResultID, AppUtility.ProtocolModalType modalType,  string functionHtml )
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
             var viewmodel = new AddResultsFunctionViewModel
             {
-                ModalType = modalType
+                ModalType = modalType,
+                FunctionIconHtml = functionHtml
             };
             if (functionResultID !=0)
             {
@@ -1151,7 +1153,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     FunctionType = functionType,
                     FunctionTypeID = FunctionTypeID,
-                    ID = protocolInstanceID,
+                    ProtocolInstanceID = protocolInstanceID,
                     ProtocolInstance = _context.ProtocolInstances.Where(pi => pi.ProtocolInstanceID == protocolInstanceID).FirstOrDefault()
                 };
             }
@@ -1193,6 +1195,100 @@ namespace PrototypeWithAuth.Controllers
             }
             return PartialView(viewmodel);
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> AddResultsFunctionModal(AddResultsFunctionViewModel addResultsFunctionViewModel, ProtocolInstance protocolInstance, Guid? guid)
+        {
+            var functionType = _context.FunctionTypes.Where(ft=>ft.FunctionTypeID == addResultsFunctionViewModel.Function.FunctionTypeID).FirstOrDefault();
+
+            var protocolInstanceDB = _context.ProtocolInstances.Where(r => r.ProtocolInstanceID == protocolInstance.ProtocolInstanceID).FirstOrDefault();
+            protocolInstanceDB.TemporaryResultDescription = protocolInstance.TemporaryResultDescription;
+            var functionResult = addResultsFunctionViewModel.Function;
+            string renderedView = "";
+            functionResult.IsTemporary = true;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (addResultsFunctionViewModel.IsRemove)
+                    {
+                        functionResult.IsTemporaryDeleted = true;
+                        _context.Entry(functionResult).State = EntityState.Modified;
+                  
+                    }
+                    else
+                    {
+                        _context.Entry(functionResult).State = EntityState.Added;
+                        await _context.SaveChangesAsync();
+                        switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
+                        {
+                            case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
+                                var product = _context.Products.Where(p => p.ProductID == addResultsFunctionViewModel.Function.ProductID).FirstOrDefault();
+                                renderedView = " <a href='#' class='open-line-product function-result-node' functionResult='" + addResultsFunctionViewModel.Function.ID + "' value='" + product.ProductID + "'>" + product.ProductName + "</a> "+addResultsFunctionViewModel.FunctionIconHtml;
+                                break;
+                            case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
+                                var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addResultsFunctionViewModel.Function.ProtocolID).FirstOrDefault();
+                                renderedView = " <a href='#' functionResult='" + addResultsFunctionViewModel.Function.ID + "' class='open-line-protocol function-result-node' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> "+addResultsFunctionViewModel.FunctionIconHtml;
+                                break;
+                            case AppUtility.ProtocolFunctionTypes.AddFile:
+                            case AppUtility.ProtocolFunctionTypes.AddImage:            
+                                MoveDocumentsOutOfTempFolder(addResultsFunctionViewModel.Function.ID, AppUtility.ParentFolderName.Reports, guid: guid);
+
+                                DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
+                                {
+                                    ObjectID = functionResult.ID.ToString(),
+                                    ParentFolderName = AppUtility.ParentFolderName.Reports,
+                                    SectionType = AppUtility.MenuItems.Protocols,
+                                    IsEdittable = true,
+                                    Guid = guid ?? Guid.NewGuid()
+                                };
+
+                                base.FillDocumentsViewModel(documentsModalViewModel);
+
+                                renderedView = await RenderPartialViewToString("_DocumentCard", documentsModalViewModel);                               
+                                break;
+                            default:
+                                renderedView = addResultsFunctionViewModel.FunctionIconHtml;
+                                break;
+                        }
+                        var replaceableText = "<span class=\"focusedText\"></span>";
+                        var tags = addResultsFunctionViewModel.ClosingTags?.Split(",") ?? new string[0];
+                        var closingTags = "";
+                        var openingTags = "";
+                        foreach (var tag in tags)
+                        {
+                            closingTags += "</" + tag + ">";
+                            openingTags = "<" + tag + ">" + openingTags;
+                        }
+                        var addedText = renderedView + " <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none text added-div start-div'></div>";
+
+                        if ( !protocolInstanceDB.TemporaryResultDescription.Contains(replaceableText))
+                        {
+                            protocolInstanceDB.TemporaryResultDescription += addedText;
+                        }
+                        else
+                        {
+                            addedText = closingTags + addedText + openingTags;
+                            protocolInstanceDB.TemporaryResultDescription = protocolInstanceDB.TemporaryResultDescription.Replace(replaceableText, addedText);
+                        }
+                        _context.Update(protocolInstanceDB);
+
+                    }
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    Response.StatusCode = 500;
+                    await transaction.RollbackAsync();
+                }
+            }
+            return PartialView("_ResultsText", protocolInstanceDB);
+        }
+
+
+
 
         private void GetFunctionLineLinkToProtocolDDLs(AddFunctionViewModel<FunctionLine> viewmodel)
         {

@@ -9,6 +9,7 @@ namespace PrototypeWithAuth.ViewModels
     public class AddResultsFunctionViewModel : AddFunctionViewModel<FunctionResult>
     {
         public string ClosingTags { get; set; }
+        public string FunctionIconHtml { get; set; }
         public AddFunctionViewModel<FunctionBase> ConvertToBaseClass()
         {
             AddFunctionViewModel<FunctionBase> baseObject = new AddFunctionViewModel<FunctionBase>

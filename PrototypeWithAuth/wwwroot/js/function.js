@@ -18,7 +18,8 @@
         }
         else if($(".results-tab").hasClass("active"))
         {
-             url = "/Protocols/AddResultsFunctionModal?FunctionTypeID=" +$(this).attr("typeID") + "&ProtocolInstanceID=" + $(".protocolInstanceID").val() +"&functionResultID="+$('.functionID').val()+ "&modalType="+$(this).attr("modaltype") +"&closingTags="+$('#closingTags').val();
+            console.log($(this)[0].outerHTML)
+             url = "/Protocols/AddResultsFunctionModal?FunctionTypeID=" +$(this).attr("typeID") + "&ProtocolInstanceID=" + $(".protocolInstanceID").val() +"&functionResultID="+$('.functionID').val()+ "&modalType="+$(this).attr("modaltype") +"&closingTags="+$('#closingTags').val()+"&functionHtml="+$(this)[0].outerHTML;
         	$.fn.CallPageRequest( url , "addFunction");
         }
 	}
@@ -40,7 +41,13 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
             console.log(functionSelect)
             changeToTriggerSelect = $(".text-editor")
          }
-         else {
+
+        else if($(".results-tab").hasClass("active"))
+        {
+                    changeToTriggerSelect = $(".text-editor")
+        }
+        else        
+        {
 	        functionSelect =$("div.line-input[data-val="+$(".lineID").val()+"]").find("a.function-line-node[functionline="+$(".function-lineID").val()+"]");   
             changeToTriggerSelect=$("div.line-input[data-val="+$(".lineID").val()+"]")
          }
@@ -99,6 +106,19 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
             functionFormData.append(pair[0], pair[1]);
         }
     }
+    else if($(".results-tab").hasClass("active"))
+    {
+          if ($(this).hasClass("removeFunction")) {
+            functionName = "DeleteReportDocumentModal"
+            functionFormData = new FormData($(".deleteFunctionForm")[0]);
+        }
+        else {
+            functionName = "AddResultsFunctionModal?guid="+$(".guid").val();
+        }
+        for (var pair of protocolFormData.entries()) {
+            functionFormData.append(pair[0], pair[1]);
+        }    
+    }
     else{
          for (var pair of protocolFormData.entries())
         {
@@ -113,7 +133,7 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
         processData: false,
         type: "POST",
         success: function (data) {
-            if ($("#masterPageType").val() == "ProtocolsReports") {
+            if ($("#masterPageType").val() == "ProtocolsReports" ||$(".results-tab").hasClass("active")) {
                 $(".text-editor-div").html(data);
                 if (!removing) {
                     var newDiv = $(".added-div");
