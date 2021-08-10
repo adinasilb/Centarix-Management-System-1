@@ -1220,7 +1220,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         _context.Entry(functionResult).State = EntityState.Added;
                         await _context.SaveChangesAsync();
-                        string functionIconHtml =  "< button class='function p-0 m-0 no-box-shadow border-0' type='button' typeID='"+functionType.FunctionTypeID+"' modalType='"+addResultsFunctionViewModel.ModalType+"' guid='"+guid+"' value='"+functionResult.ID+ "'> <div functionID = '" + functionType.FunctionTypeID + "' class='" + functionType.IconActionClass + " line-function'><i class='" + functionType.Icon + "'></i></div></button>";
+                        string functionIconHtml =  "<button class='function p-0 m-0 no-box-shadow border-0' type='button' typeID='"+functionType.FunctionTypeID+"' modalType='"+addResultsFunctionViewModel.ModalType+"' guid='"+guid+"' value='"+functionResult.ID+ "'> <div functionID = '" + functionType.FunctionTypeID + "' class='" + functionType.IconActionClass + " line-function'><i class='" + functionType.Icon + "'></i></div></button>";
                         switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
                         {
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
@@ -1576,7 +1576,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ProtocolsProductDetails(int? productID)
         {
-            var requestID = _context.Requests.Where(r => r.ProductID == productID).OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => r.RequestID).FirstOrDefault();
+            var requestID = _context.Requests.IgnoreQueryFilters().Where(r=>!r.IsDeleted).Where(r => r.ProductID == productID).OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => r.RequestID).FirstOrDefault();
             var requestItemViewModel = await editModalViewFunction(requestID, isEditable: false);
             requestItemViewModel.SectionType = AppUtility.MenuItems.Protocols;
             return PartialView(requestItemViewModel);
