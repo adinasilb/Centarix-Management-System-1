@@ -571,21 +571,14 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 var vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Requests.FirstOrDefault().Product.VendorID);
-                var categoryType = 1;
-                var serialLetter = "L";
                 var exchangeRate = requestItemViewModel.Requests.FirstOrDefault().ExchangeRate;
                 var currency = requestItemViewModel.Requests.FirstOrDefault().Currency;
-                if (OrderType == AppUtility.OrderTypeEnum.SaveOperations)
-                {
-                    categoryType = 2;
-                    serialLetter = "P";
-                }
+                
                 //in case we need to return to the modal view
                 //requestItemViewModel.ParentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryID).FirstOrDefaultAsync();
 
                 //declared outside the if b/c it's used farther down too 
                 var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-                var lastSerialNumber = int.Parse(_context.Products.IgnoreQueryFilters().Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType).OrderBy(p => p).LastOrDefault()?.SerialNumber?.Substring(1));
 
                 var RequestNum = 1;
                 var i = 1;
@@ -615,8 +608,6 @@ namespace PrototypeWithAuth.Controllers
                             isInBudget = checkIfInBudget(request);
                         }
                         request.ExchangeRate = exchangeRate;
-                        request.Product.SerialNumber = serialLetter + (lastSerialNumber + 1);
-                        lastSerialNumber++;
                         TempRequestViewModel trvm = await AddItemAccordingToOrderType(request, OrderType, isInBudget, requestItemViewModel.TempRequestListViewModel, requestNum: RequestNum);
 
 
@@ -1204,11 +1195,11 @@ namespace PrototypeWithAuth.Controllers
             {
                 _context.Entry(tempRequest.Request.Product).State = EntityState.Modified;
             }
-            if (tempRequest.Request.ParentQuoteID == 0)
+            if ((tempRequest.Request.ParentQuoteID == 0 || tempRequest.Request.ParentQuoteID == null) && tempRequest.Request.ParentQuote != null)
             {
                 _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Added;
             }
-            else if ((tempRequest.Request.ParentQuoteID != null))
+            else if ((tempRequest.Request.ParentQuote != null))
             {
                 _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Unchanged;
             }
@@ -1535,6 +1526,12 @@ namespace PrototypeWithAuth.Controllers
 
                             if (!SaveUsingTempRequest)
                             {
+                                var isOperations = false;
+                                if(tempRequest.Request.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString())
+                                {
+                                    isOperations = true;
+                                }
+                                tempRequest.Request.Product.SerialNumber = GetSerialNumber(isOperations);
                                 await SaveTempRequestAndCommentsAsync(tempRequest);
                             }
                             else if (SaveUsingTempRequest)
@@ -2764,14 +2761,13 @@ namespace PrototypeWithAuth.Controllers
             {
                 var request = _context.Requests.Where(r => r.RequestID == id).AsNoTracking().FirstOrDefault();
                 var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == request.ParentRequestID).AsNoTracking().FirstOrDefault();
-                var entries2 = _context.ChangeTracker.Entries();
                 if (parentRequest != null)
                 {
                     pr = parentRequest;
-                    entries2 = _context.ChangeTracker.Entries();
+                    pr.OrderNumber = lastParentRequestOrderNum + 1;
+                    pr.OrderDate = DateTime.Now;
                 }
                  request.ParentRequest = pr;
-                entries2 = _context.ChangeTracker.Entries();
                 if (request.Product == null)
                 {
                     request.Product = _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor)
@@ -2790,7 +2786,6 @@ namespace PrototypeWithAuth.Controllers
                     }
                 };
                 updatedTempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID, 3);
-                var entrykll = _context.ChangeTracker.Entries();
                 await SetTempRequestAsync(updatedTempRequestJson, newTRLVM, tempRequestListViewModel.RequestIndexObject);
                 var payments = _context.Payments.Where(p => p.RequestID == id);
              
@@ -3028,64 +3023,66 @@ namespace PrototypeWithAuth.Controllers
                                 //foreach (var tempRequest in deserializedTempRequestListViewModel.TempRequestViewModels)
                                 for (int tr = 0; tr < deserializedTempRequestListViewModel.TempRequestViewModels.Count(); tr++)
                                 {
-                                    deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestStatusID = 2;
-                                    if (deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID == 0)
+                                    var tempRequest = deserializedTempRequestListViewModel.TempRequestViewModels[tr];
+                                    tempRequest.Request.RequestStatusID = 2;
+                                    if (tempRequest.Request.RequestID == 0)
                                     {
-                                        if (deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.Product.ProductID == 0)
+                                        if (tempRequest.Request.Product.ProductID == 0)
                                         {
-                                            _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.Product).State = EntityState.Added;
+                                            tempRequest.Request.Product.SerialNumber = GetSerialNumber(false);
+                                            _context.Entry(tempRequest.Request.Product).State = EntityState.Added;
                                         }
                                         else
                                         {
-                                            _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.Product).State = EntityState.Modified;
+                                            _context.Entry(tempRequest.Request.Product).State = EntityState.Modified;
                                         }
-                                        //deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentRequest = pr;
-                                        _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request).State = EntityState.Added;
-                                        //deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentRequest.OrderDate = DateTime.Now;
-                                        _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentQuote).State = EntityState.Added;
+                                        //tempRequest.Request.ParentRequest = pr;
+                                        _context.Entry(tempRequest.Request).State = EntityState.Added;
+                                        //tempRequest.Request.ParentRequest.OrderDate = DateTime.Now;
+                                        _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Added;
                                     }
                                     else
                                     {
-                                        _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request).State = EntityState.Modified;
+                                        _context.Entry(tempRequest.Request).State = EntityState.Modified;
                                     }
                                     await _context.SaveChangesAsync();
                                     //if there are no payments it means that the payments were saved previously
-                                    if (deserializedTempRequestListViewModel.TempRequestViewModels[tr].Payments == null)
+                                    if (tempRequest.Payments == null)
                                     {
-                                        //deserializedTempRequestListViewModel.TempRequestViewModels[tr].Payments = new List<Payment>();
-                                        //foreach(var payment in _context.Payments.Where(p => p.RequestID == deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID))
+                                        //tempRequest.Payments = new List<Payment>();
+                                        //foreach(var payment in _context.Payments.Where(p => p.RequestID == tempRequest.Request.RequestID))
                                         //{
-                                        //    deserializedTempRequestListViewModel.TempRequestViewModels[tr].Payments.Add(payment);
+                                        //    tempRequest.Payments.Add(payment);
                                         //}
                                     }
                                     else
                                     {
-                                        foreach (var p in deserializedTempRequestListViewModel.TempRequestViewModels[tr].Payments)
+                                        foreach (var p in tempRequest.Payments)
                                         {
                                             //DO WE NEED THIS NEXT LINE HERE???
-                                            p.RequestID = deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID;
+                                            p.RequestID = tempRequest.Request.RequestID;
                                             _context.Entry(p).State = EntityState.Added;
                                         }
                                     }
                                     await _context.SaveChangesAsync();
-                                    if (deserializedTempRequestListViewModel.TempRequestViewModels[tr].Comments != null)
+                                    if (tempRequest.Comments != null)
                                     {
-                                        foreach (var c in deserializedTempRequestListViewModel.TempRequestViewModels[tr].Comments)
+                                        foreach (var c in tempRequest.Comments)
                                         {
                                             //DO WE NEED THIS NEXT LINE HERE???
-                                            c.RequestID = deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID;
+                                            c.RequestID = tempRequest.Request.RequestID;
                                             _context.Add(c);
                                         }
                                         await _context.SaveChangesAsync();
                                     }
 
-                                    if (deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
+                                    if (tempRequest.Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
                                     {
                                         var additionalRequests = tr + 1 < deserializedTempRequestListViewModel.TempRequestViewModels.Count() ? true : false;
-                                        MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, tempRequestListViewModel.GUID);
+                                        MoveDocumentsOutOfTempFolder(tempRequest.Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, tempRequestListViewModel.GUID);
                                     }
 
-                                    string NewFolder = Path.Combine(uploadFolder, deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentRequestID.ToString());
+                                    string NewFolder = Path.Combine(uploadFolder, tempRequest.Request.ParentRequestID.ToString());
                                     string folderPath = Path.Combine(NewFolder, AppUtility.FolderNamesEnum.Orders.ToString());
                                     Directory.CreateDirectory(folderPath); //make sure we don't need one above also??
 
@@ -3098,19 +3095,19 @@ namespace PrototypeWithAuth.Controllers
 
                                     System.IO.File.Copy(uploadFile, filePath); //make sure this works for each of them
 
-                                    deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.Product = await _context.Products.Where(p => p.ProductID == deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
+                                    tempRequest.Request.Product = await _context.Products.Where(p => p.ProductID == tempRequest.Request.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
                                     RequestNotification requestNotification = new RequestNotification();
-                                    requestNotification.RequestID = deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID;
+                                    requestNotification.RequestID = tempRequest.Request.RequestID;
                                     requestNotification.IsRead = false;
-                                    requestNotification.RequestName = deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.Product.ProductName;
-                                    requestNotification.ApplicationUserID = deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ApplicationUserCreatorID;
+                                    requestNotification.RequestName = tempRequest.Request.Product.ProductName;
+                                    requestNotification.ApplicationUserID = tempRequest.Request.ApplicationUserCreatorID;
                                     requestNotification.Description = "item ordered";
                                     requestNotification.NotificationStatusID = 2;
                                     requestNotification.TimeStamp = DateTime.Now;
                                     requestNotification.Controller = "Requests";
                                     requestNotification.Action = "NotificationsView";
                                     requestNotification.OrderDate = DateTime.Now;
-                                    requestNotification.Vendor = deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.Product.Vendor.VendorEnName;
+                                    requestNotification.Vendor = tempRequest.Request.Product.Vendor.VendorEnName;
                                     _context.Add(requestNotification);
 
                                     await _context.SaveChangesAsync();
@@ -5059,6 +5056,7 @@ namespace PrototypeWithAuth.Controllers
                                 _context.Entry(tempRequestViewModel.Request.ParentQuote).State = EntityState.Added;
                                 if (tempRequestViewModel.Request.Product.ProductID == 0)
                                 {
+                                    tempRequestViewModel.Request.Product.SerialNumber = GetSerialNumber(false);
                                     _context.Entry(tempRequestViewModel.Request.Product).State = EntityState.Added;
                                 }
                                 else
@@ -5453,6 +5451,7 @@ namespace PrototypeWithAuth.Controllers
             }
             return RedirectToAction("_LocationTab", new { id = requestId });
         }
+
 
 
         //[HttpGet]

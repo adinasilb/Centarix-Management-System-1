@@ -1320,6 +1320,20 @@ namespace PrototypeWithAuth.Controllers
                 return writer.GetStringBuilder().ToString();
             }
         }
+        public string GetSerialNumber(bool isOperations)
+        {
+            var categoryType = 1;
+            var serialLetter = "L";
+            if (isOperations)
+            {
+                categoryType = 2;
+                serialLetter = "P";
+            }
+            var lastSerialNumber = int.Parse(_context.Products.IgnoreQueryFilters().Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType)
+                .OrderBy(p => p).LastOrDefault()?.SerialNumber?.Substring(1));
+            return serialLetter + (lastSerialNumber + 1);
+        }
+
         //[HttpPost]
         //[Authorize(Roles = "Requests")]
         //public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel)
