@@ -55,7 +55,9 @@
             locationTypeSelected = "";
         }
     }
-    <input type="hidden" class="location-error" style="pointer-events: none; border: none" id="locationTypeSelected" name="locationTypeSelected" data-val="@locationTypeSelected" />
+
+        <input type="hidden" class="location-error mark-readonly" id="locationTypeSelected" name="locationTypeSelected" data-val="@locationTypeSelected" />
+
 </div>
 <div class="row choose-locations">
     <div class="col-2">
@@ -197,20 +199,25 @@
             }
             <div class="row"><input type="hidden" style="pointer-events:none" class="mark-readonly" id="locationSelected" name="locationSelected" value="@value" /></div>*@
 <div class="row">
+    <div class="location-error-msg"></div>
+</div>
+<div class="row">
     <div class="visualView col-6 m-auto text-center">
         @if (Model.ReceivedModalVisualViewModel != null)
         {
+            <input type="hidden" class="location-error mark-readonly" id="subLocationSelected" name="subLocationSelected" data-val="true" />
+
             @*@if (Model.ReceivedModalVisualViewModel.ParentLocationInstance.Width == 9 || Model.ReceivedModalVisualViewModel.ParentLocationInstance.Width == 12)
-                {
-                    <div class="row">
-                        <div class="col-12">
-                            <button class="btn visual-locations-zoom
-                        float-lg-right mr-4" style="text-decoration:none; font-size:1.3rem;" value="@Model.ReceivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID">
-                                <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In
-                            </button>
-                        </div>
+            {
+                <div class="row">
+                    <div class="col-12">
+                        <button class="btn visual-locations-zoom
+                    float-lg-right mr-4" style="text-decoration:none; font-size:1.3rem;" value="@Model.ReceivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID">
+                            <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In
+                        </button>
                     </div>
-                }*@
+                </div>
+            }*@
             <div>
                 @{ await Html.RenderPartialAsync("ReceivedModalVisual", Model.ReceivedModalVisualViewModel); }
             </div>

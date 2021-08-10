@@ -165,8 +165,8 @@
             </div>
             <br />
             @if (Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString() ||
-             Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.Biological.ToString() ||
-             Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.Clinical.ToString())
+            Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.Biological.ToString() ||
+            Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.Clinical.ToString())
             {
                 <div class="row">
                     <div class="col-md-3 ">
@@ -280,7 +280,8 @@
 </div>-->
 @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID != 2)
 {
-    <input type="hidden" class="location-error" style="pointer-events: none; border: none" id="locationTypeSelected" name="locationTypeSelected" data-val=""/>
+    <input type="hidden" class="location-error" id="locationTypeSelected" name="locationTypeSelected" data-val="" />
+    <div class="location-error-msg"></div>
 }
 
 <script src="~/js/InitializeDatePicker.js"></script>

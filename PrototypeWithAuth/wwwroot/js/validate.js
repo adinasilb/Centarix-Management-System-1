@@ -58,8 +58,12 @@ $(function () {
 
 	$('#myForm').data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden, input:visible, textarea:visible), [disabled], #-error';
 	$('#myForm').data("validator").settings.errorPlacement = function (error, element) {
+		console.log('in error placement')
 		if (element.hasClass('select-dropdown')) {
 			error.insertAfter(element);
+		} else if (element.hasClass('location-error')) {
+			error.insertAfter('#location-error-msg');
+			console.log('setting error text')
 		} else {
 			error.insertAfter(element);
 		}

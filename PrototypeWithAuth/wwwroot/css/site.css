@@ -3047,8 +3047,3 @@ body.modal-open .popover {
 .addFunctionModal .doc-card-outer-div {
     min-width: 100% !important;
 }
-.location-error:focus-visible, .location-error:focus, .location-error {
-    outline: none !important;
-    pointer-events: none !important;
-    cursor: none !important;
-}

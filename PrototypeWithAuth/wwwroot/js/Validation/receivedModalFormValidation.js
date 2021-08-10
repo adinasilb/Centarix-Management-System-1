@@ -24,7 +24,7 @@ $('.receivedModalForm').validate({
 			locationRequired: true
 		}
 
-	},
+	}
 /*	messages: {
 		"subLocationSelected": "Please choose a location before submitting",
 		"locationVisualSelected": "Please choose a location before submitting",
