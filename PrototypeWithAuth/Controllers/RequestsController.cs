@@ -2484,7 +2484,7 @@ namespace PrototypeWithAuth.Controllers
                             var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
                             foreach (var location in requestLocations)
                             {
-                                var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
+                                var locationInstance = _context.LocationInstances.IgnoreQueryFilters().Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
                                 _context.Remove(location);
                                 if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
                                 {

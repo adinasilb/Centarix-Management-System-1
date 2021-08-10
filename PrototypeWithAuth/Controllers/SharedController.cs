@@ -406,7 +406,7 @@ namespace PrototypeWithAuth.Controllers
             //locations:
             //get the list of requestLocationInstances in this request
             //can't look for _context.RequestLocationInstances b/c it's a join table and doesn't have a dbset
-            var request1 = _context.Requests.Where(r => r.RequestID == id).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).FirstOrDefault();
+            var request1 = _context.Requests.IgnoreQueryFilters().Where(r => r.RequestID == id).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).FirstOrDefault();
             var requestLocationInstances = request1.RequestLocationInstances.ToList();
             //if it has => (which it should once its in a details view)
             requestItemViewModel.LocationInstances = new List<LocationInstance>();
@@ -439,7 +439,7 @@ namespace PrototypeWithAuth.Controllers
                         {
                             locationInstancesDepthZero = new List<LocationInstance>(),
                             locationTypeNames = new List<string>(),
-                            locationInstancesSelected = _context.LocationInstances.Where(l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID).ToList()
+                            locationInstancesSelected = _context.LocationInstances.IgnoreQueryFilters().Where(l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID).ToList()
 
                         };
                         requestItemViewModel.ReceivedModalSublocationsViewModel = receivedModalSublocationsViewModel;
