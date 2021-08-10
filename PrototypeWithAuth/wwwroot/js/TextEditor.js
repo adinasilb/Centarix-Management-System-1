@@ -7,7 +7,7 @@
         $(".focusedText").remove()
         pasteHtmlAtCaret("<span class='focusedText'></span>")
         $("#TemporaryReportText").val($(this).html())
-
+           $("#TemporaryResultDescription").val($(this).html())
     })
     function pasteHtmlAtCaret(html) {
         var sel, range;

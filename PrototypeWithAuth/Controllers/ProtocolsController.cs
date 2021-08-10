@@ -1135,13 +1135,12 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddResultsFunctionModal(int FunctionTypeID, int protocolInstanceID, int functionResultID, AppUtility.ProtocolModalType modalType,  string functionHtml )
+        public async Task<IActionResult> AddResultsFunctionModal(int FunctionTypeID, int protocolInstanceID, int functionResultID, AppUtility.ProtocolModalType modalType )
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
             var viewmodel = new AddResultsFunctionViewModel
             {
                 ModalType = modalType,
-                FunctionIconHtml = functionHtml
             };
             if (functionResultID !=0)
             {
@@ -1221,15 +1220,16 @@ namespace PrototypeWithAuth.Controllers
                     {
                         _context.Entry(functionResult).State = EntityState.Added;
                         await _context.SaveChangesAsync();
+                        string functionIconHtml =  "< button class='function p-0 m-0 no-box-shadow border-0' type='button' typeID='"+functionType.FunctionTypeID+"' modalType='"+addResultsFunctionViewModel.ModalType+"' guid='"+guid+"' value='"+functionResult.ID+ "'> <div functionID = '" + functionType.FunctionTypeID + "' class='" + functionType.IconActionClass + " line-function'><i class='" + functionType.Icon + "'></i></div></button>";
                         switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
                         {
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
                                 var product = _context.Products.Where(p => p.ProductID == addResultsFunctionViewModel.Function.ProductID).FirstOrDefault();
-                                renderedView = " <a href='#' class='open-line-product function-result-node' functionResult='" + addResultsFunctionViewModel.Function.ID + "' value='" + product.ProductID + "'>" + product.ProductName + "</a> "+addResultsFunctionViewModel.FunctionIconHtml;
+                                renderedView = " <a href='#' class='open-line-product function-result-node' functionResult='" + addResultsFunctionViewModel.Function.ID + "' value='" + product.ProductID + "'>" + product.ProductName + "</a> "+functionIconHtml;
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
                                 var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addResultsFunctionViewModel.Function.ProtocolID).FirstOrDefault();
-                                renderedView = " <a href='#' functionResult='" + addResultsFunctionViewModel.Function.ID + "' class='open-line-protocol function-result-node' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> "+addResultsFunctionViewModel.FunctionIconHtml;
+                                renderedView = " <a href='#' functionResult='" + addResultsFunctionViewModel.Function.ID + "' class='open-line-protocol function-result-node' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> "+functionIconHtml;
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddFile:
                             case AppUtility.ProtocolFunctionTypes.AddImage:            
@@ -1249,7 +1249,7 @@ namespace PrototypeWithAuth.Controllers
                                 renderedView = await RenderPartialViewToString("_DocumentCard", documentsModalViewModel);                               
                                 break;
                             default:
-                                renderedView = addResultsFunctionViewModel.FunctionIconHtml;
+                                renderedView = functionIconHtml;
                                 break;
                         }
                         var replaceableText = "<span class=\"focusedText\"></span>";
@@ -1370,7 +1370,7 @@ namespace PrototypeWithAuth.Controllers
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
             {
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
-                    var product = _context.Products.Where(p => p.ProductID == objectID || p.SerialNumber == uniqueNumber)
+                    var product = _context.Products.IgnoreQueryFilters().Where(p=>!p.IsDeleted).Where(p => p.ProductID == objectID || p.SerialNumber == uniqueNumber)
                          .Include(p => p.ProductSubcategory).FirstOrDefault();
                     viewmodel.Function.Product = product;
                     viewmodel.Function.ProductID = product.ProductID;

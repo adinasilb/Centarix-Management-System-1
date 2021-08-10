@@ -18,8 +18,7 @@
         }
         else if($(".results-tab").hasClass("active"))
         {
-            console.log($(this)[0].outerHTML)
-             url = "/Protocols/AddResultsFunctionModal?FunctionTypeID=" +$(this).attr("typeID") + "&ProtocolInstanceID=" + $(".protocolInstanceID").val() +"&functionResultID="+$('.functionID').val()+ "&modalType="+$(this).attr("modaltype") +"&closingTags="+$('#closingTags').val()+"&functionHtml="+$(this)[0].outerHTML;
+             url = "/Protocols/AddResultsFunctionModal?FunctionTypeID=" +$(this).attr("typeID") + "&ProtocolInstanceID=" + $(".protocolInstanceID").val() +"&functionResultID="+$('.functionID').val()+ "&modalType="+$(this).attr("modaltype") +"&closingTags="+$('#closingTags').val();
         	$.fn.CallPageRequest( url , "addFunction");
         }
 	}
