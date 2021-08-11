@@ -10,8 +10,10 @@
 
     @if (Model.SectionType != AppUtility.MenuItems.Operations)
     {
+        var productNameRows = Model.Requests[0].Product.ProductName != null ? Math.Ceiling((float)(Model.Requests[0].Product.ProductName.Length) / 30) : 1;
         <div class="modal-product-title" style=" margin-left: 2rem !important">
-            <textarea asp-for="Requests[0].Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name name mark-readonly" disabled placeholder="(item name)" rows="1" cols="50" maxlength="150" style="resize:none;"></textarea>
+            <textarea asp-for="Requests[0].Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name name mark-readonly" disabled
+                       placeholder="(item name)" rows="@productNameRows" cols="50" maxlength="150" style="resize: none;"></textarea>
             <span asp-validation-for="Requests[0].Product.ProductName" class="text-danger-centarix"></span>
 
         </div>
