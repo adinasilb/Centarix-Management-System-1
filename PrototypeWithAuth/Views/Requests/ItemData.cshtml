@@ -70,13 +70,13 @@
         }
         @if ((Model.ModalType.Equals(AppUtility.RequestModalType.Summary) || Model.Requests.FirstOrDefault().RequestStatusID == 3 || Model.RequestStatusID == 7) && Model.SectionType != AppUtility.MenuItems.Operations )
         {
-            <div id="location" class="tab-pane fade @showLocation" value="2">
+            <div id="location" class="tab-pane fade request-location @showLocation" value="2">
                 @{await Html.RenderPartialAsync("~/Views/Requests/_LocationTab.cshtml", Model); }
             </div>
         }
         @if (!Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.IsProprietary && Model.SectionType != AppUtility.MenuItems.Operations && requestCategoryType != 2)
         {
-            <div id="price" class="tab-pane fade @showPrice" value="3">
+            <div id="price" class="tab-pane fade request-price @showPrice" value="3">
                 @{await Html.RenderPartialAsync("~/Views/Requests/_PriceTab.cshtml", Model); }
             </div>
         }
