@@ -1,13 +1,61 @@
 ﻿@model PrototypeWithAuth.ViewModels.FieldViewModel
 @using PrototypeWithAuth.AppData
+@using PrototypeWithAuth.ViewModels
 
-<label class="control-label">@Model.Header</label>
+@{
+    var IDBeginning = "FieldViewModels_" + Model.ListNumber + "__";
+    var NameBeginning = "FieldViewModels[" + Model.ListNumber + "].";
+    var TestHeaderIDID = IDBeginning + nameof(Model.TestHeader) + "_" + nameof(Model.TestHeader.TestHeaderID);
+    var TestHeaderIDName = NameBeginning + nameof(Model.TestHeader) + "." + nameof(Model.TestHeader.TestHeaderID);
+    var TestHeaderNameID = IDBeginning + nameof(Model.TestHeader) + "_" + nameof(Model.TestHeader.Name);
+    var TestHeaderNameName = NameBeginning + nameof(Model.TestHeader) + "." + nameof(Model.TestHeader.Name);
+    var DataTypeEnumID = IDBeginning + nameof(Model.DataTypeEnum);
+    var DataTypeEnumName = NameBeginning + nameof(Model.DataTypeEnum);
+    var TestIDID = IDBeginning + nameof(Model.TestID);
+    var TestIDName = NameBeginning + nameof(Model.TestID);
+    var StringID = IDBeginning + nameof(Model.String);
+    var StringName = NameBeginning + nameof(Model.String);
+    var TestValueID = IDBeginning + nameof(Model.TestValueID);
+    var TestValueName = NameBeginning + nameof(Model.TestValueID);
+    var DoubleID = IDBeginning + nameof(Model.Double);
+    var DoubleName = NameBeginning + nameof(Model.Double);
+    var DateTimeID = IDBeginning + nameof(Model.DateTime);
+    var DateTimeName = NameBeginning + nameof(Model.DateTime);
+    var BoolID = IDBeginning + nameof(Model.Bool);
+    var BoolName = NameBeginning + nameof(Model.Bool);
+    var FileID = IDBeginning + nameof(Model.File);
+    var FileName = NameBeginning + nameof(Model.File);
+}
+
+<input type="hidden" asp-for="TestID" value="@Model.TestID" id="@TestIDID" name="@TestIDName" />
+<input type="hidden" asp-for="TestValueID" value="@Model.TestValueID" id="@TestValueID" name="@TestValueName" />
+<input type="hidden" asp-for="TestHeader.TestHeaderID" value="@Model.TestHeader.TestHeaderID" id="@TestHeaderIDID" name="@TestHeaderIDName" />
+<input type="hidden" asp-for="TestHeader.Name" value="@Model.TestHeader.Name" id="@TestHeaderNameID" name="@TestHeaderNameName" />
+<input type="hidden" asp-for="DataTypeEnum" value="@Model.DataTypeEnum" id="@DataTypeEnumID" name="@DataTypeEnumName" />
+
+<label class="control-label">@Model.TestHeader.Name</label>
 @{
     switch (Model.DataTypeEnum)
     {
         case AppUtility.DataTypeEnum.Double:
-            <input asp-for="Double" class="form-control-plaintext border-bottom" />
+            <input asp-for="Double" id="@DoubleID" name="@DoubleName" value="@Model.Double" class="form-control-plaintext border-bottom" />
             <span asp-validation-for="Double" class="text-danger-centarix mark-readonly"></span>
+            break;
+        case AppUtility.DataTypeEnum.String:
+            <input asp-for="String" id="@StringID" name="@StringName" value="@Model.String" class="form-control-plaintext border-bottom" />
+            <span asp-validation-for="String" class="text-danger-centarix mark-readonly"></span>
+            break;
+        case AppUtility.DataTypeEnum.DateTime:
+            <input asp-for="DateTime" id="@DateTimeID" name="@DateTimeName" value="@Model.DateTime" class="form-control-plaintext border-bottom" />
+            <span asp-validation-for="DateTime" class="text-danger-centarix mark-readonly"></span>
+            break;
+        case AppUtility.DataTypeEnum.Bool:
+            <input asp-for="Bool" id="@BoolID" name="@BoolName" value="@Model.Bool" class="form-control-plaintext border-bottom" />
+            <span asp-validation-for="Bool" class="text-danger-centarix mark-readonly"></span>
+            break;
+        case AppUtility.DataTypeEnum.File:
+            <input asp-for="File" id="@FileID" name="@FileName" value="@Model.File" class="form-control-plaintext border-bottom" />
+            <span asp-validation-for="File" class="text-danger-centarix mark-readonly"></span>
             break;
     }
 }

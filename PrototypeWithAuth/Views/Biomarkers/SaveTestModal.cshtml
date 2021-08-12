@@ -42,7 +42,14 @@
             type: "POST",
             cache: false,
             success: function (data) {
-                $.fn.OpenModal('save-test-modal', 'save-bio-test-modal', data);
+                $(".testvalues").html(data);
+                $.fn.CloseModal('save-bio-test-modal');
+                //$('.edit-mode-input').data("val", false);
+                $(".edit-mode-input").prop("checked", false);
+                var editLabel = $(".edit-mode-label");
+                editLabel.text("Edit Mode Off");
+                editLabel.removeClass("on");
+                editLabel.addClass("off")
             }
         });
     });

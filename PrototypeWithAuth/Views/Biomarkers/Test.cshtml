@@ -5,11 +5,25 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 <script src="~/js/biomarkerssave.js"></script>
+@{ var listNumber = 0;}
 <form action="" method="POST" enctype="multipart/form-data" class="test-forms on-form-modal bio-form" id="myForm">
     @Html.HiddenFor(m => m.ExperimentEntry.ExperimentEntryID)
     @Html.HiddenFor(m => m.ExperimentEntry.ParticipantID)
     @Html.HiddenFor(m => m.ExperimentEntry.SiteID)
     @Html.HiddenFor(m => m.ExperimentEntry.VisitNumber)
+    @Html.HiddenFor(m => m.ExperimentEntry.Participant.ExperimentID)
+    @Html.HiddenFor(m => m.ExperimentID)
+
+    @*@for (int e = 0; e < Model.FieldViewModels.Count; e++)
+            {
+        <div class="fieldviewmodelshiddenfor">
+            @Html.HiddenFor(m => m.FieldViewModels[e].DataTypeEnum)
+            @Html.HiddenFor(m => m.FieldViewModels[e].String)
+            @Html.HiddenFor(m => m.FieldViewModels[e].FieldID)
+            @Html.HiddenFor(m => m.FieldViewModels[e].TestHeader.TestHeaderID)
+            @Html.HiddenFor(m => m.FieldViewModels[e].TestHeader.Name)
+        </div>
+            }*@
     <div class="row under-row-margin">
         <div class="col-6">
             @{ await Html.RenderPartialAsync("_participantsheader", Model.ExperimentEntry.Participant);}
@@ -38,7 +52,7 @@
                 <div class="switch col-12 switch-margin">
                     <label>
                         <label class="edit-mode-label on">edit mode on</label>
-                        <input type="checkbox" class="biomarkers-color biomarkers-test edit-mode-input" checked value="true" productID="" name="edit">
+                        <input type="checkbox" class="biomarkers-color biomarkers-test edit-mode-input" checked="checked" value="true" productID="" name="edit">
                         <span class="lever"></span>
                     </label>
                 </div>
@@ -54,8 +68,9 @@
                     @for (int t = 0; t < Model.Tests.Count; t++)
                     {
                         @Html.HiddenFor(m => m.Tests[t].TestID);
-                        <li class="@classes">@Model.Tests[t].Name</li>
+                        <li class="@classes" listnumber="@listNumber" testid="@Model.Tests[t].TestID">@Model.Tests[t].Name</li>
                         classes = origClasses;
+                        listNumber++;
                     }
                 </ul>
             </div>
@@ -64,7 +79,8 @@
                     TestValuesViewModel testValuesViewModel = new TestValuesViewModel()
                     {
                         Test = Model.Tests.FirstOrDefault(),
-                        TestValues = Model.TestValues
+                        TestValues = Model.TestValues,
+                        ListNumber = 0
                     };
                     await Html.RenderPartialAsync("_TestValues", testValuesViewModel);
                 }
@@ -72,3 +88,19 @@
         </div>
     </div>
 </form>
+
+<script>
+    $(".biomarkers-test-name").on("click", function (e) {
+        $.ajax({
+            async: true,
+            url: "/Biomarkers/_TestValues?TestID=" + $(this).attr("testid") + "&ListNumber=0&SiteID=" + /*$(this).attr("listnumber")*/ + $("#ExperimentEntry_SiteID").val() + "&ExperimentID=" + $("#ExperimentEntry_Participant_ExperimentID").val() + "&ExperimentEntryID=" + $("#ExperimentEntry_ExperimentEntryID").val(),
+            type: 'GET',
+            cache: false,
+            success: function (data) {
+                $(".testvalues").html(data);
+            }
+        });
+        $(".biomarkers-test-name").removeClass("selected");
+        $(this).addClass("selected");
+    });
+</script>

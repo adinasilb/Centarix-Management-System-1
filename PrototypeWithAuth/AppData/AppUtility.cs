@@ -174,6 +174,7 @@ namespace PrototypeWithAuth.AppData
         { Request, Resource, Protocol }
         public enum GlobalInfoType { ExchangeRate, LoginUpdates, LastProtocolLine }
         public enum DataTypeEnum { String, Double, DateTime, Bool, File }
+        public enum DataCalculation { BMI }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");

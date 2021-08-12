@@ -16,5 +16,7 @@ namespace PrototypeWithAuth.Models
         public string Type { get; set; }
         public string List { get; set; }
         public int SequencePosition { get; set; }
+        public bool IsSkip { get; set; }
+        public string Calculation { get; set; }
     }
 }

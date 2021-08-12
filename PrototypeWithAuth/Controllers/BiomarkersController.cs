@@ -87,6 +87,7 @@ namespace PrototypeWithAuth.Controllers
             _2InsertSites();
             _3Add02TestsBloodPressure();
             _4InsertECGTest();
+            _5InsertAnthropometryTest();
             return RedirectToAction("HumanTrialsList");
         }
 
@@ -327,28 +328,28 @@ namespace PrototypeWithAuth.Controllers
             {
                 Name = "SDNN",
                 Type = AppUtility.DataTypeEnum.Double.ToString(),
-                SequencePosition = 1,
+                SequencePosition = 2,
                 TestGroupID = tgId,
             };
             var rnsdd = new TestHeader()
             {
                 Name = "RNSDD",
                 Type = AppUtility.DataTypeEnum.Double.ToString(),
-                SequencePosition = 1,
+                SequencePosition = 3,
                 TestGroupID = tgId,
             };
             var sdsd = new TestHeader()
             {
                 Name = "SDSD",
                 Type = AppUtility.DataTypeEnum.Double.ToString(),
-                SequencePosition = 1,
+                SequencePosition = 4,
                 TestGroupID = tgId,
             };
             var file = new TestHeader()
             {
                 Name = "File",
                 Type = AppUtility.DataTypeEnum.File.ToString(),
-                SequencePosition = 1,
+                SequencePosition = 5,
                 TestGroupID = tgId,
             };
             _context.Add(avgHr);
@@ -357,6 +358,110 @@ namespace PrototypeWithAuth.Controllers
             _context.Add(sdsd);
             _context.Add(file);
             _context.SaveChanges();
+        }
+
+        public void _5InsertAnthropometryTest()
+        {
+            Test test = new Test()
+            {
+                Name = "Anthropometry",
+                SiteID = _context.Sites.Where(s => s.Name == "O2").Select(s => s.SiteID).FirstOrDefault()
+            };
+            _context.Add(test);
+            _context.SaveChanges();
+            var testId = _context.Tests.Where(t => t.Name == "Anthropometry").Select(t => t.TestID).FirstOrDefault();
+            var experimentTest = new ExperimentTest()
+            {
+                TestID = testId,
+                ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex1").Select(e => e.ExperimentID).FirstOrDefault()
+            };
+            var experimentTest2 = new ExperimentTest()
+            {
+                TestID = testId,
+                ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex2").Select(e => e.ExperimentID).FirstOrDefault()
+            };
+            _context.Add(experimentTest);
+            _context.Add(experimentTest2);
+            _context.SaveChanges(); var testoutergroup = new TestOuterGroup()
+            {
+                IsNone = true,
+                TestID = testId,
+                SequencePosition = 1
+            };
+            _context.Add(testoutergroup);
+            _context.SaveChanges();
+            var testgroup = new TestGroup()
+            {
+                IsNone = true,
+                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                    .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                SequencePosition = 1
+            };
+            _context.Add(testgroup);
+            _context.SaveChanges();
+            var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+            var weight = new TestHeader()
+            {
+                Name = "Weight",
+                Type = AppUtility.DataTypeEnum.Double.ToString(),
+                SequencePosition = 1,
+                TestGroupID = tgId,
+            };
+            var height = new TestHeader()
+            {
+                Name = "Height",
+                Type = AppUtility.DataTypeEnum.Double.ToString(),
+                SequencePosition = 2,
+                TestGroupID = tgId,
+            };
+            var bodyFat = new TestHeader()
+            {
+                Name = "Body Fat (%)",
+                Type = AppUtility.DataTypeEnum.Double.ToString(),
+                SequencePosition = 3,
+                TestGroupID = tgId,
+            };
+            var visceralFat = new TestHeader()
+            {
+                Name = "Visceral Fat (%)",
+                Type = AppUtility.DataTypeEnum.Double.ToString(),
+                SequencePosition = 4,
+                TestGroupID = tgId,
+            };
+            var muscleMass = new TestHeader()
+            {
+                Name = "MuscleMass",
+                Type = AppUtility.DataTypeEnum.Double.ToString(),
+                SequencePosition = 5,
+                TestGroupID = tgId,
+            };
+            var skip = new TestHeader()
+            {
+                IsSkip = true,
+                SequencePosition = 6
+            };
+            var weightCircumferance = new TestHeader()
+            {
+                Name = "Waist Circumference (cm)",
+                Type = AppUtility.DataTypeEnum.Double.ToString(),
+                SequencePosition = 7,
+                TestGroupID = tgId
+            };
+            var underBellyCircumferance = new TestHeader()
+            {
+                Name = "Under Belly Circumference (cm)",
+                Type = AppUtility.DataTypeEnum.Double.ToString(),
+                SequencePosition = 8,
+                TestGroupID = tgId
+            };
+            var bmi = new TestHeader()
+            {
+                Name = "BMI",
+                Calculation = AppUtility.DataCalculation.BMI.ToString(),
+                SequencePosition = 9,
+                TestGroupID = tgId
+            };
         }
 
         [HttpGet]
@@ -747,9 +852,25 @@ namespace PrototypeWithAuth.Controllers
             TestViewModel testViewModel = new TestViewModel()
             {
                 ExperimentEntry = ee,
+                ExperimentID = ee.Participant.ExperimentID,
                 Tests = tests,
-                TestValues = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ID 
-                                && tv.TestHeader.TestGroup.TestOuterGroup.TestID == tests.FirstOrDefault().TestID).ToList()
+                TestValues = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ID
+                                && tv.TestHeader.TestGroup.TestOuterGroup.TestID == tests.FirstOrDefault().TestID).ToList(),
+                //FieldViewModels = new List<FieldViewModel>()
+                //{
+                //    new FieldViewModel()
+                //    {
+                //        DataTypeEnum = AppUtility.DataTypeEnum.String,
+                //        String = "Hello World",
+                //        TestHeader = _context.TestHeaders.FirstOrDefault()
+                //    },
+                //    new FieldViewModel()
+                //    {
+                //        DataTypeEnum = AppUtility.DataTypeEnum.Bool,
+                //        String = "False",
+                //        TestHeader = _context.TestHeaders.FirstOrDefault()
+                //    }
+                //}
             };
             return View(testViewModel);
         }
@@ -759,9 +880,66 @@ namespace PrototypeWithAuth.Controllers
             return PartialView();
         }
 
-        public async Task SaveTests(TestViewModel testViewModel, TestValuesViewModel testValuesViewModel, List<FieldViewModel> fieldViewModels)
+        public async Task<ActionResult> SaveTests(TestViewModel testViewModel, TestValuesViewModel testValuesViewModel, List<FieldViewModel> fieldViewModels)
         {
+            foreach (var fieldTest in testViewModel.FieldViewModels)
+            {
+                TestValue testValue = new TestValue()
+                {
+                };
+                if (fieldTest.TestValueID != 0)
+                {
+                    testValue = _context.TestValues.Where(tv => tv.TestValueID == fieldTest.TestValueID).FirstOrDefault();
+                }
+                else
+                {
+                    testValue.ExperimentEntryID = testViewModel.ExperimentEntry.ExperimentEntryID;
+                    testValue.TestHeaderID = fieldTest.TestHeader.TestHeaderID;
+                }
+                switch (fieldTest.DataTypeEnum)
+                {
+                    case AppUtility.DataTypeEnum.Double:
+                        testValue.Value = fieldTest.Double.ToString();
+                        break;
+                    case AppUtility.DataTypeEnum.String:
+                        testValue.Value = fieldTest.String;
+                        break;
+                    case AppUtility.DataTypeEnum.DateTime:
+                        testValue.Value = fieldTest.DateTime.ToString();
+                        break;
+                    case AppUtility.DataTypeEnum.Bool:
+                        testValue.Value = fieldTest.Bool.ToString();
+                        break;
+                    case AppUtility.DataTypeEnum.File:
+                        //save file here and save name of file
+                        testValue.Value = fieldTest.File.ToString();
+                        break;
+                }
+                _context.Update(testValue);
+            }
             var e = 1;
+            var entries = _context.ChangeTracker.Entries();
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("_TestValues", new { TestID = testViewModel.FieldViewModels.FirstOrDefault().TestID, ListNumber = 0, SiteID = testViewModel.ExperimentEntry.SiteID, ExperimentID = testViewModel.ExperimentID, ExperimentEntryID = testViewModel.ExperimentEntry.ExperimentEntryID });
+        }
+
+        public async Task<ActionResult> _TestValues(int TestID, int ListNumber, int SiteID, int ExperimentID, int ExperimentEntryID)
+        {
+            var test = _context.Tests.Where(t => t.TestID == TestID).FirstOrDefault();
+            var tests = _context.Tests.Where(t => t.SiteID == SiteID)
+                     .Include(t => t.TestOuterGroups).ThenInclude(tog => tog.TestGroups).ThenInclude(tg => tg.TestHeaders)
+                     .Where(t => t.ExperimentTests.Select(et => et.ExperimentID).Contains(ExperimentID))
+                     .ToList();
+            TestValuesViewModel testValuesViewModel = new TestValuesViewModel()
+            {
+                ListNumber = ListNumber,
+                Test = test,
+                TestValues = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ExperimentEntryID
+                               && tv.TestHeader.TestGroup.TestOuterGroup.TestID == test.TestID).ToList()
+            };
+
+            return PartialView(testValuesViewModel);
         }
     }
 }

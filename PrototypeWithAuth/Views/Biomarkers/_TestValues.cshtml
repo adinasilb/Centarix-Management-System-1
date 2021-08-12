@@ -2,11 +2,63 @@
 @using PrototypeWithAuth.ViewModels
 @using PrototypeWithAuth.AppData
 
+@{ var listNumber = Model.ListNumber; }
 <div class="row under-row-margin">
     <div class="col-9 border-bottom heading-1">
         @Model.Test.Name
     </div>
 </div>
+
+@{
+    @functions{
+        FieldViewModel GetFieldViewModel(TestHeader header, int ListNumber)
+
+        {
+            AppUtility.DataTypeEnum dataType;
+            Enum.TryParse(header.Type, out dataType);
+            FieldViewModel fieldViewModel = new FieldViewModel()
+            {
+                TestHeader = header,
+                DataTypeEnum = dataType,
+                ListNumber = ListNumber,
+                TestID = Model.Test.TestID
+            };
+            TestValue testvalue = null;
+            if (Model.TestValues.Where(tv => tv.TestHeaderID == header.TestHeaderID).Any())
+            {
+                testvalue = Model.TestValues.Where(tv => tv.TestHeaderID == header.TestHeaderID).FirstOrDefault();
+            }
+            var data = testvalue != null ? testvalue.Value : null;
+            fieldViewModel.TestValueID = testvalue != null ? testvalue.TestValueID : 0;
+            switch (dataType)
+            {
+                case AppUtility.DataTypeEnum.Double:
+                    var dbl = data == null ? "0" : data;
+                    fieldViewModel.Double = Convert.ToDouble(dbl);
+                    break;
+                case AppUtility.DataTypeEnum.String:
+                    var str = data == null ? "" : data;
+                    fieldViewModel.String = str;
+                    break;
+                case AppUtility.DataTypeEnum.DateTime:
+                    var dt = data == null ? DateTime.Now.GetElixirDateFormat() : data;
+                    fieldViewModel.DateTime = Convert.ToDateTime(dt);
+                    break;
+                case AppUtility.DataTypeEnum.Bool:
+                    var boolean = data == null ? "0" : data;
+                    fieldViewModel.Bool = Convert.ToBoolean(boolean);
+                    break;
+                case AppUtility.DataTypeEnum.File:
+                    //fieldViewModel.File
+                    break;
+            }
+            return fieldViewModel;
+            //await Html.RenderPartialAsync("_FieldView", fieldViewModel);
+            //listNumber++;
+        }
+    }
+}
+
 @if (Model.Test.TestOuterGroups != null)
 {
     <div class="row under-row-margin">
@@ -18,7 +70,78 @@
                     @Model.Test.TestOuterGroups[0].Name
                 </span>
             }
+            @if (Model.Test.TestOuterGroups[0].TestGroups.Count == 1)
+            {
+                if (Model.Test.TestOuterGroups[0].TestGroups[0].IsNone && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 5)
+                {
+                    <div class="col-4 px-4">
+                        <div class="row p-3">
+                            @{ var header1 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 1).FirstOrDefault();}
 
+                            <div class="row p-3">
+                                @{
+                                    var fieldViewModel = GetFieldViewModel(header1, listNumber);
+                                    listNumber++;
+                                    Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                }
+                            </div>
+                        </div>
+                        <div class="row p-3">
+                            @{ var header2 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 2).FirstOrDefault();}
+
+                            <div class="row p-3">
+                                @{
+                                    fieldViewModel = GetFieldViewModel(header2, listNumber);
+                                    listNumber++;
+                                    Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4 px-4">
+                        <div class="row p-3">
+                            @{ var header3 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 3).FirstOrDefault();}
+
+                            <div class="row p-3">
+                                @{
+                                    fieldViewModel = GetFieldViewModel(header3, listNumber);
+                                    listNumber++;
+                                    Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                }
+                            </div>
+                        </div>
+                        <div class="row p-3">
+                            @{ var header4 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 4).FirstOrDefault();}
+
+                            <div class="row p-3">
+                                @{
+                                    fieldViewModel = GetFieldViewModel(header4, listNumber);
+                                    listNumber++;
+                                    Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+                if (Model.Test.TestOuterGroups[0].TestGroups[0].IsNone && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 99 && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.Calculation != null).Any())
+                {
+                    <div class="col-8 px-4">
+                        @foreach (var testheader in Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.OrderBy(th => th.SequencePosition))
+                        {
+                            <div class="col-6">
+                                @{
+                                    if (!testheader.IsSkip)
+                                    {
+                                        var fieldViewModel = GetFieldViewModel(testheader, listNumber);
+                                        listNumber++;
+                                        Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                    }
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            }
             @if (Model.Test.TestOuterGroups[0].TestGroups.Count == 3)
             {
                 @foreach (var tog in Model.Test.TestOuterGroups[0].TestGroups.OrderBy(tg => tg.SequencePosition))
@@ -33,10 +156,18 @@
                                     Enum.TryParse(header.Type, out dataType);
                                     FieldViewModel fieldViewModel = new FieldViewModel()
                                     {
-                                        Header = header.Name,
-                                        DataTypeEnum = dataType
+                                        TestHeader = header,
+                                        DataTypeEnum = dataType,
+                                        ListNumber = listNumber,
+                                        TestID = Model.Test.TestID
                                     };
-                                    var data = Model.TestValues.Count > 0 ? Model.TestValues.Where(tv => tv.TestHeaderID == header.TestHeaderID).FirstOrDefault().Value : null;
+                                    TestValue testvalue = null;
+                                    if (Model.TestValues.Where(tv => tv.TestHeaderID == header.TestHeaderID).Any())
+                                    {
+                                        testvalue = Model.TestValues.Where(tv => tv.TestHeaderID == header.TestHeaderID).FirstOrDefault();
+                                    }
+                                    var data = testvalue != null ? testvalue.Value : null;
+                                    fieldViewModel.TestValueID = testvalue != null ? testvalue.TestValueID : 0;
                                     switch (dataType)
                                     {
                                         case AppUtility.DataTypeEnum.Double:
@@ -59,7 +190,8 @@
                                             //fieldViewModel.File
                                             break;
                                     }
-                                    await Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                    Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                    listNumber++;
                                 }
                             </div>
                         }
