@@ -362,116 +362,125 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task _5InsertAnthropometryTest()
         {
-            Test test = new Test()
+            try
             {
-                Name = "Anthropometry",
-                SiteID = _context.Sites.Where(s => s.Name == "O2").Select(s => s.SiteID).FirstOrDefault()
-            };
-            _context.Add(test);
-            _context.SaveChanges();
-            var testId = _context.Tests.Where(t => t.Name == "Anthropometry").Select(t => t.TestID).FirstOrDefault();
-            var experimentTest = new ExperimentTest()
+
+                Test test = new Test()
+                {
+                    Name = "Anthropometry",
+                    SiteID = _context.Sites.Where(s => s.Name == "O2").Select(s => s.SiteID).FirstOrDefault()
+                };
+                _context.Add(test);
+                _context.SaveChanges();
+                var testId = _context.Tests.Where(t => t.Name == "Anthropometry").Select(t => t.TestID).FirstOrDefault();
+                var experimentTest = new ExperimentTest()
+                {
+                    TestID = testId,
+                    ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex1").Select(e => e.ExperimentID).FirstOrDefault()
+                };
+                var experimentTest2 = new ExperimentTest()
+                {
+                    TestID = testId,
+                    ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex2").Select(e => e.ExperimentID).FirstOrDefault()
+                };
+                _context.Add(experimentTest);
+                _context.Add(experimentTest2);
+                _context.SaveChanges(); var testoutergroup = new TestOuterGroup()
+                {
+                    IsNone = true,
+                    TestID = testId,
+                    SequencePosition = 1
+                };
+                _context.Add(testoutergroup);
+                _context.SaveChanges();
+                var testgroup = new TestGroup()
+                {
+                    IsNone = true,
+                    TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                        .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                    SequencePosition = 1
+                };
+                _context.Add(testgroup);
+                _context.SaveChanges();
+                var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                    .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+                var weight = new TestHeader()
+                {
+                    Name = "Weight",
+                    Type = AppUtility.DataTypeEnum.Double.ToString(),
+                    SequencePosition = 1,
+                    TestGroupID = tgId,
+                };
+                var height = new TestHeader()
+                {
+                    Name = "Height",
+                    Type = AppUtility.DataTypeEnum.Double.ToString(),
+                    SequencePosition = 2,
+                    TestGroupID = tgId,
+                };
+                var bodyFat = new TestHeader()
+                {
+                    Name = "Body Fat (%)",
+                    Type = AppUtility.DataTypeEnum.Double.ToString(),
+                    SequencePosition = 3,
+                    TestGroupID = tgId,
+                };
+                var visceralFat = new TestHeader()
+                {
+                    Name = "Visceral Fat (%)",
+                    Type = AppUtility.DataTypeEnum.Double.ToString(),
+                    SequencePosition = 4,
+                    TestGroupID = tgId,
+                };
+                var muscleMass = new TestHeader()
+                {
+                    Name = "MuscleMass",
+                    Type = AppUtility.DataTypeEnum.Double.ToString(),
+                    SequencePosition = 5,
+                    TestGroupID = tgId,
+                };
+                var skip = new TestHeader()
+                {
+                    IsSkip = true,
+                    SequencePosition = 6,
+                    TestGroupID = tgId
+                };
+                var waistCircumferance = new TestHeader()
+                {
+                    Name = "Waist Circumference (cm)",
+                    Type = AppUtility.DataTypeEnum.Double.ToString(),
+                    SequencePosition = 7,
+                    TestGroupID = tgId
+                };
+                var underBellyCircumferance = new TestHeader()
+                {
+                    Name = "Under Belly Circumference (cm)",
+                    Type = AppUtility.DataTypeEnum.Double.ToString(),
+                    SequencePosition = 8,
+                    TestGroupID = tgId
+                };
+                var bmi = new TestHeader()
+                {
+                    Name = "BMI",
+                    Calculation = AppUtility.DataCalculation.BMI.ToString(),
+                    SequencePosition = 9,
+                    TestGroupID = tgId
+                };
+                _context.Update(weight);
+                _context.Update(height);
+                _context.Update(bodyFat);
+                _context.Update(visceralFat);
+                _context.Update(muscleMass);
+                _context.Update(skip);
+                _context.Update(waistCircumferance);
+                _context.Update(underBellyCircumferance);
+                _context.Update(bmi);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
             {
-                TestID = testId,
-                ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex1").Select(e => e.ExperimentID).FirstOrDefault()
-            };
-            var experimentTest2 = new ExperimentTest()
-            {
-                TestID = testId,
-                ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex2").Select(e => e.ExperimentID).FirstOrDefault()
-            };
-            _context.Add(experimentTest);
-            _context.Add(experimentTest2);
-            _context.SaveChanges(); var testoutergroup = new TestOuterGroup()
-            {
-                IsNone = true,
-                TestID = testId,
-                SequencePosition = 1
-            };
-            _context.Add(testoutergroup);
-            _context.SaveChanges();
-            var testgroup = new TestGroup()
-            {
-                IsNone = true,
-                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
-                    .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
-                SequencePosition = 1
-            };
-            _context.Add(testgroup);
-            _context.SaveChanges();
-            var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
-                .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
-            var weight = new TestHeader()
-            {
-                Name = "Weight",
-                Type = AppUtility.DataTypeEnum.Double.ToString(),
-                SequencePosition = 1,
-                TestGroupID = tgId,
-            };
-            var height = new TestHeader()
-            {
-                Name = "Height",
-                Type = AppUtility.DataTypeEnum.Double.ToString(),
-                SequencePosition = 2,
-                TestGroupID = tgId,
-            };
-            var bodyFat = new TestHeader()
-            {
-                Name = "Body Fat (%)",
-                Type = AppUtility.DataTypeEnum.Double.ToString(),
-                SequencePosition = 3,
-                TestGroupID = tgId,
-            };
-            var visceralFat = new TestHeader()
-            {
-                Name = "Visceral Fat (%)",
-                Type = AppUtility.DataTypeEnum.Double.ToString(),
-                SequencePosition = 4,
-                TestGroupID = tgId,
-            };
-            var muscleMass = new TestHeader()
-            {
-                Name = "MuscleMass",
-                Type = AppUtility.DataTypeEnum.Double.ToString(),
-                SequencePosition = 5,
-                TestGroupID = tgId,
-            };
-            var skip = new TestHeader()
-            {
-                IsSkip = true,
-                SequencePosition = 6
-            };
-            var waistCircumferance = new TestHeader()
-            {
-                Name = "Waist Circumference (cm)",
-                Type = AppUtility.DataTypeEnum.Double.ToString(),
-                SequencePosition = 7,
-                TestGroupID = tgId
-            };
-            var underBellyCircumferance = new TestHeader()
-            {
-                Name = "Under Belly Circumference (cm)",
-                Type = AppUtility.DataTypeEnum.Double.ToString(),
-                SequencePosition = 8,
-                TestGroupID = tgId
-            };
-            var bmi = new TestHeader()
-            {
-                Name = "BMI",
-                Calculation = AppUtility.DataCalculation.BMI.ToString(),
-                SequencePosition = 9,
-                TestGroupID = tgId
-            };
-            _context.Add(weight);
-            _context.Add(height);
-            _context.Add(bodyFat);
-            _context.Add(visceralFat);
-            _context.Add(muscleMass);
-            _context.Add(skip);
-            _context.Add(waistCircumferance);
-            _context.Add(underBellyCircumferance);
-            _context.Add(bmi);
-            await _context.SaveChangesAsync();
+
+            }
         }
 
         [HttpGet]
