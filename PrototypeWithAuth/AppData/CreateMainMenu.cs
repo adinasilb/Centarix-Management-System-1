@@ -35,8 +35,8 @@ namespace PrototypeWithAuth.AppData
                     menuID = 2,
                     MenuDescription = AppUtility.MenuItems.Protocols.ToString(),
                     MenuViewName = "Protocols",
-                    ControllerName = "Protocols",
-                    ActionName = "CurrentProtocols",
+                    ControllerName = "",
+                    ActionName = "",
                     MenuImageURL = "/images/css/main_menu_icons/protocols.png",
                     SmallMenuImageURL = "/images/css/main_menu_small_icons/protocols_menu_button.png"
                 },
@@ -62,8 +62,8 @@ namespace PrototypeWithAuth.AppData
                     menuID = 4,
                     MenuDescription = AppUtility.MenuItems.Biomarkers.ToString(),
                     MenuViewName = "Biomarkers",
-                    ControllerName = "Biomarkers",
-                    ActionName = "HumanTrialsList",
+                    ControllerName = "",
+                    ActionName = "",
                     MenuImageURL = "/images/css/main_menu_icons/biomarkers.png",
                     SmallMenuImageURL = "/images/css/main_menu_small_icons/biomarkers_menu_button.png"
                 },
@@ -102,8 +102,8 @@ namespace PrototypeWithAuth.AppData
                     menuID = 8,
                     MenuDescription = AppUtility.MenuItems.Reports.ToString(),
                     MenuViewName = "Reports",
-                    ControllerName = "Expenses",
-                    ActionName = "SummaryPieCharts",
+                    ControllerName = "",
+                    ActionName = "",
                     MenuImageURL = "/images/css/main_menu_icons/expenses.png",
                     SmallMenuImageURL = "/images/css/main_menu_small_icons/reports_menu_button.png"
                 },

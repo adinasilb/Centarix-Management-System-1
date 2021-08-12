@@ -769,19 +769,19 @@ namespace PrototypeWithAuth.AppData
                 IconName = "icon-add_circle_outline-24px1",
                 Classes = Classes
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.Search) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
-            SidebarMenuItems.Add(new MenuItems()
-            {
-                Description = "Search",
-                Controller = "Vendors",
-                Action = "Search",
-                RouteValues = new RouteValueDictionary()
-                {
-                    {"SectionType", AppUtility.MenuItems.LabManagement }
-                },
-                IconName = "icon-zoom_in-24px-01",
-                Classes = Classes
-            });
+            //if (SidebarTitle == AppUtility.SidebarEnum.Search) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            //SidebarMenuItems.Add(new MenuItems()
+            //{
+            //    Description = "Search",
+            //    Controller = "Vendors",
+            //    Action = "Search",
+            //    RouteValues = new RouteValueDictionary()
+            //    {
+            //        {"SectionType", AppUtility.MenuItems.LabManagement }
+            //    },
+            //    IconName = "icon-zoom_in-24px-01",
+            //    Classes = Classes
+            //});
 
             return SidebarMenuItems;
         }
@@ -1111,19 +1111,19 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 IconName = "icon-add_circle_outline-24px1"
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.Search) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            SidebarMenuItems.Add(new MenuItems()
-            {
-                Description = "Search",
-                Controller = "Vendors",
-                Action = "Search",
-                RouteValues = new RouteValueDictionary()
-                {
-                    {"SectionType", AppUtility.MenuItems.Accounting }
-                },
-                Classes = CurrentClasses,
-                IconName = "icon-zoom_in-24px-01"
-            });
+            //if (SidebarTitle == AppUtility.SidebarEnum.Search) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            //SidebarMenuItems.Add(new MenuItems()
+            //{
+            //    Description = "Search",
+            //    Controller = "Vendors",
+            //    Action = "Search",
+            //    RouteValues = new RouteValueDictionary()
+            //    {
+            //        {"SectionType", AppUtility.MenuItems.Accounting }
+            //    },
+            //    Classes = CurrentClasses,
+            //    IconName = "icon-zoom_in-24px-01"
+            //});
 
             return SidebarMenuItems;
         }

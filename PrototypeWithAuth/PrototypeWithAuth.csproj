@@ -431,6 +431,8 @@
     <Compile Remove="Data\Migrations\20210805073330_UpdatedOldSubcategoryName.Designer.cs" />
     <Compile Remove="Data\Migrations\20210812103343_Test.cs" />
     <Compile Remove="Data\Migrations\20210812103343_Test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210812105534_Test.cs" />
+    <Compile Remove="Data\Migrations\20210812105534_Test.Designer.cs" />
   </ItemGroup>
 
 
