@@ -84,14 +84,15 @@
     });
 
 
-    $("form").off("click", ".results-tab").on("click", ".results-tab", function (e) {     
-      
-      
+    $(".results-tab").on("click", function (e) {
+       $(".only-results-tab").removeClass("d-none");      
     }); 
 
-    $("form").off("click", ".protocol-tab").on("click", ".protocol-tab", function (e) {     
-      
-      
+    $("form").off("click", ".next-tab:not(.results-tab)").on("click", ".next-tab:not(.results-tab)", function (e) {     
+      if($(".modalType").val() =="CheckListMode")
+      {
+        $(".only-results-tab").addClass("d-none");  
+      }
     }); 
 
     $(".saveLines").off("click").click(function (e) {

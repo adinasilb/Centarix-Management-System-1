@@ -37,7 +37,6 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click', ".
             console.log(functionSelect)
             changeToTriggerSelect = $(".text-editor")
         }
-
         else if ($(".results-tab").hasClass("active")) {
             var functionResultID = $(".function-resultID").val()
             functionSelect = $(".result-function[functionResultID=" + functionResultID + "]")
