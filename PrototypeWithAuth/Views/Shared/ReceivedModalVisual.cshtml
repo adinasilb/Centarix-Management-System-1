@@ -33,7 +33,10 @@
         @Html.HiddenFor(vm => vm.IsEditModalTable)
         @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
         {
-            locationSelected = "";
+            if(X == 0)
+            {
+                locationSelected = "";
+            }
             <tr class="p-0 m-0">
                 @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
                 {
