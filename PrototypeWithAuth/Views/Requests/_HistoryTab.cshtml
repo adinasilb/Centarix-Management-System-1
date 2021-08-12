@@ -16,7 +16,7 @@
                     Item Name
                 </th>
                 <th>
-                    Date
+                    Date Created
                 </th>
                 <th>
                     Owner
@@ -54,7 +54,7 @@
                         </a>
                     </td>
                     <td>
-                        @item.ParentRequest?.OrderDate.GetElixirDateFormat()
+                        @item.CreationDate.GetElixirDateFormat()
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.FirstName)&nbsp;
