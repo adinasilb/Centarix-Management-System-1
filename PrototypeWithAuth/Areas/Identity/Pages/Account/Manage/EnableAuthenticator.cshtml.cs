@@ -149,7 +149,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account.Manage
         {
             return string.Format(
                 AuthenticatorUriFormat,
-                _urlEncoder.Encode("PrototypeWithAuth"),
+                _urlEncoder.Encode("ElixirTest"),
                 _urlEncoder.Encode(email),
                 unformattedKey);
         }
