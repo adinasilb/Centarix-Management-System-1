@@ -153,6 +153,9 @@
             <input type="hidden" asp-for="Requests[0].Payments[i].CheckNumber" />
             <input type="hidden" asp-for="Requests[0].Payments[i].PaymentDate" />
             <input type="hidden" asp-for="Requests[0].Payments[i].PaymentID" />
+            <input type="hidden" asp-for="Requests[0].Payments[i].IsPaid" />
+            <input type="hidden" asp-for="Requests[0].Payments[i].HasInvoice" />
+            <input type="hidden" asp-for="Requests[0].Payments[i].CompanyAccount.CompanyBankName" />
             <div class="row">
                 <div class="col-3 pl-0">
                     <div class="form-group">
@@ -196,7 +199,7 @@
                 <div class="col-3 pl-0">
                     <div class="form-group">
                         <label class="control-label">Date</label>
-                        <input class="form-control-plaintext border-bottom  datepicker" type="text"  asp-format="@AppUtility.AspDateFormatString" asp-for="@payments[i].PaymentReferenceDate" disabled />
+                        <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-format="@AppUtility.AspDateFormatString" asp-for="@payments[i].PaymentReferenceDate" disabled />
                     </div>
                 </div>
             </div>

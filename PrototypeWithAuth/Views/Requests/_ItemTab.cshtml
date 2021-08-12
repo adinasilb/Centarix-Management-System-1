@@ -290,6 +290,7 @@
         <div class="row">
             @if (Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true)
             {
+                <input type ="hidden" asp-for="Requests[0].Payments[0].InvoiceID" />
                 <div class="col-md-3 ">
                     <label asp-for="Requests[0].Payments[0].Invoice.InvoiceNumber" class="control-label"></label>
                     <input asp-for="Requests[0].Payments[0].Invoice.InvoiceNumber" class="form-control-plaintext border-bottom @markReadOnlyClass" />
