@@ -1,6 +1,5 @@
 ﻿$(function () {
 	$(".ResourceNotesModal").on("click", function (e) {
-		alert("resource notes modal");
 		var url = "/Protocols/ResourceNotesModal";
 		$.ajax({
 			processData: false,
@@ -15,8 +14,6 @@
 					$.fn.CloseModal('resource-notes-modal');
 				}
 				else {
-					//eventually show error here on the modal
-					alert(error);
 				}
 			}
 		});
