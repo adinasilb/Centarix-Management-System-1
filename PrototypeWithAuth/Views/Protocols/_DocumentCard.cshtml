@@ -1,4 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.DocumentsModalViewModel
+@using PrototypeWithAuth.AppData 
 
 <div class="report-function my-3" functionReportid="@Model.ObjectID">
     <div class="card iframe-container document-border m-0 report-file-card" contenteditable="false" style="width:90px; height:150px;">
@@ -10,6 +11,11 @@
             {
                 iframeFilestring = "/images/powerpoint.png";
             }
+            var url = Url.Action("DeleteReportDocumentModal", "Protocols", new { FunctionReportID = Model.ObjectID });
+            if (Model.SectionType == AppUtility.MenuItems.Protocols)
+            {
+                url = Url.Action("DeleteResultsDocumentModal", "Protocols", new { FunctionResultID = Model.ObjectID });
+            }
         }
         <div class="card-body responsive-iframe-container p-0">
             <iframe src="@rootPath\/@iframeFilestring" title="View" class="responsive-iframe reports-iframe"
@@ -20,7 +26,7 @@
             <a href="@rootPath\/@Model.FileStrings[0]" target="_blank" class="mx-1  view-img">
                 <i class="icon-centarix-icons-09 protocols-color" style="font-size:1.5rem"></i>
             </a>
-            <a href="#" class="remove-function @Model.ObjectID report-file @Model.SectionType.ToString() mx-1" url="@Url.Action("DeleteReportDocumentModal", "Protocols", new { FunctionReportID = Model.ObjectID })">
+            <a href="#" class="remove-function @Model.ObjectID report-file @Model.SectionType.ToString() mx-1" url="@url">
                 <i style="font-size:1.5rem;" class="icon-delete-24px documents-delete-icon hover-bold protocols-color"></i>
             </a>
         </div>

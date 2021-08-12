@@ -103,9 +103,14 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click', ".
             }
         }
         else if ($(".results-tab").hasClass("active")) {
-            
+            if ($(this).hasClass("deleteDoc")) {
+                functionName = "DeleteResultsDocumentModal"
+                functionFormData = new FormData($(".deleteFunctionForm")[0]);
+            }
+            else{
+
                 functionName = "AddResultsFunctionModal?guid=" + $(".guid").val();
-            
+            }
             for (var pair of protocolFormData.entries()) {
                 functionFormData.append(pair[0], pair[1]);
             }

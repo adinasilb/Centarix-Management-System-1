@@ -1300,21 +1300,52 @@ namespace PrototypeWithAuth.Controllers
         {
             var functionResult = _context.FunctionResults.Where(fr => fr.ID == FunctionResultID).FirstOrDefault();
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == functionResult.FunctionTypeID).FirstOrDefault();
-            AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Reports;
+            AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.FunctionResults;
             string uploadReportsFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
             string uploadReportsFolder2 = Path.Combine(uploadReportsFolder, FunctionResultID.ToString());
-
-            var deleteDocumentViewModel = new DeleteReportDocumentViewModel()
+            var folderName = AppUtility.FolderNamesEnum.Files;
+            if (functionType.DescriptionEnum == AppUtility.ResultsFunctionTypes.AddImage.ToString())
             {
-                FunctionReport = functionReport,
-                ReportID = functionReport.ReportID
+                folderName = AppUtility.FolderNamesEnum.Pictures;
+            }
+            var deleteDocumentViewModel = new DeleteResultDocumentViewModel()
+            {
+                FunctionResult = functionResult,
+                ResultID = functionResult.ID
             };
 
             deleteDocumentViewModel.DocumentsInfo = new List<DocumentFolder>();
-            base.GetExistingFileStrings(deleteDocumentViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Files, parentFolderName, uploadReportsFolder2, FunctionReportID.ToString());
+            base.GetExistingFileStrings(deleteDocumentViewModel.DocumentsInfo, folderName, parentFolderName, uploadReportsFolder2, FunctionResultID.ToString());
             return PartialView(deleteDocumentViewModel);
         }
 
+
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> DeleteResultsDocumentModal(DeleteResultDocumentViewModel deleteDocumentViewModel, ProtocolInstance protocolInstance)
+        {
+            var protocolInstanceDB = _context.ProtocolInstances.Where(r => r.ProtocolInstanceID == deleteDocumentViewModel.ResultID).FirstOrDefault();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    deleteDocumentViewModel.FunctionResult.IsTemporaryDeleted = true;
+                    _context.Entry(deleteDocumentViewModel.FunctionResult).State = EntityState.Modified;
+                    protocolInstanceDB.TemporaryResultDescription = protocolInstanceDB.TemporaryResultDescription;
+                    _context.Update(protocolInstanceDB);
+
+                    await _context.SaveChangesAsync();
+                    base.DeleteTemporaryDocuments(AppUtility.ParentFolderName.FunctionResults, ObjectID: deleteDocumentViewModel.FunctionResult.ID);
+
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            return PartialView("_ResultsText", protocolInstanceDB);
+        }
 
 
 
