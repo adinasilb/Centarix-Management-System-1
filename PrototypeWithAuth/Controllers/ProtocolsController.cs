@@ -1311,7 +1311,7 @@ namespace PrototypeWithAuth.Controllers
             var deleteDocumentViewModel = new DeleteResultDocumentViewModel()
             {
                 FunctionResult = functionResult,
-                ResultID = functionResult.ID
+                ResultID = functionResult.ProtocolInstanceID
             };
 
             deleteDocumentViewModel.DocumentsInfo = new List<DocumentFolder>();
@@ -1331,7 +1331,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     deleteDocumentViewModel.FunctionResult.IsTemporaryDeleted = true;
                     _context.Entry(deleteDocumentViewModel.FunctionResult).State = EntityState.Modified;
-                    protocolInstanceDB.TemporaryResultDescription = protocolInstanceDB.TemporaryResultDescription;
+                    protocolInstanceDB.TemporaryResultDescription = protocolInstance.TemporaryResultDescription;
                     _context.Update(protocolInstanceDB);
 
                     await _context.SaveChangesAsync();
