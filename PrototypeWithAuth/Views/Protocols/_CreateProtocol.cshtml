@@ -86,6 +86,12 @@
                     <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveLines" value="Save">Save</button>
                 </div>
             </li>
+            <li class="only-results-tab @editMode @createMode  d-none li-function-bar">
+                <div class="h-100 d-flex ml-6" style=" align-items: center;">
+                    <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveResults" value="Save">Save</button>
+                </div>
+            </li>
+
             <li class="only-protocol-tab saving-spinner d-none">
                 <div class="spinner-border protocols-color" role="status">
                     <span class="sr-only"></span>Saving...
@@ -100,7 +106,7 @@
                     <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin start-protocol-fx " value="@Model.Protocol.ProtocolID">Start</button>
                 </div>
             </li>
-            @{ 
+            @{
                 var isChecked = "";
                 if (Model.ModalType == AppUtility.ProtocolModalType.Edit)
                 {

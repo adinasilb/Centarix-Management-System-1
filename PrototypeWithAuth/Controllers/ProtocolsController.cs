@@ -1135,12 +1135,13 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddResultsFunctionModal(int FunctionTypeID, int protocolInstanceID, int functionResultID, AppUtility.ProtocolModalType modalType )
+        public async Task<IActionResult> AddResultsFunctionModal(int FunctionTypeID, int protocolInstanceID, int functionResultID, AppUtility.ProtocolModalType modalType, string closingTags)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
             var viewmodel = new AddResultsFunctionViewModel
             {
                 ModalType = modalType,
+                ClosingTags = closingTags
             };
             if (functionResultID !=0)
             {
@@ -1172,14 +1173,14 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.ProtocolFunctionTypes.AddFile:
                 case AppUtility.ProtocolFunctionTypes.AddImage:
                     var folderName = AppUtility.FolderNamesEnum.Files;
-                    if (functionType.DescriptionEnum == AppUtility.ProtocolFunctionTypes.AddImage.ToString())
+                    if (functionType.DescriptionEnum == AppUtility.ResultsFunctionTypes.AddImage.ToString())
                     {
                         folderName = AppUtility.FolderNamesEnum.Pictures;
                     }
                     DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
                     {
                         FolderName = folderName,
-                        ParentFolderName = AppUtility.ParentFolderName.FunctionReports,
+                        ParentFolderName = AppUtility.ParentFolderName.FunctionResults,
                         ObjectID = viewmodel.Function.ID.ToString(),
                         SectionType = AppUtility.MenuItems.Protocols,
                         IsEdittable = modalType != AppUtility.ProtocolModalType.Summary,
@@ -1214,13 +1215,13 @@ namespace PrototypeWithAuth.Controllers
                     {
                         functionResult.IsTemporaryDeleted = true;
                         _context.Entry(functionResult).State = EntityState.Modified;
-                  
+                        _context.Update(protocolInstanceDB);
                     }
                     else
                     {
                         _context.Entry(functionResult).State = EntityState.Added;
                         await _context.SaveChangesAsync();
-                        string functionIconHtml =  "<button class='function p-0 m-0 no-box-shadow border-0' type='button' typeID='"+functionType.FunctionTypeID+"' modalType='"+addResultsFunctionViewModel.ModalType+"' guid='"+guid+"' value='"+functionResult.ID+ "'> <div functionID = '" + functionType.FunctionTypeID + "' class='" + functionType.IconActionClass + " line-function'><i class='" + functionType.Icon + "'></i></div></button>";
+                        string functionIconHtml =  "<button  class='function p-0 m-0 no-box-shadow border-0' type='button' typeID='"+functionType.FunctionTypeID+"' modalType='"+addResultsFunctionViewModel.ModalType+"' guid='"+guid+"' value='"+functionResult.ID+ "'> <div functionID = '" + functionType.FunctionTypeID + "' class='" + functionType.IconActionClass + " line-function'><i class='" + functionType.Icon + "'></i></div></button>";
                         switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
                         {
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
@@ -1233,15 +1234,20 @@ namespace PrototypeWithAuth.Controllers
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddFile:
                             case AppUtility.ProtocolFunctionTypes.AddImage:            
-                                MoveDocumentsOutOfTempFolder(addResultsFunctionViewModel.Function.ID, AppUtility.ParentFolderName.Reports, guid: guid);
-
+                                MoveDocumentsOutOfTempFolder(addResultsFunctionViewModel.Function.ID, AppUtility.ParentFolderName.FunctionResults, guid: guid);
+                                var folderName = AppUtility.FolderNamesEnum.Files;
+                                if (functionType.DescriptionEnum == AppUtility.ResultsFunctionTypes.AddImage.ToString())
+                                {
+                                    folderName = AppUtility.FolderNamesEnum.Pictures;
+                                }
                                 DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
                                 {
                                     ObjectID = functionResult.ID.ToString(),
-                                    ParentFolderName = AppUtility.ParentFolderName.Reports,
+                                    ParentFolderName = AppUtility.ParentFolderName.FunctionResults,
                                     SectionType = AppUtility.MenuItems.Protocols,
                                     IsEdittable = true,
-                                    Guid = guid ?? Guid.NewGuid()
+                                    Guid = guid ?? Guid.NewGuid(),
+                                    FolderName = folderName
                                 };
 
                                 base.FillDocumentsViewModel(documentsModalViewModel);
@@ -1252,6 +1258,7 @@ namespace PrototypeWithAuth.Controllers
                                 renderedView = functionIconHtml;
                                 break;
                         }
+                        renderedView = "<div class='result-function my-3' functionResultID='" + functionResult.ID + "'>" + renderedView + "</div>";
                         var replaceableText = "<span class=\"focusedText\"></span>";
                         var tags = addResultsFunctionViewModel.ClosingTags?.Split(",") ?? new string[0];
                         var closingTags = "";
@@ -1287,7 +1294,63 @@ namespace PrototypeWithAuth.Controllers
             return PartialView("_ResultsText", protocolInstanceDB);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> DeleteResultsDocumentModal(int FunctionResultID)
+        {
+            var functionResult = _context.FunctionResults.Where(fr => fr.ID == FunctionResultID).FirstOrDefault();
+            var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == functionResult.FunctionTypeID).FirstOrDefault();
+            AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Reports;
+            string uploadReportsFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
+            string uploadReportsFolder2 = Path.Combine(uploadReportsFolder, FunctionResultID.ToString());
 
+            var deleteDocumentViewModel = new DeleteReportDocumentViewModel()
+            {
+                FunctionReport = functionReport,
+                ReportID = functionReport.ReportID
+            };
+
+            deleteDocumentViewModel.DocumentsInfo = new List<DocumentFolder>();
+            base.GetExistingFileStrings(deleteDocumentViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Files, parentFolderName, uploadReportsFolder2, FunctionReportID.ToString());
+            return PartialView(deleteDocumentViewModel);
+        }
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> SaveResults(ProtocolInstance protocolInstance, AddResultsFunctionViewModel addResultsFunctionViewModel)
+        {
+            var protocolInstanceDB = _context.ProtocolInstances.Where(r => r.ProtocolInstanceID == protocolInstance.ProtocolInstanceID).FirstOrDefault();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+
+                    protocolInstanceDB.ResultDescription = protocolInstance.TemporaryResultDescription;
+                    protocolInstanceDB.TemporaryResultDescription = null;
+                    _context.Update(protocolInstanceDB);
+                    var functionResults = _context.FunctionResults.Where(fr => fr.ProtocolInstanceID == protocolInstance.ProtocolInstanceID && fr.IsTemporary);
+                    foreach (var functionResult in functionResults)
+                    {
+                        functionResult.IsTemporary = false;
+                        _context.Update(functionResult);
+                    }
+                    var deletedFunctionResults = _context.FunctionResults.Where(fr => fr.ProtocolInstanceID == protocolInstance.ProtocolInstanceID && fr.IsTemporaryDeleted);
+                    foreach (var fr in deletedFunctionResults)
+                    {
+                        _context.Remove(fr);
+                    }
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            return new EmptyResult();
+        }
 
 
         private void GetFunctionLineLinkToProtocolDDLs(AddFunctionViewModel<FunctionLine> viewmodel)

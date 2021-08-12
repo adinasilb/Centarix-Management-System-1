@@ -118,6 +118,30 @@
             }
         });
     });
+       $(".saveResults").off("click").click(function (e) {
+        e.preventDefault();
+        $(".saving-spinner").removeClass("d-none");
+        $.ajax({
+            processData: false,
+            contentType: false,
+            data: new FormData($("#myForm")[0]),
+            url: "/Protocols/SaveResults",
+            type: 'POST',
+            success: function (data) {
+                //$("._Lines").html(data);
+                $(".saving-spinner").addClass("d-none");
+                $(".saving-done").removeClass("d-none");
+                setTimeout(function () {
+                $(".saving-done").addClass("d-none");
+                }, 1000 * 30);
+            },
+            error: function (jqxhr) {
+                $(".error-message").html(jqxhr.responseText);
+                $(".error-message").removeClass("d-none");
+                $(".saving-spinner").addClass("d-none");
+            }
+        });
+    });
 
     $(".start-protocol-fx").off("click").click(function (e) {
         e.preventDefault();
