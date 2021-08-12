@@ -123,7 +123,7 @@
                         </div>
                     </div>
                 }
-                if (Model.Test.TestOuterGroups[0].TestGroups[0].IsNone && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 99 && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.Calculation != null).Any())
+                if (Model.Test.TestOuterGroups[0].TestGroups[0].IsNone && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 9 && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.Calculation != null).Any())
                 {
                     <div class="col-8 px-4">
                         @foreach (var testheader in Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.OrderBy(th => th.SequencePosition))

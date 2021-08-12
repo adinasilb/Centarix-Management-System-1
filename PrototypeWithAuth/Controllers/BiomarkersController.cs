@@ -360,7 +360,7 @@ namespace PrototypeWithAuth.Controllers
             _context.SaveChanges();
         }
 
-        public void _5InsertAnthropometryTest()
+        public async Task _5InsertAnthropometryTest()
         {
             Test test = new Test()
             {
@@ -441,7 +441,7 @@ namespace PrototypeWithAuth.Controllers
                 IsSkip = true,
                 SequencePosition = 6
             };
-            var weightCircumferance = new TestHeader()
+            var waistCircumferance = new TestHeader()
             {
                 Name = "Waist Circumference (cm)",
                 Type = AppUtility.DataTypeEnum.Double.ToString(),
@@ -462,6 +462,16 @@ namespace PrototypeWithAuth.Controllers
                 SequencePosition = 9,
                 TestGroupID = tgId
             };
+            _context.Add(weight);
+            _context.Add(height);
+            _context.Add(bodyFat);
+            _context.Add(visceralFat);
+            _context.Add(muscleMass);
+            _context.Add(skip);
+            _context.Add(waistCircumferance);
+            _context.Add(underBellyCircumferance);
+            _context.Add(bmi);
+            await _context.SaveChangesAsync();
         }
 
         [HttpGet]
