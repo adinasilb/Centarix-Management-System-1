@@ -263,7 +263,7 @@ namespace PrototypeWithAuth.ViewModels
         {
             try
             {
-                return GetApplicationUserName();
+                return new List<string>() { r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName } ;
             }
             catch (Exception ex)
             {
@@ -295,7 +295,7 @@ namespace PrototypeWithAuth.ViewModels
         {
             try
             {
-                return GetImageURL();
+                return r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL;
             }
             catch (Exception ex)
             {
@@ -306,7 +306,7 @@ namespace PrototypeWithAuth.ViewModels
         {
             try
             {
-                return GetProductName();
+                return new List<string>() { r.Product.ProductName };
             }
             catch (Exception ex)
             {
@@ -317,7 +317,7 @@ namespace PrototypeWithAuth.ViewModels
         {
             try
             {
-                return GetVendorName();
+                return new List<string>() { r.Product.Vendor.VendorEnName };
             }
             catch (Exception ex)
             {
