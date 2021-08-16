@@ -2838,7 +2838,7 @@ namespace PrototypeWithAuth.Controllers
                 TempRequestListViewModel = newTRLVM
             };
 
-            //render the purchase order view into a string using a the confirmEmailViewModel
+            //render the purchase order view into a string using a the co.nfirmEmailViewModel
             string renderedView = await RenderPartialViewToString("OrderEmailView", confirm);
 
             string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
