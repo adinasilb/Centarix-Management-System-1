@@ -899,9 +899,10 @@ namespace PrototypeWithAuth.Controllers
             return View(testViewModel);
         }
 
-        public async Task<ActionResult> SaveTestModal()
+        public async Task<ActionResult> SaveTestModal(string? ID = null)
         {
-            return PartialView();
+            var String1 = ID == null ? "none" : ID;
+            return PartialView("SaveTestModal", String1);
         }
 
         public async Task<ActionResult> SaveTests(TestViewModel testViewModel, TestValuesViewModel testValuesViewModel, List<FieldViewModel> fieldViewModels)

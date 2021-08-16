@@ -67,8 +67,9 @@
                         var classes = origClasses + " selected";}
                     @for (int t = 0; t < Model.Tests.Count; t++)
                     {
+                        var id = "BioTest" + t;
                         @Html.HiddenFor(m => m.Tests[t].TestID);
-                        <li class="@classes" listnumber="@listNumber" testid="@Model.Tests[t].TestID">@Model.Tests[t].Name</li>
+                        <li class="@classes" listnumber="@listNumber" testid="@Model.Tests[t].TestID" id="@id" >@Model.Tests[t].Name</li>
                         classes = origClasses;
                         listNumber++;
                     }
@@ -91,16 +92,22 @@
 
 <script>
     $(".biomarkers-test-name").on("click", function (e) {
-        $.ajax({
-            async: true,
-            url: "/Biomarkers/_TestValues?TestID=" + $(this).attr("testid") + "&ListNumber=0&SiteID=" + /*$(this).attr("listnumber")*/ + $("#ExperimentEntry_SiteID").val() + "&ExperimentID=" + $("#ExperimentEntry_Participant_ExperimentID").val() + "&ExperimentEntryID=" + $("#ExperimentEntry_ExperimentEntryID").val(),
-            type: 'GET',
-            cache: false,
-            success: function (data) {
-                $(".testvalues").html(data);
+        if (!$(this).hasClass("selected")) {
+            if ($(".edit-mode-input").hasClass("on")) {
+                alert("on");
+                $.ajax({
+                    async: false,
+                    url: "/Biomarkers/SaveTestModal?ID=" + $(this).attr("ID"),
+                    type: 'GET',
+                    cache: false,
+                    success: function (data) {
+                        $.fn.OpenModal('save-test-modal', 'save-bio-test-modal', data);
+                    }
+                });
             }
-        });
-        $(".biomarkers-test-name").removeClass("selected");
-        $(this).addClass("selected");
+            alert("after save changes");
+            
+
+        }
     });
 </script>

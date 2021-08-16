@@ -1,4 +1,5 @@
-﻿<div class="modal modal-view save-test-modal" id="myModal" data-backdrop="false" style="z-index: 9100">
+﻿@model String
+<div class="modal modal-view save-test-modal" id="myModal" data-backdrop="false" style="z-index: 9100">
     <div class="elixir-modal-sm modal-dialog-centered mx-auto" style="width:27rem;">
         <div class="modal-content d-inline-block modal-box-shadow ">
             <div class="modal-header biomarkers-background-color">
@@ -8,6 +9,7 @@
                 </button>
             </div>
             <form action="" class="small-modal-padding">
+                <input type="hidden" value="@Model" id="BioTestString" />
                 <div class="row under-row-margin">
                     <div class="col-12 text-center">
                         Would you like to save all test results?
@@ -29,6 +31,20 @@
     $(".cancel-save").on("click", function (e) {
         e.preventDefault();
         $.fn.CloseModal('save-bio-test-modal');
+        if ($("#String").val() != "none") {
+            var selected = $("#" + $("#String").val());
+            $.ajax({
+                async: true,
+                url: "/Biomarkers/_TestValues?TestID=" + selected.attr("testid") + "&ListNumber=0&SiteID=" + /*$(this).attr("listnumber")*/ + $("#ExperimentEntry_SiteID").val() + "&ExperimentID=" + $("#ExperimentEntry_Participant_ExperimentID").val() + "&ExperimentEntryID=" + $("#ExperimentEntry_ExperimentEntryID").val(),
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $(".testvalues").html(data);
+                }
+            });
+            $(".biomarkers-test-name").removeClass("selected");
+            selected.addClass("selected");
+        }
     });
     $(".submit-save").on("click", function (e) {
         e.preventDefault();
@@ -42,18 +58,37 @@
             type: "POST",
             cache: false,
             success: function (data) {
-                $(".testvalues").html(data);
                 $.fn.CloseModal('save-bio-test-modal');
-                $(".edit-mode-input").prop("checked", false);
-                var editLabel = $(".edit-mode-label");
-                editLabel.text("Edit Mode Off");
-                editLabel.removeClass("on");
-                editLabel.addClass("off")
-                var editModeInput = $(".edit-mode-input");
-                editModeInput.addClass("off");
-                editModeInput.removeClass("on");
-                $('._testvalues input').attr("disabled", true);
-                $('._testvalues input').addClass("disabled");
+                if ($("#BioTestString").val() != "none") {
+                    alert("string : " + $("#BioTestString").val());
+                    var selected = $('#' + $("#BioTestString").val());
+                    var url = "/Biomarkers/_TestValues?TestID=" + selected.attr("testid") + "&ListNumber=0&SiteID=" + /*$(this).attr("listnumber")*/ + $("#ExperimentEntry_SiteID").val() + "&ExperimentID=" + $("#ExperimentEntry_Participant_ExperimentID").val() + "&ExperimentEntryID=" + $("#ExperimentEntry_ExperimentEntryID").val();
+                    alert("url: " + url);
+                    $.ajax({
+                        async: true,
+                        url: url,
+                        type: 'GET',
+                        cache: false,
+                        success: function (data) {
+                            $(".testvalues").html(data);
+                        }
+                    });
+                    $(".biomarkers-test-name").removeClass("selected");
+                    selected.addClass("selected");
+                }
+                else {
+                    $(".testvalues").html(data);
+                    $(".edit-mode-input").prop("checked", false);
+                    var editLabel = $(".edit-mode-label");
+                    editLabel.text("Edit Mode Off");
+                    editLabel.removeClass("on");
+                    editLabel.addClass("off")
+                    var editModeInput = $(".edit-mode-input");
+                    editModeInput.addClass("off");
+                    editModeInput.removeClass("on");
+                    $('._testvalues input').attr("disabled", true);
+                    $('._testvalues input').addClass("disabled");
+                }
             }
         });
     });
