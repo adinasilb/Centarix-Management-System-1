@@ -523,9 +523,10 @@ namespace PrototypeWithAuth.Controllers
         private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(CreateProtocolsViewModel createProtocolsViewModel, int typeID, int protocolID = 0)
         {
             DeleteTemporaryDocuments(AppUtility.ParentFolderName.Protocols, Guid.Empty);
+            var lastProtocolNum = int.Parse(_context.Protocols.IgnoreQueryFilters().OrderBy(p => p).LastOrDefault()?.UniqueCode.Substring(1) ?? "0");
             var protocol = _context.Protocols
                 .Include(p => p.Urls).Include(p => p.Materials)
-                .ThenInclude(m => m.Product).Include(p => p.ProtocolSubCategory).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
+                .ThenInclude(m => m.Product).Include(p => p.ProtocolSubCategory).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol() { UniqueCode = "T" + (++lastProtocolNum) };
             protocol.Urls ??= new List<Link>();
             protocol.Materials ??= new List<Material>();
 
@@ -1700,6 +1701,8 @@ namespace PrototypeWithAuth.Controllers
                     createProtocolsViewModel.Protocol.ApplicationUserCreatorID = _userManager.GetUserId(User);
                     if (createProtocolsViewModel.Protocol.ProtocolID == 0)
                     {
+                        var lastProtocolNum = int.Parse(_context.Protocols.IgnoreQueryFilters().OrderBy(p => p).LastOrDefault()?.UniqueCode.Substring(1) ?? "0");
+                        createProtocolsViewModel.Protocol.UniqueCode = "T" + (++lastProtocolNum);
                         _context.Entry(createProtocolsViewModel.Protocol).State = EntityState.Added;
                         await _context.SaveChangesAsync();
                         Lines.ForEach(l => { l.ProtocolID = createProtocolsViewModel.Protocol.ProtocolID; _context.Add(l); _context.SaveChanges(); });

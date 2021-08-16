@@ -6,9 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.Data;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Abp.Domain.Entities;
 using System.Threading.Tasks;
+using System.Transactions;
+using System.Threading;
 
 namespace PrototypeWithAuth.Data
 {
@@ -20,6 +21,8 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+  
+ 
         public DbSet<FunctionResult> FunctionResults { get; set; }
         public DbSet<TempLineID> TempLineIDs { get; set; }
         public DbSet<FunctionLineID> FunctionLineIDs { get; set; }
@@ -401,7 +404,8 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<TempRequestJson>().Property(t => t.Json).HasColumnType("ntext");
             modelBuilder.Entity<TempLinesJson>().Property(t => t.Json).HasColumnType("ntext");
             modelBuilder.Entity<Protocol>().HasIndex(p => p.UniqueCode).IsUnique();
-            //modelBuilder.Entity<TempLine>().HasIndex(r => r.PermanentLineID).IsUnique();
+
+           
             modelBuilder.Seed();
 
             //foreach loop ensures that deletion is resticted - no cascade delete
