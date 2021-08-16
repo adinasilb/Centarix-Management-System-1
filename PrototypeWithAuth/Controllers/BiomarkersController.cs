@@ -817,8 +817,13 @@ namespace PrototypeWithAuth.Controllers
         {
             var visits = _context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.Experiment.AmountOfVisits).FirstOrDefault();
             visits = visits == 0 || visits == null ? 10 : visits;
+            var lastVisitNum = 0;
+            if (_context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.ExperimentEntries).Any())
+            {
+                lastVisitNum = _context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.ExperimentEntries.OrderByDescending(ee => ee.VisitNumber).FirstOrDefault().VisitNumber).FirstOrDefault();
+            }
             var visitList = new List<SelectListItem>();
-            for (int v = 1; v <= visits; v++)
+            for (int v = lastVisitNum + 1; v <= visits; v++)
             {
                 visitList.Add(new SelectListItem()
                 {

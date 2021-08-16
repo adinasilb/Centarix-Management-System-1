@@ -44,12 +44,16 @@
             success: function (data) {
                 $(".testvalues").html(data);
                 $.fn.CloseModal('save-bio-test-modal');
-                //$('.edit-mode-input').data("val", false);
                 $(".edit-mode-input").prop("checked", false);
                 var editLabel = $(".edit-mode-label");
                 editLabel.text("Edit Mode Off");
                 editLabel.removeClass("on");
                 editLabel.addClass("off")
+                var editModeInput = $(".edit-mode-input");
+                editModeInput.addClass("off");
+                editModeInput.removeClass("on");
+                $('._testvalues input').attr("disabled", true);
+                $('._testvalues input').addClass("disabled");
             }
         });
     });

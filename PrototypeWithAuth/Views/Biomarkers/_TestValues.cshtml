@@ -2,231 +2,236 @@
 @using PrototypeWithAuth.ViewModels
 @using PrototypeWithAuth.AppData
 
-@{ var listNumber = Model.ListNumber; }
-<div class="row under-row-margin">
-    <div class="col-9 border-bottom heading-1">
-        @Model.Test.Name
+<div class="_testvalues">
+    @{ var listNumber = Model.ListNumber; }
+    <div class="row under-row-margin">
+        <div class="col-9 border-bottom heading-1">
+            @Model.Test.Name
+        </div>
     </div>
-</div>
 
-@{
-    @functions{
-        FieldViewModel GetFieldViewModel(TestHeader header, int ListNumber)
+    @{
+        @functions{
+            FieldViewModel GetFieldViewModel(TestHeader header, int ListNumber)
 
-        {
-            AppUtility.DataTypeEnum dataType;
-            Enum.TryParse(header.Type, out dataType);
-            FieldViewModel fieldViewModel = new FieldViewModel()
             {
-                TestHeader = header,
-                DataTypeEnum = dataType,
-                ListNumber = ListNumber,
-                TestID = Model.Test.TestID
-            };
-            TestValue testvalue = null;
-            if (Model.TestValues.Where(tv => tv.TestHeaderID == header.TestHeaderID).Any())
-            {
-                testvalue = Model.TestValues.Where(tv => tv.TestHeaderID == header.TestHeaderID).FirstOrDefault();
+                AppUtility.DataTypeEnum dataType;
+                Enum.TryParse(header.Type, out dataType);
+                FieldViewModel fieldViewModel = new FieldViewModel()
+                {
+                    TestHeader = header,
+                    DataTypeEnum = dataType,
+                    ListNumber = ListNumber,
+                    TestID = Model.Test.TestID
+                };
+                TestValue testvalue = null;
+                if (Model.TestValues.Where(tv => tv.TestHeaderID == header.TestHeaderID).Any())
+                {
+                    testvalue = Model.TestValues.Where(tv => tv.TestHeaderID == header.TestHeaderID).FirstOrDefault();
+                }
+                var data = testvalue != null ? testvalue.Value : null;
+                fieldViewModel.TestValueID = testvalue != null ? testvalue.TestValueID : 0;
+                switch (dataType)
+                {
+                    case AppUtility.DataTypeEnum.Double:
+                        var dbl = data == null ? "0" : data;
+                        fieldViewModel.Double = Convert.ToDouble(dbl);
+                        break;
+                    case AppUtility.DataTypeEnum.String:
+                        var str = data == null ? "" : data;
+                        fieldViewModel.String = str;
+                        break;
+                    case AppUtility.DataTypeEnum.DateTime:
+                        var dt = data == null ? DateTime.Now.GetElixirDateFormat() : data;
+                        fieldViewModel.DateTime = Convert.ToDateTime(dt);
+                        break;
+                    case AppUtility.DataTypeEnum.Bool:
+                        var boolean = data == null ? "0" : data;
+                        fieldViewModel.Bool = Convert.ToBoolean(boolean);
+                        break;
+                    case AppUtility.DataTypeEnum.File:
+                        //fieldViewModel.File
+                        break;
+                }
+                return fieldViewModel;
+                //await Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                //listNumber++;
             }
-            var data = testvalue != null ? testvalue.Value : null;
-            fieldViewModel.TestValueID = testvalue != null ? testvalue.TestValueID : 0;
-            switch (dataType)
-            {
-                case AppUtility.DataTypeEnum.Double:
-                    var dbl = data == null ? "0" : data;
-                    fieldViewModel.Double = Convert.ToDouble(dbl);
-                    break;
-                case AppUtility.DataTypeEnum.String:
-                    var str = data == null ? "" : data;
-                    fieldViewModel.String = str;
-                    break;
-                case AppUtility.DataTypeEnum.DateTime:
-                    var dt = data == null ? DateTime.Now.GetElixirDateFormat() : data;
-                    fieldViewModel.DateTime = Convert.ToDateTime(dt);
-                    break;
-                case AppUtility.DataTypeEnum.Bool:
-                    var boolean = data == null ? "0" : data;
-                    fieldViewModel.Bool = Convert.ToBoolean(boolean);
-                    break;
-                case AppUtility.DataTypeEnum.File:
-                    //fieldViewModel.File
-                    break;
-            }
-            return fieldViewModel;
-            //await Html.RenderPartialAsync("_FieldView", fieldViewModel);
-            //listNumber++;
         }
     }
-}
 
-@if (Model.Test.TestOuterGroups != null)
-{
-    <div class="row under-row-margin">
-        @if (Model.Test.TestOuterGroups.Count == 1)
-        {
-            @if (!Model.Test.TestOuterGroups[0].IsNone)
+    @if (Model.Test.TestOuterGroups != null)
+    {
+        <div class="row under-row-margin">
+            @if (Model.Test.TestOuterGroups.Count == 1)
             {
-                <span class="heading-1">
-                    @Model.Test.TestOuterGroups[0].Name
-                </span>
-            }
-            @if (Model.Test.TestOuterGroups[0].TestGroups.Count == 1)
-            {
-                if (Model.Test.TestOuterGroups[0].TestGroups[0].IsNone && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 5)
+                @if (!Model.Test.TestOuterGroups[0].IsNone)
                 {
-                    <div class="col-4 px-4">
-                        <div class="row p-3">
-                            @{ var header1 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 1).FirstOrDefault();}
-
-                            <div class="row p-3">
-                                @{
-                                    var fieldViewModel = GetFieldViewModel(header1, listNumber);
-                                    listNumber++;
-                                    Html.RenderPartialAsync("_FieldView", fieldViewModel);
-                                }
-                            </div>
-                        </div>
-                        <div class="row p-3">
-                            @{ var header2 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 2).FirstOrDefault();}
-
-                            <div class="row p-3">
-                                @{
-                                    fieldViewModel = GetFieldViewModel(header2, listNumber);
-                                    listNumber++;
-                                    Html.RenderPartialAsync("_FieldView", fieldViewModel);
-                                }
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-4 px-4">
-                        <div class="row p-3">
-                            @{ var header3 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 3).FirstOrDefault();}
-
-                            <div class="row p-3">
-                                @{
-                                    fieldViewModel = GetFieldViewModel(header3, listNumber);
-                                    listNumber++;
-                                    Html.RenderPartialAsync("_FieldView", fieldViewModel);
-                                }
-                            </div>
-                        </div>
-                        <div class="row p-3">
-                            @{ var header4 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 4).FirstOrDefault();}
-
-                            <div class="row p-3">
-                                @{
-                                    fieldViewModel = GetFieldViewModel(header4, listNumber);
-                                    listNumber++;
-                                    Html.RenderPartialAsync("_FieldView", fieldViewModel);
-                                }
-                            </div>
-                        </div>
-                    </div>
+                    <span class="heading-1">
+                        @Model.Test.TestOuterGroups[0].Name
+                    </span>
                 }
-                if (Model.Test.TestOuterGroups[0].TestGroups[0].IsNone && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 9 && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.Calculation != null).Any())
+                @if (Model.Test.TestOuterGroups[0].TestGroups.Count == 1)
                 {
-                    <div class="col-8 px-4">
-                        @{
-                            var orderedList = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.OrderBy(th => th.SequencePosition).ToList();
-                            for (int x = 0; x < orderedList.Count(); x = x + 2)
-                            {
-                                <div class="row  p-3.">
-                                    <div class="col-6">
-                                        @{ if (!orderedList[x].IsSkip)
-                                            {
-                                                var fieldViewModel = GetFieldViewModel(orderedList[x], listNumber);
-                                                listNumber++;
-                                                Html.RenderPartialAsync("_FieldView", fieldViewModel);
-                                            }
-                                        }
-                                    </div>
-                                    @if (orderedList.Count() > x + 1)
-                                    {
+                    if (Model.Test.TestOuterGroups[0].TestGroups[0].IsNone && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 5)
+                    {
+                        <div class="col-4 px-4">
+                            <div class="row p-3">
+                                @{ var header1 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 1).FirstOrDefault();}
+
+                                <div class="row p-3">
+                                    @{
+                                        var fieldViewModel = GetFieldViewModel(header1, listNumber);
+                                        listNumber++;
+                                        Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                    }
+                                </div>
+                            </div>
+                            <div class="row p-3">
+                                @{ var header2 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 2).FirstOrDefault();}
+
+                                <div class="row p-3">
+                                    @{
+                                        fieldViewModel = GetFieldViewModel(header2, listNumber);
+                                        listNumber++;
+                                        Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 px-4">
+                            <div class="row p-3">
+                                @{ var header3 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 3).FirstOrDefault();}
+
+                                <div class="row p-3">
+                                    @{
+                                        fieldViewModel = GetFieldViewModel(header3, listNumber);
+                                        listNumber++;
+                                        Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                    }
+                                </div>
+                            </div>
+                            <div class="row p-3">
+                                @{ var header4 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 4).FirstOrDefault();}
+
+                                <div class="row p-3">
+                                    @{
+                                        fieldViewModel = GetFieldViewModel(header4, listNumber);
+                                        listNumber++;
+                                        Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    if (Model.Test.TestOuterGroups[0].TestGroups[0].IsNone && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 9 && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.Calculation != null).Any())
+                    {
+                        <div class="col-8 px-4">
+                            @{
+                                var orderedList = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders
+                                    .OrderBy(th => th.SequencePosition).ToList();
+                                var fieldsOfOrderedList = orderedList.Where(ol => ol.Calculation == null).ToList();
+                                var calculationsOfOrderedList = orderedList.Where(ol => ol.Calculation != null).ToList();
+                                for (int x = 0; x < fieldsOfOrderedList.Count(); x = x + 2)
+                                {
+                                    <div class="row  p-3">
                                         <div class="col-6">
-                                            @{ if (!orderedList[x + 1].IsSkip)
+                                            @{ if (!fieldsOfOrderedList[x].IsSkip)
                                                 {
-                                                    var fieldViewModel = GetFieldViewModel(orderedList[x + 1], listNumber);
+                                                    var fieldViewModel = GetFieldViewModel(fieldsOfOrderedList[x], listNumber);
                                                     listNumber++;
                                                     Html.RenderPartialAsync("_FieldView", fieldViewModel);
                                                 }
                                             }
                                         </div>
+                                        @if (fieldsOfOrderedList.Count() > x + 1)
+                                        {
+                                            <div class="col-6">
+                                                @{ if (!fieldsOfOrderedList[x + 1].IsSkip)
+                                                    {
+                                                        var fieldViewModel = GetFieldViewModel(fieldsOfOrderedList[x + 1], listNumber);
+                                                        listNumber++;
+                                                        Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                                    }
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            }
+                            @*@foreach (var testheader in
+                                {
+                                    <span style="width: 50%;" class="mr-0">
+                                        @{
+                                            if (!testheader.IsSkip)
+                                            {
+                                                var fieldViewModel = GetFieldViewModel(testheader, listNumber);
+                                                listNumber++;
+                                                Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                            }
+                                        }
+                                    </span>
+                                }*@
+                        </div>
+                    }
+                }
+                @if (Model.Test.TestOuterGroups[0].TestGroups.Count == 3)
+                {
+                    @foreach (var tog in Model.Test.TestOuterGroups[0].TestGroups.OrderBy(tg => tg.SequencePosition))
+                    {
+                        <div class="col-4 px-4">
+                            <span class="biomarkers-color">@tog.Name</span>
+                            @foreach (var header in tog.TestHeaders)
+                            {
+                                <div class="row p-3">
+
+                                    @{ AppUtility.DataTypeEnum dataType;
+                                        Enum.TryParse(header.Type, out dataType);
+                                        FieldViewModel fieldViewModel = new FieldViewModel()
+                                        {
+                                            TestHeader = header,
+                                            DataTypeEnum = dataType,
+                                            ListNumber = listNumber,
+                                            TestID = Model.Test.TestID
+                                        };
+                                        TestValue testvalue = null;
+                                        if (Model.TestValues.Where(tv => tv.TestHeaderID == header.TestHeaderID).Any())
+                                        {
+                                            testvalue = Model.TestValues.Where(tv => tv.TestHeaderID == header.TestHeaderID).FirstOrDefault();
+                                        }
+                                        var data = testvalue != null ? testvalue.Value : null;
+                                        fieldViewModel.TestValueID = testvalue != null ? testvalue.TestValueID : 0;
+                                        switch (dataType)
+                                        {
+                                            case AppUtility.DataTypeEnum.Double:
+                                                var dbl = data == null ? "0" : data;
+                                                fieldViewModel.Double = Convert.ToDouble(dbl);
+                                                break;
+                                            case AppUtility.DataTypeEnum.String:
+                                                var str = data == null ? "" : data;
+                                                fieldViewModel.String = str;
+                                                break;
+                                            case AppUtility.DataTypeEnum.DateTime:
+                                                var dt = data == null ? DateTime.Now.GetElixirDateFormat() : data;
+                                                fieldViewModel.DateTime = Convert.ToDateTime(dt);
+                                                break;
+                                            case AppUtility.DataTypeEnum.Bool:
+                                                var boolean = data == null ? "0" : data;
+                                                fieldViewModel.Bool = Convert.ToBoolean(boolean);
+                                                break;
+                                            case AppUtility.DataTypeEnum.File:
+                                                //fieldViewModel.File
+                                                break;
+                                        }
+                                        Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                        listNumber++;
                                     }
                                 </div>
                             }
-                        }
-                        @*@foreach (var testheader in
-                            {
-                                <span style="width: 50%;" class="mr-0">
-                                    @{
-                                        if (!testheader.IsSkip)
-                                        {
-                                            var fieldViewModel = GetFieldViewModel(testheader, listNumber);
-                                            listNumber++;
-                                            Html.RenderPartialAsync("_FieldView", fieldViewModel);
-                                        }
-                                    }
-                                </span>
-                            }*@
-                    </div>
+                        </div>
+                    }
                 }
             }
-            @if (Model.Test.TestOuterGroups[0].TestGroups.Count == 3)
-            {
-                @foreach (var tog in Model.Test.TestOuterGroups[0].TestGroups.OrderBy(tg => tg.SequencePosition))
-                {
-                    <div class="col-4 px-4">
-                        <span class="biomarkers-color">@tog.Name</span>
-                        @foreach (var header in tog.TestHeaders)
-                        {
-                            <div class="row p-3">
-
-                                @{ AppUtility.DataTypeEnum dataType;
-                                    Enum.TryParse(header.Type, out dataType);
-                                    FieldViewModel fieldViewModel = new FieldViewModel()
-                                    {
-                                        TestHeader = header,
-                                        DataTypeEnum = dataType,
-                                        ListNumber = listNumber,
-                                        TestID = Model.Test.TestID
-                                    };
-                                    TestValue testvalue = null;
-                                    if (Model.TestValues.Where(tv => tv.TestHeaderID == header.TestHeaderID).Any())
-                                    {
-                                        testvalue = Model.TestValues.Where(tv => tv.TestHeaderID == header.TestHeaderID).FirstOrDefault();
-                                    }
-                                    var data = testvalue != null ? testvalue.Value : null;
-                                    fieldViewModel.TestValueID = testvalue != null ? testvalue.TestValueID : 0;
-                                    switch (dataType)
-                                    {
-                                        case AppUtility.DataTypeEnum.Double:
-                                            var dbl = data == null ? "0" : data;
-                                            fieldViewModel.Double = Convert.ToDouble(dbl);
-                                            break;
-                                        case AppUtility.DataTypeEnum.String:
-                                            var str = data == null ? "" : data;
-                                            fieldViewModel.String = str;
-                                            break;
-                                        case AppUtility.DataTypeEnum.DateTime:
-                                            var dt = data == null ? DateTime.Now.GetElixirDateFormat() : data;
-                                            fieldViewModel.DateTime = Convert.ToDateTime(dt);
-                                            break;
-                                        case AppUtility.DataTypeEnum.Bool:
-                                            var boolean = data == null ? "0" : data;
-                                            fieldViewModel.Bool = Convert.ToBoolean(boolean);
-                                            break;
-                                        case AppUtility.DataTypeEnum.File:
-                                            //fieldViewModel.File
-                                            break;
-                                    }
-                                    Html.RenderPartialAsync("_FieldView", fieldViewModel);
-                                    listNumber++;
-                                }
-                            </div>
-                        }
-                    </div>
-                }
-            }
-        }
-    </div>
-}
+        </div>
+    }
+</div>
