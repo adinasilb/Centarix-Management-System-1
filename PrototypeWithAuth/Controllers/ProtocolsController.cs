@@ -1671,20 +1671,45 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ProtocolsProductDetails(int? productID)
         {
-            var requestID = _context.Requests.IgnoreQueryFilters().Where(r=>!r.IsDeleted).Where(r => r.ProductID == productID).OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => r.RequestID).FirstOrDefault();
+            RequestItemViewModel requestItemViewModel = await GetProtocolsProductDetailsFunction(productID);
+            return PartialView(requestItemViewModel);
+        }
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> _ProtocolsProductDetails(int? productID)
+        {
+            RequestItemViewModel requestItemViewModel = await GetProtocolsProductDetailsFunction(productID);
+            return PartialView(requestItemViewModel);
+        }
+
+        private async Task<RequestItemViewModel> GetProtocolsProductDetailsFunction(int? productID)
+        {
+            var requestID = _context.Requests.IgnoreQueryFilters().Where(r => !r.IsDeleted).Where(r => r.ProductID == productID).OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => r.RequestID).FirstOrDefault();
             var requestItemViewModel = await editModalViewFunction(requestID, isEditable: false);
             requestItemViewModel.SectionType = AppUtility.MenuItems.Protocols;
-            return PartialView(requestItemViewModel);
+            return requestItemViewModel;
         }
 
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ProtocolsDetailsFloatModal(int? protocolID)
         {
+            CreateProtocolsViewModel createProtocolsViewModel = await GetProtocolsDeetailsFloatModalFunction(protocolID);
+            return PartialView(createProtocolsViewModel);
+        }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> _ProtocolsDetailsFloatModal(int? protocolID)
+        {
+            CreateProtocolsViewModel createProtocolsViewModel = await GetProtocolsDeetailsFloatModalFunction(protocolID);
+            return PartialView(createProtocolsViewModel);
+        }
+
+        private async Task<CreateProtocolsViewModel> GetProtocolsDeetailsFloatModalFunction(int? protocolID)
+        {
             var protocol = _context.Protocols.Where(p => p.ProtocolID == protocolID).FirstOrDefault();
             var createProtocolsViewModel = new CreateProtocolsViewModel();
             createProtocolsViewModel.ModalType = AppUtility.ProtocolModalType.SummaryFloat;
             await FillCreateProtocolsViewModel(createProtocolsViewModel, protocol.ProtocolTypeID, protocol.ProtocolID);
-            return PartialView(createProtocolsViewModel);
+            return createProtocolsViewModel;
         }
 
         [HttpPost]

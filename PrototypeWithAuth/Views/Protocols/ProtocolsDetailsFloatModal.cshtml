@@ -1,42 +1,16 @@
 ﻿@model PrototypeWithAuth.ViewModels.CreateProtocolsViewModel
 @using PrototypeWithAuth.AppData
-<div class="modal modal-view fader on-form-modal add-resource-modal protocol-form" id="myModal" data-backdrop="false">
+@using Microsoft.Extensions.Primitives
+<div class="modal modal-view fader on-form-modal  protocol-form" id="myModal" data-backdrop="false">
     <div class=" modal-dialog-centered mx-auto" style="width:52%; height:100%">
-        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow "  style="height:100%">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow " style="height:100%">
 
             <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('protocol-details')">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action=""  class=" on-form-modal protocol-form modal-padding " method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-                <input type="hidden" asp-for="Protocol.ProtocolTypeID" />
-                <div class="row text-danger-centarix error-message d-none"> @Model.ErrorMessage </div>
-
-                    <div class="item-table">
-                        <ul class=" pl-0 nav" style="">
-                            <li class="list-inline-item m-0 nav-item">
-                                <a data-toggle="tab" href="#Theory@(Model.ModalType)" class="next-tab nav-link  new-button Theory new-protocols-button protocol-tab active show">
-                                    <i class="new-icon icon-theory-tab-24px"></i>
-                                    <label class="new-button-text">Theory</label>
-                                </a>
-                            </li>
-                            <li class="list-inline-item m-0 nav-item">
-                                <a data-toggle="tab" href="#Materials@(Model.ModalType)" class="next-tab nav-link new-button Materials new-protocols-button protocol-tab ">
-                                    <i class=" new-icon icon-centarix-icons-03"></i>
-                                    <label class="new-button-text">Material</label>
-                                </a>
-                            </li>
-                            <li class="list-inline-item m-0 nav-item">
-                                <a data-toggle="tab" href="#Protocol@(Model.ModalType)" class="next-tab nav-link new-button new-protocols-button protocol-tab lines-tab ">
-                                    <i class="new-icon icon-protocol-tab-24px"></i>
-                                    <label class="new-button-text">Protocols</label>
-                                </a>
-                            </li> 
-                        </ul>
-                    </div>
-                <div class="tab-content _CreateProtocolTabs">
-                    @{ await Html.RenderPartialAsync("_CreateProtocolTabs", Model);}
-                </div>
-            </form>
+            <div class="_ProtocolsDetailsFloatModal">
+                @{ await Html.RenderPartialAsync("_ProtocolsDetailsFloatModal", Model);}
+            </div>
 
 
         </div>

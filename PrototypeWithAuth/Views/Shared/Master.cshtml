@@ -538,6 +538,13 @@
                             $.fn.LoadSummaryModal('edits');
                             $('.modal-content a:first').tab('show');
                             break;
+                        case "summaryProtocolsParital":
+                            //$.fn.OnOpenModalView();
+                            $("._ProtocolsDetailsFloatModal .inner-lines-link").addClass("d-none");
+                            $("._ProtocolsDetailsFloatModal").html(data);
+                            $.fn.LoadSummaryModal('edits');
+                            $('.modal-content a:first').tab('show');
+                            break;
                         case "create":
                             //$.fn.OnOpenModalView();
                             break;
@@ -580,6 +587,10 @@
                             break;
                         case "protocolFloatModal":
                             $.fn.OpenModal('modal', 'protocol-details', modal)
+                            $.fn.ProtocolsMarkReadonly("protocol-details")
+                            break
+                        case "protocolFloatModalPartial":
+                            $("._ProtocolsDetailsFloatModal").html(data);
                             $.fn.ProtocolsMarkReadonly("protocol-details")
                             break
                         case "addChange":

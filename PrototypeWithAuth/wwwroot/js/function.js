@@ -178,11 +178,29 @@ $(".remove-function").click(function (e) {
 
 $("form").off("click", ".open-line-product").on("click", ".open-line-product", function (e) {
     e.preventDefault();
-    var url = "/Protocols/ProtocolsProductDetails?productID=" + $(this).attr("value");
-    $.fn.CallPageRequest(url, "summary");
+    if($(".modal").length>0)
+    {
+         var url = "/Protocols/_ProtocolsProductDetails?productID=" + $(this).attr("value");
+            $.fn.CallPageRequest(url, "summaryProtocolsParital");
+    }
+    else
+    {
+        var url = "/Protocols/ProtocolsProductDetails?productID=" + $(this).attr("value");
+            $.fn.CallPageRequest(url, "summary");
+    }
+
 });
 $("form").off("click", ".open-line-protocol").on("click", ".open-line-protocol", function (e) {
     e.preventDefault();
-    var url = "/Protocols/ProtocolsDetailsFloatModal?protocolID=" + $(this).attr("value");
-    $.fn.CallPageRequest(url, "protocolFloatModal");
+     if($(".modal").length>0)
+    {
+         var url = "/Protocols/_ProtocolsDetailsFloatModal?protocolID=" + $(this).attr("value");           
+         $.fn.CallPageRequest(url, "protocolFloatModalPartial");
+    }
+    else
+    {
+         var url = "/Protocols/ProtocolsDetailsFloatModal?protocolID=" + $(this).attr("value");           
+         $.fn.CallPageRequest(url, "protocolFloatModal");
+    }
+
 });
