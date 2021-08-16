@@ -1336,7 +1336,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 lastSerialNumberInt = int.Parse(lastSerialNumber.Substring(1));
             }
-            return serialLetter + (lastSerialNumber + 1);
+            return serialLetter + (lastSerialNumberInt + 1);
         }
 
         //[HttpPost]
