@@ -69,7 +69,7 @@
                     {
                         var id = "BioTest" + t;
                         @Html.HiddenFor(m => m.Tests[t].TestID);
-                        <li class="@classes" listnumber="@listNumber" testid="@Model.Tests[t].TestID" id="@id" >@Model.Tests[t].Name</li>
+                        <li class="@classes" listnumber="@listNumber" testid="@Model.Tests[t].TestID" id="@id">@Model.Tests[t].Name</li>
                         classes = origClasses;
                         listNumber++;
                     }
@@ -94,7 +94,6 @@
     $(".biomarkers-test-name").on("click", function (e) {
         if (!$(this).hasClass("selected")) {
             if ($(".edit-mode-input").hasClass("on")) {
-                alert("on");
                 $.ajax({
                     async: false,
                     url: "/Biomarkers/SaveTestModal?ID=" + $(this).attr("ID"),
@@ -105,9 +104,6 @@
                     }
                 });
             }
-            alert("after save changes");
-            
-
         }
     });
 </script>
