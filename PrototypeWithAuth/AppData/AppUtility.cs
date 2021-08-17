@@ -161,7 +161,7 @@ namespace PrototypeWithAuth.AppData
         public enum ProtocolFunctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
         public enum FunctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
         public enum ReportsFunctionTypes { AddFile }
-        public enum ResultsFunctionTypes { AddImage, AddComment, AddWarning, AddTip, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
+        public enum ResultsFunctionTypes { AddImage, AddLinkToProduct, AddLinkToProtocol, AddFile }
 
         public enum ReportTypes { Daily, Weekly, Monthly }
         public static List<StringWithName> FavoriteIcons()
@@ -176,7 +176,7 @@ namespace PrototypeWithAuth.AppData
         public enum IconNamesEnum { Share, Favorite, MorePopover, Edit, RemoveShare }
 
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
-        { Request, Resource, Protocol }
+        { Request, Resource, Protocols }
         public enum GlobalInfoType { ExchangeRate, LoginUpdates, LastProtocolLine }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {

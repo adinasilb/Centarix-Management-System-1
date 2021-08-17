@@ -139,7 +139,7 @@ $(".popover-more").off('click').click(function (e) {
 	$(".popover .share-protocol-fx").click(function (e) {
 		e.preventDefault();
 		//switch this to universal share request and the modelsenum send in
-		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?ID=" + $(this).attr("data-route-request") + "&ModelsEnum=Request";
+		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?ID=" + $(this).attr("data-route-request") + "&ModelsEnum=" + $("#masterSectionType").val();
 		console.log("url: " + url);
 		$.ajax({
 			async: true,

@@ -1733,7 +1733,13 @@ namespace PrototypeWithAuth.Controllers
             return createProtocolsViewModel;
         }
 
-
+        [HttpGet]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> CreateNewVersion(int protocolID)
+        {
+            
+            return PartialView("_IndexTableWithEditProtocol");
+        }
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
@@ -2424,6 +2430,10 @@ namespace PrototypeWithAuth.Controllers
                             var sharedResource = _context.ShareResources.Where(sr => sr.ShareID == ShareID).FirstOrDefault();
                             _context.Remove(sharedResource);
                             break;
+                        case AppUtility.ModelsEnum.Protocols:
+                            var sharedProtocol = _context.ShareProtocols.Where(sr => sr.ShareID == ShareID).FirstOrDefault();
+                            _context.Remove(sharedProtocol);
+                            break;
                     }
                     _context.SaveChanges();
                     transaction.Commit();
@@ -2445,7 +2455,7 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.ModelsEnum.Resource:
                     shareModalViewModel.ObjectDescription = _context.Resources.Where(r => r.ResourceID == ID).FirstOrDefault().Title;
                     break;
-                case AppUtility.ModelsEnum.Protocol:
+                case AppUtility.ModelsEnum.Protocols:
                     shareModalViewModel.ObjectDescription = _context.Protocols.Where(r => r.ProtocolID == ID).FirstOrDefault().Name;
                     break;
             }
@@ -2487,7 +2497,7 @@ namespace PrototypeWithAuth.Controllers
                                     _context.Update(shareResource);
                                 }
                                 break;
-                            case AppUtility.ModelsEnum.Protocol:
+                            case AppUtility.ModelsEnum.Protocols:
                                 var PrevSharedProtocol = _context.ShareProtocols
                                     .Where(sr => sr.ProtocolID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == userID).FirstOrDefault();
                                 if (PrevSharedProtocol != null)
