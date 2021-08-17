@@ -39,7 +39,7 @@
     <input type="hidden" asp-for="Protocol.ProtocolTypeID" />
     <div class="row text-danger-centarix error-message d-none"> @Model.ErrorMessage </div>
 
-    <div class="item-table">
+    <li class="item-table">
         <ul class=" pl-0 nav" style="">
             <li class="list-inline-item m-0 nav-item">
                 <a data-toggle="tab" href="#Theory@(Model.ModalType)" class="next-tab nav-link  new-button Theory new-protocols-button protocol-tab @theory">
@@ -122,6 +122,21 @@
                     </label>
                 </div>
             </li>
+            <li class="only-protocol-tab @summaryMode  d-none li-function-bar">
+                <a href="#" id="more" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="text-black p-0 m-0 no-box-shadow ">
+                    <i class="icon-more_vert-24px" style="font-size:3rem;"></i>
+                </a>
+            </li>
+            <div style="display:none;" id="morePopover">
+                <div class="container ">
+                    <div class="row moreOffDay-btn p-1">
+                        <a href="#" class=" text-black " >
+                           Create New Version
+                        </a>
+                    </div>                   
+                </div>
+
+            </div>
         </ul>
     </div>
     <div class="tab-content _CreateProtocolTabs">
