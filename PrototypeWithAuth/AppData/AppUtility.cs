@@ -714,14 +714,13 @@ namespace PrototypeWithAuth.AppData
 
         public static string GetExceptionMessage(Exception ex)
         {
-            if (ex.InnerException != null)
+            Exception exception = ex;
+            while (exception.InnerException != null)
             {
-                return ex.InnerException.Message;
+                exception = exception.InnerException;
             }
-            else
-            {
-                return ex.Message;
-            }
+            return exception.Message;
+            
         }
 
         public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)

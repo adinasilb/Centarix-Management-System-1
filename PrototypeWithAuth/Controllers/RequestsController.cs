@@ -3142,7 +3142,7 @@ namespace PrototypeWithAuth.Controllers
                                     _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Added;
                                     moveOrderDoc = true;
                                 }
-                                else
+                                else //if coming from approve order
                                 {
                                     _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Modified;
                                 }
