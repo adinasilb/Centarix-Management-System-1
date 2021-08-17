@@ -1,12 +1,12 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
 @using PrototypeWithAuth.AppData
 
-    <form action="" method="post" id="" class="p-5  inner-lines-link" enctype="multipart/form-data">
-        @for (int i = 0; i < Model.LastUrls.Count; i++)
+    <form action="" method="post" id="" class="px-5  inner-lines-link" enctype="multipart/form-data">
+        @for (int i = 0; i < (Model.LastUrls?.Count??0); i++)
         {
-            <input type="hidden" asp-for="LastUrls[i]" class="@(Model.LastUrls[i]+i)" />
+             <input type="hidden" asp-for="LastUrls[i]" class="@("LastUrl"+i)" />
         }
-        <input type="hidden" class="lastIndexOfUrls" value="@(Model.LastUrls.Count-1)" />
+        <input type="hidden" class="lastIndexOfUrls" value="@(Model.LastUrls?.Count-2??0)" />
         <div class="new-modal-header modal-line-1-header-with-back modal-sides">
             @*class needed here to override bootstraps modal limitations*@
 

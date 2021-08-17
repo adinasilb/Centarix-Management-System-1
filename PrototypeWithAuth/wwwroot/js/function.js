@@ -190,6 +190,26 @@ $("form").off("click", ".open-line-product").on("click", ".open-line-product", f
     }
       $.fn.LoadProtocolDetailsModal(url, type);
 });
+$(".modal").off("click", ".back-btn-container").on("click", ".back-btn-container", function (e) {
+    e.preventDefault();
+    var index =$(".lastIndexOfUrls").val();
+    var url = $(".LastUrl"+index).val()+"&backButtonClicked=true";   
+    var type=""
+    if(url.indexOf("_ProtocolsDetailsFloatModal") !=-1)
+    {
+        type="protocolFloatModalPartial";
+    }
+    else if(url.indexOf("_ProtocolsProductDetails") !=-1)
+    {
+        type="summaryProtocolsParital";
+    }
+    else
+    {
+        type="protocolFloatModal";
+    }
+    $.fn.LoadProtocolDetailsModal(url, type);
+});
+
 $("form").off("click", ".open-line-protocol").on("click", ".open-line-protocol", function (e) {
     e.preventDefault();
      if($(".modal").length>0)
@@ -207,7 +227,7 @@ $("form").off("click", ".open-line-protocol").on("click", ".open-line-protocol",
 
     $.fn.LoadProtocolDetailsModal = function(url, $type)
     {
-
+        $("#loading").show();
     	var formdata = new FormData($(".inner-lines-link")[0]);
         $.ajax({
             contentType: false,
@@ -219,6 +239,7 @@ $("form").off("click", ".open-line-protocol").on("click", ".open-line-protocol",
             type: "POST",
             cache: false,
             success: function (data) {
+                $("#loading").hide();
                 switch ($type) {                       
                         case "summary":
                             //$.fn.OnOpenModalView();
@@ -229,9 +250,7 @@ $("form").off("click", ".open-line-protocol").on("click", ".open-line-protocol",
                         case "summaryProtocolsParital":    
                             $("._ProtocolsDetailsFloatModal").html(data);
                             $.fn.LoadSummaryModal('_ProtocolsDetailsFloatModal');
-                            $('.modal-content a:first').tab('show');
-                            $(".back-btn-container").removeClass("d-none")
-                            $(".")
+                            $('.modal-content a:first').tab('show');                         
                             break;                                        
                         case "protocolFloatModal":
                             $.fn.OpenModal('modal', 'protocol-details', data)
@@ -240,7 +259,8 @@ $("form").off("click", ".open-line-protocol").on("click", ".open-line-protocol",
                         case "protocolFloatModalPartial":
                             $("._ProtocolsDetailsFloatModal").html(data);
                             $.fn.ProtocolsMarkReadonly("protocol-details")
-                            break                      
+                           $(".back-btn-container").removeClass("d-none")
+                            break 
                     }   
                 return true;
             }
