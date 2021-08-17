@@ -30,7 +30,7 @@
         <li>
             @{
                 var dNone = "d-none";
-                if (Model.Index == 0 && (Model.ModalType != AppUtility.ProtocolModalType.CheckListMode && Model.ModalType != AppUtility.ProtocolModalType.Summary))
+                if (Model.Index == 0 && (Model.ModalType != AppUtility.ProtocolModalType.CheckListMode&& Model.ModalType != AppUtility.ProtocolModalType.Summary && Model.ModalType !=AppUtility.ProtocolModalType.SummaryFloat))
                 {
                     dNone = "";
                 }
