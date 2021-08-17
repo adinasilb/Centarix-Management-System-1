@@ -972,5 +972,11 @@ namespace PrototypeWithAuth.Controllers
 
             return PartialView(testValuesViewModel);
         }
+
+        public string GetBMI(double weight, double height)
+        {
+            double value = (weight / (height * height)) * 10000;
+            return String.Format("{0:N2}", value);
+        }
     }
 }

@@ -21,5 +21,6 @@ namespace PrototypeWithAuth.ViewModels
         public IFormFile File { get; set; }
         public bool Bool { get; set; }
         public int FieldID { get; set; }
+        public AppUtility.DataCalculation DataCalculation { get; set; }
     }
 }

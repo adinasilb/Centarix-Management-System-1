@@ -33,29 +33,72 @@
 <input type="hidden" asp-for="TestHeader.Name" value="@Model.TestHeader.Name" id="@TestHeaderNameID" name="@TestHeaderNameName" />
 <input type="hidden" asp-for="DataTypeEnum" value="@Model.DataTypeEnum" id="@DataTypeEnumID" name="@DataTypeEnumName" />
 
-<label class="control-label">@Model.TestHeader.Name</label>
 @{
-    switch (Model.DataTypeEnum)
+    if (Model.DataCalculation == AppUtility.DataCalculation.None)
     {
-        case AppUtility.DataTypeEnum.Double:
-            <input asp-for="Double" id="@DoubleID" name="@DoubleName" value="@Model.Double" class="form-control-plaintext border-bottom" />
-            <span asp-validation-for="Double" class="text-danger-centarix mark-readonly"></span>
-            break;
-        case AppUtility.DataTypeEnum.String:
-            <input asp-for="String" id="@StringID" name="@StringName" value="@Model.String" class="form-control-plaintext border-bottom" />
-            <span asp-validation-for="String" class="text-danger-centarix mark-readonly"></span>
-            break;
-        case AppUtility.DataTypeEnum.DateTime:
-            <input asp-for="DateTime" id="@DateTimeID" name="@DateTimeName" value="@Model.DateTime" class="form-control-plaintext border-bottom" />
-            <span asp-validation-for="DateTime" class="text-danger-centarix mark-readonly"></span>
-            break;
-        case AppUtility.DataTypeEnum.Bool:
-            <input asp-for="Bool" id="@BoolID" name="@BoolName" value="@Model.Bool" class="form-control-plaintext border-bottom" />
-            <span asp-validation-for="Bool" class="text-danger-centarix mark-readonly"></span>
-            break;
-        case AppUtility.DataTypeEnum.File:
-            <input asp-for="File" id="@FileID" name="@FileName" value="@Model.File" class="form-control-plaintext border-bottom" />
-            <span asp-validation-for="File" class="text-danger-centarix mark-readonly"></span>
-            break;
+        <label class="control-label">@Model.TestHeader.Name</label>
+
+        switch (Model.DataTypeEnum)
+        {
+            case AppUtility.DataTypeEnum.Double:
+                <input asp-for="Double" id="@DoubleID" name="@DoubleName" value="@Model.Double" class="@Model.TestHeader.Name form-control-plaintext border-bottom" />
+                <span asp-validation-for="Double" class="text-danger-centarix mark-readonly"></span>
+                break;
+            case AppUtility.DataTypeEnum.String:
+                <input asp-for="String" id="@StringID" name="@StringName" value="@Model.String" class="@Model.TestHeader.Name form-control-plaintext border-bottom" />
+                <span asp-validation-for="String" class="text-danger-centarix mark-readonly"></span>
+                break;
+            case AppUtility.DataTypeEnum.DateTime:
+                <input asp-for="DateTime" id="@DateTimeID" name="@DateTimeName" value="@Model.DateTime" class="@Model.TestHeader.Name form-control-plaintext border-bottom" />
+                <span asp-validation-for="DateTime" class="text-danger-centarix mark-readonly"></span>
+                break;
+            case AppUtility.DataTypeEnum.Bool:
+                <input asp-for="Bool" id="@BoolID" name="@BoolName" value="@Model.Bool" class="@Model.TestHeader.Name form-control-plaintext border-bottom" />
+                <span asp-validation-for="Bool" class="text-danger-centarix mark-readonly"></span>
+                break;
+            case AppUtility.DataTypeEnum.File:
+                <input asp-for="File" id="@FileID" name="@FileName" value="@Model.File" class="@Model.TestHeader.Name form-control-plaintext border-bottom" />
+                <span asp-validation-for="File" class="text-danger-centarix mark-readonly"></span>
+                break;
+        }
+    }
+    else
+    {
+        <div class="row datacalculation biomarkers-border-color p-3">
+            <div class="col-8">@Model.DataCalculation.ToString()</div>
+            <div class="col-4 @Model.TestHeader.Name">
+                @Model.String
+            </div>
+        </div>
     }
 }
+
+<script>
+    $.fn.CalculateBMI = function () {
+        if ($(".BMI").length > 0 && $(".Weight").length > 0 && $(".Height").length > 0) {
+            if (parseFloat($(".Height").val()) > 0 && parseFloat($(".Weight").val())) {
+                $.fn.GetBMI(parseFloat($(".Weight").val()), parseFloat($(".Height").val()));
+            }
+        };
+    }
+    $.fn.GetBMI = function (weight, height) {
+        $.ajax({
+            async: true,
+            url: "/Biomarkers/GetBMI?weight=" + weight + "&height=" + height,
+            type: 'GET',
+            cache: true,
+            success: function (data) {
+                $(".BMI").html(data);
+            }
+        });
+    }
+    $(document).ready(function () {
+        $.fn.CalculateBMI();
+    });
+    $(".Weight").on("change", function (e) {
+        $.fn.CalculateBMI();
+    });
+    $(".Height").on("change", function (e) {
+        $.fn.CalculateBMI();
+    });
+</script>

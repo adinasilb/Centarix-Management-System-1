@@ -22,7 +22,8 @@
                     TestHeader = header,
                     DataTypeEnum = dataType,
                     ListNumber = ListNumber,
-                    TestID = Model.Test.TestID
+                    TestID = Model.Test.TestID,
+                    DataCalculation = AppUtility.DataCalculation.None
                 };
                 TestValue testvalue = null;
                 if (Model.TestValues.Where(tv => tv.TestHeaderID == header.TestHeaderID).Any())
@@ -57,6 +58,17 @@
                 //await Html.RenderPartialAsync("_FieldView", fieldViewModel);
                 //listNumber++;
             }
+        }
+        FieldViewModel GetDataCalculation(TestHeader header, int ListNumber)
+        {
+            FieldViewModel fvm = new FieldViewModel()
+            {
+                DataCalculation = (AppUtility.DataCalculation)Enum.Parse(typeof(AppUtility.DataCalculation),header.Calculation, true),
+                ListNumber = ListNumber,
+                TestID = Model.Test.TestID,
+                TestHeader = header
+            };
+            return fvm;
         }
     }
 
@@ -166,7 +178,11 @@
                                 {
                                     <div class="row">
                                         <div class="col-12 p-3">
-
+                                            @{ 
+                                                var fieldViewModel = GetDataCalculation(calculatedField, listNumber);
+                                                listNumber++;
+                                                await Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                            }
                                         </div>
                                     </div>
                                 }
