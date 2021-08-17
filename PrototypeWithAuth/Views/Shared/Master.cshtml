@@ -538,11 +538,9 @@
                             $.fn.LoadSummaryModal('edits');
                             $('.modal-content a:first').tab('show');
                             break;
-                        case "summaryProtocolsParital":
-                            //$.fn.OnOpenModalView();
-                            $("._ProtocolsDetailsFloatModal .inner-lines-link").addClass("d-none");
+                        case "summaryProtocolsParital":    
                             $("._ProtocolsDetailsFloatModal").html(data);
-                            $.fn.LoadSummaryModal('edits');
+                            $.fn.LoadSummaryModal('_ProtocolsDetailsFloatModal');
                             $('.modal-content a:first').tab('show');
                             break;
                         case "create":

@@ -1675,9 +1675,18 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(requestItemViewModel);
         }
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> _ProtocolsProductDetails(int? productID)
+        public async Task<IActionResult> _ProtocolsProductDetails(int? productID, List<string> lastUrls, bool backButtonClicked)
         {
             RequestItemViewModel requestItemViewModel = await GetProtocolsProductDetailsFunction(productID);
+            if (backButtonClicked)
+            {
+                lastUrls.RemoveAt(lastUrls.Count - 1);
+            }
+            else
+            {
+                lastUrls.Add(Request.Path + Request.QueryString);
+            }
+            requestItemViewModel.LastUrls = lastUrls;
             return PartialView(requestItemViewModel);
         }
 
@@ -1692,18 +1701,30 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ProtocolsDetailsFloatModal(int? protocolID)
         {
-            CreateProtocolsViewModel createProtocolsViewModel = await GetProtocolsDeetailsFloatModalFunction(protocolID);
+            CreateProtocolsViewModel createProtocolsViewModel = await GetProtocolsDetailsFloatModalFunction(protocolID);
+            createProtocolsViewModel.LastUrls = new List<string>() {Request.Path+Request.QueryString };
             return PartialView(createProtocolsViewModel);
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> _ProtocolsDetailsFloatModal(int? protocolID)
+        public async Task<IActionResult> _ProtocolsDetailsFloatModal(int? protocolID, List<string> lastUrls, bool backButtonClicked)
         {
-            CreateProtocolsViewModel createProtocolsViewModel = await GetProtocolsDeetailsFloatModalFunction(protocolID);
+            CreateProtocolsViewModel createProtocolsViewModel = await GetProtocolsDetailsFloatModalFunction(protocolID);
+            if(backButtonClicked)
+            {
+                lastUrls.RemoveAt(lastUrls.Count-1);
+            }
+            else
+            {
+                lastUrls.Add(Request.Path + Request.QueryString);
+            }
+
+            createProtocolsViewModel.LastUrls = lastUrls;
+            
             return PartialView(createProtocolsViewModel);
         }
 
-        private async Task<CreateProtocolsViewModel> GetProtocolsDeetailsFloatModalFunction(int? protocolID)
+        private async Task<CreateProtocolsViewModel> GetProtocolsDetailsFloatModalFunction(int? protocolID)
         {
             var protocol = _context.Protocols.Where(p => p.ProtocolID == protocolID).FirstOrDefault();
             var createProtocolsViewModel = new CreateProtocolsViewModel();

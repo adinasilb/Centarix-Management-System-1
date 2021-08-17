@@ -38,5 +38,7 @@ namespace PrototypeWithAuth.ViewModels
         }
         public AppUtility.ProtocolModalType ModalType { get; set; }
         public Guid UniqueGuid { get; set; }
+        public List<string> LastUrls { get; set; }
+
     }
 }

@@ -8,6 +8,14 @@
             <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('protocol-details')">
                 <span aria-hidden="true">&times;</span>
             </button>
+            <div class="row ">
+                <a style=""
+                   class="title-label  link-details-back-btn">
+                    <i class="icon-arrow_back_ios-24px-1" style="font-size:1.4rem;"></i>
+                </a>
+            </div>
+            <input type="hidden" class="lastUrl" value="" />
+            <input type="hidden" class="currentUrl" value="@(Context.Request.Path+Context.Request.QueryString)" />
             <div class="_ProtocolsDetailsFloatModal">
                 @{ await Html.RenderPartialAsync("_ProtocolsDetailsFloatModal", Model);}
             </div>

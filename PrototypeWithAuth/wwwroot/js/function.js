@@ -180,27 +180,67 @@ $("form").off("click", ".open-line-product").on("click", ".open-line-product", f
     e.preventDefault();
     if($(".modal").length>0)
     {
-         var url = "/Protocols/_ProtocolsProductDetails?productID=" + $(this).attr("value");
-            $.fn.CallPageRequest(url, "summaryProtocolsParital");
+         var url = "/Protocols/_ProtocolsProductDetails?productID=" + $(this).attr("value");  
+        var type = "summaryProtocolsParital";
     }
     else
     {
         var url = "/Protocols/ProtocolsProductDetails?productID=" + $(this).attr("value");
-            $.fn.CallPageRequest(url, "summary");
+        var type ="summary";
     }
-
+      $.fn.LoadProtocolDetailsModal(url, type);
 });
 $("form").off("click", ".open-line-protocol").on("click", ".open-line-protocol", function (e) {
     e.preventDefault();
      if($(".modal").length>0)
     {
-         var url = "/Protocols/_ProtocolsDetailsFloatModal?protocolID=" + $(this).attr("value");           
-         $.fn.CallPageRequest(url, "protocolFloatModalPartial");
+         var url = "/Protocols/_ProtocolsDetailsFloatModal?protocolID=" + $(this).attr("value");  
+         var type = "protocolFloatModalPartial";
     }
     else
     {
-         var url = "/Protocols/ProtocolsDetailsFloatModal?protocolID=" + $(this).attr("value");           
-         $.fn.CallPageRequest(url, "protocolFloatModal");
+         var url = "/Protocols/ProtocolsDetailsFloatModal?protocolID=" + $(this).attr("value");    
+         var type ="protocolFloatModal";
     }
-
+    $.fn.LoadProtocolDetailsModal(url, type);
 });
+
+    $.fn.LoadProtocolDetailsModal = function(url, $type)
+    {
+
+    	var formdata = new FormData($(".inner-lines-link")[0]);
+        $.ajax({
+            contentType: false,
+            processData: false,
+            async: true,
+            url: url,
+            data: formdata,
+            traditional: true,
+            type: "POST",
+            cache: false,
+            success: function (data) {
+                switch ($type) {                       
+                        case "summary":
+                            //$.fn.OnOpenModalView();
+                            $.fn.OpenModal('modal', 'edits', data)
+                            $.fn.LoadSummaryModal('edits');
+                            $('.modal-content a:first').tab('show');
+                            break;
+                        case "summaryProtocolsParital":    
+                            $("._ProtocolsDetailsFloatModal").html(data);
+                            $.fn.LoadSummaryModal('_ProtocolsDetailsFloatModal');
+                            $('.modal-content a:first').tab('show');
+                            break;                                        
+                        case "protocolFloatModal":
+                            $.fn.OpenModal('modal', 'protocol-details', data)
+                            $.fn.ProtocolsMarkReadonly("protocol-details")
+                            break
+                        case "protocolFloatModalPartial":
+                            $("._ProtocolsDetailsFloatModal").html(data);
+                            $.fn.ProtocolsMarkReadonly("protocol-details")
+                            break                      
+                    }   
+                return true;
+            }
+        });
+    }
