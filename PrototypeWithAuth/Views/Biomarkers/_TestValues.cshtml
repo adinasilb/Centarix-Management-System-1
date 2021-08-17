@@ -63,7 +63,7 @@
         {
             FieldViewModel fvm = new FieldViewModel()
             {
-                DataCalculation = (AppUtility.DataCalculation)Enum.Parse(typeof(AppUtility.DataCalculation),header.Calculation, true),
+                DataCalculation = (AppUtility.DataCalculation)Enum.Parse(typeof(AppUtility.DataCalculation), header.Calculation, true),
                 ListNumber = ListNumber,
                 TestID = Model.Test.TestID,
                 TestHeader = header
@@ -85,7 +85,7 @@
                 }
                 @if (Model.Test.TestOuterGroups[0].TestGroups.Count == 1)
                 {
-                    if (Model.Test.TestOuterGroups[0].TestGroups[0].IsNone && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 5)
+                    if (Model.Test.TestOuterGroups[0].TestGroups[0].IsNone && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 5) //ECG
                     {
                         <div class="col-4 px-4">
                             <div class="row p-3">
@@ -105,6 +105,17 @@
                                 <div class="row p-3">
                                     @{
                                         fieldViewModel = GetFieldViewModel(header2, listNumber);
+                                        listNumber++;
+                                        await Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                    }
+                                </div>
+                            </div>
+                            <div class="row p-3">
+                                @{ var header5 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 5).FirstOrDefault();}
+
+                                <div class="row p-3">
+                                    @{
+                                        fieldViewModel = GetFieldViewModel(header5, listNumber);
                                         listNumber++;
                                         await Html.RenderPartialAsync("_FieldView", fieldViewModel);
                                     }
@@ -178,7 +189,7 @@
                                 {
                                     <div class="row">
                                         <div class="col-12 p-3">
-                                            @{ 
+                                            @{
                                                 var fieldViewModel = GetDataCalculation(calculatedField, listNumber);
                                                 listNumber++;
                                                 await Html.RenderPartialAsync("_FieldView", fieldViewModel);
