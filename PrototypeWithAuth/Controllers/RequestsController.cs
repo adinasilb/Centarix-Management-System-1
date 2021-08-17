@@ -1105,6 +1105,7 @@ namespace PrototypeWithAuth.Controllers
                     newRequest.OrderType = AppUtility.OrderTypeEnum.Save.ToString();
                     newRequest.Unit = 1;
                     newRequest.Product.UnitTypeID = 5;
+                    newRequest.Product.SerialNumber = GetSerialNumber(false);
                     _context.Add(newRequest);
                     await _context.SaveChangesAsync();
                     MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests, false, guid);
