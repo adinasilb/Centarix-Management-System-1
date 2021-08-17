@@ -48,11 +48,11 @@
                 <input asp-for="Protocol.Name" class="form-control-plaintext border-bottom mark-readonly" />
                 <span asp-validation-for="Protocol.Name" class="text-danger-centarix"></span>
             </div>
-            @*<div class="col-4">
+            <div class="col-4">
                 <label asp-for="Protocol.VersionNumber" class="control-label"></label>
-                <input asp-for="Protocol.VersionNumber" class="form-control-plaintext border-bottom" />
+                <input asp-for="Protocol.VersionNumber" class="form-control-plaintext border-bottom" readonly/>
                 <span asp-validation-for="Protocol.VersionNumber" class="text-danger-centarix"></span>
-            </div>*@
+            </div>
             <div class="col-4">
                 <label asp-for="Protocol.UniqueCode" class="control-label"></label>
                 <input asp-for="Protocol.UniqueCode" class="form-control-plaintext border-bottom " readonly />

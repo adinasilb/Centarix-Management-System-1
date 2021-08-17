@@ -526,7 +526,7 @@ namespace PrototypeWithAuth.Controllers
             var lastProtocolNum = int.Parse(_context.Protocols.IgnoreQueryFilters().OrderBy(p => p).LastOrDefault()?.UniqueCode.Substring(1) ?? "0");
             var protocol = _context.Protocols
                 .Include(p => p.Urls).Include(p => p.Materials)
-                .ThenInclude(m => m.Product).Include(p => p.ProtocolSubCategory).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol() { UniqueCode = "T" + (++lastProtocolNum) };
+                .ThenInclude(m => m.Product).Include(p => p.ProtocolSubCategory).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol() { UniqueCode = "T" + (++lastProtocolNum), VersionNumber = 1+"" };
             protocol.Urls ??= new List<Link>();
             protocol.Materials ??= new List<Material>();
 
@@ -1732,6 +1732,8 @@ namespace PrototypeWithAuth.Controllers
             await FillCreateProtocolsViewModel(createProtocolsViewModel, protocol.ProtocolTypeID, protocol.ProtocolID);
             return createProtocolsViewModel;
         }
+
+
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
