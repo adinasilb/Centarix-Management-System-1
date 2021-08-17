@@ -83,7 +83,7 @@
                                     @{
                                         var fieldViewModel = GetFieldViewModel(header1, listNumber);
                                         listNumber++;
-                                        Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                        await Html.RenderPartialAsync("_FieldView", fieldViewModel);
                                     }
                                 </div>
                             </div>
@@ -94,7 +94,7 @@
                                     @{
                                         fieldViewModel = GetFieldViewModel(header2, listNumber);
                                         listNumber++;
-                                        Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                        await Html.RenderPartialAsync("_FieldView", fieldViewModel);
                                     }
                                 </div>
                             </div>
@@ -107,7 +107,7 @@
                                     @{
                                         fieldViewModel = GetFieldViewModel(header3, listNumber);
                                         listNumber++;
-                                        Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                        await Html.RenderPartialAsync("_FieldView", fieldViewModel);
                                     }
                                 </div>
                             </div>
@@ -118,7 +118,7 @@
                                     @{
                                         fieldViewModel = GetFieldViewModel(header4, listNumber);
                                         listNumber++;
-                                        Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                        await Html.RenderPartialAsync("_FieldView", fieldViewModel);
                                     }
                                 </div>
                             </div>
@@ -140,7 +140,7 @@
                                                 {
                                                     var fieldViewModel = GetFieldViewModel(fieldsOfOrderedList[x], listNumber);
                                                     listNumber++;
-                                                    Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                                    await Html.RenderPartialAsync("_FieldView", fieldViewModel);
                                                 }
                                             }
                                         </div>
@@ -151,7 +151,7 @@
                                                     {
                                                         var fieldViewModel = GetFieldViewModel(fieldsOfOrderedList[x + 1], listNumber);
                                                         listNumber++;
-                                                        Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                                        await Html.RenderPartialAsync("_FieldView", fieldViewModel);
                                                     }
                                                 }
                                             </div>
@@ -159,19 +159,18 @@
                                     </div>
                                 }
                             }
-                            @*@foreach (var testheader in
+                        </div>
+                        <div class="col-4 px-4">
+                            @{
+                                foreach (var calculatedField in calculationsOfOrderedList)
                                 {
-                                    <span style="width: 50%;" class="mr-0">
-                                        @{
-                                            if (!testheader.IsSkip)
-                                            {
-                                                var fieldViewModel = GetFieldViewModel(testheader, listNumber);
-                                                listNumber++;
-                                                Html.RenderPartialAsync("_FieldView", fieldViewModel);
-                                            }
-                                        }
-                                    </span>
-                                }*@
+                                    <div class="row">
+                                        <div class="col-12 p-3">
+
+                                        </div>
+                                    </div>
+                                }
+                            }
                         </div>
                     }
                 }

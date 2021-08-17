@@ -6,7 +6,7 @@
 }
 <script src="~/js/biomarkerssave.js"></script>
 @{ var listNumber = 0;}
-<form action="" method="POST" enctype="multipart/form-data" class="test-forms on-form-modal bio-form" id="myForm">
+<form action="" method="POST" enctype="multipart/form-data" class="test-forms on-form-modal bio-form" id="BioTestForm">
     @Html.HiddenFor(m => m.ExperimentEntry.ExperimentEntryID)
     @Html.HiddenFor(m => m.ExperimentEntry.ParticipantID)
     @Html.HiddenFor(m => m.ExperimentEntry.SiteID)
@@ -38,7 +38,7 @@
     <div class="row under-row-margin">
         <div class="col-6">
             <button class="custom-button custom-button-font light-gray-background-color ml-0">
-                <a href="@Url.Action("Biomarkers", "Experiment", new { ID = Model.ExperimentEntry.ParticipantID })" class="text-black">
+                <a href="@Url.Action("Entries", "Biomarkers", new { ParticipantID = Model.ExperimentEntry.ParticipantID })" class="text-black">
                     <i class="icon-arrow_back_ios-24px-1" style="font-size: 1.2rem;"></i>
                     Back
                 </a>
@@ -92,18 +92,33 @@
 
 <script>
     $(".biomarkers-test-name").on("click", function (e) {
+        console.log("inside of the click");
         if (!$(this).hasClass("selected")) {
-            if ($(".edit-mode-input").hasClass("on")) {
-                $.ajax({
-                    async: false,
-                    url: "/Biomarkers/SaveTestModal?ID=" + $(this).attr("ID"),
-                    type: 'GET',
-                    cache: false,
-                    success: function (data) {
-                        $.fn.OpenModal('save-test-modal', 'save-bio-test-modal', data);
-                    }
-                });
+            if ($("._testvalues").hasClass("changed")) {
+                console.log("inside of if state")
+                if ($(".edit-mode-input").hasClass("on")) {
+                    $.ajax({
+                        async: false,
+                        url: "/Biomarkers/SaveTestModal?ID=" + $(this).attr("ID"),
+                        type: 'GET',
+                        cache: false,
+                        success: function (data) {
+                            $.fn.OpenModal('save-test-modal', 'save-bio-test-modal', data);
+                        }
+                    });
+                }
             }
+            else {
+                console.log("change form");
+                $.fn.ChangeTest($(this));
+            }
+        }
+    });
+
+
+    $("body").on("change", "input", function (e) {
+        if (!$("._testvalues").hasClass("changed")) {
+            $("._testvalues").addClass("changed");
         }
     });
 </script>

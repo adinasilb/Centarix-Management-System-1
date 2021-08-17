@@ -29,6 +29,12 @@ namespace PrototypeWithAuth.Controllers
 
         public ActionResult RunScripts()
         {
+            var testvalues = _context.TestValues;
+            foreach(var tv in testvalues)
+            {
+                _context.Remove(tv);
+            }
+            _context.SaveChanges();
             var testheaders = _context.TestHeaders;
             foreach (var th in testheaders)
             {

@@ -30,48 +30,30 @@
 <script>
     $(".cancel-save").on("click", function (e) {
         e.preventDefault();
+        $(".testvalues").removeClass("changed")
         if ($("#String").val() != "none") {
             var selected = $("#" + $("#BioTestString").val());
-            $.ajax({
-                async: true,
-                url: "/Biomarkers/_TestValues?TestID=" + selected.attr("testid") + "&ListNumber=0&SiteID=" + /*$(this).attr("listnumber")*/ + $("#ExperimentEntry_SiteID").val() + "&ExperimentID=" + $("#ExperimentEntry_Participant_ExperimentID").val() + "&ExperimentEntryID=" + $("#ExperimentEntry_ExperimentEntryID").val(),
-                type: 'GET',
-                cache: false,
-                success: function (data) {
-                    $(".testvalues").html(data);
-                }
-            });
-            $(".biomarkers-test-name").removeClass("selected");
-            selected.addClass("selected");
+            $.fn.ChangeTest(selected);
             $.fn.CloseModal('save-bio-test-modal');
         }
     });
+
     $(".submit-save").on("click", function (e) {
         e.preventDefault();
+        $(".testvalues").removeClass("changed")
         $.ajax({
             contentType: false,
             processData: false,
             async: true,
             url: "/Biomarkers/SaveTests",
-            data: new FormData($("#myForm")[0]),
+            data: new FormData($("#BioTestForm")[0]),
             traditional: true,
             type: "POST",
             cache: false,
             success: function (data) {
                 if ($("#BioTestString").val() != "none") {
                     var selected = $('#' + $("#BioTestString").val());
-                    var url = "/Biomarkers/_TestValues?TestID=" + selected.attr("testid") + "&ListNumber=0&SiteID=" + /*$(this).attr("listnumber")*/ + $("#ExperimentEntry_SiteID").val() + "&ExperimentID=" + $("#ExperimentEntry_Participant_ExperimentID").val() + "&ExperimentEntryID=" + $("#ExperimentEntry_ExperimentEntryID").val();
-                    $.ajax({
-                        async: true,
-                        url: url,
-                        type: 'GET',
-                        cache: false,
-                        success: function (data) {
-                            $(".testvalues").html(data);
-                        }
-                    });
-                    $(".biomarkers-test-name").removeClass("selected");
-                    selected.addClass("selected");
+                    $.fn.ChangeTest(selected);
                 }
                 else {
                     $(".testvalues").html(data);

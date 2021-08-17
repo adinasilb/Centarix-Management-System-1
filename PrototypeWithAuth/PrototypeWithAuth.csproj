@@ -423,6 +423,10 @@
     <Compile Remove="Data\Migrations\20210721113744_updatedSiteTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20210804092449_updatedParticipantOfExperimentEntry.cs" />
     <Compile Remove="Data\Migrations\20210804092449_updatedParticipantOfExperimentEntry.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210817075353_uniqueIndexOnParticipantAndVisitNumber.cs" />
+    <Compile Remove="Data\Migrations\20210817075353_uniqueIndexOnParticipantAndVisitNumber.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210817080202_uniqueIndexOnParticipantAndVisitNumber.cs" />
+    <Compile Remove="Data\Migrations\20210817080202_uniqueIndexOnParticipantAndVisitNumber.Designer.cs" />
   </ItemGroup>
 
 
