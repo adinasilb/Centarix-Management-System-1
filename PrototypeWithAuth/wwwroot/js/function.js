@@ -230,6 +230,8 @@ $("form").off("click", ".open-line-protocol").on("click", ".open-line-protocol",
                             $("._ProtocolsDetailsFloatModal").html(data);
                             $.fn.LoadSummaryModal('_ProtocolsDetailsFloatModal');
                             $('.modal-content a:first').tab('show');
+                            $(".back-btn-container").removeClass("d-none")
+                            $(".")
                             break;                                        
                         case "protocolFloatModal":
                             $.fn.OpenModal('modal', 'protocol-details', data)
