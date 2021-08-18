@@ -1324,20 +1324,18 @@ namespace PrototypeWithAuth.Controllers
         {
             var categoryType = 1;
             var serialLetter = "L";
-            int lastSerialNumberInt = 0;
             if (isOperations)
             {
                 categoryType = 2;
                 serialLetter = "P";
             }
-            var lastSerialNumber = _context.Products.IgnoreQueryFilters().Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType)
-                .OrderBy(p => p).LastOrDefault()?.SerialNumber;
-            if(lastSerialNumber != null)
-            {
-                lastSerialNumberInt = int.Parse(lastSerialNumber.Substring(1));
-            }
+            var serialnumberList = _context.Products.IgnoreQueryFilters().Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType)
+                .Select(p => int.Parse(p.SerialNumber.Substring(1))).ToList();
+            var lastSerialNumberInt = serialnumberList.OrderBy(s => s).LastOrDefault();
+
             return serialLetter + (lastSerialNumberInt + 1);
         }
+
 
         //[HttpPost]
         //[Authorize(Roles = "Requests")]
