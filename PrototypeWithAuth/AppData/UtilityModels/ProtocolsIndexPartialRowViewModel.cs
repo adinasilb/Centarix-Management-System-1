@@ -135,7 +135,6 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { p.CreationDate.GetElixirDateFormat() } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Type", Width = 10, Value = new List<string>() { p.ProtocolType.ProtocolTypeDescription } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, Value = new List<string>() { p.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Icons = iconList, AjaxID = p.ProtocolID };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Shared By", Width = 10, Value = new List<string>() { GetSharedBy(shareProtocol) } };
             yield return new RequestIndexPartialColumnViewModel()
             {

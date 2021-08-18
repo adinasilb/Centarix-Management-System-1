@@ -158,11 +158,11 @@ $(".popover-more").off('click').click(function (e) {
 	$(".icon-more-popover").off("click").on("click", ".remove-share", function (e) {
 		var ControllersEnum = "";
 		var shareNum = "Protocols";
-		if ($(this).hasClass("Protocols")) { //THIS IF IS NOT WORKING
+		if ($(this).hasClass("Protocols")) {
 			ControllersEnum = "Protocols";
 		}
 		shareNum = $(this).attr("data-share-resource-id");
-		var url = "/" + ControllersEnum + "/RemoveShare?ID=" + shareNum + "&ModelsEnum=" + $("#masterSectionType").val();
+		var url = "/" + ControllersEnum + "/RemoveShare?ShareID=" + shareNum + "&ModelsEnum=" + $("#masterSectionType").val();
 		alert("url " + url);
 		$.ajax({
 			async: true,
@@ -170,17 +170,8 @@ $(".popover-more").off('click').click(function (e) {
 			type: 'GET',
 			cache: true,
 			success: function (e) {
-				if (!e) {
-					$.ajax({
-						async: true,
-						url: "/Requests/_IndexSharedTable",
-						type: 'GET',
-						cache: true,
-						success: function (data) {
-							$("._IndexSharedTable").html(data);
-						}
-					})
-				}
+
+					$.fn.ajaxPartialIndexTable("/Protocols/_IndexTableData", "._IndexTableData", "GET");
 			}
 		});
 	});

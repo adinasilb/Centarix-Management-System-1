@@ -48,7 +48,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
-            var viewmodel = await GetProtocolsIndexViewModel(new ProtocolsIndexObject() { });
+            var viewmodel = await GetProtocolsIndexViewModelAsync(new ProtocolsIndexObject() { });
 
             return View(viewmodel);
         }
@@ -76,7 +76,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        private async Task<ProtocolsIndexViewModel> GetProtocolsIndexViewModel(ProtocolsIndexObject protocolsIndexObject, SelectedProtocolsFilters selectedFilters = null)
+        private async Task<ProtocolsIndexViewModel> GetProtocolsIndexViewModelAsync(ProtocolsIndexObject protocolsIndexObject, SelectedProtocolsFilters selectedFilters = null)
         {
             IQueryable<Protocol> ProtocolsPassedIn = Enumerable.Empty<Protocol>().AsQueryable();
             IQueryable<Protocol> fullProtocolsList = _context.Protocols.Include(p => p.ApplicationUserCreator).Include(p => p.ProtocolSubCategory)
@@ -210,7 +210,7 @@ namespace PrototypeWithAuth.Controllers
                                         )).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 20);
                             break;
                         case AppUtility.SidebarEnum.SharedWithMe:
-                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverStart };
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverRemoveShare, popoverStart };
                             iconList.Add(popoverMoreIcon);
                             onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate)
 .Select(p => new ProtocolsIndexPartialRowViewModel(p, p.ProtocolType, p.ProtocolSubCategory, protocolsIndexObject, iconList, p.ApplicationUserCreator,
@@ -373,7 +373,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.MyProtocols;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
-            var viewmodel = await GetProtocolsIndexViewModel(
+            var viewmodel = await GetProtocolsIndexViewModelAsync(
                 new ProtocolsIndexObject() { SectionType = AppUtility.MenuItems.Protocols, SidebarType = AppUtility.SidebarEnum.MyProtocols, PageType = AppUtility.PageTypeEnum.ProtocolsProtocols });
 
             return View(viewmodel);
@@ -385,7 +385,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Favorites;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
-            var viewmodel = await GetProtocolsIndexViewModel(
+            var viewmodel = await GetProtocolsIndexViewModelAsync(
                 new ProtocolsIndexObject() { SectionType = AppUtility.MenuItems.Protocols, SidebarType = AppUtility.SidebarEnum.Favorites, PageType = AppUtility.PageTypeEnum.ProtocolsProtocols });
 
             return View(viewmodel);
@@ -397,7 +397,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SharedWithMe;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
-            var viewmodel = await GetProtocolsIndexViewModel(
+            var viewmodel = await GetProtocolsIndexViewModelAsync(
                  new ProtocolsIndexObject() { SectionType = AppUtility.MenuItems.Protocols, SidebarType = AppUtility.SidebarEnum.SharedWithMe, PageType = AppUtility.PageTypeEnum.ProtocolsProtocols });
 
             return View(viewmodel);
@@ -408,7 +408,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.LastProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
-            var viewmodel = await GetProtocolsIndexViewModel(new ProtocolsIndexObject() { SectionType = AppUtility.MenuItems.Protocols, SidebarType = AppUtility.SidebarEnum.LastProtocol, PageType = AppUtility.PageTypeEnum.ProtocolsProtocols });
+            var viewmodel = await GetProtocolsIndexViewModelAsync(new ProtocolsIndexObject() { SectionType = AppUtility.MenuItems.Protocols, SidebarType = AppUtility.SidebarEnum.LastProtocol, PageType = AppUtility.PageTypeEnum.ProtocolsProtocols });
             return View(viewmodel);
         }
         [Authorize(Roles = "Protocols")]
@@ -1825,22 +1825,20 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> _IndexTable(bool IsFavorite = false)
+        public async Task<IActionResult> _IndexTable(ProtocolsIndexObject protocolsIndexObject)
         {
             ProtocolsIndexViewModel viewmodel;
-            if (IsFavorite)
-            {
-                viewmodel = await GetProtocolsIndexViewModel(
-                new ProtocolsIndexObject() { SectionType = AppUtility.MenuItems.Protocols, SidebarType = AppUtility.SidebarEnum.Favorites, PageType = AppUtility.PageTypeEnum.ProtocolsProtocols });
-
-            }
-            else
-            {
-                viewmodel = await GetProtocolsIndexViewModel(new ProtocolsIndexObject() { });
-            }
+            viewmodel = await GetProtocolsIndexViewModelAsync(protocolsIndexObject);
             return PartialView(viewmodel);
         }
 
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> _IndexTableData(ProtocolsIndexObject protocolsIndexObject)
+        {
+            ProtocolsIndexViewModel viewmodel;
+            viewmodel = await GetProtocolsIndexViewModelAsync(protocolsIndexObject);
+            return PartialView(viewmodel);
+        }
 
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> KitProtocol()
@@ -2417,8 +2415,9 @@ namespace PrototypeWithAuth.Controllers
             base.GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, parentFolderName, uploadFolder, id);
             base.GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, parentFolderName, uploadFolder, id);
         }
+
         [Authorize(Roles = "Protocols")]
-        public async void RemoveShare(int ShareID, AppUtility.ModelsEnum modelsEnum)
+        public bool RemoveShare(int ShareID, AppUtility.ModelsEnum modelsEnum)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -2431,16 +2430,22 @@ namespace PrototypeWithAuth.Controllers
                             _context.Remove(sharedResource);
                             break;
                         case AppUtility.ModelsEnum.Protocols:
-                            var sharedProtocol = _context.ShareProtocols.Where(sr => sr.ShareID == ShareID).FirstOrDefault();
-                            _context.Remove(sharedProtocol);
+                            var sharedProtocols = _context.ShareProtocols.Where(sr => sr.ProtocolID == ShareID && sr.ToApplicationUserID == _userManager.GetUserId(User));
+                            foreach (var sr in sharedProtocols)
+                            {
+                                _context.Remove(sr);
+                            }
                             break;
+
                     }
                     _context.SaveChanges();
                     transaction.Commit();
+                    return true;
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
+                    return false;
                 }
             }
         }
@@ -3029,7 +3034,7 @@ namespace PrototypeWithAuth.Controllers
                         PageType = AppUtility.PageTypeEnum.ProtocolsProtocols,
                         SidebarType = sidebarType
                     };
-                    return RedirectToAction("_IndexTable", new { IsFavorite = true });
+                    return RedirectToAction("_IndexTable", requestIndexObject);
                 }
             }
             return new EmptyResult();
