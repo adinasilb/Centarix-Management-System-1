@@ -255,6 +255,7 @@
 					else {
 						$.fn.ChangeUserPermissionsButtons();
 					}
+					$('#permissions .form-check :input[type=hidden]').remove(); /*remove automatically generated input cuz it causes the checkboxes to be hidden*/
 				} else {
 					$.ajax({
 						url: controller + viewClass + "?id=" + id + "&SectionType=" + section,
