@@ -1409,6 +1409,8 @@ namespace PrototypeWithAuth.Controllers
                 {
                     tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
                 }
+                var updatedTempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID, 0);
+                await SetTempRequestAsync(updatedTempRequestJson, tempRequestListViewModel, tempRequestListViewModel.RequestIndexObject);
             }
 
             //foreach (var req in requests)
