@@ -3253,6 +3253,10 @@ namespace PrototypeWithAuth.Controllers
 
             //creating the path for the file to be saved
             string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
+            if (!Directory.Exists(path1))
+            {
+                Directory.CreateDirectory(path1);
+            }
             string uniqueFileName = "PriceQuoteRequest.pdf";
             string filePath = Path.Combine(path1, uniqueFileName);
             // save pdf document
@@ -3262,10 +3266,7 @@ namespace PrototypeWithAuth.Controllers
             doc.Close();
 
 
-            string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-            string uploadFile = Path.Combine(uploadFolder, "PriceQuoteRequest.pdf");
-
-            if (System.IO.File.Exists(uploadFile))
+            if (System.IO.File.Exists(filePath))
             {
                 //instatiate mimemessage
                 var message = new MimeMessage();
@@ -3293,7 +3294,7 @@ namespace PrototypeWithAuth.Controllers
                 //body
                 builder.TextBody = @"Hello," + "\n\n" + "Please send a price quote for the items listed in the attached pdf. \n\nThank you.\n"
                         + ownerUsername + "\nCentarix"; ;
-                builder.Attachments.Add(uploadFile);
+                builder.Attachments.Add(filePath);
 
                 message.Body = builder.ToMessageBody();
 
@@ -4951,9 +4952,9 @@ namespace PrototypeWithAuth.Controllers
                     _context.Add(addInvoiceViewModel.Invoice);
                     await _context.SaveChangesAsync();
 
-                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+/*                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
                     string uploadFolderFrom = Path.Combine(uploadFolder, addInvoiceViewModel.Guid.ToString());
-                    string uplaodFolderPathFrom = Path.Combine(uploadFolderFrom, AppUtility.FolderNamesEnum.Invoices.ToString());
+                    string uplaodFolderPathFrom = Path.Combine(uploadFolderFrom, AppUtility.FolderNamesEnum.Invoices.ToString());*/
 
                     foreach (var request in addInvoiceViewModel.Requests)
                     {
