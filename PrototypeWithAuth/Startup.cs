@@ -68,7 +68,7 @@ namespace PrototypeWithAuth
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("ElixirTestUpload")));
+                    Configuration.GetConnectionString("ElixirTest")));
 
             //services.AddDbContext<ApplicationDbContext>(options =>
             //{
