@@ -2843,6 +2843,10 @@ namespace PrototypeWithAuth.Controllers
             string renderedView = await RenderPartialViewToString("OrderEmailView", confirm);
 
             string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
+            if(!Directory.Exists(path1))
+            {
+                Directory.CreateDirectory(path1);
+            }
             string fileName = Path.Combine(path1, "Order.txt");
 
             using (StreamWriter writer = new StreamWriter(fileName))
