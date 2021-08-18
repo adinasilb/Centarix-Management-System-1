@@ -245,6 +245,7 @@
 				
 				if ($('.turn-edit-on-off').hasClass('users')) {
 					$('.userName').val($('#FirstName').val() + " " + $('#LastName').val())
+					$('.mark-readonly').prop('disabled', true) //for uplodad image button
 					console.log(currentPermissions)
 					$.fn.HideAllPermissionsDivs();
 					if (currentPermissions != null) {
