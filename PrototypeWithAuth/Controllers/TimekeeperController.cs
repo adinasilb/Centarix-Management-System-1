@@ -491,7 +491,15 @@ namespace PrototypeWithAuth.Controllers
                     if (updateHoursViewModel.EmployeeHour.PartialOffDayTypeID != null && updateHoursViewModel.EmployeeHour.PartialOffDayHours == null)
                     {
                         var employeeTime = _context.Employees.Include(e => e.SalariedEmployee).Where(e => e.Id == updateHoursViewModel.EmployeeHour.EmployeeID).FirstOrDefault().SalariedEmployee.HoursPerDay;
-                        ehaa.PartialOffDayHours = TimeSpan.FromHours(employeeTime) - updateHoursViewModel.EmployeeHour.TotalHours;
+                        var offDayHours = TimeSpan.FromHours(employeeTime) - updateHoursViewModel.EmployeeHour.TotalHours;
+                        if(offDayHours > TimeSpan.Zero)
+                        {
+                            ehaa.PartialOffDayHours = offDayHours;
+                        }
+                        else
+                        {
+                            ehaa.PartialOffDayTypeID = null;
+                        }
                     }
                     else
                     {
