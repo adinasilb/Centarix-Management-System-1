@@ -456,6 +456,16 @@ $(function () {
                 $(viewClass).html(data);
                 $(".tooltip").remove();
                 $("#loading").hide();
+                //workaround for price radio button not coming in when switching from nothing is here tab
+                var id = "#nis";
+                //alert($(id).prop('checked'))
+                if ($('#tempCurrency').val() === "USD") {
+                    id = "#usd";
+                }
+                if ($(id).attr("checked") !== "checked") {
+                    console.log('checking button')
+                    $(id).attr("checked", "checked");
+                }
                 return true;
             }
         });

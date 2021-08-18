@@ -131,7 +131,7 @@ namespace PrototypeWithAuth.AppData
             return ore;
         }
         public enum RoleItems { Admin, CEO }
-        public enum CurrencyEnum { NIS, USD }
+        public enum CurrencyEnum { None, NIS, USD }
         public enum PaymentsPopoverEnum
         {
             //Share,
