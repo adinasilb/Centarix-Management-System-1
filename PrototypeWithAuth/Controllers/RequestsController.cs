@@ -2781,15 +2781,17 @@ namespace PrototypeWithAuth.Controllers
                     request.Product.ProductSubcategory.ParentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).FirstOrDefault();
                     request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
                 }
-                TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID, 3);
                 newTRLVM.TempRequestViewModels = new List<TempRequestViewModel>()
                 {
                     new TempRequestViewModel(){
                         Request = request
                     }
                 };
-                updatedTempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID, 3);
+                newTRLVM.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
+                updatedTempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID, 1);
                 await SetTempRequestAsync(updatedTempRequestJson, newTRLVM, tempRequestListViewModel.RequestIndexObject);
+                newTRLVM.GUID = updatedTempRequestJson.GuidID;
+                newTRLVM.SequencePosition = updatedTempRequestJson.SequencePosition;
                 var payments = _context.Payments.Where(p => p.RequestID == id);
              
                 allRequests.Add(request);
@@ -2825,11 +2827,11 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 //updatedTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson, 3);
+                newTRLVM.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
                 await SetTempRequestAsync(oldTempRequestJson, newTRLVM, tempRequestListViewModel.RequestIndexObject);
             }
 
             //IMPORTANT!!! Check that payments and comments are coming in
-            newTRLVM.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
             ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
             {
                 ParentRequest = pr,
