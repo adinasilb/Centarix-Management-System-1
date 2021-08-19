@@ -143,7 +143,7 @@ namespace PrototypeWithAuth.Controllers
             var addInvoiceIcon = new IconColumnViewModel(" icon-cancel_presentation-24px  green-overlay ", "", "invoice-add-one", "Add Invoice");
 
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
-            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "#5F79E2", "request-favorite", "Favorite");
+            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color);", "request-favorite", "Favorite");
             var popoverMoreIcon = new IconColumnViewModel("More", "icon-more_vert-24px", "black", "More");
             var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
             var resendIcon = new IconColumnViewModel("Resend");
@@ -2032,7 +2032,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (favIconIndex != -1 && favoriteRequest != null) //check these checks
             {
-                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "#5F79E2", "request-favorite request-unlike", "Unfavorite");
+                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "var(--order-inv-color);", "request-favorite request-unlike", "Unfavorite");
                 newIconList[favIconIndex] = unLikeIcon;
             }
             //for approval icon

@@ -191,7 +191,7 @@ namespace PrototypeWithAuth.ViewModels
 
             if (favIconIndex != -1 && favoriteRequest != null) 
             {
-                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "#5F79E2", "request-favorite request-unlike", "Unfavorite");
+                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "var(--order-inv-color);", "request-favorite request-unlike", "Unfavorite");
                 newIconList[favIconIndex] = unLikeIcon;
             }
             
