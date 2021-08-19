@@ -1134,8 +1134,11 @@
             //$(".modal-backdrop").first().removeClass();
             //alert(parentFolder)
             var urlbeginning = "/Requests/"
-            if(section === "Protocols") {
-                urlbeginning ="/Protocols/"
+            if (section === "Protocols") {
+                urlbeginning = "/Protocols/"
+            }
+            else if (section == "Biomarkers") {
+                urlbeginning = "/Biomarkers/"
             }
             if (isReopen) {
                 urltogo = urlbeginning + "_DocumentsModalData?id=" + requestId + "&Guid=" + guid + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +

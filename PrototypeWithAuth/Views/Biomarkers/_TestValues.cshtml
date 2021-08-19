@@ -258,6 +258,44 @@
                     }
                 }
             }
+            else if (Model.Test.TestOuterGroups.Count == 2)
+            {
+                var border = "form-element-border-right-small";
+                <div class="row">
+                    @foreach (var testoutergroup in Model.Test.TestOuterGroups.OrderBy(tog => tog.SequencePosition))
+                    {
+                        <div class="col-6 @border">
+                            @{ border = "";}
+                            <span class="tabs-font">
+                                @testoutergroup.Name
+                            </span>
+                            <div class="row under-row-margin"></div>
+                            <div class="row">
+                                @if (testoutergroup.TestGroups.Count == 2)
+                                {
+                                    @foreach (var testgroup in testoutergroup.TestGroups.OrderBy(tg => tg.SequencePosition))
+                                    {
+                                        <div class="col-6">
+                                            <span class="biomarkers-color">@testgroup.Name</span>
+                                            @foreach (var testheader in testgroup.TestHeaders.OrderBy(th => th.SequencePosition))
+                                            {
+
+                                                <div class="row p-3">
+                                                    @{
+                                                        var fieldViewModel = GetFieldViewModel(testheader, listNumber);
+                                                        listNumber++;
+                                                        await Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
         </div>
     }
 </div>

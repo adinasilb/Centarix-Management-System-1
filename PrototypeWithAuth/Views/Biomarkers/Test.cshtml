@@ -13,6 +13,7 @@
     @Html.HiddenFor(m => m.ExperimentEntry.VisitNumber)
     @Html.HiddenFor(m => m.ExperimentEntry.Participant.ExperimentID)
     @Html.HiddenFor(m => m.ExperimentID)
+    <input type="hidden" value="@AppUtility.MenuItems.Biomarkers.ToString()" id="#masterSectionType" />
 
     @*@for (int e = 0; e < Model.FieldViewModels.Count; e++)
             {
@@ -106,6 +107,10 @@
                             $.fn.OpenModal('save-test-modal', 'save-bio-test-modal', data);
                         }
                     });
+                }
+                else {
+                    console.log("change form");
+                    $.fn.ChangeTest($(this));
                 }
             }
             else {

@@ -60,16 +60,18 @@
                 <span asp-validation-for="Bool" class="text-danger-centarix mark-readonly"></span>
                 break;
             case AppUtility.DataTypeEnum.File:
-                <div class="card document-border">
-                    <div class="document-card text-center">
-                        <i class="icon-add-24px document-icon" alt="order" style="font-size:1.25rem;"></i>
+                <a class="open-document-modal">
+                    <div class="card document-border">
+                        <div class="document-card text-center">
+                            <i class="icon-add-24px document-icon" alt="order" style="font-size:1.25rem;"></i>
+                        </div>
                     </div>
-                </div>
+                </a>
                 <br />
                 <label class="control-label text-center">@Model.TestHeader.Name</label>
-                <input asp-for="File" id="@FileID" name="@FileName" value="@Model.File" class="file-select @Model.TestHeader.Name form-control-plaintext border-bottom" 
+                @*<input asp-for="File" id="@FileID" name="@FileName" value="@Model.File" class="file-select @Model.TestHeader.Name form-control-plaintext border-bottom"
                        accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls"/>
-                    <span asp-validation-for="File" class="text-danger-centarix mark-readonly"></span>
+                    <span asp-validation-for="File" class="text-danger-centarix mark-readonly"></span>*@
                 break;
         }
     }
@@ -85,13 +87,6 @@
 }
 
 <script>
-    $.fn.CalculateBMI = function () {
-        if ($(".BMI").length > 0 && $(".Weight").length > 0 && $(".Height").length > 0) {
-            if (parseFloat($(".Height").val()) > 0 && parseFloat($(".Weight").val())) {
-                $.fn.GetBMI(parseFloat($(".Weight").val()), parseFloat($(".Height").val()));
-            }
-        };
-    }
     $.fn.GetBMI = function (weight, height) {
         $.ajax({
             async: true,
@@ -104,6 +99,13 @@
         });
     }
     $(document).ready(function () {
+        $.fn.CalculateBMI = function () {
+            if ($(".BMI").length > 0 && $(".Weight").length > 0 && $(".Height").length > 0) {
+                if (parseFloat($(".Height").val()) > 0 && parseFloat($(".Weight").val())) {
+                    $.fn.GetBMI(parseFloat($(".Weight").val()), parseFloat($(".Height").val()));
+                }
+            };
+        }
         $.fn.CalculateBMI();
     });
     $(".Weight").on("change", function (e) {
@@ -112,4 +114,7 @@
     $(".Height").on("change", function (e) {
         $.fn.CalculateBMI();
     });
+    //$(".open-document-modal").on("click", function (e) {
+    //    console.log("open document modal");
+    //});
 </script>

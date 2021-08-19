@@ -24,5 +24,7 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.PageTypeEnum PageType { get; set; }
         public bool ShowSwitch { get; set; }
         public bool DontAllowMultiple { get; set; }
+        public int TestValueID { get; set; }
+        public int ExperimentEntryID { get; set; }
     }
 }

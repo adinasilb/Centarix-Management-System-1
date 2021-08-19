@@ -2965,6 +2965,10 @@ body.modal-open .popover {
     border-right: .2rem solid #E5E5E5;
 }
 
+.form-element-border-right-small {
+    border-right: .1rem solid #E5E5E5;
+}
+
 .form-element-border-bottom-small {
     border-bottom: .1rem solid #E5E5E5;
 }

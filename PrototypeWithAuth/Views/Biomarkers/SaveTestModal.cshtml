@@ -30,7 +30,6 @@
 <script>
     $(".cancel-save").on("click", function (e) {
         e.preventDefault();
-        $(".testvalues").removeClass("changed")
         if ($("#String").val() != "none") {
             var selected = $("#" + $("#BioTestString").val());
             $.fn.ChangeTest(selected);
@@ -40,6 +39,7 @@
 
     $(".submit-save").on("click", function (e) {
         e.preventDefault();
+        $(this).attr("disabled", "disabled");
         $(".testvalues").removeClass("changed")
         $.ajax({
             contentType: false,
@@ -69,6 +69,9 @@
                     $('._testvalues input').addClass("disabled");
                 }
                 $.fn.CloseModal('save-bio-test-modal');
+            },
+            error: function (jqxhr) {
+                $(this).removeAttr()
             }
         });
     });
