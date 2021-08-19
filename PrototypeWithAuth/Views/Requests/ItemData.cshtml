@@ -68,7 +68,7 @@
                 @{await Html.RenderPartialAsync("~/Views/Requests/_ItemTab.cshtml", Model); }
             </div>
         }
-        @if ((Model.ModalType.Equals(AppUtility.RequestModalType.Summary) || Model.Requests.FirstOrDefault().RequestStatusID == 3 || Model.RequestStatusID == 7) && Model.SectionType != AppUtility.MenuItems.Operations )
+        @if (Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].RequestStatusID == 7 && Model.SectionType != AppUtility.MenuItems.Protocols && Model.Requests[0].OrderType != AppUtility.OrderTypeEnum.SaveOperations.ToString())
         {
             <div id="location" class="tab-pane fade @showLocation" value="2">
                 @{await Html.RenderPartialAsync("~/Views/Requests/_LocationTab.cshtml", Model); }
