@@ -170,7 +170,7 @@ namespace PrototypeWithAuth.ViewModels
 
             if (favIconIndex != -1 && favoriteProtocol != null) //check these checks
             {
-                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "#5F79E2", "protocol-favorite protocol-unlike", "Unfavorite");
+                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "var(--protocols-color)", "protocol-favorite protocol-unlike", "Unfavorite");
                 newIconList[favIconIndex] = unLikeIcon;
             }
             //var morePopoverIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("popover-more"));
