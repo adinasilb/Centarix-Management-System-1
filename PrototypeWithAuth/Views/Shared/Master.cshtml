@@ -654,6 +654,13 @@
             $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
 
+        $.fn.AddSaveItemClass = function(){
+            $(".top-menu").addClass("save-item");
+            $(".side-menu").addClass("save-item");
+            $(".module-button ").addClass("save-item");
+            $(".notificationDiv").addClass("save-item");         
+        }
+
 
         $.fn.LoadSummaryModal = function (modalClass) {
             $("#cost").trigger('change');

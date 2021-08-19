@@ -142,4 +142,10 @@
     <div class="tab-content _CreateProtocolTabs">
         @{ await Html.RenderPartialAsync("_CreateProtocolTabs", Model);}
     </div>
+    <script>
+        $("input, select, textarea").change(function(){        
+            $.fn.AddSaveItemClass()
+            $(".back-arrow").addClass("save-item")
+        });
+    </script>
 </form>

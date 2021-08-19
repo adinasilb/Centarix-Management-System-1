@@ -41,9 +41,14 @@
             $(".selectedTab").val(selectedTab);
             var formData = new FormData($(".createProtocolForm")[0]);
             var modalType = $(".modalType").val();
+            var url= "/Protocols/CreateProtocol";
+            if(selectedTab ==1 || selectedTab==2)
+            {
+                url+="?IncludeSaveLines=true";
+            }
             alert(modalType)
             $.ajax({
-                url: "/Protocols/CreateProtocol",
+                url: url,
                 traditional: true,
                 data: formData,
                 contentType: false,
