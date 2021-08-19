@@ -41,6 +41,7 @@
             $(".selectedTab").val(selectedTab);
             var formData = new FormData($(".createProtocolForm")[0]);
             var modalType = $(".modalType").val();
+            alert(modalType)
             $.ajax({
                 url: "/Protocols/CreateProtocol",
                 traditional: true,
@@ -70,8 +71,12 @@
 
                 },
                 error: function (jqxhr) {
-                    if (jqxhr.status == 500) {
-                        $("._CreateProtocol").html(jqxhr.responseText)
+                     if(modalType == "Create")
+                    {
+                        $("._CreateProtocolTabs").html(jqxhr.responseText)
+                    }
+                    else{
+                        $("._IndexTable").html(jqxhr.responseText)
                     }
                     $(".mdb-select").materialSelect();
                     return true;
@@ -119,7 +124,7 @@
             }
         });
     });
-       $(".saveResults").off("click").click(function (e) {
+    $(".saveResults").off("click").click(function (e) {
         e.preventDefault();
         $(".saving-spinner").removeClass("d-none");
         $.ajax({

@@ -44,8 +44,13 @@
             //}
 		}
 		else if($('.turn-edit-on-off').hasClass('protocols')){
-			console.log("has class users");
-			url = "/Protocols/CreateProtocol";
+			formData.set("ModalType", "Summary")
+				var tab= $(".protocol-tab.active.show");
+				var selectedTab = tab.parent().index() +1;
+          
+				console.log(selectedTab);
+				$(".selectedTab").val(selectedTab);
+			url = "/Protocols/CreateProtocol?IncludeSaveLines=true";
 		}
 		else {
 			alert("didn't go into any edits");
@@ -137,32 +142,11 @@
 						$.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass + "/", "." + viewClass, "GET");
 					}
 					else if ($('.turn-edit-on-off').hasClass('protocols')) {
-						var tab= $(".protocol-tab.active.show");
-						var selectedTab = tab.parent().index() +1;
-          
-						console.log(selectedTab);
-						$(".selectedTab").val(selectedTab);
-						var formData = new FormData($(".createProtocolForm")[0]);
-						$.ajax({
-							url: "/Protocols/CreateProtocol",
-							traditional: true,
-							data: formData,
-							contentType: false,
-							processData: false,
-							type: "POST",
-							success: function (data) {
-								$("._IndexTable").html(data)					
-								var modalType = $(".modalType").val();
-								$("."+modalType).removeClass("d-none")
-								$.fn.ProtocolsMarkReadonly("_IndexTable");   
-							},
-							error: function (jqxhr) {
-								if (jqxhr.status == 500) {
-									$("._CreateProtocol").html(jqxhr.responseText);						}
-								$(".mdb-select").materialSelect();
-								return true;
-							}
-						});
+						$("._IndexTable").html(data)					
+						$.fn.ProtocolsMarkReadonly("_IndexTable");
+						var modalType = $(".modalType").val();
+						$("."+modalType).removeClass("d-none")
+						
 					}
 				}
 				
@@ -177,6 +161,10 @@
 				if ($('.turn-edit-on-off').hasClass('operations') || $('.turn-edit-on-off').hasClass('orders')) {
 					$.fn.LoadEditModalDetails();
 				}
+				if ($('.turn-edit-on-off').hasClass('protocols')) {
+						$("._CreateProtocol").html(jqxhr.responseText);						
+						$(".mdb-select").materialSelect();
+					}
 				else {
 					$.fn.OnOpenModal();
                 }

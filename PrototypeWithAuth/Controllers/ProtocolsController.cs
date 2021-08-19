@@ -90,7 +90,7 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.SidebarEnum.List:
                             break;
                         case AppUtility.SidebarEnum.MyProtocols:
-                            fullProtocolsList.Where(fl => fl.ApplicationUserCreatorID == user.Id);
+                            fullProtocolsList = fullProtocolsList.Where(fl => fl.ApplicationUserCreatorID == user.Id);
                             break;
                         case AppUtility.SidebarEnum.Favorites:
                             var usersFavoriteProtocols = _context.FavoriteProtocols.Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
@@ -103,7 +103,7 @@ namespace PrototypeWithAuth.Controllers
                             fullProtocolsList = fullProtocolsList.Where(frl => shareProtocols.Contains(frl.ProtocolID));
                             break;
                         case AppUtility.SidebarEnum.LastProtocol:
-                            fullProtocolsList = fullProtocolsList.Where(p => p.ProtocolInstances.Count() > 0);
+                            fullProtocolsList = fullProtocolsList.Where(fl => fl.ApplicationUserCreatorID == user.Id).Where(p => p.ProtocolInstances.Count() > 0);
                             break;
                     }
                     break;
@@ -523,10 +523,9 @@ namespace PrototypeWithAuth.Controllers
         private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(CreateProtocolsViewModel createProtocolsViewModel, int typeID, int protocolID = 0)
         {
             DeleteTemporaryDocuments(AppUtility.ParentFolderName.Protocols, Guid.Empty);
-            var lastProtocolNum = int.Parse(_context.Protocols.IgnoreQueryFilters().OrderBy(p => p).LastOrDefault()?.UniqueCode.Substring(1) ?? "0");
             var protocol = _context.Protocols
                 .Include(p => p.Urls).Include(p => p.Materials)
-                .ThenInclude(m => m.Product).Include(p => p.ProtocolSubCategory).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol() { UniqueCode = "T" + (++lastProtocolNum), VersionNumber = 1+"" };
+                .ThenInclude(m => m.Product).Include(p => p.ProtocolSubCategory).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol() { UniqueCode = GetUniqueNumber(), VersionNumber = 1+"" };
             protocol.Urls ??= new List<Link>();
             protocol.Materials ??= new List<Material>();
 
@@ -631,35 +630,8 @@ namespace PrototypeWithAuth.Controllers
                         var tempLines = _context.TempLinesJsons.Where(tl => tl.TempLinesJsonID == guid).FirstOrDefault().DeserializeJson<ProtocolsLinesViewModel>();
 
                         await UpdateLineContentAsync(tempLines, Lines);
-                        foreach (var line in tempLines.Lines)
-                        {
-                            line.Line.ProtocolID = ProtocolID;
-                            if (_context.Lines.Where(l => l.LineID == line.Line.LineID).Any())
-                            {
-                                _context.Entry(line.Line).State = EntityState.Modified;
-                            }
-                            else
-                            {
-                                _context.Entry(line.Line).State = EntityState.Added;
-                            }
-                            if (line.Functions != null)
-                            {
-                                foreach (var function in line.Functions)
-                                {
-                                    if (_context.FunctionLines.Where(fl => fl.ID == function.ID).Any())
-                                    {
-                                        _context.Entry(function).State = EntityState.Modified;
-                                    }
-                                    else
-                                    {
-                                        _context.Entry(function).State = EntityState.Added;
-                                    }
-                                }
-                            }
-
-                        }
-                        await _context.SaveChangesAsync();
-                        await _context.FunctionLines.Where(fl=>fl.ProtocolID == ProtocolID).Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted == true).ForEachAsync(fl => { _context.Remove(fl); });
+                        await SaveTempLinesToDB(ProtocolID, tempLines);
+                        await _context.FunctionLines.Where(fl => fl.ProtocolID == ProtocolID).Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted == true).ForEachAsync(fl => { _context.Remove(fl); });
                         await _context.SaveChangesAsync();
                         await DeleteTemporaryDeletedLinesAsync();
                         await transaction.CommitAsync();
@@ -678,6 +650,39 @@ namespace PrototypeWithAuth.Controllers
                 await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
             }
         }
+
+        private async Task SaveTempLinesToDB(int ProtocolID, ProtocolsLinesViewModel tempLines)
+        {
+            foreach (var line in tempLines.Lines)
+            {
+                line.Line.ProtocolID = ProtocolID;
+                if (_context.Lines.Where(l => l.LineID == line.Line.LineID).Any())
+                {
+                    _context.Entry(line.Line).State = EntityState.Modified;
+                }
+                else
+                {
+                    _context.Entry(line.Line).State = EntityState.Added;
+                }
+                if (line.Functions != null)
+                {
+                    foreach (var function in line.Functions)
+                    {
+                        if (_context.FunctionLines.Where(fl => fl.ID == function.ID).Any())
+                        {
+                            _context.Entry(function).State = EntityState.Modified;
+                        }
+                        else
+                        {
+                            _context.Entry(function).State = EntityState.Added;
+                        }
+                    }
+                }
+
+            }
+            await _context.SaveChangesAsync();
+        }
+
         private async Task ClearTempLinesJsonAsync(Guid guid)
         {
             var lineTypes = GetOrderLineTypeFromChildToParent();
@@ -1743,7 +1748,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> CreateProtocol(CreateProtocolsViewModel createProtocolsViewModel, List<Line> Lines)
+        public async Task<IActionResult> CreateProtocol(CreateProtocolsViewModel createProtocolsViewModel, List<Line> Lines, bool IncludeSaveLines)
         {
 
             using (var transaction = _context.Database.BeginTransaction())
@@ -1751,12 +1756,12 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     createProtocolsViewModel.Protocol.Urls = createProtocolsViewModel.Protocol.Urls.Where(u => u.LinkDescription != null && u.Url != null).ToList();
-                    createProtocolsViewModel.Protocol.CreationDate = DateTime.Now;
-                    createProtocolsViewModel.Protocol.ApplicationUserCreatorID = _userManager.GetUserId(User);
+      
                     if (createProtocolsViewModel.Protocol.ProtocolID == 0)
                     {
-                        var lastProtocolNum = int.Parse(_context.Protocols.IgnoreQueryFilters().OrderBy(p => p).LastOrDefault()?.UniqueCode.Substring(1) ?? "0");
-                        createProtocolsViewModel.Protocol.UniqueCode = "T" + (++lastProtocolNum);
+                        var lastProtocolNum = GetUniqueNumber();
+                        createProtocolsViewModel.Protocol.CreationDate = DateTime.Now;
+                        createProtocolsViewModel.Protocol.ApplicationUserCreatorID = _userManager.GetUserId(User);
                         _context.Entry(createProtocolsViewModel.Protocol).State = EntityState.Added;
                         await _context.SaveChangesAsync();
                         Lines.ForEach(l => { l.ProtocolID = createProtocolsViewModel.Protocol.ProtocolID; _context.Add(l); _context.SaveChanges(); });
@@ -1781,8 +1786,20 @@ namespace PrototypeWithAuth.Controllers
                             await _context.SaveChangesAsync();
                         }
                     }
-                    await transaction.CommitAsync();
 
+                    //save lines
+                    if(IncludeSaveLines)
+                    {
+                        var tempLines = _context.TempLinesJsons.Where(tl => tl.TempLinesJsonID == createProtocolsViewModel.UniqueGuid).FirstOrDefault().DeserializeJson<ProtocolsLinesViewModel>();
+
+                        await UpdateLineContentAsync(tempLines, Lines);
+                        await SaveTempLinesToDB(createProtocolsViewModel.Protocol.ProtocolID, tempLines);
+                        await _context.FunctionLines.Where(fl => fl.ProtocolID == createProtocolsViewModel.Protocol.ProtocolID).Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted == true).ForEachAsync(fl => { _context.Remove(fl); });
+                        await _context.SaveChangesAsync();
+                        await DeleteTemporaryDeletedLinesAsync();
+                    }
+                    await transaction.CommitAsync();
+                  
                 }
                 catch (Exception ex)
                 {
@@ -3040,6 +3057,13 @@ namespace PrototypeWithAuth.Controllers
             return new EmptyResult();
         }
 
+        public string GetUniqueNumber()
+        {
+            var serialLetter = "T";
+            var serialnumberList = _context.Protocols.IgnoreQueryFilters().Select(p => int.Parse(p.UniqueCode.Substring(1))).ToList();
+            var lastSerialNumberInt = serialnumberList.OrderBy(s => s).LastOrDefault();
+            return serialLetter + (lastSerialNumberInt + 1);
+        }
     }
 
 }
