@@ -13,6 +13,7 @@
     @Html.HiddenFor(m => m.ExperimentEntry.VisitNumber)
     @Html.HiddenFor(m => m.ExperimentEntry.Participant.ExperimentID)
     @Html.HiddenFor(m => m.ExperimentID)
+    <input type="hidden" asp-for="Guid" class="hidden-guid" />
     <input type="hidden" value="@AppUtility.MenuItems.Biomarkers.ToString()" id="#masterSectionType" />
 
     @*@for (int e = 0; e < Model.FieldViewModels.Count; e++)

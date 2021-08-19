@@ -309,6 +309,7 @@ $(function () {
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
 		var showSwitch = $(".active-document-modal").attr("showSwitch");
+		console.log("showSwitch: " + showSwitch);
 		var parentFolder = $(".active-document-modal").attr("parentfolder");
 		console.log('parentfolder' + parentFolder)
 		var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");

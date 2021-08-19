@@ -114,14 +114,14 @@ namespace PrototypeWithAuth.Controllers
             {
                 var sickHours = employeeHours.Where(eh => eh.PartialOffDayTypeID == 1)
                     .Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
-                sickDaysTaken = employeeHours.Where(eh =>eh.OffDayTypeID == 1).Count();
+                sickDaysTaken = employeeHours.Where(eh => eh.OffDayTypeID == 1).Count();
                 sickDaysTaken = sickDaysTaken + (sickHours / user.SalariedEmployee.HoursPerDay);
 
                 var vacationHours = employeeHours.Where(eh => eh.PartialOffDayTypeID == 2)
                     .Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
                 vacationDaysTaken = employeeHours.Where(eh => eh.OffDayTypeID == 2).Count();
                 vacationDaysTaken = vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay);
-                var specialDays = employeeHours.Where(eh => eh.OffDayTypeID == 4 ).Count();
+                var specialDays = employeeHours.Where(eh => eh.OffDayTypeID == 4).Count();
                 unpaidLeave = employeeHours.Where(eh => eh.OffDayTypeID == 5).Count();
                 totalDays = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff);
                 totalhours = (totalDays - (vacationDaysTaken + sickDaysTaken + unpaidLeave + specialDays)) * user.SalariedEmployee.HoursPerDay;
@@ -215,13 +215,13 @@ namespace PrototypeWithAuth.Controllers
             return rate;
         }
 
-        protected void GetExistingFileStrings(List<DocumentFolder> DocumentsInfo, AppUtility.FolderNamesEnum folderName, AppUtility.ParentFolderName parentFolderName, 
+        protected void GetExistingFileStrings(List<DocumentFolder> DocumentsInfo, AppUtility.FolderNamesEnum folderName, AppUtility.ParentFolderName parentFolderName,
                                                                                                                                 string uploadFolderParent, string objectID)
         {
             string uploadFolder = Path.Combine(uploadFolderParent, folderName.ToString());
             DocumentFolder folder = new DocumentFolder()
             {
-                FolderName = folderName, 
+                FolderName = folderName,
                 ParentFolderName = parentFolderName,
                 ObjectID = objectID
             };
@@ -247,7 +247,7 @@ namespace PrototypeWithAuth.Controllers
             var MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
             string folder = Path.Combine(uploadFolder, MiddleFolderName);
             Directory.CreateDirectory(folder);
-             if (documentsModalViewModel.FilesToSave != null) //test for more than one???
+            if (documentsModalViewModel.FilesToSave != null) //test for more than one???
             {
                 var x = 1;
                 foreach (IFormFile file in documentsModalViewModel.FilesToSave)
@@ -290,26 +290,14 @@ namespace PrototypeWithAuth.Controllers
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
             var MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
             string uploadFolder2 = Path.Combine(uploadFolder1, MiddleFolderName);
-            string uploadFolder3 = Path.Combine(uploadFolder2, documentsModalViewModel.FolderName.ToString());
+            var FolderName = documentsModalViewModel.FolderName == AppUtility.FolderNamesEnum.Custom ? documentsModalViewModel.CustomFolderName : documentsModalViewModel.FolderName.ToString();
+            string uploadFolder3 = Path.Combine(uploadFolder2, FolderName);
 
             if (Directory.Exists(uploadFolder3))
             {
                 documentsModalViewModel = SaveDocuments(uploadFolder3, documentsModalViewModel);
             }
 
-        }
-
-        protected void FillBiomarkersDocumentsViewModel(DocumentsModalViewModel documentsModalViewModel)
-        {
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
-            var MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
-            string uploadFolder2 = Path.Combine(uploadFolder1, MiddleFolderName);
-            string uploadFolder3 = Path.Combine(uploadFolder2, documentsModalViewModel.FolderName.ToString());
-
-            if (Directory.Exists(uploadFolder3))
-            {
-                documentsModalViewModel = SaveDocuments(uploadFolder3, documentsModalViewModel);
-            }
         }
 
         protected DocumentsModalViewModel SaveDocuments(string FinalUploadFolder, DocumentsModalViewModel documentsModalViewModel)
@@ -362,8 +350,8 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ApplicationUserReceiver)
                 //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                 .SingleOrDefault(x => x.RequestID == id);
-            
-          
+
+
             if (request.RequestStatusID == 7)
             {
                 isProprietary = true;
@@ -864,7 +852,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedOwnersIDs.Contains(r.ApplicationUserCreatorID));
                 }
-                
+
             }
             if (selectedFilters?.Archived == true)
             {
@@ -1006,7 +994,7 @@ namespace PrototypeWithAuth.Controllers
                                     _context.ShareRequests.Where(sr => sr.RequestID == r.RequestID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user,
                                     r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)
                            ).ToLookup(r => r.r.ProductID).Select(e => e.First()).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
-                           /// .GroupBy(r => r.ProductID, (key, value) => value.OrderByDescending(v => v.ParentRequest.OrderDate).First()).AsQueryable();
+                            /// .GroupBy(r => r.ProductID, (key, value) => value.OrderByDescending(v => v.ParentRequest.OrderDate).First()).AsQueryable();
                             break;
                     }
 
@@ -1097,7 +1085,7 @@ namespace PrototypeWithAuth.Controllers
                     //SubProjects = _context.SubProjects.ToList()
                     NumFilters = numFilters,
                     SectionType = sectionType,
-                    Archive = selectedFilters.Archived, 
+                    Archive = selectedFilters.Archived,
                     IsProprietary = isProprietary
                 };
                 if (inventoryFilterViewModel.SelectedCategories.Count() > 0)
@@ -1201,7 +1189,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     AppUtility.DirectoryCopy(requestFolderFrom, requestFolderTo, true);
                 }
-                else if(requestFolderFrom != requestFolderTo)
+                else if (requestFolderFrom != requestFolderTo)
                 {
                     Directory.Move(requestFolderFrom, requestFolderTo);
                 }

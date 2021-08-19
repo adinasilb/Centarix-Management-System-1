@@ -10,6 +10,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public ExperimentEntry ExperimentEntry { get; set; }
         public int ExperimentID { get; set; }
+        public Guid Guid { get; set; }
         public List<Test> Tests { get; set; }
         public List<TestValue> TestValues { get; set; } //THIS IS ONLY FOR THE FIRST ONE!!!!
         public List<FieldViewModel> FieldViewModels { get; set; }

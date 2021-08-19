@@ -60,7 +60,7 @@
                 <span asp-validation-for="Bool" class="text-danger-centarix mark-readonly"></span>
                 break;
             case AppUtility.DataTypeEnum.File:
-                <a class="open-document-modal">
+                <a class="open-document-modal" showSwitch="@true" parentfolder="@AppUtility.ParentFolderName.ExperimentEntries.ToString()" data-string="@AppUtility.FolderNamesEnum.Custom.ToString()" data-id="@Model.TestValueID" >
                     <div class="card document-border">
                         <div class="document-card text-center">
                             <i class="icon-add-24px document-icon" alt="order" style="font-size:1.25rem;"></i>

@@ -13,6 +13,7 @@ namespace PrototypeWithAuth.ViewModels
     public class DocumentsModalViewModel : ViewModelBase
     {
         public AppUtility.FolderNamesEnum FolderName { get; set; }
+        public string CustomFolderName { get; set; }
         public string ObjectID { get; set; }
         public Guid Guid { get; set; }
         public AppUtility.ParentFolderName ParentFolderName { get; set; }
@@ -24,7 +25,5 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.PageTypeEnum PageType { get; set; }
         public bool ShowSwitch { get; set; }
         public bool DontAllowMultiple { get; set; }
-        public int TestValueID { get; set; }
-        public int ExperimentEntryID { get; set; }
     }
 }

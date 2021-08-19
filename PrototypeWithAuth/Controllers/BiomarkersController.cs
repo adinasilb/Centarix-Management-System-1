@@ -99,12 +99,13 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Biomarkers")]
-        public ActionResult DocumentsModal(string id, Guid Guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+        public ActionResult DocumentsModal(string id, Guid Guid, String RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
             AppUtility.ParentFolderName parentFolderName, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
-                FolderName = RequestFolderNameEnum,
+                CustomFolderName = RequestFolderNameEnum,
+                FolderName = AppUtility.FolderNamesEnum.Custom,
                 IsEdittable = IsEdittable,
                 ParentFolderName = parentFolderName,
                 ObjectID = id == "" ? "0" : id,
@@ -113,7 +114,7 @@ namespace PrototypeWithAuth.Controllers
                 Guid = Guid
             };
 
-            FillDocumentsViewModel(documentsModalViewModel);
+            base.FillDocumentsViewModel(documentsModalViewModel);
             return PartialView(documentsModalViewModel);
         }
 
@@ -441,6 +442,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 ExperimentEntry = ee,
                 ExperimentID = ee.Participant.ExperimentID,
+                Guid = Guid.NewGuid(),
                 Tests = tests,
                 TestValues = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ID
                                 && tv.TestHeader.TestGroup.TestOuterGroup.TestID == tests.FirstOrDefault().TestID).ToList(),
