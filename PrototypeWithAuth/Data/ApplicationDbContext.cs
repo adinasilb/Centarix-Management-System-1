@@ -9,6 +9,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Abp.Domain.Entities;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace PrototypeWithAuth.Data
 {
@@ -23,6 +24,12 @@ namespace PrototypeWithAuth.Data
         public DbSet<TempLineID> TempLineIDs { get; set; }
         public DbSet<FunctionLineID> FunctionLineIDs { get; set; }
         public DbSet<TestFieldHeader> TestFieldHeaders { get; set; }
+
+        public DbSet<ExperimentEntry> ExperimentEntries { get; set; }
+        public DbSet<TestValue> TestValues { get; set; }
+        public DbSet<TestHeader> TestHeaders { get; set; }
+        public DbSet<TestOuterGroup> TestOuterGroups { get; set; }
+        public DbSet<TestGroup> TestGroups { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<TestCategory> TestCategories { get; set; }
         public DbSet<Division> Divisions { get; set; }
@@ -151,6 +158,19 @@ namespace PrototypeWithAuth.Data
                 .HasOne(rrc => rrc.Resource)
                 .WithMany(r => r.ResourceResourceCategories)
                 .HasForeignKey(rrc => rrc.ResourceID);
+
+            modelBuilder.Entity<ExperimentTest>()
+                .HasKey(et => new { et.ExperimentID, et.TestID });
+
+            modelBuilder.Entity<ExperimentTest>()
+                .HasOne(et => et.Experiment)
+                .WithMany(e => e.ExperimentTests)
+                .HasForeignKey(et => et.ExperimentID);
+
+            modelBuilder.Entity<ExperimentTest>()
+                .HasOne(et => et.Test)
+                .WithMany(t => t.ExperimentTests)
+                .HasForeignKey(et => et.TestID);
 
             modelBuilder.Entity<RequestLocationInstance>()
                 .HasKey(rl => new { rl.RequestID, rl.LocationInstanceID });
@@ -362,6 +382,12 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
             modelBuilder.Entity<Request>().Property(r => r.ExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Product>().Property(r => r.ProductCreationDate).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<ShareRequest>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<ShareProtocol>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<ShareResource>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<TestHeader>().HasIndex(th => new { th.SequencePosition, th.TestGroupID }).IsUnique();
+            modelBuilder.Entity<ExperimentEntry>().HasIndex(ee => new { ee.ParticipantID, ee.VisitNumber }).IsUnique();
+
             modelBuilder.Entity<TempLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<FunctionLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<ParentRequest>().HasIndex(p => p.OrderNumber).IsUnique();

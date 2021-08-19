@@ -65,6 +65,7 @@
     });
     $(".submit-add").on("click", function (e) {
         e.preventDefault();
+        $(this).attr("disabled", "disabled");
         $('.addparticipantform').data("validator").settings.ignore = "";
         var ExperimentID = $("#Participant_ExperimentID").val();
         var valid = $('.addparticipantform').valid();

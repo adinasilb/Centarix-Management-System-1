@@ -2147,7 +2147,7 @@ namespace PrototypeWithAuth.Controllers
                                     .Where(sr => sr.ResourceID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == userID).FirstOrDefault();
                                 if (PrevSharedResource != null)
                                 {
-                                    PrevSharedResource.TimeStamp = DateTime.Now;
+                                    //PrevSharedResource.TimeStamp = DateTime.Now;
                                     _context.Update(PrevSharedResource);
                                 }
                                 else
@@ -2157,7 +2157,7 @@ namespace PrototypeWithAuth.Controllers
                                         ResourceID = shareModalViewModel.ID,
                                         FromApplicationUserID = currentUserID,
                                         ToApplicationUserID = userID,
-                                        TimeStamp = DateTime.Now
+                                        //TimeStamp = DateTime.Now
                                     };
                                     _context.Update(shareResource);
                                 }
@@ -2167,7 +2167,7 @@ namespace PrototypeWithAuth.Controllers
                                     .Where(sr => sr.ProtocolID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == userID).FirstOrDefault();
                                 if (PrevSharedProtocol != null)
                                 {
-                                    PrevSharedProtocol.TimeStamp = DateTime.Now;
+                                    //PrevSharedProtocol.TimeStamp = DateTime.Now;
                                     _context.Update(PrevSharedProtocol);
                                 }
                                 else
@@ -2177,7 +2177,7 @@ namespace PrototypeWithAuth.Controllers
                                         ProtocolID = shareModalViewModel.ID,
                                         FromApplicationUserID = currentUserID,
                                         ToApplicationUserID = userID,
-                                        TimeStamp = DateTime.Now
+                                        //TimeStamp = DateTime.Now
                                     };
                                     _context.Update(shareProtocol);
                                 }

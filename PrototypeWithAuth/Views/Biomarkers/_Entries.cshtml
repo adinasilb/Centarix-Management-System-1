@@ -1,0 +1,59 @@
+﻿@model PrototypeWithAuth.ViewModels.EntriesViewModel;
+@using PrototypeWithAuth.AppData;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="_entries under-row-margin">
+    @{ await Html.RenderPartialAsync("_participantsheader", Model.Participant);}
+</div>
+<div class="row under-row-margin">
+    <div class="col-6">
+        <button class="custom-button custom-button-font light-gray-background-color ml-0">
+            <a href="@Url.Action("Experiment", "Biomarkers", new { ID = Model.Participant.ExperimentID })" class="text-black">
+                <i class="icon-arrow_back_ios-24px-1" style="font-size: 1.2rem;"></i>
+                Back
+            </a>
+        </button>
+    </div>
+    <div class="col-6">
+        <button class="float-right custom-button custom-button-font clear-custom-button biomarkers-color white-background biomarkers-border-color">
+            <span class="add-new-entry" value="@Model.Participant.ParticipantID">
+                + Add New Entry
+            </span>
+        </button>
+    </div>
+</div>
+<div class="entries-list">
+    <table class="table table-headerspaced table-noheaderlines table-hover mb-0">
+        <thead>
+            <tr class="text-center">
+                @foreach (var header in Model.EntryHeaders)
+                {
+                    <th width="10%" class="p-0">
+                        <label>@header.Value</label>
+                    </th>
+                }
+            </tr>
+        </thead>
+    </table>
+
+    <div class="_BiomarkersRows">
+        @{ await Html.RenderPartialAsync("_BiomarkersRows", Model.EntryRows); }
+    </div>
+</div>
+<script>
+    $(".add-new-entry").on("click", function (e) {
+        $.ajax({
+            async: true,
+            url: "/Biomarkers/_NewEntry?ID=" + $(this).attr("value"),
+            type: 'GET',
+            cache: false,
+            success: function (data) {
+                $.fn.OpenModal('add-entry-modal', 'new-entry', data);
+                $(".mdb-select").materialSelect();
+            }
+        });
+    });
+</script>

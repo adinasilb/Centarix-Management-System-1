@@ -46,7 +46,7 @@
 
         <div id="Summary" class="tab-pane fade in ">
             <div class="container-fluid">
-                Summary
+                @{ await Html.RenderPartialAsync("_Summary", Model.Experiment); }
             </div>
         </div>
     </div>

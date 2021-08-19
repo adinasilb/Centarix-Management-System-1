@@ -2333,6 +2333,20 @@ span.caret {
     box-shadow: .5px .5px 0.323rem #707070;
 }
 
+.biomarkers-fieldset {
+    border-radius: .75rem;
+    width: 100%;
+    box-shadow: 4px 4px 9px -2px #707070;
+    /*display: flex;*/
+    padding: 2rem;
+    align-items: center;
+    justify-content: center;
+}
+
+    .biomarkers-fieldset.small-size {
+        height: 6.563rem;
+    }
+
 .resource-fieldset {
     border-radius: .75rem;
     /*height: 29.75rem;*/
@@ -2523,6 +2537,15 @@ span.caret {
     border: .5px solid #f3f3f3 !important;
 }
 
+.bio-form .switch label input[type="checkbox"]:checked + .lever:after {
+    background-color: var(--biomarkers-color) !important;
+}
+
+.bio-form .switch label input[type="checkbox"]:checked + .lever {
+    background-color: var(--biomarkers-25) !important;
+    opacity: 50 !important;
+    border: .5px solid #f3f3f3 !important;
+}
 .select-wrapper input.select-dropdown:disabled {
     color: var(--black-87) !important;
 }
@@ -2942,6 +2965,10 @@ body.modal-open .popover {
     border-right: .2rem solid #E5E5E5;
 }
 
+.form-element-border-right-small {
+    border-right: .1rem solid #E5E5E5;
+}
+
 .form-element-border-bottom-small {
     border-bottom: .1rem solid #E5E5E5;
 }
@@ -3046,4 +3073,9 @@ body.modal-open .popover {
 
 .addFunctionModal .doc-card-outer-div {
     min-width: 100% !important;
+}
+
+.datacalculation {
+    border-radius: .5rem;
+    border: 2px solid var(--biomarkers-color);
 }

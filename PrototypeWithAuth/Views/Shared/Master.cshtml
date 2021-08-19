@@ -1177,8 +1177,11 @@
             //$(".modal-backdrop").first().removeClass();
             //alert(parentFolder)
             var urlbeginning = "/Requests/"
-            if(section === "Protocols") {
-                urlbeginning ="/Protocols/"
+            if (section === "Protocols") {
+                urlbeginning = "/Protocols/"
+            }
+            else if (section == "Biomarkers") {
+                urlbeginning = "/Biomarkers/"
             }
             if (isReopen) {
                 urltogo = urlbeginning + "_DocumentsModalData?id=" + requestId + "&Guid=" + guid + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
@@ -1380,6 +1383,21 @@
                 }
             })
         }
+
+        $.fn.ChangeTest = function (selectedTest) {
+            var url = "/Biomarkers/_TestValues?TestID=" + selectedTest.attr("testid") + "&ListNumber=0&SiteID=" + /*$(this).attr("listnumber")*/ + $("#ExperimentEntry_SiteID").val() + "&ExperimentID=" + $("#ExperimentEntry_Participant_ExperimentID").val() + "&ExperimentEntryID=" + $("#ExperimentEntry_ExperimentEntryID").val();
+            $.ajax({
+                async: true,
+                url: url,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $(".testvalues").html(data);
+                }
+            });
+            $(".biomarkers-test-name").removeClass("selected");
+            selectedTest.addClass("selected");
+        };
     </script>
 
     @if (IsSectionDefined("requestNavScript"))

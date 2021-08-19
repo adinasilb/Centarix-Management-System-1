@@ -97,7 +97,7 @@ namespace PrototypeWithAuth.AppData
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
         public enum FolderNamesEnum { Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
-        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote , ParentRequest}
+        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote, ExperimentEntries, ParentRequest }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum ModalType { None, Terms, UploadOrder, UploadQuote, ConfirmEmail, Reorder }
         public static string AspDateFormatString = "{0:d MMM yyyy}";
@@ -121,14 +121,14 @@ namespace PrototypeWithAuth.AppData
         }
         public static List<StringWithName> ProtocolRoleEnums()
         {
-            List<StringWithName> ore = new List<StringWithName>()
+            List<StringWithName> pre = new List<StringWithName>()
             {
                 new StringWithName(){StringName = "General", StringDefinition = "Protocols"},
                 new StringWithName(){StringName = "Biomarkers", StringDefinition = "ProtocolsBiomarkers"},
                 new StringWithName(){StringName = "Rejuvenation", StringDefinition = "ProtocolsRejuvenation"},
                 new StringWithName(){StringName = "Delivery Systems", StringDefinition = "ProtocolsDeliverySystems"}
             };
-            return ore;
+            return pre;
         }
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum { NIS, USD }
@@ -177,6 +177,8 @@ namespace PrototypeWithAuth.AppData
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
         { Request, Resource, Protocol }
         public enum GlobalInfoType { ExchangeRate, LoginUpdates, LastProtocolLine }
+        public enum DataTypeEnum { String, Double, DateTime, Bool, File }
+        public enum DataCalculation { None, BMI }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -767,7 +769,7 @@ namespace PrototypeWithAuth.AppData
 
         public static string GetElixirDateFormat(this DateTime? date)
         {
-            return date?.ToString("d MMM yyyy")??"";
+            return date?.ToString("d MMM yyyy") ?? "";
         }
         public static string GetElixirDateFormat(this DateTime date)
         {
@@ -775,7 +777,7 @@ namespace PrototypeWithAuth.AppData
         }
         public static string GetElixirDateFormatWithTime(this DateTime? date)
         {
-            return date?.ToString("d MMM yyyy HH:mm")??"";
+            return date?.ToString("d MMM yyyy HH:mm") ?? "";
         }
         public static string GetElixirDateFormatWithTime(this DateTime date)
         {
@@ -789,7 +791,7 @@ namespace PrototypeWithAuth.AppData
             }));
         }
 
-        public static List<FunctionLine> GetFunctionsByLineID (int lineID, List<FunctionLine> functionLines)
+        public static List<FunctionLine> GetFunctionsByLineID(int lineID, List<FunctionLine> functionLines)
         {
             return functionLines.Where(fl => fl.LineID == lineID).ToList();
         }

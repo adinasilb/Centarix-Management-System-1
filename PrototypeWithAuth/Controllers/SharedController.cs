@@ -294,20 +294,38 @@ namespace PrototypeWithAuth.Controllers
 
             if (Directory.Exists(uploadFolder3))
             {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
-                //searching for the partial file name in the directory
-                FileInfo[] docfilesfound = DirectoryToSearch.GetFiles("*.*");
-                documentsModalViewModel.FileStrings = new List<String>();
-                documentsModalViewModel.FileStrings = new List<String>();
-                foreach (var docfile in docfilesfound)
-                {
-
-                    string newFileString = AppUtility.GetLastFiles(docfile.FullName, 4);                    
-                    documentsModalViewModel.FileStrings.Add(newFileString);
-                    //documentsModalViewModel.Files.Add(docfile);
-                }
+                documentsModalViewModel = SaveDocuments(uploadFolder3, documentsModalViewModel);
             }
 
+        }
+
+        protected void FillBiomarkersDocumentsViewModel(DocumentsModalViewModel documentsModalViewModel)
+        {
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
+            var MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
+            string uploadFolder2 = Path.Combine(uploadFolder1, MiddleFolderName);
+            string uploadFolder3 = Path.Combine(uploadFolder2, documentsModalViewModel.FolderName.ToString());
+
+            if (Directory.Exists(uploadFolder3))
+            {
+                documentsModalViewModel = SaveDocuments(uploadFolder3, documentsModalViewModel);
+            }
+        }
+
+        protected DocumentsModalViewModel SaveDocuments(string FinalUploadFolder, DocumentsModalViewModel documentsModalViewModel)
+        {
+            DirectoryInfo DirectoryToSearch = new DirectoryInfo(FinalUploadFolder);
+            //searching for the partial file name in the directory
+            FileInfo[] docfilesfound = DirectoryToSearch.GetFiles("*.*");
+            documentsModalViewModel.FileStrings = new List<String>();
+            foreach (var docfile in docfilesfound)
+            {
+
+                string newFileString = AppUtility.GetLastFiles(docfile.FullName, 4);
+                documentsModalViewModel.FileStrings.Add(newFileString);
+                //documentsModalViewModel.Files.Add(docfile);
+            }
+            return documentsModalViewModel;
         }
 
 

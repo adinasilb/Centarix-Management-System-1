@@ -1,0 +1,120 @@
+﻿@model PrototypeWithAuth.ViewModels.FieldViewModel
+@using PrototypeWithAuth.AppData
+@using PrototypeWithAuth.ViewModels
+
+@{
+    var IDBeginning = "FieldViewModels_" + Model.ListNumber + "__";
+    var NameBeginning = "FieldViewModels[" + Model.ListNumber + "].";
+    var TestHeaderIDID = IDBeginning + nameof(Model.TestHeader) + "_" + nameof(Model.TestHeader.TestHeaderID);
+    var TestHeaderIDName = NameBeginning + nameof(Model.TestHeader) + "." + nameof(Model.TestHeader.TestHeaderID);
+    var TestHeaderNameID = IDBeginning + nameof(Model.TestHeader) + "_" + nameof(Model.TestHeader.Name);
+    var TestHeaderNameName = NameBeginning + nameof(Model.TestHeader) + "." + nameof(Model.TestHeader.Name);
+    var DataTypeEnumID = IDBeginning + nameof(Model.DataTypeEnum);
+    var DataTypeEnumName = NameBeginning + nameof(Model.DataTypeEnum);
+    var TestIDID = IDBeginning + nameof(Model.TestID);
+    var TestIDName = NameBeginning + nameof(Model.TestID);
+    var StringID = IDBeginning + nameof(Model.String);
+    var StringName = NameBeginning + nameof(Model.String);
+    var TestValueID = IDBeginning + nameof(Model.TestValueID);
+    var TestValueName = NameBeginning + nameof(Model.TestValueID);
+    var DoubleID = IDBeginning + nameof(Model.Double);
+    var DoubleName = NameBeginning + nameof(Model.Double);
+    var DateTimeID = IDBeginning + nameof(Model.DateTime);
+    var DateTimeName = NameBeginning + nameof(Model.DateTime);
+    var BoolID = IDBeginning + nameof(Model.Bool);
+    var BoolName = NameBeginning + nameof(Model.Bool);
+    var FileID = IDBeginning + nameof(Model.File);
+    var FileName = NameBeginning + nameof(Model.File);
+}
+
+<input type="hidden" asp-for="TestID" value="@Model.TestID" id="@TestIDID" name="@TestIDName" />
+<input type="hidden" asp-for="TestValueID" value="@Model.TestValueID" id="@TestValueID" name="@TestValueName" />
+<input type="hidden" asp-for="TestHeader.TestHeaderID" value="@Model.TestHeader.TestHeaderID" id="@TestHeaderIDID" name="@TestHeaderIDName" />
+<input type="hidden" asp-for="TestHeader.Name" value="@Model.TestHeader.Name" id="@TestHeaderNameID" name="@TestHeaderNameName" />
+<input type="hidden" asp-for="DataTypeEnum" value="@Model.DataTypeEnum" id="@DataTypeEnumID" name="@DataTypeEnumName" />
+
+@{
+    if (Model.DataCalculation == AppUtility.DataCalculation.None)
+    {
+
+        switch (Model.DataTypeEnum)
+        {
+            case AppUtility.DataTypeEnum.Double:
+                <label class="control-label">@Model.TestHeader.Name</label>
+                <input asp-for="Double" id="@DoubleID" name="@DoubleName" value="@Model.Double" class="@Model.TestHeader.Name form-control-plaintext border-bottom" />
+                <span asp-validation-for="Double" class="text-danger-centarix mark-readonly"></span>
+                break;
+            case AppUtility.DataTypeEnum.String:
+                <label class="control-label">@Model.TestHeader.Name</label>
+                <input asp-for="String" id="@StringID" name="@StringName" value="@Model.String" class="@Model.TestHeader.Name form-control-plaintext border-bottom" />
+                <span asp-validation-for="String" class="text-danger-centarix mark-readonly"></span>
+                break;
+            case AppUtility.DataTypeEnum.DateTime:
+                <label class="control-label">@Model.TestHeader.Name</label>
+                <input asp-for="DateTime" id="@DateTimeID" name="@DateTimeName" value="@Model.DateTime" class="@Model.TestHeader.Name form-control-plaintext border-bottom" />
+                <span asp-validation-for="DateTime" class="text-danger-centarix mark-readonly"></span>
+                break;
+            case AppUtility.DataTypeEnum.Bool:
+                <label class="control-label">@Model.TestHeader.Name</label>
+                <input asp-for="Bool" id="@BoolID" name="@BoolName" value="@Model.Bool" class="@Model.TestHeader.Name form-control-plaintext border-bottom" />
+                <span asp-validation-for="Bool" class="text-danger-centarix mark-readonly"></span>
+                break;
+            case AppUtility.DataTypeEnum.File:
+                <a class="open-document-modal">
+                    <div class="card document-border">
+                        <div class="document-card text-center">
+                            <i class="icon-add-24px document-icon" alt="order" style="font-size:1.25rem;"></i>
+                        </div>
+                    </div>
+                </a>
+                <br />
+                <label class="control-label text-center">@Model.TestHeader.Name</label>
+                @*<input asp-for="File" id="@FileID" name="@FileName" value="@Model.File" class="file-select @Model.TestHeader.Name form-control-plaintext border-bottom"
+                       accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls"/>
+                    <span asp-validation-for="File" class="text-danger-centarix mark-readonly"></span>*@
+                break;
+        }
+    }
+    else
+    {
+        <div class="row datacalculation biomarkers-border-color p-3">
+            <div class="col-8">@Model.DataCalculation.ToString()</div>
+            <div class="col-4 @Model.TestHeader.Name">
+                @Model.String
+            </div>
+        </div>
+    }
+}
+
+<script>
+    $.fn.GetBMI = function (weight, height) {
+        $.ajax({
+            async: true,
+            url: "/Biomarkers/GetBMI?weight=" + weight + "&height=" + height,
+            type: 'GET',
+            cache: true,
+            success: function (data) {
+                $(".BMI").html(data);
+            }
+        });
+    }
+    $(document).ready(function () {
+        $.fn.CalculateBMI = function () {
+            if ($(".BMI").length > 0 && $(".Weight").length > 0 && $(".Height").length > 0) {
+                if (parseFloat($(".Height").val()) > 0 && parseFloat($(".Weight").val())) {
+                    $.fn.GetBMI(parseFloat($(".Weight").val()), parseFloat($(".Height").val()));
+                }
+            };
+        }
+        $.fn.CalculateBMI();
+    });
+    $(".Weight").on("change", function (e) {
+        $.fn.CalculateBMI();
+    });
+    $(".Height").on("change", function (e) {
+        $.fn.CalculateBMI();
+    });
+    //$(".open-document-modal").on("click", function (e) {
+    //    console.log("open document modal");
+    //});
+</script>

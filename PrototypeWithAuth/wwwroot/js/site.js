@@ -293,7 +293,7 @@ $(function () {
 		//});
 	});
 
-	$(".open-document-modal").off('click').on("click", function (e) {
+	$("body, .modal").off('click').on("click", ".open-document-modal", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 		console.log("clicked open doc modal 2");

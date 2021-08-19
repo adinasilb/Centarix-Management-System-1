@@ -1,0 +1,6 @@
+﻿@using PrototypeWithAuth.AppData
+@model PrototypeWithAuth.ViewModels.EntriesViewModel
+@{
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+@{ Html.RenderPartialAsync("_Entries", Model); }

@@ -1,0 +1,78 @@
+﻿@model String
+<div class="modal modal-view save-test-modal" id="myModal" data-backdrop="false" style="z-index: 9100">
+    <div class="elixir-modal-sm modal-dialog-centered mx-auto" style="width:27rem;">
+        <div class="modal-content d-inline-block modal-box-shadow ">
+            <div class="modal-header biomarkers-background-color">
+                <span class="heading-1 text-white">Save Changes</span>
+                <button type="button" class="close modal-close-padding modal-close-style cancel-save" @*data-dismiss="modal"*@ aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="" class="small-modal-padding">
+                <input type="hidden" value="@Model" id="BioTestString" />
+                <div class="row under-row-margin">
+                    <div class="col-12 text-center">
+                        Would you like to save changes?
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <input type="submit" class="cancel-save custom-button custom-cancel text-black custom-button-small-font px-5" value="Cancel" />
+                    </div>
+                    <div class="col-6">
+                        <input type="submit" class="submit-save custom-button custom-button-font biomarkers-background-color" value="Save" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(".cancel-save").on("click", function (e) {
+        e.preventDefault();
+        if ($("#String").val() != "none") {
+            var selected = $("#" + $("#BioTestString").val());
+            $.fn.ChangeTest(selected);
+            $.fn.CloseModal('save-bio-test-modal');
+        }
+    });
+
+    $(".submit-save").on("click", function (e) {
+        e.preventDefault();
+        $(this).attr("disabled", "disabled");
+        $(".testvalues").removeClass("changed")
+        $.ajax({
+            contentType: false,
+            processData: false,
+            async: true,
+            url: "/Biomarkers/SaveTests",
+            data: new FormData($("#BioTestForm")[0]),
+            traditional: true,
+            type: "POST",
+            cache: false,
+            success: function (data) {
+                if ($("#BioTestString").val() != "none") {
+                    var selected = $('#' + $("#BioTestString").val());
+                    $.fn.ChangeTest(selected);
+                }
+                else {
+                    $(".testvalues").html(data);
+                    $(".edit-mode-input").prop("checked", false);
+                    var editLabel = $(".edit-mode-label");
+                    editLabel.text("Edit Mode Off");
+                    editLabel.removeClass("on");
+                    editLabel.addClass("off")
+                    var editModeInput = $(".edit-mode-input");
+                    editModeInput.addClass("off");
+                    editModeInput.removeClass("on");
+                    $('._testvalues input').attr("disabled", true);
+                    $('._testvalues input').addClass("disabled");
+                }
+                $.fn.CloseModal('save-bio-test-modal');
+            },
+            error: function (jqxhr) {
+                $(this).removeAttr()
+            }
+        });
+    });
+</script>

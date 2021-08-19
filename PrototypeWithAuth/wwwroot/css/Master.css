@@ -491,7 +491,9 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     opacity: 0.67;
 }
 
-
+.font-weight-medium {
+    font-weight: 600 !important;
+}
 
 table td, table td .btn, .text, table th {
     font-size: var(--text-font-size) !important;
@@ -594,7 +596,8 @@ table td, table td .btn, .text, table th {
     margin-bottom: 2.063rem;
 }
 
-.under-td-padding {
+.under-td-padding,
+.under-row-padding{
     padding-bottom: 2.063rem !important;
 }
 
@@ -862,5 +865,18 @@ span.resources-tags-big {
 .open-experiment{
     color: var(--biomarkers-25) !important;
     text-decoration: underline !important;
+}
+
+.biomarkers-test-name {
+    padding-top: .7rem;
+    padding-bottom: .7rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
+    border-radius: 15px !important;
+    border: 0 !important;
+}
+
+.biomarkers-test-name.selected {
+    background-color: var(--biomarkers-25);
 }
 

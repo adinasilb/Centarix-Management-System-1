@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PrototypeWithAuth.AppData;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,12 +9,32 @@ namespace PrototypeWithAuth.Models
 {
     public class TestFieldHeader
     {
-        public TestFieldHeader(int testID, string fieldNames, string fieldTypes, string fieldList)
+        public TestFieldHeader()
+        {
+
+        }
+        public TestFieldHeader(int testID, List<string> fieldNames, List<string> fieldTypes)
         {
             TestID = testID;
-            FieldNames = fieldNames;
-            FieldTypes = fieldTypes;
-            FieldList = fieldList;
+            TempJson fieldNamesTemp = new TempJson();
+            JsonExtensions.SerializeViewModel(fieldNamesTemp, fieldNames);
+            FieldNames = fieldNamesTemp.Json;
+            TempJson fieldTypesTemp = new TempJson();
+            JsonExtensions.SerializeViewModel(fieldTypesTemp, fieldTypes);
+            FieldTypes = fieldTypesTemp.Json;
+        }
+        public TestFieldHeader(int testID, List<string> fieldNames, List<string> fieldTypes, List<string> fieldList)
+        {
+            TestID = testID;
+            TempJson fieldNamesTemp = new TempJson();
+            JsonExtensions.SerializeViewModel(fieldNamesTemp, fieldNames);
+            FieldNames = fieldNamesTemp.Json;
+            TempJson fieldTypesTemp = new TempJson();
+            JsonExtensions.SerializeViewModel(fieldTypesTemp, fieldTypes);
+            FieldTypes = fieldTypesTemp.Json;
+            TempJson fieldListTemp = new TempJson();
+            JsonExtensions.SerializeViewModel(fieldListTemp, fieldList);
+            FieldList = fieldNamesTemp.Json;
         }
 
         [Key]

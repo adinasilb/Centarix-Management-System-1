@@ -429,6 +429,34 @@
     <Compile Remove="Data\Migrations\20210802103031_RemoveQuoteStatusFromParentQuote.Designer.cs" />
     <Compile Remove="Data\Migrations\20210805073330_UpdatedOldSubcategoryName.cs" />
     <Compile Remove="Data\Migrations\20210805073330_UpdatedOldSubcategoryName.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210719124650_test1.cs" />
+    <Compile Remove="Data\Migrations\20210719124650_test1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210719124953_test1.cs" />
+    <Compile Remove="Data\Migrations\20210719124953_test1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210719125231_test1.cs" />
+    <Compile Remove="Data\Migrations\20210719125231_test1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210719125718_test.cs" />
+    <Compile Remove="Data\Migrations\20210719125718_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210720074831_test.cs" />
+    <Compile Remove="Data\Migrations\20210720074831_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210720080406_test.cs" />
+    <Compile Remove="Data\Migrations\20210720080406_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210720081118_changedSharedTimestamp.cs" />
+    <Compile Remove="Data\Migrations\20210720081118_changedSharedTimestamp.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210720081359_changedSharedTimestamp.cs" />
+    <Compile Remove="Data\Migrations\20210720081359_changedSharedTimestamp.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210720083007_changedSharedTimestamp3.cs" />
+    <Compile Remove="Data\Migrations\20210720083007_changedSharedTimestamp3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210720124451_addedTestGroupFK.cs" />
+    <Compile Remove="Data\Migrations\20210720124451_addedTestGroupFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210721113744_updatedSiteTable.cs" />
+    <Compile Remove="Data\Migrations\20210721113744_updatedSiteTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210804092449_updatedParticipantOfExperimentEntry.cs" />
+    <Compile Remove="Data\Migrations\20210804092449_updatedParticipantOfExperimentEntry.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210817075353_uniqueIndexOnParticipantAndVisitNumber.cs" />
+    <Compile Remove="Data\Migrations\20210817075353_uniqueIndexOnParticipantAndVisitNumber.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210817080202_uniqueIndexOnParticipantAndVisitNumber.cs" />
+    <Compile Remove="Data\Migrations\20210817080202_uniqueIndexOnParticipantAndVisitNumber.Designer.cs" />
   </ItemGroup>
 
 
