@@ -33,7 +33,7 @@
         <div class="container-fluid div-tabs  text-center pl-0">
             <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 pl-0 nav-tabs-icons">
                 <li class="nav-item icon"><a data-toggle="tab" href="#item" class="nav-link @tabClass current-tab next-tab"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
-                @if (Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].RequestStatusID == 7 && Model.SectionType != AppUtility.MenuItems.Protocols && Model.Requests[0].OrderType != AppUtility.OrderTypeEnum.SaveOperations.ToString())
+                @if ((Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].RequestStatusID == 7) && Model.SectionType != AppUtility.MenuItems.Protocols && Model.Requests[0].OrderType != AppUtility.OrderTypeEnum.SaveOperations.ToString())
                 {
                     <li class="nav-item icon"><a data-toggle="tab" href="#location" class="nav-link @tabClass next-tab request-location"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
                 }
