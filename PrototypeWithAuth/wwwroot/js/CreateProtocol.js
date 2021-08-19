@@ -153,7 +153,6 @@
             }
         });
     });
-
     $(".start-protocol-fx").off("click").click(function (e) {
         e.preventDefault();
         //switch this to universal share request and the modelsenum send in

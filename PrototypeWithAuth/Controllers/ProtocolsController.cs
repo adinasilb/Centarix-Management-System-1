@@ -426,26 +426,49 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> StartProtocol(int ID, bool isContinue, int tab = 3)
         {
-            var user = await _userManager.GetUserAsync(User);
-            CreateProtocolsViewModel viewmodel = new CreateProtocolsViewModel();
-            viewmodel.Tab = tab;
-            Protocol protocol = null;
-            if (isContinue)
+            try
             {
-                viewmodel.ProtocolInstance = await _context.ProtocolInstances.Where(p => p.ProtocolInstanceID == ID).Include(p => p.Protocol).FirstOrDefaultAsync();
-                viewmodel.ProtocolInstance.TemporaryResultDescription = viewmodel.ProtocolInstance.ResultDescription;
-                protocol = viewmodel.ProtocolInstance.Protocol;
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var user = await _userManager.GetUserAsync(User);
+                        CreateProtocolsViewModel viewmodel = new CreateProtocolsViewModel();
+                        viewmodel.Tab = tab;
+                        Protocol protocol = null;
+                        if (isContinue)
+                        {
+                            viewmodel.ProtocolInstance = await _context.ProtocolInstances.Where(p => p.ProtocolInstanceID == ID).Include(p => p.Protocol).FirstOrDefaultAsync();
+                            viewmodel.ProtocolInstance.TemporaryResultDescription = viewmodel.ProtocolInstance.ResultDescription;
+                            protocol = viewmodel.ProtocolInstance.Protocol;
+                        }
+                        else
+                        {
+                            protocol = _context.Protocols.Where(p => p.ProtocolID == ID).FirstOrDefault();
+                            viewmodel.ProtocolInstance = new ProtocolInstance { ProtocolID = ID, StartDate = DateTime.Now, ApplicationUserID = user.Id, CurrentLineID = _context.Lines.Where(l => l.ProtocolID == ID && l.ParentLineID == null && l.LineNumber == 1).FirstOrDefault().LineID };
+                            _context.Add(viewmodel.ProtocolInstance);
+                            await _context.SaveChangesAsync();
+                        }
+                        viewmodel.ModalType = AppUtility.ProtocolModalType.CheckListMode;
+                        await FillCreateProtocolsViewModel(viewmodel, ID);
+                        return PartialView("_IndexTableWithEditProtocol", viewmodel);
+                    }
+                    catch (Exception ex)
+                    {
+                        Response.StatusCode = 500;
+                        await transaction.RollbackAsync();
+                        await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
+                        return new EmptyResult();
+                    }
+                }
             }
-            else
+            catch (Exception ex)
             {
-                protocol = _context.Protocols.Where(p => p.ProtocolID == ID).FirstOrDefault();
-                viewmodel.ProtocolInstance = new ProtocolInstance { ProtocolID = ID, StartDate = DateTime.Now, ApplicationUserID = user.Id, CurrentLineID = _context.Lines.Where(l => l.ProtocolID == ID && l.ParentLineID == null && l.LineNumber == 1).FirstOrDefault().LineID };
-                _context.Add(viewmodel.ProtocolInstance);
-                await _context.SaveChangesAsync();
+                Response.StatusCode = 500;
+                await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
+                return new EmptyResult();
             }
-            viewmodel.ModalType = AppUtility.ProtocolModalType.CheckListMode;
-            await FillCreateProtocolsViewModel(viewmodel, protocol.ProtocolTypeID, protocol.ProtocolID);
-            return PartialView("_IndexTableWithEditProtocol", viewmodel);
+        
         }
 
         [Authorize(Roles = "Protocols")]
@@ -734,10 +757,10 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(viewModel);
         }
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> MaterialInfoModal(int materialID)
+        public async Task<IActionResult> MaterialInfoModal(int materialID, AppUtility.ProtocolModalType ModalType)
         {
             var material = _context.Materials.Where(m => m.MaterialID == materialID).FirstOrDefault();
-            return PartialView(new AddMaterialViewModel { Material = material });
+            return PartialView(new AddMaterialViewModel { Material = material, ModalType = ModalType });
         }
 
         [HttpPost]
