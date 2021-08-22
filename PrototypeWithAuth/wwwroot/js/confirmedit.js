@@ -68,7 +68,7 @@
 					if ($('.turn-edit-on-off').attr("section-type") == "LabManagement") {
 						//alert('reload location ')
 						//Reload visual of labmanagement
-						var visualContainerId = $(".hasVisual").attr("parent-id");
+						/*var visualContainerId = $(".hasVisual").attr("parent-id");
 						var urlLocations = "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId;
 						$.ajax({
 							async: true,
@@ -79,7 +79,7 @@
 								$(".hasVisual").html(d);
 								$("#loading").hide();
 							}
-						});
+						});*/
 					}
 					else if ($('.turn-edit-on-off').attr("section-type") == "Requests") {
 						console.log("reloading ajax partial view...");
