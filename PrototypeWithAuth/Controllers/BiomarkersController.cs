@@ -421,7 +421,7 @@ namespace PrototypeWithAuth.Controllers
             _context.Add(ee);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("_BiomarkersRows", newEntryViewModel.ParticipantID);
+            return RedirectToAction("_BiomarkersRows", new { ParticipantID = newEntryViewModel.ParticipantID });
         }
 
         [HttpGet]
