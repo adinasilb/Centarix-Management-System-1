@@ -2843,11 +2843,12 @@ namespace PrototypeWithAuth.Controllers
             string renderedView = await RenderPartialViewToString("OrderEmailView", confirm);
 
             string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
-            if(!Directory.Exists(path1))
+            string path2 = Path.Combine(path1, requestIndexObject.GUID.ToString());
+            if(!Directory.Exists(path2))
             {
-                Directory.CreateDirectory(path1);
+                Directory.CreateDirectory(path2);
             }
-            string fileName = Path.Combine(path1, "Order.txt");
+            string fileName = Path.Combine(path2, "Order.txt");
 
             using (StreamWriter writer = new StreamWriter(fileName))
             {
@@ -2914,7 +2915,8 @@ namespace PrototypeWithAuth.Controllers
                 //}
                 
                 string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
-                string fileName = Path.Combine(uploadFolder, "Order.txt");
+                string folder2 = Path.Combine(uploadFolder, tempRequestListViewModel.GUID.ToString());
+                string fileName = Path.Combine(folder2, "Order.txt");
                 //read the text file to convert to pdf
                 string renderedView = System.IO.File.ReadAllText(fileName);
                 //delete file
