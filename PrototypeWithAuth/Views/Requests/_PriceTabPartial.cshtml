@@ -21,6 +21,9 @@
         //disabledProperty = "disabled";
         markReadOnlyClass = "mark-readonly";
         shekelReadOnly = "mark-readonly";
+    }
+    if(modalType != AppUtility.RequestModalType.Create || Model.IsReorder)
+    {
         if (Model.Requests[0].Currency.Equals("USD"))
         {
             disableShekel = "disabled-text";
