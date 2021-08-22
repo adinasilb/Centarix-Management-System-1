@@ -9,8 +9,8 @@ namespace PrototypeWithAuth.Models
 {
     public class FavoriteProtocol:FavoriteBase
     {
-        public int ProtocolVersionID { get; set; }
+        public int? ProtocolVersionID { get; set; }
         public ProtocolVersion ProtocolVersion { get; set; }
-        
+
     }
 }

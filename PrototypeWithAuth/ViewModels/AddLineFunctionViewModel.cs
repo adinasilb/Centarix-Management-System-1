@@ -24,7 +24,7 @@ namespace PrototypeWithAuth.ViewModels
                 ParentCategories = ParentCategories,
                 ProtocolCategories = ProtocolCategories,
                 ProtocolSubCategories = ProtocolSubCategories,
-                Protocols = Protocols,
+                ProtocolVersions = ProtocolVersions,
                 Creators = Creators,
                 DocumentsInfo = DocumentsInfo,
                 DocumentsModalViewModel = DocumentsModalViewModel,

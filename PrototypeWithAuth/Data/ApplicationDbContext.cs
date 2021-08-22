@@ -21,8 +21,8 @@ namespace PrototypeWithAuth.Data
         {
 
         }
-  
- 
+
+        public DbSet<ProtocolVersion> ProtocolVersions { get; set; }
         public DbSet<FunctionResult> FunctionResults { get; set; }
         public DbSet<TempLineID> TempLineIDs { get; set; }
         public DbSet<FunctionLineID> FunctionLineIDs { get; set; }
@@ -403,8 +403,8 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ProtocolInstance>().Property(r => r.ResultDescription).HasColumnType("ntext");
             modelBuilder.Entity<TempRequestJson>().Property(t => t.Json).HasColumnType("ntext");
             modelBuilder.Entity<TempLinesJson>().Property(t => t.Json).HasColumnType("ntext");
-            modelBuilder.Entity<Protocol>().HasIndex(p => new { p.UniqueCode, p.VersionNumber }).IsUnique();
-
+            modelBuilder.Entity<Protocol>().HasIndex(p => new { p.UniqueCode }).IsUnique();
+            modelBuilder.Entity<ProtocolVersion>().HasIndex(p => new {p.ProtocolID, p.VersionNumber }).IsUnique();
 
             modelBuilder.Seed();
 

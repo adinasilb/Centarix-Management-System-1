@@ -1,6 +1,7 @@
 ﻿using PrototypeWithAuth.Data;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,6 +9,8 @@ namespace PrototypeWithAuth.Models
 {
     public class ProtocolVersion
     {
+        [Key]
+        public int ProtocolVersionID { get; set; }
         public string VersionNumber { get; set; }
         //public IEnumerable<TagProtocol> TagProtocols { get; set; }
         public string ShortDescription { get; set; }
@@ -17,8 +20,6 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<Line> Lines { get; set; }
         public string ApplicationUserCreatorID { get; set; }
         public ApplicationUser ApplicationUserCreator { get; set; }
-        public int ProtocolTypeID { get; set; }
-        public ProtocolType ProtocolType { get; set; }
         public DateTime CreationDate { get; set; }
         public IEnumerable<ProtocolInstance> ProtocolInstances { get; set; }
         public int ProtocolID { get; set; }

@@ -10,7 +10,7 @@
         }
         <input type="hidden" class="lastIndexOfUrls" value="@(Model.LastUrls.Count-2)"/>
         <div class="container">
-            <input type="hidden" asp-for="Protocol.ProtocolTypeID" />
+            <input type="hidden" asp-for="ProtocolVersion.Protocol.ProtocolTypeID" />
             <div class="row text-danger-centarix error-message d-none"> @Model.ErrorMessage </div>       
             <div class="item-table">
                 <ul class=" pl-0 nav" style="">

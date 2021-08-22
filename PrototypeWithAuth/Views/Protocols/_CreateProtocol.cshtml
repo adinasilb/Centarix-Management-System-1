@@ -36,7 +36,7 @@
 }
 
 <form action="" id="myForm" class=" on-form-modal protocol-form createProtocolForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-    <input type="hidden" asp-for="Protocol.ProtocolTypeID" />
+    <input type="hidden" asp-for="ProtocolVersion.Protocol.ProtocolTypeID" />
     <div class="row text-danger-centarix error-message d-none"> @Model.ErrorMessage </div>
 
     <div class="item-table">
@@ -103,7 +103,7 @@
 
             <li class="only-protocol-tab   d-none li-function-bar @summaryMode">
                 <div class="h-100 d-flex ml-6" style=" align-items: center;">
-                    <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin start-protocol-fx " value="@Model.Protocol.ProtocolID">Start</button>
+                    <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin start-protocol-fx " value="@Model.ProtocolVersion.ProtocolVersionID">Start</button>
                 </div>
             </li>
             @{
@@ -117,7 +117,7 @@
                 <div class="switch col-12 switch-margin">
                     <label>
                         <label class="edit-mode-switch-description">Edit Mode Off</label>
-                        <input type="checkbox" class="turn-edit-on-off protocols" value="@Model.Protocol.ProtocolID" name="details" @isChecked>
+                        <input type="checkbox" class="turn-edit-on-off protocols" value="@Model.ProtocolVersion.ProtocolVersionID" name="details" @isChecked>
                         <span class="lever"></span>
                     </label>
                 </div>

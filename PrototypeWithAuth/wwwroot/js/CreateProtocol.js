@@ -112,7 +112,7 @@
             processData: false,
             contentType: false,
             data: new FormData($("#myForm")[0]),
-            url: "/Protocols/SaveTempLines?ProtocolID=" + $(".createProtocolMasterProtocolID").val()+"&guid=" + $(".createProtocolMasterGuid").val(),
+            url: "/Protocols/SaveTempLines?ProtocolVersionID=" + $(".createProtocolMasterProtocolVersionID").val()+"&guid=" + $(".createProtocolMasterGuid").val(),
             type: 'POST',
             success: function (data) {
                 //$("._Lines").html(data);

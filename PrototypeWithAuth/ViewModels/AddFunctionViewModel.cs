@@ -20,7 +20,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<SelectListItem> Creators { get; set; }
         public List<ProtocolCategory> ProtocolCategories { get; set; }
         public List<ProtocolSubCategory> ProtocolSubCategories { get; set; }
-        public List<Protocol> Protocols { get; set; }
+        public List<ProtocolVersion> ProtocolVersions { get; set; }
         public List<DocumentFolder> DocumentsInfo { get; set; }
         public bool IsRemove { get; set; }
         public DocumentsModalViewModel DocumentsModalViewModel { get; set; }

@@ -8,7 +8,7 @@ namespace PrototypeWithAuth.AppData.UtilityModels
 {
     public class ProtocolProtocolInstance
     {
-        public Protocol Protocol { get; set; }
+        public ProtocolVersion ProtocolVersion { get; set; }
         public ProtocolInstance ProtocolInstance { get; set; }
     }
 }

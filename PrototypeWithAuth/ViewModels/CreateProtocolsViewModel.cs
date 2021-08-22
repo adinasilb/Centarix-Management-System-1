@@ -10,7 +10,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class CreateProtocolsViewModel : ViewModelBase
     {
-        public Protocol Protocol { get; set; }
+        public ProtocolVersion ProtocolVersion { get; set; }
         public ProtocolInstance ProtocolInstance { get; set;}
         public List<String> Tags { get; set; }
         public IEnumerable<ProtocolCategory> ProtocolCategories { get; set; }
