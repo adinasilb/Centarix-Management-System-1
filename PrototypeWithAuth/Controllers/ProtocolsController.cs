@@ -918,7 +918,7 @@ namespace PrototypeWithAuth.Controllers
 
         public bool CheckIfSerialNumberExists(string serialNumber)
         {
-            return _context.Products.Where(p => p.SerialNumber.Equals(serialNumber)).ToList().Any();
+            return _context.Products.Where(p => p.Requests.Where(r => r.RequestStatusID == 3 || r.RequestStatusID == 7).Any()).Where(p => p.SerialNumber.Equals(serialNumber)).ToList().Any();
         }
         public bool CheckIfProtocolUniqueNumberExists(string uniqueNumber)
         {
@@ -1426,7 +1426,7 @@ namespace PrototypeWithAuth.Controllers
         {
             viewmodel.ParentCategories = _context.ParentCategories.ToList();
             viewmodel.ProductSubcategories = _context.ProductSubcategories.ToList();
-            viewmodel.Products = _context.Products.ToList();
+            viewmodel.Products = _context.Products.Where(p => p.Requests.Where(r => r.RequestStatusID == 3 || r.RequestStatusID == 7).Any()).ToList();
             viewmodel.Vendors = _context.Vendors.ToList();
         }
 
@@ -1443,7 +1443,7 @@ namespace PrototypeWithAuth.Controllers
         {
             viewmodel.ParentCategories = _context.ParentCategories.ToList();
             viewmodel.ProductSubcategories = _context.ProductSubcategories.ToList();
-            viewmodel.Products = _context.Products.ToList();
+            viewmodel.Products = _context.Products.Where(p=>p.Requests.Where(r=>r.RequestStatusID==3 || r.RequestStatusID==7).Any()).ToList();
             viewmodel.Vendors = _context.Vendors.ToList();
         }
 
@@ -1493,13 +1493,25 @@ namespace PrototypeWithAuth.Controllers
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
             {
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
-                    var product = _context.Products.IgnoreQueryFilters().Where(p=>!p.IsDeleted).Where(p => p.ProductID == objectID || p.SerialNumber == uniqueNumber)
+                    var product = _context.Products.IgnoreQueryFilters().Where(p=>!p.IsDeleted).Where(p => p.Requests.Where(r => r.RequestStatusID == 3 || r.RequestStatusID == 7).Any()).Where(p => p.ProductID == objectID || p.SerialNumber == uniqueNumber)
                          .Include(p => p.ProductSubcategory).FirstOrDefault();
-                    viewmodel.Function.Product = product;
-                    viewmodel.Function.ProductID = product.ProductID;
+                    if(product != null)
+                    {
+                        viewmodel.Function.Product = product;
+                        viewmodel.ProductSubcategories = _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == product.ProductSubcategory.ParentCategoryID).ToList();
+                        viewmodel.Products = _context.Products.Where(p => p.ProductSubcategoryID == product.ProductSubcategoryID && product.VendorID == p.VendorID).Where(p => p.Requests.Where(r => r.RequestStatusID == 3 || r.RequestStatusID == 7).Any()).ToList();
+
+                        viewmodel.Function.ProductID = product.ProductID;
+                    }
+                    else
+                    {
+                        viewmodel.Function.Product = new Product();
+                        viewmodel.ProductSubcategories = _context.ProductSubcategories.ToList();
+                        viewmodel.Products = _context.Products.Where(p => p.Requests.Where(r => r.RequestStatusID == 3 || r.RequestStatusID == 7).Any()).ToList();
+
+                    }
+
                     viewmodel.ParentCategories = _context.ParentCategories.ToList();
-                    viewmodel.ProductSubcategories = _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == product.ProductSubcategory.ParentCategoryID).ToList();
-                    viewmodel.Products = _context.Products.Where(p => p.ProductSubcategoryID == product.ProductSubcategoryID && product.VendorID == p.VendorID).ToList();
                     viewmodel.Vendors = _context.Vendors.ToList();
 
                     break;
@@ -1638,7 +1650,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<JsonResult> FilterLinkToProduct(int parentCategoryID, int subCategoryID, int vendorID)
         {
-            IQueryable<Product> products = _context.Products;
+            IQueryable<Product> products = _context.Products.Where(p => p.Requests.Where(r => r.RequestStatusID == 3 || r.RequestStatusID == 7).Any());
             if (subCategoryID != 0)
             {
                 products = products.Where(p => p.ProductSubcategoryID == subCategoryID);
