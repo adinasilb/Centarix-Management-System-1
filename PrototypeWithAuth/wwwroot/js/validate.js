@@ -225,80 +225,70 @@ $(function () {
 
 	$('.next-tab').off("click").click(function () {
 		var clickedElement= $(this);
-		
+		var currentTab = $(".current-tab")
+
 		if(!$(this).hasClass("current-tab"))
 		{
-			if ($(this).hasClass('request-price') ) {
-				$('#unitTypeID').rules("remove", "selectRequired");
-			}
 
 			if ($(this).hasClass('order-tab-link') ) {
 				$('.activeSubmit').removeClass('disabled-submit')
 			}
-			//console.log($("#myForm").validate().settings.rules)
-			if ($(this).hasClass('request-location')) {
-				$('#locationTypeSelected').rules("remove", "locationRequired");
-				$('#locationVisualSelected').rules("remove", "locationRequired");
-				$('#subLocationSelected').rules("remove", "locationRequired");
-				console.log('removed locationrequired');
-			}
+			
 			//change previous tabs to accessible --> only adding prev-tab in case we need to somehow get it after
 
 			if (!$(this).hasClass("prev-tab")) {
+
+				if ($(this).parent("li").index() <= $('.request-price').parent("li").index()) {
+					$('#unitTypeID').rules("remove", "selectRequired");
+					console.log('removed price selects');
+				}
+				if ($(this).parent("li").index() <= $('.request-location').parent("li").index()) {
+					$('#locationTypeSelected').rules("remove", "locationRequired");
+					$('#locationVisualSelected').rules("remove", "locationRequired");
+					$('#subLocationSelected').rules("remove", "locationRequired");
+					console.log('removed locationrequired');
+				}
+				console.log($("#myForm").validate().settings.rules)
+				console.log($("#myForm").validate().settings.ignore)
+				console.log('this index ' + $(this).parent("li").index());
+				console.log('location index ' + $('.request-location').parent("li").index())
 				var valid = $("#myForm").valid();
 
 				console.log("valid tab" + valid)
 				if (!valid) {
 					$(this).prop("disabled", true);
+
+				} else {
+					$(currentTab).removeClass("current-tab")
+					$(this).prop("disabled", false);
+					$(this).addClass("current-tab");
 				}
-				else {
-						var currentTab = $(".current-tab")
-						$(currentTab).removeClass("current-tab")
-						$(this).prop("disabled", false);
-						$(this).addClass("current-tab");
-						$(".next-tab").removeClass("prev-tab");
-						$('.next-tab').each(function(index, element){
-			
 
-							if($(clickedElement).parent("li").index() > $(element).parent("li").index())
-							{
-								//alert("true")
-								$(element).addClass("prev-tab");
-							}
+				//work around for now - because select hidden and location-error hidden are ignored
+				if ($(this).parent("li").index() <= $('.request-price').parent("li").index()) {
+					$('#unitTypeID').rules("add", "selectRequired");
+				}
+				if ($(this).parent("li").index() <= $('.request-location').parent("li").index()) {
+					$('#locationTypeSelected').rules("add", "locationRequired");
+					$('#locationVisualSelected').rules("add", "locationRequired");
+					$('#subLocationSelected').rules("add", "locationRequired");
+					console.log('added locationrequired');
+				}
+				//console.log(currentTab);
 
-						});
-					}
-			
-			}
-			else
-			{
-			    var currentTab = $(".current-tab")
+			} else {
 				$(currentTab).removeClass("current-tab")
 				$(this).prop("disabled", false);
 				$(this).addClass("current-tab");
-				$(".next-tab").removeClass("prev-tab");
-				$('.next-tab').each(function(index, element){
-	
-
-					if($(clickedElement).index() > $(element).parent("li").index())
-					{
-						//alert("true")
-						$(element).addClass("prev-tab");
-					}
-
-				});
-
 			}
-			//work around for now - because select hidden are ignored
-				if ($(this).hasClass('request-price')) {
-					$('#unitTypeID').rules("add", "selectRequired");
-			}
-			if ($(this).hasClass('request-location')) {
-				$('#locationTypeSelected').rules("add", "locationRequired");
-				$('#locationVisualSelected').rules("add", "locationRequired");
-				$('#subLocationSelected').rules("add", "locationRequired");
-				console.log('added locationrequired');
-			}
+			$(".next-tab").removeClass("prev-tab");
+			$('.next-tab').each(function (index, element) {
+
+				if ($('.current-tab').parent("li").index() > $(element).parent("li").index()) {
+					//alert("true")
+					$(element).addClass("prev-tab");
+				}
+			});
 		}
 		
 
@@ -318,8 +308,7 @@ $(function () {
 				$('.activeSubmit').addClass('disabled-submit')
 			}
 
-		}
-		else {
+		} else {
 			$('.activeSubmit ').removeClass('disabled-submit')
 		}
 		$(this).data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden, input:visible, textarea:visible)';
