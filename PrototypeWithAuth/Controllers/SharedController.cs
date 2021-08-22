@@ -1334,8 +1334,9 @@ namespace PrototypeWithAuth.Controllers
             }
             var serialnumberList = _context.Products.IgnoreQueryFilters().Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType)
                 .Select(p => int.Parse(p.SerialNumber.Substring(1))).ToList();
-            var lastSerialNumberInt = serialnumberList.OrderBy(s => s).LastOrDefault();
 
+            lastSerialNumberInt = serialnumberList.OrderBy(s => s).LastOrDefault();
+            
             return serialLetter + (lastSerialNumberInt + 1);
         }
 
