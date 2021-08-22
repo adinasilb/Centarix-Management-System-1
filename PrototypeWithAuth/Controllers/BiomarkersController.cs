@@ -118,6 +118,13 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(documentsModalViewModel);
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Biomarkers")]
+        public void DocumentsModal(DocumentsModalViewModel documentsModalViewModel)
+        {
+            base.DocumentsModal(documentsModalViewModel);
+        }
+
         [HttpGet]
         [Authorize(Roles = "Biomarkers")]
         public async Task<IActionResult> Experiment(int ID)

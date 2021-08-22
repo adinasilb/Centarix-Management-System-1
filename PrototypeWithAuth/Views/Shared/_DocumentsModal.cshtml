@@ -66,6 +66,11 @@
         colorToUse = "disabled-filter";
     }
 
+    var folderName = Model.FolderName.ToString();
+    if (Model.FolderName == AppUtility.FolderNamesEnum.Custom)
+    {
+        folderName = "Save File";
+    }
 
     /*toggle switch:  only if edit*/
     /*upload button: everthing but summary*/
@@ -96,7 +101,8 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-2">
-                                <input type="text" class="form-control-plaintext heading-1" disabled asp-for="FolderName" />
+                                <input type="text" class="form-control-plaintext heading-1" disabled asp-for="FolderName" value="@folderName" />
+                                @Html.HiddenFor(m => m.CustomFolderName);
                             </div>
                             <div class="col-3 offset-7">
                             </div>
