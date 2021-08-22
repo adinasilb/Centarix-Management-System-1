@@ -3324,7 +3324,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (var quote in requests)
                         {
                             quote.QuoteStatusID = 2;
-                            quote.ParentQuote.ApplicationUserID = currentUser.Id;
+                            //quote.ParentQuote.ApplicationUserID = currentUser.Id;
                             //_context.Update(quote.ParentQuote);
                             //_context.SaveChanges();
                             _context.Update(quote);
