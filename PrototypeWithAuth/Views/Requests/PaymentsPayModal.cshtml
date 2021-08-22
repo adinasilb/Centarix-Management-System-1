@@ -33,13 +33,7 @@
                                 var CostDollar = Model.Requests.Sum(r => r.Cost / r.ExchangeRate);
                                 var DollarVAT = Model.Requests.Sum(r => r.VAT / r.ExchangeRate);
                                 var TotalDollar = CostDollar + DollarVAT;
-                                var ShippingTotalShekel = TotalShekel;
-                                var ShippingTotalDollar = TotalDollar;
-                                foreach (var shipping in Model.ShippingToPay)
-                                {
-                                    ShippingTotalDollar += Convert.ToDecimal(shipping.CostDollar);
-                                    ShippingTotalShekel += Convert.ToDecimal(shipping.CostShekel);
-                                }
+                                
                             }
 
                         </div>
@@ -107,17 +101,35 @@
                         </div>
                         @if (Model.ShippingToPay.Any())
                         {
+                            
+                            var ShippingTotalShekel = TotalShekel;
+                            var ShippingTotalDollar = TotalDollar;
+                            var includeVAT = Model.Requests[0].IncludeVAT;
                             <strong>Shipping:</strong>
-                            <div class="row pt-2">
-                                @for (var s = 0; s < Model.ShippingToPay.Count; s++)
-                                {
-                                    @Html.HiddenFor(m => m.ShippingToPay[s].ID);
+                            @for (var s = 0; s < Model.ShippingToPay.Count; s++)
+                            {
+                                <div class="row pt-2">
+                                    @{ 
+                                        var ShekelShipping = Convert.ToDecimal(Model.ShippingToPay[s].CostShekel);
+                                        var DollarShipping = Convert.ToDecimal(Model.ShippingToPay[s].CostDollar);
+
+                                        decimal ShippingVATShekel = 0;
+                                        decimal ShippingVATDollar = 0;
+                                        if (includeVAT)
+                                        {
+                                            ShippingVATShekel = ShekelShipping * .17m;
+                                            ShippingVATDollar = DollarShipping * .17m;
+                                        }
+                                        ShippingTotalDollar += DollarShipping + ShippingVATDollar;
+                                        ShippingTotalShekel += ShekelShipping + ShippingVATShekel;
+                                    }
+                                    @Html.HiddenFor(m => m.ShippingToPay[s].ID)
                                     <div class="col-2">
                                         <div class="form-group">
                                             <label class=" control-label">@Model.ShippingToPay[s].Name</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
-                                                <input value="@String.Format("{0:0.00}",Model.ShippingToPay[s].CostShekel)" class="form-control-plaintext border-bottom" disabled />
+                                                <input value="@String.Format("{0:0.00}",ShekelShipping)" class="form-control-plaintext border-bottom" disabled />
                                             </div>
                                         </div>
                                     </div>
@@ -126,13 +138,31 @@
                                             <label class=" control-label"></label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#36;</span>
-                                                <input value="@String.Format("{0:0.00}",Model.ShippingToPay[s].CostDollar)" class="form-control-plaintext border-bottom" disabled />
+                                                <input value="@String.Format("{0:0.00}", DollarShipping)" class="form-control-plaintext border-bottom" disabled />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label class=" control-label">VAT</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">&#x20aa;</span>
+                                                <input value="@String.Format("{0:0.00}",ShippingVATShekel)" class="form-control-plaintext border-bottom" disabled />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label class=" control-label"></label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">&#36;</span>
+                                                <input value="@String.Format("{0:0.00}", ShippingVATDollar)" class="form-control-plaintext border-bottom" disabled />
                                             </div>
                                         </div>
                                     </div>
 
-                                }
-                            </div>
+                                </div>
+                            }
                             <div class="row">
                                 <div class="col-2">
                                     <div class="form-group">

@@ -143,7 +143,7 @@ namespace PrototypeWithAuth.Controllers
             var addInvoiceIcon = new IconColumnViewModel(" icon-cancel_presentation-24px  green-overlay ", "", "invoice-add-one", "Add Invoice");
 
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
-            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "#5F79E2", "request-favorite", "Favorite");
+            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color);", "request-favorite", "Favorite");
             var popoverMoreIcon = new IconColumnViewModel("More", "icon-more_vert-24px", "black", "More");
             var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
             var resendIcon = new IconColumnViewModel("Resend");
@@ -1105,6 +1105,7 @@ namespace PrototypeWithAuth.Controllers
                     newRequest.OrderType = AppUtility.OrderTypeEnum.Save.ToString();
                     newRequest.Unit = 1;
                     newRequest.Product.UnitTypeID = 5;
+                    newRequest.Product.SerialNumber = GetSerialNumber(false);
                     _context.Add(newRequest);
                     await _context.SaveChangesAsync();
                     MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests, false, guid);
@@ -1408,6 +1409,8 @@ namespace PrototypeWithAuth.Controllers
                 {
                     tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
                 }
+                var updatedTempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID, 0);
+                await SetTempRequestAsync(updatedTempRequestJson, tempRequestListViewModel, tempRequestListViewModel.RequestIndexObject);
             }
 
             //foreach (var req in requests)
@@ -2029,7 +2032,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (favIconIndex != -1 && favoriteRequest != null) //check these checks
             {
-                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "#5F79E2", "request-favorite request-unlike", "Unfavorite");
+                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "var(--order-inv-color);", "request-favorite request-unlike", "Unfavorite");
                 newIconList[favIconIndex] = unLikeIcon;
             }
             //for approval icon
@@ -2778,15 +2781,17 @@ namespace PrototypeWithAuth.Controllers
                     request.Product.ProductSubcategory.ParentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).FirstOrDefault();
                     request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
                 }
-                TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID, 3);
                 newTRLVM.TempRequestViewModels = new List<TempRequestViewModel>()
                 {
                     new TempRequestViewModel(){
                         Request = request
                     }
                 };
-                updatedTempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID, 3);
+                newTRLVM.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
+                updatedTempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID, 1);
                 await SetTempRequestAsync(updatedTempRequestJson, newTRLVM, tempRequestListViewModel.RequestIndexObject);
+                newTRLVM.GUID = updatedTempRequestJson.GuidID;
+                newTRLVM.SequencePosition = updatedTempRequestJson.SequencePosition;
                 var payments = _context.Payments.Where(p => p.RequestID == id);
              
                 allRequests.Add(request);
@@ -2822,11 +2827,11 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 //updatedTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson, 3);
+                newTRLVM.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
                 await SetTempRequestAsync(oldTempRequestJson, newTRLVM, tempRequestListViewModel.RequestIndexObject);
             }
 
             //IMPORTANT!!! Check that payments and comments are coming in
-            newTRLVM.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
             ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
             {
                 ParentRequest = pr,
@@ -2837,8 +2842,13 @@ namespace PrototypeWithAuth.Controllers
             //render the purchase order view into a string using a the confirmEmailViewModel
             string renderedView = await RenderPartialViewToString("OrderEmailView", confirm);
 
-            string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-            string fileName = Path.Combine(path1, "Order.txt");
+            string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
+            string path2 = Path.Combine(path1, requestIndexObject.GUID.ToString());
+            if(!Directory.Exists(path2))
+            {
+                Directory.CreateDirectory(path2);
+            }
+            string fileName = Path.Combine(path2, "Order.txt");
 
             using (StreamWriter writer = new StreamWriter(fileName))
             {
@@ -2903,8 +2913,10 @@ namespace PrototypeWithAuth.Controllers
                 //    }
                 //    emailNum++;
                 //}
-                string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-                string fileName = Path.Combine(uploadFolder, "Order.txt");
+                
+                string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
+                string folder2 = Path.Combine(uploadFolder, tempRequestListViewModel.GUID.ToString());
+                string fileName = Path.Combine(folder2, "Order.txt");
                 //read the text file to convert to pdf
                 string renderedView = System.IO.File.ReadAllText(fileName);
                 //delete file
@@ -2921,12 +2933,30 @@ namespace PrototypeWithAuth.Controllers
                 doc = converter.ConvertHtmlString(renderedView, baseUrl);
 
                 //save this as orderform
-                string uploadFile = Path.Combine(uploadFolder, "CentarixOrder#" + deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentRequest.OrderNumber + ".pdf");
-                doc.Save(uploadFile);
+                string id;
+                if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentRequestID != null)
+                {
+                    id = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentRequestID.ToString();
+                }
+                else
+                {
+                    id = tempRequestListViewModel.GUID.ToString();
+                }
+                string NewFolder = Path.Combine(uploadFolder, id);
+                //string NewFolder = Path.Combine(uploadFolder, deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentRequestID.ToString());
+                string folderPath = Path.Combine(NewFolder, AppUtility.FolderNamesEnum.Orders.ToString());
+                Directory.CreateDirectory(folderPath); //make sure we don't need one above also??
+                string filePath = Path.Combine(folderPath, "CentarixOrder" + deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentRequest.OrderNumber + ".pdf");
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                doc.Save(filePath);
                 doc.Close();
 
                 /*string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-                string uploadFile = Path.Combine(uploadFolder, "CentarixOrder#" + requests.FirstOrDefault().ParentRequest.OrderNumber + ".pdf");
+                string uploadFile = Path.Combine(uploadFolder, "CentarixOrder" + requests.FirstOrDefault().ParentRequest.OrderNumber + ".pdf");
                 */
 
 
@@ -2984,7 +3014,7 @@ namespace PrototypeWithAuth.Controllers
                 builder.TextBody = @"Hello," + "\n\n" + "Please see the attached order for quote number(s) " + string.Join(", ", quoteNumbers) +
                     ". \n\nPlease confirm that you received the order. \n\nThank you.\n"
                     + ownerUsername + "\nCentarix";
-                builder.Attachments.Add(uploadFile);
+                builder.Attachments.Add(filePath);
 
                 message.Body = builder.ToMessageBody();
 
@@ -3082,7 +3112,7 @@ namespace PrototypeWithAuth.Controllers
                                         MoveDocumentsOutOfTempFolder(tempRequest.Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, tempRequestListViewModel.GUID);
                                     }
 
-                                    string NewFolder = Path.Combine(uploadFolder, tempRequest.Request.ParentRequestID.ToString());
+                                    /*string NewFolder = Path.Combine(uploadFolder, tempRequest.Request.ParentRequestID.ToString());
                                     string folderPath = Path.Combine(NewFolder, AppUtility.FolderNamesEnum.Orders.ToString());
                                     Directory.CreateDirectory(folderPath); //make sure we don't need one above also??
 
@@ -3093,7 +3123,7 @@ namespace PrototypeWithAuth.Controllers
                                         System.IO.File.Delete(filePath);
                                     }
 
-                                    System.IO.File.Copy(uploadFile, filePath); //make sure this works for each of them
+                                    System.IO.File.Copy(uploadFile, filePath); //make sure this works for each of them*/
 
                                     tempRequest.Request.Product = await _context.Products.Where(p => p.ProductID == tempRequest.Request.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
                                     RequestNotification requestNotification = new RequestNotification();
@@ -3116,20 +3146,21 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID == null ? 0 : Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, false, tempRequestListViewModel.GUID);
                                 }
-
+                                bool moveOrderDoc = false;
                                 if(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID == 0)
                                 {
-
                                     _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Added;
+                                    moveOrderDoc = true;
                                 }
-                                else
+                                else //if coming from approve order
                                 {
                                     _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Modified;
                                 }
                                 await _context.SaveChangesAsync();
-                                if (System.IO.File.Exists(uploadFile))
+                                if(moveOrderDoc)
                                 {
-                                    System.IO.File.Delete(uploadFile);
+                                   MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID,
+                                        AppUtility.ParentFolderName.ParentRequest, false, tempRequestListViewModel.GUID);     //make sure has an id here.
                                 }
                                 //throw new Exception();
                                 await transaction.CommitAsync();
@@ -3224,6 +3255,10 @@ namespace PrototypeWithAuth.Controllers
 
             //creating the path for the file to be saved
             string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
+            if (!Directory.Exists(path1))
+            {
+                Directory.CreateDirectory(path1);
+            }
             string uniqueFileName = "PriceQuoteRequest.pdf";
             string filePath = Path.Combine(path1, uniqueFileName);
             // save pdf document
@@ -3233,10 +3268,7 @@ namespace PrototypeWithAuth.Controllers
             doc.Close();
 
 
-            string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-            string uploadFile = Path.Combine(uploadFolder, "PriceQuoteRequest.pdf");
-
-            if (System.IO.File.Exists(uploadFile))
+            if (System.IO.File.Exists(filePath))
             {
                 //instatiate mimemessage
                 var message = new MimeMessage();
@@ -3264,7 +3296,7 @@ namespace PrototypeWithAuth.Controllers
                 //body
                 builder.TextBody = @"Hello," + "\n\n" + "Please send a price quote for the items listed in the attached pdf. \n\nThank you.\n"
                         + ownerUsername + "\nCentarix"; ;
-                builder.Attachments.Add(uploadFile);
+                builder.Attachments.Add(filePath);
 
                 message.Body = builder.ToMessageBody();
 
@@ -3292,7 +3324,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (var quote in requests)
                         {
                             quote.QuoteStatusID = 2;
-                            quote.ParentQuote.ApplicationUserID = currentUser.Id;
+                            //quote.ParentQuote.ApplicationUserID = currentUser.Id;
                             //_context.Update(quote.ParentQuote);
                             //_context.SaveChanges();
                             _context.Update(quote);
@@ -4922,9 +4954,9 @@ namespace PrototypeWithAuth.Controllers
                     _context.Add(addInvoiceViewModel.Invoice);
                     await _context.SaveChangesAsync();
 
-                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+/*                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
                     string uploadFolderFrom = Path.Combine(uploadFolder, addInvoiceViewModel.Guid.ToString());
-                    string uplaodFolderPathFrom = Path.Combine(uploadFolderFrom, AppUtility.FolderNamesEnum.Invoices.ToString());
+                    string uplaodFolderPathFrom = Path.Combine(uploadFolderFrom, AppUtility.FolderNamesEnum.Invoices.ToString());*/
 
                     foreach (var request in addInvoiceViewModel.Requests)
                     {

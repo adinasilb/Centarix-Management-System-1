@@ -43,7 +43,7 @@ Model.TempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.Side
             }
         </div>
         <div class="col-3 offset-3 text-center">
-            <span style="font-weight:500" id="date"></span>
+            <span style="font-weight:500" id="date">@DateTime.Now.GetElixirDateFormat()</span>
         </div>
     </div>
     <hr>
@@ -67,9 +67,9 @@ Model.TempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.Side
                         {
                             notes += "<span class='text'>" + @request.NoteToSupplier + "</span><br/>";
                         }
-                    }
-                    if (notes != "")
-                    { <span class="heading-1">Please Note:</span><br> }
+    }
+    if (notes != "")
+    { <span class="heading-1">Please Note:</span><br> }
                     @Html.Raw(notes);
 
                 }
@@ -90,14 +90,14 @@ Model.TempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.Side
                         <th style="width:15%;">SKU</th>
                         <th style="width:8%;">Units</th>
                         if (showPrice == "")
-                        {
+        {
                             <th style="width:16%;">Price</th>
                             <th style="width:15%;">Discount</th>
                             <th style="width:16%;">Total</th>
                         }
-                    }
+    }
                     else
-                    {
+    {
                         <th>Items</th>
                         <th>SKU</th>
                         <th>Total</th>
@@ -108,21 +108,21 @@ Model.TempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.Side
             <tbody>
 
                 @{ decimal total = 0;
-                    foreach (var request in Model.Requests)
-                    {
-                        var cost = request.Cost;
+        foreach (var request in Model.Requests)
+        {
+            var cost = request.Cost;
 
-                        if (request.Currency == AppUtility.CurrencyEnum.USD.ToString())
-                        {
-                            cost = cost / request.ExchangeRate;
-                            total = total + ((request.Cost ?? 0) / request.ExchangeRate);
-                            vat += request.VAT / request.ExchangeRate;
-                        }
-                        else
-                        {
-                            total = total + (request.Cost ?? 0);
-                            vat += request.VAT;
-                        }
+            if (request.Currency == AppUtility.CurrencyEnum.USD.ToString())
+            {
+                cost = cost / request.ExchangeRate;
+                total = total + ((request.Cost ?? 0) / request.ExchangeRate);
+                vat += request.VAT / request.ExchangeRate;
+            }
+            else
+            {
+                total = total + (request.Cost ?? 0);
+                vat += request.VAT;
+            }
                         <tr>
                             <td style="font-weight: 500;">@request.Product.ProductName</td>
                             <td>@request.Product.CatalogNumber</td>
@@ -137,14 +137,15 @@ Model.TempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.Side
                         </tr>
                     }
                     var shipping = Model.Requests[0].ParentRequest?.Shipping ?? 0;
-                    total = total + (decimal)shipping;
-                    if(vat != 0)
-                    { 
-                        vat += (decimal)shipping * .17m;
-                    }
-                    decimal totalWithVat = total + vat;
+    total = total + (decimal)shipping;
+    if(vat != 0)
+    {
+        vat += (decimal)shipping * .17m;
+    }
+    decimal totalWithVat = total + vat;
                 }
-                
+
+
             <tr>
                 <td colspan="@colspan" rowspan="4" class="borderless-cell">
                     <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">

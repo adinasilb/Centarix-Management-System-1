@@ -37,36 +37,61 @@ namespace PrototypeWithAuth.Controllers
             var user = _context.Employees.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
             var usersLoggedIn = _context.Employees.Where(u => u.LastLogin.Date == DateTime.Today.Date).Count();
             var users = _context.Employees.ToList();
-            var lastUpdateToTimekeeper = _context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.LoginUpdates.ToString()).FirstOrDefault();
-            if (lastUpdateToTimekeeper == null)
+            HomePageViewModel viewModel = new HomePageViewModel();
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                lastUpdateToTimekeeper = new GlobalInfo { GlobalInfoType = AppUtility.GlobalInfoType.LoginUpdates.ToString(), Date = DateTime.Now.AddDays(-1) };
-                _context.Update(lastUpdateToTimekeeper);
-                await _context.SaveChangesAsync();
-            }
-            else if (lastUpdateToTimekeeper.Date.Date < DateTime.Today)
-            {
-                foreach (Employee employee in users)
+                try
                 {
-                    var userRoles = await _userManager.GetRolesAsync(employee);
-                    if (userRoles.Contains("TimeKeeper") && employee.EmployeeStatusID != 4) //if employee statuses updated, function needs to be changed
+                    var lastUpdateToTimekeeper = _context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.LoginUpdates.ToString()).FirstOrDefault();
+                    if (lastUpdateToTimekeeper == null)
                     {
-                        await fillInTimekeeperMissingDays(employee, lastUpdateToTimekeeper.Date);
-                        fillInTimekeeperNotifications(employee, lastUpdateToTimekeeper.Date);
+                        lastUpdateToTimekeeper = new GlobalInfo { GlobalInfoType = AppUtility.GlobalInfoType.LoginUpdates.ToString(), Date = DateTime.Now.AddDays(-1) };
+                        _context.Update(lastUpdateToTimekeeper);
+                        await _context.SaveChangesAsync();
                     }
+                    else if (lastUpdateToTimekeeper.Date.Date < DateTime.Today)
+                    {
+                        foreach (Employee employee in users)
+                        {
+                            var userRoles = await _userManager.GetRolesAsync(employee);
+                            if (userRoles.Contains("TimeKeeper") && employee.EmployeeStatusID != 4) //if employee statuses updated, function needs to be changed
+                            {
+                                await fillInTimekeeperMissingDays(employee, lastUpdateToTimekeeper.Date);
+                                fillInTimekeeperNotifications(employee, lastUpdateToTimekeeper.Date);
+                            }
+                        }
+                        lastUpdateToTimekeeper.Date = DateTime.Now;
+                        _context.Update(lastUpdateToTimekeeper);
+                        await _context.SaveChangesAsync();
+                    }
+                    await transaction.CommitAsync();
                 }
-                lastUpdateToTimekeeper.Date = DateTime.Now;
-                _context.Update(lastUpdateToTimekeeper);
-                await _context.SaveChangesAsync();
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    viewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
+                }
             }
-
-            if (user.LastLogin.Date < DateTime.Today)
+            using (var transaction2 = _context.Database.BeginTransaction())
             {
-                fillInOrderLate(user);
-                user.LastLogin = DateTime.Now;
-                _context.Update(user);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    if (user.LastLogin.Date < DateTime.Today)
+                    {
+                        fillInOrderLate(user);
+                        user.LastLogin = DateTime.Now;
+                        _context.Update(user);
+                        await _context.SaveChangesAsync();
+                    }
+                    await transaction2.CommitAsync();
+                }
+                catch(Exception ex)
+                {
+                    await transaction2.RollbackAsync();
+                    viewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
+                }
             }
+        
             var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
             IEnumerable<Menu> menu = null;
             //if (rolesList.Contains(AppUtility.RoleItems.CEO.ToString()) || rolesList.Contains(AppUtility.RoleItems.Admin.ToString()))
@@ -77,10 +102,9 @@ namespace PrototypeWithAuth.Controllers
             //{
             menu = CreateMainMenu.GetMainMenu().Where(m => rolesList.Contains(m.MenuDescription));
             //}
-
+            viewModel.Menus = menu;
             //update latest exchange rate if need be
             var latestRate = _context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.ExchangeRate.ToString()).FirstOrDefault();
-
 
             if (latestRate == null)
             {
@@ -99,7 +123,7 @@ namespace PrototypeWithAuth.Controllers
                     await _context.SaveChangesAsync();
                 }
             }
-            return View(menu);
+            return View(viewModel);
         }
         public async Task<IActionResult> _MenuButtons()
         {

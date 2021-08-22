@@ -50,7 +50,7 @@
 <div>
     @{
         var locationTypeSelected = "true";
-        if (Model.ParentDepthZeroOfSelected == null && Model.LocationInstances[0].LocationInstanceID != -1)
+        if (Model.ParentDepthZeroOfSelected == null)
         {
             locationTypeSelected = "";
         }
