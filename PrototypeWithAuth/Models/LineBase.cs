@@ -14,8 +14,8 @@ namespace PrototypeWithAuth.Models
         public int LineTypeID { get; set; }
         public LineType LineType { get; set; }
         public int? ParentLineID { get; set; }
-        public int ProtocolID { get; set; }
-        public Protocol Protocol { get; set; }
+        public int ProtocolVersionID { get; set; }
+        public ProtocolVersion ProtocolVersion { get; set; }
         public int LineNumber { get; set; }
  
     }

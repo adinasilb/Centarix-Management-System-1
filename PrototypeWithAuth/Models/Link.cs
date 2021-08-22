@@ -12,7 +12,7 @@ namespace PrototypeWithAuth.Models
         public int LinkID { get; set; }
         public string LinkDescription { get; set; }
         public string Url { get; set; }
-        public int ProtocolID { get; set; }
-        public Protocol Protocol { get; set;}
+        public int ProtocolVersionID { get; set; }
+        public ProtocolVersion ProtocolVersion { get; set;}
     }
 }

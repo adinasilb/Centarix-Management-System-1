@@ -11,6 +11,6 @@ namespace PrototypeWithAuth.Models
     public class ShareProtocol :ShareBase
     {        
         public int ProtocolID { get; set; }
-        public Protocol Protocol { get; set; }
+        public ProtocolVersion ProtocolVersion { get; set; }
     }
 }
