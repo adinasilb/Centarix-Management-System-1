@@ -66,19 +66,20 @@
 					//alert("got data for locations");
 					//console.log(data)
 					if ($('.turn-edit-on-off').attr("section-type") == "LabManagement") {
+						//alert('reload location ')
 						//Reload visual of labmanagement
-						//var visualContainerId = $(".hasVisual").attr("parent-id");
-						//var urlLocations = "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId;
-						//$.ajax({
-						//	async: true,
-						//	url: urlLocations,
-						//	type: 'GET',
-						//	cache: true,
-						//	success: function (d) {
-						//		$(".hasVisual").html(d);
-						//		$("#loading").hide();
-						//	}
-						//});
+						var visualContainerId = $(".hasVisual").attr("parent-id");
+						var urlLocations = "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId;
+						$.ajax({
+							async: true,
+							url: urlLocations,
+							type: 'GET',
+							cache: true,
+							success: function (d) {
+								$(".hasVisual").html(d);
+								$("#loading").hide();
+							}
+						});
 					}
 					else if ($('.turn-edit-on-off').attr("section-type") == "Requests") {
 						console.log("reloading ajax partial view...");
