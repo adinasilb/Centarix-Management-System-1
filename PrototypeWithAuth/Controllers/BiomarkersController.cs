@@ -445,14 +445,20 @@ namespace PrototypeWithAuth.Controllers
                     .Include(t => t.TestOuterGroups).ThenInclude(tog => tog.TestGroups).ThenInclude(tg => tg.TestHeaders)
                     .Where(t => t.ExperimentTests.Select(et => et.ExperimentID).Contains(ee.Participant.ExperimentID))
                     .ToList();
+            var testValues = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ID
+                                && tv.TestHeader.TestGroup.TestOuterGroup.TestID == tests.FirstOrDefault().TestID).ToList();
+            
+            if (testValues.Count() != tests.Select(t => t.TestOuterGroups.Select(to => to.TestGroups.SelectMany(tg => tg.TestHeaders))).Count())
+            {
+                testValues = CreateTestValuesIfNone(tests, testValues, ee.ExperimentEntryID);
+            }
             TestViewModel testViewModel = new TestViewModel()
             {
                 ExperimentEntry = ee,
                 ExperimentID = ee.Participant.ExperimentID,
                 Guid = Guid.NewGuid(),
                 Tests = tests,
-                TestValues = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ID
-                                && tv.TestHeader.TestGroup.TestOuterGroup.TestID == tests.FirstOrDefault().TestID).ToList(),
+                TestValues = testValues,
                 //FieldViewModels = new List<FieldViewModel>()
                 //{
                 //    new FieldViewModel()
@@ -470,6 +476,26 @@ namespace PrototypeWithAuth.Controllers
                 //}
             };
             return View(testViewModel);
+        }
+
+        private List<TestValue> CreateTestValuesIfNone(List<Test> tests, List<TestValue> testValues, int ExperimentEntryID)
+        {
+            var allTests = tests.SelectMany(t => t.TestOuterGroups.SelectMany(tog => tog.TestGroups.SelectMany(tg => tg.TestHeaders)));
+            foreach (var testheader in tests.SelectMany(t => t.TestOuterGroups.SelectMany(tog => tog.TestGroups.SelectMany(tg => tg.TestHeaders))))
+            {
+                if (!testValues.Where(tv => tv.TestHeaderID == testheader.TestHeaderID).Any())
+                {
+                    TestValue tv = new TestValue()
+                    {
+                        TestHeaderID = testheader.TestHeaderID,
+                        ExperimentEntryID = ExperimentEntryID
+                    };
+                    _context.Update(tv);
+                    _context.SaveChanges();
+                    testValues.Add(tv);
+                }
+            }
+            return testValues;
         }
 
         public async Task<ActionResult> SaveTestModal(string? ID = null)

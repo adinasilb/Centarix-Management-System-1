@@ -244,8 +244,19 @@ namespace PrototypeWithAuth.Controllers
         protected virtual void DocumentsModal(DocumentsModalViewModel documentsModalViewModel)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
-            var MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
-            string folder = Path.Combine(uploadFolder, MiddleFolderName);
+            string folder = "";
+            if (documentsModalViewModel.FolderName == AppUtility.FolderNamesEnum.Custom && documentsModalViewModel.ParentFolderName == AppUtility.ParentFolderName.ExperimentEntries)
+            {
+                var UpperMiddleFolderName = documentsModalViewModel.Guid.ToString();
+                string UMFolder = Path.Combine(uploadFolder, UpperMiddleFolderName);
+                var MiddleFolderName = documentsModalViewModel.ObjectID.ToString();
+                folder = Path.Combine(UMFolder, MiddleFolderName);
+            }
+            else
+            {
+                var MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
+                folder = Path.Combine(uploadFolder, MiddleFolderName);
+            }
             Directory.CreateDirectory(folder);
             if (documentsModalViewModel.FilesToSave != null) //test for more than one???
             {
