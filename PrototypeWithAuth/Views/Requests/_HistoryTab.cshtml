@@ -57,8 +57,8 @@
                         @item.CreationDate.GetElixirDateFormat()
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.FirstName)&nbsp;
-                        @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.LastName)
+                        @Html.DisplayFor(modelItem => item.ApplicationUserCreator.FirstName)&nbsp;
+                        @Html.DisplayFor(modelItem => item.ApplicationUserCreator.LastName)
                     </td>
                     <td>
                         <ul style="list-style: none;" class="mb-0 pl-0">
