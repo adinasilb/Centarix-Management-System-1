@@ -1106,6 +1106,10 @@ namespace PrototypeWithAuth.Controllers
                     newRequest.Unit = 1;
                     newRequest.Product.UnitTypeID = 5;
                     newRequest.Product.SerialNumber = GetSerialNumber(false);
+                    if(newRequest.Product.ProductCreationDate == DateTime.Today) //if it's today, add seconds to be now so it shows up on top
+                    {
+                        newRequest.Product.ProductCreationDate = DateTime.Now;
+                    }
                     _context.Add(newRequest);
                     await _context.SaveChangesAsync();
                     MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests, false, guid);
@@ -5131,12 +5135,12 @@ namespace PrototypeWithAuth.Controllers
                                 action = "_IndexTableWithCounts";
                                 return RedirectToAction(action, "Requests", tempRequestListViewModel.RequestIndexObject);
                             }
-                            else if (uploadQuoteOrderViewModel.TempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
+                            else if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                             {
                                 action = "NotificationsView";
-                                return RedirectToAction(action, "Requests", uploadQuoteOrderViewModel.TempRequestListViewModel.RequestIndexObject);
+                                return RedirectToAction(action, "Requests", tempRequestListViewModel.RequestIndexObject);
                             }
-                            return await RedirectRequestsToShared(action, uploadQuoteOrderViewModel.TempRequestListViewModel.RequestIndexObject);
+                            return await RedirectRequestsToShared(action, tempRequestListViewModel.RequestIndexObject);
                         }
                         catch (Exception ex)
                         {
