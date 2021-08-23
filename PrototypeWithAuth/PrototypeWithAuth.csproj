@@ -491,6 +491,8 @@
     <Folder Include="wwwroot\Materials\" />
     <Folder Include="wwwroot\FunctionLine\" />
     <Folder Include="wwwroot\ParentQuotes\" />
+    <Folder Include="wwwroot\ParentQuote\" />
+    <Folder Include="wwwroot\ParentRequest\" />
     <Folder Include="wwwroot\Protocols\" />
     <Folder Include="wwwroot\Reports\" />
     <Folder Include="wwwroot\Requests\" />
