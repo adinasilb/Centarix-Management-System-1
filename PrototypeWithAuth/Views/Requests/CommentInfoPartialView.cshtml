@@ -28,9 +28,9 @@
                 <button href="#" type="button" class="btn btn-link p-0 ">
                     @{
                         var src = "/UserImages/user-image-placeholder.png";
-                        if (_userManager.GetUserAsync(User).Result.UserImage != null)
+                        if (Model.Comment.ApplicationUser.UserImage != null)
                         {
-                            src = "\\" + AppUtility.GetLastFiles(_userManager.GetUserAsync(User).Result.UserImage, 2);
+                            src = "\\" + AppUtility.GetLastFiles(Model.Comment.ApplicationUser.UserImage, 2);
                         }
                     }
                     <img src="@src" class=" ml-0 circular-profile-img circular-profile-img-50" alt="default User image" />
@@ -38,8 +38,8 @@
             </div>
             <div class="col-9 ">
                 <div class=" p-3 ">
-                    <label class="m-0"> @_userManager.GetUserAsync(User).Result.FirstName</label>
-                    <label class="m-0">@_userManager.GetUserAsync(User).Result.LastName</label>
+                    <label class="m-0"> @Model.Comment.ApplicationUser.FirstName</label>
+                    <label class="m-0">@Model.Comment.ApplicationUser.LastName</label>
                     <label class="m-0">@Model.Comment.CommentTimeStamp.ToString("MMMM") @Model.Comment.CommentTimeStamp.Day, @Model.Comment.CommentTimeStamp.Year @Model.Comment.CommentTimeStamp.ToString("hh:mm tt") </label>
                     @{
                         var commentTextID = "Comments_" + Model.Index + "__CommentText";

@@ -1059,14 +1059,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    if (isInBudget)
-                    {
-                        newRequest.RequestStatusID = 6;
-                    }
-                    else
-                    {
-                        newRequest.RequestStatusID = 1;
-                    }
+                    
+                    newRequest.RequestStatusID = 6;
+               
                     newRequest.Cost = 0;
                     //newRequest.ParentQuote = new ParentQuote();
                     newRequest.QuoteStatusID = 1;
