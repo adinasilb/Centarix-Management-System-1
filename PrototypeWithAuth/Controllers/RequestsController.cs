@@ -4407,6 +4407,7 @@ namespace PrototypeWithAuth.Controllers
         {
             Comment comment = new Comment();
             comment.ApplicationUser =  _userManager.GetUserAsync(User).Result;
+            comment.ApplicationUserID = comment.ApplicationUser.Id;
             comment.CommentType = type;
             CommentsInfoViewModel commentsInfoViewModel = new CommentsInfoViewModel { Comment = comment, Index = index };
             return PartialView(commentsInfoViewModel);
