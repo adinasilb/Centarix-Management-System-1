@@ -8,6 +8,7 @@
 @{ var listNumber = 0;}
 <form action="" method="POST" enctype="multipart/form-data" class="test-forms on-form-modal bio-form" id="BioTestForm">
     @Html.HiddenFor(m => m.ExperimentEntry.ExperimentEntryID)
+    <input type="hidden" value="@Model.ExperimentEntry.ExperimentEntryID" id="CustomMainObjectID" />
     @Html.HiddenFor(m => m.ExperimentEntry.ParticipantID)
     @Html.HiddenFor(m => m.ExperimentEntry.SiteID)
     @Html.HiddenFor(m => m.ExperimentEntry.VisitNumber)
@@ -123,6 +124,7 @@
 
 
     $("body").on("change", "input", function (e) {
+        //this is also on change of the documents modal so don't change unless you change there too
         if (!$("._testvalues").hasClass("changed")) {
             $("._testvalues").addClass("changed");
         }

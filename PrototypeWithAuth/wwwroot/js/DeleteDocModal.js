@@ -13,6 +13,7 @@
 	var $SectionType = $("#masterSectionType").val();
 	var guid = $("#Guid").val();
 	var $isEdittable = $('.active-document-modal').attr("data-val");
+	var $CustomMainObjectID = $("#CustomMainObjectID").val();
 	var $showSwitch = $('.active-document-modal').attr("showSwitch");
 	var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
 	console.log("allowmultiple " + dontAllowMultipleFiles);
@@ -31,7 +32,7 @@
 				$(".report-text").trigger("change");
 			}
 			else {
-				$.fn.OpenDocumentsModal(true, $foldername, $objectId, guid, $isEdittable, $SectionType, $showSwitch, $parentfoldername, dontAllowMultipleFiles);
+				$.fn.OpenDocumentsModal(true, $foldername, $objectId, guid, $isEdittable, $SectionType, $showSwitch, $parentfoldername, dontAllowMultipleFiles, $CustomMainObjectID);
 			}
 			//$.fn.ChangeColorsOfDocs($foldername);
 			$(".document-name").text('')

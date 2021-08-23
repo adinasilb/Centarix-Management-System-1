@@ -244,19 +244,17 @@ namespace PrototypeWithAuth.Controllers
         protected virtual void DocumentsModal(DocumentsModalViewModel documentsModalViewModel)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
-            string folder = "";
+            var MiddleFolderName = "";
             if (documentsModalViewModel.FolderName == AppUtility.FolderNamesEnum.Custom && documentsModalViewModel.ParentFolderName == AppUtility.ParentFolderName.ExperimentEntries)
             {
-                var UpperMiddleFolderName = documentsModalViewModel.Guid.ToString();
-                string UMFolder = Path.Combine(uploadFolder, UpperMiddleFolderName);
-                var MiddleFolderName = documentsModalViewModel.ObjectID.ToString();
-                folder = Path.Combine(UMFolder, MiddleFolderName);
+                MiddleFolderName = documentsModalViewModel.Guid.ToString();
             }
             else
             {
-                var MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
-                folder = Path.Combine(uploadFolder, MiddleFolderName);
+                MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
+
             }
+            var folder = Path.Combine(uploadFolder, MiddleFolderName);
             Directory.CreateDirectory(folder);
             if (documentsModalViewModel.FilesToSave != null) //test for more than one???
             {
@@ -264,7 +262,12 @@ namespace PrototypeWithAuth.Controllers
                 foreach (IFormFile file in documentsModalViewModel.FilesToSave)
                 {
                     //create file
-                    string folderPath = Path.Combine(folder, documentsModalViewModel.FolderName.ToString());
+                    var folderName = documentsModalViewModel.FolderName.ToString();
+                    if (documentsModalViewModel.FolderName == AppUtility.FolderNamesEnum.Custom && documentsModalViewModel.ParentFolderName == AppUtility.ParentFolderName.ExperimentEntries)
+                    {
+                        folderName = documentsModalViewModel.ObjectID.ToString();
+                    }
+                    string folderPath = Path.Combine(folder, folderName);
                     Directory.CreateDirectory(folderPath);
                     string uniqueFileName = x + file.FileName;
                     string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -298,15 +301,42 @@ namespace PrototypeWithAuth.Controllers
         }
         protected void FillDocumentsViewModel(DocumentsModalViewModel documentsModalViewModel)
         {
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
-            var MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
-            string uploadFolder2 = Path.Combine(uploadFolder1, MiddleFolderName);
-            var FolderName = documentsModalViewModel.FolderName == AppUtility.FolderNamesEnum.Custom ? documentsModalViewModel.CustomFolderName : documentsModalViewModel.FolderName.ToString();
-            string uploadFolder3 = Path.Combine(uploadFolder2, FolderName);
-
-            if (Directory.Exists(uploadFolder3))
+            if (documentsModalViewModel.FolderName == AppUtility.FolderNamesEnum.Custom && documentsModalViewModel.ParentFolderName == AppUtility.ParentFolderName.ExperimentEntries)
             {
-                documentsModalViewModel = SaveDocuments(uploadFolder3, documentsModalViewModel);
+                string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
+                var MiddleFolderName = documentsModalViewModel.Guid.ToString();
+                string uploadFolder2 = Path.Combine(uploadFolder1, MiddleFolderName);
+                var FolderName = documentsModalViewModel.ObjectID.ToString();
+                string uploadFolder3 = Path.Combine(uploadFolder2, FolderName);
+
+                if (Directory.Exists(uploadFolder3))
+                {
+                    documentsModalViewModel = SaveDocuments(uploadFolder3, documentsModalViewModel);
+                }
+
+                string uploadFolderA = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
+                var MiddleFolderNameA = documentsModalViewModel.Guid.ToString();
+                string uploadFolderB = Path.Combine(uploadFolderA, MiddleFolderNameA);
+                var FolderNameB = documentsModalViewModel.ObjectID.ToString(); 
+                string uploadFolderC = Path.Combine(uploadFolderB, FolderNameB);
+
+                if (Directory.Exists(uploadFolderC))
+                {
+                    documentsModalViewModel = SaveDocuments(uploadFolder3, documentsModalViewModel);
+                }
+            }
+            else
+            {
+                string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
+                var MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
+                string uploadFolder2 = Path.Combine(uploadFolder1, MiddleFolderName);
+                var FolderName = documentsModalViewModel.FolderName == AppUtility.FolderNamesEnum.Custom && documentsModalViewModel.ParentFolderName == AppUtility.ParentFolderName.ExperimentEntries ? documentsModalViewModel.ObjectID.ToString() : documentsModalViewModel.FolderName.ToString();
+                string uploadFolder3 = Path.Combine(uploadFolder2, FolderName);
+
+                if (Directory.Exists(uploadFolder3))
+                {
+                    documentsModalViewModel = SaveDocuments(uploadFolder3, documentsModalViewModel);
+                }
             }
 
         }

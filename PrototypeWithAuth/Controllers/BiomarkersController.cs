@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -100,12 +101,13 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [Authorize(Roles = "Biomarkers")]
         public ActionResult DocumentsModal(string id, Guid Guid, String RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
-            AppUtility.ParentFolderName parentFolderName, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+            AppUtility.ParentFolderName parentFolderName, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, string CustomMainObjectID = "0")
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
                 CustomFolderName = RequestFolderNameEnum,
                 FolderName = AppUtility.FolderNamesEnum.Custom,
+                CustomMainObjectID = CustomMainObjectID,
                 IsEdittable = IsEdittable,
                 ParentFolderName = parentFolderName,
                 ObjectID = id == "" ? "0" : id,
@@ -123,6 +125,29 @@ namespace PrototypeWithAuth.Controllers
         public void DocumentsModal(DocumentsModalViewModel documentsModalViewModel)
         {
             base.DocumentsModal(documentsModalViewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Biomarkers")]
+        public ActionResult _DocumentsModalData(string id, Guid Guid, string RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+                                                AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Protocols, bool dontAllowMultipleFiles = false, string CustomMainObjectID = "0")
+        {
+            DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
+            {
+                FolderName = AppUtility.FolderNamesEnum.Custom,
+                CustomFolderName = RequestFolderNameEnum,
+                CustomMainObjectID = CustomMainObjectID,
+                ParentFolderName = parentFolderName,
+                ObjectID = id == "" ? "0" : id,
+                SectionType = SectionType,
+                IsEdittable = IsEdittable,
+                DontAllowMultiple = dontAllowMultipleFiles,
+                ShowSwitch = showSwitch,
+                Guid = Guid
+            };
+
+            base.FillDocumentsViewModel(documentsModalViewModel);
+            return PartialView(documentsModalViewModel);
         }
 
         [HttpGet]
@@ -447,7 +472,7 @@ namespace PrototypeWithAuth.Controllers
                     .ToList();
             var testValues = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ID
                                 && tv.TestHeader.TestGroup.TestOuterGroup.TestID == tests.FirstOrDefault().TestID).ToList();
-            
+
             if (testValues.Count() != tests.Select(t => t.TestOuterGroups.Select(to => to.TestGroups.SelectMany(tg => tg.TestHeaders))).Count())
             {
                 testValues = CreateTestValuesIfNone(tests, testValues, ee.ExperimentEntryID);
@@ -544,11 +569,54 @@ namespace PrototypeWithAuth.Controllers
                 }
                 _context.Update(testValue);
             }
-            var e = 1;
             var entries = _context.ChangeTracker.Entries();
             await _context.SaveChangesAsync();
 
+            SaveFiles(testViewModel.Guid, testViewModel.ExperimentEntry.ExperimentEntryID);
+
             return RedirectToAction("_TestValues", new { TestID = testViewModel.FieldViewModels.FirstOrDefault().TestID, ListNumber = 0, SiteID = testViewModel.ExperimentEntry.SiteID, ExperimentID = testViewModel.ExperimentID, ExperimentEntryID = testViewModel.ExperimentEntry.ExperimentEntryID });
+        }
+
+        private void SaveFiles(Guid guid, int ExperimentEntryID)
+        {
+            try
+            {
+
+                string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ExperimentEntries.ToString());
+                string GuidFolder = Path.Combine(uploadFolder, guid.ToString());
+                string IDFolder = Path.Combine(uploadFolder, ExperimentEntryID.ToString());
+
+                var directories = Directory.GetDirectories(GuidFolder);
+
+                if (directories.Count() >= 1 && !Directory.Exists(IDFolder))
+                {
+                    Directory.CreateDirectory(IDFolder);
+                }
+
+                foreach (var directory in directories)
+                {
+                    var directoryFolderName = AppUtility.GetLastFiles(directory, 1);
+                    string SmallerFolder = Path.Combine(IDFolder, directoryFolderName);
+                    if (!Directory.Exists(SmallerFolder))
+                    {
+                        Directory.CreateDirectory(SmallerFolder);
+                    }
+                    var files = Directory.GetFiles(directory);
+                    foreach (var file in files)
+                    {
+                        var fileName = AppUtility.GetLastFiles(file, 1);
+                        var FileToSave = Path.Combine(SmallerFolder, fileName);
+                        System.IO.File.Copy(file, FileToSave);
+                    }
+                }
+
+                Directory.Delete(GuidFolder);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
         }
 
         public async Task<ActionResult> _TestValues(int TestID, int ListNumber, int SiteID, int ExperimentID, int ExperimentEntryID)

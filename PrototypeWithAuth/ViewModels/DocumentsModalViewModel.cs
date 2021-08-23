@@ -15,6 +15,7 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.FolderNamesEnum FolderName { get; set; }
         public string CustomFolderName { get; set; }
         public string ObjectID { get; set; }
+        public string CustomMainObjectID { get; set; }
         public Guid Guid { get; set; }
         public AppUtility.ParentFolderName ParentFolderName { get; set; }
         public List<string> FileStrings { get; set; }

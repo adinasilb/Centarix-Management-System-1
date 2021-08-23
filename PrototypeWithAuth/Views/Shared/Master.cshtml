@@ -466,7 +466,7 @@
                 $.fn.EnableMaterialSelect('#protocolParentList', 'select-options-protocolParentList');
                 $.fn.EnableMaterialSelect('#protocolSubList', 'select-options-protocolSubList');
                 $(".Materials").addClass("saveProtocol");
-                $(".Protocols").addClass("saveProtocol"); 
+                $(".Protocols").addClass("saveProtocol");
                 var modalType = $(".modalType").val();
                 $("." + modalType).addClass("d-none")
                 var attrString = "[modaltype=" + modalType + "]";
@@ -1128,7 +1128,7 @@
 
 
 
-        $.fn.OpenDocumentsModal = function (isReopen, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles) {
+        $.fn.OpenDocumentsModal = function (isReopen, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID) {
             $('#loading').show();
             //alert("in documents modal in document modal js")
             //$(".modal-backdrop").first().removeClass();
@@ -1142,10 +1142,10 @@
             }
             if (isReopen) {
                 urltogo = urlbeginning + "_DocumentsModalData?id=" + requestId + "&Guid=" + guid + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
-                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
+                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles + "&CustomMainObjectID=" + $CustomMainObjectID;
             } else {
                 urltogo = urlbeginning + "DocumentsModal?id=" + requestId + "&Guid=" + guid + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
-                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
+                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles + "&CustomMainObjectID=" + $CustomMainObjectID;
             }
 
             console.log(urltogo);
@@ -1159,6 +1159,13 @@
                     console.log("isreopen: " + isReopen);
                     if(isReopen)
                     {
+                        console.log("before fx");
+                        if ($("._testvalues").length > 0) {
+
+                            if (!$("._testvalues").hasClass("changed")) {
+                                $("._testvalues").addClass("changed");
+                            }
+                        }
                         //alert("._DocumentsModalData")
                         $("._DocumentsModalData").html(data);
                     }
