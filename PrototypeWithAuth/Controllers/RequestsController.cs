@@ -1106,9 +1106,9 @@ namespace PrototypeWithAuth.Controllers
                     newRequest.Unit = 1;
                     newRequest.Product.UnitTypeID = 5;
                     newRequest.Product.SerialNumber = GetSerialNumber(false);
-                    if(newRequest.Product.ProductCreationDate == DateTime.Today) //if it's today, add seconds to be now so it shows up on top
+                    if(newRequest.CreationDate == DateTime.Today) //if it's today, add seconds to be now so it shows up on top
                     {
-                        newRequest.Product.ProductCreationDate = DateTime.Now;
+                        newRequest.CreationDate = DateTime.Now;
                     }
                     _context.Add(newRequest);
                     await _context.SaveChangesAsync();
