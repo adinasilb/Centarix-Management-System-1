@@ -5123,6 +5123,7 @@ namespace PrototypeWithAuth.Controllers
                                     RevertDocuments(tempRequestViewModel.Request.RequestID, AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
                                     RevertDocuments(tempRequestViewModel.Request.ParentQuoteID == null ? 0 : Convert.ToInt32(tempRequestViewModel.Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
                                     //Directory.Move(requestFolderTo, requestFolderFrom);
+                                    transaction.Rollback();
                                     throw new Exception(AppUtility.GetExceptionMessage(ex));
                                 }
                             }
@@ -5144,7 +5145,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         catch (Exception ex)
                         {
-                            transaction.Rollback();
+                       
                             throw new Exception(AppUtility.GetExceptionMessage(ex));
                         }
                     }
