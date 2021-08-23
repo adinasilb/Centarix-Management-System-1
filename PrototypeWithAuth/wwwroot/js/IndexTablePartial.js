@@ -125,9 +125,9 @@ $(function () {
 
     $("body").off("click").on("click", ".load-order-details", function (e) {
         //alert('in function')
-        console.log("in order details");
         e.preventDefault();
         e.stopImmediatePropagation();
+        console.log("in order details");
         //e.stopPropagation();
         $("#loading").show();
         var section = $("#masterSectionType").val()
