@@ -5119,6 +5119,7 @@ namespace PrototypeWithAuth.Controllers
                                     RevertDocuments(tempRequestViewModel.Request.RequestID, AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
                                     RevertDocuments(tempRequestViewModel.Request.ParentQuoteID == null ? 0 : Convert.ToInt32(tempRequestViewModel.Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
                                     //Directory.Move(requestFolderTo, requestFolderFrom);
+                                    transaction.Rollback();
                                     throw new Exception(AppUtility.GetExceptionMessage(ex));
                                 }
                             }
@@ -5131,7 +5132,7 @@ namespace PrototypeWithAuth.Controllers
                                 action = "_IndexTableWithCounts";
                                 return RedirectToAction(action, "Requests", tempRequestListViewModel.RequestIndexObject);
                             }
-                            else if (uploadQuoteOrderViewModel.TempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
+                            else if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                             {
                                 action = "NotificationsView";
                                 return RedirectToAction(action, "Requests", uploadQuoteOrderViewModel.TempRequestListViewModel.RequestIndexObject);
@@ -5140,7 +5141,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         catch (Exception ex)
                         {
-                            transaction.Rollback();
+                       
                             throw new Exception(AppUtility.GetExceptionMessage(ex));
                         }
                     }
