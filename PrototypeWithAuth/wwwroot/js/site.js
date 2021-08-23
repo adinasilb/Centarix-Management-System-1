@@ -1445,7 +1445,7 @@ $(function () {
 		else if ($(this).hasClass('locations')) {
 			console.log("has locations");
 			url = "/Requests/ReceivedModalVisual";
-			section = $(".turn-edit-on-off").attr("section-type"); //"Requests";
+			section = $(".turn-edit-on-off").attr("section-type");
 			console.log("section: " + section);
         }
 		if ($(this).hasClass('orders') && $(this).hasClass('equipment')) {
