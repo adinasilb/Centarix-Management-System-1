@@ -5135,9 +5135,9 @@ namespace PrototypeWithAuth.Controllers
                             else if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                             {
                                 action = "NotificationsView";
-                                return RedirectToAction(action, "Requests", uploadQuoteOrderViewModel.TempRequestListViewModel.RequestIndexObject);
+                                return RedirectToAction(action, "Requests", tempRequestListViewModel.RequestIndexObject);
                             }
-                            return await RedirectRequestsToShared(action, uploadQuoteOrderViewModel.TempRequestListViewModel.RequestIndexObject);
+                            return await RedirectRequestsToShared(action, tempRequestListViewModel.RequestIndexObject);
                         }
                         catch (Exception ex)
                         {
