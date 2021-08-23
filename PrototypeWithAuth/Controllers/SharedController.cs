@@ -114,14 +114,14 @@ namespace PrototypeWithAuth.Controllers
             {
                 var sickHours = employeeHours.Where(eh => eh.PartialOffDayTypeID == 1)
                     .Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
-                sickDaysTaken = employeeHours.Where(eh => eh.OffDayTypeID == 1).Count();
+                sickDaysTaken = employeeHours.Where(eh =>eh.OffDayTypeID == 1).Count();
                 sickDaysTaken = sickDaysTaken + (sickHours / user.SalariedEmployee.HoursPerDay);
 
                 var vacationHours = employeeHours.Where(eh => eh.PartialOffDayTypeID == 2)
                     .Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
                 vacationDaysTaken = employeeHours.Where(eh => eh.OffDayTypeID == 2).Count();
                 vacationDaysTaken = vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay);
-                var specialDays = employeeHours.Where(eh => eh.OffDayTypeID == 4).Count();
+                var specialDays = employeeHours.Where(eh => eh.OffDayTypeID == 4 ).Count();
                 unpaidLeave = employeeHours.Where(eh => eh.OffDayTypeID == 5).Count();
                 totalDays = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff);
                 totalhours = (totalDays - (vacationDaysTaken + sickDaysTaken + unpaidLeave + specialDays)) * user.SalariedEmployee.HoursPerDay;
@@ -215,13 +215,13 @@ namespace PrototypeWithAuth.Controllers
             return rate;
         }
 
-        protected void GetExistingFileStrings(List<DocumentFolder> DocumentsInfo, AppUtility.FolderNamesEnum folderName, AppUtility.ParentFolderName parentFolderName,
+        protected void GetExistingFileStrings(List<DocumentFolder> DocumentsInfo, AppUtility.FolderNamesEnum folderName, AppUtility.ParentFolderName parentFolderName, 
                                                                                                                                 string uploadFolderParent, string objectID)
         {
             string uploadFolder = Path.Combine(uploadFolderParent, folderName.ToString());
             DocumentFolder folder = new DocumentFolder()
             {
-                FolderName = folderName,
+                FolderName = folderName, 
                 ParentFolderName = parentFolderName,
                 ObjectID = objectID
             };
@@ -247,7 +247,7 @@ namespace PrototypeWithAuth.Controllers
             var MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
             string folder = Path.Combine(uploadFolder, MiddleFolderName);
             Directory.CreateDirectory(folder);
-            if (documentsModalViewModel.FilesToSave != null) //test for more than one???
+             if (documentsModalViewModel.FilesToSave != null) //test for more than one???
             {
                 var x = 1;
                 foreach (IFormFile file in documentsModalViewModel.FilesToSave)
@@ -302,7 +302,7 @@ namespace PrototypeWithAuth.Controllers
                 foreach (var docfile in docfilesfound)
                 {
 
-                    string newFileString = AppUtility.GetLastFiles(docfile.FullName, 4);
+                    string newFileString = AppUtility.GetLastFiles(docfile.FullName, 4);                    
                     documentsModalViewModel.FileStrings.Add(newFileString);
                     //documentsModalViewModel.Files.Add(docfile);
                 }
@@ -344,14 +344,14 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ApplicationUserReceiver)
                 //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                 .SingleOrDefault(x => x.RequestID == id);
-
-
+            
+          
             if (request.RequestStatusID == 7)
             {
                 isProprietary = true;
             }
 
-            var requestsByProduct = _context.Requests.IgnoreQueryFilters().Where(r => !r.IsDeleted).Where(r => r.ProductID == productId)
+            var requestsByProduct = _context.Requests.IgnoreQueryFilters().Where(r=>!r.IsDeleted).Where(r => r.ProductID == productId)
                  .Include(r => r.Product.ProductSubcategory).Include(r => r.Product.ProductSubcategory.ParentCategory)
                     .Include(r => r.ApplicationUserCreator) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .Include(r => r.ParentRequest)
@@ -433,7 +433,7 @@ namespace PrototypeWithAuth.Controllers
 
                     if (parentLocationInstance == null)
                     {
-                        var locationType = _context.TemporaryLocationInstances.Where(l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID).Select(li => li.LocationType).FirstOrDefault();
+                        var locationType = _context.TemporaryLocationInstances.IgnoreQueryFilters().Where(l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID).Select(li => li.LocationType).FirstOrDefault();
                         requestItemViewModel.ReceivedLocationViewModel = receivedLocationViewModel;
                         ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
                         {
@@ -622,8 +622,8 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID == 2)
             {
-
-                if (requestItemViewModel.Requests.FirstOrDefault().ParentRequestID != null)
+                
+                if(requestItemViewModel.Requests.FirstOrDefault().ParentRequestID !=null)
                 {
                     GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, AppUtility.ParentFolderName.ParentRequest, ordersFolder, requestItemViewModel.Requests.FirstOrDefault().ParentRequestID.ToString());
                 }
@@ -672,7 +672,7 @@ namespace PrototypeWithAuth.Controllers
                 categoryID = 2;
             }
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
-            IQueryable<Request> fullRequestsList = _context.Requests.IgnoreQueryFilters().Where(r => !r.IsDeleted).Where(r => r.Product.ProductName.Contains(requestIndexObject.SearchText)).Include(r => r.ApplicationUserCreator)
+            IQueryable<Request> fullRequestsList = _context.Requests.IgnoreQueryFilters().Where(r=>!r.IsDeleted).Where(r => r.Product.ProductName.Contains(requestIndexObject.SearchText)).Include(r => r.ApplicationUserCreator)
          .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)/*.Where(r => r.IsArchived == requestIndexObject.IsArchive)*/;
 
             int sideBarID = 0;
@@ -727,7 +727,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 3);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-
+                    
                 }
 
             }
@@ -750,7 +750,9 @@ namespace PrototypeWithAuth.Controllers
             else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.AccountingGeneral)
             {
                 //we need both categories
-                RequestsPassedIn = _context.Requests.IgnoreQueryFilters().Where(r => !r.IsDeleted).Where(r => r.RequestStatusID == 3).Where(r => Years.Contains(r.ParentRequest.OrderDate.Year)).Where(r => !r.IsClarify && !r.IsPartial && r.Payments.Where(p => p.IsPaid && p.HasInvoice).Count() == r.Payments.Count());
+                RequestsPassedIn = _context.Requests.IgnoreQueryFilters().Where(r => !r.IsDeleted).Where(r => r.RequestStatusID == 3)
+                    .Where(r => !r.IsClarify && !r.IsPartial && r.Payments.Where(p => p.IsPaid && p.HasInvoice).Count() == r.Payments.Count())
+                    .Where(r => Years.Contains(r.ParentRequest.OrderDate.Year));
                 if (Months != null && Months.Count() > 0)
                 {
                     RequestsPassedIn = RequestsPassedIn.Where(r => Months.Contains(r.ParentRequest.OrderDate.Month));
@@ -869,7 +871,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     fullRequestsList = fullRequestsList.Where(r => selectedFilters.SelectedOwnersIDs.Contains(r.ApplicationUserCreatorID));
                 }
-
+                
             }
             if (selectedFilters?.Archived == true)
             {
@@ -892,7 +894,7 @@ namespace PrototypeWithAuth.Controllers
             var approveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#00CA72", "approve-order", "Approve");
             var CantApproveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#E5E5E5", "", "Needs Approval");
             var equipmentIcon = new IconColumnViewModel(" icon-settings-24px-1 ", "var(--lab-man-color);", "create-calibration", "Create Calibration");
-            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "#5F79E2", "request-favorite", "Favorite");
+            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color);", "request-favorite", "Favorite");
 
             var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
             var popoverDelete = new IconPopoverViewModel(" icon-delete-24px  ", "black", AppUtility.PopoverDescription.Delete, "Delete", "Requests", AppUtility.PopoverEnum.None, "load-confirm-delete");
@@ -1011,7 +1013,7 @@ namespace PrototypeWithAuth.Controllers
                                     _context.ShareRequests.Where(sr => sr.RequestID == r.RequestID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user,
                                     r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)
                            ).ToLookup(r => r.r.ProductID).Select(e => e.First()).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
-                            /// .GroupBy(r => r.ProductID, (key, value) => value.OrderByDescending(v => v.ParentRequest.OrderDate).First()).AsQueryable();
+                           /// .GroupBy(r => r.ProductID, (key, value) => value.OrderByDescending(v => v.ParentRequest.OrderDate).First()).AsQueryable();
                             break;
                     }
 
@@ -1102,7 +1104,7 @@ namespace PrototypeWithAuth.Controllers
                     //SubProjects = _context.SubProjects.ToList()
                     NumFilters = numFilters,
                     SectionType = sectionType,
-                    Archive = selectedFilters.Archived,
+                    Archive = selectedFilters.Archived, 
                     IsProprietary = isProprietary
                 };
                 if (inventoryFilterViewModel.SelectedCategories.Count() > 0)
@@ -1206,7 +1208,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     AppUtility.DirectoryCopy(requestFolderFrom, requestFolderTo, true);
                 }
-                else if (requestFolderFrom != requestFolderTo)
+                else if(requestFolderFrom != requestFolderTo)
                 {
                     Directory.Move(requestFolderFrom, requestFolderTo);
                 }
@@ -1216,7 +1218,7 @@ namespace PrototypeWithAuth.Controllers
         protected void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, AppUtility.FolderNamesEnum folderName, bool additionalRequests = false, Guid? guid = null)
         {
             //rename temp folder to the request id
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());   
             var TempFolderName = guid == null ? "0" : guid.ToString();
             string requestFolderFrom = Path.Combine(uploadFolder, TempFolderName);
             string uplaodFolderPathFrom = Path.Combine(requestFolderFrom, folderName.ToString());
@@ -1324,6 +1326,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var categoryType = 1;
             var serialLetter = "L";
+            int lastSerialNumberInt = 0;
             if (isOperations)
             {
                 categoryType = 2;
@@ -1331,10 +1334,12 @@ namespace PrototypeWithAuth.Controllers
             }
             var serialnumberList = _context.Products.IgnoreQueryFilters().Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType)
                 .Select(p => int.Parse(p.SerialNumber.Substring(1))).ToList();
-            var lastSerialNumberInt = serialnumberList.OrderBy(s => s).LastOrDefault();
 
+            lastSerialNumberInt = serialnumberList.OrderBy(s => s).LastOrDefault();
+            
             return serialLetter + (lastSerialNumberInt + 1);
         }
+
 
         //[HttpPost]
         //[Authorize(Roles = "Requests")]

@@ -73,12 +73,12 @@
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
     @*<form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding documentModalForm" id="myForm">*@
         <form action="" data-string="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding documentModalForm" id="myForm">
-            <div class="modal modal-document fader documentsModal @form" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9900">
+            <div class="modal modal-document fader documentsModal @form" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ style="z-index: 9900">
                 <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
                     <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
 
 
-                        <button type="button" class="close modal-close-padding modal-close-style close-document-modal" aria-label="Close">
+                        <button type="button" class="close modal-close-padding modal-close-style" onclick="$.fn.CloseModal('documents');" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         @*@for (int x = 0; x < Model.Requests.Count; x++)
@@ -169,10 +169,10 @@
                                 {
                                     saveButtonText = "Add";
                                 }
-                                <button type="button" class="custom-button custom-button-font @bcColorToUse @saveClass document-modal-save document-modal-buttons close-document-modal" @*data-dismiss="modal"*@ aria-label="Close" @*onclick="$('.documents').html('');*@>
+                                <button type="button" class="custom-button custom-button-font @bcColorToUse @saveClass document-modal-save document-modal-buttons " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('documents');">
                                     @saveButtonText
                                 </button>
-                                <button type="button" class="custom-button custom-cancel @cancelClass  document-modal-cancel close-document-modal" @*data-dismiss="modal"*@ aria-label="Close" @*onclick="$('.documents').html('');*@>
+                                <button type="button" class="custom-button custom-cancel @cancelClass  document-modal-cancel " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('documents');">
                                     Cancel
                                 </button>
                             </div>
@@ -181,11 +181,7 @@
                 </div>
             </div>
         </form>
-        <script>
-            $('.close-document-modal').click(function (e) {
-                $.fn.CloseModal("documents");
-            })
-        </script>
+
         <script src="~/js/DeleteDocModal.js"></script>
         <script src="~/js/DocumentModalJS.js"></script>
         <script src="~/js/site.js"></script>

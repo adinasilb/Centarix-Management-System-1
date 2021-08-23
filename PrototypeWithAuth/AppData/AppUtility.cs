@@ -97,7 +97,7 @@ namespace PrototypeWithAuth.AppData
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
         public enum FolderNamesEnum { Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
-        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote , ParentRequest}
+        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote, ParentRequest }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum ModalType { None, Terms, UploadOrder, UploadQuote, ConfirmEmail, Reorder }
         public static string AspDateFormatString = "{0:d MMM yyyy}";
@@ -131,7 +131,7 @@ namespace PrototypeWithAuth.AppData
             return ore;
         }
         public enum RoleItems { Admin, CEO }
-        public enum CurrencyEnum { NIS, USD }
+        public enum CurrencyEnum { None, NIS, USD }
         public enum PaymentsPopoverEnum
         {
             //Share,
@@ -148,7 +148,7 @@ namespace PrototypeWithAuth.AppData
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }
-        public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusables, Equipment, Operation, Biological, Safety, General, Clinical }
+        public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusable, Equipment, Operation, Biological, Safety, General, Clinical }
         public enum RequestModalType { Create, Edit, Summary }
         public enum ProtocolModalType { Create, CheckListMode, Summary, Edit, SummaryFloat }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
@@ -485,57 +485,74 @@ namespace PrototypeWithAuth.AppData
 
         public static List<String> GetPriceColumn(List<String> priceFilterEnums, Request request, CurrencyEnum currency)
         {
-            List<String> priceColumn = new List<String>();
-            var currencyFormat = "he-IL";
-            var pricePerUnit = request.PricePerUnit;
-            var cost = request.Cost;
-            var total = request.TotalWithVat;
-            var vat = request.VAT;
-            var exchangeRate = request.ExchangeRate == 0 ? 1 : request.ExchangeRate;
+            try
+            {
+                List<String> priceColumn = new List<String>();
+                var currencyFormat = "he-IL";
+                var pricePerUnit = request.PricePerUnit;
+                var cost = request.Cost;
+                var total = request.TotalWithVat;
+                var vat = request.VAT;
+                //var exchangeRate = request.ExchangeRate == 0 ? 1 : request.ExchangeRate;
+                var exchangeRate = request.ExchangeRate;
 
-            if (currency == AppUtility.CurrencyEnum.USD)
-            {
-                currencyFormat = "en-US";
-                pricePerUnit = request.PricePerUnit / exchangeRate;
-                cost = request.Cost / exchangeRate;
-                total = request.TotalWithVat / exchangeRate;
-                vat = request.VAT / exchangeRate;
-            }
-            foreach (var p in priceFilterEnums)
-            {
-                switch (Enum.Parse(typeof(PriceSortEnum), p))
+                if (currency == AppUtility.CurrencyEnum.USD)
                 {
-                    case PriceSortEnum.Unit:
-                        priceColumn.Add("U: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", pricePerUnit));
-                        break;
-                    case PriceSortEnum.Total:
-                        priceColumn.Add("T: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", cost));
-                        break;
-                    case PriceSortEnum.Vat:
-                        priceColumn.Add("V: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", vat));
-                        break;
-                    case PriceSortEnum.TotalVat:
-                        priceColumn.Add("P: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", total));
-                        break;
+                    currencyFormat = "en-US";
+                    pricePerUnit = request.PricePerUnit / exchangeRate;
+                    cost = request.Cost / exchangeRate;
+                    total = request.TotalWithVat / exchangeRate;
+                    vat = request.VAT / exchangeRate;
                 }
+                foreach (var p in priceFilterEnums)
+                {
+                    switch (Enum.Parse(typeof(PriceSortEnum), p))
+                    {
+                        case PriceSortEnum.Unit:
+                            priceColumn.Add("U: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", pricePerUnit));
+                            break;
+                        case PriceSortEnum.Total:
+                            priceColumn.Add("T: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", cost));
+                            break;
+                        case PriceSortEnum.Vat:
+                            priceColumn.Add("V: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", vat));
+                            break;
+                        case PriceSortEnum.TotalVat:
+                            priceColumn.Add("P: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", total));
+                            break;
+                    }
+                }
+                return priceColumn;
             }
-            return priceColumn;
+            
+            catch(Exception ex)
+            {
+                return new List<String>() { "price has an error" };
+            }
         }
 
-        public static List<string> GetCategoryColumn(bool categorySelected, bool subcategorySelected, ProductSubcategory ps, ParentCategory pc)
+        public static List<string> GetCategoryColumn(bool categorySelected, bool subcategorySelected, Product p)
         {
-            List<string> categoryColumn = new List<String>();
-            var category = pc.ParentCategoryDescription;
-            var subcategory = ps.ProductSubcategoryDescription;
-            if (categorySelected)
+            try
             {
-                categoryColumn.Add(category);
+
+                List<string> categoryColumn = new List<String>();
+                var category = p.ProductSubcategory.ParentCategory.ParentCategoryDescription;
+                var subcategory = p.ProductSubcategory.ProductSubcategoryDescription;
+                if (categorySelected)
+                {
+                    categoryColumn.Add(category);
+                }
+                if (subcategorySelected)
+                {
+                    categoryColumn.Add(subcategory);
+                }
+                return categoryColumn;
             }
-            if (subcategorySelected)
+            catch (Exception ex)
             {
-                categoryColumn.Add(subcategory);
+                return new List<string>() { "category has an error" };
             }
-            return categoryColumn;
         }
         //public static List<T> CloneList<T>(T list)
         //{
@@ -553,32 +570,39 @@ namespace PrototypeWithAuth.AppData
         }
 
         public static List<String> GetAmountColumn(Request request)
-        { 
-            List<String> amountColumn = new List<String>();
-            if (request.Unit != null)
+        {
+            try
             {
-                amountColumn.Add(request.Unit + " " + request.Product.UnitType.UnitTypeDescription);
-                if (request.Product.SubUnit != null)
+                List<String> amountColumn = new List<String>();
+                if (request.Unit != null)
                 {
-                    amountColumn.Add(request.Product.SubUnit + " " + request.Product.SubUnitType.UnitTypeDescription);
-                    if (request.Product.SubSubUnit != null)
+                    amountColumn.Add(request.Unit + " " + request.Product.UnitType.UnitTypeDescription);
+                    if (request.Product.SubUnit != null)
                     {
-                        amountColumn.Add(request.Product.SubSubUnit + " " + request.Product.SubSubUnitType.UnitTypeDescription);
+                        amountColumn.Add(request.Product.SubUnit + " " + request.Product.SubUnitType.UnitTypeDescription);
+                        if (request.Product.SubSubUnit != null)
+                        {
+                            amountColumn.Add(request.Product.SubSubUnit + " " + request.Product.SubSubUnitType.UnitTypeDescription);
+                        }
+
                     }
 
                 }
-
+                return amountColumn;
             }
-            return amountColumn;
+            catch (Exception ex)
+            {
+                return new List<String>() { "unit has an error" };
+            }
         }
 
-        public static decimal GetPricePerSubUnit (Request request)
+        public static decimal GetPricePerSubUnit(Request request)
         {
-            return request.Product.SubUnit != null ? request.PricePerUnit / request.Product.SubUnit??1:0;
+            return request.Product.SubUnit != null ? request.PricePerUnit / request.Product.SubUnit ?? 1 : 0;
         }
         public static decimal GetPricePerSubSubUnit(Request request)
         {
-            return request.Product.SubSubUnit != null ? GetPricePerSubUnit(request) / request.Product.SubUnit ?? 1 :0;
+            return request.Product.SubSubUnit != null ? GetPricePerSubUnit(request) / request.Product.SubUnit ?? 1 : 0;
         }
 
         public static string GetNote(SidebarEnum sidebarEnum, Request request)
@@ -690,14 +714,13 @@ namespace PrototypeWithAuth.AppData
 
         public static string GetExceptionMessage(Exception ex)
         {
-            if (ex.InnerException != null)
+            Exception exception = ex;
+            while (exception.InnerException != null)
             {
-                return ex.InnerException.Message;
+                exception = exception.InnerException;
             }
-            else
-            {
-                return ex.Message;
-            }
+            return exception.Message;
+            
         }
 
         public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
@@ -767,7 +790,7 @@ namespace PrototypeWithAuth.AppData
 
         public static string GetElixirDateFormat(this DateTime? date)
         {
-            return date?.ToString("d MMM yyyy")??"";
+            return date?.ToString("d MMM yyyy") ?? "";
         }
         public static string GetElixirDateFormat(this DateTime date)
         {
@@ -775,7 +798,7 @@ namespace PrototypeWithAuth.AppData
         }
         public static string GetElixirDateFormatWithTime(this DateTime? date)
         {
-            return date?.ToString("d MMM yyyy HH:mm")??"";
+            return date?.ToString("d MMM yyyy HH:mm") ?? "";
         }
         public static string GetElixirDateFormatWithTime(this DateTime date)
         {
@@ -789,7 +812,7 @@ namespace PrototypeWithAuth.AppData
             }));
         }
 
-        public static List<FunctionLine> GetFunctionsByLineID (int lineID, List<FunctionLine> functionLines)
+        public static List<FunctionLine> GetFunctionsByLineID(int lineID, List<FunctionLine> functionLines)
         {
             return functionLines.Where(fl => fl.LineID == lineID).ToList();
         }
@@ -829,13 +852,13 @@ namespace PrototypeWithAuth.AppData
 
         public static String GetDateOrderedString(ParentRequest parentRequest)
         {
-            if (parentRequest == null)
-            {
-                return "Something went wrong with this order";
-            }
-            else
-            {
+            try 
+            { 
                 return parentRequest.OrderDate.GetElixirDateFormat();
+            }
+            catch(Exception ex)
+            {
+                return "order date has an error";
             }
         }
     }

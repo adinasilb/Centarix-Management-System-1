@@ -65,19 +65,20 @@
 					//alert("got data for locations");
 					//console.log(data)
 					if ($('.turn-edit-on-off').attr("section-type") == "LabManagement") {
+						//alert('reload location ')
 						//Reload visual of labmanagement
-						//var visualContainerId = $(".hasVisual").attr("parent-id");
-						//var urlLocations = "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId;
-						//$.ajax({
-						//	async: true,
-						//	url: urlLocations,
-						//	type: 'GET',
-						//	cache: true,
-						//	success: function (d) {
-						//		$(".hasVisual").html(d);
-						//		$("#loading").hide();
-						//	}
-						//});
+						/*var visualContainerId = $(".hasVisual").attr("parent-id");
+						var urlLocations = "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId;
+						$.ajax({
+							async: true,
+							url: urlLocations,
+							type: 'GET',
+							cache: true,
+							success: function (d) {
+								$(".hasVisual").html(d);
+								$("#loading").hide();
+							}
+						});*/
 					}
 					else if ($('.turn-edit-on-off').attr("section-type") == "Requests") {
 						console.log("reloading ajax partial view...");
@@ -243,6 +244,7 @@
 				
 				if ($('.turn-edit-on-off').hasClass('users')) {
 					$('.userName').val($('#FirstName').val() + " " + $('#LastName').val())
+					$('.mark-readonly').prop('disabled', true) //for uplodad image button
 					console.log(currentPermissions)
 					$.fn.HideAllPermissionsDivs();
 					if (currentPermissions != null) {
@@ -252,6 +254,7 @@
 					else {
 						$.fn.ChangeUserPermissionsButtons();
 					}
+					$('#permissions .form-check :input[type=hidden]').remove(); /*remove automatically generated input cuz it causes the checkboxes to be hidden*/
 				} else {
 					$.ajax({
 						url: controller + viewClass + "?id=" + id + "&SectionType=" + section,

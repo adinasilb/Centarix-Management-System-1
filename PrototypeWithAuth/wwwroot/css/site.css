@@ -3047,3 +3047,9 @@ body.modal-open .popover {
 .addFunctionModal .doc-card-outer-div {
     min-width: 100% !important;
 }
+
+.scroll-body {
+    overflow: auto;
+    height: 800px;
+    display: block;
+}

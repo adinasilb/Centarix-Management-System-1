@@ -24,11 +24,10 @@
             }
 
             <div class="row mt-2">
-                <input type="hidden" id="tempCurrency" value="NIS" />
+                <input type="hidden" id="tempCurrency" value="@Model.SelectedCurrency" />
                 <div class="col-5">
 
                     <div class="custom-control custom-radio">
-
                         @Html.RadioButtonFor(model => model.SelectedCurrency, AppUtility.CurrencyEnum.NIS, htmlAttributes: new { @class = "custom-control-input nis", @id = "nis", })
                         @*<input checked="checked"
                             id="nis"
@@ -56,3 +55,4 @@
 
     </ul>
 </span>
+

@@ -21,6 +21,9 @@
         //disabledProperty = "disabled";
         markReadOnlyClass = "mark-readonly";
         shekelReadOnly = "mark-readonly";
+    }
+    if(modalType != AppUtility.RequestModalType.Create || Model.IsReorder)
+    {
         if (Model.Requests[0].Currency.Equals("USD"))
         {
             disableShekel = "disabled-text";
@@ -32,7 +35,7 @@
             //shekelSelected = "";
         }
     }
-    if (modalType == AppUtility.RequestModalType.Edit && (Model.Requests[0].QuoteStatusID == 2 || Model.Requests[0].QuoteStatusID == 1))
+    if (modalType != AppUtility.RequestModalType.Create && (Model.Requests[0].QuoteStatusID == 2 || Model.Requests[0].QuoteStatusID == 1))
     {
         hideNoQuote = "d-none";
     }
