@@ -2471,8 +2471,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 if (!String.IsNullOrEmpty(comment.CommentText))
                                 {
-                                    //save the new comment
-                                    comment.ApplicationUserID = currentUser.Id;
+                                    //save the new comment                                    
                                     comment.CommentTimeStamp = DateTime.Now;
                                     comment.RequestID = request.RequestID;
                                     _context.Update(comment);

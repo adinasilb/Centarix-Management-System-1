@@ -35,8 +35,8 @@ namespace PrototypeWithAuth.AppData
                     menuID = 2,
                     MenuDescription = AppUtility.MenuItems.Protocols.ToString(),
                     MenuViewName = "Protocols",
-                    ControllerName = "ReportsCategories",
-                    ActionName = "Protocols",
+                    ControllerName = "Protocols",
+                    ActionName = "ReportsCategories",
                     MenuImageURL = "/images/css/main_menu_icons/protocols.png",
                     SmallMenuImageURL = "/images/css/main_menu_small_icons/protocols_menu_button.png"
                 },
