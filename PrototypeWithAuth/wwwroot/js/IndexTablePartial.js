@@ -222,8 +222,7 @@ $(function () {
             })
         }
         else {
-            console.log("request status id: " + $(".request-status-id").val());
-            $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/Approve/?id=" + val, "._IndexTableWithCounts", "GET");
+            alert("error- shouldn't get here!");
         }
         return false;
     });
