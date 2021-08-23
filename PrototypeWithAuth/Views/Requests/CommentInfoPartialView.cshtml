@@ -19,10 +19,13 @@
             var commentTypeName = "Comments[" + Model.Index + "].CommentType";
             var commentIDID = "Comments_" + Model.Index + "__CommentID";
             var commentIDName = "Comments[" + Model.Index + "].CommentID";
+            var commentUserID = "Comments_" + Model.Index + "__ApplicationUserID";
+            var commentUserName = "Comments[" + Model.Index + "].ApplicationUserID";
         }
 
         <input type="hidden" id="@commentIDID" name="@commentIDName" value="@Model.Comment.CommentID" class="comment-type" />
         <input type="hidden" id="@commentTypeID" name="@commentTypeName" value="@Model.Comment.CommentType" class="comment-type" />
+        <input type="hidden" id="@commentUserID" name="@commentUserName" value="@Model.Comment.ApplicationUserID" class="comment-type" />
         <div class="row ml-2  border-bottom-0 mb-0">
             <div class="col-1 mt-auto mb-auto ">
                 <button href="#" type="button" class="btn btn-link p-0 ">
