@@ -153,10 +153,10 @@
     });
 
 
-    //$("body").on("change", "input", function (e) {
-    //    //this is also on change of the documents modal so don't change unless you change there too
-    //    if (!$("._testvalues").hasClass("changed")) {
-    //        $("._testvalues").addClass("changed");
-    //    }
-    //});
+    $("body").on("change", "input", function (e) {
+        //this is also on change of the documents modal so don't change unless you change there too
+        if (!$("._testvalues").hasClass("changed")) {
+            $("._testvalues").addClass("changed");
+        }
+    });
 </script>
