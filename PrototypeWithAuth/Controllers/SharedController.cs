@@ -315,14 +315,14 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 string uploadFolderA = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
-                var MiddleFolderNameA = documentsModalViewModel.Guid.ToString();
+                var MiddleFolderNameA = documentsModalViewModel.CustomMainObjectID.ToString();
                 string uploadFolderB = Path.Combine(uploadFolderA, MiddleFolderNameA);
                 var FolderNameB = documentsModalViewModel.ObjectID.ToString(); 
                 string uploadFolderC = Path.Combine(uploadFolderB, FolderNameB);
 
                 if (Directory.Exists(uploadFolderC))
                 {
-                    documentsModalViewModel = SaveDocuments(uploadFolder3, documentsModalViewModel);
+                    documentsModalViewModel = SaveDocuments(uploadFolderC, documentsModalViewModel);
                 }
             }
             else

@@ -472,8 +472,9 @@ namespace PrototypeWithAuth.Controllers
                     .ToList();
             var testValues = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ID
                                 && tv.TestHeader.TestGroup.TestOuterGroup.TestID == tests.FirstOrDefault().TestID).ToList();
-
-            if (testValues.Count() != tests.Select(t => t.TestOuterGroups.Select(to => to.TestGroups.SelectMany(tg => tg.TestHeaders))).Count())
+            var value1 = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ID).Count();
+            var value2 = tests.SelectMany(t => t.TestOuterGroups/*.Where(tog => tog.TestID == tests.FirstOrDefault().TestID)*/.SelectMany(to => to.TestGroups.SelectMany(tg => tg.TestHeaders))).Count();
+            if (value1 < value2)
             {
                 testValues = CreateTestValuesIfNone(tests, testValues, ee.ExperimentEntryID);
             }

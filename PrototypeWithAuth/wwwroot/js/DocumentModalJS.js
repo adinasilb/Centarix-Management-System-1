@@ -127,6 +127,7 @@
 
     $("body, .modal").off("click").on("click", ".delete-document", function (e) {
         e.preventDefault();
+        alert("delete document");
         var hasClass = $(this).hasClass("delete-file-document");
         var reportFile = $(this).hasClass("report-file");
         console.log(reportFile)
