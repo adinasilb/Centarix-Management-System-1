@@ -126,6 +126,7 @@ namespace PrototypeWithAuth.Controllers
         {
             base.DocumentsModal(documentsModalViewModel);
         }
+        
 
         [HttpGet]
         [Authorize(Roles = "Biomarkers")]

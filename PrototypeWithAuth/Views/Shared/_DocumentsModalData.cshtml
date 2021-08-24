@@ -1,6 +1,10 @@
 ﻿@model PrototypeWithAuth.ViewModels.DocumentsModalViewModel
 @using PrototypeWithAuth.AppData
 @using Microsoft.Extensions.Primitives
+<script src="~/js/DeleteDocModal.js"></script>
+<script src="~/js/DocumentModalJS.js"></script>
+<script src="~/js/site.js"></script>
+
 @{
     Layout = null;
     var markDisabled = "details";
@@ -45,6 +49,13 @@
         bcColor = "protocols-background-color";
         color = "protocols-color";
         sectionType = AppUtility.MenuItems.Protocols.ToString();
+    }
+    else if (Model.SectionType == AppUtility.MenuItems.Biomarkers)
+    {
+        form = "bio-form";
+        bcColor = "biomarkers-background-color";
+        color = "biomarkers-color";
+        sectionType = AppUtility.MenuItems.Biomarkers.ToString();
     }
     var bcColorToUse = bcColor;
     var colorToUse = color;
@@ -123,26 +134,26 @@
                                 break;
                         }
 
-                                for (int i = 0; i < EndCount; i++)
-                                {
-                                    var carouselItemClass = "carousel-item";
-                                    if (i == 0)
+                        for (int i = 0; i < EndCount; i++)
+                        {
+                            var carouselItemClass = "carousel-item";
+                            if (i == 0)
+                            {
+                                carouselItemClass += " active";
+                            }
+                            <div class="@carouselItemClass">
+                                <div class=" doc-card-outer-div col-md-4 m-0">
+                                    @if (ModelCount > i)
                                     {
-                                        carouselItemClass += " active";
-                                    }
-                                    <div class="@carouselItemClass">
-                                        <div class=" doc-card-outer-div col-md-4 m-0">
-                                            @if (ModelCount > i)
-                                            {
-                                                var iframeFilestring = Model.FileStrings[i];
-                                                var ext = iframeFilestring.Split(".").Last();
-                                                if (ext == "pptx" || ext == "ppt")
-                                                {
-                                                    iframeFilestring = "images/powerpoint.png";
-                                                }
-                                                <div class="card iframe-container document-border m-0">
-                                                    <div class="card-body responsive-iframe-container">
-                                                        @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
+                                        var iframeFilestring = Model.FileStrings[i];
+                                        var ext = iframeFilestring.Split(".").Last();
+                                        if (ext == "pptx" || ext == "ppt")
+                                        {
+                                            iframeFilestring = "images/powerpoint.png";
+                                        }
+                                        <div class="card iframe-container document-border m-0">
+                                            <div class="card-body responsive-iframe-container">
+                                                @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
 
                                                 @*<a href="@Model.FileStrings[i]" class="linkwrap" target="_blank">
                                                     <div class="blocker"></div>*@
@@ -163,7 +174,8 @@
                                                     }*@
                                                 @if (Model.ShowSwitch || Model.IsEdittable)
                                                 {
-                                                    <a href="" class="delete-document @deleteDocumentClass @Model.SectionType.ToString() mx-3" url="@Url.Action("DeleteDocumentModal", "Requests", new { FileString = Model.FileStrings[i], id = Model.ObjectID, RequestFolderNameEnum = Model.FolderName, IsEdittable = true, SectionType = Model.SectionType, ParentFolderName = Model.ParentFolderName })">
+                                                    var sectionClass = "Requests";
+                                                    <a href="" class="delete-document @deleteDocumentClass @Model.SectionType.ToString() mx-3" url="@Url.Action("DeleteDocumentModal", @sectionClass , new { FileString = Model.FileStrings[i], id = Model.ObjectID, RequestFolderNameEnum = Model.FolderName, IsEdittable = true, SectionType = Model.SectionType, ParentFolderName = Model.ParentFolderName })">
                                                         <i style="font-size:2rem;" class="icon-delete-24px documents-delete-icon hover-bold @colorToUse"></i>
                                                     </a>}
                                                 @*<a href="@Model.FileStrings[i]" target="_blank" class="btn btn-block btn-secondary">open</a>*@
@@ -215,6 +227,3 @@ else
         $.fn.CloseModal("documents");
     })
 </script>
-<script src="~/js/DeleteDocModal.js"></script>
-<script src="~/js/DocumentModalJS.js"></script>
-<script src="~/js/site.js"></script>

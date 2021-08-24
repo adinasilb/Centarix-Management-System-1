@@ -98,6 +98,7 @@
                     return true;
                 },
                 error: function (jqxhr) {
+                    $(this).attr("disabled", "false");
                     $("#loading").hide();
                     return true;
                 }

@@ -92,10 +92,9 @@
         </div>
     </div>
 </form>
-
 <script>
     $(".biomarkers-test-name").on("click", function (e) {
-        console.log("inside of the click");
+        alert("inside of the click");
         if (!$(this).hasClass("selected")) {
             if ($("._testvalues").hasClass("changed")) {
                 console.log("inside of if state")
