@@ -21,7 +21,8 @@ namespace PrototypeWithAuth.Data
         {
 
         }
-
+        public DbSet<TempResultsJson> TempResultsJsons { get; set; }
+        public DbSet<TempReportJson> TempReportJsons { get; set; }
         public DbSet<ProtocolVersion> ProtocolVersions { get; set; }
         public DbSet<FunctionResult> FunctionResults { get; set; }
         public DbSet<TempLineID> TempLineIDs { get; set; }
