@@ -149,12 +149,11 @@
                 <div class="form-group">
                     <label asp-for="Function.ProtocolVersionID" class="control-label"></label>
                     @Html.DropDownListFor(
-        vm => vm.Function.ProtocolVersion,
+        vm => vm.Function.ProtocolVersionID,
         new SelectList(
         Model.ProtocolVersions,
         dataValueField: "ProtocolVersionID",
-        dataTextField: "ProtocolVersion.Protocol.Name"),
-        //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
+        dataTextField: "Name"),
         "Select a Protocol",
         htmlAttributes: new { @class = "  mdb-select custom select-dropdown form-control-plaintext protocol object mdb-select-sublist" + disabled, @id = "protocolList", @size = 1, @searchable = "Select A Protocol", @data_stop_refresh = "true" }
         )
@@ -164,7 +163,7 @@
         <div class="row">
             <div class="col-6">
                 <label asp-for="Function.ProtocolVersion.Protocol.UniqueCode" class="control-label"></label>
-                <input class="border-bottom form-control-plaintext unique-number @disabled" rows="6" asp-for="Function.ProtocolVersion.Protocol.UniqueCode" />
+                <input class="border-bottom form-control-plaintext unique-number @disabled" name="uniqueCode" id="uniqueCode" value="@(Model.Function.ProtocolVersion?.Protocol?.UniqueCode+"V"+Model.Function.ProtocolVersion?.VersionNumber)" />
             </div>
         </div>
         break;

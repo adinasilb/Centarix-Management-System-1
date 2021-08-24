@@ -405,7 +405,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<TempLinesJson>().Property(t => t.Json).HasColumnType("ntext");
             modelBuilder.Entity<Protocol>().HasIndex(p => new { p.UniqueCode }).IsUnique();
             modelBuilder.Entity<ProtocolVersion>().HasIndex(p => new {p.ProtocolID, p.VersionNumber }).IsUnique();
-
+            modelBuilder.Entity<ProtocolVersion>().Ignore(p => p.Name);
             modelBuilder.Seed();
 
             //foreach loop ensures that deletion is resticted - no cascade delete

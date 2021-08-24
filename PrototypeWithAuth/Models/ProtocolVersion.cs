@@ -24,5 +24,19 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<ProtocolInstance> ProtocolInstances { get; set; }
         public int ProtocolID { get; set; }
         public Protocol Protocol { get; set; }
+
+        public string Name { get
+            {
+                if (Protocol != null)
+                {
+                    return Protocol.Name;
+                }
+                else
+                {
+                    return "Error: need to include protocol";
+                }
+            }
+            set {; } }
+
     }
 }

@@ -19,12 +19,12 @@
 					data: { "SerialNumber":function(){ return $("#FunctionLine_Product_SerialNumber").val()}},
 				}
 			},				
-			"FunctionLine.Protocol.UniqueCode": {
+			"uniqueCode": {
 				remote:{
 					url: '/Protocols/CheckIfProtocolUniqueNumberExists',
 					type: 'POST',
 					async: false,
-					data: { "UniqueNumber":function(){ return $("#FunctionLine_Protocol_UniqueCode").val()}}
+					data: { "UniqueNumber":function(){ return $("#uniqueCode").val()}}
 				}
 			},
 				PicturesInput :{
@@ -38,7 +38,7 @@
 	   "FunctionLine.Product.SerialNumber": {
             remote: "This serial number does not exist."
         },
-		"FunctionLine.Protocol.UniqueCode": {
+		"uniqueCode": {
             remote: "This unique code does not exist."
         },
 	},

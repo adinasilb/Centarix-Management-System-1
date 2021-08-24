@@ -584,7 +584,7 @@ namespace PrototypeWithAuth.Controllers
             if (createProtocolsViewModel.UniqueGuid == Guid.Empty)
             {
                 createProtocolsViewModel.UniqueGuid = Guid.NewGuid();
-                var functionLines = await _context.FunctionLines.Where(fl => fl.Line.ProtocolVersionID == protocolVersionID && fl.IsTemporaryDeleted == false).Include(fl => fl.FunctionType).Include(fl => fl.ProtocolVersion).Include(fl => fl.Product).ToListAsync();
+                var functionLines = await _context.FunctionLines.Where(fl => fl.Line.ProtocolVersionID == protocolVersionID && fl.IsTemporaryDeleted == false).Include(fl => fl.FunctionType).Include(fl => fl.ProtocolVersion).ThenInclude(pv  =>pv.Protocol).ThenInclude(p=>p.ProtocolSubCategory).Include(fl => fl.Product).ToListAsync();
 
                 var lines = await _context.Lines.Where(l => l.ProtocolVersionID == protocolVersionID && l.IsTemporaryDeleted == false).Select(l =>
                new ProtocolsLineViewModel { Line = l, Functions = AppUtility.GetFunctionsByLineID(l.LineID, functionLines) }).ToListAsync();
@@ -922,7 +922,7 @@ namespace PrototypeWithAuth.Controllers
         }
         public bool CheckIfProtocolUniqueNumberExists(string uniqueNumber)
         {
-            return _context.Protocols.Where(p => p.UniqueCode.Equals(uniqueNumber)).ToList().Any();
+            return _context.ProtocolVersions.Include(p=>p.Protocol).Select(p=>p.Protocol.UniqueCode+"V"+p.VersionNumber).Where(p =>p.Equals(uniqueNumber)).ToList().Any();
         }
         public bool ValidateUniqueProtocolNumber(string uniqueNumber, int protocolID)
         {
@@ -1419,7 +1419,7 @@ namespace PrototypeWithAuth.Controllers
             viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.ToList();
             viewmodel.Creators = _context.Users.Select(u =>
                 new SelectListItem() { Value = u.Id, Text = u.FirstName + u.LastName }).ToList();
-            viewmodel.ProtocolVersions = _context.ProtocolVersions.ToList();
+            viewmodel.ProtocolVersions = _context.ProtocolVersions.Include(p=>p.Protocol).ToList();
         }
 
         private void GetFunctionLineLinkToProductDDls(AddFunctionViewModel<FunctionLine> viewmodel)
@@ -1577,7 +1577,7 @@ namespace PrototypeWithAuth.Controllers
                                 addFunctionViewModel.Function.Product = product;
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
-                                var protocol = _context.ProtocolVersions.Include(p=>p.Protocol).Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.Function.ProtocolVersionID).FirstOrDefault();
+                                var protocol = _context.ProtocolVersions.Include(p=>p.Protocol).Include(p => p.Materials).Where(p => p.ProtocolVersionID == addFunctionViewModel.Function.ProtocolVersionID).FirstOrDefault();
                                 tempLine.Line.Content += " <a href='#' functionline='" + addFunctionViewModel.Function.ID + "' class='open-line-protocol function-line-node' value='" + protocol.ProtocolVersionID + "'>" + protocol.Protocol.Name + " </a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>"; ;
                                 addFunctionViewModel.Function.ProtocolVersion = protocol;
                                 break;
@@ -1641,7 +1641,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 protocolsList = protocolsList.Where(p => p.ApplicationUserCreatorID == creatorID);
             }
-            var protocolListJson = await protocolsList.Select(p => new { protocolID = p.ProtocolID, name = p.Protocol.Name }).ToListAsync();
+            var protocolListJson = await protocolsList.Select(p => new { protocolID = p.ProtocolVersionID, name = p.Protocol.Name }).ToListAsync();
             var subCategoryList = await _context.ProtocolSubCategories.Where(ps => ps.ProtocolCategoryTypeID == parentCategoryID).Select(ps => new { subCategoryID = ps.ProtocolCategoryTypeID, subCategoryDescription = ps.ProtocolSubCategoryTypeDescription }).ToListAsync();
             return Json(new { ProtocolSubCategories = subCategoryList, Protocols = protocolListJson });
         }
@@ -1766,7 +1766,7 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task<CreateProtocolsViewModel> GetProtocolsDetailsFloatModalFunction(int? protocolID)
         {
-            var protocol = _context.ProtocolVersions.Where(p => p.ProtocolVersionID == protocolID).FirstOrDefault();
+            var protocol = _context.ProtocolVersions.Include(p=>p.Protocol).Where(p => p.ProtocolVersionID == protocolID).FirstOrDefault();
             var createProtocolsViewModel = new CreateProtocolsViewModel();
             createProtocolsViewModel.ModalType = AppUtility.ProtocolModalType.SummaryFloat;
             await FillCreateProtocolsViewModel(createProtocolsViewModel, protocol.Protocol.ProtocolTypeID, protocol.ProtocolVersionID);
