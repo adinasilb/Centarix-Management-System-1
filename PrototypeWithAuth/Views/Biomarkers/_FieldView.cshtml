@@ -41,26 +41,26 @@
         {
             case AppUtility.DataTypeEnum.Double:
                 <label class="control-label">@Model.TestHeader.Name</label>
-                <input asp-for="Double" id="@DoubleID" name="@DoubleName" value="@Model.Double" class="@Model.TestHeader.Name form-control-plaintext border-bottom" />
+                <input asp-for="Double" id="@DoubleID" name="@DoubleName" value="@Model.Double" class="@Model.TestHeader.Name form-control-plaintext border-bottom test-field" />
                 <span asp-validation-for="Double" class="text-danger-centarix mark-readonly"></span>
                 break;
             case AppUtility.DataTypeEnum.String:
                 <label class="control-label">@Model.TestHeader.Name</label>
-                <input asp-for="String" id="@StringID" name="@StringName" value="@Model.String" class="@Model.TestHeader.Name form-control-plaintext border-bottom" />
+                <input asp-for="String" id="@StringID" name="@StringName" value="@Model.String" class="@Model.TestHeader.Name form-control-plaintext border-bottom test-field" />
                 <span asp-validation-for="String" class="text-danger-centarix mark-readonly"></span>
                 break;
             case AppUtility.DataTypeEnum.DateTime:
                 <label class="control-label">@Model.TestHeader.Name</label>
-                <input asp-for="DateTime" id="@DateTimeID" name="@DateTimeName" value="@Model.DateTime" class="@Model.TestHeader.Name form-control-plaintext border-bottom" />
+                <input asp-for="DateTime" id="@DateTimeID" name="@DateTimeName" value="@Model.DateTime" class="@Model.TestHeader.Name form-control-plaintext border-bottom test-field" />
                 <span asp-validation-for="DateTime" class="text-danger-centarix mark-readonly"></span>
                 break;
             case AppUtility.DataTypeEnum.Bool:
                 <label class="control-label">@Model.TestHeader.Name</label>
-                <input asp-for="Bool" id="@BoolID" name="@BoolName" value="@Model.Bool" class="@Model.TestHeader.Name form-control-plaintext border-bottom" />
+                <input asp-for="Bool" id="@BoolID" name="@BoolName" value="@Model.Bool" class="@Model.TestHeader.Name form-control-plaintext border-bottom test-field" />
                 <span asp-validation-for="Bool" class="text-danger-centarix mark-readonly"></span>
                 break;
             case AppUtility.DataTypeEnum.File:
-                <a class="open-document-modal" showSwitch="@true.ToString()" parentfolder="@AppUtility.ParentFolderName.ExperimentEntries.ToString()" data-val="@true.ToString()" data-string="@AppUtility.FolderNamesEnum.Custom.ToString()" data-id="@Model.TestValueID" >
+                <a class="open-document-modal  test-field" showSwitch="@true.ToString()" parentfolder="@AppUtility.ParentFolderName.ExperimentEntries.ToString()" data-val="@true.ToString()" data-string="@AppUtility.FolderNamesEnum.Custom.ToString()" data-id="@Model.TestValueID" >
                     <div class="card document-border">
                         <div class="document-card text-center">
                             <i class="icon-add-24px document-icon" alt="order" style="font-size:1.25rem;"></i>

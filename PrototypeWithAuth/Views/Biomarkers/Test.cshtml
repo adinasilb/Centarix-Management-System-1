@@ -121,11 +121,42 @@
         }
     });
 
-
-    $("body").on("change", "input", function (e) {
-        //this is also on change of the documents modal so don't change unless you change there too
-        if (!$("._testvalues").hasClass("changed")) {
-            $("._testvalues").addClass("changed");
+    $(".edit-mode-input").on("click", function (e) {
+        console.log("in click");
+        if ($(this).hasClass("on")) {
+            $('.test-field').attr("disabled", "disabled");
+            $('.test-field').addClass("disabled");
+            $(".disable-custom-mdbselect").addClass("disable-custom-mdbselect");
+            $(".edit-mode-label").removeClass("on");
+            $(".edit-mode-label").addClass("off");
+            $(".edit-mode-label").html("Edit Mode Off");
+            $(this).removeClass("on");
+            $(this).addClass("off");
+            $(this).attr("checked", false);
+            $(this).val(false);
+            $(this).attr("name", "details");
+        }
+        else {
+            console.log("in if off");
+            $('.test-field').attr("disabled", false);
+            $('.test-field').removeClass("disabled");
+            $(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect");
+            $(".edit-mode-label").addClass("on");
+            $(".edit-mode-label").removeClass("off");
+            $(".edit-mode-label").html("Edit Mode On");
+            $(this).addClass("on");
+            $(this).removeClass("off");
+            $(this).attr("checked", "checked");
+            $(this).val(true);
+            $(this).attr("name", "edit");
         }
     });
+
+
+    //$("body").on("change", "input", function (e) {
+    //    //this is also on change of the documents modal so don't change unless you change there too
+    //    if (!$("._testvalues").hasClass("changed")) {
+    //        $("._testvalues").addClass("changed");
+    //    }
+    //});
 </script>
