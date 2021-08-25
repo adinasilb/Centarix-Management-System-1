@@ -5579,6 +5579,16 @@ namespace PrototypeWithAuth.Controllers
                             var orderedBy = _context.Employees.Where(e => e.Email == r.OrderedBy).FirstOrDefault()?.Id;
                             var vendorID = _context.Vendors.Where(v => v.VendorEnName == r.VendorName).Select(v => v.VendorID).FirstOrDefault();
                             //check if product exists based on vendor catalog number
+                            if (vendorID == 0)
+                            {
+
+                                WriteErrorToFile("Row " + lineNumber + " did not have a proper vendor");
+                                _context.ChangeTracker.Entries()
+                                    .Where(e => e.Entity != null).ToList();
+
+
+                                throw new Exception("failed to find vendor");
+                            }
                             var productID = _context.Products.Where(p => p.VendorID == vendorID && p.CatalogNumber.ToLower() == r.CatalogNumber.ToLower()).Select(p => p.ProductID).FirstOrDefault();
                             var request = new Request() { };
                             if (productID == 0)
