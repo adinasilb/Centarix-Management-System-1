@@ -46,7 +46,6 @@
             {
                 url+="?IncludeSaveLines=true";
             }
-            alert(modalType)
             $.ajax({
                 url: url,
                 traditional: true,
@@ -158,4 +157,24 @@
         //switch this to universal share request and the modelsenum send in
         $.fn.StartProtocol($(this).attr("value"), false, 3);
     });
+
+    $("#more").off('click').click(function () {
+		$('[data-toggle="popover"]').popover('dispose');
+		$(this).popover({
+			sanitize: false,
+			placement: 'bottom',
+			html: true,
+			content: function () {
+				return $('#morePopover').html();
+			}
+		});
+		$(this).popover('toggle');
+
+		//set up remove share on here
+		
+		$(".popover .createNewVersion").click( function (e) {
+            e.preventDefault();
+			
+		});
+	});
 });

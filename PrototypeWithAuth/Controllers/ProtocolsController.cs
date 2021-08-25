@@ -1775,10 +1775,53 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> CreateNewVersion(int protocolID)
+        public async Task<IActionResult> CreateNewVersion(int protocolVersionID)
         {
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ResearchProtocol;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
+            var protocol = await _context.ProtocolVersions.Include(pv=>pv.Protocol).Where(pv=>pv.ProtocolVersionID == protocolVersionID).FirstOrDefaultAsync();
+            protocol.VersionNumber += 1;
+            protocol.ProtocolID = 0;
+            _context.Entry(protocol).State = EntityState.Added;
+            await _context.SaveChangesAsync();
+            var protocolLines = _context.Lines.Include(l=>l.LineType).Include(l => l.ParentLine).Include(l=>l.LineChange).Include(l=>l.FunctionLines).Where(l=>l.ProtocolVersionID== protocol.ProtocolVersionID);
+            List<Line> childLines = protocolLines.Where(l => l.LineType.LineTypeChildID == null).ToList();
+            while (childLines.Count()>0)
+            {
+                var distinctParentLines = childLines.Select(c=>c.ParentLine).Distinct().ToList();
+                foreach(var parent in distinctParentLines)
+                {
+                    var tempParentID = new TempLineID();
+                    _context.Add(tempParentID);
+                    await _context.SaveChangesAsync();
+                    foreach (var line in childLines.Where(l=>l.ParentLineID == parent.LineID))
+                    {
+                        var templineID = new TempLineID();
+                        _context.Add(templineID);
+                        await _context.SaveChangesAsync();
+                        line.LineID = templineID.ID;
+                        line.ParentLineID = tempParentID.ID;
+                        _context.Entry(line).State = EntityState.Added;
+                        await _context.SaveChangesAsync();
+                        line.LineChange.ToList().ForEach(lc => { lc.LineID = line.LineID; _context.Entry(lc).State = EntityState.Added; });
+                        await _context.SaveChangesAsync();
+                        line.FunctionLines.ToList().ForEach(lc => { lc.LineID = line.LineID; _context.Entry(lc).State = EntityState.Added; });
+                        await _context.SaveChangesAsync();
+
+                    }
+                    parent.LineID = tempParentID.ID;
+                    _context.Entry(parent).State = EntityState.Added;
+                    await _context.SaveChangesAsync();
+                }
+               childLines = protocolLines.Where(l => l.LineType.LineTypeChildID == childLines.FirstOrDefault().LineTypeID).ToList();
+            }
             
-            return PartialView("_IndexTableWithEditProtocol");
+           
+            CreateProtocolsViewModel viewmodel = new CreateProtocolsViewModel();
+            await FillCreateProtocolsViewModel(viewmodel, protocol.Protocol.ProtocolTypeID, protocolVersionID);
+            viewmodel.ModalType = AppUtility.ProtocolModalType.CreateNewVersion;
+            return View("ResearchProtocol", viewmodel);
         }
 
         [HttpPost]
@@ -1792,7 +1835,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     createProtocolsViewModel.ProtocolVersion.Urls = createProtocolsViewModel.ProtocolVersion.Urls.Where(u => u.LinkDescription != null && u.Url != null).ToList();
       
-                    if (createProtocolsViewModel.ProtocolVersion.ProtocolID == 0)
+                    if (createProtocolsViewModel.ProtocolVersion.Protocol.ProtocolID == 0)
                     {
                         var lastProtocolNum = GetUniqueNumber();
                         createProtocolsViewModel.ProtocolVersion.Protocol.UniqueCode = lastProtocolNum; 
@@ -1816,6 +1859,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         else
                         {
+                            var entries  =_context.ChangeTracker.Entries();
                             _context.Entry(createProtocolsViewModel.ProtocolVersion).State = EntityState.Modified;
                             await _context.SaveChangesAsync();
                         }            
@@ -1842,7 +1886,7 @@ namespace PrototypeWithAuth.Controllers
 
                         await UpdateLineContentAsync(tempLines, Lines);
                         await SaveTempLinesToDB(createProtocolsViewModel.ProtocolVersion.ProtocolVersionID, tempLines);
-                        await _context.FunctionLines.Where(fl => fl.ProtocolVersionID == createProtocolsViewModel.ProtocolVersion.ProtocolVersionID).Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted == true).ForEachAsync(fl => { _context.Remove(fl); });
+                        await _context.FunctionLines.Where(fl => fl.Line.ProtocolVersionID == createProtocolsViewModel.ProtocolVersion.ProtocolVersionID).Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted == true).ForEachAsync(fl => { _context.Remove(fl); });
                         await _context.SaveChangesAsync();
                         await DeleteTemporaryDeletedLinesAsync();
                     }
@@ -3011,7 +3055,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Remove(functionReport);
 
                             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Reports.ToString());
-                            string uploadFolder2 = Path.Combine(uploadFolder1, report.ReportID.ToString());
+                            string uploadFolder2 = Path.Combine(uploadFolder1,functionReport.ID.ToString());
                             if (Directory.Exists(uploadFolder2))
                             {
                                 Directory.Delete(uploadFolder2, true);

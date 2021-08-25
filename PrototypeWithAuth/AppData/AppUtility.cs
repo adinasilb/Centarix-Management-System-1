@@ -97,7 +97,7 @@ namespace PrototypeWithAuth.AppData
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
         public enum FolderNamesEnum { Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
-        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote , ParentRequest, FunctionReports, FunctionResults}
+        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote , ParentRequest,  FunctionResults}
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum ModalType { None, Terms, UploadOrder, UploadQuote, ConfirmEmail, Reorder }
         public static string AspDateFormatString = "{0:d MMM yyyy}";
@@ -150,7 +150,7 @@ namespace PrototypeWithAuth.AppData
         public enum CategoryTypeEnum { Operations, Lab }
         public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusables, Equipment, Operation, Biological, Safety, General, Clinical }
         public enum RequestModalType { Create, Edit, Summary }
-        public enum ProtocolModalType {None, Create, CheckListMode, Summary, Edit, SummaryFloat }
+        public enum ProtocolModalType {None, Create, CheckListMode, Summary, Edit, SummaryFloat, CreateNewVersion }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
         public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue }

@@ -39,12 +39,14 @@
         <input type="hidden" asp-for="Tab" class="selectedTab" />
         <input type="hidden" asp-for="UniqueGuid" />
         <input type="hidden" asp-for="ProtocolVersion.Protocol.ProtocolID" value="@Model.ProtocolVersion.Protocol.ProtocolID" />
+        <input type="hidden" asp-for="ProtocolVersion.ProtocolID" />
         <input type="hidden" asp-for="ModalType" class="modalType" />
         <input type="hidden" asp-for="ProtocolVersion.CreationDate" />
         <input type="hidden" asp-for="ProtocolVersion.ApplicationUserCreatorID" />
         <input type="hidden" asp-for="ProtocolInstance.ProtocolInstanceID" class="protocolInstanceID" />
         <input type="hidden" asp-for="ProtocolVersion.VersionNumber" class="" />
         <input type="hidden" asp-for="ProtocolVersion.Protocol.UniqueCode" class="" />
+        <input type="hidden" asp-for="ProtocolVersion.ProtocolVersionID" class="" />
         <div class="row under-row-margin">
             <div class="col-4">
                 <label asp-for="ProtocolVersion.Protocol.Name" class="control-label"></label>
@@ -52,10 +54,10 @@
                 <span asp-validation-for="ProtocolVersion.Protocol.Name" class="text-danger-centarix"></span>
             </div>
             <div class="col-4">
-                <label  class="control-label">Unique Code</label>
+                <label class="control-label">Unique Code</label>
                 <input value="@(Model.ProtocolVersion.Protocol.UniqueCode+"V"+Model.ProtocolVersion.VersionNumber)" class="form-control-plaintext border-bottom" readonly />
-                    </div>
-  
+            </div>
+
         </div>
 
         <div class="row under-row-margin">

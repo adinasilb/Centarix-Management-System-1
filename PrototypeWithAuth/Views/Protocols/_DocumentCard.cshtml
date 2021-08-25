@@ -12,7 +12,7 @@
                 iframeFilestring = "/images/powerpoint.png";
             }
             var url = Url.Action("DeleteReportDocumentModal", "Protocols", new { FunctionReportID = Model.ObjectID });
-            if (Model.SectionType == AppUtility.MenuItems.Protocols)
+            if (Model.ParentFolderName != AppUtility.ParentFolderName.Reports)
             {
                 url = Url.Action("DeleteResultsDocumentModal", "Protocols", new { FunctionResultID = Model.ObjectID });
             }

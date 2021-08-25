@@ -12,5 +12,6 @@ namespace PrototypeWithAuth.Models
         public  Line ParentLine { get; set; }
         public bool IsTemporaryDeleted { get; set; }
         public IEnumerable<LineChange> LineChange { get; set; }
+        public IEnumerable<FunctionLine> FunctionLines { get; set; }
     }
 }
