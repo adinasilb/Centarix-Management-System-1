@@ -78,7 +78,7 @@ namespace PrototypeWithAuth.ViewModels
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = "" };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = pv.ProtocolVersionID, Width = 15, Value = new List<string>() { pv.Protocol.Name } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, Value = new List<string>() { pv.VersionNumber } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, Value = new List<string>() { pv.VersionNumber+"" } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Creator", Width = 10, Value = new List<string>() { pv.ApplicationUserCreator.FirstName + " " + pv.ApplicationUserCreator.LastName } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, Value = new List<string>() { } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { pv.CreationDate.ToString("dd'/'MM'/'yyyy") } };
@@ -95,7 +95,7 @@ namespace PrototypeWithAuth.ViewModels
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = "" };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = pv.ProtocolVersionID, Width = 15, Value = new List<string>() { pv.Protocol.Name } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 8, Value = new List<string>() { pv.VersionNumber } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 8, Value = new List<string>() { pv.VersionNumber+"" } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Creator", Width = 10, Value = new List<string>() { pv.ApplicationUserCreator.FirstName + " " + pv.ApplicationUserCreator.LastName } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 8, Value = new List<string>() { } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Start Date", Width = 10, Value = new List<string>() { protocolInstance.StartDate.GetElixirDateFormatWithTime() } };
@@ -113,7 +113,7 @@ namespace PrototypeWithAuth.ViewModels
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = "" };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = pv.ProtocolVersionID, Width = 15, Value = new List<string>() { pv.Protocol.Name } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, Value = new List<string>() { pv.VersionNumber } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, Value = new List<string>() { pv.VersionNumber+"" } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, Value = new List<string>() { } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { pv.CreationDate.GetElixirDateFormat()} };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Type", Width = 10, Value = new List<string>() { pv.Protocol.ProtocolType.ProtocolTypeDescription } };
@@ -130,7 +130,7 @@ namespace PrototypeWithAuth.ViewModels
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = "" };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = pv.ProtocolVersionID, Width = 15, Value = new List<string>() { pv.Protocol.Name } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, Value = new List<string>() { pv.VersionNumber } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, Value = new List<string>() { pv.VersionNumber+"" } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Creator", Width = 10, Value = new List<string>() { pv.ApplicationUserCreator.FirstName + " " + pv.ApplicationUserCreator.LastName } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, Value = new List<string>() { } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { pv.CreationDate.GetElixirDateFormat() } };
@@ -149,7 +149,7 @@ namespace PrototypeWithAuth.ViewModels
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = "" };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = pv.ProtocolVersionID, Width = 15, Value = new List<string>() { pv.Protocol.Name } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, Value = new List<string>() { pv.VersionNumber } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, Value = new List<string>() { pv.VersionNumber+"" } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Creator", Width = 10, Value = new List<string>() { pv.ApplicationUserCreator.FirstName + " " + pv.ApplicationUserCreator.LastName } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, Value = new List<string>() { } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { pv.CreationDate.GetElixirDateFormat() } };

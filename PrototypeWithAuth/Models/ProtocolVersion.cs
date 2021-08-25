@@ -11,7 +11,7 @@ namespace PrototypeWithAuth.Models
     {
         [Key]
         public int ProtocolVersionID { get; set; }
-        public string VersionNumber { get; set; }
+        public int VersionNumber { get; set; }
         //public IEnumerable<TagProtocol> TagProtocols { get; set; }
         public string ShortDescription { get; set; }
         public string Theory { get; set; }

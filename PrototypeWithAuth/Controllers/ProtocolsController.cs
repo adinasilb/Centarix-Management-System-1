@@ -548,7 +548,7 @@ namespace PrototypeWithAuth.Controllers
             DeleteTemporaryDocuments(AppUtility.ParentFolderName.Protocols, Guid.Empty);
             var protocol = _context.ProtocolVersions.Include(p=>p.Protocol)
                 .Include(p => p.Urls).Include(p => p.Materials)
-                .ThenInclude(m => m.Product).Include(p => p.Protocol.ProtocolSubCategory).Where(p => p.ProtocolVersionID == protocolVersionID).FirstOrDefault() ?? new ProtocolVersion() {Protocol = new Protocol() { UniqueCode = GetUniqueNumber() }, VersionNumber = 1+"" };
+                .ThenInclude(m => m.Product).Include(p => p.Protocol.ProtocolSubCategory).Where(p => p.ProtocolVersionID == protocolVersionID).FirstOrDefault() ?? new ProtocolVersion() {Protocol = new Protocol() { UniqueCode = GetUniqueNumber() }, VersionNumber = 1 };
             protocol.Urls ??= new List<Link>();
             protocol.Materials ??= new List<Material>();
 
@@ -1780,46 +1780,59 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ResearchProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            var protocol = await _context.ProtocolVersions.Include(pv=>pv.Protocol).Where(pv=>pv.ProtocolVersionID == protocolVersionID).FirstOrDefaultAsync();
-            protocol.VersionNumber += 1;
-            protocol.ProtocolID = 0;
-            _context.Entry(protocol).State = EntityState.Added;
-            await _context.SaveChangesAsync();
-            var protocolLines = _context.Lines.Include(l=>l.LineType).Include(l => l.ParentLine).Include(l=>l.LineChange).Include(l=>l.FunctionLines).Where(l=>l.ProtocolVersionID== protocol.ProtocolVersionID);
-            List<Line> childLines = protocolLines.Where(l => l.LineType.LineTypeChildID == null).ToList();
-            while (childLines.Count()>0)
-            {
-                var distinctParentLines = childLines.Select(c=>c.ParentLine).Distinct().ToList();
-                foreach(var parent in distinctParentLines)
-                {
-                    var tempParentID = new TempLineID();
-                    _context.Add(tempParentID);
-                    await _context.SaveChangesAsync();
-                    foreach (var line in childLines.Where(l=>l.ParentLineID == parent.LineID))
-                    {
-                        var templineID = new TempLineID();
-                        _context.Add(templineID);
-                        await _context.SaveChangesAsync();
-                        line.LineID = templineID.ID;
-                        line.ParentLineID = tempParentID.ID;
-                        _context.Entry(line).State = EntityState.Added;
-                        await _context.SaveChangesAsync();
-                        line.LineChange.ToList().ForEach(lc => { lc.LineID = line.LineID; _context.Entry(lc).State = EntityState.Added; });
-                        await _context.SaveChangesAsync();
-                        line.FunctionLines.ToList().ForEach(lc => { lc.LineID = line.LineID; _context.Entry(lc).State = EntityState.Added; });
-                        await _context.SaveChangesAsync();
+            var protocol = await _context.ProtocolVersions.Include(pv => pv.Protocol).Where(pv => pv.ProtocolVersionID == protocolVersionID).AsNoTracking().FirstOrDefaultAsync();
 
-                    }
-                    parent.LineID = tempParentID.ID;
-                    _context.Entry(parent).State = EntityState.Added;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    protocol.VersionNumber += 1;
+                    protocol.ProtocolVersionID = 0;
+                    _context.Entry(protocol).State = EntityState.Added;
                     await _context.SaveChangesAsync();
+                    var protocolLines = _context.Lines.Include(l => l.LineType).Include(l => l.ParentLine).Include(l => l.LineChange).Include(l => l.FunctionLines).Where(l => l.ProtocolVersionID == protocolVersionID);
+                    List<Line> childLines = protocolLines.Where(l => l.LineType.LineTypeChildID == null).ToList();
+                    while (childLines.Count() > 0)
+                    {
+                        var distinctParentLines = childLines.Select(c => c.ParentLine).Distinct().ToList();
+                        foreach (var parent in distinctParentLines)
+                        {
+                            var tempParentID = new TempLineID();
+                            _context.Add(tempParentID);
+                            await _context.SaveChangesAsync();
+                            foreach (var line in childLines.Where(l => l.ParentLineID == parent.LineID))
+                            {
+                                var templineID = new TempLineID();
+                                _context.Add(templineID);
+                                await _context.SaveChangesAsync();
+                                line.LineID = templineID.ID;
+                                line.ParentLineID = tempParentID.ID;
+                                _context.Entry(line).State = EntityState.Added;
+                                await _context.SaveChangesAsync();
+                                line.LineChange.ToList().ForEach(lc => { lc.LineID = line.LineID; _context.Entry(lc).State = EntityState.Added; });
+                                await _context.SaveChangesAsync();
+                                line.FunctionLines.ToList().ForEach(lc => { lc.LineID = line.LineID; _context.Entry(lc).State = EntityState.Added; });
+                                await _context.SaveChangesAsync();
+                            }
+                            parent.LineID = tempParentID.ID;
+                            _context.Entry(parent).State = EntityState.Added;
+                            await _context.SaveChangesAsync();
+                        }
+                        childLines = protocolLines.Where(l => l.LineType.LineTypeChildID == childLines.FirstOrDefault().LineTypeID).ToList();
+
+                        await transaction.CommitAsync();
+                    }
                 }
-               childLines = protocolLines.Where(l => l.LineType.LineTypeChildID == childLines.FirstOrDefault().LineTypeID).ToList();
+                catch (Exception ex)
+                {
+
+                }
+
+              
             }
-            
-           
+
             CreateProtocolsViewModel viewmodel = new CreateProtocolsViewModel();
-            await FillCreateProtocolsViewModel(viewmodel, protocol.Protocol.ProtocolTypeID, protocolVersionID);
+            await FillCreateProtocolsViewModel(viewmodel, protocol.Protocol.ProtocolTypeID, protocol.ProtocolVersionID);
             viewmodel.ModalType = AppUtility.ProtocolModalType.CreateNewVersion;
             return View("ResearchProtocol", viewmodel);
         }
