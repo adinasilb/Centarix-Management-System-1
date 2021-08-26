@@ -80,7 +80,7 @@
                     }
                 }
                 <label class="control-label">Category</label>
-                <select id="@parentCategoryID" @disabled name="@(dynamicName)Product.ProductSubcategory.ParentCategoryID" class="mdb-select custom select-dropdown form-control-plaintext parentlist @parentSelect @markReadOnlyClass parent-category" request-index="@Model.RequestIndex" searchable="Select Category" data-stop-refresh ="true">
+                <select id="@parentCategoryID" @disabled name="@(dynamicName)Product.ProductSubcategory.ParentCategoryID" class="mdb-select custom select-dropdown form-control-plaintext parentlist @parentSelect @markReadOnlyClass parent-category" request-index="@Model.RequestIndex" searchable="Select Category" data-stop-refresh="true">
                     @if (Model.Request.Product?.ProductSubcategory.ParentCategoryID == 0 || Model.Request.Product?.ProductSubcategory.ParentCategoryID == null)
                     {
                         <option class="disabled-color" disabled selected>Select Category</option>
@@ -130,7 +130,7 @@
                         subCategoryID = dynamicID + "Product_ProductSubcategoryID";
                     }
                 }
-                <select id="@subCategoryID" @disabled name="@(dynamicName)Product.ProductSubcategoryID" class="mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist @mdbSelect @markReadOnlyClass sub-category" searchable="Select Subcategory" data-stop-refresh ="true">
+                <select id="@subCategoryID" @disabled name="@(dynamicName)Product.ProductSubcategoryID" class="mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist @mdbSelect @markReadOnlyClass sub-category" searchable="Select Subcategory" data-stop-refresh="true">
                     @if (Model.Request.Product?.ProductSubcategoryID == 0 || Model.Request.Product?.ProductSubcategoryID == null)
                     {
                         <option class="disabled-color" disabled selected>Select Subcategory</option>
@@ -211,11 +211,57 @@
             </div>
         }
     </div>
+    @if (Model.Request.ParentRequest?.SupplierOrderNumber != null || Model.Request.Payments?.FirstOrDefault()?.HasInvoice == true)
+    {
+        <div class="row">
+            @if (Model.Request.Payments?.FirstOrDefault()?.HasInvoice == true)
+            {
+                <input type="hidden" name="@(dynamicName)Payments[0].InvoiceID" id="@(dynamicID)Payments[0].InvoiceID" value="@Model.Request.Payments[0].InvoiceID"/>
+                <div class="col-md-3 ">
+                    <label asp-for="@Model.Request.Payments[0].Invoice.InvoiceNumber" class="control-label"></label>
+                    <input name="@(dynamicName)Payments[0].Invoice.InvoiceNumber" id="@(dynamicID)Payments[0].Invoice.InvoiceNumber" value="@Model.Request.Payments[0].Invoice.InvoiceNumber"
+                           class="form-control-plaintext border-bottom @markReadOnlyClass" @disabled />
+                    <span for="@(dynamicID)Payments[0].Invoice.InvoiceNumber" class="text-danger-centarix"></span>
+                </div>
+                <div class="col-md-3 ">
+                    <label asp-for="@Model.Request.Payments[0].Invoice.InvoiceDate" class="control-label"></label>
+                    <input name="@(dynamicName)Payments[0].Invoice.InvoiceDate" id="@(dynamicID)Payments[0].Invoice.InvoiceDate" value="@Model.Request.Payments[0].Invoice.InvoiceDate.GetElixirDateFormat()" 
+                           class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" type="text" @disabled />
+                    <span for="@(dynamicID)Payments[0].Invoice.InvoiceDate" class="text-danger-centarix"></span>
+                </div>
+            }
+            @if (Model.Request.ParentRequest?.SupplierOrderNumber != null)
+            {
+                <div class="col-md-3 ">
+                    <label asp-for="@Model.Request.ParentRequest.SupplierOrderNumber" class="control-label"></label>
+                    <input name="@(dynamicName)ParentRequest.SupplierOrderNumber" id="@(dynamicID)ParentRequest.SupplierOrderNumber" value="@Model.Request.ParentRequest.SupplierOrderNumber"
+                           class="form-control-plaintext border-bottom @markReadOnlyClass" type="text" @disabled/>
+                    <span for="@(dynamicID)ParentRequest.SupplierOrderNumber" class="text-danger-centarix"></span>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="@Model.Request.ParentRequest.OrderDate" class="control-label"></label>
+                    <input type="text" name="@(dynamicName)ParentRequest.OrderDate" id="@(dynamicID)ParentRequest.OrderDate" value="@Model.Request.ParentRequest.OrderDate.GetElixirDateFormat()" 
+                           class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" @disabled />
+                    <span for="@(dynamicID)Request.ParentRequest.OrderDate" class="text-danger-centarix"></span>
+                </div>
+            }
+            @if (Model.Request.ParentRequest?.OrderNumber != null)
+            {
+                <div class="col-md-3 ">
+                    <label asp-for="@Model.Request.ParentRequest.OrderNumber" class="control-label"></label>
+                    <input value="@Model.Request.ParentRequest.OrderNumber" id="@(dynamicID)ParentRequest.OrderNumber" name="@(dynamicName)ParentRequest.OrderNumber" 
+                           class="form-control-plaintext border-bottom @markReadOnlyClass" type="text" @disabled />
+                    <span for="@(dynamicID)ParentRequest.OrderNumber" class="text-danger-centarix"></span>
+                </div>
+            }
+
+        </div>
+    }
     <div class="row">
 
         <div class="col-md-2 form-group">
             <label class="control-label">Amount</label>
-            <input type="number" id="@(dynamicID)Unit" name="@(dynamicName)Unit"  class="form-control-plaintext border-bottom  @markReadOnlyClass  unit" @disabled value="@Model.Request.Unit" />
+            <input type="number" id="@(dynamicID)Unit" name="@(dynamicName)Unit" class="form-control-plaintext border-bottom  @markReadOnlyClass  unit" @disabled value="@Model.Request.Unit" />
             <span for="@(dynamicID)Unit" class="text-danger-centarix"></span>
         </div>
         <input type="hidden" id="@(dynamicID)UnitTypeID" name="@(dynamicName)UnitTypeID" value="5" />
@@ -233,7 +279,7 @@
                 <label class="control-label"></label>
                 <div class="input-group">
                     <span class="input-group-text request-cost-shekel-icon @disableShekel">&#x20aa;</span>
-                    <input id="@(dynamicID)Cost" name="@(dynamicName)Cost" data-val="@Model.RequestIndex" class="@markReadOnlyClass form-control-plaintext border-bottom requestPriceQuote shekel-cost cost @disableShekel" min="1" value="@(Model.Request!= null ? Model.Request.Cost ?? 0 : 0)"  @disabledShekelProperty />
+                    <input id="@(dynamicID)Cost" name="@(dynamicName)Cost" data-val="@Model.RequestIndex" class="@markReadOnlyClass form-control-plaintext border-bottom requestPriceQuote shekel-cost cost @disableShekel" min="1" value="@(Model.Request!= null ? Model.Request.Cost ?? 0 : 0)" @disabledShekelProperty />
                     @*<span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>*@
                 </div>
             </div>
@@ -311,7 +357,7 @@
             </div>
         }
     </div>
-    @if (Model.Request!=null && Model.Request?.RequestStatusID != 1 && Model.Request?.RequestStatusID != 6)
+    @if (Model.Request != null && Model.Request?.RequestStatusID != 1 && Model.Request?.RequestStatusID != 6)
     {
         <div class="row">
 
@@ -332,67 +378,67 @@
             </div>
 
         </div>
-    <div class="row">
-        <div class="col-2">
-            <label class="control-label" asp-for="Request.Installments">Payments</label>
-            <input asp-for="Request.Installments" class="form-control-plaintext border-bottom " readonly />
-        </div>
-        @{var payments = Model.Request.Payments.Where(p => p.IsPaid).OrderBy(p => p.PaymentDate).ToList(); }
-        @if (payments.Count() > 0)
-        {
-            <div class="container col-10">
-                @for (int i = 0; i < payments.Count(); i++)
-                {
-
-                    <div class="row">
-                        <div class="col-3 pl-0">
-                            <div class="form-group">
-                                <label class="control-label">Date</label>
-                                <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="@payments[i].PaymentReferenceDate" disabled />
-                            </div>
-                        </div>
-
-                        <div class="col-3">
-                            <div class="payment-type form-group">
-                                <label class="control-label">Payment Type</label>
-                                <input class="form-control-plaintext border-bottom" value="@payments[i].PaymentType.PaymentTypeDescription" disabled />
-                            </div>
-                        </div>
-                        @if (payments[i].PaymentTypeID == 1)
-                        {
-                            <div class="col-3">
-                                <div class="form-group payment-account">
-                                    <label class="control-label">Account ID</label>
-                                    <input class="form-control-plaintext border-bottom reference-1" disabled @*vaule="@payments[i].CreditCard.CardNumber"*@ />
-                                </div>
-                            </div>
-                        }
-                        @if (payments[i].PaymentTypeID == 3)
-                        {
-                            <div class="col-3">
-                                <div class="form-group payment-reference">
-                                    <label class="control-label">Payment Reference</label>
-                                    <input class="form-control-plaintext border-bottom reference-1" disabled value="@payments[i].Reference" />
-                                </div>
-                            </div>
-                        }
-                        @if (payments[i].PaymentTypeID == 2)
-                        {
-                            <div class="col-3">
-                                <div class="form-group payment-reference">
-                                    <label class="control-label">Check Number</label>
-                                    <input class="form-control-plaintext border-bottom reference-1" disabled value="@payments[i].CheckNumber" />
-                                </div>
-                            </div>
-                        }
-                    </div>
-
-                }
+        <div class="row">
+            <div class="col-2">
+                <label class="control-label" asp-for="Request.Installments">Payments</label>
+                <input asp-for="Request.Installments" class="form-control-plaintext border-bottom " readonly />
             </div>
-        }
-    </div>
+            @{var payments = Model.Request.Payments.Where(p => p.IsPaid).OrderBy(p => p.PaymentDate).ToList(); }
+            @if (payments.Count() > 0)
+            {
+                <div class="container col-10">
+                    @for (int i = 0; i < payments.Count(); i++)
+                    {
 
-        
-}
-    </div>
+                        <div class="row">
+                            <div class="col-3 pl-0">
+                                <div class="form-group">
+                                    <label class="control-label">Date</label>
+                                    <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="@payments[i].PaymentReferenceDate" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-3">
+                                <div class="payment-type form-group">
+                                    <label class="control-label">Payment Type</label>
+                                    <input class="form-control-plaintext border-bottom" value="@payments[i].PaymentType.PaymentTypeDescription" disabled />
+                                </div>
+                            </div>
+                            @if (payments[i].PaymentTypeID == 1)
+                            {
+                                <div class="col-3">
+                                    <div class="form-group payment-account">
+                                        <label class="control-label">Account ID</label>
+                                        <input class="form-control-plaintext border-bottom reference-1" disabled @*vaule="@payments[i].CreditCard.CardNumber"*@ />
+                                    </div>
+                                </div>
+                            }
+                            @if (payments[i].PaymentTypeID == 3)
+                            {
+                                <div class="col-3">
+                                    <div class="form-group payment-reference">
+                                        <label class="control-label">Payment Reference</label>
+                                        <input class="form-control-plaintext border-bottom reference-1" disabled value="@payments[i].Reference" />
+                                    </div>
+                                </div>
+                            }
+                            @if (payments[i].PaymentTypeID == 2)
+                            {
+                                <div class="col-3">
+                                    <div class="form-group payment-reference">
+                                        <label class="control-label">Check Number</label>
+                                        <input class="form-control-plaintext border-bottom reference-1" disabled value="@payments[i].CheckNumber" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                    }
+                </div>
+            }
+        </div>
+
+
+    }
+</div>
 
