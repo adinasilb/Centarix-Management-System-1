@@ -1,16 +1,21 @@
 ﻿var isEmployee = function () {
+	console.log('is employee ' + ($("#NewEmployee_EmployeeStatusID").val() != "4"))
 	return $("#NewEmployee_EmployeeStatusID").val() != "4";
 }
 var isEmployeeOnly = function () {
+	console.log('is employee only' + $("#NewEmployee_EmployeeStatusID").val() == "1")
 	return $("#NewEmployee_EmployeeStatusID").val() == "1";
 }
 var isUserAndIsNotEdit = function () {
+	console.log('is user and not in edit' + $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false)
 	return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false;
 }
 var isEdit = function () {
+	console.log('is edit' + $('#myForm').hasClass('editUser'))
 	return $('#myForm').hasClass('editUser');
 }
 var isUser = function () {
+	console.log('is user' + $("#NewEmployee_EmployeeStatusID").val() == "4")
 	return $("#NewEmployee_EmployeeStatusID").val() == "4";
 }
 $.validator.addMethod("validTime", function (value, element) {
@@ -101,7 +106,7 @@ $('.usersForm').validate({
 		},
 		"TimeSpan-HoursPerDay": {
 			required: isEmployeeOnly,
-			validHours: true
+			validHours: isEmployeeOnly
         },
 		"NewEmployee.VacationDays": {
 			required: isEmployeeOnly,
