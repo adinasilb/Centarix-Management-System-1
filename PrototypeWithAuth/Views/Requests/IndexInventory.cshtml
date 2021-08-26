@@ -9,7 +9,10 @@
     ViewData["Title"] = "Index";
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
-
+    if (AppUtility.IsAjaxRequest(this.Context.Request))
+    {
+        Layout = null;
+    }
 
     bool search = false;
     if (TempData["Search"] != null)

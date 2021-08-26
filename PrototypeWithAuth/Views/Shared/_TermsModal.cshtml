@@ -108,6 +108,7 @@
         }
         else {
             $('.activeSubmit').removeClass('disabled-submit')
+            $(".submitTerms").prop('disabled', true)
             $("#loading").show();
             $("#RedirectAction").val(window.location.href);
             //alert("window: " + window.location.href);
@@ -124,6 +125,7 @@
                 cache: false,
                 success: function (data) {
                     $('.termsModalForm .temprequesthiddenfors').html('');
+                    $(".submitTerms").prop('disabled', false)
                     if (($("#SectionType").val() == "Operations" || $("#masterSectionType").val() == "Operations") && data == '') {
                         //alert("if 1");
                         window.location.href = "/Requests/Index?PageType=OperationsRequest&SectionType=Operations&RequestStatusID=2&SidebarType=List";
@@ -144,10 +146,11 @@
                     return true;
                 },
                 error: function (jqxhr) {
+                    console.log('terms error')
                     if (jqxhr.status == 500) {
                         $.fn.OpenModal('termsModal', 'terms', jqxhr.responseText);
                     }
-
+                    $(".submitTerms").prop('disabled', false)
                     $("#loading").hide();
                     return true;
                 }

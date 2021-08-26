@@ -2695,6 +2695,10 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
                 }
+                else if(tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
+                {
+                    tempRequestListViewModel.RequestIndexObject.RequestStatusID = 6; //redirect to requests instead of received
+                }
                 //should this be added?
                 /*//uncurrent the one we're on
                 await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);*/
@@ -4433,9 +4437,10 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> OrderLateModal(Request request)
+        public async Task<IActionResult> OrderLateModal(Request requestFromView)
         {
-            request = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.ApplicationUserCreator).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
+            var request = _context.Requests.Where(r => r.RequestID == requestFromView.RequestID).Include(r => r.ApplicationUserCreator).Include(r => r.ParentRequest).Include(r => r.Product)
+                .ThenInclude(p => p.Vendor).FirstOrDefault();
             //instatiate mimemessage
             var message = new MimeMessage();
 
@@ -4487,7 +4492,8 @@ namespace PrototypeWithAuth.Controllers
                 client.Disconnect(true);
 
             }
-            return RedirectToAction("NotificationsView", new { DidntArrive = true });
+            //return RedirectToAction("NotificationsView", new { DidntArrive = true });
+            return new EmptyResult();
         }
 
 
@@ -5296,17 +5302,7 @@ namespace PrototypeWithAuth.Controllers
                 //}
                 string action;
                 tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
-                if (tempRequestListViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased ||
-                    tempRequestListViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.SaveOperations)
-                {
-                    action = "TermsModal";
-                }
-                else
-                {
-                    await RemoveTempRequestAsync(newTempRequestJson.GuidID);
-                    action = "_IndexTableWithCounts";
-                    return await RedirectRequestsToShared(action, tempRequestListViewModel.RequestIndexObject);
-                }
+                action = "TermsModal";
                 Response.StatusCode = 200;
                 return RedirectToAction(action, tempRequestListViewModel.RequestIndexObject);
             }
@@ -5352,16 +5348,15 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel, TempRequestListViewModel tempRequestListViewModel, bool isCancel = false)
         {
+            
             if (isCancel)
             {
-                if (isCancel)
-                {
-                    DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
-                    DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
-                    await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
-                    return new EmptyResult();
-                }
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
+                await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
+                return new EmptyResult();
             }
+            
             var r = await SaveTermsModalAsync(termsViewModel, tempRequestListViewModel);
             if (r.RedirectToActionResult.ActionName == "" && r.RedirectToActionResult.ControllerName == "")
             {

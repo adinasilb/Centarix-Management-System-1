@@ -8,7 +8,7 @@
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('late-order');">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
+            <form action="" method="post" id="myForm" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
                 @Html.HiddenFor(r => r.RequestID)
                 <div class="modal-header border-0 pt-0 px-0 modal-header-padding">
                     <div class="container p-0">
@@ -31,7 +31,7 @@
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
-                        <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin" asp-action="OrderLateModal" value="Send" />
+                        <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin send-order-late-email" @*asp-action="OrderLateModal"*@ value="Send" />
                         <button type="button" class="custom-button custom-cancel cancel-email" data-dismiss="modal" onclick="$.fn.CloseModal('late-order');">Cancel</button>
                     </div>
                 </div>
@@ -39,3 +39,30 @@
         </div>
     </div>
 </div>
+<script>
+    $('.send-order-late-email').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation()
+        console.log('send order late email')
+        var formData = new FormData($("#myForm")[0]);
+        $('.send-order-late-email').prop('disabled', true);
+        $.ajax({
+            processData: false,
+            contentType: false,
+            async: true,
+            url: "/Requests/OrderLateModal",
+            type: 'POST',
+            data: formData,
+            success: function (data) {
+                $('.send-order-late-email').prop('disabled', false);
+                $.fn.CloseModal('late-order');
+                //$('.render-body').html(data);
+                //$('.order-late').bind('click');
+            },
+            error: function (data) {
+                console.log('in error of send email')
+                $('.send-order-late-email').prop('disabled', false);
+            }
+        })
+    })
+</script>

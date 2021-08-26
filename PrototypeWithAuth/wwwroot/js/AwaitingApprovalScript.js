@@ -1,10 +1,12 @@
 ﻿$(".approve-hours").off('click').click(function (e) {
+    $(this).prop('disabled', true)
 	$.ajax({
 		async: true,
 		url: "ApproveHours" + '?id=' + $(this).val(),
 		type: 'GET',
 		cache: false,
-		success: function (data) {
+        success: function (data) {
+            $(this).prop('disabled', false)
 			$(".render-partial").html(data);
 		}
 	});
@@ -29,6 +31,7 @@ function OpenDenyApprovalModal (id) {
 
 $("#submit-deny-approval-request").click(function (e) {
     e.preventDefault();
+    $("#submit-deny-approval-request").prop('disabled', true)
     var formData = new FormData($("#denyForm")[0]);
     $itemurl = '/ApplicationUsers/DenyApprovalRequestModal';
     $.ajax({
@@ -40,6 +43,12 @@ $("#submit-deny-approval-request").click(function (e) {
         type: 'POST',
         cache: true,
         success: function (data) {
+            $("#submit-deny-approval-request").prop('disabled', false)
+            $.fn.CloseModal('deny-approval');
+            $(".render-partial").html(data);
+        },
+        error: function (data) {
+            $("#submit-deny-approval-request").prop('disabled', false)
             $.fn.CloseModal('deny-approval');
             $(".render-partial").html(data);
         }

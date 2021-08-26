@@ -70,6 +70,7 @@
 <script>
     $(".approve-cart").off('click').on("click", function (e) {
         e.preventDefault();
+        $(".approve-cart").prop('disabled', true)
         console.log("approve cart");
         $("#loading").show();
         var val = $(this).attr("value");
@@ -82,6 +83,7 @@
                 type: "GET",
                 cache: false,
                 success: function (data) {
+                    $(".approve-cart").prop('disabled', false)
                     $.fn.CloseModal("cart-total");
                     $("._IndexTableWithCounts").html(data);
                     $("#loading").hide();
@@ -91,7 +93,7 @@
                     if (jqxhr.status == 500) {
                         $.fn.OpenModal('cart-total-modal', 'cart-total', jqxhr.responseText)
                     }
-
+                    $(".approve-cart").prop('disabled', false)
                     $("#loading").hide();
                     return true;
                 }

@@ -1060,9 +1060,11 @@ $(function () {
 	});
 	$("#entry").off('click').click(function (e) {
 		e.preventDefault();
+		console.log('preventing default')
 	});
 	$("#exit").off('click').click(function (e) {
 		e.preventDefault();
+		console.log('preventing default')
 	});
 	$('.monthsHours .select-dropdown').off('change').change(function (e) {
 		console.log(".monthsHours chnage")
@@ -1309,19 +1311,18 @@ $(function () {
 				//	alert("else")
 					$(".render-body").html(data);
 				}
+				$(this).prop('disabled', false)
 			}
-
 		});
 	}
-
-
 
 	$("#saveOffDay").off('click').click(function (e) {
 		e.preventDefault();
 
 		var pageType = $('#masterPageType').val()
-
+		$(this).prop('disabled', true)
 		$.fn.SaveOffDays("OffDayModal", pageType, "");
+		console.log('got here')
 	});
 
 
