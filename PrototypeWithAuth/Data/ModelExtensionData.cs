@@ -802,7 +802,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 204,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "",
+                    ProductSubcategoryDescription = "Solutions",
                     ImageURL = "/images/css/CategoryImages/reagents/chemical_solution2.png"
                 },
                 new ProductSubcategory

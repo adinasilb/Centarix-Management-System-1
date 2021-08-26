@@ -5551,8 +5551,8 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public async Task UploadRequestsFromExcel()
         {
-            var InventoryFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\inventoryexcel2.csv";
-            var POFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\_2019.xlsx";
+            var InventoryFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\FINAL excel for upload 25-08WithFakeEmails.csv";
+            var POFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\orders-Grid view.csv";
 
             var lineNumber = 0;
 
@@ -5560,7 +5560,7 @@ namespace PrototypeWithAuth.Controllers
             var excelInvoices = new ExcelQueryFactory(POFileName);
             try
             {
-                var requests = from r in excelRequests.Worksheet<UploadExcelModel>("inventory excel") select r;
+                var requests = from r in excelRequests.Worksheet<UploadExcelModel>("inventory") select r;
                 var requestsInvoice = from i in excelInvoices.Worksheet<UploadInvoiceExcelModel>("orders") select i;
                 var lastSerialNumber = int.Parse(_context.Products.IgnoreQueryFilters().Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == 1).OrderBy(p => p).LastOrDefault()?.SerialNumber?.Substring(1) ?? "1");
                 var currency = AppUtility.CurrencyEnum.USD;
@@ -5574,15 +5574,15 @@ namespace PrototypeWithAuth.Controllers
                         try
                         {
                             var categories = await _context.ProductSubcategories.IgnoreQueryFilters().Include(pc => pc.ParentCategory).Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
-                            var requestedBy = _context.Employees.Where(e => e.Email == r.RequstedBy).FirstOrDefault()?.Id;
-                            var receivedBy = _context.Employees.Where(e => e.Email == r.ReceivedBy).FirstOrDefault()?.Id;
-                            var orderedBy = _context.Employees.Where(e => e.Email == r.OrderedBy).FirstOrDefault()?.Id;
-                            var vendorID = _context.Vendors.Where(v => v.VendorEnName == r.VendorName).Select(v => v.VendorID).FirstOrDefault();
+                            var requestedBy = _context.Employees.Where(e => e.Email.ToLower() == r.RequstedBy.ToLower()).FirstOrDefault()?.Id;
+                            var receivedBy = _context.Employees.Where(e => e.Email.ToLower() == r.ReceivedBy.ToLower()).FirstOrDefault()?.Id;
+                            var orderedBy = _context.Employees.Where(e => e.Email.ToLower() == r.OrderedBy.ToLower()).FirstOrDefault()?.Id;
+                            var vendorID = _context.Vendors.Where(v => v.VendorEnName.ToLower() == r.VendorName.ToLower()).Select(v => v.VendorID).FirstOrDefault();
                             //check if product exists based on vendor catalog number
                             if (vendorID == 0)
                             {
 
-                                WriteErrorToFile("Row " + lineNumber + " did not have a proper vendor");
+                                WriteErrorToFile("Row " + lineNumber + " did not have a proper vendor: "+r.VendorName);
                                 _context.ChangeTracker.Entries()
                                     .Where(e => e.Entity != null).ToList();
 
@@ -5620,6 +5620,12 @@ namespace PrototypeWithAuth.Controllers
 
 
                             var exchangeRate = AppUtility.GetExchangeRateByDate(r.DateOrdered);
+                            if(exchangeRate ==0.0m)
+                            {
+                                WriteErrorToFile("Row " + lineNumber + "exchangerate came in 0");
+                                _context.ChangeTracker.Entries()
+                                    .Where(e => e.Entity != null).ToList();
+                            }
                             //cost = cost * exchangeRate; //always from quartzy in dollars        
                             int parentRequestID = 0;
                             if (r.OrderNumber != "")
@@ -5650,10 +5656,10 @@ namespace PrototypeWithAuth.Controllers
                             request.RequestStatusID = 3;
                             request.ApplicationUserReceiverID = receivedBy;
                             request.ArrivalDate = r.DateReceived;
-                            request.Cost = r.TotalPrice * 3.2M;
+                            request.Cost = r.TotalPrice * exchangeRate;
                             request.Currency = currency.ToString();
                             request.Unit = r.Unit;
-                            request.ExchangeRate = 3.2M;
+                            request.ExchangeRate =exchangeRate;
                             request.CreationDate = r.DateRequested;
                             request.ParentQuoteID = null;
                             request.OrderType = orderType;
