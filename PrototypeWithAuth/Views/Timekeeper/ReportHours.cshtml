@@ -59,7 +59,7 @@
 
                     </div>
                     <input type="hidden" value="@user.Id" id="userid" />
-                    <input class="d-none" id="entry" value="@Model.Entry?.ToString("MMMM") @Model.Entry?.Day, @Model.Entry?.Year @Model.Entry?.Hour:@Model.Entry?.Minute:@Model.Entry?.Second" />
+                    <input class="d-none" id="entryTime" value="@Model.Entry?.ToString("MMMM") @Model.Entry?.Day, @Model.Entry?.Year @Model.Entry?.Hour:@Model.Entry?.Minute:@Model.Entry?.Second" />
                 </div>
             </div>
             <div class="col-4">
@@ -134,7 +134,8 @@
                     @Html.HiddenFor(e => e.EntryExitEnum)
                     <div class="row entry-exit-background p-5  mt-5">
                         <div class="col-6 between-button-margin my-3 text-right">
-                            <button id="entry" class="no-box-shadow border-0 rounded-pill @entryClasses text-white entry-exit-button" @isEntryDisabled type="submit" asp-action="ReportHours">
+                            <button id="entry" class="no-box-shadow border-0 rounded-pill @entryClasses text-white entry-exit-button" @isEntryDisabled type="submit" 
+                                    asp-action="ReportHours">
                                 <span>
                                     <i class="icon-entry-24px" style=" font-size: 3rem; top:.25rem; position:relative;">
                                     </i>@entryDescription
@@ -196,7 +197,7 @@
         //  s = checkTime(s);
         document.getElementById('time').innerHTML =
             h + ":" + m;
-        var entry = new Date($('#entry').val())
+        var entry = new Date($('#entryTime').val())
         var diff = today.getTime() - entry.getTime();
 
         var days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -219,6 +220,7 @@
         return i;
     }
     $('.delete-notification').on('click', function () {
+        $('.delete-notification').prop('disabled', true)
         $.ajax({
             traditional: true,
             async: true,
@@ -226,10 +228,12 @@
             type: 'POST',
             cache: false,
             success: function (newData) {
+                $('.delete-notification').prop('disabled', false)
                 $('.render-body').html(newData);
             },
             error: function (xhr) {
                 console.log('error deleting notification');
+                $('.delete-notification').prop('disabled', false)
                 $('.render-body').html(xhr.responseText);
             }
         });
