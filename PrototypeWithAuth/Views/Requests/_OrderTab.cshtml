@@ -117,6 +117,7 @@
 
         }
         else {
+            $(".submitOrder").prop('disabled', true)
             $('.activeSubmit').removeClass('disabled-submit')
             $("#loading").show();
             var orderType = $(this).attr("value");
@@ -150,7 +151,8 @@
                 //    $(".outer-add-item-view").html(data);
                 //}
                 //else {
-                    $.fn.OpenModal('modalStep1', 'step-1', data)
+                $.fn.OpenModal('modalStep1', 'step-1', data)
+                $(".submitOrder").prop('disabled', false)
                 //}
                 /*$("temprequesthiddenfors").remove();*/
                 $("#loading").hide();
@@ -160,6 +162,7 @@
                 console.log("in error of ajax call ");
                 $("#loading").hide();
                 $('.error-message').html(jqxhr.responseText);
+                $(".submitOrder").prop('disabled', false)
             }
             
         });

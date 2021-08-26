@@ -59,7 +59,8 @@
                         <br />
                         <div class="modal-footer-no">
                             <div class="text-center modal-footer-mt">
-                                <input id="submitAddLocation" type="submit" value="Save" @*asp-action="AddLocation"*@ class="lab-man-background-color custom-button custom-button-font  between-button-margin activeSubmit" />@*style="margin-right:11rem;"*@
+                                <input id="submitAddLocation" type="submit" value="Save" @*asp-action="AddLocation"*@ class="lab-man-background-color 
+                                       custom-button custom-button-font  between-button-margin activeSubmit" />@*style="margin-right:11rem;"*@
                                 @*@if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
                                     {
                                         <button class="btn btn-link load-add-location-type float-none" style="color: #2196F3;">[Add Location Type]</button>
@@ -109,7 +110,8 @@
         }
         else {
             $("#loading").show();
-            $('.activeSubmit ').removeClass('disabled-submit')
+            //$('.activeSubmit ').removeClass('disabled-submit')
+            $('#submitAddLocation').prop('disabled', true)
             var formData = new FormData($("#myForm")[0]);
             $.ajax({
                 contentType: false,
@@ -123,6 +125,7 @@
                 cache: false,
                 success: function (data) {
                     $("#loading").hide();
+                    $('#submitAddLocation').prop('disabled', false)
                     $.fn.CloseModal('add-location');
                     $('.render-body').html(data);
                     return true;
@@ -132,6 +135,7 @@
                         alert ("browser timed out. you may not see location for another couple minutes")
                         $.fn.CloseModal('add-location');
                     }
+                    $('#submitAddLocation').prop('disabled', false)
                 }
             })
         }
