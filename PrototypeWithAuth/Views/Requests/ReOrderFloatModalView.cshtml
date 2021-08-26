@@ -108,8 +108,8 @@
                     <div class="form-group mx-auto text-center mb-4">
                         <div class="row">
                             <div class="col-4">
-                                <button type="submit" name="OrderType" asp-action="ReOrderFloatModalView" value="@AppUtility.OrderTypeEnum.RequestPriceQuote"
-                                        class="p-0 custom-order-inv custom-button create-modal-submit ">
+                                <button type="submit" name="OrderType" @*asp-action="ReOrderFloatModalView"*@ value="@AppUtility.OrderTypeEnum.RequestPriceQuote"
+                                        class="p-0 custom-order-inv custom-button create-modal-submit submitOrder">
                                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
                                 </button>
 
@@ -183,7 +183,8 @@
             }
         }
         else {
-            $('.activeSubmit').removeClass('disabled-submit')
+            //$('.activeSubmit').removeClass('disabled-submit')
+            $('.submitOrder').prop('disabled', true)
             $("#loading").show();
             var formData = new FormData($(".reorderForm")[0]);
             console.log(...formData)
@@ -198,16 +199,25 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    $(".modal .temprequesthiddenfors").html('');
-                    //if (orderType == 'AddToCart') {
-                    //    $("_IndexTableData").html(data);
-                    //    $.fn.CloseModal('reorder-item');
-                    //}
-                    //else {
-                    //alert("$.fn.OpenModal('modalStep1', 'step-1', data)");
-                    $.fn.OpenModal('modalStep1', 'step-1', data)
-                    //}
                     $("#loading").hide();
+
+                    if (orderType == 'RequestPriceQuote') {
+                        $('.submitOrder').prop('disabled', false)
+                        $.fn.CloseModal('reorder-item')
+                        $('.render-body').html(data);
+                    }
+                    else {
+                        $(".modal .temprequesthiddenfors").html('');
+                        //if (orderType == 'AddToCart') {
+                        //    $("_IndexTableData").html(data);
+                        //    $.fn.CloseModal('reorder-item');
+                        //}
+                        //else {
+                        //alert("$.fn.OpenModal('modalStep1', 'step-1', data)");
+                        $.fn.OpenModal('modalStep1', 'step-1', data)
+                        $('.submitOrder').prop('disabled', false)
+                        //}
+                    }
                     return true;
                 },
                 error: function (jqxhr) {
@@ -215,8 +225,8 @@
                         console.log('error');
                         $.fn.OpenModal('reorderModal', 'reorder-item', jqxhr.responseText)
                     }
-
                     $("#loading").hide();
+                    $('.submitOrder').prop('disabled', false)
                     return true;
                 }
             });

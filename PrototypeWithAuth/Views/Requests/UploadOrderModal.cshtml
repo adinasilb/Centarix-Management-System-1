@@ -156,8 +156,7 @@
             $("#loading").show();
             var formData = new FormData($(".uploadQuoteForm")[0]);
             //alert(...formData);
-            var orderType = $("#RequestIndexObject_OrderType").val();
-            //alert("orderType: " + orderType);
+            $('.submit-order').prop('disabled', true);
             $.ajax({
                 contentType: false,
                 processData: false,
@@ -168,24 +167,10 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    if (orderType == "SaveOperations" || orderType == "AlreadyPurchased") {
-                        //alert("opening terms modal");
-                        $('.modal .temprequesthiddenfors').html('');
-                        $.fn.OpenModal("termsModal", "terms", data);
-                    }
-                    else {
-                        $(".save-item").removeClass("save-item").off('click')
-                        if ($('#masterPageType').val() == "RequestRequest") {
-                            $(".render-body").html(data)
-                        }
-                        else if ($('#masterPageType').val() == "RequestCart") {
-                            $(".render-body").html(data)
-                        }
-                        else {
-                            $("._IndexTableData").html(data);
-                        }
-                        $.fn.CloseModal("step-1");
-                    }
+                    //alert("opening terms modal");
+                    $('.modal .temprequesthiddenfors').html('');
+                    $.fn.OpenModal("termsModal", "terms", data);
+                    $('.submit-order').prop('disabled', false);
                     $("#loading").hide();
                     return true;
                 },
@@ -193,6 +178,7 @@
                     if (jqxhr.status == 500) {
                         $.fn.OpenModal('modalStep1', 'step-1', jqxhr.responseText)
                     }
+                    $('.submit-order').prop('disabled', false);
                     $("#loading").hide();
                     return true;
                 }

@@ -173,6 +173,7 @@
         }
         else {
             $('.activeSubmit').removeClass('disabled-submit')
+            $('.submitQuote').prop('disabled', true);
             $("#loading").show();
             var formData = new FormData($(".uploadQuoteForm")[0]);
             $.ajax({
@@ -189,6 +190,7 @@
                     console.log("status code" + jqxhr.status)
                     $('.modal .temprequesthiddenfors').html('');
                     console.log($("#OrderTypeEnum").val())
+                    $('.submitQuote').prop('disabled', false);
                     if ($("#OrderTypeEnum").val() == "AddToCart" || jqxhr.status == "210") {
                         $.fn.CloseModal("step-1");
                         $.fn.CloseModal("edits");
@@ -218,7 +220,7 @@
                     if (jqxhr.status == 500) {
                         $.fn.OpenModal('modalStep1', 'step-1', jqxhr.responseText)
                     }
-
+                    $('.submitQuote').prop('disabled', false);
                     $("#loading").hide();
                     return true;
                 }

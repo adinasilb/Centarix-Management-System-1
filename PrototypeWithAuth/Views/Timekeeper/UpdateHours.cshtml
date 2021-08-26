@@ -83,6 +83,7 @@
         }
         else {
             $('.activeSubmit').removeClass('disabled-submit')
+            $('.update-hours').prop('disabled', true)
             var pageType = $(this).attr("data-val");
             var url = "/Timekeeper/UpdateHours/?PageType=" + pageType;
             console.log("url: " + url);
@@ -97,11 +98,13 @@
                 data: formData,
                 cache: true,
                 success: function (data) {
-                        //alert(data);
-                        $('.render-body').html(data);
-                        $.fn.CloseModal("update-time-worked");
+                    //alert(data);
+                    $('.render-body').html(data);
+                    $('.update-hours').prop('disabled', false)
+                    $.fn.CloseModal("update-time-worked");
                 },
                 error: function (jqxhr) {
+                    $('.update-hours').prop('disabled', false)
                     $.fn.OpenModal("modal", "update-time-worked", jqxhr.responseText);
                 }
             });

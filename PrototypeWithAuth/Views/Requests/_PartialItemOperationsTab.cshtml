@@ -202,7 +202,7 @@
         {
             <div class="col-md-3 ">
                 <label asp-for="Request.ArrivalDate" class="control-label"></label>
-                <input asp-for="Request.ArrivalDate" class="form-control-plaintext border-bottom" disabled type="text" />
+                <input asp-for="Request.ArrivalDate" class="form-control-plaintext border-bottom" disabled type="text" asp-format="@AppUtility.AspDateFormatString" />
             </div>
             <div class="col-md-3">
                 <label class="control-label">Receiver</label>
@@ -394,7 +394,7 @@
                             <div class="col-3 pl-0">
                                 <div class="form-group">
                                     <label class="control-label">Date</label>
-                                    <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="@payments[i].PaymentReferenceDate" disabled />
+                                    <input class="form-control-plaintext border-bottom" type="text" asp-for="@payments[i].PaymentReferenceDate" disabled asp-format="@AppUtility.AspDateFormatString"/>
                                 </div>
                             </div>
 
