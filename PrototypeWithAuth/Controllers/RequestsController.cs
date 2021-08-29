@@ -2406,7 +2406,7 @@ namespace PrototypeWithAuth.Controllers
                     //    requestItemViewModel.Request.ParentQuote = parentQuote;
                     //}
 
-                    var product = _context.Products.Include(p => p.Vendor).Include(p => p.ProductSubcategory).FirstOrDefault(v => v.ProductID == request.ProductID);
+                    var product = _context.Products.IgnoreQueryFilters().Include(p => p.Vendor).Include(p => p.ProductSubcategory).FirstOrDefault(v => v.ProductID == request.ProductID);
                     // product.ProductSubcategoryID = requestItemViewModel.Request.Product.ProductSubcategoryID;
                     product.VendorID = request.Product.VendorID;
                     product.CatalogNumber = request.Product.CatalogNumber;
