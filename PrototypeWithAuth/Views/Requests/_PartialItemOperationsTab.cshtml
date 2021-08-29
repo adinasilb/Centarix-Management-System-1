@@ -352,8 +352,9 @@
         {
             <div class="col-3">
                 <label class="control-label" asp-for="Request.PaymentStatus.PaymentStatusDescription">Terms</label>
-                <input asp-for="Request.PaymentStatus.PaymentStatusDescription" class="form-control-plaintext border-bottom" disabled />
-                <input type="hidden" asp-for="Request.PaymentStatusID" />
+                <input value="@Model.Request.PaymentStatus.PaymentStatusDescription" id="@(dynamicID)PaymentStatus.PaymentStatusDescription" name="@(dynamicName)PaymentStatus.PaymentStatusDescription"
+                       class="form-control-plaintext border-bottom" disabled />
+                <input type="hidden" value="@Model.Request.PaymentStatusID" id="@(dynamicID)PaymentStatusID" name="@(dynamicName)PaymentStatusID" />
             </div>
         }
     </div>
@@ -380,8 +381,8 @@
         </div>
         <div class="row">
             <div class="col-2">
-                <label class="control-label" asp-for="Request.Installments">Payments</label>
-                <input asp-for="Request.Installments" class="form-control-plaintext border-bottom " readonly />
+                <label asp-for="Request.Installments" class="control-label" >Payments</label>
+                <input name="@(dynamicName)Installments" id="@(dynamicID)Installments" value="@Model.Request.Installments" class="form-control-plaintext border-bottom " readonly />
             </div>
             @{var payments = Model.Request.Payments.Where(p => p.IsPaid).OrderBy(p => p.PaymentDate).ToList(); }
             @if (payments.Count() > 0)
