@@ -220,13 +220,13 @@
                 <div class="col-md-3 ">
                     <label asp-for="@Model.Request.Payments[0].Invoice.InvoiceNumber" class="control-label"></label>
                     <input name="@(dynamicName)Payments[0].Invoice.InvoiceNumber" id="@(dynamicID)Payments[0].Invoice.InvoiceNumber" value="@Model.Request.Payments[0].Invoice.InvoiceNumber"
-                           class="form-control-plaintext border-bottom @markReadOnlyClass" @disabled />
+                           class="form-control-plaintext border-bottom" @disabled />
                     <span for="@(dynamicID)Payments[0].Invoice.InvoiceNumber" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-md-3 ">
                     <label asp-for="@Model.Request.Payments[0].Invoice.InvoiceDate" class="control-label"></label>
                     <input name="@(dynamicName)Payments[0].Invoice.InvoiceDate" id="@(dynamicID)Payments[0].Invoice.InvoiceDate" value="@Model.Request.Payments[0].Invoice.InvoiceDate.GetElixirDateFormat()" 
-                           class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" type="text" @disabled />
+                           class="form-control-plaintext border-bottom datepicker " type="text" @disabled />
                     <span for="@(dynamicID)Payments[0].Invoice.InvoiceDate" class="text-danger-centarix"></span>
                 </div>
             }
@@ -235,13 +235,13 @@
                 <div class="col-md-3 ">
                     <label asp-for="@Model.Request.ParentRequest.SupplierOrderNumber" class="control-label"></label>
                     <input name="@(dynamicName)ParentRequest.SupplierOrderNumber" id="@(dynamicID)ParentRequest.SupplierOrderNumber" value="@Model.Request.ParentRequest.SupplierOrderNumber"
-                           class="form-control-plaintext border-bottom @markReadOnlyClass" type="text" @disabled/>
+                           class="form-control-plaintext border-bottom " type="text" @disabled/>
                     <span for="@(dynamicID)ParentRequest.SupplierOrderNumber" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-md-3">
                     <label asp-for="@Model.Request.ParentRequest.OrderDate" class="control-label"></label>
                     <input type="text" name="@(dynamicName)ParentRequest.OrderDate" id="@(dynamicID)ParentRequest.OrderDate" value="@Model.Request.ParentRequest.OrderDate.GetElixirDateFormat()" 
-                           class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" @disabled />
+                           class="form-control-plaintext border-bottom datepicker " @disabled />
                     <span for="@(dynamicID)Request.ParentRequest.OrderDate" class="text-danger-centarix"></span>
                 </div>
             }
@@ -250,7 +250,7 @@
                 <div class="col-md-3 ">
                     <label asp-for="@Model.Request.ParentRequest.OrderNumber" class="control-label"></label>
                     <input value="@Model.Request.ParentRequest.OrderNumber" id="@(dynamicID)ParentRequest.OrderNumber" name="@(dynamicName)ParentRequest.OrderNumber" 
-                           class="form-control-plaintext border-bottom @markReadOnlyClass" type="text" @disabled />
+                           class="form-control-plaintext border-bottom" type="text" @disabled />
                     <span for="@(dynamicID)ParentRequest.OrderNumber" class="text-danger-centarix"></span>
                 </div>
             }
