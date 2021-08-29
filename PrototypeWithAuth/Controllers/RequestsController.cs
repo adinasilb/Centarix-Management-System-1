@@ -2472,10 +2472,10 @@ namespace PrototypeWithAuth.Controllers
                                 if (!String.IsNullOrEmpty(comment.CommentText))
                                 {
                                     //save the new comment
-                                    comment.CommentTimeStamp = DateTime.Now;
                                     comment.RequestID = request.RequestID;
                                     if(comment.CommentID == 0)
                                     {
+                                        comment.CommentTimeStamp = DateTime.Now;
                                         _context.Entry(comment).State = EntityState.Added;
                                     } 
                                     else
