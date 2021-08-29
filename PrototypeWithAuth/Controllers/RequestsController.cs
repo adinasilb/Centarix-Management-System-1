@@ -2470,7 +2470,6 @@ namespace PrototypeWithAuth.Controllers
                                 if (!String.IsNullOrEmpty(comment.CommentText))
                                 {
                                     //save the new comment
-                                    comment.ApplicationUserID = currentUser.Id;
                                     comment.CommentTimeStamp = DateTime.Now;
                                     comment.RequestID = request.RequestID;
                                     _context.Update(comment);
@@ -4405,6 +4404,8 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> CommentInfoPartialView(String type, int index)
         {
             Comment comment = new Comment();
+            comment.ApplicationUser = _userManager.GetUserAsync(User).Result;
+            comment.ApplicationUserID = comment.ApplicationUser.Id;
             comment.CommentType = type;
             CommentsInfoViewModel commentsInfoViewModel = new CommentsInfoViewModel { Comment = comment, Index = index };
             return PartialView(commentsInfoViewModel);
