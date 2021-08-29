@@ -629,6 +629,23 @@ namespace PrototypeWithAuth.Controllers
             }
             return orderedLineTypes;
         }
+        private int GetSmallestLineTypeInListOfLines(IEnumerable<Line> lines)
+        {
+            var parentLines = lines.Where(l => l.ParentLineID == null).ToList();
+            var smallestLineTypeID = parentLines[0].LineTypeID;
+            while(parentLines.Count()>0)
+            {
+                var currNode = parentLines[0];
+                var children = lines.Where(l => l.LineType.LineTypeParentID == currNode.LineTypeID).ToList();
+                if(children.Count!=0)
+                {
+                    smallestLineTypeID = children[0].LineTypeID;                  
+                }
+                parentLines = children;
+            }
+
+            return smallestLineTypeID;
+        }
         private List<LineType> GetOrderLineTypeFromChildToParent()
         {
             List<LineType> orderedLineTypes = new List<LineType>();
@@ -1790,45 +1807,56 @@ namespace PrototypeWithAuth.Controllers
                     protocol.ProtocolVersionID = 0;
                     _context.Entry(protocol).State = EntityState.Added;
                     await _context.SaveChangesAsync();
-                    var protocolLines = _context.Lines.Include(l => l.LineType).Include(l => l.ParentLine).Include(l => l.LineChange).Include(l => l.FunctionLines).Where(l => l.ProtocolVersionID == protocolVersionID);
-                    List<Line> childLines = protocolLines.Where(l => l.LineType.LineTypeChildID == null).ToList();
-                    while (childLines.Count() > 0)
+                    var protocolLines = _context.Lines.Include(l => l.LineType).Include(l => l.ParentLine).Include(l => l.LineChange).Include(l => l.FunctionLines).Where(l => l.ProtocolVersionID == protocolVersionID).AsNoTracking();
+                    var childLineType = GetSmallestLineTypeInListOfLines(protocolLines);
+                    List<Line> childLines = protocolLines.Where(l => l.LineType.LineTypeID == childLineType).ToList();
+                    while (childLines?.Count() > 0)
                     {
-                        var distinctParentLines = childLines.Select(c => c.ParentLine).Distinct().ToList();
+                        var distinctParentLines = childLines.Select(c => c.ParentLine).Where(c=>c!=null).Distinct().ToList();
                         foreach (var parent in distinctParentLines)
                         {
                             var tempParentID = new TempLineID();
                             _context.Add(tempParentID);
                             await _context.SaveChangesAsync();
-                            foreach (var line in childLines.Where(l => l.ParentLineID == parent.LineID))
+                            var currChildLines = childLines.Where(l => l.ParentLineID == parent.LineID).ToList();
+                             parent.LineID = tempParentID.ID;
+                            parent.ProtocolVersionID = protocol.ProtocolVersionID;
+                            _context.Entry(parent).State = EntityState.Added;
+                            await _context.SaveChangesAsync();
+                            foreach (var line in currChildLines)
                             {
                                 var templineID = new TempLineID();
                                 _context.Add(templineID);
                                 await _context.SaveChangesAsync();
                                 line.LineID = templineID.ID;
                                 line.ParentLineID = tempParentID.ID;
+                                line.ProtocolVersionID = protocol.ProtocolVersionID;
                                 _context.Entry(line).State = EntityState.Added;
                                 await _context.SaveChangesAsync();
-                                line.LineChange.ToList().ForEach(lc => { lc.LineID = line.LineID; _context.Entry(lc).State = EntityState.Added; });
-                                await _context.SaveChangesAsync();
-                                line.FunctionLines.ToList().ForEach(lc => { lc.LineID = line.LineID; _context.Entry(lc).State = EntityState.Added; });
+                                line.FunctionLines.ToList().ForEach(lc => {
+                                    var functionLineID = new FunctionLineID();
+                                    _context.Add(functionLineID);
+                                    _context.SaveChanges();
+                                    lc.ID = functionLineID.ID; 
+                                    lc.LineID = line.LineID;
+                                    _context.Entry(lc).State = EntityState.Added; 
+                                });
                                 await _context.SaveChangesAsync();
                             }
-                            parent.LineID = tempParentID.ID;
-                            _context.Entry(parent).State = EntityState.Added;
-                            await _context.SaveChangesAsync();
+              
+
                         }
                         childLines = protocolLines.Where(l => l.LineType.LineTypeChildID == childLines.FirstOrDefault().LineTypeID).ToList();
 
-                        await transaction.CommitAsync();
+                   
                     }
+                    await transaction.CommitAsync();
                 }
                 catch (Exception ex)
                 {
 
                 }
 
-              
             }
 
             CreateProtocolsViewModel viewmodel = new CreateProtocolsViewModel();
