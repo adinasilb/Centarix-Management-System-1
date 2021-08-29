@@ -220,12 +220,13 @@ namespace PrototypeWithAuth.ViewModels
                     newIconList.Insert(resendIconIndex, placeholder);
                 }
                
-                var reorderIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink=="Reorder");
+                var reorderIconIndex = newIconList.FindIndex(ni => ni.TooltipTitle=="Reorder");
                 if(reorderIconIndex !=-1)
                 {
                     if(request.Product.UnitTypeID ==-1 || request.Product.ProductSubcategory.IsOldSubCategory)
                     {
                         newIconList.RemoveAt(reorderIconIndex);
+                        newIconList.Insert(reorderIconIndex, placeholder);
                     }
                 }
                 var morePopoverIndex = newIconList.FindIndex(ni => ni.IconAjaxLink=="popover-more");
