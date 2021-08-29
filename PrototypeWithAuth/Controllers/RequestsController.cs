@@ -2460,8 +2460,7 @@ namespace PrototypeWithAuth.Controllers
                         }*/
                         _context.Entry(request).State = EntityState.Modified;
                         _context.Entry(request.Product).State = EntityState.Modified;
-                        _context.Entry(request.ParentQuote).State = EntityState.Unchanged;
-                        var entries = _context.ChangeTracker.Entries();
+                        //var entries = _context.ChangeTracker.Entries();
                         await _context.SaveChangesAsync();
 
 
