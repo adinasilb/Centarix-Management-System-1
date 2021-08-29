@@ -5579,6 +5579,16 @@ namespace PrototypeWithAuth.Controllers
                             //check if product exists based on vendor catalog number
                             var productID = _context.Products.Where(p => p.VendorID == vendorID && p.CatalogNumber.ToLower() == r.CatalogNumber.ToLower()).Select(p => p.ProductID).FirstOrDefault();
                             var request = new Request() { };
+                            if (vendorID == 0)
+                            {
+
+                                WriteErrorToFile("Row " + lineNumber + " did not have a proper vendor");
+                                _context.ChangeTracker.Entries()
+                                    .Where(e => e.Entity != null).ToList();
+
+
+                                throw new Exception("failed to find vendor");
+                            }
                             if (productID == 0)
                             {
                                 var product = new Product()
