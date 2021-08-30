@@ -1059,9 +1059,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    
                     newRequest.RequestStatusID = 6;
-               
                     newRequest.Cost = 0;
                     //newRequest.ParentQuote = new ParentQuote();
                     newRequest.QuoteStatusID = 1;
@@ -2454,13 +2452,19 @@ namespace PrototypeWithAuth.Controllers
 
                         //_context.Update(requestItemViewModel.Request.Product.SubProject);
                         //_context.Update(requestItemViewModel.Request.Product);
-                        if (request.ParentQuote != null)
+                        /*if (request.ParentQuote != null)
                         {
                             _context.Update(request.ParentQuote);
                             await _context.SaveChangesAsync();
                             request.ParentQuoteID = request.ParentQuote.ParentQuoteID;
+                        }*/
+                        //_context.Update(request);
+                        _context.Entry(request).State = EntityState.Modified;
+                        _context.Entry(request.Product).State = EntityState.Modified;
+                        if (request.Payments?[0].Invoice != null)
+                        {
+                            _context.Entry(request.Payments[0].Invoice).State = EntityState.Modified; //todo: make a loop
                         }
-                        _context.Update(request);
                         await _context.SaveChangesAsync();
 
 
@@ -2471,10 +2475,18 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 if (!String.IsNullOrEmpty(comment.CommentText))
                                 {
-                                    //save the new comment                                    
+                                    //save the new comment
                                     comment.CommentTimeStamp = DateTime.Now;
                                     comment.RequestID = request.RequestID;
-                                    _context.Update(comment);
+                                    if (comment.CommentID == 0)
+                                    {
+                                        _context.Entry(comment).State = EntityState.Added;
+                                    }
+                                    else
+                                    {
+                                        _context.Entry(comment).State = EntityState.Modified;
+                                    }
+                                    //_context.Update(comment);
                                 }
                             }
                             await _context.SaveChangesAsync();
@@ -4406,7 +4418,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> CommentInfoPartialView(String type, int index)
         {
             Comment comment = new Comment();
-            comment.ApplicationUser =  _userManager.GetUserAsync(User).Result;
+            comment.ApplicationUser = _userManager.GetUserAsync(User).Result;
             comment.ApplicationUserID = comment.ApplicationUser.Id;
             comment.CommentType = type;
             CommentsInfoViewModel commentsInfoViewModel = new CommentsInfoViewModel { Comment = comment, Index = index };
@@ -5548,258 +5560,252 @@ namespace PrototypeWithAuth.Controllers
         //    return true;
         //}
 
-        //[HttpGet]
-        //public async Task UploadRequestsFromExcel()
-        //{
-        //    var InventoryFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\VendorsThatDidNotMakeItIn.xlsx";
-        //    var POFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\orders-Grid view.csv";
+        [HttpGet]
+        public async Task UploadRequestsFromExcel()
+        {
+            var InventoryFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\inventoryexcel2.csv";
+            var POFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\_2019.xlsx";
 
-        //    var lineNumber = 0;
+            var lineNumber = 0;
 
-        //    var excelRequests = new ExcelQueryFactory(InventoryFileName);
-        //    var excelInvoices = new ExcelQueryFactory(POFileName);
-        //    try
-        //    {
-        //        var requests = from r in excelRequests.Worksheet<UploadExcelModel>("inventory") select r;
-        //        var requestsInvoice = from i in excelInvoices.Worksheet<UploadInvoiceExcelModel>("orders") select i;
-        //        var lastSerialNumber = int.Parse(_context.Products.IgnoreQueryFilters().Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == 1).OrderBy(p => p).LastOrDefault()?.SerialNumber?.Substring(1) ?? "1");
-        //        var currency = AppUtility.CurrencyEnum.USD;
-        //        long lastParentRequestOrderNum = 1510;
-        //        var requestInvoiceList = requestsInvoice.ToList();
-        //        foreach (var r in requests)
-        //        {
-        //            lineNumber++;
-        //            using (var transaction = _context.Database.BeginTransaction())
-        //            {
-        //                try
-        //                {
-        //                    var categories = await _context.ProductSubcategories.IgnoreQueryFilters().Include(pc => pc.ParentCategory).Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
-        //                    var requestedBy = _context.Employees.Where(e => e.Email.ToLower() == r.RequstedBy.ToLower()).FirstOrDefault()?.Id;
-        //                    var receivedBy = _context.Employees.Where(e => e.Email.ToLower() == r.ReceivedBy.ToLower()).FirstOrDefault()?.Id;
-        //                    var orderedBy = _context.Employees.Where(e => e.Email.ToLower() == r.OrderedBy.ToLower()).FirstOrDefault()?.Id;
-        //                    var vendorID = _context.Vendors.Where(v => v.VendorEnName.ToLower() == r.VendorName.ToLower()).Select(v => v.VendorID).FirstOrDefault();
-        //                    //check if product exists based on vendor catalog number
-        //                    if (vendorID == 0)
-        //                    {
+            var excelRequests = new ExcelQueryFactory(InventoryFileName);
+            var excelInvoices = new ExcelQueryFactory(POFileName);
+            try
+            {
+                var requests = from r in excelRequests.Worksheet<UploadExcelModel>("inventory excel") select r;
+                var requestsInvoice = from i in excelInvoices.Worksheet<UploadInvoiceExcelModel>("orders") select i;
+                var lastSerialNumber = int.Parse(_context.Products.IgnoreQueryFilters().Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == 1).OrderBy(p => p).LastOrDefault()?.SerialNumber?.Substring(1) ?? "1");
+                var currency = AppUtility.CurrencyEnum.USD;
+                long lastParentRequestOrderNum = 1500;
+                var requestInvoiceList = requestsInvoice.ToList();
+                foreach (var r in requests)
+                {
+                    lineNumber++;
+                    using (var transaction = _context.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            var categories = await _context.ProductSubcategories.IgnoreQueryFilters().Include(pc => pc.ParentCategory).Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
+                            var requestedBy = _context.Employees.Where(e => e.Email == r.RequstedBy).FirstOrDefault()?.Id;
+                            var receivedBy = _context.Employees.Where(e => e.Email == r.ReceivedBy).FirstOrDefault()?.Id;
+                            var orderedBy = _context.Employees.Where(e => e.Email == r.OrderedBy).FirstOrDefault()?.Id;
+                            var vendorID = _context.Vendors.Where(v => v.VendorEnName == r.VendorName).Select(v => v.VendorID).FirstOrDefault();
+                            //check if product exists based on vendor catalog number
+                            var productID = _context.Products.Where(p => p.VendorID == vendorID && p.CatalogNumber.ToLower() == r.CatalogNumber.ToLower()).Select(p => p.ProductID).FirstOrDefault();
+                            var request = new Request() { };
+                            if (vendorID == 0)
+                            {
 
-        //                        WriteErrorToFile("Row " + lineNumber + " did not have a proper vendor: "+r.VendorName);
-        //                        _context.ChangeTracker.Entries()
-        //                            .Where(e => e.Entity != null).ToList();
-
-
-        //                        throw new Exception("failed to find vendor");
-        //                    }
-        //                    var productID = _context.Products.Where(p => p.VendorID == vendorID && p.CatalogNumber.ToLower() == r.CatalogNumber.ToLower()).Select(p => p.ProductID).FirstOrDefault();
-        //                    var request = new Request() { };
-        //                    if (productID == 0)
-        //                    {
-        //                        var product = new Product()
-        //                        {
-        //                            ProductName = r.ItemName,
-        //                            VendorID = vendorID,
-        //                            ProductSubcategoryID = categories.Where(ps => new string(ps.ProductSubcategoryDescription.ToLower().Where(c => char.IsLetterOrDigit(c)).ToArray()) == new string(r.ProductSubCategoryName.ToLower().Where(c => char.IsLetterOrDigit(c)).ToArray()) && ps.ParentCategory.ParentCategoryDescription.ToLower() == r.ParentCategoryName.ToLower()).Select(ps => ps.ProductSubcategoryID).FirstOrDefault(),
-        //                            CatalogNumber = r.CatalogNumber,
-        //                            SerialNumber = "L" + ++lastSerialNumber,
-        //                            ProductCreationDate = DateTime.Now,
-        //                            UnitTypeID = -1,
-        //                        };
-        //                        if (lineNumber > 548)
-        //                        {
-        //                            lineNumber = lineNumber;
-        //                        }
-        //                        _context.Entry(product).State = EntityState.Added;
-        //                        await _context.SaveChangesAsync();
-        //                        request.ProductID = product.ProductID;
-        //                    }
-        //                    else
-        //                    {
-        //                        request.ProductID = productID;
-        //                    }
-
-        //                    var orderType = AppUtility.OrderTypeEnum.ExcelUpload.ToString();
+                                WriteErrorToFile("Row " + lineNumber + " did not have a proper vendor");
+                                _context.ChangeTracker.Entries()
+                                    .Where(e => e.Entity != null).ToList();
 
 
-        //                    var exchangeRate = AppUtility.GetExchangeRateByDate(r.DateOrdered);
-        //                    if(exchangeRate ==0.0m)
-        //                    {
-        //                        WriteErrorToFile("Row " + lineNumber + "exchangerate came in 0");
-        //                        _context.ChangeTracker.Entries()
-        //                            .Where(e => e.Entity != null).ToList();
-        //                    }
-        //                    //cost = cost * exchangeRate; //always from quartzy in dollars        
-        //                    int parentRequestID = 0;
-        //                    if (r.OrderNumber != "")
-        //                    {
-        //                        parentRequestID = _context.ParentRequests.Where(pr => pr.QuartzyOrderNumber == r.OrderNumber).Select(pr => pr.ParentRequestID).FirstOrDefault();
+                                throw new Exception("failed to find vendor");
+                            }
+                            if (productID == 0)
+                            {
+                                var product = new Product()
+                                {
+                                    ProductName = r.ItemName,
+                                    VendorID = vendorID,
+                                    ProductSubcategoryID = categories.Where(ps => new string(ps.ProductSubcategoryDescription.ToLower().Where(c => char.IsLetterOrDigit(c)).ToArray()) == new string(r.ProductSubCategoryName.ToLower().Where(c => char.IsLetterOrDigit(c)).ToArray()) && ps.ParentCategory.ParentCategoryDescription.ToLower() == r.ParentCategoryName.ToLower()).Select(ps => ps.ProductSubcategoryID).FirstOrDefault(),
+                                    CatalogNumber = r.CatalogNumber,
+                                    SerialNumber = "L" + lastSerialNumber++,
+                                    ProductCreationDate = DateTime.Now,
+                                    UnitTypeID = -1,
+                                };
+                                if (lineNumber > 548)
+                                {
+                                    lineNumber = lineNumber;
+                                }
+                                _context.Entry(product).State = EntityState.Added;
+                                await _context.SaveChangesAsync();
+                                request.ProductID = product.ProductID;
+                            }
+                            else
+                            {
+                                request.ProductID = productID;
+                            }
 
-        //                    }
-        //                    if (parentRequestID != 0)
-        //                    {
-        //                        request.ParentRequestID = parentRequestID;
-        //                    }
-        //                    else
-        //                    {
-        //                        ParentRequest parentRequest = null;
-        //                        if (r.OrderNumber != null && r.OrderNumber.StartsWith("1") && r.OrderNumber.Length == 8)
-        //                        {
-        //                            parentRequest = new ParentRequest() { QuartzyOrderNumber = r.OrderNumber, OrderNumber = int.Parse(r.OrderNumber.Substring(3)), ApplicationUserID = orderedBy, OrderDate = r.DateOrdered };
-        //                        }
-        //                        else
-        //                        {
-        //                            parentRequest = new ParentRequest() { QuartzyOrderNumber = r.OrderNumber, OrderNumber = lastParentRequestOrderNum++, ApplicationUserID = orderedBy, OrderDate = r.DateOrdered };
-        //                        }
-        //                        _context.Entry(parentRequest).State = EntityState.Added;
-        //                        await _context.SaveChangesAsync();
-        //                        request.ParentRequestID = parentRequest.ParentRequestID;
-        //                    }
-        //                    request.ApplicationUserCreatorID = requestedBy;
-        //                    request.RequestStatusID = 3;
-        //                    request.ApplicationUserReceiverID = receivedBy;
-        //                    request.ArrivalDate = r.DateReceived;
-        //                    request.Cost = r.TotalPrice * exchangeRate;
-        //                    request.Currency = currency.ToString();
-        //                    request.Unit = r.Unit;
-        //                    request.ExchangeRate =exchangeRate;
-        //                    request.CreationDate = r.DateRequested;
-        //                    request.ParentQuoteID = null;
-        //                    request.OrderType = orderType;
-        //                    request.IncludeVAT = true;
-        //                    request.URL = r.Url;
-        //                    request.PaymentStatusID = 2;
-        //                    request.Installments = 1;
-        //                    _context.Entry(request).State = EntityState.Added;
-        //                    await _context.SaveChangesAsync();
-
-        //                    var requestLocationInstance = new RequestLocationInstance() { RequestID = request.RequestID, LocationInstanceID = -1 };
-        //                    _context.Entry(requestLocationInstance).State = EntityState.Added;
-        //                    await _context.SaveChangesAsync();
-        //                    try
-        //                    {
-        //                        try
-        //                        {
-        //                            if (r.OrderNumber != null && r.OrderNumber != "")
-        //                            {
-
-        //                                var invoiceRow = requestInvoiceList.Where(i => i.OrderNumber == r.OrderNumber && new string(i.CatalogNumber.ToLower().Where(c => char.IsLetterOrDigit(c)).ToArray()) == new string(r.CatalogNumber.ToLower().Where(c => char.IsLetterOrDigit(c)).ToArray()) && i.DocumentNumber != 0 && i.InvoiceNumber != "").FirstOrDefault();
-        //                                // var invoiceNumbers = invoiceRows.Select(ir => ir.InvoiceNumber).ToList();
-        //                                if (invoiceRow != null)
-        //                                {
-
-        //                                    WriteErrorToFile("this row went in perfectly");
-        //                                    await SetInvoiceAndPaymentsAccordingToResultsFromDB(r, request, invoiceRow);
-        //                                }
+                            var orderType = AppUtility.OrderTypeEnum.ExcelUpload.ToString();
 
 
-        //                                //var invoiceIds= invoices.Select(i=>i.InvoiceID);
-        //                                //if(invoiceIds.Count()==invoiceNumbers.Count() && invoiceNumbers.Count()>0)
-        //                                //{
-        //                                //    foreach(var invoiceID in invoiceIds)
-        //                                //    {
-        //                                //        var payment = new Payment() { InvoiceID = invoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
-        //                                //        _context.Entry(payment).State = EntityState.Added;
-        //                                //    }
+                            var exchangeRate = AppUtility.GetExchangeRateByDate(r.DateOrdered);
+                            //cost = cost * exchangeRate; //always from quartzy in dollars        
+                            int parentRequestID = 0;
+                            if (r.OrderNumber != "")
+                            {
+                                parentRequestID = _context.ParentRequests.Where(pr => pr.QuartzyOrderNumber == r.OrderNumber).Select(pr => pr.ParentRequestID).FirstOrDefault();
 
-        //                                //}
-        //                                //else if (invoiceIds.Count() != invoiceNumbers.Count() && invoiceNumbers.Count() > 0)
-        //                                //{
-        //                                //    foreach (var invoiceID in invoiceIds)
-        //                                //    {
-        //                                //        var payment = new Payment() { InvoiceID = invoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
-        //                                //        _context.Entry(payment).State = EntityState.Added;
-        //                                //    }
-        //                                //    var invoiceNumbersNotInDataBaseYet = invoiceRows.Where(i => !invoices.Select(i=>i.InvoiceNumber).Contains(i.InvoiceNumber));
-        //                                //    foreach(var ie in invoiceNumbersNotInDataBaseYet)
-        //                                //    {
-        //                                //        var invoice = new Invoice() {InvoiceNumber = ie.InvoiceNumber, InvoiceDate = ie.InvoiceDate };
-        //                                //        _context.Entry(invoice).State = EntityState.Added;
-        //                                //        await _context.SaveChangesAsync();
-        //                                //        var payment = new Payment() { InvoiceID = invoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID =3 , RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
-        //                                //        _context.Entry(payment).State = EntityState.Added;
+                            }
+                            if (parentRequestID != 0)
+                            {
+                                request.ParentRequestID = parentRequestID;
+                            }
+                            else
+                            {
+                                ParentRequest parentRequest = null;
+                                if (r.OrderNumber != null && r.OrderNumber.StartsWith("1") && r.OrderNumber.Length == 8)
+                                {
+                                    parentRequest = new ParentRequest() { QuartzyOrderNumber = r.OrderNumber, OrderNumber = int.Parse(r.OrderNumber.Substring(3)), ApplicationUserID = orderedBy, OrderDate = r.DateOrdered };
+                                }
+                                else
+                                {
+                                    parentRequest = new ParentRequest() { QuartzyOrderNumber = r.OrderNumber, OrderNumber = lastParentRequestOrderNum++, ApplicationUserID = orderedBy, OrderDate = r.DateOrdered };
+                                }
+                                _context.Entry(parentRequest).State = EntityState.Added;
+                                await _context.SaveChangesAsync();
+                                request.ParentRequestID = parentRequest.ParentRequestID;
+                            }
+                            request.ApplicationUserCreatorID = requestedBy;
+                            request.RequestStatusID = 3;
+                            request.ApplicationUserReceiverID = receivedBy;
+                            request.ArrivalDate = r.DateReceived;
+                            request.Cost = r.TotalPrice * 3.2M;
+                            request.Currency = currency.ToString();
+                            request.Unit = r.Unit;
+                            request.ExchangeRate = 3.2M;
+                            request.CreationDate = r.DateRequested;
+                            request.ParentQuoteID = null;
+                            request.OrderType = orderType;
+                            request.IncludeVAT = true;
+                            request.URL = r.Url;
+                            request.PaymentStatusID = 2;
+                            request.Installments = 1;
+                            _context.Entry(request).State = EntityState.Added;
+                            await _context.SaveChangesAsync();
 
-        //                                //    }
-        //                                //    //upload the invoice documents ---
-        //                                //}
-        //                                else // no invoice in the excel
-        //                                {
-        //                                    var invoiceRows = requestInvoiceList.Where(i => i.OrderNumber == r.OrderNumber && i.DocumentNumber > 0 && i.InvoiceNumber != "");
-        //                                    if (invoiceRows.Count() == 0)
-        //                                    {
-        //                                        WriteErrorToFile("There is not matching catalog number and order number to row" + lineNumber + " - added default invoice for requestID: " + request.RequestID);
+                            var requestLocationInstance = new RequestLocationInstance() { RequestID = request.RequestID, LocationInstanceID = -1 };
+                            _context.Entry(requestLocationInstance).State = EntityState.Added;
+                            await _context.SaveChangesAsync();
+                            try
+                            {
+                                try
+                                {
+                                    if (r.OrderNumber != null && r.OrderNumber != "")
+                                    {
 
-        //                                        var emptyInvoice = new Invoice() { InvoiceNumber = "000000000", InvoiceDate = r.DateOrdered };
-        //                                        _context.Entry(emptyInvoice).State = EntityState.Added;
-        //                                        await _context.SaveChangesAsync();
-        //                                        var payment = new Payment() { InvoiceID = emptyInvoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
-        //                                        _context.Entry(payment).State = EntityState.Added;
-        //                                        //no docments either....
+                                        var invoiceRow = requestInvoiceList.Where(i => i.OrderNumber == r.OrderNumber && new string(i.CatalogNumber.ToLower().Where(c => char.IsLetterOrDigit(c)).ToArray()) == new string(r.CatalogNumber.ToLower().Where(c => char.IsLetterOrDigit(c)).ToArray()) && i.DocumentNumber != 0 && i.InvoiceNumber != "").FirstOrDefault();
+                                        // var invoiceNumbers = invoiceRows.Select(ir => ir.InvoiceNumber).ToList();
+                                        if (invoiceRow != null)
+                                        {
 
-        //                                    }
-        //                                    else if (invoiceRows.Count() == 1)
-        //                                    {
+                                            WriteErrorToFile("this row went in perfectly");
+                                            await SetInvoiceAndPaymentsAccordingToResultsFromDB(r, request, invoiceRow);
+                                        }
 
-        //                                        WriteErrorToFile("this row went in okay - there was one row for the po # but not matching catlog number");
-        //                                        await SetInvoiceAndPaymentsAccordingToResultsFromDB(r, request, invoiceRows.FirstOrDefault());
-        //                                    }
-        //                                    else if (invoiceRows.Select(ir => ir.InvoiceNumber).Distinct().Count() < 2 && invoiceRows.Select(ir => ir.DocumentNumber).Distinct().Count() < 2)
-        //                                    {
-        //                                        WriteErrorToFile("this row went in okay - there was one row for the po # but not matching catlog number");
 
-        //                                        await SetInvoiceAndPaymentsAccordingToResultsFromDB(r, request, invoiceRows.FirstOrDefault());
-        //                                    }
-        //                                    else
-        //                                    {
-        //                                        WriteErrorToFile("There are duplicate matching invoices for " + lineNumber + " - added default invoice for requestID: " + request.RequestID);
+                                        //var invoiceIds= invoices.Select(i=>i.InvoiceID);
+                                        //if(invoiceIds.Count()==invoiceNumbers.Count() && invoiceNumbers.Count()>0)
+                                        //{
+                                        //    foreach(var invoiceID in invoiceIds)
+                                        //    {
+                                        //        var payment = new Payment() { InvoiceID = invoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
+                                        //        _context.Entry(payment).State = EntityState.Added;
+                                        //    }
 
-        //                                        var emptyInvoice = new Invoice() { InvoiceNumber = "000000000", InvoiceDate = r.DateOrdered };
-        //                                        _context.Entry(emptyInvoice).State = EntityState.Added;
-        //                                        await _context.SaveChangesAsync();
-        //                                        var payment = new Payment() { InvoiceID = emptyInvoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
-        //                                        _context.Entry(payment).State = EntityState.Added;
-        //                                        //no docments either....
-        //                                    }
-        //                                }
-        //                                await _context.SaveChangesAsync();
-        //                            }
-        //                            else
-        //                            {
-        //                                var emptyInvoice = new Invoice() { InvoiceNumber = "000000000", InvoiceDate = r.DateOrdered };
-        //                                _context.Entry(emptyInvoice).State = EntityState.Added;
-        //                                await _context.SaveChangesAsync();
-        //                                var payment = new Payment() { InvoiceID = emptyInvoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
-        //                                _context.Entry(payment).State = EntityState.Added;
-        //                                //no docments either....
-        //                                WriteErrorToFile("This item has no order number" + lineNumber + " - added default invoice for requestID: " + request.RequestID);
+                                        //}
+                                        //else if (invoiceIds.Count() != invoiceNumbers.Count() && invoiceNumbers.Count() > 0)
+                                        //{
+                                        //    foreach (var invoiceID in invoiceIds)
+                                        //    {
+                                        //        var payment = new Payment() { InvoiceID = invoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
+                                        //        _context.Entry(payment).State = EntityState.Added;
+                                        //    }
+                                        //    var invoiceNumbersNotInDataBaseYet = invoiceRows.Where(i => !invoices.Select(i=>i.InvoiceNumber).Contains(i.InvoiceNumber));
+                                        //    foreach(var ie in invoiceNumbersNotInDataBaseYet)
+                                        //    {
+                                        //        var invoice = new Invoice() {InvoiceNumber = ie.InvoiceNumber, InvoiceDate = ie.InvoiceDate };
+                                        //        _context.Entry(invoice).State = EntityState.Added;
+                                        //        await _context.SaveChangesAsync();
+                                        //        var payment = new Payment() { InvoiceID = invoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID =3 , RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
+                                        //        _context.Entry(payment).State = EntityState.Added;
 
-        //                            }
-        //                        }
-        //                        catch (Exception ex)
-        //                        {
-        //                            WriteErrorToFile("Row " + lineNumber + " failed to enter database: " + AppUtility.GetExceptionMessage(ex));
-        //                            _context.ChangeTracker.Entries()
-        //                                .Where(e => e.Entity != null).ToList()
-        //                                .ForEach(e => e.State = EntityState.Detached);
-        //                        }
+                                        //    }
+                                        //    //upload the invoice documents ---
+                                        //}
+                                        else // no invoice in the excel
+                                        {
+                                            var invoiceRows = requestInvoiceList.Where(i => i.OrderNumber == r.OrderNumber && i.DocumentNumber > 0 && i.InvoiceNumber != "");
+                                            if (invoiceRows.Count() == 0)
+                                            {
+                                                WriteErrorToFile("There is not matching catalog number and order number to row" + lineNumber + " - added default invoice for requestID: " + request.RequestID);
 
-        //                    }
-        //                    catch (Exception ex)
-        //                    {
-        //                        WriteErrorToFile("Error reading invoice file: " + AppUtility.GetExceptionMessage(ex));
-        //                    }
-        //                    await transaction.CommitAsync();
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    WriteErrorToFile("Row " + lineNumber + " failed to enter database: " + AppUtility.GetExceptionMessage(ex));
-        //                }
+                                                var emptyInvoice = new Invoice() { InvoiceNumber = "000000000", InvoiceDate = r.DateOrdered };
+                                                _context.Entry(emptyInvoice).State = EntityState.Added;
+                                                await _context.SaveChangesAsync();
+                                                var payment = new Payment() { InvoiceID = emptyInvoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
+                                                _context.Entry(payment).State = EntityState.Added;
+                                                //no docments either....
 
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        WriteErrorToFile("Error reading requests file: " + AppUtility.GetExceptionMessage(ex));
-        //    }
-        //}
+                                            }
+                                            else if (invoiceRows.Count() == 1)
+                                            {
+
+                                                WriteErrorToFile("this row went in okay - there was one row for the po # but not matching catlog number");
+                                                await SetInvoiceAndPaymentsAccordingToResultsFromDB(r, request, invoiceRows.FirstOrDefault());
+                                            }
+                                            else if (invoiceRows.Select(ir => ir.InvoiceNumber).Distinct().Count() < 2 && invoiceRows.Select(ir => ir.DocumentNumber).Distinct().Count() < 2)
+                                            {
+                                                WriteErrorToFile("this row went in okay - there was one row for the po # but not matching catlog number");
+
+                                                await SetInvoiceAndPaymentsAccordingToResultsFromDB(r, request, invoiceRows.FirstOrDefault());
+                                            }
+                                            else
+                                            {
+                                                WriteErrorToFile("There are duplicate matching invoices for " + lineNumber + " - added default invoice for requestID: " + request.RequestID);
+
+                                                var emptyInvoice = new Invoice() { InvoiceNumber = "000000000", InvoiceDate = r.DateOrdered };
+                                                _context.Entry(emptyInvoice).State = EntityState.Added;
+                                                await _context.SaveChangesAsync();
+                                                var payment = new Payment() { InvoiceID = emptyInvoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
+                                                _context.Entry(payment).State = EntityState.Added;
+                                                //no docments either....
+                                            }
+                                        }
+                                        await _context.SaveChangesAsync();
+                                    }
+                                    else
+                                    {
+                                        var emptyInvoice = new Invoice() { InvoiceNumber = "000000000", InvoiceDate = r.DateOrdered };
+                                        _context.Entry(emptyInvoice).State = EntityState.Added;
+                                        await _context.SaveChangesAsync();
+                                        var payment = new Payment() { InvoiceID = emptyInvoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
+                                        _context.Entry(payment).State = EntityState.Added;
+                                        //no docments either....
+                                        WriteErrorToFile("This item has no order number" + lineNumber + " - added default invoice for requestID: " + request.RequestID);
+
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    WriteErrorToFile("Row " + lineNumber + " failed to enter database: " + AppUtility.GetExceptionMessage(ex));
+                                    _context.ChangeTracker.Entries()
+                                        .Where(e => e.Entity != null).ToList()
+                                        .ForEach(e => e.State = EntityState.Detached);
+                                }
+
+                            }
+                            catch (Exception ex)
+                            {
+                                WriteErrorToFile("Error reading invoice file: " + AppUtility.GetExceptionMessage(ex));
+                            }
+                            await transaction.CommitAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            WriteErrorToFile("Row " + lineNumber + " failed to enter database: " + AppUtility.GetExceptionMessage(ex));
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorToFile("Error reading requests file: " + AppUtility.GetExceptionMessage(ex));
+            }
+        }
 
         private async Task SetInvoiceAndPaymentsAccordingToResultsFromDB(UploadExcelModel r, Request request, UploadInvoiceExcelModel invoiceRow)
         {

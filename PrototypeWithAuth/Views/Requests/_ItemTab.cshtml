@@ -13,14 +13,15 @@
     var modalType = Model.ModalType;
     var markReadOnlyClass = "";
     var hiddenSummaryClass = "";
-    if (modalType == AppUtility.RequestModalType.Edit)
+    var disabled = "";
+    if (modalType != AppUtility.RequestModalType.Create)
     {
         markReadOnlyClass = "mark-readonly";
-    }
-    if (modalType == AppUtility.RequestModalType.Summary)
-    {
-        hiddenSummaryClass = "hidden";
-        markReadOnlyClass = "mark-readonly";
+        disabled = "disabled";
+        if (modalType == AppUtility.RequestModalType.Summary)
+        {
+            hiddenSummaryClass = "hidden";
+        }
     }
     var projectCategories = AppUtility.ParentCategoryEnum.Consumables
         + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
@@ -306,21 +307,21 @@
             {
                 <div class="col-md-3 ">
                     <label asp-for="Requests[0].ParentRequest.SupplierOrderNumber" class="control-label"></label>
-                    <input asp-for="Requests[0].ParentRequest.SupplierOrderNumber" class="form-control-plaintext border-bottom @markReadOnlyClass" type="text" />
+                    <input value="@Model.Requests[0].ParentRequest.SupplierOrderNumber" class="form-control-plaintext border-bottom" @disabled type="text" />
                     <span asp-validation-for="Requests[0].ParentRequest.SupplierOrderNumber" class="text-danger-centarix"></span>
-                </div>
-                <div class="col-md-3">
-                    <label asp-for="Requests[0].ParentRequest.OrderDate" class="control-label"></label>
-                    <input type="text" asp-for="Requests[0].ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" asp-format="@AppUtility.AspDateFormatString"  />
-                    <span asp-validation-for="Requests[0].ParentRequest.OrderDate" class="text-danger-centarix"></span>
                 </div>
             }
             @if(Model.Requests[0].ParentRequest?.OrderNumber != null)
             {
                 <div class="col-md-3 ">
                     <label asp-for="Requests[0].ParentRequest.OrderNumber" class="control-label"></label>
-                    <input asp-for="Requests[0].ParentRequest.OrderNumber" class="form-control-plaintext border-bottom @markReadOnlyClass" type="text" />
+                    <input value="@Model.Requests[0].ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" @disabled type="text" />
                     <span asp-validation-for="Requests[0].ParentRequest.OrderNumber" class="text-danger-centarix"></span>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Requests[0].ParentRequest.OrderDate" class="control-label"></label>
+                    <input type="text" value="@Model.Requests[0].ParentRequest.OrderDate.GetElixirDateFormat()" class="form-control-plaintext border-bottom datepicker" @disabled @*asp-format="@AppUtility.AspDateFormatString"*@ />
+                    <span asp-validation-for="Requests[0].ParentRequest.OrderDate" class="text-danger-centarix"></span>
                 </div>
             }
 

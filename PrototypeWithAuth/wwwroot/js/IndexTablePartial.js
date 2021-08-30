@@ -325,7 +325,7 @@ $(function () {
         var months = [];
         months = $("#Months").val();*/
         $('.page-number').val(1);
-        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET" /*, undefined, "", months, years*/);
+        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTable/", "._IndexTable", "GET" /*, undefined, "", months, years*/);
         return false;
     });
 
