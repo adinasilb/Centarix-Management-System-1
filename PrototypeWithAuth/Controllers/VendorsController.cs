@@ -591,16 +591,6 @@ namespace PrototypeWithAuth.Controllers
             AddContactViewModel addContactViewModel = new AddContactViewModel { VendorContact = contact, Index = index };
             return PartialView(addContactViewModel);
         }
-
-/*        public bool CheckUniqueCompanyIDPerCountry(string CompanyID, string CountryName, int? VendorID = null)
-        {
-            var boolCheck = true;
-            //validation for the create
-           
-            //validation for the edit
-            
-            return boolCheck;
-        }*/
     }
 
 }
