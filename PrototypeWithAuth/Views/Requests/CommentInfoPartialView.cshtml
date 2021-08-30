@@ -32,7 +32,7 @@
             <button href="#" type="button" class="btn btn-link p-0 ">
                 @{
                     var src = "/UserImages/user-image-placeholder.png";
-                    if (_userManager.GetUserAsync(User).Result.UserImage != null)
+                    if (Model.Comment.ApplicationUser.UserImage != null)
                     {
                         src = "\\" + AppUtility.GetLastFiles(Model.Comment.ApplicationUser.UserImage, 2);
                     }
