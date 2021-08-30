@@ -289,7 +289,7 @@
     @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null || Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true)
     {
         <div class="row">
-            @if (Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true)
+            @if (Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true) //todo: make this a loop for each payment
             {
                 <input type ="hidden" asp-for="Requests[0].Payments[0].InvoiceID" />
                 <input type ="hidden" asp-for="Requests[0].Payments[0].Invoice.InvoiceID" />
@@ -321,7 +321,7 @@
                 </div>
                 <div class="col-md-3">
                     <label asp-for="Requests[0].ParentRequest.OrderDate" class="control-label"></label>
-                    <input type="text" value="@Model.Requests[0].ParentRequest.OrderDate.GetElixirDateFormat()" class="form-control-plaintext border-bottom datepicker" @disabled @*asp-format="@AppUtility.AspDateFormatString"*@ />
+                    <input type="text" value="@Model.Requests[0].ParentRequest.OrderDate.GetElixirDateFormat()" class="form-control-plaintext border-bottom datepicker"  @disabled @*asp-format="@AppUtility.AspDateFormatString"*@  />
                     <span asp-validation-for="Requests[0].ParentRequest.OrderDate" class="text-danger-centarix"></span>
                 </div>
             }
