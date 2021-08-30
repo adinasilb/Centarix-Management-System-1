@@ -315,12 +315,12 @@
             {
                 <div class="col-md-3 ">
                     <label asp-for="Requests[0].ParentRequest.OrderNumber" class="control-label"></label>
-                    <input asp-for="Requests[0].ParentRequest.OrderNumber" class="form-control-plaintext border-bottom @disabled" type="text" />
+                    <input value="@Model.Requests[0].ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" @disabled type="text" />
                     <span asp-validation-for="Requests[0].ParentRequest.OrderNumber" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-md-3">
                     <label asp-for="Requests[0].ParentRequest.OrderDate" class="control-label"></label>
-                    <input type="text" asp-for="Requests[0].ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" asp-format="@AppUtility.AspDateFormatString"  />
+                    <input type="text" value="@Model.Requests[0].ParentRequest.OrderDate.GetElixirDateFormat()" class="form-control-plaintext border-bottom datepicker" @disabled @*asp-format="@AppUtility.AspDateFormatString"*@ />
                     <span asp-validation-for="Requests[0].ParentRequest.OrderDate" class="text-danger-centarix"></span>
                 </div>
             }
