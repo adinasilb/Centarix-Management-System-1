@@ -2741,7 +2741,15 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-
+        private async Task RemoveOldRequestFromInventory(int requestId)
+        {
+            if(requestId != 0)
+            {
+                var oldRequest = _context.Requests.Where(r => r.RequestID == requestId).Where(r => r.IsInInventory).FirstOrDefault();
+                oldRequest.IsInInventory = false;
+                await _context.SaveChangesAsync();
+            }
+        }
 
 
         [HttpGet]
@@ -3149,7 +3157,6 @@ namespace PrototypeWithAuth.Controllers
                                     requestNotification.OrderDate = DateTime.Now;
                                     requestNotification.Vendor = tempRequest.Request.Product.Vendor.VendorEnName;
                                     _context.Add(requestNotification);
-
                                     await _context.SaveChangesAsync();
                                 }
                                 if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
@@ -3868,6 +3875,7 @@ namespace PrototypeWithAuth.Controllers
                     requestReceived.IsPartial = receivedLocationViewModel.Request.IsPartial;
                     requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
                     requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
+                    requestReceived.IsInInventory = true;
                     if (requestReceived.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString())
                     {
                         requestReceived.Batch = receivedLocationViewModel.Request.Batch;
@@ -3879,6 +3887,8 @@ namespace PrototypeWithAuth.Controllers
                     }
                     _context.Update(requestReceived);
                     await _context.SaveChangesAsync();
+
+                    await RemoveOldRequestFromInventory(requestReceived.RequestID);
 
                     RequestNotification requestNotification = new RequestNotification();
                     requestNotification.RequestID = requestReceived.RequestID;
