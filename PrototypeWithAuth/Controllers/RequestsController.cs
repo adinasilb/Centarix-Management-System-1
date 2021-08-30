@@ -1147,6 +1147,7 @@ namespace PrototypeWithAuth.Controllers
                         request.RequestStatusID = 3;
                         request.ApplicationUserReceiverID = _userManager.GetUserId(User);
                         request.ArrivalDate = DateTime.Now;
+                        request.IsInInventory = true;
                     }
                     else
                     {
@@ -2745,7 +2746,8 @@ namespace PrototypeWithAuth.Controllers
         {
             if(requestId != 0)
             {
-                var oldRequest = _context.Requests.Where(r => r.RequestID == requestId).Where(r => r.IsInInventory).FirstOrDefault();
+                var productID = _context.Requests.Where(r => r.RequestID == requestId).Select(r => r.ProductID).FirstOrDefault();
+                var oldRequest = _context.Requests.Where(r => r.ProductID == productID && r.RequestID != requestId).Where(r => r.IsInInventory).FirstOrDefault();
                 oldRequest.IsInInventory = false;
                 await _context.SaveChangesAsync();
             }
