@@ -938,9 +938,9 @@ namespace PrototypeWithAuth.Controllers
                                             r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                             break;
                         case 3:
-                            //iconList.Add(reorderIcon);
+                            iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
-                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder/*, popoverDelete*/ };
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare/*, popoverReorder*//*, popoverDelete*/ };
                             iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).Select(r =>
                             new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
@@ -1004,7 +1004,8 @@ namespace PrototypeWithAuth.Controllers
 
                             break;
                         default:
-                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder, /*popoverDelete*/ };
+                            iconList.Add(reorderIcon);
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, /*popoverReorder,*/ /*popoverDelete*/ };
                             iconList.Add(favoriteIcon);
                             iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Summary,
