@@ -2452,13 +2452,19 @@ namespace PrototypeWithAuth.Controllers
 
                         //_context.Update(requestItemViewModel.Request.Product.SubProject);
                         //_context.Update(requestItemViewModel.Request.Product);
-                        if (request.ParentQuote != null)
+                        /*if (request.ParentQuote != null)
                         {
                             _context.Update(request.ParentQuote);
                             await _context.SaveChangesAsync();
                             request.ParentQuoteID = request.ParentQuote.ParentQuoteID;
+                        }*/
+                        //_context.Update(request);
+                        _context.Entry(request).State = EntityState.Modified;
+                        _context.Entry(request.Product).State = EntityState.Modified;
+                        if (request.Payments?[0].Invoice != null)
+                        {
+                            _context.Entry(request.Payments[0].Invoice).State = EntityState.Modified; //todo: make a loop
                         }
-                        _context.Update(request);
                         await _context.SaveChangesAsync();
 
 
@@ -2472,7 +2478,15 @@ namespace PrototypeWithAuth.Controllers
                                     //save the new comment
                                     comment.CommentTimeStamp = DateTime.Now;
                                     comment.RequestID = request.RequestID;
-                                    _context.Update(comment);
+                                    if (comment.CommentID == 0)
+                                    {
+                                        _context.Entry(comment).State = EntityState.Added;
+                                    }
+                                    else
+                                    {
+                                        _context.Entry(comment).State = EntityState.Modified;
+                                    }
+                                    //_context.Update(comment);
                                 }
                             }
                             await _context.SaveChangesAsync();
