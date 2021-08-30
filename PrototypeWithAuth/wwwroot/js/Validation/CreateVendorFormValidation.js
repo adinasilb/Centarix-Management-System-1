@@ -6,11 +6,22 @@
 		"Vendor.VendorEnName": "required",
 		"Vendor.VendorHeName": "required",
 		"VendorCategoryTypes": { selectRequired: true },
-		"Vendor.VendorBuisnessID": {
+		/*"Vendor.VendorBusinessID": {
 			required: true,
-			number: true,
-			min: 1
-		},
+			remote: {
+				url: '/Vendors/CheckUniqueCompanyIDPerCountry',
+				type: 'POST',
+				data: {
+					"CompanyID": function () { return $("#Vendor_VendorBuisnessID").val() },
+					"CountryName": function () { return $("#Vendor_VendorCountry").val() },
+					"VendorID": function () {
+						if ($(".turn-edit-on-off").length > 0) {
+							return $("#Vendor_VendorID").val();
+						} else { return null }
+					}
+				},
+			},
+		},*/
 		"Vendor.VendorCountry": "required",
 		"Vendor.VendorCity": "required",
 		"Vendor.VendorTelephone": {
