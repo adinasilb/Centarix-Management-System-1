@@ -1812,7 +1812,7 @@ namespace PrototypeWithAuth.Controllers
                     List<Line> childLines = protocolLines.Where(l => l.LineType.LineTypeID == childLineType).ToList();
                     while (childLines?.Count() > 0)
                     {
-                        var distinctParentLines = childLines.Select(c => c.ParentLine).Where(c=>c!=null).Distinct().ToList();
+                        var distinctParentLines = childLines.Select(c => c.ParentLine).Distinct().Where(c => c != null).ToList();
                         foreach (var parent in distinctParentLines)
                         {
                             var tempParentID = new TempLineID();
