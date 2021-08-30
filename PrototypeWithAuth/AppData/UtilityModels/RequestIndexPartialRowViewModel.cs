@@ -430,7 +430,7 @@ namespace PrototypeWithAuth.ViewModels
         private IEnumerable<RequestIndexPartialColumnViewModel> GetSummaryColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = GetImageURL() };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = GetProductName(), AjaxLink = "load-product-details-summary", AjaxID = r.RequestID, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 9, Value = GetVendorName(), ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, Value = AppUtility.GetAmountColumn(r) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, Value = new List<string>() { GetLocationInstanceNameBefore() } };
