@@ -302,6 +302,7 @@ $(function () {
 		$(this).data("validator").settings.ignore = "";
 		var valid = $(this).valid();
 		console.log("validate.js says valid form: " + valid)
+		
 		if (!valid) {
 			e.preventDefault();
 			if (!$('.activeSubmit').hasClass('disabled-submit')) {
@@ -310,6 +311,7 @@ $(function () {
 
 		} else {
 			$('.activeSubmit ').removeClass('disabled-submit')
+			$("input[type='submit']").prop('disabled', true)
 		}
 		$(this).data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden, input:visible, textarea:visible)';
 	});
