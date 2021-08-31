@@ -404,7 +404,7 @@ namespace PrototypeWithAuth.Controllers
                     VendorContact = vc,
                     Delete = false
                 }).ToList();
-            createSupplierViewModel.VendorComments = await _context.VendorComments.Where(c => c.VendorID == id).ToListAsync();
+            createSupplierViewModel.VendorComments = await _context.VendorComments.Where(c => c.VendorID == id).Include(r => r.ApplicationUser).ToListAsync();
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.AllSuppliers;
             //tempdata page type for active tab link
@@ -479,10 +479,15 @@ namespace PrototypeWithAuth.Controllers
                         {
                             foreach (var vendorComment in createSupplierViewModel.VendorComments)
                             {
-                                vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
-                                vendorComment.ApplicationUserID = _userManager.GetUserId(User);
-                                vendorComment.CommentTimeStamp = DateTime.Now;
-                                _context.Update(vendorComment);
+                                if (!String.IsNullOrEmpty(vendorComment.CommentText))
+                                {
+                                    vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
+                                    if(vendorComment.VendorCommentID == 0)
+                                    {
+                                        vendorComment.CommentTimeStamp = DateTime.Now;
+                                    }
+                                    _context.Update(vendorComment);
+                                }
 
                             }
                         }
@@ -580,6 +585,8 @@ namespace PrototypeWithAuth.Controllers
         {
             VendorComment comment = new VendorComment();
             comment.CommentType = type;
+            comment.ApplicationUser = _userManager.GetUserAsync(User).Result;
+            comment.ApplicationUserID = comment.ApplicationUser.Id;
             AddCommentViewModel addCommentViewModel = new AddCommentViewModel { VendorComment = comment, Index = index };
             return PartialView(addCommentViewModel);
         }
