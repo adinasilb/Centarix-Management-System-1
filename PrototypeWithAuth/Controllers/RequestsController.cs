@@ -5877,5 +5877,17 @@ namespace PrototypeWithAuth.Controllers
             sw.WriteLine("\n" + message);
             sw.Close();
         }
+        public async Task MarkInventory()
+        {
+            var requests = _context.Requests.IgnoreQueryFilters().Where(r => !r.IsDeleted).Where(r => r.RequestStatusID == 3 && r.OrderType != AppUtility.OrderTypeEnum.Save.ToString());
+            var requestsInInventory = requests.OrderByDescending(r => r.ParentRequest.OrderDate).ToLookup(r => r.ProductID).Select(e => e.First());
+
+            foreach (var r in requestsInInventory)
+            {
+                r.IsInInventory = true;
+                _context.Update(r);
+            }
+            await _context.SaveChangesAsync();
+        }
     }
 }

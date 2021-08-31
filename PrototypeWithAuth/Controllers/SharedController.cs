@@ -777,6 +777,8 @@ namespace PrototypeWithAuth.Controllers
             else //we just want what is in inventory
             {
                 RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3 || r.RequestStatus.RequestStatusID == 4 || r.RequestStatus.RequestStatusID == 5);
+                //change to: (if can reorder operations
+                //RequestsPassedIn = fullRequestsList.Where(r => r.IsInInventory);
             }
             AppUtility.SidebarEnum SidebarTitle = AppUtility.SidebarEnum.List;
             //now that the lists are created sort by vendor or subcategory
