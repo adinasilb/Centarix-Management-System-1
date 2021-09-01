@@ -318,7 +318,14 @@ namespace PrototypeWithAuth.ViewModels
         {
             try
             {
-                return new List<string>() { r.Product.Vendor.VendorEnName };
+                if(r.OrderType == AppUtility.OrderTypeEnum.Save.ToString())
+                {
+                    return new List<string>() { "" };
+                }
+                else
+                {
+                    return new List<string>() { r.Product.Vendor.VendorEnName };
+                }
             }
             catch (Exception ex)
             {
