@@ -10,12 +10,12 @@ $(".expected-supply-days").change(function () {
 });
 $.fn.SetExpectedSupplyDateFromDays = function (selector, thisElement) {
 	var OrderDate;
-/*	if ($('.for-supply-date-calc').length > 0) {
-		OrderDate = moment($('.for-supply-date-calc').val()*//*.split("/").reverse().join("-")*//*);
+	if ($('.for-supply-date-calc').length > 0) {
+		OrderDate = moment($('.for-supply-date-calc').val(), 'D MMM YYYY');
 
-	} else {*/
+	} else {
 		OrderDate = moment();
-//	}
+	}
 	var supplyDate = OrderDate.add(thisElement.val(), "d").format("D MMM YYYY");
 	console.log(supplyDate)
 	$(selector).val(supplyDate);
@@ -32,21 +32,20 @@ $(".expected-supply-date").change(function () {
 });
 $.fn.SetExpectedSupplyDaysFromDate = function(selector, thisElement) {
 	var val = thisElement.val();
-	val = val.split("/").reverse().join("-");
-	var date = moment(val);
+	console.log(val);
+	//val = val.split("/").reverse().join("-");
+	var date = moment(val, 'D MMM YYYY');
 	date.set("time", 0)
-	if (date < moment() && !moment().isSame(date, 'day')) {
+	var OrderDate;
+	if ($('.for-supply-date-calc').length > 0) {
+		console.log("in first of of check roder date")
+		OrderDate = moment($('.for-supply-date-calc').val(), 'D MMM YYYY');
+	} else {
+		OrderDate = moment();
+	}
+	if (date < OrderDate && !OrderDate.isSame(date, 'day')) {
 		return;
 	}
-	var OrderDate;
-	//if ($('.for-supply-date-calc').length > 0) {
-	//	console.log("in first of of check roder date")
-	//	OrderDate = moment($('.for-supply-date-calc').val().split("/").reverse().join("-"));
-
-	//} else {
-		OrderDate = moment();
-
-	//}
 	var amountOfDays = Math.ceil(date.diff(OrderDate, 'days', true))
 	$(selector).val(amountOfDays);
 }
