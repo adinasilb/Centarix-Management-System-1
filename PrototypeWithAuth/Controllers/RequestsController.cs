@@ -5879,8 +5879,11 @@ namespace PrototypeWithAuth.Controllers
         }
         public async Task MarkInventory()
         {
+            //before running this function, run the following in ssms:
+            //update requests set IsInInventory = 'false'
+
             var requests = _context.Requests.IgnoreQueryFilters().Where(r => !r.IsDeleted).Where(r => r.RequestStatusID == 3 && r.OrderType != AppUtility.OrderTypeEnum.Save.ToString());
-            var requestsInInventory = requests.OrderByDescending(r => r.ParentRequest.OrderDate).ToLookup(r => r.ProductID).Select(e => e.First());
+            var requestsInInventory = requests.OrderByDescending(r => r.ArrivalDate).ToLookup(r => r.ProductID).Select(e => e.First());
 
             foreach (var r in requestsInInventory)
             {
