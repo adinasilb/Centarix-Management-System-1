@@ -2744,14 +2744,17 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task RemoveOldRequestFromInventory(int requestId)
         {
-            if(requestId != 0)
+
+            var productID = _context.Requests.Where(r => r.RequestID == requestId).Select(r => r.ProductID).FirstOrDefault();
+            var oldRequest = _context.Requests.Where(r => r.ProductID == productID && r.RequestID != requestId).Where(r => r.IsInInventory).FirstOrDefault();
+            if (oldRequest != null)
             {
-                var productID = _context.Requests.Where(r => r.RequestID == requestId).Select(r => r.ProductID).FirstOrDefault();
-                var oldRequest = _context.Requests.Where(r => r.ProductID == productID && r.RequestID != requestId).Where(r => r.IsInInventory).FirstOrDefault();
                 oldRequest.IsInInventory = false;
+                _context.Update(oldRequest);
                 await _context.SaveChangesAsync();
-            }
+            }       
         }
+
 
 
         [HttpGet]
@@ -3888,10 +3891,11 @@ namespace PrototypeWithAuth.Controllers
                         requestReceived.PaymentStatusID = 3;
                     }
                     _context.Update(requestReceived);
+
+                    //need to do this function before save changes because if new request it should not have an id yet
                     await _context.SaveChangesAsync();
-
                     await RemoveOldRequestFromInventory(requestReceived.RequestID);
-
+               
                     RequestNotification requestNotification = new RequestNotification();
                     requestNotification.RequestID = requestReceived.RequestID;
                     requestNotification.IsRead = false;
