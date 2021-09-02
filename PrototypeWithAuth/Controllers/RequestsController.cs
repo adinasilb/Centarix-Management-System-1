@@ -3208,7 +3208,7 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                 }
-
+                tempRequestListViewModel.RequestIndexObject.RequestStatusID = 2;
                 return RedirectToAction(action, tempRequestListViewModel.RequestIndexObject);
             }
             catch (Exception ex)
