@@ -672,8 +672,7 @@ namespace PrototypeWithAuth.Controllers
                         await UpdateLineContentAsync(tempLines, Lines);
                         await SaveTempLinesToDB(ProtocolVersionID, tempLines);
                         await _context.FunctionLines.Where(fl => fl.ProtocolVersionID == ProtocolVersionID).Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted == true).ForEachAsync(fl => { _context.Remove(fl); });
-                        await _context.SaveChangesAsync();
-                        await DeleteTemporaryDeletedLinesAsync();
+                        await _context.SaveChangesAsync();                   
                         await transaction.CommitAsync();
                     }
                     catch (Exception ex)
@@ -696,13 +695,24 @@ namespace PrototypeWithAuth.Controllers
             foreach (var line in tempLines.Lines)
             {
                 line.Line.ProtocolVersionID = ProtocolVersionID;
+               
                 if (_context.Lines.Where(l => l.LineID == line.Line.LineID).Any())
                 {
-                    _context.Entry(line.Line).State = EntityState.Modified;
+                    if (line.Line.IsTemporaryDeleted)
+                    {
+                        _context.Entry(line.Line).State = EntityState.Deleted;
+                    }
+                    else
+                    {
+                        _context.Entry(line.Line).State = EntityState.Modified;
+                    }               
                 }
                 else
                 {
-                    _context.Entry(line.Line).State = EntityState.Added;
+                    if (!line.Line.IsTemporaryDeleted)
+                    {                     
+                        _context.Entry(line.Line).State = EntityState.Added;
+                    }
                 }
                 if (line.Functions != null)
                 {
@@ -816,6 +826,7 @@ namespace PrototypeWithAuth.Controllers
                     var listOfLineTypeIDs = orderedLineTypes.Select(lt => lt.LineTypeID).ToList();
                     var tempLinesJson = await _context.TempLinesJsons.Where(tlj => tlj.TempLinesJsonID == guid).FirstOrDefaultAsync();
                     var tempLines = tempLinesJson.DeserializeJson<ProtocolsLinesViewModel>();
+                    tempLines.Lines = tempLines.Lines.Where(tl => !tl.Line.IsTemporaryDeleted).ToList();
                     var currentLine = tempLines.Lines.Where(tl => tl.Line.LineID == currentLineID).FirstOrDefault().Line;
                     if (Lines != null)
                     {
@@ -967,6 +978,7 @@ namespace PrototypeWithAuth.Controllers
             var lineTypes = await _context.LineTypes.ToListAsync();
             var tlj = await _context.TempLinesJsons.Where(tlj => tlj.TempLinesJsonID == guid).FirstOrDefaultAsync();
             viewmodel = tlj.DeserializeJson<ProtocolsLinesViewModel>();
+            viewmodel.Lines = viewmodel.Lines.Where(tl => !tl.Line.IsTemporaryDeleted).ToList();
             if (needsReordering)
             {
                 viewmodel.Lines.Where(tl => tl.Line.ParentLineID == null).OrderByDescending(tl => tl.Line.LineNumber).ToList().ForEach(tl => { parentNodes.Push(tl); });
@@ -1038,21 +1050,6 @@ namespace PrototypeWithAuth.Controllers
             }
             return lineNumberString;
         }
-
-        private async Task DeleteTemporaryDeletedLinesAsync()
-        {
-            var linesToDelete = await _context.Lines.Where(l => l.IsTemporaryDeleted).ToListAsync();
-            var lineTypes = GetOrderLineTypeFromChildToParent();
-            foreach (var lineType in lineTypes)
-            {
-                var linesByType = linesToDelete.Where(n => n.LineTypeID == lineType.LineTypeID);
-                foreach (var line in linesByType)
-                {
-                    _context.Remove(line);
-                }
-                await _context.SaveChangesAsync();
-            }
-        }
         private async Task DeleteTempLineWithChildrenAsync(ProtocolsLinesViewModel tempLines, Line line)
         {
             var siblingsAfter = tempLines.Lines.Where(tl => tl.Line.ParentLineID == line.ParentLineID && tl.Line.LineNumber > line.LineNumber).ToList();
@@ -1072,12 +1069,13 @@ namespace PrototypeWithAuth.Controllers
             {
                 var permanentLine = await _context.Lines.Where(l => l.LineID == node.Line.LineID).FirstOrDefaultAsync();
 
-                if (permanentLine != null)
-                {
-                    permanentLine.IsTemporaryDeleted = true;
-                    _context.Update(permanentLine);
-                }
-                tempLines.Lines.Remove(node);
+                //if (permanentLine != null)
+                //{
+                //    permanentLine.IsTemporaryDeleted = true;
+                //    _context.Update(permanentLine);
+                //}
+                //tempLines.Lines.Remove(node);
+                node.Line.IsTemporaryDeleted = true;
             }
 
             //update all the siblings after number--
@@ -1554,7 +1552,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 var tempLinesJson = await _context.TempLinesJsons.Where(tlj => tlj.TempLinesJsonID == addFunctionViewModel.UniqueGuid).FirstOrDefaultAsync();
                 var tempLines = tempLinesJson.DeserializeJson<ProtocolsLinesViewModel>();
-
+                tempLines.Lines = tempLines.Lines.Where(tl => !tl.Line.IsTemporaryDeleted).ToList();
                 await UpdateLineContentAsync(tempLines, Lines);
                 var tempLine = tempLines.Lines.Where(tl => tl.Line.LineID == addFunctionViewModel.Function.LineID).FirstOrDefault();
                 var protocolID = tempLine.Line.ProtocolVersionID;
@@ -1924,12 +1922,11 @@ namespace PrototypeWithAuth.Controllers
                     if(IncludeSaveLines)
                     {
                         var tempLines = _context.TempLinesJsons.Where(tl => tl.TempLinesJsonID == createProtocolsViewModel.UniqueGuid).FirstOrDefault().DeserializeJson<ProtocolsLinesViewModel>();
-
+                        tempLines.Lines = tempLines.Lines.Where(tl => !tl.Line.IsTemporaryDeleted).ToList();
                         await UpdateLineContentAsync(tempLines, Lines);
                         await SaveTempLinesToDB(createProtocolsViewModel.ProtocolVersion.ProtocolVersionID, tempLines);
                         await _context.FunctionLines.Where(fl => fl.Line.ProtocolVersionID == createProtocolsViewModel.ProtocolVersion.ProtocolVersionID).Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted == true).ForEachAsync(fl => { _context.Remove(fl); });
                         await _context.SaveChangesAsync();
-                        await DeleteTemporaryDeletedLinesAsync();
                     }
                     await transaction.CommitAsync();
                   
