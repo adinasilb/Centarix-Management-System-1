@@ -204,7 +204,9 @@
                     if (orderType == 'RequestPriceQuote') {
                         $('.submitOrder').prop('disabled', false)
                         $.fn.CloseModal('reorder-item')
-                        $('.render-body').html(data);
+                        if (data != '') {
+                            $('.render-body').html(data);
+                        }
                     }
                     else {
                         $(".modal .temprequesthiddenfors").html('');
