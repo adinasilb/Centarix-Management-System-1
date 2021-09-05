@@ -1010,7 +1010,7 @@ namespace PrototypeWithAuth.Controllers
                             popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, /*popoverReorder,*/ /*popoverDelete*/ };
                             iconList.Add(favoriteIcon);
                             iconList.Add(popoverMoreIcon);
-                            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Summary,
+                            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ThenBy(r => r.Product.ProductName).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Summary,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                     r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(),
                                     _context.ShareRequests.Where(sr => sr.RequestID == r.RequestID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user,
