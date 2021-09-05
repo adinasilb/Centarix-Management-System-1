@@ -318,6 +318,10 @@ namespace PrototypeWithAuth.ViewModels
         {
             try
             {
+                if(r.OrderType == AppUtility.OrderTypeEnum.Save.ToString())
+                {
+                    return new List<string>() { "Centarix" };
+                }
                 return new List<string>() { r.Product.Vendor.VendorEnName };
             }
             catch (Exception ex)
@@ -335,6 +339,14 @@ namespace PrototypeWithAuth.ViewModels
             {
                 return new List<string>() { "payment date has an error" };
             }
+        }
+        private List<string> GetDateForFavoriteRequest()
+        {
+                if(r.OrderType == AppUtility.OrderTypeEnum.Save.ToString())
+                {
+                    return new List<string>() { r.CreationDate.GetElixirDateFormat() };
+                }
+                return new List<string>() { r.ArrivalDate.GetElixirDateFormat() };
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetApproveColumns()
         {
@@ -379,7 +391,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, Value = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width = 10, Value = new List<string>() { r.ArrivalDate.GetElixirDateFormat() } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width = 10, Value = GetDateForFavoriteRequest() };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
