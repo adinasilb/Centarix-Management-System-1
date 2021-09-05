@@ -127,7 +127,7 @@
                 cache: false,
                 success: function (data) {
                     $(".submitTerms").prop('disabled', false)
-                    if (($("#SectionType").val() == "Operations" || $("#masterSectionType").val() == "Operations") && data == '') {
+                    if (/*($("#SectionType").val() == "Operations" ||*/ $("#masterSectionType").val() == "Operations" && data == '') {
                         //alert("if 1");
                         var requestStatusId = '2';
                         console.log($('#Requests_0__IsReceived').val())
@@ -136,10 +136,10 @@
                         }
                         window.location.href = "/Requests/Index?PageType=OperationsRequest&SectionType=Operations&RequestStatusID=" + requestStatusId  + "&SidebarType=List";
                     }
-                    else if ($('#masterPageType').val() == "RequestSummary") {
+                    else if ($('#masterPageType').val() == "RequestSummary" && data == '') {
                         window.location.href = "/Requests/IndexInventory?PageType=RequestSummary&SectionType=Requests&SidebarType=List";
                     }
-                    else if (($("#SectionType").val() == "Requests" || $("#masterSectionType").val() == "Requests") && data == '') {
+                    else if (/*($("#SectionType").val() == "Requests" || */$("#masterPageType").val() == "RequestRequest" && data == '') {
                         //alert("if 2");
                         //console.log($("#RequestIndexObject_OrderType").val())
                         if ($("#RequestIndexObject_OrderType").val() == 'AlreadyPurchased') {
@@ -147,6 +147,11 @@
                         } else {
                             window.location.href = "/Requests?PageType=RequestRequest&SectionType=Requests&SidebarType=List";
                         }
+                    }
+                    else if ($('#masterSectionType').val() == "Requests" && data == '') { //Location and personal
+                        $.fn.CloseModal('terms');
+                        $.fn.CloseModal('step-1');
+                        $.fn.CloseModal('reorder-item');
                     }
                     else {
                         //alert("else");

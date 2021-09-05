@@ -547,7 +547,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date", Width = 12, Value = new List<string>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 12, Value = new List<string>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
@@ -565,7 +565,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date", Width = 12, Value = new List<string>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 12, Value = new List<string>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
