@@ -1924,6 +1924,8 @@ namespace PrototypeWithAuth.Controllers
                         var tempLines = _context.TempLinesJsons.Where(tl => tl.TempLinesJsonID == createProtocolsViewModel.UniqueGuid).FirstOrDefault().DeserializeJson<ProtocolsLinesViewModel>();
                         tempLines.Lines = tempLines.Lines.Where(tl => !tl.Line.IsTemporaryDeleted).ToList();
                         await UpdateLineContentAsync(tempLines, Lines);
+                        _context.Update(tempLines);
+                        await _context.SaveChangesAsync();
                         await SaveTempLinesToDB(createProtocolsViewModel.ProtocolVersion.ProtocolVersionID, tempLines);
                         await _context.FunctionLines.Where(fl => fl.Line.ProtocolVersionID == createProtocolsViewModel.ProtocolVersion.ProtocolVersionID).Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted == true).ForEachAsync(fl => { _context.Remove(fl); });
                         await _context.SaveChangesAsync();
