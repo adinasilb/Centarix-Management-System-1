@@ -451,6 +451,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         viewmodel.ModalType = AppUtility.ProtocolModalType.CheckListMode;
                         await FillCreateProtocolsViewModel(viewmodel, viewmodel.ProtocolInstance.ProtocolVersion.Protocol.ProtocolTypeID,  viewmodel.ProtocolInstance.ProtocolVersionID);
+                        await transaction.CommitAsync();
                         return PartialView("_IndexTableWithEditProtocol", viewmodel);
                     }
                     catch (Exception ex)
@@ -588,6 +589,7 @@ namespace PrototypeWithAuth.Controllers
 
                 var lines = await _context.Lines.Where(l => l.ProtocolVersionID == protocolVersionID && l.IsTemporaryDeleted == false).Select(l =>
                new ProtocolsLineViewModel { Line = l, Functions = AppUtility.GetFunctionsByLineID(l.LineID, functionLines) }).ToListAsync();
+             
                 if (lines.Count() == 0)
                 {
                     var lineID = new TempLineID();
@@ -695,9 +697,10 @@ namespace PrototypeWithAuth.Controllers
             foreach (var line in tempLines.Lines)
             {
                 line.Line.ProtocolVersionID = ProtocolVersionID;
-               
-                if (_context.Lines.Where(l => l.LineID == line.Line.LineID).Any())
+                _context.ChangeTracker.Entries().Where(e=>e.Entity is Line).ToList().ForEach(e=> { e.State = EntityState.Detached; });
+                if (_context.Lines.Where(l => l.LineID == line.Line.LineID).AsNoTracking().Any())
                 {
+
                     if (line.Line.IsTemporaryDeleted)
                     {
                         _context.Entry(line.Line).State = EntityState.Deleted;
@@ -1872,7 +1875,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    createProtocolsViewModel.ProtocolVersion.Urls = createProtocolsViewModel.ProtocolVersion.Urls.Where(u => u.LinkDescription != null && u.Url != null).ToList();
+                    createProtocolsViewModel.ProtocolVersion.Urls = createProtocolsViewModel.ProtocolVersion.Urls?.Where(u => u.LinkDescription != null && u.Url != null)?.ToList();
       
                     if (createProtocolsViewModel.ProtocolVersion.Protocol.ProtocolID == 0)
                     {
@@ -1921,10 +1924,12 @@ namespace PrototypeWithAuth.Controllers
                     //save lines
                     if(IncludeSaveLines)
                     {
-                        var tempLines = _context.TempLinesJsons.Where(tl => tl.TempLinesJsonID == createProtocolsViewModel.UniqueGuid).FirstOrDefault().DeserializeJson<ProtocolsLinesViewModel>();
+                        var tempLinesJson = _context.TempLinesJsons.Where(tl => tl.TempLinesJsonID == createProtocolsViewModel.UniqueGuid).FirstOrDefault();
+                        var tempLines = tempLinesJson.DeserializeJson<ProtocolsLinesViewModel>();
                         tempLines.Lines = tempLines.Lines.Where(tl => !tl.Line.IsTemporaryDeleted).ToList();
                         await UpdateLineContentAsync(tempLines, Lines);
-                        _context.Update(tempLines);
+                        tempLinesJson.SerializeViewModel(tempLines);
+                        _context.Update(tempLinesJson);
                         await _context.SaveChangesAsync();
                         await SaveTempLinesToDB(createProtocolsViewModel.ProtocolVersion.ProtocolVersionID, tempLines);
                         await _context.FunctionLines.Where(fl => fl.Line.ProtocolVersionID == createProtocolsViewModel.ProtocolVersion.ProtocolVersionID).Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted == true).ForEachAsync(fl => { _context.Remove(fl); });
