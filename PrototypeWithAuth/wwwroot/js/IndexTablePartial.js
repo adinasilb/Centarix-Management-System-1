@@ -63,7 +63,7 @@ $(function () {
         });
 
     });
-    $('._IndexTableData [data-toggle = "tooltip"]').off('click').on("click", function (e) {
+    $('._IndexTableData [data-toggle = "tooltip"], ._IndexTableDataByVendor [data-toggle = "tooltip"]' ).off('click').on("click", function (e) {
         e.preventDefault();
         console.log('prevent default')
     });
