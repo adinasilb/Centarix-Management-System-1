@@ -71,6 +71,8 @@
                 <input type="hidden" asp-for="Requests[0].OrderType" />
                 <input type="hidden" asp-for="Requests[0].ArrivalDate" />
                 <input type="hidden" value="@Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum" id="categoryDescription" />
+                
+                <input type="hidden" asp-for="Requests[0].IsInInventory"/>
 
                 <!-- Modal Header -->
                 <div class="new-modal-header modal-line-1-header-with-back modal-sides">
