@@ -1817,7 +1817,7 @@ namespace PrototypeWithAuth.Controllers
                     var parentLines = protocolLines.Where(pl => pl.ParentLineID == null);
                     foreach(var parent in parentLines)
                     {
-                       await Copy(protocolLines, parent, protocol.ProtocolVersionID);
+                       Copy(protocolLines, parent, protocol.ProtocolVersionID);
                     }                 
                
                     await transaction.CommitAsync();
@@ -1835,7 +1835,7 @@ namespace PrototypeWithAuth.Controllers
             return View("ResearchProtocol", viewmodel);
         }
 
-        public async Task<Line> Copy(List<Line> lines, Line origin, int protocolVersionID, Line parent = null)
+        public  Line Copy(List<Line> lines, Line origin, int protocolVersionID, Line parent = null)
         {
             if (origin == null)
             {
@@ -1846,11 +1846,11 @@ namespace PrototypeWithAuth.Controllers
             var oldLineID = origin.LineID;
             var templineID = new TempLineID();
             _context.Add(templineID);
-            await _context.SaveChangesAsync();         
+            _context.SaveChanges();         
             origin.LineID = templineID.ID;
             _context.Entry(origin).State = EntityState.Added;
-            await _context.SaveChangesAsync();
-            lines.Where(l => l.ParentLineID == oldLineID).Select(async x => await Copy(lines, x, protocolVersionID, origin)).ToList();
+            _context.SaveChanges();
+            lines.Where(l => l.ParentLineID == oldLineID).ToList().ForEach( x =>  Copy(lines, x, protocolVersionID, origin));
             return origin;
         }
 
