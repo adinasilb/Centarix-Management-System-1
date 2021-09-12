@@ -6,8 +6,8 @@ $('.editQuoteDetails').validate({
 	rules: {
 		"QuoteNumber": {
 			required: true,
-			number: true,
-			min: 1
+			//number: true,
+			//min: 1
 		},
 		//"Request.ExpectedSupplyDays": {
 		//	required: true,
