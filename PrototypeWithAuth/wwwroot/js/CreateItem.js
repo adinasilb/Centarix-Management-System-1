@@ -28,6 +28,7 @@
                         $(".side-menu").addClass("save-item");
                         $(".module-button ").addClass("save-item");
                         $(".notificationDiv").addClass("save-item");
+                        $(".home-nav-item").addClass("save-item");
                         $("#loading").hide();
                         var category = $("#categoryDescription").val();
                         console.log("category " + category)
