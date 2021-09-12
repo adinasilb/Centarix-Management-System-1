@@ -1804,54 +1804,21 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
+                    
                     protocol.VersionNumber += 1;
                     protocol.ProtocolVersionID = 0;
                     protocol.ApplicationUserCreatorID = _userManager.GetUserAsync(User).Result.Id;
+                    var protocolLines = await _context.Lines.Include(l => l.LineType).Include(l => l.ParentLine)
+                        .Include(l => l.LineChange).Include(l => l.FunctionLines)
+                        .Where(l => l.ProtocolVersionID == protocolVersionID).AsNoTracking().ToListAsync();
 
                     _context.Entry(protocol).State = EntityState.Added;
                     await _context.SaveChangesAsync();
-                    var protocolLines = await _context.Lines.Include(l => l.LineType).Include(l => l.ParentLine).Include(l => l.LineChange).Include(l => l.FunctionLines).Where(l => l.ProtocolVersionID == protocolVersionID).AsNoTracking().ToListAsync();
-                    var orderedLines = OrderLines(protocolLines);
-                    var currentParentID = orderedLines.FirstOrDefault().ParentLineID;
-                    foreach (var l in orderedLines)
+                    var parentLines = protocolLines.Where(pl => pl.ParentLineID == null);
+                    foreach(var parent in parentLines)
                     {
-                        if (l.LineID != currentParentID && l.ParentLineID != currentParentID)
-                        {
-
-                        }
-                        var tempParentID = new TempLineID();
-                        _context.Add(tempParentID);
-                        await _context.SaveChangesAsync();
-                        var currChildLines = childLines.Where(l => l.ParentLineID == parent.LineID).ToList();
-                            parent.LineID = tempParentID.ID;
-                        parent.ProtocolVersionID = protocol.ProtocolVersionID;
-                        _context.Entry(parent).State = EntityState.Added;
-                        await _context.SaveChangesAsync();
-                        foreach (var line in currChildLines)
-                        {
-                            var templineID = new TempLineID();
-                            _context.Add(templineID);
-                            await _context.SaveChangesAsync();
-                            line.LineID = templineID.ID;
-                            line.ParentLineID = tempParentID.ID;
-                            line.ProtocolVersionID = protocol.ProtocolVersionID;
-                            _context.Entry(line).State = EntityState.Added;
-                            await _context.SaveChangesAsync();
-                            line.FunctionLines.ToList().ForEach(lc => {
-                                var functionLineID = new FunctionLineID();
-                                _context.Add(functionLineID);
-                                _context.SaveChanges();
-                                lc.ID = functionLineID.ID; 
-                                lc.LineID = line.LineID;
-                                _context.Entry(lc).State = EntityState.Added; 
-                            });
-                            await _context.SaveChangesAsync();
-                        }
-              
-
-                    }
-                        
-                   
+                       await Copy(protocolLines, parent, protocol.ProtocolVersionID);
+                    }                 
                
                     await transaction.CommitAsync();
                 }
@@ -1868,6 +1835,25 @@ namespace PrototypeWithAuth.Controllers
             return View("ResearchProtocol", viewmodel);
         }
 
+        public async Task<Line> Copy(List<Line> lines, Line origin, int protocolVersionID, Line parent = null)
+        {
+            if (origin == null)
+            {
+                return null;
+            }
+            origin.ParentLineID = parent?.LineID;
+            origin.ProtocolVersionID = protocolVersionID;
+            var oldLineID = origin.LineID;
+            var templineID = new TempLineID();
+            _context.Add(templineID);
+            await _context.SaveChangesAsync();         
+            origin.LineID = templineID.ID;
+            _context.Entry(origin).State = EntityState.Added;
+            await _context.SaveChangesAsync();
+            lines.Where(l => l.ParentLineID == oldLineID).Select(async x => await Copy(lines, x, protocolVersionID, origin)).ToList();
+            return origin;
+        }
+
         private List<Line> OrderLines(List<Line> lines) 
         {
             Stack<Line> linesStack = new Stack<Line>();
@@ -1877,7 +1863,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 var node = linesStack.Pop();
                 
-                lines.Where(c => c.ParentLineID == node.LineID).OrderByDescending(tl => tl.LineNumber).ToList().ForEach(c => { parentNodes.Push(c); });
+                lines.Where(c => c.ParentLineID == node.LineID).OrderByDescending(tl => tl.LineNumber).ToList().ForEach(c => { linesStack.Push(c); });
                 orderedLines.Add(node);
             }
             return orderedLines;
