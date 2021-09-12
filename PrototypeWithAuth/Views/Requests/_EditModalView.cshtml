@@ -46,7 +46,6 @@
         @*style needed here to override bootstraps modal width limitations*@
 
         <div class="modal-content d-inline-block ">
-
             <form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
                 @Html.HiddenFor(model => model.Requests[0].ParentRequest.ApplicationUserID)
@@ -76,12 +75,9 @@
                 <div class="new-modal-header modal-line-1-header-with-back modal-sides">
                     @*class needed here to override bootstraps modal limitations*@
 
-                    @if (Model.ErrorMessage != null)
-                    {
-                        <div class="row">
-                            <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
-                        </div>
-                    }
+                    <div class="row error-message">
+                        @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
+                    </div>
                     <div>
                         <button class="back-button" type="button" style="border-width: 0; background: transparent">
                             <img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" />
@@ -96,12 +92,12 @@
                         {
                             <img src="~/images/css/CategoryImages/placeholder.png" alt="Alternate Text" class="top-modal-image" width="75" /> @*this will be the product image and will need to be pulled from wherever it will be located in the DB*@
                         }
-                        <div class=" col _ItemHeader" >
+                        <div class=" col _ItemHeader">
                             @{ await Html.RenderPartialAsync("_ItemHeader", Model);}
                         </div>
                         <div class="form-group">
-                            @if ((Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].RequestStatusID == 2) && Model.SectionType == AppUtility.MenuItems.Requests 
-                                && Model.Requests[0].Product.UnitTypeID != -1 && !Model.Requests[0].Product.ProductSubcategory.IsOldSubCategory && !Model.IsHistory)
+                            @if ((Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].RequestStatusID == 2) && Model.SectionType == AppUtility.MenuItems.Requests
+                               && Model.Requests[0].Product.UnitTypeID != -1 && !Model.Requests[0].Product.ProductSubcategory.IsOldSubCategory && !Model.IsHistory)
                             {
                                 <div class="d-flex align-items-center">
                                     <button type="button" value="@Model.Requests[0].RequestID" class="load-order-details custom-button custom-button-font @color m-auto">Request</button>
