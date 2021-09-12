@@ -1817,7 +1817,7 @@ namespace PrototypeWithAuth.Controllers
                     var parentLines = protocolLines.Where(pl => pl.ParentLineID == null);
                     foreach(var parent in parentLines)
                     {
-                       Copy(protocolLines, parent, protocol.ProtocolVersionID);
+                       CopyLine(protocolLines, parent, protocol.ProtocolVersionID);
                     }                 
                
                     await transaction.CommitAsync();
@@ -1835,7 +1835,7 @@ namespace PrototypeWithAuth.Controllers
             return View("ResearchProtocol", viewmodel);
         }
 
-        public  Line Copy(List<Line> lines, Line origin, int protocolVersionID, Line parent = null)
+        public  Line CopyLine(List<Line> lines, Line origin, int protocolVersionID, Line parent = null)
         {
             if (origin == null)
             {
@@ -1850,7 +1850,7 @@ namespace PrototypeWithAuth.Controllers
             origin.LineID = templineID.ID;
             _context.Entry(origin).State = EntityState.Added;
             _context.SaveChanges();
-            lines.Where(l => l.ParentLineID == oldLineID).ToList().ForEach( x =>  Copy(lines, x, protocolVersionID, origin));
+            lines.Where(l => l.ParentLineID == oldLineID).ToList().ForEach( x =>  CopyLine(lines, x, protocolVersionID, origin));
             return origin;
         }
 
