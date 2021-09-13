@@ -210,7 +210,7 @@ $('body').on('click', "#applyFilter", function (e) {
 			break;
 	}*/
 	var reloadDiv = '_IndexTableData';
-	if ($('.' + reloadDiv).length == 0) {
+	if ($('.' + reloadDiv).length == 0) { //if it's showing the nothing is here page. not just using indextable when don't have to, so don't lose price and category filters
 		reloadDiv = '_IndexTable';
     }
 	//console.log(data);
