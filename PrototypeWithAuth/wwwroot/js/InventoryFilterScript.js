@@ -196,17 +196,17 @@ $('body').on('click', "#applyFilter", function (e) {
 	//reset page number
 	$('.page-number').val(1);
 
-/*	var url;
+/*	var reloadDiv;
 	switch ($('#masterPageType').val()) {
 		case 'RequestSummary':
-			url = "_IndexTableWithProprietaryTabs";
+			reloadDiv = "_IndexTableWithProprietaryTabs";
 			break;
 		case 'RequestRequest':
 		case 'OperationsRequest':
-			url = "_IndexTableWithCounts"
+			reloadDiv = "_IndexTableWithCounts"
 			break;
 		case 'OperationsInventory':
-			url = "_IndexTable";
+			reloadDiv = "_IndexTable";
 			break;
 	}*/
 	var reloadDiv = '_IndexTableData';
