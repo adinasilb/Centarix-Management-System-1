@@ -12,7 +12,8 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
     console.log($('#masterSidebarType').val())
     //console.log($(".modal").hasClass('editModal'));
     if ($(".modal").hasClass('editModal')) {
-        var requestID = $('#history').find('button.open-history-item-modal').attr("value");
+        var requestID = $('#history').find('a.open-history-item-modal').attr("value");
+        //console.log('reqeustid ' + requestID);
         var selectedPriceSort = [];
         $("#priceSortContent2 .priceSort:checked").each(function (e) {
             selectedPriceSort.push($(this).attr("enum"));

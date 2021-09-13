@@ -1341,6 +1341,11 @@
             var selectedCategory = $(className + " .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedSubCategory = $(className + " .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
             console.log(selectedVendor);
+            var catalogNumber = $(className + ' .search-by-catalog-number').val()
+            if (catalogNumber == undefined) {
+                catalogNumber = "";
+            }
+            console.log(catalogNumber)
             var archived = $('.archive-check').val();
             if (archived == undefined) {
                 archived = false;
@@ -1348,7 +1353,7 @@
             console.log('archived ' + archived);
             return {
                 SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation,
-                SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived
+                SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived, CatalogNumber: catalogNumber
             }
         }
 

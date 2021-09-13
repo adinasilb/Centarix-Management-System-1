@@ -1615,7 +1615,7 @@ namespace PrototypeWithAuth.Controllers
                             if (!needsToBeApproved)
                             {
                                 return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("Index", controller, tempRequestListViewModel.RequestIndexObject) };
-                            };
+                            }
                         }
 
                     }
@@ -2411,12 +2411,12 @@ namespace PrototypeWithAuth.Controllers
                     product.CatalogNumber = request.Product.CatalogNumber;
                     //in case we need to return to the modal view
                     product.ProductName = request.Product.ProductName;
+                    product.ProductSubcategoryID = request.Product.ProductSubcategoryID;
                     product.UnitTypeID = request.Product.UnitTypeID;
                     product.SubUnit = request.Product.SubUnit;
                     product.SubUnitTypeID = request.Product.SubUnitTypeID;
                     product.SubSubUnit = request.Product.SubSubUnit;
                     product.SubSubUnitTypeID = request.Product.SubSubUnitTypeID;
-                    product.ProductSubcategoryID = request.Product.ProductSubcategoryID;
 
                     var parentCategoryId = request.Product.ProductSubcategory.ParentCategoryID;
                     requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).Where(ps => ps.ParentCategoryID == parentCategoryId).ToListAsync();
@@ -2717,18 +2717,25 @@ namespace PrototypeWithAuth.Controllers
                 /*//uncurrent the one we're on
                 await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);*/
 
-                var action = tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary ? "IndexInventory" : "Index";
-                switch (OrderTypeEnum)
+                
+                var action = "UploadQuoteModal"; //for order now and add to cart
+                if(OrderTypeEnum == AppUtility.OrderTypeEnum.AlreadyPurchased)
                 {
-                    case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                        action = "UploadOrderModal";
-                        break;
-                    case AppUtility.OrderTypeEnum.OrderNow:
-                        action = "UploadQuoteModal";
-                        break;
-                    case AppUtility.OrderTypeEnum.AddToCart:
-                        action = "UploadQuoteModal";
-                        break;
+                    action = "UploadOrderModal";
+                }
+                else if(OrderTypeEnum == AppUtility.OrderTypeEnum.RequestPriceQuote)
+                {
+                    switch(tempRequestListViewModel.RequestIndexObject.PageType)
+                    {
+                        case AppUtility.PageTypeEnum.RequestRequest:
+                            action = "Index";
+                            break;
+                        case AppUtility.PageTypeEnum.RequestSummary:
+                            action = "IndexInventory";
+                            break;
+                        case AppUtility.PageTypeEnum.RequestLocation:
+                            return new EmptyResult();
+                    }
                 }
                 tempRequestListViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
                 tempRequestListViewModel.RequestIndexObject.IsReorder = true;
@@ -3195,7 +3202,12 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                 }
-
+                tempRequestListViewModel.RequestIndexObject.RequestStatusID = 2;
+                if(tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestLocation) 
+                {
+                    //TODO change to ajax call, return new empty result and close modals in success of ajax
+                    return RedirectToAction("Index", "Locations", new { SectionType = AppUtility.MenuItems.Requests });
+                }
                 return RedirectToAction(action, tempRequestListViewModel.RequestIndexObject);
             }
             catch (Exception ex)
@@ -5147,7 +5159,7 @@ namespace PrototypeWithAuth.Controllers
                             await RemoveTempRequestAsync(deserializedTempRequestListViewModel.GUID);
                             //base.RemoveRequestWithCommentsAndEmailSessions();
 
-                            var action = "_IndexTableData";
+                            /*var action = "_IndexTableData";
                             if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                             {
                                 action = "_IndexTableWithCounts";
@@ -5158,7 +5170,8 @@ namespace PrototypeWithAuth.Controllers
                                 action = "NotificationsView";
                                 return RedirectToAction(action, "Requests", tempRequestListViewModel.RequestIndexObject);
                             }
-                            return await RedirectRequestsToShared(action, tempRequestListViewModel.RequestIndexObject);
+                            return await RedirectRequestsToShared(action, tempRequestListViewModel.RequestIndexObject);*/
+                            return new EmptyResult();
                         }
                         catch (Exception ex)
                         {
