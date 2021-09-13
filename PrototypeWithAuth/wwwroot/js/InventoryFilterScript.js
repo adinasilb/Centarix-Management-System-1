@@ -192,6 +192,7 @@ $('body').on('click', "#applyFilter", function (e) {
     }
 	var numFilters = $('.numFilters').attr("value");
 	console.log('search text ' + searchText);
+	var catalogNumber = $('.popover .search-by-catalog-number').val()
 	//reset page number
 	$('.page-number').val(1);
 
@@ -208,7 +209,10 @@ $('body').on('click', "#applyFilter", function (e) {
 			url = "_IndexTable";
 			break;
 	}*/
-	var url = '_IndexTableData';
+	var reloadDiv = '_IndexTableData';
+	if ($('.' + reloadDiv).length == 0) { //if it's showing the nothing is here page. not just using indextable when don't have to, so don't lose price and category filters
+		reloadDiv = '_IndexTable';
+	}
 	//console.log(data);
 	$.ajax({
 		//    processData: false,
@@ -216,14 +220,15 @@ $('body').on('click', "#applyFilter", function (e) {
 		data: data,
 		async: true,
 		traditional: true,
-		url: "/Requests/" + url + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
+		url: "/Requests/" + reloadDiv + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
 		type: 'POST',
 		cache: false,
 		success: function (data) {
-			$('.' + url).html(data);
+			$('.' + reloadDiv).html(data);
 			$('[data-toggle="popover"]').popover('dispose');
 			console.log($.type(searchText))
 			$('.search-requests-in-filter').attr('value', searchText);
+			$('.search-by-catalog-number').attr('value', catalogNumber);
 			$('body').removeClass('popover-open');
 			$('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
 			$('#invFilterPopover').addClass('custom-order-inv');
