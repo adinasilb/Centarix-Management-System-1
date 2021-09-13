@@ -1809,7 +1809,7 @@ namespace PrototypeWithAuth.Controllers
                     protocol.ProtocolVersionID = 0;
                     protocol.ApplicationUserCreatorID = _userManager.GetUserAsync(User).Result.Id;
                     var protocolLines = await _context.Lines.Include(l => l.LineType).Include(l => l.ParentLine)
-                        .Include(l => l.LineChange).Include(l => l.FunctionLines)
+                        .Include(l => l.LineChange).Include(l => l.FunctionLines).ThenInclude(fl=>fl.FunctionType)
                         .Where(l => l.ProtocolVersionID == protocolVersionID).AsNoTracking().ToListAsync();
 
                     _context.Entry(protocol).State = EntityState.Added;
@@ -1820,6 +1820,7 @@ namespace PrototypeWithAuth.Controllers
                        CopyLine(protocolLines, parent, protocol.ProtocolVersionID);
                     }                 
                
+
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
@@ -1855,7 +1856,12 @@ namespace PrototypeWithAuth.Controllers
             origin.FunctionLines.ToList().ForEach(fl => {
                 var tempFunctionLineID = new FunctionLineID();
                 _context.Add(tempFunctionLineID);
-                _context.SaveChanges();
+                _context.SaveChanges();        
+                if (fl.FunctionType.DescriptionEnum == AppUtility.FunctionTypes.AddFile.ToString() || fl.FunctionType.DescriptionEnum == AppUtility.FunctionTypes.AddImage.ToString())
+                {
+                    MoveDocumentsOutOfTempFolder(tempFunctionLineID.ID, AppUtility.ParentFolderName.FunctionLine, fl.ID, true);
+
+                }
                 fl.ID = tempFunctionLineID.ID;
                 fl.LineID = templineID.ID;
                 _context.Entry(fl).State = EntityState.Added;
