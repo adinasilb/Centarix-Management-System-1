@@ -18,7 +18,9 @@
                 }
                 <div class="modal-header border-0 border-bottom modal-header-padding">
                     <div class="container">
-                        <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessage</label>
+                        <label class="error-message p-2" style="width:100%; text-align: center">
+                        @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
+                        </label>
 
                         <div class="heading-1">
                             Update Hours
@@ -105,7 +107,8 @@
                 },
                 error: function (jqxhr) {
                     $('.update-hours').prop('disabled', false)
-                    $.fn.OpenModal("modal", "update-time-worked", jqxhr.responseText);
+                    //$.fn.OpenModal("modal", "update-time-worked", jqxhr.responseText);
+                    $('.modal .error-message').html(jqxhr.responseText);
                 }
             });
         }

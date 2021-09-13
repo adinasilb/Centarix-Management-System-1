@@ -1457,9 +1457,13 @@ namespace PrototypeWithAuth.Controllers
                     {
                         userImageViewModel.FileToSave.CopyTo(FileStream);
                         SavedUserImagePath = AppUtility.GetLastFiles(filePath, 2);
+                        //throw new Exception();
                     }
                     catch (Exception e)
                     {
+                        Response.StatusCode = 500;
+                        //Response.WriteAsync(AppUtility.GetExceptionMessage(e)); both do same thing - which is better?
+                        return AppUtility.GetExceptionMessage(e);
                     }
                 }
             }

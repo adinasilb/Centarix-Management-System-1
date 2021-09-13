@@ -38,7 +38,9 @@
 </div>
 <div class="modal-body">
     <div class="container">
-        <div class="row text-danger-centarix"> @Model.ErrorMessage </div>
+        <div class="row error-message"> 
+        @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
+        </div>
         <div class="row">
 
             <div class="col-3">
@@ -147,9 +149,10 @@
                 },
                 error: function (jqxhr) {
                     console.log('terms error')
-                    if (jqxhr.status == 500) {
+                    /*if (jqxhr.status == 500) {
                         $.fn.OpenModal('termsModal', 'terms', jqxhr.responseText);
-                    }
+                    }*/
+                    $('.termsModal .error-message').html(jqxhr.responseText)
                     $(".submitTerms").prop('disabled', false)
                     $("#loading").hide();
                     return true;

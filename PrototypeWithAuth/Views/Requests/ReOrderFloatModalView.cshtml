@@ -63,16 +63,11 @@
 
                 <!-- Modal Header -->
                 <div class="new-modal-header no-box-shadow modal-header-padding " style="border-bottom:0 !important">
-                    @if (Model.ErrorMessage != null)
-                    {
-                        <h6 class="text-danger-centarix">
-                            @Model.ErrorMessage
-                        </h6>
-                        <br />
-                    }
 
                     <div class="form-group mb-3 ">
-                        <div class="row px-5 text-danger-centarix"> @ViewBag.ErrorMessage </div>
+                        <div class="row px-5 error-message">
+                            @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
+                        </div>
                         <div class="row modal-title-line">
                             <div class="col-1">
                                 @if (Model.Requests[0].Product.ProductSubcategory.ImageURL != null)
@@ -221,10 +216,11 @@
                     return true;
                 },
                 error: function (jqxhr) {
-                    if (jqxhr.status == 500) {
+                    /*if (jqxhr.status == 500) {
                         console.log('error');
                         $.fn.OpenModal('reorderModal', 'reorder-item', jqxhr.responseText)
-                    }
+                    }*/
+                    $('.reorder-item .error-message').html(jqxhr.responseText)
                     $("#loading").hide();
                     $('.submitOrder').prop('disabled', false)
                     return true;

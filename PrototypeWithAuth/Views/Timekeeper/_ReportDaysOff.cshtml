@@ -10,12 +10,8 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
 }
-<div class="row">
-    @if (Model.ErrorMessage != null && Model.ErrorMessage != "")
-    {
-        <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
-
-    }
+<div class="row pb-2 error-message">
+@{await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
 </div>
 <div class="row   mb-5 text-center ">
     <div class="col-8">

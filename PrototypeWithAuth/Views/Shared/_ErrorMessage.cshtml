@@ -1,7 +1,7 @@
 ﻿@model string
 
-@if (Model != null)
+@if (Model != null && Model != "")
 {
-    <div class="text danger-text">Error: @Model</div>
+    <div class="text danger-text _errorMessage">Error: @Model</div>
 }
 
