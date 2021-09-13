@@ -196,20 +196,23 @@ $('body').on('click', "#applyFilter", function (e) {
 	//reset page number
 	$('.page-number').val(1);
 
-/*	var url;
+/*	var reloadDiv;
 	switch ($('#masterPageType').val()) {
 		case 'RequestSummary':
-			url = "_IndexTableWithProprietaryTabs";
+			reloadDiv = "_IndexTableWithProprietaryTabs";
 			break;
 		case 'RequestRequest':
 		case 'OperationsRequest':
-			url = "_IndexTableWithCounts"
+			reloadDiv = "_IndexTableWithCounts"
 			break;
 		case 'OperationsInventory':
-			url = "_IndexTable";
+			reloadDiv = "_IndexTable";
 			break;
 	}*/
-	var url = '_IndexTableData';
+	var reloadDiv = '_IndexTableData';
+	if ($('.' + reloadDiv).length == 0) {
+		reloadDiv = '_IndexTable';
+    }
 	//console.log(data);
 	$.ajax({
 		//    processData: false,
@@ -217,11 +220,11 @@ $('body').on('click', "#applyFilter", function (e) {
 		data: data,
 		async: true,
 		traditional: true,
-		url: "/Requests/" + url + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
+		url: "/Requests/" + reloadDiv + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
 		type: 'POST',
 		cache: false,
 		success: function (data) {
-			$('.' + url).html(data);
+			$('.' + reloadDiv).html(data);
 			$('[data-toggle="popover"]').popover('dispose');
 			console.log($.type(searchText))
 			$('.search-requests-in-filter').attr('value', searchText);
