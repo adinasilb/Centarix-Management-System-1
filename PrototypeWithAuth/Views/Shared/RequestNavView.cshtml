@@ -386,6 +386,7 @@
                     else if (jqxhr.responseText != null) {
                         if (jqxhr.responseText.indexOf('<div') == -1) {
                             alert("Error 500: " + jqxhr.responseText);
+                            console.log(jqxhr.responseText)
                         }
                     }
                     else {

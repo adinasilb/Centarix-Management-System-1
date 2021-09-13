@@ -38,7 +38,9 @@
                 <div>
                     <div class="modal-header modal-header-padding">
                         <div class="container-fluid">
-                            <div class="row text-danger-centarix"> @Model.ErrorMessage </div>
+                            <div class="row error-message">
+                                @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
+                            </div>
                             <div class="row ">
                                 <div class="col-4">
                                     <div class="heading-1">Upload Quote</div>
@@ -217,9 +219,10 @@
                     return true;
                 },
                 error: function (jqxhr) {
-                    if (jqxhr.status == 500) {
+                    /*if (jqxhr.status == 500) {
                         $.fn.OpenModal('modalStep1', 'step-1', jqxhr.responseText)
-                    }
+                    }*/
+                    $('.step-1 .error-message').html(jqxhr.responseText);
                     $('.submitQuote').prop('disabled', false);
                     $("#loading").hide();
                     return true;

@@ -608,6 +608,8 @@ $(function () {
 
 
 		$.ajax({
+			processData: false,
+			contentType: false,
 			url: url,
 			method: 'POST',
 			data: formData,
@@ -638,8 +640,6 @@ $(function () {
 
 				//return false;
 			},
-			processData: false,
-			contentType: false
 		});
 
 

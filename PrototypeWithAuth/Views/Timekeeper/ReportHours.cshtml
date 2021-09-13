@@ -19,12 +19,8 @@
         Layout = "~/Views/Shared/RequestNavView.cshtml";
     }
     @*<label class="text-danger-centarix p-2" style="width:100%; text-align: center">Exception here: @Model.ErrorMessage</label>*@
-    <div class="row">
-        @if (Model.ErrorMessage != null && Model.ErrorMessage != "")
-        {
-            <span class="text danger-text view-bag-error pb-2">Error: @Model.ErrorMessage</span>
-
-        }
+    <div class="row error-message">
+        @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
     </div>
     <div class="container-fluid">
         <div class="row pb-1 mb-4">
@@ -234,7 +230,7 @@
             error: function (xhr) {
                 console.log('error deleting notification');
                 $('.delete-notification').prop('disabled', false)
-                $('.render-body').html(xhr.responseText);
+                $('.error-message').html(xhr.responseText);
             }
         });
     });

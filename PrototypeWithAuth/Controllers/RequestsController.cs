@@ -1502,6 +1502,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         foreach (var tempRequest in newTRLVM.TempRequestViewModels)
                         {
+                            //throw new Exception();
                             tempRequest.Request.PaymentStatusID = termsViewModel.SelectedTerm;
                             tempRequest.Request.Installments = (uint)termsViewModel.Installments != 0 ? (uint)termsViewModel.Installments : 1;
                             if (newTRLVM.TempRequestViewModels.Count() == 1 && tempRequest.Request.RequestStatusID == 1) //item is ordernow and needs to be approved
@@ -1650,10 +1651,10 @@ namespace PrototypeWithAuth.Controllers
                 await RollbackCurrentTempAsync(tempRequestListViewModel.GUID);
                 termsViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
-                var termsList = new List<SelectListItem>() { };
-                await _context.PaymentStatuses.ForEachAsync(ps => termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription }));
-                termsViewModel.TermsList = termsList;
-                termsViewModel.TempRequestListViewModel = tempRequestListViewModel;
+                //var termsList = new List<SelectListItem>() { };
+                //await _context.PaymentStatuses.ForEachAsync(ps => termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription }));
+                //termsViewModel.TermsList = termsList;
+                //termsViewModel.TempRequestListViewModel = tempRequestListViewModel;
                 return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("", "", ""), TermsViewModel = termsViewModel };
             }
         }
@@ -2586,7 +2587,7 @@ namespace PrototypeWithAuth.Controllers
                     FillDocumentsInfo(requestItemViewModel, productSubcategory, requestId, parentQuoteId);
                     requestItemViewModel.Comments = await _context.Comments.Include(r => r.ApplicationUser).Where(r => r.Request.RequestID == requestItemViewModel.Requests[0].RequestID).ToListAsync();
                     requestItemViewModel.ModalType = AppUtility.RequestModalType.Edit;
-                    Response.StatusCode = 550;
+                    Response.StatusCode = 50;
                     return PartialView(requestItemViewModel);
                 }
             }
@@ -2734,6 +2735,7 @@ namespace PrototypeWithAuth.Controllers
                 tempRequestListViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
                 tempRequestListViewModel.RequestIndexObject.IsReorder = true;
                 tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
+                //throw new Exception();
                 return RedirectToAction(action, "Requests", tempRequestListViewModel.RequestIndexObject);
             }
             catch (Exception ex)
@@ -2741,9 +2743,9 @@ namespace PrototypeWithAuth.Controllers
                 await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
                 requestItemViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
-                var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-                requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
-                return PartialView("ReOrderFloatModalView", requestItemViewModel);
+                /*var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+                requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");*/
+                return PartialView("_ErrorMessage", requestItemViewModel.ErrorMessage);
             }
         }
 
@@ -4811,13 +4813,13 @@ namespace PrototypeWithAuth.Controllers
                 {
                     await transaction.RollbackAsync();
                     Response.StatusCode = 500;
-                    for (int i = 0; i < paymentsPayModalViewModel.Requests.Count; i++)
+                    /*for (int i = 0; i < paymentsPayModalViewModel.Requests.Count; i++)
                     {
                         paymentsPayModalViewModel.Requests[i] = _context.Requests.Where(r => r.RequestID == paymentsPayModalViewModel.Requests[i].RequestID).Include(r => r.Product)
                             .ThenInclude(p => p.Vendor).FirstOrDefault();
-                    }
+                    }*/
                     paymentsPayModalViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
-                    return PartialView(paymentsPayModalViewModel);
+                    return PartialView("_ErrorMessage", paymentsPayModalViewModel.ErrorMessage);
                 }
             }
 
@@ -5147,6 +5149,7 @@ namespace PrototypeWithAuth.Controllers
 
                                 try
                                 {
+                                    //throw new Exception();
                                     await transaction.CommitAsync();
                                 }
                                 catch (Exception ex)
@@ -5155,7 +5158,7 @@ namespace PrototypeWithAuth.Controllers
                                     RevertDocuments(tempRequestViewModel.Request.ParentQuoteID == null ? 0 : Convert.ToInt32(tempRequestViewModel.Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
                                     //Directory.Move(requestFolderTo, requestFolderFrom);
                                     transaction.Rollback();
-                                    throw new Exception(AppUtility.GetExceptionMessage(ex));
+                                    throw ex;
                                 }
                             }
                             await RemoveTempRequestAsync(deserializedTempRequestListViewModel.GUID);
@@ -5177,7 +5180,7 @@ namespace PrototypeWithAuth.Controllers
                         catch (Exception ex)
                         {
                        
-                            throw new Exception(AppUtility.GetExceptionMessage(ex));
+                            throw ex;
                         }
                     }
                 }
@@ -5209,7 +5212,7 @@ namespace PrototypeWithAuth.Controllers
                 uploadQuoteOrderViewModel.TempRequestListViewModel = tempRequestListViewModel;
                 uploadQuoteOrderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
-                return PartialView("UploadQuoteModal", uploadQuoteOrderViewModel);
+                return PartialView("_ErrorMessage", uploadQuoteOrderViewModel.ErrorMessage);
             }
         }
 
@@ -5296,7 +5299,7 @@ namespace PrototypeWithAuth.Controllers
                     tempRequest.Request.ParentRequest = uploadOrderViewModel.ParentRequest;
                     //}
                 }
-
+                //throw new Exception();
                 await SetTempRequestAsync(newTempRequestJson, deserializedTempRequestListViewModel, tempRequestListViewModel.RequestIndexObject);
                 //await KeepTempRequestJsonCurrentAsOriginal(newTempRequestJson.GuidID);
                 //do we need this current/original here??
@@ -5340,9 +5343,9 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                uploadOrderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                uploadOrderViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
-                return PartialView("UploadOrderModal", uploadOrderViewModel);
+                return PartialView("_ErrorMessage", uploadOrderViewModel.ErrorMessage);
             }
         }
 
@@ -5392,7 +5395,7 @@ namespace PrototypeWithAuth.Controllers
             var r = await SaveTermsModalAsync(termsViewModel, tempRequestListViewModel);
             if (r.RedirectToActionResult.ActionName == "" && r.RedirectToActionResult.ControllerName == "")
             {
-                return PartialView("TermsModal", r.TermsViewModel);
+                return PartialView("_ErrorMessage", r.TermsViewModel.ErrorMessage);
             }
             else if (r.RedirectToActionResult.ActionName == "NeedsToBeApproved")
             {
