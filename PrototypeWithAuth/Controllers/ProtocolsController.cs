@@ -1850,6 +1850,14 @@ namespace PrototypeWithAuth.Controllers
             origin.LineID = templineID.ID;
             _context.Entry(origin).State = EntityState.Added;
             _context.SaveChanges();
+            origin.FunctionLines.ToList().ForEach(fl => {
+                var tempFunctionLineID = new FunctionLineID();
+                _context.Add(tempFunctionLineID);
+                _context.SaveChanges();
+                fl.ID = tempFunctionLineID.ID; 
+                fl.LineID = templineID.ID;
+                _context.Entry(fl).State = EntityState.Modified; });
+            _context.SaveChanges();
             lines.Where(l => l.ParentLineID == oldLineID).ToList().ForEach( x =>  CopyLine(lines, x, protocolVersionID, origin));
             return origin;
         }
