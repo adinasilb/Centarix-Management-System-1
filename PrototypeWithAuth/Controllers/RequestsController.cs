@@ -2480,11 +2480,11 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     //save the new comment
                                     comment.RequestID = request.RequestID;
-                                    if (comment.CommentID == 0)
+                                    if(comment.CommentID == 0)
                                     {
                                         comment.CommentTimeStamp = DateTime.Now;
                                         _context.Entry(comment).State = EntityState.Added;
-                                    }
+                                    } 
                                     else
                                     {
                                         _context.Entry(comment).State = EntityState.Modified;
@@ -2710,6 +2710,10 @@ namespace PrototypeWithAuth.Controllers
                             throw new Exception(AppUtility.GetExceptionMessage(ex)); ;
                         }
                     }
+                }
+                else if(tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
+                {
+                    tempRequestListViewModel.RequestIndexObject.RequestStatusID = 6; //redirect to requests instead of received
                 }
                 else if(tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                 {
