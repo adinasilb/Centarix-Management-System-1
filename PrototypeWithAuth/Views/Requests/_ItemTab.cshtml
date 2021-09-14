@@ -286,24 +286,9 @@
                 <span asp-validation-for="Requests[0].URL" class="text-danger-centarix"></span>
             </div>
         </div>
-    @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null || Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true)
+    @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null ||  Model.Requests[0].ParentRequest?.OrderNumber != null)
     {
         <div class="row">
-            @if (Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true)
-            {
-                <input type ="hidden" asp-for="Requests[0].Payments[0].InvoiceID" />
-                <input type ="hidden" asp-for="Requests[0].Payments[0].Invoice.InvoiceID" />
-                <div class="col-md-3 ">
-                    <label asp-for="Requests[0].Payments[0].Invoice.InvoiceNumber" class="control-label"></label>
-                    <input asp-for="Requests[0].Payments[0].Invoice.InvoiceNumber" class="form-control-plaintext border-bottom @markReadOnlyClass" />
-                    <span asp-validation-for="Requests[0].Payments[0].Invoice.InvoiceNumber" class="text-danger-centarix"></span>
-                </div>
-                <div class="col-md-3 ">
-                    <label asp-for="Requests[0].Payments[0].Invoice.InvoiceDate" class="control-label"></label>
-                    <input asp-for="Requests[0].Payments[0].Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" type="text" asp-format="@AppUtility.AspDateFormatString" />
-                    <span asp-validation-for="Requests[0].Payments[0].Invoice.InvoiceDate" class="text-danger-centarix"></span>
-                </div>
-            }
             @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null)
             {
                 <div class="col-md-3 ">
@@ -328,22 +313,40 @@
 
         </div>
     }
-    @if (Model.Requests[0].RequestStatusID == 3)
+    @if (Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true)
     {
         <div class="row">
-            <div class="col-md-3 ">
-                <label asp-for="Requests[0].ArrivalDate" class="control-label"></label>
-                <input asp-for="Requests[0].ArrivalDate" class="form-control-plaintext border-bottom" asp-format="@AppUtility.AspDateFormatString" disabled type="text" />
-            </div>
-            <div class="col-md-3">
-                <label class="control-label">Received By</label>
-                <input type="text" class="form-control-plaintext border-bottom" disabled value="@Model.Requests[0].ApplicationUserReceiver.FirstName @Model.Requests[0].ApplicationUserReceiver.LastName" />
-                <input type="hidden" asp-for="Requests[0].ApplicationUserReceiverID" />
-            </div>
+            @if (Model.Requests[0].RequestStatusID == 3)
+            {
+                <div class="col-md-3 ">
+                    <label asp-for="Requests[0].ArrivalDate" class="control-label"></label>
+                    <input asp-for="Requests[0].ArrivalDate" class="form-control-plaintext border-bottom" asp-format="@AppUtility.AspDateFormatString" disabled type="text" />
+                </div>
+                <div class="col-md-3">
+                    <label class="control-label">Received By</label>
+                    <input type="text" class="form-control-plaintext border-bottom" disabled value="@Model.Requests[0].ApplicationUserReceiver.FirstName @Model.Requests[0].ApplicationUserReceiver.LastName" />
+                    <input type="hidden" asp-for="Requests[0].ApplicationUserReceiverID" />
+                </div>
+            }
+            @if (Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true) //todo: make this a loop for each payment
+            {
+                <input type ="hidden" asp-for="Requests[0].Payments[0].InvoiceID" />
+                <input type ="hidden" asp-for="Requests[0].Payments[0].Invoice.InvoiceID" />
+                <div class="col-md-3 ">
+                    <label asp-for="Requests[0].Payments[0].Invoice.InvoiceNumber" class="control-label"></label>
+                    <input asp-for="Requests[0].Payments[0].Invoice.InvoiceNumber" class="form-control-plaintext border-bottom @markReadOnlyClass" />
+                    <span asp-validation-for="Requests[0].Payments[0].Invoice.InvoiceNumber" class="text-danger-centarix"></span>
+                </div>
+                <div class="col-md-3 ">
+                    <label asp-for="Requests[0].Payments[0].Invoice.InvoiceDate" class="control-label"></label>
+                    <input asp-for="Requests[0].Payments[0].Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" type="text" asp-format="@AppUtility.AspDateFormatString" />
+                    <span asp-validation-for="Requests[0].Payments[0].Invoice.InvoiceDate" class="text-danger-centarix"></span>
+                </div>
+            }
         </div>
     }
 }
-else
+else //isProprietary
 {
     @*<div class="row">
         <div class="col-md-4 form-group">
