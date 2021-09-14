@@ -43,6 +43,7 @@ $.fn.ReloadFilterDiv = function (numFilters, data) {
 	console.log('status ' + $(".request-status-id").attr("value"));
 	var searchText = $('.popover .search-requests-in-filter').val();
 	console.log('search: ' + searchText);
+	var catalogNumber = $('.popover .search-by-catalog-number').val();
 /*	var searchText2 = $('.popover .search-requests-in-filter').attr('value');
 	console.log('search 2: ' + searchText2);*/
 	$.ajax({
@@ -58,6 +59,7 @@ $.fn.ReloadFilterDiv = function (numFilters, data) {
 			$('#inventoryFilterContent').html(newData);
 			$('.search-requests-in-filter').attr('value', searchText);
 			//$('.search-requests-in-filter').val(searchText);
+			$('.search-by-catalog-number').attr('value', catalogNumber);
 			$('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
 		}
 	});
