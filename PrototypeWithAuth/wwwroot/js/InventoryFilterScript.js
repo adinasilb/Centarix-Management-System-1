@@ -42,6 +42,7 @@ $.fn.ReloadFilterDiv = function (numFilters, data) {
 	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
 	console.log('status ' + $(".request-status-id").attr("value"));
 	var searchText = $('.popover .search-requests-in-filter').val();
+	var catalogNumber = $('.popover .search-by-catalog-number').val();
 	console.log('search: ' + searchText);
 /*	var searchText2 = $('.popover .search-requests-in-filter').attr('value');
 	console.log('search 2: ' + searchText2);*/
@@ -58,6 +59,7 @@ $.fn.ReloadFilterDiv = function (numFilters, data) {
 			$('#inventoryFilterContent').html(newData);
 			$('.search-requests-in-filter').attr('value', searchText);
 			//$('.search-requests-in-filter').val(searchText);
+			$('.search-by-catalog-number').attr('value', catalogNumber);
 			$('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
 		}
 	});
