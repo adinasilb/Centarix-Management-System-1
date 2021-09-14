@@ -100,6 +100,7 @@
                             </div>
                             @if (Model.TempRequestListViewModel.RequestIndexObject.IsReorder)
                             {
+                                <input type="hidden" class="for-supply-date-calc" value="@DateTime.Now.GetElixirDateFormat()"/>
                                 <div class="row">
                                     <div class=" col-md-6">
                                         <div class="form-group ">
