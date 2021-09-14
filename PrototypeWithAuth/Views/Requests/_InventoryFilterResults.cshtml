@@ -30,9 +30,15 @@
                 <label class="text text-left font-weight-bold">Total Filters:</label>
                 <span class=" text numFilters font-weight-bold" value="@Model.NumFilters">@Model.NumFilters</span>
             </div>
-            <div class="col-3">
-                <input type="text" placeholder="Search" class="mb-2 w-100 form-control-plaintext border-bottom search-requests-in-filter" />
+            <div class="col-2">
+                <input type="text" placeholder="Search By Name" class="mb-2 w-100 form-control-plaintext border-bottom search-requests-in-filter" />
             </div>
+            @if (!Model.IsProprietary)
+            {
+                <div class="col-2">
+                    <input type="text" placeholder="By Catalog Number" class="mb-2 w-100 form-control-plaintext border-bottom search-by-catalog-number" />
+                </div>
+            }
             <div class="col-3"></div>
             @if (Model.IsProprietary)
             {

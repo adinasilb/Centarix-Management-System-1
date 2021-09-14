@@ -2462,7 +2462,7 @@ namespace PrototypeWithAuth.Controllers
                         //_context.Update(request);
                         _context.Entry(request).State = EntityState.Modified;
                         _context.Entry(request.Product).State = EntityState.Modified;
-                        if (request.Payments?[0].Invoice != null)
+                        if (request.Payments?[0].InvoiceID != null)
                         {
                             _context.Entry(request.Payments[0].Invoice).State = EntityState.Modified; //todo: make a loop
                         }

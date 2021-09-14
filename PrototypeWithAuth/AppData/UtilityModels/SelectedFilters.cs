@@ -6,6 +6,7 @@ namespace PrototypeWithAuth.AppData.UtilityModels
     {
         public bool Archived { get; set; }
         //public List<int> SelectedTypesIDs { get; set; }
+        public string CatalogNumber { get; set; }
         private List<int> _selectedVendorsIDs;
         public List<int> SelectedVendorsIDs 
         {

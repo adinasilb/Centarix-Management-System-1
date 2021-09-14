@@ -42,6 +42,7 @@ $.fn.ReloadFilterDiv = function (numFilters, data) {
 	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
 	console.log('status ' + $(".request-status-id").attr("value"));
 	var searchText = $('.popover .search-requests-in-filter').val();
+	var catalogNumber = $('.popover .search-by-catalog-number').val();
 	console.log('search: ' + searchText);
 /*	var searchText2 = $('.popover .search-requests-in-filter').attr('value');
 	console.log('search 2: ' + searchText2);*/
@@ -58,6 +59,7 @@ $.fn.ReloadFilterDiv = function (numFilters, data) {
 			$('#inventoryFilterContent').html(newData);
 			$('.search-requests-in-filter').attr('value', searchText);
 			//$('.search-requests-in-filter').val(searchText);
+			$('.search-by-catalog-number').attr('value', catalogNumber);
 			$('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
 		}
 	});
@@ -192,6 +194,7 @@ $('body').on('click', "#applyFilter", function (e) {
     }
 	var numFilters = $('.numFilters').attr("value");
 	console.log('search text ' + searchText);
+	var catalogNumber = $('.popover .search-by-catalog-number').val()
 	//reset page number
 	$('.page-number').val(1);
 
@@ -208,7 +211,10 @@ $('body').on('click', "#applyFilter", function (e) {
 			url = "_IndexTable";
 			break;
 	}*/
-	var url = '_IndexTableData';
+	var reloadDiv = '_IndexTableData';
+	if ($('.' + reloadDiv).length == 0) { //if it's showing the nothing is here page. not just using indextable when don't have to, so don't lose price and category filters
+		reloadDiv = '_IndexTable';
+	}
 	//console.log(data);
 	$.ajax({
 		//    processData: false,
@@ -216,14 +222,15 @@ $('body').on('click', "#applyFilter", function (e) {
 		data: data,
 		async: true,
 		traditional: true,
-		url: "/Requests/" + url + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
+		url: "/Requests/" + reloadDiv + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
 		type: 'POST',
 		cache: false,
 		success: function (data) {
-			$('.' + url).html(data);
+			$('.' + reloadDiv).html(data);
 			$('[data-toggle="popover"]').popover('dispose');
 			console.log($.type(searchText))
 			$('.search-requests-in-filter').attr('value', searchText);
+			$('.search-by-catalog-number').attr('value', catalogNumber);
 			$('body').removeClass('popover-open');
 			$('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
 			$('#invFilterPopover').addClass('custom-order-inv');

@@ -873,7 +873,11 @@ namespace PrototypeWithAuth.Controllers
                 {
                     fullRequestsList = fullRequestsList.Where(r => selectedFilters.SelectedOwnersIDs.Contains(r.ApplicationUserCreatorID));
                 }
-                
+                if (selectedFilters.CatalogNumber != null && selectedFilters.CatalogNumber != "")
+                {
+                    fullRequestsList = fullRequestsList.Where(r => r.Product.CatalogNumber.ToUpper().Contains(selectedFilters.CatalogNumber.ToUpper()));
+                }
+
             }
             if (selectedFilters?.Archived == true)
             {
@@ -1110,7 +1114,8 @@ namespace PrototypeWithAuth.Controllers
                     NumFilters = numFilters,
                     SectionType = sectionType,
                     Archive = selectedFilters.Archived, 
-                    IsProprietary = isProprietary
+                    IsProprietary = isProprietary,
+                    CatalogNumber = selectedFilters.CatalogNumber
                 };
                 if (inventoryFilterViewModel.SelectedCategories.Count() > 0)
                 {
