@@ -1437,7 +1437,7 @@ namespace PrototypeWithAuth.Controllers
             viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.ToList();
             viewmodel.Creators = _context.Users.Select(u =>
                 new SelectListItem() { Value = u.Id, Text = u.FirstName + u.LastName }).ToList();
-            viewmodel.ProtocolVersions = _context.ProtocolVersions.Include(p=>p.Protocol).ToList();
+            viewmodel.ProtocolVersions = _context.ProtocolVersions.Include(p=>p.Protocol).ToLookup(p=>p.ProtocolID).Select(pi=> pi.OrderByDescending(v => v.VersionNumber).First()).ToList();
         }
 
         private void GetFunctionLineLinkToProductDDls(AddFunctionViewModel<FunctionLine> viewmodel)
@@ -1454,7 +1454,7 @@ namespace PrototypeWithAuth.Controllers
             viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.ToList();
             viewmodel.Creators = _context.Users.Select(u =>
                 new SelectListItem() { Value = u.Id, Text = u.FirstName + u.LastName }).ToList();
-            viewmodel.ProtocolVersions = _context.ProtocolVersions.ToList();
+            viewmodel.ProtocolVersions = _context.ProtocolVersions.Include(p => p.Protocol).ToLookup(p => p.ProtocolID).Select(pi => pi.OrderByDescending(v => v.VersionNumber).First()).ToList();
         }
 
         private void GetFunctionLineLinkToProductDDls(AddFunctionViewModel<FunctionResult> viewmodel)
@@ -1541,7 +1541,7 @@ namespace PrototypeWithAuth.Controllers
                     viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.Where(ps => ps.ProtocolCategoryTypeID == protocol.Protocol.ProtocolSubCategory.ProtocolCategoryTypeID).ToList();
                     viewmodel.Creators = _context.Users.Select(u =>
                         new SelectListItem() { Value = u.Id, Text = u.FirstName + u.LastName }).ToList();
-                    viewmodel.ProtocolVersions = _context.ProtocolVersions.Include(p=>p.Protocol).Where(p => p.Protocol.ProtocolSubCategoryID == protocol.Protocol.ProtocolSubCategoryID && p.ApplicationUserCreatorID == protocol.ApplicationUserCreatorID).ToList();
+                    viewmodel.ProtocolVersions = _context.ProtocolVersions.Include(p=>p.Protocol).Where(p => p.Protocol.ProtocolSubCategoryID == protocol.Protocol.ProtocolSubCategoryID && p.ApplicationUserCreatorID == protocol.ApplicationUserCreatorID).ToLookup(p => p.ProtocolID).Select(pi => pi.OrderByDescending(v => v.VersionNumber).First()).ToList();
                     break;
             }
             return PartialView(viewmodel);
@@ -1646,21 +1646,21 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<JsonResult> FilterLinkToProtocol(int parentCategoryID, int subCategoryID, string creatorID)
         {
-            IQueryable<ProtocolVersion> protocolsList = _context.ProtocolVersions.Include(p=>p.Protocol);
-            if (subCategoryID != 0)
+            IQueryable<ProtocolVersion> protocolsList = _context.ProtocolVersions.Include(p=>p.Protocol).ThenInclude(p=>p.ProtocolSubCategory);
+            if (subCategoryID != 0 && protocolsList.Count() > 0)
             {
                 protocolsList = protocolsList.Where(p => p.Protocol.ProtocolSubCategoryID == subCategoryID);
             }
-            else if (parentCategoryID != 0)
+            else if (parentCategoryID != 0 && protocolsList.Count()>0)
             {
                 protocolsList = protocolsList.Where(p => p.Protocol.ProtocolSubCategory.ProtocolCategoryTypeID == parentCategoryID);
             }
-            if (creatorID != null)
+            if (creatorID != null && protocolsList.Count() > 0)
             {
                 protocolsList = protocolsList.Where(p => p.ApplicationUserCreatorID == creatorID);
             }
-            var protocolListJson = await protocolsList.Select(p => new { protocolID = p.ProtocolVersionID, name = p.Protocol.Name }).ToListAsync();
-            var subCategoryList = await _context.ProtocolSubCategories.Where(ps => ps.ProtocolCategoryTypeID == parentCategoryID).Select(ps => new { subCategoryID = ps.ProtocolCategoryTypeID, subCategoryDescription = ps.ProtocolSubCategoryTypeDescription }).ToListAsync();
+            var protocolListJson = await protocolsList.ToLookup(p => p.ProtocolID).Select(pi => pi.OrderByDescending(v => v.VersionNumber).First()).Select(p => new { protocolID = p.ProtocolVersionID, name = p.Protocol.Name }).ToListAsync();
+            var subCategoryList = await _context.ProtocolSubCategories.Where(ps => ps.ProtocolCategoryTypeID == parentCategoryID).Select(ps => new { subCategoryID = ps.ProtocolSubCategoryTypeID, subCategoryDescription = ps.ProtocolSubCategoryTypeDescription }).ToListAsync();
             return Json(new { ProtocolSubCategories = subCategoryList, Protocols = protocolListJson });
         }
 
@@ -1793,12 +1793,13 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> CreateNewVersion(int protocolVersionID)
+        public async Task<IActionResult> CreateNewVersion(int protocolID)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ResearchProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            var protocol = await _context.ProtocolVersions.Include(pv => pv.Protocol).Where(pv => pv.ProtocolVersionID == protocolVersionID).AsNoTracking().FirstOrDefaultAsync();
+            var maxVersion = _context.ProtocolVersions.AsNoTracking().Where(pv => pv.ProtocolID == protocolID).Max(pv => pv.VersionNumber);
+            var protocol =  await _context.ProtocolVersions.Include(pv => pv.Protocol).AsNoTracking().Where(pv => pv.ProtocolID == protocolID && pv.VersionNumber == maxVersion).FirstOrDefaultAsync();
 
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -1810,7 +1811,7 @@ namespace PrototypeWithAuth.Controllers
                     protocol.ApplicationUserCreatorID = _userManager.GetUserAsync(User).Result.Id;
                     var protocolLines = await _context.Lines.Include(l => l.LineType).Include(l => l.ParentLine)
                         .Include(l => l.LineChange).Include(l => l.FunctionLines).ThenInclude(fl=>fl.FunctionType)
-                        .Where(l => l.ProtocolVersionID == protocolVersionID).AsNoTracking().ToListAsync();
+                        .Where(l => l.ProtocolVersionID == protocol.ProtocolVersionID).AsNoTracking().ToListAsync();
 
                     _context.Entry(protocol).State = EntityState.Added;
                     await _context.SaveChangesAsync();
