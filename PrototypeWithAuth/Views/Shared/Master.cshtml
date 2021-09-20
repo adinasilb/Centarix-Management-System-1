@@ -12,7 +12,7 @@
     @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
     @*<link rel="stylesheet" href="~/lib/bootstrap/originalDist/css/bootstrap.min.css" />*@
 
-    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
+@*    <script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/jquery/dist/popper.min.js"></script>
         <script src="~/lib/jquery/dist/popper.min.js"></script>
         <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
@@ -1350,7 +1350,11 @@
             if (archived == undefined) {
                 archived = false;
             }
-            console.log('archived ' + archived);
+            var catalogNumber = $(className + ' .search-by-catalog-number').val()
+            if (catalogNumber == undefined) {
+                catalogNumber = "";
+            }
+            console.log(catalogNumber)
             return {
                 SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation,
                 SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived, CatalogNumber: catalogNumber

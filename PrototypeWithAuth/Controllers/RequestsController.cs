@@ -1147,6 +1147,7 @@ namespace PrototypeWithAuth.Controllers
                         request.RequestStatusID = 3;
                         request.ApplicationUserReceiverID = _userManager.GetUserId(User);
                         request.ArrivalDate = DateTime.Now;
+                        request.IsInInventory = true;
                     }
                     else
                     {
@@ -2453,12 +2454,13 @@ namespace PrototypeWithAuth.Controllers
 
                         //_context.Update(requestItemViewModel.Request.Product.SubProject);
                         //_context.Update(requestItemViewModel.Request.Product);
-/*                        if (request.ParentQuote != null)
+                        /*if (request.ParentQuote != null)
                         {
                             _context.Update(request.ParentQuote);
                             await _context.SaveChangesAsync();
                             request.ParentQuoteID = request.ParentQuote.ParentQuoteID;
                         }*/
+                        //_context.Update(request);
                         _context.Entry(request).State = EntityState.Modified;
                         _context.Entry(request.Product).State = EntityState.Modified;
                         if(request.Payments?[0].Invoice != null)
@@ -2713,6 +2715,10 @@ namespace PrototypeWithAuth.Controllers
                 {
                     tempRequestListViewModel.RequestIndexObject.RequestStatusID = 6; //redirect to requests instead of received
                 }
+                else if(tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
+                {
+                    tempRequestListViewModel.RequestIndexObject.RequestStatusID = 6; //redirect to requests instead of received
+                }
                 //should this be added?
                 /*//uncurrent the one we're on
                 await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);*/
@@ -2754,6 +2760,18 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+        private async Task RemoveOldRequestFromInventory(int requestId)
+        {
+
+            var productID = _context.Requests.Where(r => r.RequestID == requestId).Select(r => r.ProductID).FirstOrDefault();
+            var oldRequest = _context.Requests.Where(r => r.ProductID == productID && r.RequestID != requestId).Where(r => r.IsInInventory).FirstOrDefault();
+            if (oldRequest != null)
+            {
+                oldRequest.IsInInventory = false;
+                _context.Update(oldRequest);
+                await _context.SaveChangesAsync();
+            }       
+        }
 
 
 
@@ -3162,7 +3180,6 @@ namespace PrototypeWithAuth.Controllers
                                     requestNotification.OrderDate = DateTime.Now;
                                     requestNotification.Vendor = tempRequest.Request.Product.Vendor.VendorEnName;
                                     _context.Add(requestNotification);
-
                                     await _context.SaveChangesAsync();
                                 }
                                 if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
@@ -3886,6 +3903,7 @@ namespace PrototypeWithAuth.Controllers
                     requestReceived.IsPartial = receivedLocationViewModel.Request.IsPartial;
                     requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
                     requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
+                    requestReceived.IsInInventory = true;
                     if (requestReceived.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString())
                     {
                         requestReceived.Batch = receivedLocationViewModel.Request.Batch;
@@ -3896,8 +3914,11 @@ namespace PrototypeWithAuth.Controllers
                         requestReceived.PaymentStatusID = 3;
                     }
                     _context.Update(requestReceived);
-                    await _context.SaveChangesAsync();
 
+                    //need to do this function before save changes because if new request it should not have an id yet
+                    await _context.SaveChangesAsync();
+                    await RemoveOldRequestFromInventory(requestReceived.RequestID);
+               
                     RequestNotification requestNotification = new RequestNotification();
                     requestNotification.RequestID = requestReceived.RequestID;
                     requestNotification.IsRead = false;
@@ -5885,6 +5906,21 @@ namespace PrototypeWithAuth.Controllers
             var sw = System.IO.File.AppendText(errorFilePath);
             sw.WriteLine("\n" + message);
             sw.Close();
+        }
+        public async Task MarkInventory()
+        {
+            //before running this function, run the following in ssms:
+            //update requests set IsInInventory = 'false'
+
+            var requests = _context.Requests.IgnoreQueryFilters().Where(r => !r.IsDeleted).Where(r => r.RequestStatusID == 3 && r.OrderType != AppUtility.OrderTypeEnum.Save.ToString());
+            var requestsInInventory = requests.OrderByDescending(r => r.ArrivalDate).ToLookup(r => r.ProductID).Select(e => e.First());
+
+            foreach (var r in requestsInInventory)
+            {
+                r.IsInInventory = true;
+                _context.Update(r);
+            }
+            await _context.SaveChangesAsync();
         }
     }
 }

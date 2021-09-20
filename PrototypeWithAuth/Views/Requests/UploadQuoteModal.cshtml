@@ -91,7 +91,7 @@
                                 <div class=" col-md-6">
                                     <div class="form-group ">
                                         <label asp-for="@Model.ParentQuote.QuoteNumber" class=" control-label m-0 mt-2" style="width:100%;"></label>
-                                        <input asp-for="@Model.ParentQuote.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0"  />
+                                        <input asp-for="@Model.ParentQuote.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" />
                                         <span asp-validation-for="@Model.ParentQuote.QuoteNumber" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
@@ -100,6 +100,7 @@
                             </div>
                             @if (Model.TempRequestListViewModel.RequestIndexObject.IsReorder)
                             {
+                                <input type="hidden" class="for-supply-date-calc" value="@DateTime.Now.GetElixirDateFormat()"/>
                                 <div class="row">
                                     <div class=" col-md-6">
                                         <div class="form-group ">
