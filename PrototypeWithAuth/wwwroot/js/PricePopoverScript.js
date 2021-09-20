@@ -26,6 +26,9 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
             cache: false,
             success: function (data) {
                 $('#history').html(data);
+            },
+            error: function (jqxhr) {
+                $('.modal .error-message').html(jqxhr.responseText);
             }
         });
     }

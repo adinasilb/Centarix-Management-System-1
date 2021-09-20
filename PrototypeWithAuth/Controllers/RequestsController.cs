@@ -5453,8 +5453,18 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         public async Task<IActionResult> _HistoryTab(int? id, List<string> selectedPriceSort, string selectedCurrency, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
-            var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, false, selectedPriceSort, selectedCurrency);
-            return PartialView(requestItemViewModel);
+            try
+            {
+                var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, false, selectedPriceSort, selectedCurrency);
+                //throw new Exception();
+                return PartialView(requestItemViewModel);
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = 500;
+                return PartialView("_ErrorMessage", AppUtility.GetExceptionMessage(ex));
+            }
+            
         }
         [Authorize(Roles = "Requests")]
         [HttpGet]

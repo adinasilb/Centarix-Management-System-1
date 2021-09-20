@@ -68,7 +68,7 @@ $('.search-requests').on('change', function (e) {
 	console.log(searchText);
 	console.log('searchtext length' + searchText.length)
 	/*if (searchText.length < 3 && searchText != "") {
-		return;
+		return;3
     }*/
 	//clear search in filter so doesn't mess things up
 	$('.search-requests-in-filter').attr('value', "");
