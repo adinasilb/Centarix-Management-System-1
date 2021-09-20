@@ -90,7 +90,10 @@ $('.search-requests').on('change', function (e) {
 			url = "_IndexTable";
 			break;
 	}*/
-	url = '_IndexTableData';
+	var url = '_IndexTableData';
+	if ($('.' + url).length == 0) { //if it's showing the nothing is here page. not just using indextable when don't have to, so don't lose price and category filters
+		url = '_IndexTable';
+	}
 	//console.log(url);
 	$.ajax({
 		//processData: false,
