@@ -18,7 +18,11 @@
 					async: false,
 					data: { "SerialNumber":function(){ return $("#FunctionLine_Product_SerialNumber").val()}},
 				}
-			},				
+			},	
+			"Function.Timer":{
+				required:true,
+				validTimeWithSeconds:true
+			},
 			"uniqueCode": {
 				remote:{
 					url: '/Protocols/CheckIfProtocolUniqueNumberExists',
