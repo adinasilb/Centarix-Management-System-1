@@ -1981,7 +1981,7 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 createProtocolsViewModel = await FillCreateProtocolsViewModel(createProtocolsViewModel, createProtocolsViewModel.ProtocolVersion.Protocol.ProtocolTypeID, createProtocolsViewModel.ProtocolVersion.ProtocolVersionID);
-                if (createProtocolsViewModel.ModalType == AppUtility.ProtocolModalType.Create)
+                if (createProtocolsViewModel.ModalType == AppUtility.ProtocolModalType.Create || createProtocolsViewModel.ModalType == AppUtility.ProtocolModalType.CreateNewVersion)
                 {
                     return PartialView("_CreateProtocolTabs", createProtocolsViewModel);
                 }

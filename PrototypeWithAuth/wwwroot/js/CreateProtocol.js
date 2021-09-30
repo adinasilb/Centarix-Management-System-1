@@ -54,7 +54,7 @@
                 processData: false,
                 type: "POST",
                 success: function (data) {
-                    if(modalType == "Create")
+                    if(modalType == "Create" ||modalType == "CreateNewVersion")
                     {
                         $("._CreateProtocolTabs").html(data)
                     }
@@ -93,7 +93,7 @@
     });
 
 
-    $(".results-tab").on("click", function (e) {
+    $("form").off("click", ".results-tab").on("click", ".results-tab", function (e) {
        $(".only-results-tab").removeClass("d-none");      
     }); 
 
