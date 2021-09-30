@@ -61,7 +61,11 @@ $.fn.ReloadFilterDiv = function (numFilters, data) {
 			//$('.search-requests-in-filter').val(searchText);
 			$('.search-by-catalog-number').attr('value', catalogNumber);
 			$('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
-		}
+		}, 
+		error: function (jqxhr) {
+			$('#inventoryFilterContent .error-message').html(jqxhr.responseText);
+			$('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
+        }
 	});
 }
 $('.search-requests').on('change', function (e) {
