@@ -4214,12 +4214,13 @@ namespace PrototypeWithAuth.Controllers
                                 requestNotification.Vendor = request.Product.Vendor.VendorEnName;
                                 _context.Update(requestNotification);
                                 await _context.SaveChangesAsync();
+                                //throw new Exception();
                                 await transaction.CommitAsync();
                             }
                             catch (Exception ex)
                             {
                                 transaction.Rollback();
-                                throw new Exception(AppUtility.GetExceptionMessage(ex));
+                                throw new Exception(ex.Message);
                             }
                         }
                         break;
@@ -4229,9 +4230,10 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                var errorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
-                await Response.WriteAsync(ex.Message);
+                //await Response.WriteAsync(errorMessage);
+                return PartialView("_ErrorMessage", errorMessage);
             }
             return await RedirectRequestsToShared("_IndexTableWithCounts", requestIndex);
 
