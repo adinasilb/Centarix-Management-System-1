@@ -13,6 +13,7 @@
                     <div class="type-div" style="width:22%;">
                         <fieldset class=" resource-fieldset px-3 pt-2">
                             <div class="resource-title heading-1">@workflow.ProtocolInstance.ProtocolVersion.Protocol.Name</div>
+                            <div class="text">V @workflow.ProtocolInstance.ProtocolVersion.VersionNumber</div>
                             <div class="text">Current Step: @workflow.CurrentLineString</div>
                             <div class="text">@workflow.ProtocolInstance.StartDate.GetElixirDateFormatWithTime()</div>
                             <div class="resource-icons list-buttons row m-2 py-4 form-element-border-top-small w-100">
