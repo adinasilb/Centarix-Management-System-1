@@ -3240,9 +3240,14 @@ namespace PrototypeWithAuth.Controllers
                 {
                     return RedirectToAction("Cart", new { errorMessage = tempRequestListViewModel.RequestIndexObject.ErrorMessage });
                 }
-                else if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
+                else if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
                 {
                     return RedirectToAction("IndexInventory", tempRequestListViewModel.RequestIndexObject);
+                }
+                else if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestLocation)
+                {
+                    return RedirectToAction("Index", "Locations", new { SectionType = AppUtility.MenuItems.Requests, 
+                            ErrorMessage = tempRequestListViewModel.RequestIndexObject.ErrorMessage });
                 }
                 else
                 {
