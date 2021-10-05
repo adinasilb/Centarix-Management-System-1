@@ -433,6 +433,8 @@
     <Compile Remove="Data\Migrations\20210802074407_sdsdf.Designer.cs" />
     <Compile Remove="Data\Migrations\20210822065747_AddProtocolVersion.cs" />
     <Compile Remove="Data\Migrations\20210822065747_AddProtocolVersion.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211005115854_TestMergeProtocolWithMaster.cs" />
+    <Compile Remove="Data\Migrations\20211005115854_TestMergeProtocolWithMaster.Designer.cs" />
   </ItemGroup>
 
 
