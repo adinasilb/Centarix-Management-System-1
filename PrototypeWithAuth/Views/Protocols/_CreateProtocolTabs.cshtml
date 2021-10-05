@@ -5,6 +5,7 @@
     string theory = "";
     string material = "";
     string protocols = "";
+    string results = "";
     switch (Model.Tab)
     {
         case 1:
@@ -15,6 +16,9 @@
             break;
         case 3:
             protocols = " active show ";
+            break;
+        case 4:
+            results = " active show ";
             break;
 
     }
@@ -29,36 +33,37 @@
 }
 <div id="Theory@(Model.ModalType)" class="tab-pane fade in @theory">
     <div class="container-fluid theory-container m-0" style="@theoryContainerStyle">
-        <input type="hidden" class="createProtocolMasterProtocolID" value="@Model.Protocol.ProtocolID" />
+        <input type="hidden" class="createProtocolMasterProtocolID" value="@Model.ProtocolVersion.Protocol.ProtocolID" />
+        <input type="hidden" class="createProtocolMasterProtocolVersionID" value="@Model.ProtocolVersion.ProtocolVersionID" />
         <input type="hidden" class="createProtocolMasterGuid hidden-guid" value="@Model.UniqueGuid" />
         <input type="hidden" asp-for="Tab" class="selectedTab" />
-        <input type="hidden" asp-for="UniqueGuid"/>
-        <input type="hidden" asp-for="Protocol.ProtocolID" value="@Model.Protocol.ProtocolID" />
+        <input type="hidden" asp-for="UniqueGuid" />
+        <input type="hidden" asp-for="ProtocolVersion.Protocol.ProtocolID" value="@Model.ProtocolVersion.Protocol.ProtocolID" />
+        <input type="hidden" asp-for="ProtocolVersion.ProtocolID" value="@Model.ProtocolVersion.ProtocolID" />
         <input type="hidden" asp-for="ModalType" class="modalType" />
-        <input type="hidden" asp-for="Protocol.CreationDate" />
+        <input type="hidden" asp-for="ProtocolVersion.CreationDate" />
+        <input type="hidden" asp-for="ProtocolVersion.ApplicationUserCreatorID" />
         <input type="hidden" asp-for="ProtocolInstance.ProtocolInstanceID" class="protocolInstanceID" />
+        <input type="hidden" asp-for="ProtocolVersion.VersionNumber" class="" />
+        <input type="hidden" asp-for="ProtocolVersion.Protocol.UniqueCode" class="" />
+        <input type="hidden" asp-for="ProtocolVersion.ProtocolVersionID" class="" value="@Model.ProtocolVersion.ProtocolVersionID" />
         <div class="row under-row-margin">
             <div class="col-4">
-                <label asp-for="Protocol.Name" class="control-label"></label>
-                <input asp-for="Protocol.Name" class="form-control-plaintext border-bottom mark-readonly" />
-                <span asp-validation-for="Protocol.Name" class="text-danger-centarix"></span>
+                <label asp-for="ProtocolVersion.Protocol.Name" class="control-label"></label>
+                <input asp-for="ProtocolVersion.Protocol.Name" class="form-control-plaintext border-bottom mark-readonly" />
+                <span asp-validation-for="ProtocolVersion.Protocol.Name" class="text-danger-centarix"></span>
             </div>
-            @*<div class="col-4">
-                <label asp-for="Protocol.VersionNumber" class="control-label"></label>
-                <input asp-for="Protocol.VersionNumber" class="form-control-plaintext border-bottom" />
-                <span asp-validation-for="Protocol.VersionNumber" class="text-danger-centarix"></span>
-            </div>*@
             <div class="col-4">
-                <label asp-for="Protocol.UniqueCode" class="control-label"></label>
-                <input asp-for="Protocol.UniqueCode" class="form-control-plaintext border-bottom mark-readonly" />
-                <span asp-validation-for="Protocol.UniqueCode" class="text-danger-centarix"></span>
+                <label class="control-label">Unique Code</label>
+                <input value="@(Model.ProtocolVersion.Protocol.UniqueCode+"V"+Model.ProtocolVersion.VersionNumber)" class="form-control-plaintext border-bottom" readonly />
             </div>
+
         </div>
 
         <div class="row under-row-margin">
             <div class="col-4">
                 <label class="control-label">Category</label>
-                @Html.DropDownListFor(vm => vm.Protocol.ProtocolSubCategory.ProtocolCategoryTypeID,
+                @Html.DropDownListFor(vm => vm.ProtocolVersion.Protocol.ProtocolSubCategory.ProtocolCategoryTypeID,
 new SelectList(
 Model.ProtocolCategories,
 "ProtocolCategoryTypeID",
@@ -68,7 +73,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
             </div>
             <div class="col-4">
                 <label class="control-label">Sub Category</label>
-                @Html.DropDownListFor(vm => vm.Protocol.ProtocolSubCategoryID,
+                @Html.DropDownListFor(vm => vm.ProtocolVersion.Protocol.ProtocolSubCategoryID,
 new SelectList(
 Model.ProtocolSubCategories,
 "ProtocolSubCategoryTypeID",
@@ -84,16 +89,16 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
         </div>
         <div class="row ">
             <div class="col-12">
-                <label asp-for="Protocol.ShortDescription" class="control-label"></label>
-                <input asp-for="Protocol.ShortDescription" class="form-control-plaintext border-bottom mark-readonly" />
-                <span asp-validation-for="Protocol.ShortDescription" class="text-danger-centarix"></span>
+                <label asp-for="ProtocolVersion.ShortDescription" class="control-label"></label>
+                <input asp-for="ProtocolVersion.ShortDescription" class="form-control-plaintext border-bottom mark-readonly" />
+                <span asp-validation-for="ProtocolVersion.ShortDescription" class="text-danger-centarix"></span>
             </div>
         </div>
         <div class="row ">
             <div class="col-12">
-                <label asp-for="Protocol.Theory" class="control-label"></label>
-                <textarea asp-for="Protocol.Theory" class="form-control-plaintext border-bottom border mark-readonly" rows="15"></textarea>
-                <span asp-validation-for="Protocol.Theory" class="text-danger-centarix"></span>
+                <label asp-for="ProtocolVersion.Theory" class="control-label"></label>
+                <textarea asp-for="ProtocolVersion.Theory" class="form-control-plaintext border-bottom border mark-readonly" rows="15"></textarea>
+                <span asp-validation-for="ProtocolVersion.Theory" class="text-danger-centarix"></span>
             </div>
         </div>
         <div class="row mt-6">
@@ -132,7 +137,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                                     filterClass = color;
                                 }
                             }
-                            <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@Model.Protocol.ProtocolID" id="@folder.FolderName.ToString()" data-val="@true" showSwitch="@false">
+                            <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@Model.ProtocolVersion.ProtocolVersionID" id="@folder.FolderName.ToString()" data-val="@true" showSwitch="@false">
                                 <div class="card document-border ">
                                     <div class="document-card text-center">
                                         <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
@@ -148,19 +153,19 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
             <div class="col-6 ">
                 <div class="container ">
 
-                    @for (int i = 0; i < Model.Protocol.Urls.Count(); i++)
+                    @for (int i = 0; i < Model.ProtocolVersion.Urls.Count(); i++)
                     {
-                        <input type="hidden" asp-for="Protocol.Urls[i].LinkID" />
+                        <input type="hidden" asp-for="ProtocolVersion.Urls[i].LinkID" />
                         <div class="row">
                             <div class="col-6">
-                                <label asp-for="Protocol.Urls[i].LinkDescription" class="control-label">Link Description</label>
-                                <input asp-for="Protocol.Urls[i].LinkDescription" class="form-control-plaintext border-bottom mark-readonly" />
-                                <span asp-validation-for="Protocol.Urls[i].LinkDescription" class="text-danger-centarix"></span>
+                                <label asp-for="ProtocolVersion.Urls[i].LinkDescription" class="control-label">Link Description</label>
+                                <input asp-for="ProtocolVersion.Urls[i].LinkDescription" class="form-control-plaintext border-bottom mark-readonly" />
+                                <span asp-validation-for="ProtocolVersion.Urls[i].LinkDescription" class="text-danger-centarix"></span>
                             </div>
                             <div class="col-6">
-                                <label asp-for="Protocol.Urls[i].Url" class="control-label"></label>
-                                <input asp-for="Protocol.Urls[i].Url" class="form-control-plaintext border-bottom mark-readonly" />
-                                <span asp-validation-for="Protocol.Urls[i].Url" class="text-danger-centarix"></span>
+                                <label asp-for="ProtocolVersion.Urls[i].Url" class="control-label"></label>
+                                <input asp-for="ProtocolVersion.Urls[i].Url" class="form-control-plaintext border-bottom mark-readonly" />
+                                <span asp-validation-for="ProtocolVersion.Urls[i].Url" class="text-danger-centarix"></span>
                             </div>
                         </div>
                     }
@@ -176,7 +181,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
 </div>
 
 <div id="Materials@(Model.ModalType)" class="_MaterialTab tab-pane fade in @material">
-    @{ await Html.RenderPartialAsync("_MaterialTab", new MaterialTabViewModel { Materials = Model.Protocol.Materials.ToList(), MaterialCategories = Model.MaterialCategories, Folders = Model.MaterialDocuments, ModalType = Model.ModalType });
+    @{ await Html.RenderPartialAsync("_MaterialTab", new MaterialTabViewModel { Materials = Model.ProtocolVersion.Materials.ToList(), MaterialCategories = Model.MaterialCategories, Folders = Model.MaterialDocuments, ModalType = Model.ModalType });
     }
 </div>
 
@@ -184,7 +189,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
 <div id="Protocol@(Model.ModalType)" class="tab-pane fade in @protocols">
 
     <div class="lines">
-        <div class="heading-1">@Model.Protocol.Name</div>
+        <div class="heading-1">@Model.ProtocolVersion.Protocol.Name</div>
         <div class="_Lines">
             @{await Html.RenderPartialAsync("_Lines",  Model.Lines );}
         </div>
@@ -192,10 +197,15 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
 
     </div>
 </div>
-<div id="Results@(Model.ModalType)" class="tab-pane fade in @AppUtility.ProtocolModalType.CheckListMode d-none">
+<div id="Results@(Model.ModalType)" class="tab-pane fade in @AppUtility.ProtocolModalType.CheckListMode @results d-none">
     <div class="row text-editor-div" style="min-height:50px; width:100%">
+       
         @{
-            await Html.RenderPartialAsync("_ResultsText", Model.ProtocolInstance);
+            if(Model.ProtocolInstance !=null)
+            {
+                await Html.RenderPartialAsync("_ResultsText", Model.ProtocolInstance);
+            }
+
         }
     </div>
 </div>

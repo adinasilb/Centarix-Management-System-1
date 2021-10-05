@@ -1452,7 +1452,10 @@ $(function () {
 			url = "/Requests/EditModalView";
 			section = "LabManagement";
 		}
-
+		if ($(this).hasClass('protocols')) {
+		//url = "/Protocols/EditModalView";
+		section = "Protocols";
+		}
 		if (type == 'edit') {
 			$("#loading").show();
 			console.log("in if edit");

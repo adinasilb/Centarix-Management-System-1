@@ -5,9 +5,9 @@
     Context.Request.Headers.TryGetValue("Referer", out action);}
 <div class="row pb-3 mb-6">
     <a style="" href="@action"
-       class="title-label  btn-link heading-1 ">
+       class="title-label  btn-link heading-1 back-arrow">
         <i class="icon-arrow_back_ios-24px-1" style="font-size:1.4rem;"></i>
-        <label class="pl-2">@Model.Protocol.Name</label>
+        <label class="pl-2">@Model.ProtocolVersion.Protocol.Name</label>
     </a>
 </div>
 

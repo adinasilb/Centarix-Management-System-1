@@ -475,8 +475,19 @@
                 $("[modaltype = " + modalType + "]").attr("modaltype", "Edit");
                 $(".modalType").val("Edit");
                 modalType = $(".modalType").val();
-                $("." + modalType).removeClass("d-none")
-
+                if ($(".next-tab.active").hasClass("lines-tab")) {
+                    $("." + modalType + ".only-protocol-tab.li-function-bar").removeClass("d-none");
+                }
+                else {
+                    $("." + modalType + ".only-protocol-tab").addClass("d-none");
+                }
+                if ($(".next-tab.active").hasClass("results-tab")) {
+                    $("." + modalType + ".only-results-tab.li-function-bar").removeClass("d-none");
+                }
+                else {
+                    $("." + modalType + ".only-results-tab").addClass("d-none");
+                }
+                $("." + modalType + ":not(.only-protocol-tab):not(.only-results-tab)").removeClass("d-none");
             }
         }
 
@@ -529,6 +540,11 @@
                             $.fn.LoadSummaryModal('edits');
                             $('.modal-content a:first').tab('show');
                             break;
+                        case "summaryProtocolsParital":    
+                            $("._ProtocolsDetailsFloatModal").html(data);
+                            $.fn.LoadSummaryModal('_ProtocolsDetailsFloatModal');
+                            $('.modal-content a:first').tab('show');
+                            break;
                         case "create":
                             //$.fn.OnOpenModalView();
                             break;
@@ -571,6 +587,10 @@
                             break;
                         case "protocolFloatModal":
                             $.fn.OpenModal('modal', 'protocol-details', modal)
+                            $.fn.ProtocolsMarkReadonly("protocol-details")
+                            break
+                        case "protocolFloatModalPartial":
+                            $("._ProtocolsDetailsFloatModal").html(data);
                             $.fn.ProtocolsMarkReadonly("protocol-details")
                             break
                         case "addChange":
@@ -638,6 +658,13 @@
             }
         }
 
+        $.fn.AddSaveItemClass = function(){
+            $(".top-menu").addClass("save-item");
+            $(".side-menu").addClass("save-item");
+            $(".module-button ").addClass("save-item");
+            $(".notificationDiv").addClass("save-item");         
+        }
+
 
         $.fn.LoadSummaryModal = function (modalClass) {
             $("#cost").trigger('change');
@@ -703,6 +730,10 @@
                     var modalType=$(".modalType").val();
                     $.fn.ProtocolsMarkReadonly("_IndexTable");
                     $("."+modalType).removeClass("d-none");
+                    if(tab == 4)
+                    {
+                        $(".only-results-tab").removeClass("d-none");
+                    }
                     return false;
                 }
             });

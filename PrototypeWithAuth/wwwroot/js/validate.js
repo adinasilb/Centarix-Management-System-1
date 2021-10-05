@@ -326,4 +326,44 @@ $(function () {
 		return locationSelected;
 	}, 'Please choose a location before submitting');
 
+	$.validator.addMethod("validTime", function (value, element) {
+	var t = value.split(':');
+	if (t[0].length == 1) {
+		value = "0" + value;
+	}
+	if (t[2] != null) {
+		$("#"+element.id).val(t[0] + ":" + t[1]);
+    }
+	var result = value.length == 0 || (/^\d\d:\d\d$/.test(value) &&
+		t[0] >= 0 && t[0] < 24 &&
+		t[1] >= 0 && t[1] < 60);
+	return result;
+	}, "Invalid time");
+
+	$.validator.addMethod("validTimeWithSeconds", function (value, element) {
+	var t = value.split(':');
+	if (t[0].length == 1) {
+		value = "0" + value;
+	}
+	if(t[0]==undefined)
+	{
+		t[0]="00";
+	}
+	if(t[1]==undefined)
+	{
+		t[1]="00";
+	}
+	if(t[2]==undefined)
+	{
+		t[2]="00";
+	}
+	$("#"+element.id).val(t[0] + ":" + t[1]+":" + t[2]);
+
+	var result = value.length == 0 || (/^\d\d:\d\d:\d\d$/.test(value) &&
+		t[0] >= 0 && t[0] < 24 &&
+		t[1] >= 0 && t[1] < 60 &&
+		t[2] >= 0 && t[2] < 60  
+		);
+	return result;
+	}, "Invalid time");
 });

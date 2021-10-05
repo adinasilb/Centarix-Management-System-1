@@ -30,12 +30,12 @@
         <li>
             @{
                 var dNone = "d-none";
-                if (Model.Index == 0 && (Model.ModalType != AppUtility.ProtocolModalType.CheckListMode && Model.ModalType != AppUtility.ProtocolModalType.Summary))
+                if (Model.Index == 0 && (Model.ModalType != AppUtility.ProtocolModalType.CheckListMode&& Model.ModalType != AppUtility.ProtocolModalType.Summary && Model.ModalType !=AppUtility.ProtocolModalType.SummaryFloat))
                 {
                     dNone = "";
                 }
             }
-            <a tabindex="0" role="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="@dNone no-box-shadow btn p-0 m-0 addLinePopover mark-readonly @(dynamicID)ContentLinePopoverButton" lineNumber="@Model.LineNumberString" value="line-content@(Model.Index)" parentLineID="@Model.Line?.ParentLineID" lineCount="@Model.Index">
+            <a tabindex="0" role="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="click" class="@dNone no-box-shadow btn p-0 m-0 addLinePopover mark-readonly @(dynamicID)ContentLinePopoverButton" lineNumber="@Model.LineNumberString" value="line-content@(Model.Index)" parentLineID="@Model.Line?.ParentLineID" lineCount="@Model.Index">
                 <i class="protocols-color icon-add_circle-24px" style="  font-size: 3rem;"></i>
             </a>
         </li>
@@ -43,19 +43,19 @@
             @foreach (var item in Model.LineTypes)
             {
                 <div class="row px-2 comment-btn">
-                    <button type="button" value="@item.LineTypeID" current-line-id="@(Model.Line?.LineID??0)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine mark-readonly w-100" style="font-size:1rem; font-weight:400;">
+                    <button type="button" tabindex="0" role="button" value="@item.LineTypeID" current-line-id="@(Model.Line?.LineID??0)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine mark-readonly w-100" style="font-size:1rem; font-weight:400;">
                         @item.LineTypeDescription
                     </button><hr class="m-0" />
                 </div>
             }
-            @if (Model.Index != 0 && Model.ModalType == AppUtility.ProtocolModalType.Create)
-            {
+            @*@if (Model.Index != 0 && (Model.ModalType == AppUtility.ProtocolModalType.Create || Model.ModalType == AppUtility.ProtocolModalType.CreateNewVersion))
+            {*@
                 <div class="row px-2 comment-btn">
                     <button type="button" value="-1" current-line-id="@(Model.Line?.LineID??0)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark @AppUtility.ProtocolModalType.Create addLine mark-readonly " style="font-size:1rem; font-weight:400;">
                         Delete Current Line
                     </button><hr class="m-0" />
                 </div>
-            }
+            @*}*@
 
         </div>
     </ul>

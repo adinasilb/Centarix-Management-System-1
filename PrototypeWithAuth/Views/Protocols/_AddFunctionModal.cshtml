@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.ViewModels.AddFunctionViewModel
+﻿@model PrototypeWithAuth.ViewModels.AddFunctionViewModel<FunctionBase>
 @using PrototypeWithAuth.AppData
 <script src="~/js/Validation/AddFunctionValidation.js"></script>
 <script src="~/js/validate.js"></script>
@@ -7,39 +7,39 @@
     var fileButtonText = "Select File";
     var documentsDisabled = true;
     var disabled = "";
-    if (Model.ModalType == AppUtility.ProtocolModalType.CheckListMode
-        || Model.ModalType == AppUtility.ProtocolModalType.Summary)
+    if ((Model.ModalType == AppUtility.ProtocolModalType.CheckListMode
+        || Model.ModalType == AppUtility.ProtocolModalType.Summary) && Model.Function.ID != 0)
     {
         documentsDisabled = false;
         disabled = " mark-readonly ";
     }
 }
-@switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(Model.FunctionLine.FunctionType.DescriptionEnum))
+@switch (Enum.Parse<AppUtility.FunctionTypes>(Model.Function.FunctionType.DescriptionEnum))
 {
-    case AppUtility.ProtocolFunctionTypes.AddComment:
-    case AppUtility.ProtocolFunctionTypes.AddTip:
-    case AppUtility.ProtocolFunctionTypes.AddWarning:
-        <textarea class="border form-control-plaintext @disabled " rows="6" asp-for="FunctionLine.Description"></textarea>
+    case AppUtility.FunctionTypes.AddComment:
+    case AppUtility.FunctionTypes.AddTip:
+    case AppUtility.FunctionTypes.AddWarning:
+        <textarea class="border form-control-plaintext @disabled " rows="6" asp-for="Function.Description"></textarea>
         break;
-    case AppUtility.ProtocolFunctionTypes.AddFile:
-    case AppUtility.ProtocolFunctionTypes.AddImage:
+    case AppUtility.FunctionTypes.AddFile:
+    case AppUtility.FunctionTypes.AddImage:
         <div class="_DocumentsModalData">
             @{
                 await Html.RenderPartialAsync("_DocumentsModalData", Model.DocumentsModalViewModel);
             }
         </div>
-                    break;
-                case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
-                    if (Model.FunctionLine.ID > 0)
-                    {
-                        disabled = " mark-readonly ";
-                    }
+        break;
+    case AppUtility.FunctionTypes.AddLinkToProduct:
+        if (Model.Function.ID > 0)
+        {
+            disabled = " mark-readonly ";
+        }
 
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
-                    <label asp-for="FunctionLine.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
-                    @Html.DropDownListFor(vm => vm.FunctionLine.Product.ProductSubcategory.ParentCategoryID,
+                    <label asp-for="Function.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+                    @Html.DropDownListFor(vm => vm.Function.Product.ProductSubcategory.ParentCategoryID,
                  new SelectList(
                  Model.ParentCategories,
                  "ParentCategoryID",
@@ -50,8 +50,8 @@
             </div>
             <div class="col-6">
                 <div class="form-group sublist">
-                    <label asp-for="FunctionLine.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
-                    @Html.DropDownListFor(vm => vm.FunctionLine.Product.ProductSubcategory.ProductSubcategoryID,
+                    <label asp-for="Function.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
+                    @Html.DropDownListFor(vm => vm.Function.Product.ProductSubcategory.ProductSubcategoryID,
                         new SelectList(
                         Model.ProductSubcategories,
                         dataValueField: "ProductSubcategoryID",
@@ -64,9 +64,9 @@
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
-                    <label asp-for="FunctionLine.Product.Vendor" class="control-label"></label>
+                    <label asp-for="Function.Product.Vendor" class="control-label"></label>
                     @Html.DropDownListFor(
-        vm => vm.FunctionLine.Product.VendorID,
+        vm => vm.Function.Product.VendorID,
         new SelectList(
         Model.Vendors,
         dataValueField: "VendorID",
@@ -79,9 +79,9 @@
             </div>
             <div class="col-6">
                 <div class="form-group">
-                    <label asp-for="FunctionLine.Product.ProductName" class="control-label"></label>
+                    <label asp-for="Function.Product.ProductName" class="control-label"></label>
                     @Html.DropDownListFor(
-        vm => vm.FunctionLine.ProductID,
+        vm => vm.Function.ProductID,
         new SelectList(
         Model.Products,
         dataValueField: "ProductID",
@@ -95,22 +95,22 @@
         </div>
         <div class="row">
             <div class="col-6">
-                <label asp-for="FunctionLine.Product.SerialNumber" class="control-label"></label>
+                <label asp-for="Function.Product.SerialNumber" class="control-label"></label>
 
-                <input class="border-bottom form-control-plaintext unique-number @disabled" rows="6" asp-for="FunctionLine.Product.SerialNumber" />
+                <input class="border-bottom form-control-plaintext unique-number @disabled" rows="6" asp-for="Function.Product.SerialNumber" />
             </div>
         </div>
-                    break;
-                case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
-                    if (Model.FunctionLine.ID >0)
-                    {
-                        disabled = " mark-readonly ";
-                    }
+        break;
+    case AppUtility.FunctionTypes.AddLinkToProtocol:
+        if (Model.Function.ID > 0)
+        {
+            disabled = " mark-readonly ";
+        }
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
-                    <label asp-for="FunctionLine.Protocol.ProtocolSubCategory.ProtocolCategoryType" class="control-label"></label>
-                    @Html.DropDownListFor(vm => vm.FunctionLine.Protocol.ProtocolSubCategory.ProtocolCategoryTypeID,
+                    <label asp-for="Function.ProtocolVersion.Protocol.ProtocolSubCategory.ProtocolCategoryType" class="control-label"></label>
+                    @Html.DropDownListFor(vm => vm.Function.ProtocolVersion.Protocol.ProtocolSubCategory.ProtocolCategoryTypeID,
                  new SelectList(
                  Model.ProtocolCategories,
                  dataValueField: "ProtocolCategoryTypeID",
@@ -121,8 +121,8 @@
             </div>
             <div class="col-6">
                 <div class="form-group sublist">
-                    <label asp-for="FunctionLine.Protocol.ProtocolSubCategory" class="control-label"></label>
-                    @Html.DropDownListFor(vm => vm.FunctionLine.Protocol.ProtocolSubCategoryID,
+                    <label asp-for="Function.ProtocolVersion.Protocol.ProtocolSubCategory" class="control-label"></label>
+                    @Html.DropDownListFor(vm => vm.Function.ProtocolVersion.Protocol.ProtocolSubCategoryID,
                         new SelectList(
                         Model.ProtocolSubCategories,
                         dataValueField: "ProtocolSubCategoryTypeID",
@@ -135,9 +135,9 @@
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
-                    <label asp-for="FunctionLine.Protocol.ApplicationUserCreator" class="control-label"></label>
+                    <label asp-for="Function.ProtocolVersion.ApplicationUserCreator" class="control-label"></label>
                     @Html.DropDownListFor(
-        vm => vm.FunctionLine.Protocol.ApplicationUserCreatorID,
+        vm => vm.Function.ProtocolVersion.ApplicationUserCreatorID,
        Model.Creators,
         //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
         "Select a Creator",
@@ -147,14 +147,13 @@
             </div>
             <div class="col-6">
                 <div class="form-group">
-                    <label asp-for="FunctionLine.Protocol" class="control-label"></label>
+                    <label asp-for="Function.ProtocolVersionID" class="control-label"></label>
                     @Html.DropDownListFor(
-        vm => vm.FunctionLine.ProtocolID,
+        vm => vm.Function.ProtocolVersionID,
         new SelectList(
-        Model.Protocols,
-        dataValueField: "ProtocolID",
+        Model.ProtocolVersions,
+        dataValueField: "ProtocolVersionID",
         dataTextField: "Name"),
-        //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
         "Select a Protocol",
         htmlAttributes: new { @class = "  mdb-select custom select-dropdown form-control-plaintext protocol object mdb-select-sublist" + disabled, @id = "protocolList", @size = 1, @searchable = "Select A Protocol", @data_stop_refresh = "true" }
         )
@@ -163,21 +162,53 @@
         </div>
         <div class="row">
             <div class="col-6">
-                <label asp-for="FunctionLine.Protocol.UniqueCode" class="control-label"></label>
-                <input class="border-bottom form-control-plaintext unique-number @disabled" rows="6" asp-for="FunctionLine.Protocol.UniqueCode" />
+                <label asp-for="Function.ProtocolVersion.Protocol.UniqueCode" class="control-label"></label>
+                <input class="border-bottom form-control-plaintext unique-number @disabled" name="uniqueCode" id="uniqueCode" value="@(Model.Function.ProtocolVersion?.Protocol?.UniqueCode+"V"+Model.Function.ProtocolVersion?.VersionNumber)" />
             </div>
         </div>
         break;
-    case AppUtility.ProtocolFunctionTypes.AddStop:
+    case AppUtility.FunctionTypes.AddStop:
         break;
-    case AppUtility.ProtocolFunctionTypes.AddTimer:
+    case AppUtility.FunctionTypes.AddTimer:
         <div class="row">
             <div class="col-4 offset-4">
-                <input class="border-bottom form-control-plaintext heading-1 @disabled" rows="6" asp-for="FunctionLine.Timer" />
+                <input class="border-bottom form-control-plaintext heading-1 @disabled timer"
+                   seconds="@Model.Function.Timer.TotalSeconds" asp-for="Function.Timer" />
             </div>
         </div>
         break;
 
+}
+@if (Model.Function.FunctionType.DescriptionEnum == AppUtility.FunctionTypes.AddTimer.ToString() && Model.ModalType == AppUtility.ProtocolModalType.CheckListMode)
+{
+    <script>
+
+        $(document).ready( function () {
+
+            var durations = $(".timer").attr("seconds");
+                display = $('.timer').val();
+            startTimer(durations, display);
+        });
+        function startTimer(duration, display) {
+            var timer = duration, hours, minutes, seconds;
+            setInterval(function () {
+                seconds = parseInt(timer % 60, 10);
+                minutes = parseInt((timer / 60) % 60, 10);
+                hours = parseInt((timer / 60) / 60, 10);
+
+                hours = hours < 10 ? "0" + hours : hours;
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                $('.timer').val( hours + ":" + minutes + ":" + seconds);
+
+                if (--timer < 0) {
+                    timer = duration;
+                }
+            }, 1000);
+        }
+
+    </script>
 }
 
 <script src="~/js/AddFunctionModal.js"></script>

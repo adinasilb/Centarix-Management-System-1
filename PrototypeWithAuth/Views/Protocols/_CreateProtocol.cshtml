@@ -36,7 +36,7 @@
 }
 
 <form action="" id="myForm" class=" on-form-modal protocol-form createProtocolForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-    <input type="hidden" asp-for="Protocol.ProtocolTypeID" />
+    <input type="hidden" asp-for="ProtocolVersion.Protocol.ProtocolTypeID" />
     <div class="row text-danger-centarix error-message d-none"> @Model.ErrorMessage </div>
 
     <div class="item-table">
@@ -60,7 +60,7 @@
                 </a>
             </li>
             <li class="list-inline-item m-0 nav-item @checkListMode has-modal-type d-none">
-                <a data-toggle="tab" href="#Results@(Model.ModalType) " class="next-tab nav-link new-button new-protocols-button protocol-tab lines-tab @results ">
+                <a data-toggle="tab" href="#Results@(Model.ModalType) " class="next-tab nav-link new-button new-protocols-button results-tab @results ">
                     <i class="new-icon icon-protocol-tab-24px"></i>
                     <label class="new-button-text">Results</label>
                 </a>
@@ -73,11 +73,25 @@
                     }
                 </div>
             </li>
+            <li class="only-results-tab li-function-bar  @editMode @createMode d-none">
+                <div class=" function-bar">
+                    @foreach (var type in Model.ResultsFunctionTypes)
+                    {
+                        <button class="function" type="button" typeID="@type.FunctionTypeID" modalType="@Model.ModalType" guid="@Model.UniqueGuid" value="0"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
+                    }
+                </div>
+            </li>
             <li class="only-protocol-tab @editMode @createMode  d-none li-function-bar">
                 <div class="h-100 d-flex ml-6" style=" align-items: center;">
                     <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveLines" value="Save">Save</button>
                 </div>
             </li>
+            <li class="only-results-tab @editMode @createMode  d-none li-function-bar">
+                <div class="h-100 d-flex ml-6" style=" align-items: center;">
+                    <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveResults" value="Save">Save</button>
+                </div>
+            </li>
+
             <li class="only-protocol-tab saving-spinner d-none">
                 <div class="spinner-border protocols-color" role="status">
                     <span class="sr-only"></span>Saving...
@@ -89,10 +103,11 @@
 
             <li class="only-protocol-tab   d-none li-function-bar @summaryMode">
                 <div class="h-100 d-flex ml-6" style=" align-items: center;">
-                    <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin start-protocol-fx " value="@Model.Protocol.ProtocolID">Start</button>
+                    <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin start-protocol-fx " value="@Model.ProtocolVersion.ProtocolVersionID">Start</button>
                 </div>
             </li>
-            @{ var isChecked = "";
+            @{
+                var isChecked = "";
                 if (Model.ModalType == AppUtility.ProtocolModalType.Edit)
                 {
                     isChecked = "checked";
@@ -102,14 +117,35 @@
                 <div class="switch col-12 switch-margin">
                     <label>
                         <label class="edit-mode-switch-description">Edit Mode Off</label>
-                        <input type="checkbox" class="turn-edit-on-off protocols" value="@Model.Protocol.ProtocolID" name="details" @isChecked >
+                        <input type="checkbox" class="turn-edit-on-off protocols" value="@Model.ProtocolVersion.ProtocolVersionID" name="details" @isChecked>
                         <span class="lever"></span>
                     </label>
                 </div>
             </li>
+            <li class="only-protocol-tab @summaryMode  d-none li-function-bar">
+                <a href="#" id="more" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="click" class="text-black p-0 m-0 no-box-shadow ">
+                    <i class="icon-more_vert-24px" style="font-size:3rem;"></i>
+                </a>
+            </li>
+            <div style="display:none;" id="morePopover">
+                <div class="container ">
+                    <div class="row moreOffDay-btn p-1">
+                        <a asp-action="CreateNewVersion" asp-route-protocolID="@Model.ProtocolVersion.ProtocolID" class=" text-black " >
+                           Create New Version
+                        </a>
+                    </div>                   
+                </div>
+
+            </div>
         </ul>
     </div>
     <div class="tab-content _CreateProtocolTabs">
         @{ await Html.RenderPartialAsync("_CreateProtocolTabs", Model);}
     </div>
+    <script>
+        $("input, select, textarea").change(function(){        
+            $.fn.AddSaveItemClass()
+            $(".back-arrow").addClass("save-item")
+        });
+    </script>
 </form>

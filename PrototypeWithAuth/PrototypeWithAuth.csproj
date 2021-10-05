@@ -429,6 +429,10 @@
     <Compile Remove="Data\Migrations\20210802103031_RemoveQuoteStatusFromParentQuote.Designer.cs" />
     <Compile Remove="Data\Migrations\20210805073330_UpdatedOldSubcategoryName.cs" />
     <Compile Remove="Data\Migrations\20210805073330_UpdatedOldSubcategoryName.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802074407_sdsdf.cs" />
+    <Compile Remove="Data\Migrations\20210802074407_sdsdf.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210822065747_AddProtocolVersion.cs" />
+    <Compile Remove="Data\Migrations\20210822065747_AddProtocolVersion.Designer.cs" />
   </ItemGroup>
 
 
