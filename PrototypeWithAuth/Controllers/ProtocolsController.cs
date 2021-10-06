@@ -183,7 +183,7 @@ namespace PrototypeWithAuth.Controllers
                             iconList.Add(favoriteIcon);
                             popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverStart };
                             iconList.Add(popoverMoreIcon);
-                            onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate)
+                            onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate).ThenByDescending(p=>p.VersionNumber)
     .Select(p => new ProtocolsIndexPartialRowViewModel(p, p.Protocol, p.Protocol.ProtocolType, p.Protocol.ProtocolSubCategory, p.ApplicationUserCreator, protocolsIndexObject, iconList, _context.FavoriteProtocols.Where(fr => fr.ProtocolVersionID == p.ProtocolVersionID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(), user,
         _context.ProtocolInstances.Where(pi => pi.ProtocolVersionID == p.ProtocolVersionID && pi.ApplicationUserID == user.Id && !pi.IsFinished).OrderByDescending(pi => pi.StartDate).FirstOrDefault())).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 20);
                             break;
