@@ -1793,26 +1793,26 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> CreateNewVersion(int protocolID)
+        public async Task<IActionResult> CreateNewVersion(int protocolID, int protocolVersionID)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ResearchProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
             var maxVersion = _context.ProtocolVersions.AsNoTracking().Where(pv => pv.ProtocolID == protocolID).Max(pv => pv.VersionNumber);
-            var protocol =  await _context.ProtocolVersions.Include(pv => pv.Protocol).AsNoTracking().Where(pv => pv.ProtocolID == protocolID && pv.VersionNumber == maxVersion).FirstOrDefaultAsync();
+            var protocol =  await _context.ProtocolVersions.Include(pv => pv.Protocol).AsNoTracking().Where(pv => pv.ProtocolVersionID == protocolVersionID).FirstOrDefaultAsync();
 
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
-                {
-                    
-                    protocol.VersionNumber += 1;
-                    protocol.ProtocolVersionID = 0;
-                    protocol.ApplicationUserCreatorID = _userManager.GetUserAsync(User).Result.Id;
+                {                 
+          
                     var protocolLines = await _context.Lines.Include(l => l.LineType).Include(l => l.ParentLine)
                         .Include(l => l.LineChange).Include(l => l.FunctionLines).ThenInclude(fl=>fl.FunctionType)
                         .Where(l => l.ProtocolVersionID == protocol.ProtocolVersionID).AsNoTracking().ToListAsync();
-
+                    protocol.VersionNumber = maxVersion+1;
+                    protocol.ProtocolVersionID = 0;
+                    protocol.ApplicationUserCreatorID = _userManager.GetUserAsync(User).Result.Id;
+                    protocol.CreationDate = DateTime.Now;
                     _context.Entry(protocol).State = EntityState.Added;
                     await _context.SaveChangesAsync();
                     var parentLines = protocolLines.Where(pl => pl.ParentLineID == null);
