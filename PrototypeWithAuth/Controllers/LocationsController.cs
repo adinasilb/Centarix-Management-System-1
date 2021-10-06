@@ -233,7 +233,8 @@ namespace PrototypeWithAuth.Controllers
             bool go = true;
             List<LocationType> listOfChildrenTypes = new List<LocationType>();
 
-            var locationRooms = await _context.LocationRoomInstances.Select(lr => lr).ToListAsync();
+            var locationRooms = await _context.LocationRoomInstances.Select(lr => lr).OrderBy(lr => lr.LocationRoomTypeID)
+                .ThenBy(lr => lr.LocationRoomInstanceID).ToListAsync();
             List<SelectListItem> locationRoomsSelectList = new List<SelectListItem>();
             foreach (var r in locationRooms)
             {
