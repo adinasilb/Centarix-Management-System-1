@@ -41,9 +41,9 @@
         <input type="hidden" asp-for="ProtocolVersion.Protocol.ProtocolID" value="@Model.ProtocolVersion.Protocol.ProtocolID" />
         <input type="hidden" asp-for="ProtocolVersion.ProtocolID" value="@Model.ProtocolVersion.ProtocolID" />
         <input type="hidden" asp-for="ModalType" class="modalType" />
-        <input type="hidden" asp-for="ProtocolVersion.CreationDate" />
-        <input type="hidden" asp-for="ProtocolVersion.ApplicationUserCreatorID" />
-        <input type="hidden" asp-for="ProtocolInstance.ProtocolInstanceID" class="protocolInstanceID" />
+        <input type="hidden" asp-for="ProtocolVersion.CreationDate" value="@Model.ProtocolVersion.CreationDate"  />
+        <input type="hidden" asp-for="ProtocolVersion.ApplicationUserCreatorID" value="@Model.ProtocolVersion.ApplicationUserCreatorID" />
+        <input type="hidden" asp-for="ProtocolInstance.ProtocolInstanceID" class="protocolInstanceID"  value="@Model.ProtocolInstance?.ProtocolInstanceID"/>
         <input type="hidden" asp-for="ProtocolVersion.VersionNumber" class="" />
         <input type="hidden" asp-for="ProtocolVersion.Protocol.UniqueCode" class="" />
         <input type="hidden" asp-for="ProtocolVersion.ProtocolVersionID" class="" value="@Model.ProtocolVersion.ProtocolVersionID" />

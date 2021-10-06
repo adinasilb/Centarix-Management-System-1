@@ -1937,7 +1937,6 @@ namespace PrototypeWithAuth.Controllers
                         }
                         else
                         {
-                            var entries  =_context.ChangeTracker.Entries();
                             _context.Entry(createProtocolsViewModel.ProtocolVersion).State = EntityState.Modified;
                             await _context.SaveChangesAsync();
                         }            
