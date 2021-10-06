@@ -2,7 +2,7 @@
 @using PrototypeWithAuth.AppData
 
 @{ 
-    var containerStyle = "width:70%";
+    var containerStyle = "width:80%";
     if(Model.ModalType ==AppUtility.ProtocolModalType.SummaryFloat)
     {
         containerStyle = "";
@@ -23,7 +23,7 @@
             @foreach (var materialC in Model.MaterialCategories)
             {
                 <div class="col">
-                    <div class="container">
+                    <div class="container pr-5">
                         @{ var materialsPerCategory = Model.Materials.Where(m => m.MaterialCategoryID == materialC.MaterialCategoryID);
                             if (materialsPerCategory.Count() > 0)
                             {

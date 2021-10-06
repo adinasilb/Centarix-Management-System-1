@@ -123,14 +123,14 @@
                 </div>
             </li>
             <li class="only-protocol-tab @summaryMode  d-none li-function-bar">
-                <a href="#" id="more" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="click" class="text-black p-0 m-0 no-box-shadow ">
+                <a href="#" id="more" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="text-black p-0 m-0 no-box-shadow ">
                     <i class="icon-more_vert-24px" style="font-size:3rem;"></i>
                 </a>
             </li>
             <div style="display:none;" id="morePopover">
                 <div class="container ">
                     <div class="row moreOffDay-btn p-1">
-                        <a asp-action="CreateNewVersion" asp-route-protocolID="@Model.ProtocolVersion.ProtocolID" class=" text-black " >
+                        <a asp-action="CreateNewVersion" asp-route-protocolID="@Model.ProtocolVersion.ProtocolID" asp-route-protocolVersionID="@Model.ProtocolVersion.ProtocolVersionID" class=" text-black " >
                            Create New Version
                         </a>
                     </div>                   

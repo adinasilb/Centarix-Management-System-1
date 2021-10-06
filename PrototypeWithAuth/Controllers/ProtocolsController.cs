@@ -183,7 +183,7 @@ namespace PrototypeWithAuth.Controllers
                             iconList.Add(favoriteIcon);
                             popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverStart };
                             iconList.Add(popoverMoreIcon);
-                            onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate)
+                            onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate).ThenByDescending(p=>p.VersionNumber)
     .Select(p => new ProtocolsIndexPartialRowViewModel(p, p.Protocol, p.Protocol.ProtocolType, p.Protocol.ProtocolSubCategory, p.ApplicationUserCreator, protocolsIndexObject, iconList, _context.FavoriteProtocols.Where(fr => fr.ProtocolVersionID == p.ProtocolVersionID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(), user,
         _context.ProtocolInstances.Where(pi => pi.ProtocolVersionID == p.ProtocolVersionID && pi.ApplicationUserID == user.Id && !pi.IsFinished).OrderByDescending(pi => pi.StartDate).FirstOrDefault())).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 20);
                             break;
@@ -1793,27 +1793,38 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> CreateNewVersion(int protocolID)
+        public async Task<IActionResult> CreateNewVersion(int protocolID, int protocolVersionID)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ResearchProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
             var maxVersion = _context.ProtocolVersions.AsNoTracking().Where(pv => pv.ProtocolID == protocolID).Max(pv => pv.VersionNumber);
-            var protocol =  await _context.ProtocolVersions.Include(pv => pv.Protocol).AsNoTracking().Where(pv => pv.ProtocolID == protocolID && pv.VersionNumber == maxVersion).FirstOrDefaultAsync();
+            var protocol =  await _context.ProtocolVersions.Include(pv => pv.Protocol).AsNoTracking().Where(pv => pv.ProtocolVersionID == protocolVersionID).FirstOrDefaultAsync();
 
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
-                {
-                    
-                    protocol.VersionNumber += 1;
-                    protocol.ProtocolVersionID = 0;
-                    protocol.ApplicationUserCreatorID = _userManager.GetUserAsync(User).Result.Id;
+                {                 
+          
                     var protocolLines = await _context.Lines.Include(l => l.LineType).Include(l => l.ParentLine)
                         .Include(l => l.LineChange).Include(l => l.FunctionLines).ThenInclude(fl=>fl.FunctionType)
                         .Where(l => l.ProtocolVersionID == protocol.ProtocolVersionID).AsNoTracking().ToListAsync();
-
+                    protocol.VersionNumber = maxVersion+1;
+                    protocol.ProtocolVersionID = 0;
+                    protocol.ApplicationUserCreatorID = _userManager.GetUserAsync(User).Result.Id;
+                    protocol.CreationDate = DateTime.Now;
                     _context.Entry(protocol).State = EntityState.Added;
+                    await _context.SaveChangesAsync();
+
+                    //copy materials
+                    var materials = _context.Materials.Where(m => m.ProtocolVersionID == protocolVersionID).AsNoTracking().ToList();
+                    foreach(var material in materials)
+                    {                        
+                        material.MaterialID = 0;
+                        material.ProtocolVersion = null;
+                        material.ProtocolVersionID = protocol.ProtocolVersionID;
+                        _context.Entry(material).State = EntityState.Added;
+                    }
                     await _context.SaveChangesAsync();
                     var parentLines = protocolLines.Where(pl => pl.ParentLineID == null);
                     foreach(var parent in parentLines)
@@ -1926,7 +1937,6 @@ namespace PrototypeWithAuth.Controllers
                         }
                         else
                         {
-                            var entries  =_context.ChangeTracker.Entries();
                             _context.Entry(createProtocolsViewModel.ProtocolVersion).State = EntityState.Modified;
                             await _context.SaveChangesAsync();
                         }            
