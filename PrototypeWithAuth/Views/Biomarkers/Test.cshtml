@@ -172,9 +172,9 @@
     });
 
     $("#entries-list").on("change", function (e) {
-        alert("clicked change-ee");
+        alert("clicked change-ee with page reload");
         url = "/Biomarkers/Test?ID=" + $(this).val();
-        $.post(url);
+        top.location.href = url;
         //$.ajax({
         //    async: true,
         //    url: url,
