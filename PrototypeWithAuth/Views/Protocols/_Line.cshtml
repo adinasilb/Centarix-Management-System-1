@@ -35,7 +35,7 @@
                     dNone = "";
                 }
             }
-            <a tabindex="0" role="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="click" class="@dNone no-box-shadow btn p-0 m-0 addLinePopover mark-readonly @(dynamicID)ContentLinePopoverButton" lineNumber="@Model.LineNumberString" value="line-content@(Model.Index)" parentLineID="@Model.Line?.ParentLineID" lineCount="@Model.Index">
+            <a tabindex="0" role="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="@dNone no-box-shadow btn p-0 m-0 addLinePopover mark-readonly @(dynamicID)ContentLinePopoverButton" lineNumber="@Model.LineNumberString" value="line-content@(Model.Index)" parentLineID="@Model.Line?.ParentLineID" lineCount="@Model.Index">
                 <i class="protocols-color icon-add_circle-24px" style="  font-size: 3rem;"></i>
             </a>
         </li>

@@ -1815,6 +1815,19 @@ namespace PrototypeWithAuth.Controllers
                     protocol.CreationDate = DateTime.Now;
                     _context.Entry(protocol).State = EntityState.Added;
                     await _context.SaveChangesAsync();
+
+                    //copy materials
+                    var materials = _context.Materials.Where(m => m.ProtocolVersionID == protocolVersionID).ToList();
+                    foreach(var material in materials)
+                    {                        
+                        material.MaterialID = 0;               
+                        _context.Entry(protocol).State = EntityState.Added;
+                        await _context.SaveChangesAsync();
+                        material.ProtocolVersion = null;
+                        material.ProtocolVersionID = protocol.ProtocolVersionID;
+                        _context.Entry(protocol).State = EntityState.Modified;
+                    }
+                    await _context.SaveChangesAsync();
                     var parentLines = protocolLines.Where(pl => pl.ParentLineID == null);
                     foreach(var parent in parentLines)
                     {
