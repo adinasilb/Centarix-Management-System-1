@@ -2011,6 +2011,9 @@ td .btn {
 .order-inv-form .select-wrapper.active span.caret, .order-inv-form .select-wrapper.active label.mdb-main-label {
     color: var(--order-inv-color) !important;
 }
+.bio-form .select-wrapper.active span.caret, .order-inv-form .select-wrapper.active label.mdb-main-label {
+    color: var(--order-inv-color) !important;
+}
 /*HOVER FOR EACH SECTION*/
 .order-inv-form .form-control-plaintext:not(.danger-box-shadow):focus {
     outline-width: 0px !important;
@@ -2038,6 +2041,26 @@ td .btn {
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
 }
 
+.bio-form .input-group:focus-within > .input-group-text {
+    box-shadow: 0 2px 0 0 var(--biomarkers-color) !important;
+}
+
+.bio-form .form-control-plaintext:not(.danger-box-shadow):focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--biomarkers-color) !important;
+}
+
+.bio-form .form-control-plaintext.danger-box-shadow:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--danger-color) !important;
+}
+
+.bio-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+    border-bottom: none !important;
+    border: 2px solid var(--biomarkers-color) !important;
+}
 .users-form .form-control-plaintext:focus {
     outline-width: 0px !important;
     outline-color: none !important;

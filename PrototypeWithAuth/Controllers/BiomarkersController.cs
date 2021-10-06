@@ -458,6 +458,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [HttpPost]
         public async Task<ActionResult> Test(int ID)
         {
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.HumanTrials;
@@ -486,6 +487,15 @@ namespace PrototypeWithAuth.Controllers
                 Guid = Guid.NewGuid(),
                 Tests = tests,
                 TestValues = testValues,
+                ExperimentEntries = _context.ExperimentEntries
+                                  .Where(ee2 => ee2.SiteID == ee.SiteID && ee2.ParticipantID == ee.ParticipantID)
+                                  .Select(
+                                      e => new SelectListItem
+                                      {
+                                          Text = "Entry " + e.VisitNumber + " - " + e.Site.Name,
+                                          Value = e.ExperimentEntryID.ToString()
+                                      }
+                                  ).ToList()
                 //FieldViewModels = new List<FieldViewModel>()
                 //{
                 //    new FieldViewModel()

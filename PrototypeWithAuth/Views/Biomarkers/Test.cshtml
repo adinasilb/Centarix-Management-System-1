@@ -7,6 +7,7 @@
 <script src="~/js/biomarkerssave.js"></script>
 @{ var listNumber = 0;}
 <form action="" method="POST" enctype="multipart/form-data" class="test-forms on-form-modal bio-form" id="BioTestForm">
+    <input type="submit" class="hidden" />
     @Html.HiddenFor(m => m.ExperimentEntry.ExperimentEntryID)
     <input type="hidden" value="@Model.ExperimentEntry.ExperimentEntryID" id="CustomMainObjectID" />
     @Html.HiddenFor(m => m.ExperimentEntry.ParticipantID)
@@ -35,6 +36,17 @@
             <div class="entries-header font-weight-medium text float-right">
                 Entry Number: <span class="biomarkers-color">@Model.ExperimentEntry.VisitNumber </span> |
                 Date: <span class="biomarkers-color">@Model.ExperimentEntry.DateTime.GetElixirDateFormat() </span>
+                <select asp-for="Guid" class="mdb-select custom select-dropdown form-control-plaintext" id="entries-list">
+                    @foreach (var e in Model.ExperimentEntries)
+                    {
+                        <option class="change-ee" value="@e.Value">@e.Text</option>
+                    }
+                </select>
+                @*@Html.DropDownList("ExperimentEntries",
+                        Model.ExperimentEntries,
+                        optionLabel: "Select A Category",
+                        htmlAttributes: new { @class = " ", @searchable = "default value", }
+                    )*@
             </div>
         </div>
     </div>
@@ -157,5 +169,17 @@
         if (!$("._testvalues").hasClass("changed")) {
             $("._testvalues").addClass("changed");
         }
+    });
+
+    $("#entries-list").on("change", function (e) {
+        alert("clicked change-ee");
+        url = "/Biomarkers/Test?ID=" + $(this).val();
+        $.post(url);
+        //$.ajax({
+        //    async: true,
+        //    url: url,
+        //    type: 'POST',
+        //    cache: true
+        //});
     });
 </script>
