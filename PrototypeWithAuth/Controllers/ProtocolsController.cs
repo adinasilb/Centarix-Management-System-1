@@ -1817,15 +1817,13 @@ namespace PrototypeWithAuth.Controllers
                     await _context.SaveChangesAsync();
 
                     //copy materials
-                    var materials = _context.Materials.Where(m => m.ProtocolVersionID == protocolVersionID).ToList();
+                    var materials = _context.Materials.Where(m => m.ProtocolVersionID == protocolVersionID).AsNoTracking().ToList();
                     foreach(var material in materials)
                     {                        
-                        material.MaterialID = 0;               
-                        _context.Entry(protocol).State = EntityState.Added;
-                        await _context.SaveChangesAsync();
+                        material.MaterialID = 0;
                         material.ProtocolVersion = null;
                         material.ProtocolVersionID = protocol.ProtocolVersionID;
-                        _context.Entry(protocol).State = EntityState.Modified;
+                        _context.Entry(material).State = EntityState.Added;
                     }
                     await _context.SaveChangesAsync();
                     var parentLines = protocolLines.Where(pl => pl.ParentLineID == null);
