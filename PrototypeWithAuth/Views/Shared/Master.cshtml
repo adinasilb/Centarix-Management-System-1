@@ -13,10 +13,10 @@
     @*<link rel="stylesheet" href="~/lib/bootstrap/originalDist/css/bootstrap.min.css" />*@
 
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/jquery/dist/popper.min.js"></script>
-        <script src="~/lib/jquery/dist/popper.min.js"></script>
-        <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
-        <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
+    <script src="~/lib/jquery/dist/popper.min.js"></script>
+    <script src="~/lib/jquery/dist/popper.min.js"></script>
+    <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
+    <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Master.css" asp-append-version="true" />
@@ -353,7 +353,7 @@
             return false;
         });
 
-        $(".order-late").on("click", function (e) {
+    $(".order-late").on("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
         $("#loading").show();
@@ -488,6 +488,8 @@
             $(".location-icon").removeClass("d-none");
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
+            $('.open-archive-modal').removeClass('disabled-background-color');
+            $('.open-archive-modal').addClass('order-inv-background-color');
         }
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
@@ -614,6 +616,8 @@
             $("." + modalClass + ' .turn-edit-on-off').attr('name', 'details')
             $("." + modalClass + ' .open-document-modal').attr("data-val", false);
             $("." + modalClass + ' .location-icon').addClass('d-none');
+            $("." + modalClass + ' .open-archive-modal').addClass('disabled-background-color');
+            $("." + modalClass + ' .open-archive-modal').removeClass('order-inv-background-color');
 
             //console.log('locations edot mode off');
             //$("." + modalClass +".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
@@ -1337,6 +1341,11 @@
             var selectedCategory = $(className + " .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedSubCategory = $(className + " .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
             console.log(selectedVendor);
+            var catalogNumber = $(className + ' .search-by-catalog-number').val()
+            if (catalogNumber == undefined) {
+                catalogNumber = "";
+            }
+            console.log(catalogNumber)
             var archived = $('.archive-check').val();
             if (archived == undefined) {
                 archived = false;

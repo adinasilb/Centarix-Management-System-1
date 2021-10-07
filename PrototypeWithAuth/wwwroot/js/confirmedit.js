@@ -13,7 +13,6 @@
 			console.log("not valid data");
 			return false;
 		}
-
 		var url = '';
 		if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
 			console.log("has class suppliers or accounting");
@@ -65,10 +64,12 @@
 				if ($('.turn-edit-on-off').hasClass('locations')) {
 					//alert("got data for locations");
 					//console.log(data)
-					if ($('.turn-edit-on-off').attr("section-type") == "LabManagement") {
-						//alert('reload location ')
-						//Reload visual of labmanagement
-						/*var visualContainerId = $(".hasVisual").attr("parent-id");
+					var pageType = $('#masterPageType').val();
+					console.log(pageType)
+					if (pageType == "LabManagementLocations" || pageType == 'RequestLocation') {
+						console.log('reload location ')
+						//Reload visual of locations box
+						var visualContainerId = $(".hasVisual").attr("parent-id");
 						var urlLocations = "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId;
 						$.ajax({
 							async: true,
@@ -79,7 +80,7 @@
 								$(".hasVisual").html(d);
 								$("#loading").hide();
 							}
-						});*/
+						});
 					}
 					else if ($('.turn-edit-on-off').attr("section-type") == "Requests") {
 						console.log("reloading ajax partial view...");

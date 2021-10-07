@@ -63,8 +63,8 @@ namespace PrototypeWithAuth.Controllers
             entryExitViewModel.TimekeeperNotifications = notifications;
             if (errorMessage != null)
             {
-                entryExitViewModel.ErrorMessage += (errorMessage ?? "");
-                Response.StatusCode = 550;
+                entryExitViewModel.ErrorMessage += errorMessage;
+                Response.StatusCode = 500;
                 //return PartialView(entryExitViewModel);
             }
             return View(entryExitViewModel);
@@ -547,7 +547,7 @@ namespace PrototypeWithAuth.Controllers
                         await _context.SaveChangesAsync();
                     }
                     
-                    //throw new Exception();
+                    throw new Exception();
                     await transaction.CommitAsync();
                     if(updateHoursViewModel.PageType == null || updateHoursViewModel.PageType == "ReportHours")
                     {
@@ -559,15 +559,15 @@ namespace PrototypeWithAuth.Controllers
                 {
                     await transaction.RollbackAsync();
                     updateHoursViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
-                    updateHoursViewModel.PartialOffDayTypes = _context.OffDayTypes.Where(od => od.OffDayTypeID == 1 /*Sick Day*/ || od.OffDayTypeID == 2 /*Vacation Day*/);
+                    /*updateHoursViewModel.PartialOffDayTypes = _context.OffDayTypes.Where(od => od.OffDayTypeID == 1 *//*Sick Day*//* || od.OffDayTypeID == 2 *//*Vacation Day*//*);
                     var userID = _userManager.GetUserId(User);
                     var user = await _context.Employees.Where(u => u.Id == userID).FirstOrDefaultAsync();
                     updateHoursViewModel.EmployeeHour.Employee = user;
                     var offDayType = await _context.OffDayTypes.Where(odt => odt.OffDayTypeID == updateHoursViewModel.EmployeeHour.OffDayTypeID).FirstOrDefaultAsync();
                     updateHoursViewModel.EmployeeHour.OffDayType = offDayType;
-                  
-                    Response.StatusCode = 550;
-                    return PartialView("UpdateHours", updateHoursViewModel);
+                  */
+                    Response.StatusCode = 500;
+                    return PartialView("_ErrorMessage", updateHoursViewModel.ErrorMessage);
 
                 }
             }
@@ -593,6 +593,7 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 await SaveOffDay(offDayViewModel.FromDate, offDayViewModel.ToDate, offDayViewModel.OffDayType);
+                //throw new Exception();
             }
             catch(Exception ex)
             {
@@ -654,6 +655,7 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 await SaveOffDay(offDayViewModel.FromDate, new DateTime(), offDayViewModel.OffDayType);
+                //throw new Exception();
             }
             catch(Exception ex)
             {
@@ -1033,14 +1035,15 @@ namespace PrototypeWithAuth.Controllers
                     var notification = _context.TimekeeperNotifications.Where(tn => tn.NotificationID == id).FirstOrDefault();
                     _context.Remove(notification);
                     await _context.SaveChangesAsync();
-                    //throw new Exception();
+                    throw new Exception();
                     await transaction.CommitAsync();
                     return RedirectToAction("ReportHours");
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    return RedirectToAction("ReportHours", new { errorMessage = AppUtility.GetExceptionMessage(ex) });
+                    Response.StatusCode = 500;
+                    return PartialView("_ErrorMessage", AppUtility.GetExceptionMessage(ex));
                 }
             }
             
