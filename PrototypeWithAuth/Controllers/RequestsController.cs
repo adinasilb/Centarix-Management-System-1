@@ -3318,10 +3318,9 @@ namespace PrototypeWithAuth.Controllers
 
                 // close pdf document
                 doc.Close();
-                filePath = null;
 
-                //if (System.IO.File.Exists(filePath))
-                //{
+                if (System.IO.File.Exists(filePath))
+                {
                     //instatiate mimemessage
                     var message = new MimeMessage();
 
@@ -3388,13 +3387,13 @@ namespace PrototypeWithAuth.Controllers
 
                     }
                     return RedirectToAction("LabManageQuotes");
-                //}
+                }
 
-/*                else
+                else
                 {
                     throw new FileNotFoundException();
                     //return RedirectToAction("Error");
-                }*/
+                }
             }
             catch(Exception ex)
             {
