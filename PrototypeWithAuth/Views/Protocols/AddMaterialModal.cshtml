@@ -98,7 +98,16 @@
     
     });
     $(".serialNumber").change(function () {
-        $(".materialName").val("");
+        $.ajax({
+            url: "/Protocols/GetProductNameFromSerialNumber?serialNumber="+$(this).val(),
+            type: "GET",
+            success: function (data) {
+                $(".materialName").val(data)
+            },
+            error: function (jqxhr) {
+               
+            }
+        });
     });
     $(".saveMaterial").click(function (e) {
         e.preventDefault();
