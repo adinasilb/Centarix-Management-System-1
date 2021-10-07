@@ -41,13 +41,13 @@
 				//console.log("has class locations in requests");
 				url = "/Requests/ReceivedModalVisual";
 				visualDiv = $(".visualView");
-            //}
+            //} 
 		}
 		else if($('.turn-edit-on-off').hasClass('protocols')){
 			formData.set("ModalType", "Summary")
-				var tab= $(".protocol-tab.active.show");
-				var selectedTab = tab.parent().index() +1;
-          
+			var tab = $(".protocol-tab.active");
+			var selectedTab = tab.parent().index() + 1;
+			formData.set("Tab", selectedTab)
 				console.log(selectedTab);
 				$(".selectedTab").val(selectedTab);
 			url = "/Protocols/CreateProtocol?IncludeSaveLines=true";
