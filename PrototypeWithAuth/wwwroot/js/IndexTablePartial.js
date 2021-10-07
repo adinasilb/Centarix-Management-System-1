@@ -466,6 +466,9 @@ $(function () {
                     $(id).attr("checked", "checked");
                 }
                 return true;
+            },
+            error: function (jqxhr) {
+                $('.error-message').html(jqxhr.responseText);
             }
         });
 
