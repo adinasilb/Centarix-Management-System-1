@@ -2,6 +2,9 @@
 @using PrototypeWithAuth.AppData
 <input type="hidden" value="@Model.RequestStatusID" class="request-status-id" />
 <input type="hidden" value="@Model.SidebarFilterID" class="sideBarFilterID" />
+<div class="error-message">
+    @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage);}
+</div>
 @if (Model.PagedList.Count() > 0)
 {
 

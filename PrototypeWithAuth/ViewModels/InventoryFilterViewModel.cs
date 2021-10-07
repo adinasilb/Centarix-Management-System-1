@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PrototypeWithAuth.Models;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class InventoryFilterViewModel
+    public class InventoryFilterViewModel : ViewModelBase
     {
         //public List<CategoryType> Types { get; set; }
         //public List<CategoryType> SelectedTypes { get; set; }
