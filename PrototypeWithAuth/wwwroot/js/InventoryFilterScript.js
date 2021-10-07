@@ -44,6 +44,7 @@ $.fn.ReloadFilterDiv = function (numFilters, data) {
 	var searchText = $('.popover .search-requests-in-filter').val();
 	var catalogNumber = $('.popover .search-by-catalog-number').val();
 	console.log('search: ' + searchText);
+	var catalogNumber = $('.popover .search-by-catalog-number').val();
 /*	var searchText2 = $('.popover .search-requests-in-filter').attr('value');
 	console.log('search 2: ' + searchText2);*/
 	$.ajax({
@@ -61,7 +62,11 @@ $.fn.ReloadFilterDiv = function (numFilters, data) {
 			//$('.search-requests-in-filter').val(searchText);
 			$('.search-by-catalog-number').attr('value', catalogNumber);
 			$('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
-		}
+		}, 
+		error: function (jqxhr) {
+			$('#inventoryFilterContent .error-message').html(jqxhr.responseText);
+			$('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
+        }
 	});
 }
 $('.search-requests').on('change', function (e) {
@@ -70,7 +75,7 @@ $('.search-requests').on('change', function (e) {
 	console.log(searchText);
 	console.log('searchtext length' + searchText.length)
 	/*if (searchText.length < 3 && searchText != "") {
-		return;
+		return;3
     }*/
 	//clear search in filter so doesn't mess things up
 	$('.search-requests-in-filter').attr('value', "");
@@ -90,7 +95,10 @@ $('.search-requests').on('change', function (e) {
 			url = "_IndexTable";
 			break;
 	}*/
-	url = '_IndexTableData';
+	var url = '_IndexTableData';
+	if ($('.' + url).length == 0) { //if it's showing the nothing is here page. not just using indextable when don't have to, so don't lose price and category filters
+		url = '_IndexTable';
+	}
 	//console.log(url);
 	$.ajax({
 		//processData: false,
@@ -198,17 +206,17 @@ $('body').on('click', "#applyFilter", function (e) {
 	//reset page number
 	$('.page-number').val(1);
 
-/*	var url;
+/*	var reloadDiv;
 	switch ($('#masterPageType').val()) {
 		case 'RequestSummary':
-			url = "_IndexTableWithProprietaryTabs";
+			reloadDiv = "_IndexTableWithProprietaryTabs";
 			break;
 		case 'RequestRequest':
 		case 'OperationsRequest':
-			url = "_IndexTableWithCounts"
+			reloadDiv = "_IndexTableWithCounts"
 			break;
 		case 'OperationsInventory':
-			url = "_IndexTable";
+			reloadDiv = "_IndexTable";
 			break;
 	}*/
 	var reloadDiv = '_IndexTableData';

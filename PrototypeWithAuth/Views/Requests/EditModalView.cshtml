@@ -7,16 +7,11 @@
 @{
     TempData.Keep();
     ViewData["Title"] = "EditModalView";
-    
+
     Layout = null;
-    
+
 }
-@if (Model.ErrorMessage != null)
-{
-    <div class="row p-4">
-        <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
-    </div>
-}
+
 
 <div class="modal modal-view right fader on-form-modal editModal" aria-labelledby="Request" data-backdrop="false" style="z-index: 1050">
     @{ await Html.RenderPartialAsync("_EditModalView", Model);}

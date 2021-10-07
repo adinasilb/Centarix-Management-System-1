@@ -2,6 +2,7 @@
 	$(".share-object").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
+		$(this).prop('disabled', true)
 		var menuEnum = $("#MenuItem").val();
 		var url = "/" + menuEnum + "/ShareModal";
 		var formData = new FormData($(".sharemodal")[0]);
@@ -10,6 +11,7 @@
 			method: 'POST',
 			data: formData,
 			success: (e) => {
+				$(this).prop('disabled', false)
 				if (!e) {
 					$.fn.CloseModal("share-modal");
 				}

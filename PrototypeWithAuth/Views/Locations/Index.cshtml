@@ -17,7 +17,7 @@
             break;
     }
 }
-
+@{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
 <input type="hidden" asp-for="SectionType" />
 <script src="~/js/site.js"></script>
 <div class="locations-page @pagetype " style=" margin-right: -5.625rem !important;">

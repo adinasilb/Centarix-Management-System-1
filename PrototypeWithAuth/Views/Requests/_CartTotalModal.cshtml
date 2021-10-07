@@ -32,6 +32,9 @@
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('cart-total')">
                 <span aria-hidden="true">&times;</span>
             </button>
+            <div class="error-message pt-4 pl-3">
+                @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
+            </div>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
 
                 <div class="modal-header border-bottom modal-header-padding">
@@ -70,6 +73,7 @@
 <script>
     $(".approve-cart").off('click').on("click", function (e) {
         e.preventDefault();
+        $(".approve-cart").prop('disabled', true)
         console.log("approve cart");
         $("#loading").show();
         var val = $(this).attr("value");
@@ -82,16 +86,18 @@
                 type: "GET",
                 cache: false,
                 success: function (data) {
+                    $(".approve-cart").prop('disabled', false)
                     $.fn.CloseModal("cart-total");
                     $("._IndexTableWithCounts").html(data);
                     $("#loading").hide();
                     return true;
                 },
                 error: function (jqxhr) {
-                    if (jqxhr.status == 500) {
+                    /*if (jqxhr.status == 500) {
                         $.fn.OpenModal('cart-total-modal', 'cart-total', jqxhr.responseText)
-                    }
-
+                    }*/
+                    $('.cart-total-modal .error-message').html(jqxhr.responseText);
+                    $(".approve-cart").prop('disabled', false)
                     $("#loading").hide();
                     return true;
                 }
