@@ -7,11 +7,26 @@
 		"Vendor.VendorHeName": "required",
 		"VendorCategoryTypes": { selectRequired: true },
 		"Vendor.VendorBuisnessID": {
-			required: true,
+			/*required: true,
 			number: true,
-			min: 1
+			min: 1*/
+		
+			required: true,
+			remote: {
+				url: '/Vendors/CheckUniqueCompanyIDAndCountry',
+				type: 'POST',
+				data: {
+					"VendorID": function () { return $("#vendorList").val() },
+					"CatalogNumber": function () { return $("#Requests_0__Product_CatalogNumber").val() },
+					"ProductID": function () {
+						if ($(".turn-edit-on-off").length > 0) {
+							return $(".turn-edit-on-off").attr("productID");
+						} else { return null }
+					}
+				},
+			},
 		},
-		"Vendor.VendorCountry": "required",
+		"Vendor.VendorCountry": { selectRequired: true },
 		"Vendor.VendorCity": "required",
 		"Vendor.VendorTelephone": {
 			required: true,

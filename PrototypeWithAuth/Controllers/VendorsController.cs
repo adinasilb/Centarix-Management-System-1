@@ -598,6 +598,24 @@ namespace PrototypeWithAuth.Controllers
             AddContactViewModel addContactViewModel = new AddContactViewModel { VendorContact = contact, Index = index };
             return PartialView(addContactViewModel);
         }
+
+        [HttpPost]
+        public bool CheckUniqueCompanyIDAndCountry(int VendorID, string CatalogNumber, int? ProductID = null)
+        {
+            var boolCheck = true;
+            //validation for the create
+            if (VendorID != null && CatalogNumber != null && (ProductID == null && _context.Requests.Where(r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID).Any()))
+            {
+                return false;
+            }
+            //validation for the edit
+            var product = _context.Requests.Where(r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID);
+            if (ProductID != null && _context.Requests.Where(r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID).Any())
+            {
+                return false;
+            }
+            return boolCheck;
+        }
     }
 
 }
