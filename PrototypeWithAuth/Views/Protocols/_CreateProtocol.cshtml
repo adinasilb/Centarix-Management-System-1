@@ -108,16 +108,20 @@
             </li>
             @{
                 var isChecked = "";
+                var editModeText = "Edit Mode Off";
+                var switchName = "details";
                 if (Model.ModalType == AppUtility.ProtocolModalType.Edit)
                 {
                     isChecked = "checked";
+                    editModeText = "Edit Mode On";
+                    switchName = "edit";
                 }
             }
             <li class="@editMode @summaryMode d-none">
                 <div class="switch col-12 switch-margin">
                     <label>
-                        <label class="edit-mode-switch-description">Edit Mode Off</label>
-                        <input type="checkbox" class="turn-edit-on-off protocols" value="@Model.ProtocolVersion.ProtocolVersionID" name="details" @isChecked>
+                        <label class="edit-mode-switch-description">@editModeText</label>
+                        <input type="checkbox" class="turn-edit-on-off protocols" value="@Model.ProtocolVersion.ProtocolVersionID" name="@switchName" @isChecked>
                         <span class="lever"></span>
                     </label>
                 </div>
