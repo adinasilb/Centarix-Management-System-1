@@ -946,7 +946,10 @@ namespace PrototypeWithAuth.Controllers
             return PartialView("_Lines", await OrderLinesForViewAsync(true, protocolVersionID, modalType, guid));
         }
 
-
+        public string GetProductNameFromSerialNumber(string serialNumber)
+        {
+            return _context.Products.Where(p => p.Requests.Where(r => r.RequestStatusID == 3 || r.RequestStatusID == 7).Any()).Where(p => p.SerialNumber.Equals(serialNumber)).FirstOrDefault()?.ProductName;
+        }
         public bool CheckIfSerialNumberExists(string serialNumber)
         {
             return _context.Products.Where(p => p.Requests.Where(r => r.RequestStatusID == 3 || r.RequestStatusID == 7).Any()).Where(p => p.SerialNumber.Equals(serialNumber)).ToList().Any();
