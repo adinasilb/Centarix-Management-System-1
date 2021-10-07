@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211006091900_UpdateRoomInstancesDS")]
+    partial class UpdateRoomInstancesDS
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2198,92 +2200,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("LocationRoomTypeID");
 
                     b.ToTable("LocationRoomInstances");
-
-                    b.HasData(
-                        new
-                        {
-                            LocationRoomInstanceID = 1,
-                            LocationRoomInstanceAbbrev = "L1",
-                            LocationRoomInstanceName = "Laboratory 1",
-                            LocationRoomTypeID = 1
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 2,
-                            LocationRoomInstanceAbbrev = "L2",
-                            LocationRoomInstanceName = "Laboratory 2",
-                            LocationRoomTypeID = 1
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 3,
-                            LocationRoomInstanceAbbrev = "TC1",
-                            LocationRoomInstanceName = "Tissue Culture 1",
-                            LocationRoomTypeID = 2
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 4,
-                            LocationRoomInstanceAbbrev = "E1",
-                            LocationRoomInstanceName = "Equipment Room 1",
-                            LocationRoomTypeID = 3
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 5,
-                            LocationRoomInstanceAbbrev = "R1",
-                            LocationRoomInstanceName = "Refrigerator Room 1",
-                            LocationRoomTypeID = 4
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 6,
-                            LocationRoomInstanceAbbrev = "W1",
-                            LocationRoomInstanceName = "Washing Room 1",
-                            LocationRoomTypeID = 5
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 7,
-                            LocationRoomInstanceAbbrev = "S1",
-                            LocationRoomInstanceName = "Storage Room 1",
-                            LocationRoomTypeID = 6
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 8,
-                            LocationRoomInstanceAbbrev = "DSL3",
-                            LocationRoomInstanceName = "DS-Lab 3",
-                            LocationRoomTypeID = 1
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 9,
-                            LocationRoomInstanceAbbrev = "DSL4",
-                            LocationRoomInstanceName = "DS-Lab 4",
-                            LocationRoomTypeID = 1
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 10,
-                            LocationRoomInstanceAbbrev = "DSTC2",
-                            LocationRoomInstanceName = "DS-Tissue Culture 2",
-                            LocationRoomTypeID = 2
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 11,
-                            LocationRoomInstanceAbbrev = "DSW2",
-                            LocationRoomInstanceName = "DS-Washing Room 2",
-                            LocationRoomTypeID = 5
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 12,
-                            LocationRoomInstanceAbbrev = "LN1",
-                            LocationRoomInstanceName = "Liquid Nitrogen Room 1",
-                            LocationRoomTypeID = 7
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationRoomType", b =>

@@ -242,7 +242,7 @@ $(function () {
 					$('#unitTypeID').rules("remove", "selectRequired");
 					console.log('removed price selects');
 				}
-				if ($(this).parent("li").index() <= $('.request-location').parent("li").index()) {
+				if ($(this).parent("li").index() <= $('.request-location').parent("li").index() &&$('#locationTypeSelected').length>0) {
 					$('#locationTypeSelected').rules("remove", "locationRequired");
 					$('#locationVisualSelected').rules("remove", "locationRequired");
 					$('#subLocationSelected').rules("remove", "locationRequired");
