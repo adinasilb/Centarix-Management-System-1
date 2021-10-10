@@ -889,6 +889,16 @@ namespace PrototypeWithAuth.Controllers
             }
             return fullRequestsList;
         }
+        protected static IQueryable<Request> ApplySearchToRequestList(RequestsSearchViewModel requestsSearchViewModel, IQueryable<Request> fullRequestsList)
+        {
+
+            //??about including invoice and payments null pointer.....
+            if (requestsSearchViewModel.InvoiceNumer != null && requestsSearchViewModel.InvoiceNumer != "")
+            {
+                fullRequestsList = fullRequestsList.Where(r => r.Payments.Where(p=>p.Invoice.InvoiceNumber.ToLower() == requestsSearchViewModel.InvoiceNumer.ToLower()).Any());
+            }
+            return fullRequestsList;
+        }
 
         private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude)
         {

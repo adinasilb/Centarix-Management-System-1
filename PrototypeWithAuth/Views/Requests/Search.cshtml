@@ -25,33 +25,8 @@
 
 <form action="" method="post" class="container-fluid ml-6 @form "  enctype="multipart/form-data" id="search-form">
     <div class="row">
-        <div class="col-1  mr-5">
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input filled-in" asp-for="Inventory" />
-                <label class="form-check-label" asp-for="Inventory"></label>
-            </div>
-            <br />
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input filled-in" asp-for="Ordered" />
-                <label class="form-check-label " asp-for="Ordered"></label>
-            </div>
-            <br />
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input filled-in" asp-for="ForApproval" />
-                <label class="form-check-label " asp-for="ForApproval"></label>
-            </div>
-
-            @*<span class="text-muted">(another option)</span>
-        <select class="form-control-plaintext border-bottom">
-            <option value="value">Inventory</option>
-            <option value="value">Ordered</option>
-            <option value="value">For Approval</option>
-        </select>*@
-        </div>
-
         <div class="col-7 create-user  on-form-modal ">
             <div class="on-form-modal-border pb-4">
-                <input type="hidden" asp-for="SectionType" />
     
                 <div class="new-modal-body ">
                     <div class="container-fluid div-tabs no-box-shadow p-0">
@@ -70,16 +45,16 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label asp-for="Request.Product.ProductName" class="control-label">Item Name: </label>
-                                        <input asp-for="Request.Product.ProductName" data-val="false" class="form-control-plaintext border-bottom" />
+                                        <label asp-for="ItemName" class="control-label">Item Name: </label>
+                                        <input asp-for="ItemName" data-val="false" class="form-control-plaintext border-bottom" />
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-4">
                                     <div class="form-group">
-                                        <label asp-for="Request.Product.ProductSubcategory.ParentCategoryID" class="control-label">Category</label>
-                                        <select searchable="Please select a category" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" id="parentlist" asp-for="Request.Product.ProductSubcategory.ParentCategoryID">
+                                        <label asp-for="ParentCategoryID" class="control-label">Category</label>
+                                        <select searchable="Please select a category" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" id="parentlist" asp-for="ParentCategoryID">
                                             <option value="0">Select Category</option>
                                             @foreach (var parentCategory in Model.ParentCategories)
                                             {

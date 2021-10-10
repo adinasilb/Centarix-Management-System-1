@@ -3452,45 +3452,14 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [Authorize(Roles = "Requests, LabManagement, Operations")]
         public async Task<IActionResult> Search(AppUtility.MenuItems SectionType)
-        {
-            int categoryID = 0;
-            if (SectionType == AppUtility.MenuItems.Requests)
-            {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestSearch;
-                categoryID = 2;
-            }
-            else if (SectionType == AppUtility.MenuItems.LabManagement)
-            {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSearch;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
-            }
-            else if (SectionType == AppUtility.MenuItems.Operations)
-            {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsSearch;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
-                categoryID = 1;
-            }
-
-
+        {  
             RequestsSearchViewModel requestsSearchViewModel = new RequestsSearchViewModel
             {
-                ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID != categoryID).ToListAsync(),
-                ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID != categoryID).ToListAsync(),
-                Projects = await _context.Projects.ToListAsync(),
-                SubProjects = await _context.SubProjects.ToListAsync(),
+                ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID != 1).ToListAsync(),
+                ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID != categoryID).ToListAsync(),    
                 Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID != categoryID).Count() > 0).ToListAsync(),
-                Request = new Request(),
-                Inventory = false,
-                Ordered = false,
-                ForApproval = false,
-                SectionType = SectionType
-                //check if we need this here
+                
             };
-
-            requestsSearchViewModel.Request.ParentRequest = new ParentRequest();
 
             return View(requestsSearchViewModel);
         }
