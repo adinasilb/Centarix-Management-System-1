@@ -600,21 +600,19 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        public bool CheckUniqueCompanyIDAndCountry(int VendorID, string CatalogNumber, int? ProductID = null)
+        public bool CheckUniqueCompanyIDAndCountry(string CompanyID, string Country, int? VendorID = null)
         {
-            var boolCheck = true;
             //validation for the create
-            if (VendorID != null && CatalogNumber != null && (ProductID == null && _context.Requests.Where(r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID).Any()))
+            if (CompanyID != null && Country != null && (VendorID == null && _context.Vendors.Where(v => v.VendorBuisnessID.Equals(CompanyID) && v.VendorCountry.Equals(Country)).Any()))
             {
                 return false;
             }
             //validation for the edit
-            var product = _context.Requests.Where(r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID);
-            if (ProductID != null && _context.Requests.Where(r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID).Any())
+            if (VendorID != null && _context.Vendors.Where(v => v.VendorBuisnessID.Equals(CompanyID) && v.VendorCountry.Equals(Country) && v.VendorID != VendorID).Any())
             {
                 return false;
             }
-            return boolCheck;
+            return true;
         }
     }
 
