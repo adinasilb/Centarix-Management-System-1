@@ -52,6 +52,14 @@
                         break;
                     case AppUtility.DataTypeEnum.File:
                         //fieldViewModel.File
+                        if(Model.FilesPrevFilled.Contains(new BoolIntViewModel() { Bool = true, Int = header.TestHeaderID }))
+                        {
+                            fieldViewModel.HasFile = true;
+                        }
+                        else
+                        {
+                            fieldViewModel.HasFile = false;
+                        }
                         break;
                 }
                 return fieldViewModel;

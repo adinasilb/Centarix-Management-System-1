@@ -22,5 +22,6 @@ namespace PrototypeWithAuth.ViewModels
         public bool Bool { get; set; }
         public int FieldID { get; set; }
         public AppUtility.DataCalculation DataCalculation { get; set; }
+        public bool HasFile { get; set; }
     }
 }

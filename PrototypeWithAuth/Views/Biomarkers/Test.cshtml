@@ -108,7 +108,6 @@
     $(".biomarkers-test-name").on("click", function (e) {
         if (!$(this).hasClass("selected")) {
             if ($("._testvalues").hasClass("changed")) {
-                console.log("inside of if state")
                 if ($(".edit-mode-input").hasClass("on")) {
                     $.ajax({
                         async: false,
@@ -121,12 +120,10 @@
                     });
                 }
                 else {
-                    console.log("change form");
                     $.fn.ChangeTest($(this));
                 }
             }
             else {
-                console.log("change form");
                 $.fn.ChangeTest($(this));
             }
         }

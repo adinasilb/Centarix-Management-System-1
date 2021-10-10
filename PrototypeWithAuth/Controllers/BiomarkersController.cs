@@ -126,7 +126,7 @@ namespace PrototypeWithAuth.Controllers
         {
             base.DocumentsModal(documentsModalViewModel);
         }
-        
+
 
         [HttpGet]
         [Authorize(Roles = "Biomarkers")]
@@ -474,6 +474,9 @@ namespace PrototypeWithAuth.Controllers
                     .ToList();
             var testValues = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ID
                                 && tv.TestHeader.TestGroup.TestOuterGroup.TestID == tests.FirstOrDefault().TestID).ToList();
+            var areFilesFilled = new List<BoolIntViewModel>();
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ExperimentEntries.ToString());
+
             var value1 = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ID).Count();
             var value2 = tests.SelectMany(t => t.TestOuterGroups/*.Where(tog => tog.TestID == tests.FirstOrDefault().TestID)*/.SelectMany(to => to.TestGroups.SelectMany(tg => tg.TestHeaders))).Count();
             if (value1 < value2)
@@ -515,6 +518,35 @@ namespace PrototypeWithAuth.Controllers
             return View(testViewModel);
         }
 
+        private List<BoolIntViewModel> CheckForFiles(List<TestValue> testValues, int eeID)
+        {
+            bool hasFile = false;
+            List<BoolIntViewModel> FilesWithDocsSaved = new List<BoolIntViewModel>();
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ExperimentEntries.ToString());
+            foreach (var tv in testValues.Where(tv => tv.TestHeader.Type == AppUtility.DataTypeEnum.File.ToString()))
+            {
+                string uploadFolder2 = Path.Combine(uploadFolder1, eeID.ToString());
+                if (Directory.Exists(uploadFolder2))
+                {
+                    string uploadFolder3 = Path.Combine(uploadFolder2, tv.TestValueID.ToString());
+                    if (Directory.Exists(uploadFolder3))
+                    {
+                        DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
+                        //searching for the partial file name in the directory
+                        FileInfo[] docfilesfound = DirectoryToSearch.GetFiles("*.*");
+                        if( docfilesfound.Length > 0)
+                        {
+                            FilesWithDocsSaved.Add(new BoolIntViewModel()
+                            {
+                                Bool = true,
+                                Int = tv.TestHeaderID
+                            });
+                        }
+                    }
+                }
+            }
+            return FilesWithDocsSaved;
+        }
         private List<TestValue> CreateTestValuesIfNone(List<Test> tests, List<TestValue> testValues, int ExperimentEntryID)
         {
             var allTests = tests.SelectMany(t => t.TestOuterGroups.SelectMany(tog => tog.TestGroups.SelectMany(tg => tg.TestHeaders)));
@@ -638,12 +670,15 @@ namespace PrototypeWithAuth.Controllers
                      .Include(t => t.TestOuterGroups).ThenInclude(tog => tog.TestGroups).ThenInclude(tg => tg.TestHeaders)
                      .Where(t => t.ExperimentTests.Select(et => et.ExperimentID).Contains(ExperimentID))
                      .ToList();
+            var testValues = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ExperimentEntryID
+                              && tv.TestHeader.TestGroup.TestOuterGroup.TestID == test.TestID).ToList();
+            List<BoolIntViewModel> filesPrevFilled = CheckForFiles(testValues, ExperimentEntryID);
             TestValuesViewModel testValuesViewModel = new TestValuesViewModel()
             {
                 ListNumber = ListNumber,
                 Test = test,
-                TestValues = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ExperimentEntryID
-                               && tv.TestHeader.TestGroup.TestOuterGroup.TestID == test.TestID).ToList()
+                TestValues = testValues,
+                FilesPrevFilled = filesPrevFilled
             };
 
             return PartialView(testValuesViewModel);
