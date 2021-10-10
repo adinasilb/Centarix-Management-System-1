@@ -42,7 +42,7 @@
 
 
                         @if ((Model.ModalType == AppUtility.ProtocolModalType.Edit ||
-               Model.ModalType == AppUtility.ProtocolModalType.Create))
+               Model.ModalType == AppUtility.ProtocolModalType.Create || Model.ModalType == AppUtility.ProtocolModalType.CreateNewVersion))
                         {
                             @if ((Model.Function.FunctionType.DescriptionEnum == AppUtility.ProtocolFunctionTypes.AddFile.ToString() || Model.Function.FunctionType.DescriptionEnum == AppUtility.ProtocolFunctionTypes.AddImage.ToString()))
                             {
