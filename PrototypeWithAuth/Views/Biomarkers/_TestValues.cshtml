@@ -52,13 +52,16 @@
                         break;
                     case AppUtility.DataTypeEnum.File:
                         //fieldViewModel.File
-                        if(Model.FilesPrevFilled.Contains(new BoolIntViewModel() { Bool = true, Int = header.TestHeaderID }))
+                        foreach (var fileFilled in Model.FilesPrevFilled)
                         {
-                            fieldViewModel.HasFile = true;
-                        }
-                        else
-                        {
-                            fieldViewModel.HasFile = false;
+                            if (fileFilled.Bool && fileFilled.Int == header.TestHeaderID)
+                            {
+                                fieldViewModel.HasFile = true;
+                            }
+                            else
+                            {
+                                fieldViewModel.HasFile = false;
+                            }
                         }
                         break;
                 }

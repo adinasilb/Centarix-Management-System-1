@@ -764,8 +764,8 @@ table td, table td .btn, .text, table th {
     border: 1px solid var(--lab-man-color) !important;
 }
 
-.bio-form .document-border:hover, .order-inv-form .document-border.hasFile {
-    border: 1px solid var(--biomarkers-color) !important;
+.bio-form .document-border.hasFile {
+    border: 2px solid var(--biomarkers-color) !important;
 }
 .accounting-form .document-border:hover, .accounting-form .document-border.hasFile {
     border: 1px solid var(--acc-color) !important;
