@@ -10,8 +10,8 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class VendorSearchViewModel : ViewModelBase
     {
-        public IEnumerable<ParentCategory> ParentCategories { get; set; }
-        public int SelectedParentCategoryID { get; set; }
+        public IEnumerable<CategoryType> CategoryTypes { get; set; }
+        public List<int> VendorCategoryTypes { get; set; }
         public IEnumerable<Vendor> Vendors { get; set; }
 
         [ MaxLength(50)]
