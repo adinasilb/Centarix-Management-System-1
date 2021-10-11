@@ -2653,7 +2653,8 @@ namespace PrototypeWithAuth.Controllers
                     shareModalViewModel.ObjectDescription = _context.Resources.Where(r => r.ResourceID == ID).FirstOrDefault().Title;
                     break;
                 case AppUtility.ModelsEnum.Protocols:
-                    shareModalViewModel.ObjectDescription = _context.Protocols.Where(r => r.ProtocolID == ID).FirstOrDefault().Name;
+                    var protocolVersion = _context.ProtocolVersions.Where(r => r.ProtocolVersionID == ID).FirstOrDefault();
+                    shareModalViewModel.ObjectDescription = _context.Protocols.Where(r => r.ProtocolID == protocolVersion.ProtocolID).FirstOrDefault().Name;
                     break;
             }
             return PartialView(shareModalViewModel);
