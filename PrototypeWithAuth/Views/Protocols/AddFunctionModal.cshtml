@@ -42,7 +42,7 @@
 
 
                         @if ((Model.ModalType == AppUtility.ProtocolModalType.Edit ||
-               Model.ModalType == AppUtility.ProtocolModalType.Create))
+               Model.ModalType == AppUtility.ProtocolModalType.Create || Model.ModalType == AppUtility.ProtocolModalType.CreateNewVersion))
                         {
                             @if ((Model.Function.FunctionType.DescriptionEnum == AppUtility.ProtocolFunctionTypes.AddFile.ToString() || Model.Function.FunctionType.DescriptionEnum == AppUtility.ProtocolFunctionTypes.AddImage.ToString()))
                             {
@@ -67,9 +67,10 @@
 
                             else if (Model.Function.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProduct.ToString() && Model.Function.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProtocol.ToString() && Model.Function.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddStop.ToString())
                             {
+                                saveDnone = "";
                                 if (Model.Function.ID == 0)
                                 {
-                                    saveDnone = "";
+
                                     cancelDnone = "";
                                 }
                                 else

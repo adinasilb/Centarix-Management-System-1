@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211010192659_FixSomeDBWordIssues")]
+    partial class FixSomeDBWordIssues
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1122,14 +1124,14 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("ApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("ProtocolVersionID")
+                    b.Property<int>("ProtocolID")
                         .HasColumnType("int");
 
                     b.HasKey("FavoriteID");
 
                     b.HasIndex("ApplicationUserID");
 
-                    b.HasIndex("ProtocolVersionID");
+                    b.HasIndex("ProtocolID");
 
                     b.ToTable("FavoriteProtocols");
                 });
@@ -1217,7 +1219,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("ProductID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProtocolVersionID")
+                    b.Property<int?>("ProtocolID")
                         .HasColumnType("int");
 
                     b.Property<TimeSpan>("Timer")
@@ -1231,7 +1233,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.HasIndex("ProtocolVersionID");
+                    b.HasIndex("ProtocolID");
 
                     b.ToTable("FunctionLines");
                 });
@@ -1260,9 +1262,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("FunctionTypeID")
                         .HasColumnType("int");
 
@@ -1275,70 +1274,23 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("ProductID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProtocolVersionID")
+                    b.Property<int?>("ProtocolID")
                         .HasColumnType("int");
 
                     b.Property<int>("ReportID")
                         .HasColumnType("int");
 
-                    b.Property<TimeSpan>("Timer")
-                        .HasColumnType("time");
-
                     b.HasKey("ID");
 
                     b.HasIndex("FunctionTypeID");
 
                     b.HasIndex("ProductID");
 
-                    b.HasIndex("ProtocolVersionID");
+                    b.HasIndex("ProtocolID");
 
                     b.HasIndex("ReportID");
 
                     b.ToTable("FunctionReports");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.FunctionResult", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("FunctionTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsTemporary")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsTemporaryDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ProductID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProtocolInstanceID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProtocolVersionID")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("Timer")
-                        .HasColumnType("time");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("FunctionTypeID");
-
-                    b.HasIndex("ProductID");
-
-                    b.HasIndex("ProtocolInstanceID");
-
-                    b.HasIndex("ProtocolVersionID");
-
-                    b.ToTable("FunctionResults");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FunctionType", b =>
@@ -2064,7 +2016,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("ParentLineID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProtocolVersionID")
+                    b.Property<int>("ProtocolID")
                         .HasColumnType("int");
 
                     b.HasKey("LineID");
@@ -2073,7 +2025,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ParentLineID");
 
-                    b.HasIndex("ProtocolVersionID");
+                    b.HasIndex("ProtocolID");
 
                     b.ToTable("Lines");
                 });
@@ -2152,7 +2104,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("LinkDescription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProtocolVersionID")
+                    b.Property<int>("ProtocolID")
                         .HasColumnType("int");
 
                     b.Property<string>("Url")
@@ -2160,7 +2112,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasKey("LinkID");
 
-                    b.HasIndex("ProtocolVersionID");
+                    b.HasIndex("ProtocolID");
 
                     b.ToTable("Links");
                 });
@@ -2248,92 +2200,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("LocationRoomTypeID");
 
                     b.ToTable("LocationRoomInstances");
-
-                    b.HasData(
-                        new
-                        {
-                            LocationRoomInstanceID = 1,
-                            LocationRoomInstanceAbbrev = "L1",
-                            LocationRoomInstanceName = "Laboratory 1",
-                            LocationRoomTypeID = 1
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 2,
-                            LocationRoomInstanceAbbrev = "L2",
-                            LocationRoomInstanceName = "Laboratory 2",
-                            LocationRoomTypeID = 1
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 3,
-                            LocationRoomInstanceAbbrev = "TC1",
-                            LocationRoomInstanceName = "Tissue Culture 1",
-                            LocationRoomTypeID = 2
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 4,
-                            LocationRoomInstanceAbbrev = "E1",
-                            LocationRoomInstanceName = "Equipment Room 1",
-                            LocationRoomTypeID = 3
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 5,
-                            LocationRoomInstanceAbbrev = "R1",
-                            LocationRoomInstanceName = "Refrigerator Room 1",
-                            LocationRoomTypeID = 4
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 6,
-                            LocationRoomInstanceAbbrev = "W1",
-                            LocationRoomInstanceName = "Washing Room 1",
-                            LocationRoomTypeID = 5
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 7,
-                            LocationRoomInstanceAbbrev = "S1",
-                            LocationRoomInstanceName = "Storage Room 1",
-                            LocationRoomTypeID = 6
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 8,
-                            LocationRoomInstanceAbbrev = "DSL3",
-                            LocationRoomInstanceName = "DS-Lab 3",
-                            LocationRoomTypeID = 1
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 9,
-                            LocationRoomInstanceAbbrev = "DSL4",
-                            LocationRoomInstanceName = "DS-Lab 4",
-                            LocationRoomTypeID = 1
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 10,
-                            LocationRoomInstanceAbbrev = "DSTC2",
-                            LocationRoomInstanceName = "DS-Tissue Culture 2",
-                            LocationRoomTypeID = 2
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 11,
-                            LocationRoomInstanceAbbrev = "DSW2",
-                            LocationRoomInstanceName = "DS-Washing Room 2",
-                            LocationRoomTypeID = 5
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 12,
-                            LocationRoomInstanceAbbrev = "LN1",
-                            LocationRoomInstanceName = "Liquid Nitrogen Room 1",
-                            LocationRoomTypeID = 7
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationRoomType", b =>
@@ -2389,12 +2255,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationRoomTypeID = 6,
                             LocationAbbreviation = "S",
                             LocationRoomTypeDescription = "Storage Room"
-                        },
-                        new
-                        {
-                            LocationRoomTypeID = 7,
-                            LocationAbbreviation = "LN",
-                            LocationRoomTypeDescription = "Liquid Nitrogen Room"
                         });
                 });
 
@@ -2671,7 +2531,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("ProductID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProtocolVersionID")
+                    b.Property<int>("ProtocolID")
                         .HasColumnType("int");
 
                     b.HasKey("MaterialID");
@@ -2680,7 +2540,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.HasIndex("ProtocolVersionID");
+                    b.HasIndex("ProtocolID");
 
                     b.ToTable("Materials");
                 });
@@ -4194,6 +4054,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ApplicationUserCreatorID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -4212,7 +4078,12 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("UniqueCode")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("VersionNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ProtocolID");
+
+                    b.HasIndex("ApplicationUserCreatorID");
 
                     b.HasIndex("ProtocolSubCategoryID");
 
@@ -4302,7 +4173,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsFinished")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ProtocolVersionID")
+                    b.Property<int>("ProtocolID")
                         .HasColumnType("int");
 
                     b.Property<string>("ResultDescription")
@@ -4323,7 +4194,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("CurrentLineID");
 
-                    b.HasIndex("ProtocolVersionID");
+                    b.HasIndex("ProtocolID");
 
                     b.ToTable("ProtocolInstances");
                 });
@@ -4431,41 +4302,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ProtocolTypeID = 6,
                             ProtocolTypeDescription = "Maintenance"
                         });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolVersion", b =>
-                {
-                    b.Property<int>("ProtocolVersionID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ApplicationUserCreatorID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProtocolID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ShortDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Theory")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("VersionNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProtocolVersionID");
-
-                    b.HasIndex("ApplicationUserCreatorID");
-
-                    b.HasIndex("ProtocolID", "VersionNumber")
-                        .IsUnique();
-
-                    b.ToTable("ProtocolVersions");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.QuoteStatus", b =>
@@ -5142,7 +4978,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("FromApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("ProtocolVersionID")
+                    b.Property<int>("ProtocolID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
@@ -5155,7 +4991,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("FromApplicationUserID");
 
-                    b.HasIndex("ProtocolVersionID");
+                    b.HasIndex("ProtocolID");
 
                     b.HasIndex("ToApplicationUserID");
 
@@ -5386,20 +5222,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("TempLinesJsons");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.TempReportJson", b =>
-                {
-                    b.Property<Guid>("TempReportJsonID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Json")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("TempReportJsonID");
-
-                    b.ToTable("TempReportJsons");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.TempRequestJson", b =>
                 {
                     b.Property<int>("TempRequestJsonID")
@@ -5430,20 +5252,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ApplicationUserID");
 
                     b.ToTable("TempRequestJsons");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.TempResultsJson", b =>
-                {
-                    b.Property<Guid>("TempResultsJsonID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Json")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("TempResultsJsonID");
-
-                    b.ToTable("TempResultsJsons");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Test", b =>
@@ -5645,6 +5453,12 @@ namespace PrototypeWithAuth.Data.Migrations
                             UnitTypeID = 2,
                             UnitParentTypeID = 1,
                             UnitTypeDescription = "Box"
+                        },
+                        new
+                        {
+                            UnitTypeID = 19,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Case"
                         },
                         new
                         {
@@ -6184,7 +5998,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("VendorBuisnessID")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VendorCellPhone")
                         .HasColumnType("nvarchar(max)");
@@ -6236,9 +6050,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("VendorID");
-
-                    b.HasIndex("VendorCountry", "VendorBuisnessID")
-                        .IsUnique();
 
                     b.ToTable("Vendors");
                 });
@@ -6700,10 +6511,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
+                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
                         .WithMany()
-                        .HasForeignKey("ProtocolVersionID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("ProtocolID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteRequest", b =>
@@ -6751,7 +6563,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.Line", "Line")
-                        .WithMany("FunctionLines")
+                        .WithMany()
                         .HasForeignKey("LineID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -6761,9 +6573,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
+                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
                         .WithMany()
-                        .HasForeignKey("ProtocolVersionID")
+                        .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -6780,9 +6592,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
+                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
                         .WithMany()
-                        .HasForeignKey("ProtocolVersionID")
+                        .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Report", "Report")
@@ -6790,31 +6602,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ReportID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.FunctionResult", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.FunctionType", "FunctionType")
-                        .WithMany()
-                        .HasForeignKey("FunctionTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.ProtocolInstance", "ProtocolInstance")
-                        .WithMany()
-                        .HasForeignKey("ProtocolInstanceID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
-                        .WithMany()
-                        .HasForeignKey("ProtocolVersionID")
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.JobSubcategoryType", b =>
@@ -6839,9 +6626,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ParentLineID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
+                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
                         .WithMany("Lines")
-                        .HasForeignKey("ProtocolVersionID")
+                        .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -6876,10 +6663,11 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Link", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
+                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
                         .WithMany("Urls")
-                        .HasForeignKey("ProtocolVersionID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("ProtocolID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
@@ -6941,9 +6729,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
+                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
                         .WithMany("Materials")
-                        .HasForeignKey("ProtocolVersionID")
+                        .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -7076,6 +6864,11 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Protocol", b =>
                 {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserCreator")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserCreatorID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("PrototypeWithAuth.Models.ProtocolSubCategory", "ProtocolSubCategory")
                         .WithMany()
                         .HasForeignKey("ProtocolSubCategoryID")
@@ -7110,9 +6903,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
+                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
                         .WithMany("ProtocolInstances")
-                        .HasForeignKey("ProtocolVersionID")
+                        .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -7122,20 +6915,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.ProtocolCategory", "ProtocolCategoryType")
                         .WithMany()
                         .HasForeignKey("ProtocolCategoryTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolVersion", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserCreator")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserCreatorID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany()
-                        .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -7303,10 +7082,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("FromApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
+                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
                         .WithMany()
-                        .HasForeignKey("ProtocolVersionID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("ProtocolID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
                         .WithMany()
@@ -7364,7 +7144,7 @@ namespace PrototypeWithAuth.Data.Migrations
             modelBuilder.Entity("PrototypeWithAuth.Models.TagProtocol", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany()
+                        .WithMany("TagProtocols")
                         .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

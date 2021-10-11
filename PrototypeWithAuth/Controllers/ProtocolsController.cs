@@ -1537,7 +1537,7 @@ namespace PrototypeWithAuth.Controllers
 
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
-                    var protocol = _context.ProtocolVersions.Include(p=>p.Protocol).Where(p => p.ProtocolVersionID == objectID || p.Protocol.UniqueCode == uniqueNumber).Include(ps => ps.Protocol.ProtocolSubCategory).FirstOrDefault();
+                    var protocol = _context.ProtocolVersions.Include(p=>p.Protocol).Where(p => p.ProtocolVersionID == objectID || p.Protocol.UniqueCode + 'V' + p.VersionNumber == uniqueNumber).Include(ps => ps.Protocol.ProtocolSubCategory).FirstOrDefault();
                     viewmodel.Function.ProtocolVersion = protocol;
                     viewmodel.Function.ProtocolVersionID = protocol.ProtocolVersionID;
                     viewmodel.ProtocolCategories = _context.ProtocolCategories.ToList();
@@ -2653,7 +2653,8 @@ namespace PrototypeWithAuth.Controllers
                     shareModalViewModel.ObjectDescription = _context.Resources.Where(r => r.ResourceID == ID).FirstOrDefault().Title;
                     break;
                 case AppUtility.ModelsEnum.Protocols:
-                    shareModalViewModel.ObjectDescription = _context.Protocols.Where(r => r.ProtocolID == ID).FirstOrDefault().Name;
+                    var protocolVersion = _context.ProtocolVersions.Where(r => r.ProtocolVersionID == ID).FirstOrDefault();
+                    shareModalViewModel.ObjectDescription = _context.Protocols.Where(r => r.ProtocolID == protocolVersion.ProtocolID).FirstOrDefault().Name;
                     break;
             }
             return PartialView(shareModalViewModel);
