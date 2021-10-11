@@ -534,7 +534,7 @@ namespace PrototypeWithAuth.Controllers
                         DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
                         //searching for the partial file name in the directory
                         FileInfo[] docfilesfound = DirectoryToSearch.GetFiles("*.*");
-                        if( docfilesfound.Length > 0)
+                        if (docfilesfound.Length > 0)
                         {
                             FilesWithDocsSaved.Add(new BoolIntViewModel()
                             {
@@ -761,6 +761,7 @@ namespace PrototypeWithAuth.Controllers
             _7InsertBalanceTest();
             _8InsertMuscleStrengthTest();
             _9InsertCPETandSpirometryTest();
+            _10InsertDexaTest();
             return RedirectToAction("HumanTrialsList");
         }
 
@@ -1597,6 +1598,75 @@ namespace PrototypeWithAuth.Controllers
                     TestGroupID = tgId,
                 };
                 _context.Add(file);
+                _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public void _10InsertDexaTest()
+        {
+            try
+            {
+                Test test = new Test()
+                {
+                    Name = "Dexa",
+                    SiteID = _context.Sites.Where(s => s.Name == "Centarix").Select(s => s.SiteID).FirstOrDefault()
+                };
+                _context.Add(test);
+                _context.SaveChanges();
+                var testId = _context.Tests.Where(t => t.Name == "Dexa").Select(t => t.TestID).FirstOrDefault();
+                var experimentTest = new ExperimentTest()
+                {
+                    TestID = testId,
+                    ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex1").Select(e => e.ExperimentID).FirstOrDefault()
+                };
+                var experimentTest2 = new ExperimentTest()
+                {
+                    TestID = testId,
+                    ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex2").Select(e => e.ExperimentID).FirstOrDefault()
+                };
+                _context.Add(experimentTest);
+                _context.Add(experimentTest2);
+                _context.SaveChanges(); 
+                var testoutergroup = new TestOuterGroup()
+                {
+                    IsNone = true,
+                    TestID = testId,
+                    SequencePosition = 1
+                };
+                _context.Add(testoutergroup);
+                _context.SaveChanges();
+                var testgroup = new TestGroup()
+                {
+                    IsNone = true,
+                    TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                        .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                    SequencePosition = 1
+                };
+                _context.Add(testgroup);
+                _context.SaveChanges();
+                var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                    .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+                var file1 = new TestHeader()
+                {
+                    Name = "Results File",
+                    Type = AppUtility.DataTypeEnum.File.ToString(),
+                    SequencePosition = 1,
+                    TestGroupID = tgId,
+                };
+                _context.Add(file1);
+                _context.SaveChangesAsync();
+                var file2 = new TestHeader()
+                {
+                    Name = "Procedure File",
+                    Type = AppUtility.DataTypeEnum.File.ToString(),
+                    SequencePosition = 1,
+                    TestGroupID = tgId,
+                };
+                _context.Add(file2);
                 _context.SaveChangesAsync();
             }
             catch (Exception ex)
