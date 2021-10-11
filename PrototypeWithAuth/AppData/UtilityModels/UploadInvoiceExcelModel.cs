@@ -9,7 +9,7 @@ namespace PrototypeWithAuth.AppData.UtilityModels
     public class UploadInvoiceExcelModel
     {
 
-        [ExcelColumn("PO #")]
+        [ExcelColumn("F")]
         public string OrderNumber { get; set; }
         [ExcelColumn("invoice number")]
         public string InvoiceNumber {get; set;}

@@ -495,7 +495,6 @@
     <Folder Include="wwwroot\ParentRequest\" />
     <Folder Include="wwwroot\Protocols\" />
     <Folder Include="wwwroot\Reports\" />
-    <Folder Include="wwwroot\Requests\" />
     <Folder Include="wwwroot\ResourceImages\" />
   </ItemGroup>
 

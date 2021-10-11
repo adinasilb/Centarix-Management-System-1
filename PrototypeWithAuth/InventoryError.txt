@@ -1,32 +1,689 @@
 
-Row 1 did not have a proper vendor
+There is not matching catalog number and order number to row1 - added default invoice for requestID: 4224
 
-Row 1 failed to enter database: failed to find vendor
+There is not matching catalog number and order number to row2 - added default invoice for requestID: 4225
 
-Row 2 did not have a proper vendor
+There is not matching catalog number and order number to row3 - added default invoice for requestID: 4226
 
-Row 2 failed to enter database: failed to find vendor
+There is not matching catalog number and order number to row4 - added default invoice for requestID: 4227
 
-Row 3 did not have a proper vendor
+There is not matching catalog number and order number to row5 - added default invoice for requestID: 4228
 
-Row 3 failed to enter database: failed to find vendor
+There is not matching catalog number and order number to row6 - added default invoice for requestID: 4229
 
-Row 4 did not have a proper vendor
+There is not matching catalog number and order number to row7 - added default invoice for requestID: 4230
 
-Row 4 failed to enter database: failed to find vendor
+There is not matching catalog number and order number to row8 - added default invoice for requestID: 4231
 
-Row 5 did not have a proper vendor
+There is not matching catalog number and order number to row9 - added default invoice for requestID: 4232
 
-Row 5 failed to enter database: failed to find vendor
+This item has no order number10 - added default invoice for requestID: 4233
 
-Row 6 did not have a proper vendor
+There is not matching catalog number and order number to row11 - added default invoice for requestID: 4234
 
-Row 6 failed to enter database: failed to find vendor
+There is not matching catalog number and order number to row12 - added default invoice for requestID: 4235
 
-Row 7 did not have a proper vendor
+There is not matching catalog number and order number to row13 - added default invoice for requestID: 4236
 
-Row 7 failed to enter database: failed to find vendor
+There is not matching catalog number and order number to row14 - added default invoice for requestID: 4237
 
-Row 8 did not have a proper vendor
+There is not matching catalog number and order number to row15 - added default invoice for requestID: 4238
 
-Row 8 failed to enter database: failed to find vendor
+There is not matching catalog number and order number to row16 - added default invoice for requestID: 4239
+
+There is not matching catalog number and order number to row17 - added default invoice for requestID: 4240
+
+There is not matching catalog number and order number to row18 - added default invoice for requestID: 4241
+
+There is not matching catalog number and order number to row19 - added default invoice for requestID: 4242
+
+There is not matching catalog number and order number to row20 - added default invoice for requestID: 4243
+
+There is not matching catalog number and order number to row21 - added default invoice for requestID: 4244
+
+There is not matching catalog number and order number to row22 - added default invoice for requestID: 4245
+
+There is not matching catalog number and order number to row23 - added default invoice for requestID: 4246
+
+There is not matching catalog number and order number to row24 - added default invoice for requestID: 4247
+
+There is not matching catalog number and order number to row25 - added default invoice for requestID: 4248
+
+This item has no order number26 - added default invoice for requestID: 4249
+
+This item has no order number27 - added default invoice for requestID: 4250
+
+This item has no order number28 - added default invoice for requestID: 4251
+
+This item has no order number29 - added default invoice for requestID: 4252
+
+There is not matching catalog number and order number to row30 - added default invoice for requestID: 4253
+
+There is not matching catalog number and order number to row31 - added default invoice for requestID: 4254
+
+There is not matching catalog number and order number to row32 - added default invoice for requestID: 4255
+
+There is not matching catalog number and order number to row33 - added default invoice for requestID: 4256
+
+There is not matching catalog number and order number to row34 - added default invoice for requestID: 4257
+
+There is not matching catalog number and order number to row35 - added default invoice for requestID: 4258
+
+There is not matching catalog number and order number to row36 - added default invoice for requestID: 4259
+
+There is not matching catalog number and order number to row37 - added default invoice for requestID: 4260
+
+There is not matching catalog number and order number to row38 - added default invoice for requestID: 4261
+
+There is not matching catalog number and order number to row39 - added default invoice for requestID: 4262
+
+This item has no order number40 - added default invoice for requestID: 4263
+
+This item has no order number41 - added default invoice for requestID: 4264
+
+There is not matching catalog number and order number to row42 - added default invoice for requestID: 4265
+
+this row went in perfectly
+
+file was addeded for request id:4266
+
+There is not matching catalog number and order number to row44 - added default invoice for requestID: 4267
+
+this row went in perfectly
+
+file was addeded for request id:4268
+
+this row went in perfectly
+
+file was addeded for request id:4269
+
+There is not matching catalog number and order number to row47 - added default invoice for requestID: 4270
+
+There is not matching catalog number and order number to row48 - added default invoice for requestID: 4271
+
+There is not matching catalog number and order number to row49 - added default invoice for requestID: 4272
+
+this row went in perfectly
+
+file was addeded for request id:4273
+
+There is not matching catalog number and order number to row51 - added default invoice for requestID: 4274
+
+this row went in perfectly
+
+file was addeded for request id:4275
+
+There is not matching catalog number and order number to row53 - added default invoice for requestID: 4276
+
+There is not matching catalog number and order number to row54 - added default invoice for requestID: 4277
+
+this row went in perfectly
+
+file was addeded for request id:4278
+
+this row went in perfectly
+
+file was addeded for request id:4279
+
+There is not matching catalog number and order number to row57 - added default invoice for requestID: 4280
+
+There is not matching catalog number and order number to row58 - added default invoice for requestID: 4281
+
+this row went in perfectly
+
+error adding file4282
+
+There is not matching catalog number and order number to row60 - added default invoice for requestID: 4283
+
+There is not matching catalog number and order number to row61 - added default invoice for requestID: 4284
+
+this row went in perfectly
+
+file was addeded for request id:4285
+
+this row went in perfectly
+
+file was addeded for request id:4286
+
+this row went in perfectly
+
+file was addeded for request id:4287
+
+this row went in perfectly
+
+file was addeded for request id:4288
+
+There is not matching catalog number and order number to row66 - added default invoice for requestID: 4289
+
+There is not matching catalog number and order number to row67 - added default invoice for requestID: 4290
+
+There is not matching catalog number and order number to row68 - added default invoice for requestID: 4291
+
+this row went in perfectly
+
+file was addeded for request id:4292
+
+this row went in perfectly
+
+file was addeded for request id:4293
+
+This item has no order number71 - added default invoice for requestID: 4294
+
+There is not matching catalog number and order number to row72 - added default invoice for requestID: 4295
+
+this row went in perfectly
+
+file was addeded for request id:4296
+
+this row went in perfectly
+
+file was addeded for request id:4297
+
+this row went in perfectly
+
+file was addeded for request id:4298
+
+this row went in perfectly
+
+file was addeded for request id:4299
+
+this row went in perfectly
+
+file was addeded for request id:4300
+
+this row went in perfectly
+
+file was addeded for request id:4301
+
+this row went in perfectly
+
+file was addeded for request id:4302
+
+this row went in perfectly
+
+file was addeded for request id:4303
+
+This item has no order number81 - added default invoice for requestID: 4304
+
+this row went in perfectly
+
+file was addeded for request id:4305
+
+this row went in perfectly
+
+file was addeded for request id:4306
+
+There is not matching catalog number and order number to row84 - added default invoice for requestID: 4307
+
+this row went in perfectly
+
+file was addeded for request id:4308
+
+There is not matching catalog number and order number to row86 - added default invoice for requestID: 4309
+
+this row went in perfectly
+
+file was addeded for request id:4310
+
+this row went in perfectly
+
+file was addeded for request id:4311
+
+this row went in perfectly
+
+file was addeded for request id:4312
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4313
+
+this row went in perfectly
+
+file was addeded for request id:4314
+
+this row went in perfectly
+
+file was addeded for request id:4315
+
+this row went in perfectly
+
+file was addeded for request id:4316
+
+this row went in perfectly
+
+file was addeded for request id:4317
+
+this row went in perfectly
+
+file was addeded for request id:4318
+
+There is not matching catalog number and order number to row96 - added default invoice for requestID: 4319
+
+this row went in perfectly
+
+file was addeded for request id:4320
+
+this row went in perfectly
+
+file was addeded for request id:4321
+
+this row went in perfectly
+
+file was addeded for request id:4322
+
+this row went in perfectly
+
+file was addeded for request id:4323
+
+this row went in perfectly
+
+file was addeded for request id:4324
+
+this row went in perfectly
+
+file was addeded for request id:4325
+
+this row went in perfectly
+
+file was addeded for request id:4326
+
+This item has no order number104 - added default invoice for requestID: 4327
+
+There is not matching catalog number and order number to row105 - added default invoice for requestID: 4328
+
+This item has no order number106 - added default invoice for requestID: 4329
+
+this row went in perfectly
+
+file was addeded for request id:4330
+
+this row went in perfectly
+
+file was addeded for request id:4331
+
+this row went in perfectly
+
+file was addeded for request id:4332
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4333
+
+this row went in perfectly
+
+file was addeded for request id:4334
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4335
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4336
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4337
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4338
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4339
+
+this row went in perfectly
+
+file was addeded for request id:4340
+
+this row went in perfectly
+
+file was addeded for request id:4341
+
+This item has no order number119 - added default invoice for requestID: 4342
+
+This item has no order number120 - added default invoice for requestID: 4343
+
+This item has no order number121 - added default invoice for requestID: 4344
+
+This item has no order number122 - added default invoice for requestID: 4345
+
+this row went in perfectly
+
+file was addeded for request id:4346
+
+There are duplicate matching invoices for 124 - added default invoice for requestID: 4347
+
+There is not matching catalog number and order number to row125 - added default invoice for requestID: 4348
+
+There is not matching catalog number and order number to row126 - added default invoice for requestID: 4349
+
+There is not matching catalog number and order number to row127 - added default invoice for requestID: 4350
+
+There is not matching catalog number and order number to row128 - added default invoice for requestID: 4351
+
+There is not matching catalog number and order number to row129 - added default invoice for requestID: 4352
+
+There is not matching catalog number and order number to row130 - added default invoice for requestID: 4353
+
+this row went in perfectly
+
+file was addeded for request id:4354
+
+There is not matching catalog number and order number to row132 - added default invoice for requestID: 4355
+
+This item has no order number133 - added default invoice for requestID: 4356
+
+This item has no order number134 - added default invoice for requestID: 4357
+
+This item has no order number135 - added default invoice for requestID: 4358
+
+This item has no order number136 - added default invoice for requestID: 4359
+
+There is not matching catalog number and order number to row137 - added default invoice for requestID: 4360
+
+There is not matching catalog number and order number to row138 - added default invoice for requestID: 4361
+
+This item has no order number139 - added default invoice for requestID: 4362
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4363
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4364
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4365
+
+this row went in perfectly
+
+file was addeded for request id:4366
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4367
+
+There is not matching catalog number and order number to row145 - added default invoice for requestID: 4368
+
+this row went in perfectly
+
+file was addeded for request id:4369
+
+this row went in perfectly
+
+file was addeded for request id:4370
+
+There is not matching catalog number and order number to row148 - added default invoice for requestID: 4371
+
+This item has no order number149 - added default invoice for requestID: 4372
+
+There is not matching catalog number and order number to row150 - added default invoice for requestID: 4373
+
+this row went in perfectly
+
+file was addeded for request id:4374
+
+this row went in perfectly
+
+file was addeded for request id:4375
+
+this row went in perfectly
+
+file was addeded for request id:4376
+
+this row went in perfectly
+
+file was addeded for request id:4377
+
+this row went in perfectly
+
+file was addeded for request id:4378
+
+this row went in perfectly
+
+file was addeded for request id:4379
+
+This item has no order number157 - added default invoice for requestID: 4380
+
+this row went in perfectly
+
+file was addeded for request id:4381
+
+There is not matching catalog number and order number to row159 - added default invoice for requestID: 4382
+
+this row went in perfectly
+
+file was addeded for request id:4383
+
+this row went in perfectly
+
+file was addeded for request id:4384
+
+this row went in perfectly
+
+file was addeded for request id:4385
+
+this row went in perfectly
+
+file was addeded for request id:4386
+
+this row went in perfectly
+
+file was addeded for request id:4387
+
+this row went in perfectly
+
+file was addeded for request id:4388
+
+this row went in perfectly
+
+file was addeded for request id:4389
+
+There is not matching catalog number and order number to row167 - added default invoice for requestID: 4390
+
+this row went in perfectly
+
+file was addeded for request id:4391
+
+this row went in perfectly
+
+file was addeded for request id:4392
+
+Row 170 failed to enter database: Object reference not set to an instance of an object.
+
+this row went in perfectly
+
+file was addeded for request id:4394
+
+this row went in perfectly
+
+file was addeded for request id:4395
+
+There is not matching catalog number and order number to row173 - added default invoice for requestID: 4396
+
+this row went in perfectly
+
+file was addeded for request id:4397
+
+this row went in perfectly
+
+file was addeded for request id:4398
+
+this row went in perfectly
+
+file was addeded for request id:4399
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4400
+
+There is not matching catalog number and order number to row178 - added default invoice for requestID: 4401
+
+this row went in perfectly
+
+file was addeded for request id:4402
+
+There is not matching catalog number and order number to row180 - added default invoice for requestID: 4403
+
+this row went in perfectly
+
+file was addeded for request id:4404
+
+this row went in perfectly
+
+file was addeded for request id:4405
+
+This item has no order number183 - added default invoice for requestID: 4406
+
+this row went in perfectly
+
+file was addeded for request id:4407
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4408
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4409
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4410
+
+this row went in perfectly
+
+file was addeded for request id:4411
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4412
+
+this row went in okay - there was one row for the po # but not matching catlog number
+
+file was addeded for request id:4413
+
+this row went in perfectly
+
+file was addeded for request id:4414
+
+this row went in perfectly
+
+file was addeded for request id:4415
+
+This item has no order number193 - added default invoice for requestID: 4416
+
+this row went in perfectly
+
+file was addeded for request id:4417
+
+this row went in perfectly
+
+file was addeded for request id:4418
+
+this row went in perfectly
+
+file was addeded for request id:4419
+
+this row went in perfectly
+
+file was addeded for request id:4420
+
+There are duplicate matching invoices for 198 - added default invoice for requestID: 4421
+
+There are duplicate matching invoices for 199 - added default invoice for requestID: 4422
+
+this row went in perfectly
+
+file was addeded for request id:4423
+
+this row went in perfectly
+
+file was addeded for request id:4424
+
+this row went in perfectly
+
+file was addeded for request id:4425
+
+this row went in perfectly
+
+file was addeded for request id:4426
+
+this row went in perfectly
+
+file was addeded for request id:4427
+
+this row went in perfectly
+
+file was addeded for request id:4428
+
+this row went in perfectly
+
+file was addeded for request id:4429
+
+this row went in perfectly
+
+file was addeded for request id:4430
+
+this row went in perfectly
+
+file was addeded for request id:4431
+
+this row went in perfectly
+
+file was addeded for request id:4432
+
+There is not matching catalog number and order number to row210 - added default invoice for requestID: 4433
+
+this row went in perfectly
+
+file was addeded for request id:4434
+
+this row went in perfectly
+
+file was addeded for request id:4435
+
+this row went in perfectly
+
+file was addeded for request id:4436
+
+this row went in perfectly
+
+file was addeded for request id:4437
+
+this row went in perfectly
+
+file was addeded for request id:4438
+
+this row went in perfectly
+
+file was addeded for request id:4439
+
+this row went in perfectly
+
+file was addeded for request id:4440
+
+this row went in perfectly
+
+file was addeded for request id:4441
+
+Row 219 did not have a proper vendor Bactlab Diagnostics (BD)
+
+
+this row went in perfectly
+
+file was addeded for request id:4442
+
+Row 220 did not have a proper vendor Bactlab Diagnostics (BD)
+
+
+Row 220 failed to enter database: failed to find vendor
+
+Row 221 did not have a proper vendor Bactlab Diagnostics (BD)
+
+
+Error reading requests file: The process cannot access the file 'C:\Users\debbie\Source\Repos\shimoncentarix\Centarix-Management-System\PrototypeWithAuth\InventoryError.txt' because it is being used by another process.

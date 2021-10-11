@@ -5579,7 +5579,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public async Task UploadRequestsFromExcel()
         {
-            var InventoryFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\Imported table 2-to uploadWithFixedVendorsAndCategories.csv";
+            var InventoryFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\Imported table 2-to uploadWithFixedVendorsAndCategoriesFakeUsers.csv";
             var POFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\_2019 - orders (07-10-21).csv";
 
             var lineNumber = 0;
@@ -5592,7 +5592,7 @@ namespace PrototypeWithAuth.Controllers
                 var requestsInvoice = from i in excelInvoices.Worksheet<UploadInvoiceExcelModel>("orders") select i;
                 var lastSerialNumber = int.Parse(_context.Products.IgnoreQueryFilters().Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == 1).OrderBy(p => p).LastOrDefault()?.SerialNumber?.Substring(1) ?? "1");
                 var currency = AppUtility.CurrencyEnum.USD;
-                long lastParentRequestOrderNum = 1500;
+                long lastParentRequestOrderNum =2000;
                 var requestInvoiceList = requestsInvoice.ToList();
                 foreach (var r in requests)
                 {
@@ -5607,12 +5607,12 @@ namespace PrototypeWithAuth.Controllers
                             var orderedBy = _context.Employees.Where(e => e.Email == r.OrderedBy).FirstOrDefault()?.Id;
                             var vendorID = _context.Vendors.Where(v => v.VendorEnName == r.VendorName).Select(v => v.VendorID).FirstOrDefault();
                             //check if product exists based on vendor catalog number
-                            var productID = _context.Products.Where(p => p.VendorID == vendorID && p.CatalogNumber.ToLower() == r.CatalogNumber.ToLower()).Select(p => p.ProductID).FirstOrDefault();
+                            var productID = _context.Products.AsNoTracking().Where(p => p.VendorID == vendorID && p.CatalogNumber.ToLower() == r.CatalogNumber.ToLower()).Select(p => p.ProductID).FirstOrDefault();
                             var request = new Request() { };
                             if (vendorID == 0)
                             {
 
-                                WriteErrorToFile("Row " + lineNumber + " did not have a proper vendor");
+                                WriteErrorToFile("Row " + lineNumber + " did not have a proper vendor " +r.VendorName);
                                 _context.ChangeTracker.Entries()
                                     .Where(e => e.Entity != null).ToList();
 
@@ -5825,7 +5825,7 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task SetInvoiceAndPaymentsAccordingToResultsFromDB(UploadExcelModel r, Request request, UploadInvoiceExcelModel invoiceRow)
         {
-            string sourceFile = @"C:\Users\debbie\OneDrive - Centarix\Desktop\DocumentsInvoices\"+invoiceRow.DocumentNumber+".pdf";
+            string sourceFile = @"C:\Users\debbie\OneDrive - Centarix\Desktop\DocumentsInvoices10112021\" + invoiceRow.DocumentNumber+".pdf";
            
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
