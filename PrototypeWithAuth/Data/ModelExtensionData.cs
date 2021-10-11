@@ -258,11 +258,11 @@ namespace PrototypeWithAuth.Data
                     UnitTypeID = 2,
                     ParentCategoryID = 1
                 },
-                new UnitTypeParentCategory
-                {
-                    UnitTypeID = 19,
-                    ParentCategoryID = 1
-                },
+                //new UnitTypeParentCategory
+                //{
+                //    UnitTypeID = 19,
+                //    ParentCategoryID = 1
+                //},
                 new UnitTypeParentCategory
                 {
                     UnitTypeID = 3,
@@ -298,11 +298,11 @@ namespace PrototypeWithAuth.Data
                     UnitTypeID = 2,
                     ParentCategoryID = 2
                 },
-                new UnitTypeParentCategory
-                {
-                    UnitTypeID = 19,
-                    ParentCategoryID = 2
-                },
+                //new UnitTypeParentCategory
+                //{
+                //    UnitTypeID = 19,
+                //    ParentCategoryID = 2
+                //},
                 new UnitTypeParentCategory
                 {
                     UnitTypeID = 3,
@@ -388,11 +388,11 @@ namespace PrototypeWithAuth.Data
                     UnitTypeID = 2,
                     ParentCategoryID = 4
                 },
-                new UnitTypeParentCategory
-                {
-                    UnitTypeID = 19,
-                    ParentCategoryID = 4
-                },
+                //new UnitTypeParentCategory
+                //{
+                //    UnitTypeID = 19,
+                //    ParentCategoryID = 4
+                //},
                 new UnitTypeParentCategory
                 {
                     UnitTypeID = 3,
@@ -463,11 +463,11 @@ namespace PrototypeWithAuth.Data
                     UnitTypeID = 2,
                     ParentCategoryID = 5
                 },
-                new UnitTypeParentCategory
-                {
-                    UnitTypeID = 19,
-                    ParentCategoryID = 5
-                },
+                //new UnitTypeParentCategory
+                //{
+                //    UnitTypeID = 19,
+                //    ParentCategoryID = 5
+                //},
                 new UnitTypeParentCategory
                 {
                     UnitTypeID = 3,
@@ -493,11 +493,11 @@ namespace PrototypeWithAuth.Data
                     UnitTypeID = 2,
                     ParentCategoryID = 7
                 },
-                new UnitTypeParentCategory
-                {
-                    UnitTypeID = 19,
-                    ParentCategoryID = 7
-                },
+                //new UnitTypeParentCategory
+                //{
+                //    UnitTypeID = 19,
+                //    ParentCategoryID = 7
+                //},
                 new UnitTypeParentCategory
                 {
                     UnitTypeID = 3,
@@ -603,11 +603,11 @@ namespace PrototypeWithAuth.Data
                     UnitTypeID = 18,
                     ParentCategoryID = 6
                 },
-                new UnitTypeParentCategory
-                {
-                    UnitTypeID = 19,
-                    ParentCategoryID = 6
-                },
+                //new UnitTypeParentCategory
+                //{
+                //    UnitTypeID = 19,
+                //    ParentCategoryID = 6
+                //},
                 new UnitTypeParentCategory
                 {
                     UnitTypeID = 20,
@@ -697,7 +697,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 109,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "RT-PCR Plastics",
+                    ProductSubcategoryDescription = "Q-PCR Plastics",
                     ImageURL = "/images/css/CategoryImages/consumables/rtpcr_consumables.png"
                 },
                 new ProductSubcategory
@@ -788,7 +788,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 202,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Antibodies",
+                    ProductSubcategoryDescription = "Antibody",
                     ImageURL = "/images/css/CategoryImages/reagents/antibody.png"
                 },
                 new ProductSubcategory
@@ -823,7 +823,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 207,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "RT-PCR Reagents",
+                    ProductSubcategoryDescription = "Q-PCR Reagents",
                     ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent2.png"
                 },
                 new ProductSubcategory
@@ -837,7 +837,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 209,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Primers",
+                    ProductSubcategoryDescription = "Primers and Oligos",
                     ImageURL = "/images/css/CategoryImages/reagents/primer.png"
                 },
                 new ProductSubcategory
@@ -900,7 +900,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 218,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "DNA Enzyme",
+                    ProductSubcategoryDescription = "DNA Enzymes",
                     ImageURL = "/images/css/CategoryImages/reagents/dna_enzyme.png"
                 },
                 new ProductSubcategory
@@ -1424,12 +1424,12 @@ namespace PrototypeWithAuth.Data
                  UnitParentTypeID = 1,
                  UnitTypeDescription = "Box"
              },
-             new UnitType
-             {
-                 UnitTypeID = 19,
-                 UnitParentTypeID = 1,
-                 UnitTypeDescription = "Case"
-             },
+             //new UnitType
+             //{
+             //    UnitTypeID = 19,
+             //    UnitParentTypeID = 1,
+             //    UnitTypeDescription = "Case"
+             //},
              new UnitType
              {
                  UnitTypeID = 3,
@@ -1934,8 +1934,107 @@ namespace PrototypeWithAuth.Data
                         LocationRoomTypeID = 6,
                         LocationRoomTypeDescription = "Storage Room",
                         LocationAbbreviation = "S"
+                    },
+                    new LocationRoomType
+                    {
+                        LocationRoomTypeID = 7,
+                        LocationRoomTypeDescription = "Liquid Nitrogen Room",
+                        LocationAbbreviation = "LN"
                     }
                 );
+            modelBuilder.Entity<LocationRoomInstance>().HasData(
+                       new LocationRoomInstance
+                       {
+                           LocationRoomInstanceID = 1,
+                           LocationRoomTypeID = 1,
+                           LocationRoomInstanceName = "Laboratory 1",
+                           LocationRoomInstanceAbbrev = "L1",
+                       },
+                       new LocationRoomInstance
+                       {
+                           LocationRoomInstanceID = 2,
+                           LocationRoomTypeID = 1,
+                           LocationRoomInstanceName = "Laboratory 2",
+                           LocationRoomInstanceAbbrev = "L2",
+                       },
+                       
+                       new LocationRoomInstance
+                       {
+                           LocationRoomInstanceID = 3,
+                           LocationRoomInstanceName = "Tissue Culture 1",
+                           LocationRoomInstanceAbbrev = "TC1",
+                           LocationRoomTypeID = 2
+                       },
+                       
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID = 4,
+                            LocationRoomTypeID = 3,
+                            LocationRoomInstanceName = "Equipment Room 1",
+                            LocationRoomInstanceAbbrev = "E1"
+
+                        },
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID = 5,
+                            LocationRoomTypeID = 4,
+                            LocationRoomInstanceName = "Refrigerator Room 1",
+                            LocationRoomInstanceAbbrev = "R1"
+
+                        },
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID = 6,
+                            LocationRoomTypeID = 5,
+                            LocationRoomInstanceName = "Washing Room 1",
+                            LocationRoomInstanceAbbrev = "W1"
+                        },
+                        
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID = 7,
+                            LocationRoomTypeID = 6,
+                            LocationRoomInstanceName = "Storage Room 1",
+                            LocationRoomInstanceAbbrev = "S1"
+
+                        },
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID = 8,
+                            LocationRoomTypeID = 1,
+                            LocationRoomInstanceName = "DS-Lab 3",
+                            LocationRoomInstanceAbbrev = "DSL3",
+                        },
+                       new LocationRoomInstance
+                       {
+                           LocationRoomInstanceID = 9,
+                           LocationRoomTypeID = 1,
+                           LocationRoomInstanceName = "DS-Lab 4",
+                           LocationRoomInstanceAbbrev = "DSL4",
+                       },
+                       new LocationRoomInstance
+                       {
+                           LocationRoomInstanceID = 10,
+                           LocationRoomInstanceName = "DS-Tissue Culture 2",
+                           LocationRoomInstanceAbbrev = "DSTC2",
+                           LocationRoomTypeID = 2
+                       },
+                       new LocationRoomInstance
+                       {
+                           LocationRoomInstanceID = 11,
+                           LocationRoomTypeID = 5,
+                           LocationRoomInstanceName = "DS-Washing Room 2",
+                           LocationRoomInstanceAbbrev = "DSW2"
+                       },
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID = 12,
+                            LocationRoomTypeID = 7,
+                            LocationRoomInstanceName = "Liquid Nitrogen Room 1",
+                            LocationRoomInstanceAbbrev = "LN1"
+
+                        }
+                        );
             modelBuilder.Entity<TemporaryLocationInstance>().HasData(
                  new LocationInstance
                  {
