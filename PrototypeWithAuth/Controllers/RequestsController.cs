@@ -5591,7 +5591,7 @@ namespace PrototypeWithAuth.Controllers
                 var requests = from r in excelRequests.Worksheet<UploadExcelModel>("inventory excel") select r;
                 var requestsInvoice = from i in excelInvoices.Worksheet<UploadInvoiceExcelModel>("orders") select i;
                 var lastSerialNumber = int.Parse(_context.Products.IgnoreQueryFilters().Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == 1).OrderBy(p => p).LastOrDefault()?.SerialNumber?.Substring(1) ?? "1");
-                var currency = AppUtility.CurrencyEnum.USD;
+                var currency = AppUtility.CurrencyEnum.NIS;
                 long lastParentRequestOrderNum =2000;
                 var requestInvoiceList = requestsInvoice.ToList();
                 foreach (var r in requests)
