@@ -60,12 +60,12 @@
     </div>
     <div class="row under-row-margin">
         <div class="col-6">
-            <button class="custom-button custom-button-font light-gray-background-color ml-0">
-                <a href="@Url.Action("Entries", "Biomarkers", new { ParticipantID = Model.ExperimentEntry.ParticipantID })" class="text-black">
+            <a href="@Url.Action("Entries", "Biomarkers", new { ParticipantID = Model.ExperimentEntry.ParticipantID })">
+                <button class="custom-button custom-button-font light-gray-background-color ml-0 text-black" type="button">
                     <i class="icon-arrow_back_ios-24px-1" style="font-size: 1.2rem;"></i>
                     Back
-                </a>
-            </button>
+                </button>
+            </a>
             <span class="col-2 heading-1">
                 @Model.ExperimentEntry.Site.Name
             </span>
