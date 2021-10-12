@@ -7,6 +7,6 @@
     ViewData["Title"] = "Summary Days";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-    <div class="summaryDaysOffTable">
+    <div class="summaryDaysOffTable scroll-page">
         @{await Html.RenderPartialAsync("_SummaryDaysOff", Model); }
     </div>
