@@ -216,7 +216,12 @@
                                     }
                                     else
                                     {
-                                        <label class="m-0 p-0">@col.Value[val]</label>
+                                        var textCase = "";
+                                        if(col.Title.Equals("Amount"))
+                                        {
+                                            textCase = "text-transform: none";
+                                        }
+                                        <label class="m-0 p-0" style="@textCase">@col.Value[val]</label>
                                     }
                                 }
                             }
