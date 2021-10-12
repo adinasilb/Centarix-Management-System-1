@@ -104,7 +104,8 @@
                     {
                         Test = Model.Tests.FirstOrDefault(),
                         TestValues = Model.TestValues,
-                        ListNumber = 0
+                        ListNumber = 0,
+                        FilesPrevFilled = Model.FilesPrevFilled
                     };
                     await Html.RenderPartialAsync("_TestValues", testValuesViewModel);
                 }

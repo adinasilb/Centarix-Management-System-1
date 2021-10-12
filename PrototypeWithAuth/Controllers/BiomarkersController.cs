@@ -483,6 +483,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 testValues = CreateTestValuesIfNone(tests, testValues, ee.ExperimentEntryID);
             }
+            List<BoolIntViewModel> filesPrevFilled = CheckForFiles(testValues, ee.ExperimentEntryID);
             TestViewModel testViewModel = new TestViewModel()
             {
                 ExperimentEntry = ee,
@@ -498,7 +499,8 @@ namespace PrototypeWithAuth.Controllers
                                           Text = "Entry " + e.VisitNumber + " - " + e.Site.Name,
                                           Value = e.ExperimentEntryID.ToString()
                                       }
-                                  ).ToList()
+                                  ).ToList(),
+                FilesPrevFilled = filesPrevFilled
                 //FieldViewModels = new List<FieldViewModel>()
                 //{
                 //    new FieldViewModel()
@@ -1602,7 +1604,7 @@ namespace PrototypeWithAuth.Controllers
                     TestGroupID = tgId,
                 };
                 _context.Add(file);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -1662,7 +1664,7 @@ namespace PrototypeWithAuth.Controllers
                     TestGroupID = tgId,
                 };
                 _context.Add(file1);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 var file2 = new TestHeader()
                 {
                     Name = "Procedure File",
@@ -1671,7 +1673,7 @@ namespace PrototypeWithAuth.Controllers
                     TestGroupID = tgId,
                 };
                 _context.Add(file2);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -1732,7 +1734,7 @@ namespace PrototypeWithAuth.Controllers
                     TestGroupID = tgId,
                 };
                 _context.Add(file1);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 var file2 = new TestHeader()
                 {
                     Name = "Procedure File",
@@ -1741,7 +1743,7 @@ namespace PrototypeWithAuth.Controllers
                     TestGroupID = tgId,
                 };
                 _context.Add(file2);
-                _context.SaveChangesAsync();
+               await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -1803,7 +1805,7 @@ namespace PrototypeWithAuth.Controllers
                     TestGroupID = tgId,
                 };
                 _context.Add(file1);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 var file2 = new TestHeader()
                 {
                     Name = "Procedure File",
@@ -1812,7 +1814,7 @@ namespace PrototypeWithAuth.Controllers
                     TestGroupID = tgId,
                 };
                 _context.Add(file2);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -1874,7 +1876,7 @@ namespace PrototypeWithAuth.Controllers
                     TestGroupID = tgId,
                 };
                 _context.Add(file1);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 var file2 = new TestHeader()
                 {
                     Name = "Procedure File",
@@ -1883,7 +1885,7 @@ namespace PrototypeWithAuth.Controllers
                     TestGroupID = tgId,
                 };
                 _context.Add(file2);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
