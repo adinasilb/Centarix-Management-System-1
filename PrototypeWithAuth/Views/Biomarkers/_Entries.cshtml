@@ -10,12 +10,13 @@
 </div>
 <div class="row under-row-margin">
     <div class="col-6">
-        <button class="custom-button custom-button-font light-gray-background-color ml-0">
-            <a href="@Url.Action("Experiment", "Biomarkers", new { ID = Model.Participant.ExperimentID })" class="text-black">
+        <a href="@Url.Action("Experiment", "Biomarkers", new { ID = Model.Participant.ExperimentID })">
+            <button class="custom-button custom-button-font light-gray-background-color ml-0 text-black">
                 <i class="icon-arrow_back_ios-24px-1" style="font-size: 1.2rem;"></i>
                 Back
-            </a>
-        </button>
+            </button>
+        </a>
+        
     </div>
     <div class="col-6">
         <button class="float-right custom-button custom-button-font clear-custom-button biomarkers-color white-background biomarkers-border-color">

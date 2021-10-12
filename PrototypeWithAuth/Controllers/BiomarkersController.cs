@@ -415,19 +415,25 @@ namespace PrototypeWithAuth.Controllers
         {
             var visits = _context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.Experiment.AmountOfVisits).FirstOrDefault();
             visits = visits == 0 || visits == null ? 10 : visits;
-            var lastVisitNum = 0;
+            //var lastVisitNum = 0;
+            var prevVisitNums = new List<int>();
             if (_context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.ExperimentEntries).Any())
             {
-                lastVisitNum = _context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.ExperimentEntries.OrderByDescending(ee => ee.VisitNumber).FirstOrDefault().VisitNumber).FirstOrDefault();
+                prevVisitNums = _context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.ExperimentEntries.Select(ee => ee.VisitNumber)).FirstOrDefault().ToList();
+                //lastVisitNum = _context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.ExperimentEntries.OrderByDescending(ee => ee.VisitNumber).FirstOrDefault().VisitNumber).FirstOrDefault();
             }
+            
             var visitList = new List<SelectListItem>();
-            for (int v = lastVisitNum + 1; v <= visits; v++)
+            for (int v = 1; v <= visits; v++)
             {
-                visitList.Add(new SelectListItem()
+                if (!prevVisitNums.Contains(v))
                 {
-                    Text = v.ToString(),
-                    Value = v.ToString()
-                });
+                    visitList.Add(new SelectListItem()
+                    {
+                        Text = v.ToString(),
+                        Value = v.ToString()
+                    });
+                }
             };
             NewEntryViewModel nevm = new NewEntryViewModel()
             {
@@ -806,7 +812,7 @@ namespace PrototypeWithAuth.Controllers
                 Line1Address = "Hamarpe 3",
                 City = "Har Hotzvim",
                 Country = "Jerusalem",
-                PrimaryContactID = _context.Users.Where(u => u.Email == "adina@centarix.com").FirstOrDefault().Id,
+                PrimaryContactID = _context.Users.Where(u => u.Email == "rachelstrauss@centarix.com").FirstOrDefault().Id,
                 PhoneNumber = "077-2634302"
             };
             _context.Add(Centarix);
@@ -816,7 +822,7 @@ namespace PrototypeWithAuth.Controllers
                 Line1Address = "",
                 City = "Har Hazofim",
                 Country = "Jerusalem",
-                PrimaryContactID = _context.Users.Where(u => u.Email == "adina@centarix.com").FirstOrDefault().Id,
+                PrimaryContactID = _context.Users.Where(u => u.Email == "rachelstrauss@centarix.com").FirstOrDefault().Id,
                 PhoneNumber = "055-9876543"
             };
             _context.Add(O2);
