@@ -524,6 +524,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 testValues = CreateTestValuesIfNone(tests, testValues, ee.ExperimentEntryID);
             }
+            List<BoolIntViewModel> filesPrevFilled = CheckForFiles(testValues, ee.ExperimentEntryID);
             TestViewModel testViewModel = new TestViewModel()
             {
                 ExperimentEntry = ee,
@@ -539,7 +540,8 @@ namespace PrototypeWithAuth.Controllers
                                           Text = "Entry " + e.VisitNumber + " - " + e.Site.Name,
                                           Value = e.ExperimentEntryID.ToString()
                                       }
-                                  ).ToList()
+                                  ).ToList(),
+                FilesPrevFilled = filesPrevFilled
                 //FieldViewModels = new List<FieldViewModel>()
                 //{
                 //    new FieldViewModel()
@@ -731,7 +733,7 @@ namespace PrototypeWithAuth.Controllers
             return String.Format("{0:N2}", value);
         }
 
-        public ActionResult RunScripts()
+        public async Task<ActionResult> RunScriptsAsync()
         {
             var testvalues = _context.TestValues;
             foreach (var tv in testvalues)
@@ -793,20 +795,23 @@ namespace PrototypeWithAuth.Controllers
                 _context.Remove(e);
             }
 
-            _1InsertExeriments();
-            _2InsertSites();
-            _3Add02TestsBloodPressure();
-            _4InsertECGTest();
-            _5InsertAnthropometryTest();
-            _6InsertFlexibilityTest();
-            _7InsertBalanceTest();
-            _8InsertMuscleStrengthTest();
-            _9InsertCPETandSpirometryTest();
-            _10InsertDexaTest();
+            await _1InsertExeriments();
+            await _2InsertSites();
+            await _3Add02TestsBloodPressure();
+            await _4InsertECGTest();
+            await _5InsertAnthropometryTest();
+            await _6InsertFlexibilityTest();
+            await _7InsertBalanceTest();
+            await _8InsertMuscleStrengthTest();
+            await _9InsertCPETandSpirometryTest();
+            await _10InsertDexaTest();
+            await _11InsertImmunochemistryTest();
+            await _12InsertBloodChemicalsTest();
+            await _13InsertBloodCountTest();
             return RedirectToAction("HumanTrialsList");
         }
 
-        public void _1InsertExeriments()
+        public async Task _1InsertExeriments()
         {
             DateTime startDate;
             DateTime.TryParseExact("20210106", "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
@@ -839,7 +844,7 @@ namespace PrototypeWithAuth.Controllers
             _context.SaveChanges();
         }
 
-        public void _2InsertSites()
+        public async Task _2InsertSites()
         {
             Site Centarix = new Site()
             {
@@ -864,7 +869,7 @@ namespace PrototypeWithAuth.Controllers
             _context.SaveChanges();
         }
 
-        public void _3Add02TestsBloodPressure()
+        public async Task _3Add02TestsBloodPressure()
         {
             Test BloodPressure = new Test()
             {
@@ -991,7 +996,7 @@ namespace PrototypeWithAuth.Controllers
             _context.SaveChanges();
         }
 
-        public void _4InsertECGTest()
+        public async Task _4InsertECGTest()
         {
             var Test = new Test()
             {
@@ -1289,7 +1294,7 @@ namespace PrototypeWithAuth.Controllers
             _context.SaveChanges();
         }
 
-        public void _7InsertBalanceTest()
+        public async Task _7InsertBalanceTest()
         {
             try
             {
@@ -1438,7 +1443,8 @@ namespace PrototypeWithAuth.Controllers
 
             }
         }
-        public void _8InsertMuscleStrengthTest()
+
+        public async Task _8InsertMuscleStrengthTest()
         {
             try
             {
@@ -1588,7 +1594,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        public void _9InsertCPETandSpirometryTest()
+        public async Task _9InsertCPETandSpirometryTest()
         {
             try
             {
@@ -1598,7 +1604,7 @@ namespace PrototypeWithAuth.Controllers
                     SiteID = _context.Sites.Where(s => s.Name == "O2").Select(s => s.SiteID).FirstOrDefault()
                 };
                 _context.Add(test);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 var testId = _context.Tests.Where(t => t.Name == "CPET and Spirometry").Select(t => t.TestID).FirstOrDefault();
                 var experimentTest = new ExperimentTest()
                 {
@@ -1639,7 +1645,7 @@ namespace PrototypeWithAuth.Controllers
                     TestGroupID = tgId,
                 };
                 _context.Add(file);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -1647,14 +1653,14 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        public void _10InsertDexaTest()
+        public async Task _10InsertDexaTest()
         {
             try
             {
                 Test test = new Test()
                 {
                     Name = "Dexa",
-                    SiteID = _context.Sites.Where(s => s.Name == "Centarix").Select(s => s.SiteID).FirstOrDefault()
+                    SiteID = _context.Sites.Where(s => s.Name == "Centarix Biotech").Select(s => s.SiteID).FirstOrDefault()
                 };
                 _context.Add(test);
                 _context.SaveChanges();
@@ -1699,16 +1705,228 @@ namespace PrototypeWithAuth.Controllers
                     TestGroupID = tgId,
                 };
                 _context.Add(file1);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 var file2 = new TestHeader()
                 {
                     Name = "Procedure File",
                     Type = AppUtility.DataTypeEnum.File.ToString(),
-                    SequencePosition = 1,
+                    SequencePosition = 2,
                     TestGroupID = tgId,
                 };
                 _context.Add(file2);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public async Task _11InsertImmunochemistryTest()
+        {
+            try
+            {
+
+                Test test = new Test()
+                {
+                    Name = "Immunochemistry",
+                    SiteID = _context.Sites.Where(s => s.Name == "Centarix Biotech").Select(s => s.SiteID).FirstOrDefault()
+                };
+                _context.Add(test);
+                _context.SaveChanges();
+                var testId = _context.Tests.Where(t => t.Name == "Immunochemistry").Select(t => t.TestID).FirstOrDefault();
+                var experimentTest = new ExperimentTest()
+                {
+                    TestID = testId,
+                    ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex1").Select(e => e.ExperimentID).FirstOrDefault()
+                };
+                var experimentTest2 = new ExperimentTest()
+                {
+                    TestID = testId,
+                    ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex2").Select(e => e.ExperimentID).FirstOrDefault()
+                };
+                _context.Add(experimentTest);
+                _context.Add(experimentTest2);
+                _context.SaveChanges();
+                var testoutergroup = new TestOuterGroup()
+                {
+                    IsNone = true,
+                    TestID = testId,
+                    SequencePosition = 1
+                };
+                _context.Add(testoutergroup);
+                _context.SaveChanges();
+                var testgroup = new TestGroup()
+                {
+                    IsNone = true,
+                    TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                        .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                    SequencePosition = 1
+                };
+                _context.Add(testgroup);
+                _context.SaveChanges();
+                var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                    .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+                var file1 = new TestHeader()
+                {
+                    Name = "Results File",
+                    Type = AppUtility.DataTypeEnum.File.ToString(),
+                    SequencePosition = 1,
+                    TestGroupID = tgId,
+                };
+                _context.Add(file1);
+                await _context.SaveChangesAsync();
+                var file2 = new TestHeader()
+                {
+                    Name = "Procedure File",
+                    Type = AppUtility.DataTypeEnum.File.ToString(),
+                    SequencePosition = 2,
+                    TestGroupID = tgId,
+                };
+                _context.Add(file2);
+               await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+
+        public async Task _12InsertBloodChemicalsTest()
+        {
+            try
+            {
+
+                Test test = new Test()
+                {
+                    Name = "Blood Chemicals",
+                    SiteID = _context.Sites.Where(s => s.Name == "Centarix Biotech").Select(s => s.SiteID).FirstOrDefault()
+                };
+                _context.Add(test);
+                _context.SaveChanges();
+                var testId = _context.Tests.Where(t => t.Name == "Blood Chemicals").Select(t => t.TestID).FirstOrDefault();
+                var experimentTest = new ExperimentTest()
+                {
+                    TestID = testId,
+                    ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex1").Select(e => e.ExperimentID).FirstOrDefault()
+                };
+                var experimentTest2 = new ExperimentTest()
+                {
+                    TestID = testId,
+                    ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex2").Select(e => e.ExperimentID).FirstOrDefault()
+                };
+                _context.Add(experimentTest);
+                _context.Add(experimentTest2);
+                _context.SaveChanges();
+                var testoutergroup = new TestOuterGroup()
+                {
+                    IsNone = true,
+                    TestID = testId,
+                    SequencePosition = 1
+                };
+                _context.Add(testoutergroup);
+                _context.SaveChanges();
+                var testgroup = new TestGroup()
+                {
+                    IsNone = true,
+                    TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                        .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                    SequencePosition = 1
+                };
+                _context.Add(testgroup);
+                _context.SaveChanges();
+                var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                    .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+                var file1 = new TestHeader()
+                {
+                    Name = "Results File",
+                    Type = AppUtility.DataTypeEnum.File.ToString(),
+                    SequencePosition = 1,
+                    TestGroupID = tgId,
+                };
+                _context.Add(file1);
+                await _context.SaveChangesAsync();
+                var file2 = new TestHeader()
+                {
+                    Name = "Procedure File",
+                    Type = AppUtility.DataTypeEnum.File.ToString(),
+                    SequencePosition = 2,
+                    TestGroupID = tgId,
+                };
+                _context.Add(file2);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+
+        public async Task _13InsertBloodCountTest()
+        {
+            try
+            {
+
+                Test test = new Test()
+                {
+                    Name = "Blood Count",
+                    SiteID = _context.Sites.Where(s => s.Name == "Centarix Biotech").Select(s => s.SiteID).FirstOrDefault()
+                };
+                _context.Add(test);
+                _context.SaveChanges();
+                var testId = _context.Tests.Where(t => t.Name == "Blood Count").Select(t => t.TestID).FirstOrDefault();
+                var experimentTest = new ExperimentTest()
+                {
+                    TestID = testId,
+                    ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex1").Select(e => e.ExperimentID).FirstOrDefault()
+                };
+                var experimentTest2 = new ExperimentTest()
+                {
+                    TestID = testId,
+                    ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex2").Select(e => e.ExperimentID).FirstOrDefault()
+                };
+                _context.Add(experimentTest);
+                _context.Add(experimentTest2);
+                _context.SaveChanges();
+                var testoutergroup = new TestOuterGroup()
+                {
+                    IsNone = true,
+                    TestID = testId,
+                    SequencePosition = 1
+                };
+                _context.Add(testoutergroup);
+                _context.SaveChanges();
+                var testgroup = new TestGroup()
+                {
+                    IsNone = true,
+                    TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                        .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                    SequencePosition = 1
+                };
+                _context.Add(testgroup);
+                _context.SaveChanges();
+                var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                    .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+                var file1 = new TestHeader()
+                {
+                    Name = "Results File",
+                    Type = AppUtility.DataTypeEnum.File.ToString(),
+                    SequencePosition = 1,
+                    TestGroupID = tgId,
+                };
+                _context.Add(file1);
+                await _context.SaveChangesAsync();
+                var file2 = new TestHeader()
+                {
+                    Name = "Procedure File",
+                    Type = AppUtility.DataTypeEnum.File.ToString(),
+                    SequencePosition = 2,
+                    TestGroupID = tgId,
+                };
+                _context.Add(file2);
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {

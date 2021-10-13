@@ -36,12 +36,20 @@
             <div class="entries-header font-weight-medium text float-right">
                 Entry Number: <span class="biomarkers-color">@Model.ExperimentEntry.VisitNumber </span> |
                 Date: <span class="biomarkers-color">@Model.ExperimentEntry.DateTime.GetElixirDateFormat() </span>
-                <select asp-for="Guid" class="mdb-select custom select-dropdown form-control-plaintext" id="entries-list">
-                    @foreach (var e in Model.ExperimentEntries)
-                    {
-                        <option class="change-ee" value="@e.Value">@e.Text</option>
-                    }
-                </select>
+                      <select asp-for="Guid" class="mdb-select custom select-dropdown form-control-plaintext" id="entries-list">
+                          @foreach (var e in Model.ExperimentEntries)
+                          {
+                              if (e.Value.ToString() == Model.ExperimentEntry.ExperimentEntryID.ToString())
+                              {
+                                  <option selected class="change-ee" value="@e.Value">@e.Text</option>
+                              }
+                              else
+                              {
+
+                                  <option class="change-ee" value="@e.Value">@e.Text</option>
+                              }
+                          }
+                      </select>
                 @*@Html.DropDownList("ExperimentEntries",
                         Model.ExperimentEntries,
                         optionLabel: "Select A Category",
@@ -96,7 +104,8 @@
                     {
                         Test = Model.Tests.FirstOrDefault(),
                         TestValues = Model.TestValues,
-                        ListNumber = 0
+                        ListNumber = 0,
+                        FilesPrevFilled = Model.FilesPrevFilled
                     };
                     await Html.RenderPartialAsync("_TestValues", testValuesViewModel);
                 }
