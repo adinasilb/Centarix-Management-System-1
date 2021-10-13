@@ -104,6 +104,7 @@
             console.log("has class already");
         } else {
             console.log("does not class already");
+            console.log(folder)
             $(folder + ".active-document-modal" + " div.card.document-border").addClass("hasFile");
             if (section == "Operations") {
                 div.addClass("oper-filter");
@@ -113,6 +114,9 @@
             else if ((section == "Protocols")) {
                 div.addClass("protocols-filter");
                 $(".active-document-modal .material-image-icon").addClass("protocols-filter");
+            }
+            else if ((section == "Biomarkers")) {
+                div.addClass("biomarkers-filter");
             }
             else {
                 div.addClass("order-inv-filter");

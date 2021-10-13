@@ -61,14 +61,15 @@
                 break;
             case AppUtility.DataTypeEnum.File:
                 var hasFile = Model.HasFile ? " hasFile " : " ";
+                var iconFilter = Model.HasFile ? " biomarkers-filter " : " ";
                 <div class="col-12">
 
                     <div class="row">
                         <div class="col-12">
-                            <a class="open-document-modal  test-field" showSwitch="@true.ToString()" parentfolder="@AppUtility.ParentFolderName.ExperimentEntries.ToString()" data-val="@true.ToString()" data-string="@AppUtility.FolderNamesEnum.Custom.ToString()" data-id="@Model.TestValueID">
+                            <a class="open-document-modal  test-field" showSwitch="@true.ToString()" parentfolder="@AppUtility.ParentFolderName.ExperimentEntries.ToString()" data-val="@true.ToString()" data-string="@AppUtility.FolderNamesEnum.Custom.ToString()" data-id="@Model.TestValueID" id="@AppUtility.FolderNamesEnum.Custom.ToString()">
                                 <div class="card document-border @hasFile">
                                     <div class="document-card text-center">
-                                        <i class="icon-add-24px document-icon" alt="order" style="font-size:1.25rem;"></i>
+                                        <i class="icon-add-24px document-icon @iconFilter" alt="order" style="font-size:1.8rem;"></i>
                                     </div>
                                 </div>
                             </a>
@@ -76,7 +77,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-12"><label class="control-label text-center" style="display: flex;">Add @Model.TestHeader.Name</label></div>
+                        <div class="col-12"><label class="control-label text-center text document-text-margin" style="display: flex; flex-direction:column;">Add @Model.TestHeader.Name</label></div>
                     </div>
                 </div>
                 <br />

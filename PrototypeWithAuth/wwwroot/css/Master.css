@@ -203,6 +203,11 @@
     border-color: var(--biomarkers-color) !important;
 }
 
+.biomarkers-link{
+    color: var(--biomarkers-color) !important;
+    text-decoration: underline;
+}
+
 .lab-man-filter {
     filter: var(--lab-man-filter) !important;
 }
