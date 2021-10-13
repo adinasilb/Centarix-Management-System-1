@@ -5854,7 +5854,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 WriteErrorToFile("error adding file" + request.RequestID);
             }
-            var invoiceDB = _context.Invoices.Where(i => i.InvoiceNumber == invoiceRow.InvoiceNumber).AsNoTracking().FirstOrDefault();
+            var invoiceDB = _context.Invoices.Where(i => i.InvoiceNumber == invoiceRow.InvoiceNumber && i.InvoiceNumber !=null).AsNoTracking().FirstOrDefault();
             if (invoiceDB != null)
             {
                 var payment = new Payment() { InvoiceID = invoiceDB.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
