@@ -28,19 +28,7 @@ $.validator.addMethod("Entry2NotGreaterThanExitTwo", function (value, element) {
 	return exit1moment.isBefore(entry2moment);
 }, 'Entry 2 must be more than Exit 1');
 
-$.validator.addMethod("validTime", function (value, element) {
-	var t = value.split(':');
-	if (t[0].length == 1) {
-		value = "0" + value;
-	}
-	if (t[2] != null) {
-		$("#"+element.id).val(t[0] + ":" + t[1]);
-    }
-	var result = value.length == 0 || (/^\d\d:\d\d$/.test(value) &&
-		t[0] >= 0 && t[0] < 24 &&
-		t[1] >= 0 && t[1] < 60);
-	return result;
-}, "Invalid time");
+
 
 $.validator.addMethod("EntryExit1FilledInBeforeEntryExit2", function (value, element) {
 	var entry1 = $('#EmployeeHour_Entry1').val() != "";

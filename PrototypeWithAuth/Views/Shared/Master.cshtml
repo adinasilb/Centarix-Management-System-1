@@ -13,10 +13,10 @@
     @*<link rel="stylesheet" href="~/lib/bootstrap/originalDist/css/bootstrap.min.css" />*@
 
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/jquery/dist/popper.min.js"></script>
-        <script src="~/lib/jquery/dist/popper.min.js"></script>
-        <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
-        <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
+    <script src="~/lib/jquery/dist/popper.min.js"></script>
+    <script src="~/lib/jquery/dist/popper.min.js"></script>
+    <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
+    <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Master.css" asp-append-version="true" />
@@ -353,7 +353,7 @@
             return false;
         });
 
-        $(".order-late").on("click", function (e) {
+    $(".order-late").on("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
         $("#loading").show();
@@ -475,8 +475,19 @@
                 $("[modaltype = " + modalType + "]").attr("modaltype", "Edit");
                 $(".modalType").val("Edit");
                 modalType = $(".modalType").val();
-                $("." + modalType).removeClass("d-none")
-
+                if ($(".next-tab.active").hasClass("lines-tab")) {
+                    $("." + modalType + ".only-protocol-tab.li-function-bar").removeClass("d-none");
+                }
+                else {
+                    $("." + modalType + ".only-protocol-tab").addClass("d-none");
+                }
+                if ($(".next-tab.active").hasClass("results-tab")) {
+                    $("." + modalType + ".only-results-tab.li-function-bar").removeClass("d-none");
+                }
+                else {
+                    $("." + modalType + ".only-results-tab").addClass("d-none");
+                }
+                $("." + modalType + ":not(.only-protocol-tab):not(.only-results-tab)").removeClass("d-none");
             }
         }
 
@@ -488,6 +499,8 @@
             $(".location-icon").removeClass("d-none");
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
+            $('.open-archive-modal').removeClass('disabled-background-color');
+            $('.open-archive-modal').addClass('order-inv-background-color');
         }
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
@@ -527,6 +540,11 @@
                             //$.fn.OnOpenModalView();
                             $.fn.OpenModal('modal', 'edits', modal)
                             $.fn.LoadSummaryModal('edits');
+                            $('.modal-content a:first').tab('show');
+                            break;
+                        case "summaryProtocolsParital":    
+                            $("._ProtocolsDetailsFloatModal").html(data);
+                            $.fn.LoadSummaryModal('_ProtocolsDetailsFloatModal');
                             $('.modal-content a:first').tab('show');
                             break;
                         case "create":
@@ -573,6 +591,10 @@
                             $.fn.OpenModal('modal', 'protocol-details', modal)
                             $.fn.ProtocolsMarkReadonly("protocol-details")
                             break
+                        case "protocolFloatModalPartial":
+                            $("._ProtocolsDetailsFloatModal").html(data);
+                            $.fn.ProtocolsMarkReadonly("protocol-details")
+                            break
                         case "addChange":
                             $.fn.OpenModal('modal', 'add-change-div', modal)
                             break;
@@ -614,6 +636,8 @@
             $("." + modalClass + ' .turn-edit-on-off').attr('name', 'details')
             $("." + modalClass + ' .open-document-modal').attr("data-val", false);
             $("." + modalClass + ' .location-icon').addClass('d-none');
+            $("." + modalClass + ' .open-archive-modal').addClass('disabled-background-color');
+            $("." + modalClass + ' .open-archive-modal').removeClass('order-inv-background-color');
 
             //console.log('locations edot mode off');
             //$("." + modalClass +".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
@@ -636,6 +660,14 @@
                 $('.edits .mdb-select').materialSelect();
                 $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
             }
+        }
+
+        $.fn.AddSaveItemClass = function(){
+            $(".top-menu").addClass("save-item");
+            $(".side-menu").addClass("save-item");
+            $(".module-button ").addClass("save-item");
+            $(".notificationDiv").addClass("save-item");
+            $(".home-nav-item").addClass("save-item");
         }
 
 
@@ -703,6 +735,10 @@
                     var modalType=$(".modalType").val();
                     $.fn.ProtocolsMarkReadonly("_IndexTable");
                     $("."+modalType).removeClass("d-none");
+                    if(tab == 4)
+                    {
+                        $(".only-results-tab").removeClass("d-none");
+                    }
                     return false;
                 }
             });
@@ -1336,6 +1372,11 @@
             var selectedCategory = $(className + " .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedSubCategory = $(className + " .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
             console.log(selectedVendor);
+            var catalogNumber = $(className + ' .search-by-catalog-number').val()
+            if (catalogNumber == undefined) {
+                catalogNumber = "";
+            }
+            console.log(catalogNumber)
             var archived = $('.archive-check').val();
             if (archived == undefined) {
                 archived = false;

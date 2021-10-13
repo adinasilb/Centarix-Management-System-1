@@ -12,12 +12,13 @@
                 {
                     <div class="type-div" style="width:22%;">
                         <fieldset class=" resource-fieldset px-3 pt-2">
-                            <div class="resource-title heading-1">@workflow.ProtocolInstance.Protocol.Name</div>
+                            <div class="resource-title heading-1">@workflow.ProtocolInstance.ProtocolVersion.Protocol.Name</div>
+                            <div class="text">V @workflow.ProtocolInstance.ProtocolVersion.VersionNumber</div>
                             <div class="text">Current Step: @workflow.CurrentLineString</div>
                             <div class="text">@workflow.ProtocolInstance.StartDate.GetElixirDateFormatWithTime()</div>
                             <div class="resource-icons list-buttons row m-2 py-4 form-element-border-top-small w-100">
                                 <a class="btn-link text no-hover requests start-protocol-fx" value="@workflow.ProtocolInstance.ProtocolInstanceID">
-                                    <i class="icon-play_circle_outline-24px-1 start-protocol-fx" style="color: #4CAF50"></i>
+                                    <i class="icon-play_circle_outline-24px-1" style="color: #4CAF50"></i>
                                     <label class="m-2">Continue</label>
                                 </a>
                             </div>
@@ -30,6 +31,7 @@
 <script>
     $(".start-protocol-fx").off("click").click(function (e) {
         e.preventDefault();
+        console.log($(this).attr("value"))
         //switch this to universal share request and the modelsenum send in
         $.fn.StartProtocol($(this).attr("value"), true, 3);
     });

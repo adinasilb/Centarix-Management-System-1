@@ -106,10 +106,12 @@ $(function () {
 			$('.only-employee').removeClass("error");
 			$('.only-employee').addClass("hidden");
 			$('.only-employee').addClass("m-0");
+			//$('.only-employee').prop('disabled', true)
 		}
 		else {
 			$('.only-employee').removeClass("hidden");
 			$('.only-employee').removeClass("m-0");
+			//$('.only-employee').prop('disabled', false)
         }
 
 		$.fn.AppendAsteriskToRequired();

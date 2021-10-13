@@ -608,6 +608,8 @@ $(function () {
 
 
 		$.ajax({
+			processData: false,
+			contentType: false,
 			url: url,
 			method: 'POST',
 			data: formData,
@@ -638,8 +640,6 @@ $(function () {
 
 				//return false;
 			},
-			processData: false,
-			contentType: false
 		});
 
 
@@ -1060,9 +1060,11 @@ $(function () {
 	});
 	$("#entry").off('click').click(function (e) {
 		e.preventDefault();
+		console.log('preventing default')
 	});
 	$("#exit").off('click').click(function (e) {
 		e.preventDefault();
+		console.log('preventing default')
 	});
 	$('.monthsHours .select-dropdown').off('change').change(function (e) {
 		console.log(".monthsHours chnage")
@@ -1309,19 +1311,18 @@ $(function () {
 				//	alert("else")
 					$(".render-body").html(data);
 				}
+				$(this).prop('disabled', false)
 			}
-
 		});
 	}
-
-
 
 	$("#saveOffDay").off('click').click(function (e) {
 		e.preventDefault();
 
 		var pageType = $('#masterPageType').val()
-
+		$(this).prop('disabled', true)
 		$.fn.SaveOffDays("OffDayModal", pageType, "");
+		console.log('got here')
 	});
 
 
@@ -1445,14 +1446,17 @@ $(function () {
 		else if ($(this).hasClass('locations')) {
 			console.log("has locations");
 			url = "/Requests/ReceivedModalVisual";
-			section = $(".turn-edit-on-off").attr("section-type"); //"Requests";
+			section = $(".turn-edit-on-off").attr("section-type");
 			console.log("section: " + section);
         }
 		if ($(this).hasClass('orders') && $(this).hasClass('equipment')) {
 			url = "/Requests/EditModalView";
 			section = "LabManagement";
 		}
-
+		if ($(this).hasClass('protocols')) {
+		//url = "/Protocols/EditModalView";
+		section = "Protocols";
+		}
 		if (type == 'edit') {
 			$("#loading").show();
 			console.log("in if edit");

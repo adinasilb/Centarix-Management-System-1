@@ -6,9 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.Data;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Abp.Domain.Entities;
 using System.Threading.Tasks;
+using System.Transactions;
+using System.Threading;
 
 namespace PrototypeWithAuth.Data
 {
@@ -20,6 +21,10 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<TempResultsJson> TempResultsJsons { get; set; }
+        public DbSet<TempReportJson> TempReportJsons { get; set; }
+        public DbSet<ProtocolVersion> ProtocolVersions { get; set; }
+        public DbSet<FunctionResult> FunctionResults { get; set; }
         public DbSet<TempLineID> TempLineIDs { get; set; }
         public DbSet<FunctionLineID> FunctionLineIDs { get; set; }
         public DbSet<TestFieldHeader> TestFieldHeaders { get; set; }
@@ -399,8 +404,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ProtocolInstance>().Property(r => r.ResultDescription).HasColumnType("ntext");
             modelBuilder.Entity<TempRequestJson>().Property(t => t.Json).HasColumnType("ntext");
             modelBuilder.Entity<TempLinesJson>().Property(t => t.Json).HasColumnType("ntext");
-            modelBuilder.Entity<Protocol>().HasIndex(p => p.UniqueCode).IsUnique();
-            //modelBuilder.Entity<TempLine>().HasIndex(r => r.PermanentLineID).IsUnique();
+            modelBuilder.Entity<Protocol>().HasIndex(p => new { p.UniqueCode }).IsUnique();
+            modelBuilder.Entity<ProtocolVersion>().HasIndex(p => new {p.ProtocolID, p.VersionNumber }).IsUnique();
+            modelBuilder.Entity<ProtocolVersion>().Ignore(p => p.Name);
             modelBuilder.Seed();
 
             //foreach loop ensures that deletion is resticted - no cascade delete

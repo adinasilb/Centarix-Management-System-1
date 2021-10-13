@@ -11,8 +11,8 @@
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form addFunctionForm documentModalForm on-form-modal">
                 <input type="hidden" asp-for="ReportID" />
-                <input type="hidden" asp-for="FunctionReport.FunctionTypeID" />
-                <input type="hidden" asp-for="FunctionReport.ID" class="function-reportID" />
+                <input type="hidden" asp-for="Function.FunctionTypeID" />
+                <input type="hidden" asp-for="Function.ID" class="function-reportID" />
                 <input type="hidden" asp-for="IsRemove" class="isRemove" />
                 <input type="hidden" asp-for="ClosingTags" />
                 <div class="modal-header border-0 pt-0 px-0 modal-header-padding text-center">
@@ -21,12 +21,12 @@
                         <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessage</label>
 
                         <div>
-                            <span class="heading-1"><i class="@Model.FunctionReport.FunctionType.Icon"></i>&ensp;@Model.FunctionReport.FunctionType.FunctionDescription</span>
+                            <span class="heading-1"><i class="@Model.Function.FunctionType.Icon"></i>&ensp;@Model.Function.FunctionType.FunctionDescription</span>
                         </div>
                     </div>
                 </div>
                 <div class="modal-body m-0 p-0">
-                    @switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(Model.FunctionReport.FunctionType.DescriptionEnum))
+                    @switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(Model.Function.FunctionType.DescriptionEnum))
                     {
                         case AppUtility.ProtocolFunctionTypes.AddFile:
                             <div class="_DocumentsModalData">
@@ -180,9 +180,9 @@
                             <div class="modal-footer border-0 p-0">
                                 <div class="mx-auto modal-footer-mt">
                                     @{var dnone = "";}
-                                    @if (Model.FunctionReport.FunctionType.DescriptionEnum == AppUtility.ReportsFunctionTypes.AddFile.ToString())
-                                            {
-                                                dnone = "d-none";
+                                    @if (Model.Function.FunctionType.DescriptionEnum == AppUtility.ReportsFunctionTypes.AddFile.ToString())
+                                    {
+                                        dnone = "d-none";
                                         <div class="upload-btn-wrapper between-button-margin">
                                             <button class="custom-button custom-button-font protocols-background-color upload-file document-modal-buttons" data-string="@AppUtility.FolderNamesEnum.Files">Upload A File</button>
                                             <input type="file" name="FilesToSave" id="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls "  />
@@ -191,7 +191,7 @@
                                     }
 
                                     <input type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveFunction  @dnone" value="Add" />
-                                    @if (Model.FunctionReport.ID != 0)
+                                    @if (Model.Function.ID != 0)
                                     {
                                         <input type="button" class="custom-button custom-cancel removeFunction" value="Remove" />
                                     }

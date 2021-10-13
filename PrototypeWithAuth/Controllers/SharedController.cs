@@ -877,7 +877,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     fullRequestsList = fullRequestsList.Where(r => r.Product.CatalogNumber.ToUpper().Contains(selectedFilters.CatalogNumber.ToUpper()));
                 }
-
+                
             }
             if (selectedFilters?.Archived == true)
             {
@@ -984,7 +984,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     break;
                 case AppUtility.PageTypeEnum.RequestInventory:
-                    popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder, popoverDelete };
+                    popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, /*popoverReorder,*/ popoverDelete };
                     iconList.Add(popoverMoreIcon);
                     onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
@@ -1011,7 +1011,7 @@ namespace PrototypeWithAuth.Controllers
                             break;
                         default:
                             iconList.Add(reorderIcon);
-                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, /*popoverReorder,*/ /*popoverDelete*/ };
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare/*, popoverReorder,*/ /*popoverDelete*/ };
                             iconList.Add(favoriteIcon);
                             iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ThenBy(r => r.Product.ProductName).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Summary,
@@ -1203,9 +1203,19 @@ namespace PrototypeWithAuth.Controllers
 
         protected void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, bool additionalRequests = false, Guid? guid = null)
         {
+            MoveDocumentsOutOfTempFolder(id, parentFolderName, additionalRequests, guid.ToString());
+        }
+
+        protected void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, int oldID, bool additionalRequests = false)
+        {
+            MoveDocumentsOutOfTempFolder(id, parentFolderName, additionalRequests, oldID.ToString());
+        }
+
+        private void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, bool additionalRequests, string oldID)
+        {
             //rename temp folder to the request id
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
-            var TempFolderName = guid == null ? "0" : guid.ToString();
+            var TempFolderName = oldID.ToString();
             string requestFolderFrom = Path.Combine(uploadFolder, TempFolderName);
             string requestFolderTo = Path.Combine(uploadFolder, id.ToString());
             if (Directory.Exists(requestFolderFrom))
@@ -1218,7 +1228,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     AppUtility.DirectoryCopy(requestFolderFrom, requestFolderTo, true);
                 }
-                else if(requestFolderFrom != requestFolderTo)
+                else if (requestFolderFrom != requestFolderTo)
                 {
                     Directory.Move(requestFolderFrom, requestFolderTo);
                 }
