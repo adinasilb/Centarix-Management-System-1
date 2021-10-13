@@ -3450,15 +3450,20 @@ namespace PrototypeWithAuth.Controllers
          * BEGIN SEARCH
          */
         [HttpGet]
-        [Authorize(Roles = "Requests, LabManagement, Operations")]
+        [Authorize(Roles = "Requests, LabManagement, Operations, Accounting")]
         public async Task<IActionResult> Search(AppUtility.MenuItems SectionType)
-        {  
+        {
+            var categoryID = 1;
+            if(SectionType == AppUtility.MenuItems.Operations)
+            {
+                categoryID = 2;
+            }
             RequestsSearchViewModel requestsSearchViewModel = new RequestsSearchViewModel
             {
                 ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID != 1).ToListAsync(),
-                ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID != categoryID).ToListAsync(),    
+                ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID != categoryID).ToListAsync(),
                 Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID != categoryID).Count() > 0).ToListAsync(),
-                
+                ApplicationUsers = await _context.Users.ToListAsync()
             };
 
             return View(requestsSearchViewModel);

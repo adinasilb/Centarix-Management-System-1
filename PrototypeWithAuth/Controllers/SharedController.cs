@@ -893,9 +893,9 @@ namespace PrototypeWithAuth.Controllers
         {
 
             //??about including invoice and payments null pointer.....
-            if (requestsSearchViewModel.InvoiceNumer != null && requestsSearchViewModel.InvoiceNumer != "")
+            if (requestsSearchViewModel.InvoiceNumber != null && requestsSearchViewModel.InvoiceNumber != "")
             {
-                fullRequestsList = fullRequestsList.Where(r => r.Payments.Where(p=>p.Invoice.InvoiceNumber.ToLower() == requestsSearchViewModel.InvoiceNumer.ToLower()).Any());
+                fullRequestsList = fullRequestsList.Where(r => r.Payments.Where(p=>p.Invoice.InvoiceNumber.ToLower() == requestsSearchViewModel.InvoiceNumber.ToLower()).Any());
             }
             return fullRequestsList;
         }
