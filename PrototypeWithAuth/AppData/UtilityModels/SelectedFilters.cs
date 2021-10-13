@@ -4,28 +4,7 @@ namespace PrototypeWithAuth.AppData.UtilityModels
 {
     public class SelectedFilters
     {
-        public bool Archived { get; set; }
-        public string CatalogNumber { get; set; }
-        //public List<int> SelectedTypesIDs { get; set; }
-        private List<int> _selectedVendorsIDs;
-        public List<int> SelectedVendorsIDs 
-        {
-            get
-            {
-                if (_selectedVendorsIDs == null)
-                {
-                    return new List<int>();
-                } 
-                else
-                {
-                    return _selectedVendorsIDs;
-                }
-            }
-            set 
-            {
-                _selectedVendorsIDs = value;
-            } 
-        }
+     
         private List<string> _selectedOwnersIDs;
         public List<string> SelectedOwnersIDs {
             get
@@ -44,24 +23,7 @@ namespace PrototypeWithAuth.AppData.UtilityModels
                 _selectedOwnersIDs = value;
             }
         }
-        private List<int> _selectedLocationsIDs;
-        public List<int> SelectedLocationsIDs {
-            get
-            {
-                if (_selectedLocationsIDs == null)
-                {
-                    return new List<int>();
-                }
-                else
-                {
-                    return _selectedLocationsIDs;
-                }
-            }
-            set
-            {
-                _selectedLocationsIDs = value;
-            }
-        }
+     
         private List<int> _selectedCategoriesIDs;
         public List<int> SelectedCategoriesIDs {
             get
