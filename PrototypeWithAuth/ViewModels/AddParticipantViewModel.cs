@@ -10,5 +10,6 @@ namespace PrototypeWithAuth.ViewModels
     {
         public Participant Participant { get; set; }
         public List<Gender> Genders { get; set; }
+        public List<ParticipantStatus> ParticipantStatuses { get; set; }
     }
 }

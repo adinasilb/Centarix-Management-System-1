@@ -313,6 +313,41 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("_BiomarkersRows", new { ExperimentID = addParticipant.Participant.ExperimentID });
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Biomarkers")]
+        public ActionResult EditParticipantModal(int ParticipantID)
+        {
+            AddParticipantViewModel addParticipantViewModel = new AddParticipantViewModel()
+            {
+                Participant = _context.Participants.Where(p => p.ParticipantID == ParticipantID).Include(p => p.Gender).Include(p=> p.ParticipantStatus).FirstOrDefault(),
+                Genders = _context.Genders.ToList(),
+                ParticipantStatuses = _context.ParticipantStatuses.ToList()
+            };
+
+            return PartialView(addParticipantViewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Biomarkers")]
+        public async Task<ActionResult> EditParticipantModal(AddParticipantViewModel editParticipant)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _context.Update(editParticipant.Participant);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
+            }
+            return RedirectToAction("_Entries", new {ParticipantID = editParticipant.Participant.ParticipantID });
+        }
+
         public async Task<int> GetParticipantsCount(int ExperimentID)
         {
             return _context.Participants.Where(p => p.ExperimentID == ExperimentID).Count();

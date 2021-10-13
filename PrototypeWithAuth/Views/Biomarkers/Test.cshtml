@@ -28,7 +28,7 @@
             @Html.HiddenFor(m => m.FieldViewModels[e].TestHeader.Name)
         </div>
             }*@
-    <div class="row under-row-margin">
+    <div class="row under-row-margin" style="margin-top: 2.063rem">
         <div class="col-6">
             @{ await Html.RenderPartialAsync("_participantsheader", Model.ExperimentEntry.Participant);}
         </div>

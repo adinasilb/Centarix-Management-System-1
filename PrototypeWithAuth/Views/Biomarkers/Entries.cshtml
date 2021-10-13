@@ -3,4 +3,6 @@
 @{
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-@{ Html.RenderPartialAsync("_Entries", Model); }
+<div class="_ParticipantEntries">
+    @{ Html.RenderPartialAsync("_Entries", Model); }
+</div>
