@@ -1,11 +1,11 @@
-﻿@model ProtocolsInventoryFilterViewModel
+﻿@model ProtocolsFilterViewModel
 @using PrototypeWithAuth.ViewModels;
 
 @using PrototypeWithAuth.Data;
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 
-<div style="width:1200px; height:35.75rem; margin:0;" class="container-fluid overflow-hidden order-inv-form">
+<div style="width:1200px; height:35.75rem; margin:0;" class="container-fluid overflow-hidden protocol-form">
     <div class="row">
         <div class=" col-1 offset-11">
             <button type="button" class="close popover-close" style="font-size:2rem;">&times;</button>
@@ -40,6 +40,21 @@
             </div>
 
         </div>
+        <div class="border-right col filter-col type-col">
+            <input placeholder="Category" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom type-search" />
+            <div class="inventory-filter-col not-selected">
+                @foreach (var type in Model.ProtocolTypes)
+                {
+                    <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left" labelName="@type.ProtocolTypeDescription" value="@type.ProtocolTypeID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ProtocolTypeDescription</span></button>
+                }
+            </div>
+            <div class="inventory-filter-col selected">
+                @foreach (var type in Model.SelectedProtocolTypes)
+                {
+                    <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left filter-btn-select" value="@type.ProtocolTypeID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ProtocolTypeDescription</span></button>
+                }
+            </div>
+        </div>
         <div class="border-right col filter-col category-col">
             <input placeholder="Category" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom category-search" />
             <div class="inventory-filter-col not-selected">
@@ -70,8 +85,8 @@
                 }
             </div>
         </div>
-    
+
     </div>
 </div>
 
-<script src="~/js/InventoryFilterScript.js"></script>
+<script src="~/js/ProtocolFilterScript.js"></script>

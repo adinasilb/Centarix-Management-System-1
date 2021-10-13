@@ -664,7 +664,7 @@ namespace PrototypeWithAuth.Controllers
                 //GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.RequestFolderNamesEnum.Credits, requestParentFolderName, requestFolder, requestId);
             }
         }
-        protected async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null, SelectedFilters selectedFilters = null, int numFilters = 0)
+        protected async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null, SelectedRequestFilters selectedFilters = null, int numFilters = 0)
         {
             int categoryID = 1;
             if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
@@ -849,7 +849,7 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters, requestIndexObject.SectionType, isProprietary);
             return requestIndexViewModel;
         }
-        protected static IQueryable<Request> filterListBySelectFilters(SelectedFilters selectedFilters, IQueryable<Request> fullRequestsList)
+        protected static IQueryable<Request> filterListBySelectFilters(SelectedRequestFilters selectedFilters, IQueryable<Request> fullRequestsList)
         {
             if (selectedFilters != null)
             {
@@ -1089,7 +1089,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedFilters selectedFilters = null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests, bool isProprietary = false)
+        protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFilters selectedFilters = null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests, bool isProprietary = false)
         {
             int categoryType = sectionType == AppUtility.MenuItems.Requests ? 1 : 2;
             if (selectedFilters != null)

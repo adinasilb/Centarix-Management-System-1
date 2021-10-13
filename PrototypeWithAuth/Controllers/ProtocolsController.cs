@@ -53,6 +53,64 @@ namespace PrototypeWithAuth.Controllers
             return View(viewmodel);
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public IActionResult _ProtocolFilterResults(SelectedProtocolsFilters selectedFilters, int numFilters, AppUtility.MenuItems sectionType)
+        {
+            try
+            {
+                ProtocolsFilterViewModel inventoryFilterViewModel = GetProtocolFilterViewModel(selectedFilters:selectedFilters, numFilters : numFilters, sectionType : sectionType);
+                return PartialView(inventoryFilterViewModel);
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = 500;
+                return PartialView("_ErrorMessage", AppUtility.GetExceptionMessage(ex));
+            }
+        }
+        private ProtocolsFilterViewModel GetProtocolFilterViewModel(SelectedProtocolsFilters selectedFilters = null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Protocols)
+        {
+            if (selectedFilters != null)
+            {
+                ProtocolsFilterViewModel protocolsFilterViewModel = new ProtocolsFilterViewModel()
+                {
+                    Owners = _context.Employees.Where(o => !selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
+                    ProtocolCategories = _context.ProtocolCategories.Where(c => !selectedFilters.SelectedCategoriesIDs.Contains(c.ProtocolCategoryTypeID)).ToList(),
+                    ProtocolSubCategories = _context.ProtocolSubCategories.Distinct()
+                        .Where(v => !selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProtocolSubCategoryTypeID)).ToList(),
+                    SelectedOwners = _context.Employees.Where(o => selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
+                    SelectedProtocolCategories = _context.ProtocolCategories.Where(c => selectedFilters.SelectedCategoriesIDs.Contains(c.ProtocolCategoryTypeID)).ToList(),
+                    SelectedProtocolSubCategories = _context.ProtocolSubCategories.Distinct().Where(v => selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProtocolSubCategoryTypeID)).ToList(),
+                    SelectedProtocolTypes = _context.ProtocolTypes.Where(c => selectedFilters.SelectedCategoriesIDs.Contains(c.ProtocolTypeID)).ToList(),
+
+                    NumFilters = numFilters,
+                    SectionType = sectionType,                  
+                };
+                if (protocolsFilterViewModel.SelectedProtocolCategories.Count() > 0)
+                {
+                    protocolsFilterViewModel.ProtocolSubCategories = protocolsFilterViewModel.ProtocolSubCategories.Where(ps => protocolsFilterViewModel.SelectedProtocolCategories.Contains(ps.ProtocolCategoryType)).ToList();
+                }
+
+                return protocolsFilterViewModel;
+            }
+            else
+            {
+                return new ProtocolsFilterViewModel()
+                {
+
+                    Owners = _context.Employees.ToList(),
+                    ProtocolCategories = _context.ProtocolCategories.ToList(),
+                    ProtocolTypes = _context.ProtocolTypes.ToList(),
+                    ProtocolSubCategories = _context.ProtocolSubCategories.ToList(),
+                    SelectedOwners = new List<Employee>(),
+                    SelectedProtocolCategories = new List<ProtocolCategory>(),
+                    SelectedProtocolSubCategories = new List<ProtocolSubCategory>(),
+                    SelectedProtocolTypes = new List<ProtocolType>(),
+                    NumFilters = numFilters,
+                    SectionType = sectionType,
+                };
+            }
+        }
         [Authorize(Roles = "Protocols")]
         private static IQueryable<ProtocolVersion> filterListBySelectFilters(SelectedProtocolsFilters selectedFilters, IQueryable<ProtocolVersion> fullRequestsListProprietary)
         {
@@ -62,9 +120,13 @@ namespace PrototypeWithAuth.Controllers
                 {
                     fullRequestsListProprietary = fullRequestsListProprietary.Where(p => selectedFilters.SelectedCategoriesIDs.Contains(p.Protocol.ProtocolSubCategory.ProtocolCategoryTypeID));
                 }
-                if (selectedFilters.SelectedProtocolsSubcategoriesIDs.Count() > 0)
+                if (selectedFilters.SelectedTypesIDs.Count() > 0)
                 {
-                    fullRequestsListProprietary = fullRequestsListProprietary.Where(p => selectedFilters.SelectedProtocolsSubcategoriesIDs.Contains(p.Protocol.ProtocolSubCategoryID));
+                    fullRequestsListProprietary = fullRequestsListProprietary.Where(p => selectedFilters.SelectedTypesIDs.Contains(p.Protocol.ProtocolTypeID));
+                }
+                if (selectedFilters.SelectedSubcategoriesIDs.Count() > 0)
+                {
+                    fullRequestsListProprietary = fullRequestsListProprietary.Where(p => selectedFilters.SelectedSubcategoriesIDs.Contains(p.Protocol.ProtocolSubCategoryID));
                 }
                 if (selectedFilters.SelectedOwnersIDs.Count() > 0)
                 {
@@ -126,42 +188,6 @@ namespace PrototypeWithAuth.Controllers
             return protocolsIndexViewModel;
         }
 
-        [Authorize(Roles = "Protocols")]
-        private ProtocolsInventoryFilterViewModel GetProtocolFilterViewModel(SelectedProtocolsFilters selectedFilters = null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)
-        {
-            if (selectedFilters != null)
-            {
-                ProtocolsInventoryFilterViewModel inventoryFilterViewModel = new ProtocolsInventoryFilterViewModel()
-                {
-                    Owners = _context.Employees.Where(o => !selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
-                    ProtocolCategories = _context.ProtocolCategories.Where(c => !selectedFilters.SelectedCategoriesIDs.Contains(c.ProtocolCategoryTypeID)).ToList(),
-                    ProtocolSubCategories = _context.ProtocolSubCategories.Distinct().Where(v => !selectedFilters.SelectedProtocolsSubcategoriesIDs.Contains(v.ProtocolSubCategoryTypeID)).ToList(),
-                    SelectedOwners = _context.Employees.Where(o => selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
-                    SelectedProtocolCategories = _context.ProtocolCategories.Where(c => selectedFilters.SelectedCategoriesIDs.Contains(c.ProtocolCategoryTypeID)).ToList(),
-                    SelectedProtocolSubCategories = _context.ProtocolSubCategories.Distinct().Where(v => selectedFilters.SelectedProtocolsSubcategoriesIDs.Contains(v.ProtocolSubCategoryTypeID)).ToList(),
-                    NumFilters = numFilters
-                };
-                if (inventoryFilterViewModel.ProtocolCategories.Count() > 0)
-                {
-                    inventoryFilterViewModel.ProtocolSubCategories = inventoryFilterViewModel.ProtocolSubCategories.Where(ps => inventoryFilterViewModel.ProtocolCategories.Contains(ps.ProtocolCategoryType)).ToList();
-                }
-
-                return inventoryFilterViewModel;
-            }
-            else
-            {
-                return new ProtocolsInventoryFilterViewModel()
-                {
-                    Owners = _context.Employees.ToList(),
-                    ProtocolCategories = _context.ProtocolCategories.ToList(),
-                    ProtocolSubCategories = _context.ProtocolSubCategories.ToList(),
-                    SelectedOwners = new List<Employee>(),
-                    SelectedProtocolCategories = new List<ProtocolCategory>(),
-                    SelectedProtocolSubCategories = new List<ProtocolSubCategory>(),
-                    NumFilters = numFilters
-                };
-            }
-        }
 
         [Authorize(Roles = "Protocols")]
         private async Task<IPagedList<ProtocolsIndexPartialRowViewModel>> GetProtocolsColumnsAndRows(ProtocolsIndexObject protocolsIndexObject, IPagedList<ProtocolsIndexPartialRowViewModel> onePageOfProtocols, IQueryable<ProtocolVersion> ProtocolPassedInWithInclude)
