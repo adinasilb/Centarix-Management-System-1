@@ -26,8 +26,15 @@ namespace PrototypeWithAuth.AppData.UtilityModels
         public string Url { get; set; }
         [ExcelColumn("Total Price")]
         public decimal TotalPrice { get; set; }
+
+        private string _OrderNumber;
         [ExcelColumn("PO #")]
-        public string OrderNumber { get; set; }
+        public string OrderNumber
+        {
+
+            get { return _OrderNumber?.Replace("|", ""); }
+            set { _OrderNumber = value; }
+        }
         [ExcelColumn("Date Requested")]
         public DateTime DateRequested { get; set; }
         [ExcelColumn("Date Ordered")]
@@ -38,7 +45,7 @@ namespace PrototypeWithAuth.AppData.UtilityModels
         public DateTime DateReceived { get; set; }
         [ExcelColumn("Received By")]
         public string ReceivedBy { get; set; }
-      
+
 
     }
 }

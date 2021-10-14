@@ -11,8 +11,15 @@ namespace PrototypeWithAuth.AppData.UtilityModels
 
         [ExcelColumn("F")]
         public string OrderNumber { get; set; }
+
+        private string _InvoiceNumber;
         [ExcelColumn("invoice number")]
-        public string InvoiceNumber {get; set;}
+        public string InvoiceNumber
+        {
+
+            get { return _InvoiceNumber?.Replace("|", ""); }
+            set { _InvoiceNumber = value; }
+        }
         [ExcelColumn("invoice date")]
         public DateTime InvoiceDate { get; set; }
         [ExcelColumn("document number")]

@@ -5580,7 +5580,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task UploadRequestsFromExcel()
         {
             var InventoryFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\Imported table 2-to uploadWithFixedVendorsAndCategoriesRealUsers.csv";
-            var POFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\_2019 - orders (07-10-21).csv";
+            var POFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\_2019 - orders (07-10-21)2.csv";
 
             var lineNumber = 0;
 
@@ -5652,10 +5652,10 @@ namespace PrototypeWithAuth.Controllers
                             int parentRequestID = 0;
                             if (r.OrderNumber != "" && r.OrderNumber != null)
                             {
-                                parentRequestID = _context.ParentRequests.Where(pr => pr.QuartzyOrderNumber == r.OrderNumber && pr.QuartzyOrderNumber!=null).Select(pr => pr.ParentRequestID).FirstOrDefault();
+                                parentRequestID = _context.ParentRequests.Where(pr => pr.QuartzyOrderNumber == r.OrderNumber && pr.QuartzyOrderNumber != null).Select(pr => pr.ParentRequestID).FirstOrDefault();
 
                             }
-                         
+
                             if (parentRequestID != 0)
                             {
                                 request.ParentRequestID = parentRequestID;
@@ -5854,7 +5854,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 WriteErrorToFile("error adding file" + request.RequestID);
             }
-            var invoiceDB = _context.Invoices.Where(i => i.InvoiceNumber == invoiceRow.InvoiceNumber && i.InvoiceNumber !=null).AsNoTracking().FirstOrDefault();
+            var invoiceDB = _context.Invoices.Where(i => i.InvoiceNumber == invoiceRow.InvoiceNumber && i.InvoiceNumber != null).AsNoTracking().FirstOrDefault();
             if (invoiceDB != null)
             {
                 var payment = new Payment() { InvoiceID = invoiceDB.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
@@ -5869,7 +5869,6 @@ namespace PrototypeWithAuth.Controllers
                 _context.Entry(payment).State = EntityState.Added;
             }
         }
-
         private static void WriteErrorToFile(string message)
         {
             var errorFilePath = "InventoryError.txt";
