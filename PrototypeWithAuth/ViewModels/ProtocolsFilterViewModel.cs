@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PrototypeWithAuth.Models;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class ProtocolsFilterViewModel
+    public class ProtocolsFilterViewModel :ViewModelBase
     {
         public List<Employee> Owners { get; set; }
         public List<Employee> SelectedOwners { get; set; }
-        public List<ProtocolType> ProtocolTypes { get; set; }
+        public List<ProtocolType> ProtocolTypes { get; set; } 
         public List<ProtocolType> SelectedProtocolTypes { get; set; }
         public List<ProtocolCategory> ProtocolCategories { get; set; }
         public List<ProtocolCategory> SelectedProtocolCategories { get; set; }

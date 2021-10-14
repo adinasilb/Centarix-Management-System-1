@@ -78,10 +78,12 @@ namespace PrototypeWithAuth.Controllers
                     ProtocolCategories = _context.ProtocolCategories.Where(c => !selectedFilters.SelectedCategoriesIDs.Contains(c.ProtocolCategoryTypeID)).ToList(),
                     ProtocolSubCategories = _context.ProtocolSubCategories.Distinct()
                         .Where(v => !selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProtocolSubCategoryTypeID)).ToList(),
+
+                    ProtocolTypes = _context.ProtocolTypes.Where(c => !selectedFilters.SelectedTypesIDs.Contains(c.ProtocolTypeID)).ToList(),
                     SelectedOwners = _context.Employees.Where(o => selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
                     SelectedProtocolCategories = _context.ProtocolCategories.Where(c => selectedFilters.SelectedCategoriesIDs.Contains(c.ProtocolCategoryTypeID)).ToList(),
                     SelectedProtocolSubCategories = _context.ProtocolSubCategories.Distinct().Where(v => selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProtocolSubCategoryTypeID)).ToList(),
-                    SelectedProtocolTypes = _context.ProtocolTypes.Where(c => selectedFilters.SelectedCategoriesIDs.Contains(c.ProtocolTypeID)).ToList(),
+                    SelectedProtocolTypes = _context.ProtocolTypes.Where(c => selectedFilters.SelectedTypesIDs.Contains(c.ProtocolTypeID)).ToList(),
 
                     NumFilters = numFilters,
                     SectionType = sectionType,                  
@@ -138,10 +140,10 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        private async Task<ProtocolsIndexViewModel> GetProtocolsIndexViewModelAsync(ProtocolsIndexObject protocolsIndexObject, SelectedProtocolsFilters selectedFilters = null)
+        private async Task<ProtocolsIndexViewModel> GetProtocolsIndexViewModelAsync(ProtocolsIndexObject protocolsIndexObject, SelectedProtocolsFilters selectedProtocolsFilters=null, int numFilters =0)
         {
             IQueryable<ProtocolVersion> ProtocolsPassedIn = Enumerable.Empty<ProtocolVersion>().AsQueryable();
-            IQueryable<ProtocolVersion> fullProtocolsList = _context.ProtocolVersions.Include(p=>p.Protocol).Include(p => p.ApplicationUserCreator).Include(p => p.Protocol.ProtocolSubCategory)
+            IQueryable<ProtocolVersion> fullProtocolsList = _context.ProtocolVersions.Where(r => r.Protocol.Name.Contains(protocolsIndexObject.SearchText)).Include(p=>p.Protocol).Include(p => p.ApplicationUserCreator).Include(p => p.Protocol.ProtocolSubCategory)
                 .ThenInclude(p => p.ProtocolCategoryType).Include(p => p.Protocol.ProtocolType).Include(p => p.ProtocolInstances);
             var user = await _userManager.GetUserAsync(User);
             switch (protocolsIndexObject.PageType)
@@ -178,13 +180,12 @@ namespace PrototypeWithAuth.Controllers
             var onePageOfProducts = Enumerable.Empty<ProtocolsIndexPartialRowViewModel>().ToPagedList();
 
 
-            var ProtocolsPassedInWithInclude = filterListBySelectFilters(selectedFilters, fullProtocolsList);
-
+            var ProtocolsPassedInWithInclude = filterListBySelectFilters(selectedProtocolsFilters, fullProtocolsList);
             onePageOfProducts = await GetProtocolsColumnsAndRows(protocolsIndexObject, onePageOfProducts, ProtocolsPassedInWithInclude);
 
             protocolsIndexViewModel.PagedList = onePageOfProducts;
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            protocolsIndexViewModel.ProtocolsFilterViewModel = GetProtocolFilterViewModel(selectedFilters);
+            protocolsIndexViewModel.ProtocolsFilterViewModel = GetProtocolFilterViewModel(protocolsIndexObject.SelectedFilters);
             return protocolsIndexViewModel;
         }
 
@@ -2043,18 +2044,20 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> _IndexTable(ProtocolsIndexObject protocolsIndexObject)
+        public async Task<IActionResult> _IndexTable(ProtocolsIndexObject protocolsIndexObject, SelectedProtocolsFilters selectedFilters = null, int numFilters = 0)
         {
             ProtocolsIndexViewModel viewmodel;
-            viewmodel = await GetProtocolsIndexViewModelAsync(protocolsIndexObject);
+            protocolsIndexObject.SelectedFilters = selectedFilters;
+            
+            viewmodel = await GetProtocolsIndexViewModelAsync(protocolsIndexObject, selectedFilters, numFilters);
             return PartialView(viewmodel);
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> _IndexTableData(ProtocolsIndexObject protocolsIndexObject)
+        public async Task<IActionResult> _IndexTableData(ProtocolsIndexObject protocolsIndexObject,  SelectedProtocolsFilters selectedFilters = null, int numFilters = 0)
         {
             ProtocolsIndexViewModel viewmodel;
-            viewmodel = await GetProtocolsIndexViewModelAsync(protocolsIndexObject);
+            viewmodel = await GetProtocolsIndexViewModelAsync(protocolsIndexObject, selectedFilters, numFilters);
             return PartialView(viewmodel);
         }
 
