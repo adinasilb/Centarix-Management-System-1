@@ -102,7 +102,8 @@ namespace PrototypeWithAuth.Controllers
 
             VendorSearchViewModel vendorSearchViewModel = new VendorSearchViewModel
             {
-                ParentCategories = _context.ParentCategories.ToList(),
+                //ParentCategories = _context.ParentCategories.ToList(),
+                CategoryTypes = _context.CategoryTypes.ToList(),
                 Vendors = _context.Vendors.ToList(),
                 SectionType = SectionType
             };
@@ -132,23 +133,20 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Search(VendorSearchViewModel vendorSearchViewModel)
 
         {
-            IQueryable<Vendor> filteredVendors = _context.Vendors.AsQueryable();
-            filteredVendors = filteredVendors
+            IQueryable<Vendor> filteredVendors = _context.Vendors.Include(v => v.VendorCategoryTypes).AsQueryable();
+            List<int> orderedVendorCategoryTypes = null;
+            if (vendorSearchViewModel.VendorCategoryTypes != null) 
+            { 
+                orderedVendorCategoryTypes = vendorSearchViewModel.VendorCategoryTypes.OrderBy(e => e).ToList();
+            }
+            var listfilteredVendors = filteredVendors
                 .Where(fv => (String.IsNullOrEmpty(vendorSearchViewModel.VendorEnName) || fv.VendorEnName.Contains(vendorSearchViewModel.VendorEnName))
                  &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorHeName) || fv.VendorHeName.Contains(vendorSearchViewModel.VendorHeName))
              &&
              (String.IsNullOrEmpty(vendorSearchViewModel.VendorBuisnessID) || fv.VendorBuisnessID.Contains(vendorSearchViewModel.VendorBuisnessID))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.InfoEmail) || fv.InfoEmail.Contains(vendorSearchViewModel.InfoEmail))
-            &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.OrdersEmail) || fv.OrdersEmail.Contains(vendorSearchViewModel.OrdersEmail))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorTelephone) || fv.VendorTelephone.Contains(vendorSearchViewModel.VendorTelephone))
-              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorCellPhone) || fv.VendorCellPhone.Contains(vendorSearchViewModel.VendorCellPhone))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorFax) || fv.VendorFax.Contains(vendorSearchViewModel.VendorFax))
+             (String.IsNullOrEmpty(vendorSearchViewModel.VendorCountry) || fv.VendorCountry.Contains(vendorSearchViewModel.VendorCountry))
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorCity) || fv.VendorCity.Contains(vendorSearchViewModel.VendorCity))
              &&
@@ -156,6 +154,16 @@ namespace PrototypeWithAuth.Controllers
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorZip) || fv.VendorZip.Contains(vendorSearchViewModel.VendorZip))
              &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorTelephone) || fv.VendorTelephone.Contains(vendorSearchViewModel.VendorTelephone))
+              &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorCellPhone) || fv.VendorCellPhone.Contains(vendorSearchViewModel.VendorCellPhone))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorFax) || fv.VendorFax.Contains(vendorSearchViewModel.VendorFax))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.OrdersEmail) || fv.OrdersEmail.Contains(vendorSearchViewModel.OrdersEmail))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.InfoEmail) || fv.InfoEmail.Contains(vendorSearchViewModel.InfoEmail))
+            &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorWebsite) || fv.VendorWebsite.Contains(vendorSearchViewModel.VendorWebsite))
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorBank) || fv.VendorBank.Contains(vendorSearchViewModel.VendorBank))
@@ -168,33 +176,13 @@ namespace PrototypeWithAuth.Controllers
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorBIC) || fv.VendorBIC.Contains(vendorSearchViewModel.VendorBIC))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorRoutingNum) || fv.VendorRoutingNum.Contains(vendorSearchViewModel.VendorBIC))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorGoldAccount) || fv.VendorGoldAccount.Contains(vendorSearchViewModel.VendorGoldAccount))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorGoldAccount) || fv.VendorGoldAccount.Contains(vendorSearchViewModel.VendorGoldAccount)));
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorRoutingNum) || fv.VendorRoutingNum.Contains(vendorSearchViewModel.VendorRoutingNum))).ToList();
 
+            //listfilteredVendors = listfilteredVendors.Where(fv => (orderedVendorCategoryTypes == null || orderedVendorCategoryTypes.SequenceEqual(fv.VendorCategoryTypes.OrderBy( ct => ct.CategoryTypeID).Select(ct => ct.CategoryTypeID)))).ToList(); //if choose lab, will not show vendors that have both lab and operations
+            listfilteredVendors = listfilteredVendors.Where(fv => (orderedVendorCategoryTypes == null || orderedVendorCategoryTypes.All(fv.VendorCategoryTypes.Select(ct => ct.CategoryTypeID).Contains))).ToList(); //if choose lab, will include vendors that have both lab and operations
 
-            if (vendorSearchViewModel.SelectedParentCategoryID > 0)
-            {
-                foreach (var v in filteredVendors)
-                {
-
-                    bool vendorContainsParentCategory = false;
-                    foreach (var p in _context.Products.Include(p => p.ProductSubcategory))
-                    {
-                        //var psc = _context.ProductSubcategories.Where(psc => psc.ProductSubcategoryID == p.ProductSubcategoryID) //need to instatntaite subcategories before refrenceing to parent
-                        if ((p.ProductSubcategory.ParentCategoryID == vendorSearchViewModel.SelectedParentCategoryID) && (p.VendorID == v.VendorID))
-                        {
-                            vendorContainsParentCategory = true;
-
-                        }
-                    }
-                    if (!vendorContainsParentCategory)
-                    {
-                        filteredVendors = filteredVendors.Where(fv => fv.VendorID != v.VendorID);
-
-                    }
-                }
-            }
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = vendorSearchViewModel.SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
             if (vendorSearchViewModel.SectionType == AppUtility.MenuItems.LabManagement)
@@ -205,7 +193,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
             }
-            return View("IndexForPayment", filteredVendors.ToList());
+            return View("IndexForPayment", listfilteredVendors);
         }
 
 
@@ -597,6 +585,22 @@ namespace PrototypeWithAuth.Controllers
             VendorContact contact = new VendorContact();
             AddContactViewModel addContactViewModel = new AddContactViewModel { VendorContact = contact, Index = index };
             return PartialView(addContactViewModel);
+        }
+
+        [HttpPost]
+        public bool CheckUniqueCompanyIDAndCountry(string CompanyID, string Country, int? VendorID = null)
+        {
+            //validation for the create
+            if (CompanyID != null && Country != null && (VendorID == null && _context.Vendors.Where(v => v.VendorBuisnessID.Equals(CompanyID) && v.VendorCountry.Equals(Country)).Any()))
+            {
+                return false;
+            }
+            //validation for the edit
+            if (VendorID != null && _context.Vendors.Where(v => v.VendorBuisnessID.Equals(CompanyID) && v.VendorCountry.Equals(Country) && v.VendorID != VendorID).Any())
+            {
+                return false;
+            }
+            return true;
         }
     }
 

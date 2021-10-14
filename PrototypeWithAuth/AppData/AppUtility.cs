@@ -100,6 +100,14 @@ namespace PrototypeWithAuth.AppData
         public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote, ParentRequest, FunctionResults }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum ModalType { None, Terms, UploadOrder, UploadQuote, ConfirmEmail, Reorder }
+        public enum VendorCountries { 
+            Israel, 
+            [Display(Name = "North America")]
+            NorthAmerica,
+            [Display(Name = "South America")]
+            SouthAmerica, 
+            Europe, 
+            Asia }
         public static string AspDateFormatString = "{0:d MMM yyyy}";
         public static List<StringWithName> RequestRoleEnums()
         {

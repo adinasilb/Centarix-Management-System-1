@@ -110,7 +110,18 @@
                 <div class="col-3">
                     <div class="form-group">
                         <label asp-for="Vendor.VendorCountry" class="control-label"></label>
-                        <input asp-for="Vendor.VendorCountry" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        @Html.DropDownListFor(
+                            vm => vm.Vendor.VendorCountry,
+                            new SelectList(Enum.GetValues(typeof(AppUtility.VendorCountries))),
+                            "Select Country",
+                            htmlAttributes: new
+                            {
+                                @class = " mdb-select custom select-dropdown form-control-plaintext  mark-readonly",
+                                @id = "VendorCountries",
+                                @size = 1,
+                                @data_stop_refresh = "true"
+                            }
+                        )
                         <span asp-validation-for="Vendor.VendorCountry" class="text-danger-centarix"></span>
                     </div>
                 </div>

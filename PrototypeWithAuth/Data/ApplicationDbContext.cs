@@ -373,6 +373,8 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ParentRequest>().HasIndex(p => p.QuartzyOrderNumber).IsUnique();
             modelBuilder.Entity<Product>().HasIndex(p => p.SerialNumber).IsUnique();
             modelBuilder.Entity<Product>().HasIndex(p => new { p.SerialNumber, p.VendorID }).IsUnique();
+            modelBuilder.Entity<Vendor>().HasIndex(v => new { v.VendorCountry, v.VendorBuisnessID }).IsUnique();
+
             /*PROTOCOLS*/
             ///set up composite keys
 

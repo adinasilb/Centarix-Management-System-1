@@ -289,6 +289,7 @@
 		}
 		if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
 			$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
+			$.fn.EnableMaterialSelect('#VendorCountries', 'select-options-VendorCountries');
 		}
 		if ($(this).hasClass('users')) {
 			$.fn.EnableMaterialSelect('#NewEmployee_JobSubcategoryType_JobCategoryTypeID', 'select-options-NewEmployee_JobSubcategoryType_JobCategoryTypeID');

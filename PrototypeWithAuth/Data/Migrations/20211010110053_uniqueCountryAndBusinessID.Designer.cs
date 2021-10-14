@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211010110053_uniqueCountryAndBusinessID")]
+    partial class uniqueCountryAndBusinessID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3405,7 +3407,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/consumables/rtpcr_consumables.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Q-PCR Plastics"
+                            ProductSubcategoryDescription = "RT-PCR Plastics"
                         },
                         new
                         {
@@ -3509,7 +3511,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/antibody.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Antibody"
+                            ProductSubcategoryDescription = "Antibodies"
                         },
                         new
                         {
@@ -3549,7 +3551,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent2.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Q-PCR Reagents"
+                            ProductSubcategoryDescription = "RT-PCR Reagents"
                         },
                         new
                         {
@@ -3565,7 +3567,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/primer.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Primers and Oligos"
+                            ProductSubcategoryDescription = "Primers"
                         },
                         new
                         {
@@ -3637,7 +3639,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/dna_enzyme.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "DNA Enzymes"
+                            ProductSubcategoryDescription = "DNA Enzyme"
                         },
                         new
                         {
@@ -5648,6 +5650,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
+                            UnitTypeID = 19,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Case"
+                        },
+                        new
+                        {
                             UnitTypeID = 3,
                             UnitParentTypeID = 1,
                             UnitTypeDescription = "Pack"
@@ -5807,6 +5815,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
+                            UnitTypeID = 19,
+                            ParentCategoryID = 1
+                        },
+                        new
+                        {
                             UnitTypeID = 3,
                             ParentCategoryID = 1
                         },
@@ -5838,6 +5851,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             UnitTypeID = 2,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 19,
                             ParentCategoryID = 2
                         },
                         new
@@ -5927,6 +5945,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
+                            UnitTypeID = 19,
+                            ParentCategoryID = 4
+                        },
+                        new
+                        {
                             UnitTypeID = 3,
                             ParentCategoryID = 4
                         },
@@ -5997,6 +6020,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
+                            UnitTypeID = 19,
+                            ParentCategoryID = 5
+                        },
+                        new
+                        {
                             UnitTypeID = 3,
                             ParentCategoryID = 5
                         },
@@ -6018,6 +6046,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             UnitTypeID = 2,
+                            ParentCategoryID = 7
+                        },
+                        new
+                        {
+                            UnitTypeID = 19,
                             ParentCategoryID = 7
                         },
                         new
@@ -6123,6 +6156,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             UnitTypeID = 18,
+                            ParentCategoryID = 6
+                        },
+                        new
+                        {
+                            UnitTypeID = 19,
                             ParentCategoryID = 6
                         },
                         new
