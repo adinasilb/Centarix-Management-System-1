@@ -5580,7 +5580,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task UploadRequestsFromExcel()
         {
             var InventoryFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\Imported table 2-to uploadWithFixedVendorsAndCategoriesFakeUsers.csv";
-            var POFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\_2019 - orders (07-10-21).csv";
+            var POFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\_2019 - orders (07-10-21)2.csv";
 
             var lineNumber = 0;
 
@@ -5592,7 +5592,7 @@ namespace PrototypeWithAuth.Controllers
                 var requestsInvoice = from i in excelInvoices.Worksheet<UploadInvoiceExcelModel>("orders") select i;
                 var lastSerialNumber = int.Parse(_context.Products.IgnoreQueryFilters().Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == 1).OrderBy(p => p).LastOrDefault()?.SerialNumber?.Substring(1) ?? "1");
                 var currency = AppUtility.CurrencyEnum.NIS;
-                long lastParentRequestOrderNum =2000;
+                long lastParentRequestOrderNum = 2000;
                 var requestInvoiceList = requestsInvoice.ToList();
                 foreach (var r in requests)
                 {
@@ -5612,7 +5612,7 @@ namespace PrototypeWithAuth.Controllers
                             if (vendorID == 0)
                             {
 
-                                WriteErrorToFile("Row " + lineNumber + " did not have a proper vendor " +r.VendorName);
+                                WriteErrorToFile("Row " + lineNumber + " did not have a proper vendor " + r.VendorName);
                                 _context.ChangeTracker.Entries()
                                     .Where(e => e.Entity != null).ToList();
 
@@ -5650,11 +5650,12 @@ namespace PrototypeWithAuth.Controllers
                             var exchangeRate = AppUtility.GetExchangeRateByDate(r.DateOrdered);
                             //cost = cost * exchangeRate; //always from quartzy in dollars        
                             int parentRequestID = 0;
-                            if (r.OrderNumber != "")
+                            if (r.OrderNumber != "" && r.OrderNumber != null)
                             {
-                                parentRequestID = _context.ParentRequests.Where(pr => pr.QuartzyOrderNumber == r.OrderNumber).Select(pr => pr.ParentRequestID).FirstOrDefault();
+                                parentRequestID = _context.ParentRequests.Where(pr => pr.QuartzyOrderNumber == r.OrderNumber && pr.QuartzyOrderNumber != null).Select(pr => pr.ParentRequestID).FirstOrDefault();
 
                             }
+
                             if (parentRequestID != 0)
                             {
                                 request.ParentRequestID = parentRequestID;
@@ -5668,7 +5669,8 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 else
                                 {
-                                    parentRequest = new ParentRequest() { QuartzyOrderNumber = r.OrderNumber, OrderNumber = lastParentRequestOrderNum++, ApplicationUserID = orderedBy, OrderDate = r.DateOrdered };
+                                    parentRequest = new ParentRequest() { QuartzyOrderNumber = r.OrderNumber, OrderNumber = lastParentRequestOrderNum, ApplicationUserID = orderedBy, OrderDate = r.DateOrdered };
+                                    lastParentRequestOrderNum += 1;
                                 }
                                 _context.Entry(parentRequest).State = EntityState.Added;
                                 await _context.SaveChangesAsync();
@@ -5825,12 +5827,12 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task SetInvoiceAndPaymentsAccordingToResultsFromDB(UploadExcelModel r, Request request, UploadInvoiceExcelModel invoiceRow)
         {
-            string sourceFile = @"C:\Users\debbie\OneDrive - Centarix\Desktop\DocumentsInvoices10112021\" + invoiceRow.DocumentNumber+".pdf";
-           
+            string sourceFile = @"C:\Users\debbie\OneDrive - Centarix\Desktop\DocumentsInvoices\" + invoiceRow.DocumentNumber + ".pdf";
+
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
             string uploadFolderPathTo = Path.Combine(requestFolderTo, AppUtility.FolderNamesEnum.Invoices.ToString());
-           
+
             try
             {
                 if (!Directory.Exists(requestFolderTo))
@@ -5845,14 +5847,14 @@ namespace PrototypeWithAuth.Controllers
                         Directory.CreateDirectory(uploadFolderPathTo);
                     }
                 }
-                System.IO.File.Copy(sourceFile, uploadFolderPathTo+ @"\"+invoiceRow.DocumentNumber + ".pdf", true);
-                WriteErrorToFile("file was addeded for request id:"+ request.RequestID);
+                System.IO.File.Copy(sourceFile, uploadFolderPathTo + @"\" + invoiceRow.DocumentNumber + ".pdf", true);
+                WriteErrorToFile("file was addeded for request id:" + request.RequestID);
             }
             catch (IOException iox)
             {
                 WriteErrorToFile("error adding file" + request.RequestID);
             }
-            var invoiceDB = _context.Invoices.Where(i => i.InvoiceNumber == invoiceRow.InvoiceNumber).AsNoTracking().FirstOrDefault();
+            var invoiceDB = _context.Invoices.Where(i => i.InvoiceNumber == invoiceRow.InvoiceNumber && i.InvoiceNumber != null).AsNoTracking().FirstOrDefault();
             if (invoiceDB != null)
             {
                 var payment = new Payment() { InvoiceID = invoiceDB.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
