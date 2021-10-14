@@ -73,7 +73,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("ElixirProduction"));
+                    Configuration.GetConnectionString("ElixirProductionUpload"));
                 //options.EnableSensitiveDataLogging(true);
             });
 
