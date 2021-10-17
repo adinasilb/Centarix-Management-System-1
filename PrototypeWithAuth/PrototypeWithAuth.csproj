@@ -489,13 +489,14 @@
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />
     <Folder Include="wwwroot\Materials\" />
+    <Folder Include="wwwroot\FunctionResults\" />
     <Folder Include="wwwroot\FunctionLine\" />
+    <Folder Include="wwwroot\Protocols\" />
+    <Folder Include="wwwroot\ParentRequest\" />
+    <Folder Include="wwwroot\ParentQuote\" />
+    <Folder Include="wwwroot\Reports\" />
     <Folder Include="wwwroot\Requests\" />
     <Folder Include="wwwroot\ParentQuotes\" />
-    <Folder Include="wwwroot\ParentQuote\" />
-    <Folder Include="wwwroot\ParentRequest\" />
-    <Folder Include="wwwroot\Protocols\" />
-    <Folder Include="wwwroot\Reports\" />
     <Folder Include="wwwroot\ResourceImages\" />
   </ItemGroup>
 
