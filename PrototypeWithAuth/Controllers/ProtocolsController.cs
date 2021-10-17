@@ -329,6 +329,8 @@ namespace PrototypeWithAuth.Controllers
         private async Task<IPagedList<ReportIndexPartialRowViewModel>> GetReportsColumnsAndRows(ReportsIndexObject reportsIndexObject, IPagedList<ReportIndexPartialRowViewModel> onePageOfReports, IQueryable<Report> ReportPassedInWithInclude)
         {
             List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
+            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--protocols-color)", "report-favorite", "Favorite");
+
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
             switch (reportsIndexObject.PageType)
             {
@@ -336,6 +338,7 @@ namespace PrototypeWithAuth.Controllers
                     switch (reportsIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.WeeklyReports:
+                            iconList.Add(favoriteIcon);
                             onePageOfReports = await GetReportListRows(reportsIndexObject, onePageOfReports, ReportPassedInWithInclude);
                             break;
                         case AppUtility.SidebarEnum.DailyReports:
