@@ -7,7 +7,17 @@
 }
 <div class="_entries under-row-margin">
     @{ await Html.RenderPartialAsync("_participantsheader", Model.Participant);}
+
 </div>
+@{ 
+    var entryDisabled = "";
+    var addEntryButtonColor = "biomarkers-color white-background biomarkers-border-color clear-custom-button";
+    if(Model.Participant.ParticipantStatusID == 2)
+    {
+        entryDisabled = "disabled";
+        addEntryButtonColor = "disabled-background-color";
+    }
+}
 <div class="row under-row-margin">
     <div class="col-6">
         <a href="@Url.Action("Experiment", "Biomarkers", new { ID = Model.Participant.ExperimentID })">
@@ -19,7 +29,7 @@
         
     </div>
     <div class="col-6">
-        <button class="float-right custom-button custom-button-font clear-custom-button biomarkers-color white-background biomarkers-border-color">
+        <button class="float-right custom-button custom-button-font @addEntryButtonColor  @entryDisabled">
             <span class="add-new-entry" value="@Model.Participant.ParticipantID">
                 + Add New Entry
             </span>
