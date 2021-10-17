@@ -25,7 +25,7 @@ namespace PrototypeWithAuth.ViewModels
         {
             r = report;
             r.ReportCategory = reportCategory;
-            this.favoriteReport = favoriteReport
+            this.favoriteReport = favoriteReport;
             ReportIndexPartialRowViewModel.reportIndexObject = reportIndexObject;
             //this.iconList = iconList;
             this.user = user;
@@ -68,7 +68,7 @@ namespace PrototypeWithAuth.ViewModels
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "Name", Width = 10, Value = new List<string>() { r.ReportTitle }, AjaxLink = "edit-report", AjaxID = r.ReportID };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Dates", Width = 10, Value = new List<string>() { AppUtility.GetWeekStartEndDates(r.DateCreated) } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Icons = GetIcons(), AjaxID = r.ReportID };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Icons = GetIcons(favoriteReport), AjaxID = r.ReportID };
         }
         
 
