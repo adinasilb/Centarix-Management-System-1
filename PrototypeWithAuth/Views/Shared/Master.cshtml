@@ -1304,6 +1304,10 @@
                 cache: false,
                 success: function (data) {
                     $(".testvalues").html(data);
+                    if ($(".edit-mode-input").hasClass("off")) {
+                        $('._testvalues input').attr("disabled", true);
+                        $('._testvalues input').addClass("disabled");
+                    }
                 }
             });
             $(".biomarkers-test-name").removeClass("selected");

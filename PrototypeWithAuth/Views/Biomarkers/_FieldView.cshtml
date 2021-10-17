@@ -41,7 +41,7 @@
         {
             case AppUtility.DataTypeEnum.Double:
                 <label class="control-label">@Model.TestHeader.Name</label>
-                <input asp-for="Double" id="@DoubleID" name="@DoubleName" value="@Model.Double" class="@Model.TestHeader.Name form-control-plaintext border-bottom test-field" />
+                <input asp-for="Double" id="@DoubleID" name="@DoubleName" value="@Model.Double" class="@Model.TestHeader.Name form-control-plaintext border-bottom test-field double" />
                 <span asp-validation-for="Double" class="text-danger-centarix mark-readonly"></span>
                 break;
             case AppUtility.DataTypeEnum.String:
@@ -66,7 +66,7 @@
 
                     <div class="row">
                         <div class="col-12">
-                            <a class="open-document-modal  test-field" showSwitch="@true.ToString()" parentfolder="@AppUtility.ParentFolderName.ExperimentEntries.ToString()" data-val="@true.ToString()" data-string="@AppUtility.FolderNamesEnum.Custom.ToString()" data-id="@Model.TestValueID" id="@AppUtility.FolderNamesEnum.Custom.ToString()">
+                            <a class="open-document-modal  test-field" showSwitch="@true.ToString()" parentfolder="@AppUtility.ParentFolderName.ExperimentEntries.ToString()" data-val="@false.ToString()" data-string="@AppUtility.FolderNamesEnum.Custom.ToString()" data-id="@Model.TestValueID" id="@AppUtility.FolderNamesEnum.Custom.ToString()">
                                 <div class="card document-border @hasFile">
                                     <div class="document-card text-center">
                                         <i class="icon-add-24px document-icon @iconFilter" alt="order" style="font-size:1.8rem;"></i>
@@ -119,6 +119,10 @@
             };
         }
         $.fn.CalculateBMI();
+        if ($(".edit-mode-input").hasClass("off")) {
+            $('._testvalues input').attr("disabled", true);
+            $('._testvalues input').addClass("disabled");
+        }
     });
     $(".Weight").on("change", function (e) {
         $.fn.CalculateBMI();

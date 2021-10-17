@@ -1,7 +1,8 @@
 ﻿$(function (e) {
     $(".edit-mode-input").on("click", function (e) {
-        e.preventDefault();
+        //e.preventDefault();
         if ($(this).hasClass("on")) {
+            console.log($(this))
             $.ajax({
                 async: true,
                 url: "/Biomarkers/SaveTestModal/",
@@ -13,10 +14,12 @@
             });
         }
         else if ($(this).hasClass("off")) {
+            console.log($(this))
             $(this).addClass("on");
             $(this).removeClass("off");
-            $(this).attr("checked", "checked");
             $(this).attr("value", "true");
+            $(this).attr("checked", "checked");
+            $('.open-document-modal').attr("data-val", true);
             var editLabel = $(".edit-mode-label");
             editLabel.text("Edit Mode On");
             editLabel.removeClass("off");
