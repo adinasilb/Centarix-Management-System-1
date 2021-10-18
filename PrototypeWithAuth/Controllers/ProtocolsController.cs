@@ -2175,7 +2175,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> IndexFavoriteReports(AppUtility.SidebarEnum SidebarType)
+        public async Task<IActionResult> IndexFavoriteReports()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Favorites;
@@ -2184,7 +2184,7 @@ namespace PrototypeWithAuth.Controllers
             ReportsIndexObject reportsIndexObject = new ReportsIndexObject()
             {
                 PageType = AppUtility.PageTypeEnum.ProtocolsReports,
-                SidebarType = SidebarType,
+                SidebarType = AppUtility.SidebarEnum.Favorites
 
             };
             var reportsIndexViewModel = await GetReportsIndexViewModel(reportsIndexObject);
