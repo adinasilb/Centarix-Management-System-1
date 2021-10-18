@@ -415,6 +415,7 @@
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
             $('.location-icon').removeClass('d-none');
+            
 
             //turn off document modals
             if ($(element).hasClass('operations') || $(element).hasClass('orders')) {
@@ -1160,12 +1161,12 @@
                     if(isReopen)
                     {
                         console.log("before fx");
-                        if ($("._testvalues").length > 0) {
+                        //if ($("._testvalues").length > 0) {
 
-                            if (!$("._testvalues").hasClass("changed")) {
-                                $("._testvalues").addClass("changed");
-                            }
-                        }
+                        //    if (!$("._testvalues").hasClass("changed")) {
+                        //        $("._testvalues").addClass("changed");
+                        //    }
+                        //}
                         //alert("._DocumentsModalData")
                         $("._DocumentsModalData").html(data);
                     }
@@ -1307,6 +1308,7 @@
                     if ($(".edit-mode-input").hasClass("off")) {
                         $('._testvalues input').attr("disabled", true);
                         $('._testvalues input').addClass("disabled");
+                        $(".open-document-modal").attr("data-val", "false")
                     }
                 }
             });

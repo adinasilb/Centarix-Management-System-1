@@ -65,7 +65,7 @@
                 var section = $("#masterSectionType").val();
                 var guid = $("#Guid").val();
                 var $CustomMainObjectID = $("#CustomMainObjectID").val();
-                alert("$CustomMainObjectID: " + $CustomMainObjectID);
+                //alert("$CustomMainObjectID: " + $CustomMainObjectID);
 
                 if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
                     section = "Operations"
@@ -117,6 +117,7 @@
             }
             else if ((section == "Biomarkers")) {
                 div.addClass("biomarkers-filter");
+
             }
             else {
                 div.addClass("order-inv-filter");
@@ -129,7 +130,7 @@
         }
     };
 
-    $("body, .modal").off("click").on("click", ".delete-document", function (e) {
+    $("body, .modal").on("click", ".delete-document", function (e) {
         e.preventDefault();
         
         var hasClass = $(this).hasClass("delete-file-document");

@@ -1645,6 +1645,10 @@ $(function () {
 		$.fn.CallPageRequest($itemurl, "delete");
     })
 
+	$('.close-document-modal').off("click").click(function (e) {
+		console.log("click 1")
+		$.fn.CloseModal("documents");
+	})
 });
 
 

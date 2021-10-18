@@ -117,7 +117,7 @@
     $(".biomarkers-test-name").on("click", function (e) {
         if (!$(this).hasClass("selected")) {
             if ($("._testvalues").hasClass("changed")) {
-                if ($(".edit-mode-input").hasClass("on")) {
+                //if ($(".edit-mode-input").hasClass("on")) {
                     $.ajax({
                         async: false,
                         url: "/Biomarkers/SaveTestModal?ID=" + $(this).attr("ID"),
@@ -127,10 +127,7 @@
                             $.fn.OpenModal('save-test-modal', 'save-bio-test-modal', data);
                         }
                     });
-                }
-                else {
-                    $.fn.ChangeTest($(this));
-                }
+                //}
             }
             else {
                 $.fn.ChangeTest($(this));
@@ -172,8 +169,9 @@
 
 
     $("body").on("change", "input", function (e) {
+        console.log($(this))
         //this is also on change of the documents modal so don't change unless you change there too
-        if (!$("._testvalues").hasClass("changed")) {
+        if (!$("._testvalues").hasClass("changed") && !$(this).hasClass("turn-edit-doc-on-off")) {
             $("._testvalues").addClass("changed");
         }
         $(".bio-form").valid()
