@@ -47,18 +47,26 @@
 
 $.fn.RemoveColorsOfDocs = function ($foldername) {
 	console.log("in remove colors")
-	console.log($foldername)
+	
+	if ($("#masterSectionType").val() == "Biomarkers") {
+		console.log($("#ObjectID").val())
+		$foldername = $foldername + "."+$("#ObjectID").val()
+	}
+	console.log("foldername: "+$foldername)
 	$("#" + $foldername + " i").removeClass('oper-filter');
 	$("#" + $foldername + " i").removeClass('order-inv-filter')
 	$("#" + $foldername + " i").removeClass('lab-man-filter')
 	$("#" + $foldername + " i").removeClass('protocols-filter')
+	$("#" + $foldername + " i").removeClass('biomarkers-filter')
 	$(".active-document-modal .material-image-icon").removeClass("protocols-filter");
 	$(".active-document-modal .material-image-icon").addClass("disabled-text");
 	$("#" + $foldername + " i").addClass('opac87');
-	$("#" + $foldername+"Input").removeClass("contains-file");
-	if ($("#" + $foldername+"Input").rules()) {
-				$("#" + $foldername+"Input").valid();
-		}
+	$("#" + $foldername + "Input").removeClass("contains-file");
+	if ($("#" + $foldername + "Input").rules()) {
+		$("#" + $foldername + "Input").valid();
+	}
+	if ($("masterSectionType").val() == "Biomarkers") {
 
-	$("#" + $foldername +" .document-border").removeClass("hasFile")
+	}
+	$("#" + $foldername + " .document-border").removeClass("hasFile")
 };

@@ -66,7 +66,7 @@
 
                     <div class="row">
                         <div class="col-12">
-                            <a class="open-document-modal  test-field" showSwitch="@false.ToString()" parentfolder="@AppUtility.ParentFolderName.ExperimentEntries.ToString()" data-val="@true.ToString()" data-string="@AppUtility.FolderNamesEnum.Custom.ToString()" data-id="@Model.TestValueID" id="@AppUtility.FolderNamesEnum.Custom.ToString()">
+                            <a class="open-document-modal  test-field @Model.TestValueID" showSwitch="@false.ToString()" parentfolder="@AppUtility.ParentFolderName.ExperimentEntries.ToString()" data-val="@true.ToString()" data-string="@AppUtility.FolderNamesEnum.Custom.ToString()" data-id="@Model.TestValueID" id="@AppUtility.FolderNamesEnum.Custom.ToString()">
                                 <div class="card document-border @hasFile">
                                     <div class="document-card text-center">
                                         <i class="icon-add-24px document-icon @iconFilter" alt="order" style="font-size:1.8rem;"></i>

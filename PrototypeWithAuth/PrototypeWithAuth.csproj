@@ -463,6 +463,8 @@
     <Compile Remove="Data\Migrations\20210822065747_AddProtocolVersion.Designer.cs" />
     <Compile Remove="Data\Migrations\20211005115854_TestMergeProtocolWithMaster.cs" />
     <Compile Remove="Data\Migrations\20211005115854_TestMergeProtocolWithMaster.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211018104323_BiomarkerMerge.cs" />
+    <Compile Remove="Data\Migrations\20211018104323_BiomarkerMerge.Designer.cs" />
   </ItemGroup>
 
 
