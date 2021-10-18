@@ -547,7 +547,7 @@ namespace PrototypeWithAuth.Controllers
                         await _context.SaveChangesAsync();
                     }
                     
-                    throw new Exception();
+                    //throw new Exception();
                     await transaction.CommitAsync();
                     if(updateHoursViewModel.PageType == null || updateHoursViewModel.PageType == "ReportHours")
                     {
@@ -1035,7 +1035,7 @@ namespace PrototypeWithAuth.Controllers
                     var notification = _context.TimekeeperNotifications.Where(tn => tn.NotificationID == id).FirstOrDefault();
                     _context.Remove(notification);
                     await _context.SaveChangesAsync();
-                    throw new Exception();
+                    //throw new Exception();
                     await transaction.CommitAsync();
                     return RedirectToAction("ReportHours");
                 }
