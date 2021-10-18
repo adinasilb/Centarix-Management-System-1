@@ -39,7 +39,7 @@
                                 </div>
 
                                 <div class="col-md-3 text-center">
-                                    <input type="submit" value="Search" asp-action="Search" class="@buttonSubmitClass custom-button custom-button-font" />
+                                    <input type="button" value="Search"@* asp-action="Search"*@ class="@buttonSubmitClass custom-button custom-button-font search-for-request" />
                                 </div>
                             </div>
                             <div class="row">
@@ -61,7 +61,7 @@
                                     <div class="form-group">
                                         <label asp-for="ParentCategoryID" class="control-label">Category</label>
                                         <select searchable="Please select a category" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" id="parentlist" asp-for="ParentCategoryID">
-                                            <option value="0">Select Category</option>
+                                            <option value="">Select Category</option>
                                             @foreach (var parentCategory in Model.ParentCategories)
                                             {
                                                 <option value="@parentCategory.ParentCategoryID">@parentCategory.ParentCategoryDescription</option>
@@ -73,7 +73,7 @@
                                     <div class="form-group">
                                         <label asp-for="ProductSubcategoryID" class="control-label">Subcategory</label>
                                         <select searchable="Please select a subcategory" asp-for="ProductSubcategoryID" class="mdb-select-sublist  mdb-select custom select-dropdown form-control-plaintext" id="sublist" data-val="false">
-                                            <option value="0">Select Subcategory</option>
+                                            <option value="">Select Subcategory</option>
                                             @foreach (var productSubcategory in Model.ProductSubcategories)
                                             {
                                                 <option value="@productSubcategory.ProductSubcategoryID">@productSubcategory.ProductSubcategoryDescription</option>
@@ -85,7 +85,7 @@
                                     <div class="form-group">
                                         <label asp-for="VendorID" class="control-label">Supplier</label>
                                         <select searchable="Select A Vendor" asp-for="VendorID" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" id="vendorList">
-                                            <option value="0">Select Vendor</option>
+                                            <option value="">Select Vendor</option>
                                             @foreach (var vendor in Model.Vendors)
                                             {
                                                 <option value="@vendor.VendorID">@vendor.VendorEnName</option>
@@ -117,9 +117,9 @@
                             <div class="row">
                                 <div class="col-4">
                                     <div class="form-group">
-                                        <label asp-for="ApplicationUserReceiverID" class="control-label">Received By:</label>
-                                        <select searchable="Please select a user" asp-for="ProductSubcategoryID" class="mdb-select-sublist  mdb-select custom select-dropdown form-control-plaintext" data-val="false">
-                                            <option value="0">Select User</option>
+                                        <label asp-for="ApplicationUserReceiverID" class="control-label">Received By</label>
+                                        <select searchable="Please select a user" asp-for="ApplicationUserReceiverID" class="mdb-select-sublist  mdb-select custom select-dropdown form-control-plaintext" data-val="false">
+                                            <option value="">Select User</option>
                                             @foreach (var user in Model.ApplicationUsers)
                                             {
                                                 <option value="@user.Id">@user.FirstName @user.LastName</option>
@@ -194,17 +194,44 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
-
-
                         </div>
-
                     </div>
                 </div>
-
             </div>
 </div>
         </div>
 </form>
+<script>
+    $('.search-for-request').off('click').on('click', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        //alert('got here');
+        var url = 'Index';
+        switch ($('#masterPageType').val()) {
+            case 'RequestSummary':
+                url = 'IndexInventory';
+            case 'AccountingGeneral':
+                url = 'AccountingGeneral';
+            case 'AccountingPayments':
+
+        }
+        var fullUrl = '/Requests/' + url + '?' + $.fn.getRequestIndexString();
+        console.log(fullUrl);
+        $.ajax({
+            contentType: false,
+            processData: false,
+            async: true,
+            url: fullUrl,
+            data: new FormData($("#search-form")[0]),
+            traditional: true,
+            type: "POST",
+            cache: false,
+            success: function (data) {
+                $('.render-body').html(data);
+            },
+            error: function (jqxhr) {
+                $('.error-message').html(jqxhr.responseText);
+            }
+        })
+    })
+</script>

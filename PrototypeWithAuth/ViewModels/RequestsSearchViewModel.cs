@@ -21,7 +21,9 @@ namespace PrototypeWithAuth.ViewModels
         public int? VendorID { get; set; }
         public string ItemName { get; set; }
         public string ProductHebrewName { get; set; }
+        [Display(Name = "Invoice Number")]
         public string InvoiceNumber { get; set; }
+        [Display(Name = "Invoice Date")]
         public DateTime? InvoiceDate {get; set;}
         //public Request Request { get; set; }
 /*        public DateTime? ToDate { get; set; }
@@ -33,7 +35,7 @@ namespace PrototypeWithAuth.ViewModels
         public DateTime? CreationDate { get; set; }
         public string Currency { get; set; }
         [Display(Name = "Arrival Date")]
-        public DateTime ArrivalDate { get; set; }
+        public DateTime? ArrivalDate { get; set; }
         public IEnumerable<ApplicationUser> ApplicationUsers { get; set; }
         public string ApplicationUserReceiverID { get; set; }
         [Display(Name = "Quote Number")]

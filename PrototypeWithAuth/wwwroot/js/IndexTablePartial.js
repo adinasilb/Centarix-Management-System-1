@@ -123,7 +123,7 @@ $(function () {
     });
 
 
-    $("body").off("click").on("click", ".load-order-details", function (e) {
+    $(".modal").off("click").on("click", ".load-order-details", function (e) {
         //alert('in function')
         e.preventDefault();
         e.stopImmediatePropagation();

@@ -532,7 +532,21 @@ namespace PrototypeWithAuth.AppData
                 Classes = menuClass,
                 IconName = "icon-face-24px"
             });
-
+            if (SidebarTitle == AppUtility.SidebarEnum.Search) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Search",
+                Controller = "Requests",
+                Action = "Search",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType",  pageType },
+                    { "SectionType", AppUtility.MenuItems.Requests },
+                    { "SidebarType", AppUtility.SidebarEnum.Search }
+                },
+                Classes = menuClass,
+                IconName = "icon-zoom_in-24px-01"
+            });
             return SidebarMenuItems;
         }
         public static List<MenuItems> GetOrdersAndInventorySummarySidebarMenuItems(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses, AppUtility.PageTypeEnum pageType, AppUtility.CategoryTypeEnum categoryType)
@@ -626,6 +640,21 @@ namespace PrototypeWithAuth.AppData
             //    Classes = menuClass,
             //    IconName = "icon-place-24px"
             //});
+            if (SidebarTitle == AppUtility.SidebarEnum.Search) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Search",
+                Controller = "Requests",
+                Action = "Search",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType",  pageType },
+                    { "SectionType", AppUtility.MenuItems.Requests },
+                    { "SidebarType", AppUtility.SidebarEnum.Search }
+                },
+                Classes = menuClass,
+                IconName = "icon-zoom_in-24px-01"
+            });
             return SidebarMenuItems;
         }
         public static List<MenuItems> GetOrdersAndInventorySearchSidebarMenuItems(string OrigClasses, string ActiveClasses, AppUtility.PageTypeEnum pageType, AppUtility.CategoryTypeEnum categoryType)
@@ -1148,7 +1177,21 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 IconName = "icon-format_list_bulleted-24px-01"
             });
-
+            if (SidebarTitle == AppUtility.SidebarEnum.Search) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Search",
+                Controller = "Requests",
+                Action = "Search",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType",  AppUtility.PageTypeEnum.AccountingGeneral },
+                    { "SectionType", AppUtility.MenuItems.Accounting },
+                    { "SidebarType", AppUtility.SidebarEnum.Search }
+                },
+                Classes = CurrentClasses,
+                IconName = "icon-zoom_in-24px-01"
+            });
 
             return SidebarMenuItems;
         }

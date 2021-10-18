@@ -68,9 +68,10 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [HttpPost]
         [Authorize(Roles = "Requests, Operations")]
         // GET: Requests
-        public async Task<IActionResult> Index(RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> Index(RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel)
         {
 
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
@@ -79,7 +80,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (await base.IsAuthorizedAsync(requestIndexObject.SectionType))
             {
-                var viewmodel = await base.GetIndexViewModel(requestIndexObject);
+                var viewmodel = await base.GetIndexViewModel(requestIndexObject, requestsSearchViewModel: requestsSearchViewModel);
 
                 // SetViewModelCounts(requestIndexObject, viewmodel);
                 return View(viewmodel);
@@ -92,8 +93,9 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [HttpPost]
         [Authorize(Roles = "Requests, Operations")]
-        public async Task<IActionResult> IndexInventory(RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> IndexInventory(RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel)
         {
             if (await base.IsAuthorizedAsync(requestIndexObject.SectionType))
             {
@@ -102,7 +104,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
 
-                var viewmodel = await base.GetIndexViewModel(requestIndexObject);
+                var viewmodel = await base.GetIndexViewModel(requestIndexObject, requestsSearchViewModel: requestsSearchViewModel);
                 //  SetViewModelProprietaryCounts(requestIndexObject, viewmodel);
                 //viewmodel.InventoryFilterViewModel = GetInventoryFilterViewModel();
 
@@ -408,7 +410,7 @@ namespace PrototypeWithAuth.Controllers
             IQueryable<Request> changingList = _context.Requests.Where(r => r.Product.ProductName.Contains(requestIndexObject.SearchText))
                 .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)
                 .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor);
-            changingList = filterListBySelectFilters(selectedFilters, changingList);
+            changingList = FilterListBySelectFilters(selectedFilters, changingList);
 
             int[] requestStatusIds = { 1, 2, 3, 6 };
             int[] newRequestStatusIds = new int[2];
@@ -528,12 +530,12 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor);
             if (requestIndexObject.RequestStatusID == 7)
             {
-                fullRequestsListProprietary = filterListBySelectFilters(selectedFilters, fullRequestsListProprietary);
+                fullRequestsListProprietary = FilterListBySelectFilters(selectedFilters, fullRequestsListProprietary);
                 fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.Product.ProductName.Contains(requestIndexObject.SearchText));
             }
             else
             {
-                fullRequestsList = filterListBySelectFilters(selectedFilters, fullRequestsList);
+                fullRequestsList = FilterListBySelectFilters(selectedFilters, fullRequestsList);
                 fullRequestsList = fullRequestsList.Where(r => r.Product.ProductName.Contains(requestIndexObject.SearchText));
             }
 
@@ -1666,13 +1668,14 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
+        [HttpPost]
         [Authorize(Roles = "Accounting")]
-        public async Task<IActionResult> AccountingGeneral(RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> AccountingGeneral(RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
-            RequestIndexPartialViewModel requestIndexPartialViewModel = await GetIndexViewModel(requestIndexObject, Years: new List<int>() { DateTime.Now.Year }, Months: new List<int>() { DateTime.Now.Month });
+            RequestIndexPartialViewModel requestIndexPartialViewModel = await GetIndexViewModel(requestIndexObject, Years: new List<int>() { DateTime.Now.Year }, Months: new List<int>() { DateTime.Now.Month }, requestsSearchViewModel: requestsSearchViewModel);
             AccountingGeneralViewModel viewModel = new AccountingGeneralViewModel() { RequestIndexPartialViewModel = requestIndexPartialViewModel };
             return PartialView(viewModel);
         }
@@ -3451,18 +3454,25 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests, LabManagement, Operations, Accounting")]
-        public async Task<IActionResult> Search(AppUtility.MenuItems SectionType)
+        public async Task<IActionResult> Search(AppUtility.MenuItems SectionType, AppUtility.PageTypeEnum PageType)
         {
-            var categoryID = 1;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
+            var categoryID = new List<int>{ 1 };
             if(SectionType == AppUtility.MenuItems.Operations)
             {
-                categoryID = 2;
+                categoryID = new List<int> { 2 };
+            }
+            else if(SectionType == AppUtility.MenuItems.Accounting)
+            {
+                categoryID = new List<int> { 1, 2 };
             }
             RequestsSearchViewModel requestsSearchViewModel = new RequestsSearchViewModel
             {
                 ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID != 1).ToListAsync(),
-                ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID != categoryID).ToListAsync(),
-                Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID != categoryID).Count() > 0).ToListAsync(),
+                ProductSubcategories = await _context.ProductSubcategories.Where(ps => categoryID.Contains(ps.ParentCategory.CategoryTypeID)).ToListAsync(),
+                Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => categoryID.Contains(vc.CategoryTypeID)).Count() > 0).ToListAsync(),
                 ApplicationUsers = await _context.Users.ToListAsync()
             };
 
