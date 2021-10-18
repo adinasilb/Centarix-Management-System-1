@@ -38,7 +38,9 @@
                 <div>
                     <div class="modal-header modal-header-padding">
                         <div class="container-fluid">
-                            <div class="row text-danger-centarix"> @Model.ErrorMessage </div>
+                            <div class="row error-message">
+                                @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
+                            </div>
                             <div class="row ">
                                 <div class="col-4">
                                     <div class="heading-1">Upload Quote</div>
@@ -58,7 +60,7 @@
                         var filterClass = "opac87";
                         var hasFileClass = "";
                         var containsFile = "";
-                        <input type="hidden" asp-for="FileStrings" />@*This is for reloading hte modal on error*@
+                        <input type="hidden" asp-for="FileStrings" />@*This is for reloading the modal on error*@
                         if (Model.FileStrings != null && Model.FileStrings.Count > 0)
                         {
                             filterClass = "order-inv-filter";
@@ -69,8 +71,12 @@
 
                     <div class="row">
                         <div class=" offset-4 text-center">
-                            <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" name="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
-                            <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-id="0" id="@AppUtility.FolderNamesEnum.Quotes.ToString()" name="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-val="@true" showSwitch="@false" parentfolder="@AppUtility.ParentFolderName.ParentQuote.ToString()">
+                            <div class="d-inline-block" style="max-width:150px">
+                            <input type="text" readonly id="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" name="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" class="@containsFile" 
+                                   style="pointer-events:none; background:none; border:none;" />
+                            </div>
+                            <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-id="0" id="@AppUtility.FolderNamesEnum.Quotes.ToString()" 
+                               name="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-val="@true" showSwitch="@false" parentfolder="@AppUtility.ParentFolderName.ParentQuote.ToString()">
 
                                 <div class="card document-border @hasFileClass">
                                     <div class="document-card text-center">
@@ -85,7 +91,7 @@
                                 <div class=" col-md-6">
                                     <div class="form-group ">
                                         <label asp-for="@Model.ParentQuote.QuoteNumber" class=" control-label m-0 mt-2" style="width:100%;"></label>
-                                        <input asp-for="@Model.ParentQuote.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" />
+                                        <input asp-for="@Model.ParentQuote.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" />
                                         <span asp-validation-for="@Model.ParentQuote.QuoteNumber" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
@@ -94,6 +100,7 @@
                             </div>
                             @if (Model.TempRequestListViewModel.RequestIndexObject.IsReorder)
                             {
+                                <input type="hidden" class="for-supply-date-calc" value="@DateTime.Now.GetElixirDateFormat()"/>
                                 <div class="row">
                                     <div class=" col-md-6">
                                         <div class="form-group ">
@@ -138,13 +145,19 @@
     $(".cancel-quote").on("click", function (e) {
         e.preventDefault();
         //alert("in cancel quote");
+        var guid = $("#GUID").val();
+        var sequence = $("#SequencePosition").val();
+        console.log("guid: " + guid);
+        console.log("sequence: " + sequence);
         var selector = '.temprequesthiddenfors';
         if ($('#RequestIndexObject_IsReorder').val() === 'True') {
             selector = '.modal .temprequesthiddenfors';
         }
         console.log(selector)
-        $.fn.CloseModal('step-1');
-        $.fn.AddTempRequestHiddenFors($('.hidden-guid').val(), selector);
+        var e = $.fn.AddTempRequestHiddenFors(guid, sequence, selector);
+        if (!e) {
+            $.fn.CloseModal('step-1');
+        }
     });
     
     $(".submitQuote").off('click').on("click", function (e) {
@@ -163,6 +176,7 @@
         }
         else {
             $('.activeSubmit').removeClass('disabled-submit')
+            $('.submitQuote').prop('disabled', true);
             $("#loading").show();
             var formData = new FormData($(".uploadQuoteForm")[0]);
             $.ajax({
@@ -179,6 +193,7 @@
                     console.log("status code" + jqxhr.status)
                     $('.modal .temprequesthiddenfors').html('');
                     console.log($("#OrderTypeEnum").val())
+                    $('.submitQuote').prop('disabled', false);
                     if ($("#OrderTypeEnum").val() == "AddToCart" || jqxhr.status == "210") {
                         $.fn.CloseModal("step-1");
                         $.fn.CloseModal("edits");
@@ -186,11 +201,14 @@
                         console.log('remove save item')
                         $(".save-item").removeClass("save-item").off('click')
                         console.log("Index");
-                        if ($(".editModal").length > 0) {
+                        /*if ($(".editModal").length > 0) { //will never get in cuz of closemodal('edits')
                             $(".render-body").html(data)
                         }
-                        else if ($('#masterPageType').val() == "RequestSummary") {
+                        else*/ if ($('#masterPageType').val() == "RequestSummary") {
                             window.location.href = "/Requests/IndexInventory?" + $.fn.getRequestIndexString();
+                        }
+                        else if ($('#masterPageType').val() == "RequestLocation") {
+                            //just close modals
                         }
                         else {
                             window.location.href = "/Requests/Index"
@@ -205,16 +223,17 @@
                     return true;
                 },
                 error: function (jqxhr) {
-                    if (jqxhr.status == 500) {
+                    /*if (jqxhr.status == 500) {
                         $.fn.OpenModal('modalStep1', 'step-1', jqxhr.responseText)
-                    }
-
+                    }*/
+                    $('.step-1 .error-message').html(jqxhr.responseText);
+                    $('.submitQuote').prop('disabled', false);
                     $("#loading").hide();
                     return true;
                 }
             });
         }
-        $(".uploadQuoteForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+        $(".uploadQuoteForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';
 
     });
     //$(".cancel-quote").click(function (e) {

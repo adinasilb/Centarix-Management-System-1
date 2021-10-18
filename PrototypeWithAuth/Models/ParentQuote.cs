@@ -30,8 +30,6 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Quote Number")]
 
         public string QuoteNumber { get; set; }
-        public int QuoteStatusID { get; set; }
-        [ForeignKey("QuoteStatusID")]
-        public QuoteStatus QuoteStatus { get; set; }
+
     }
 }

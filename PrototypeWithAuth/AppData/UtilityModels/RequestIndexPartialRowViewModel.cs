@@ -84,9 +84,9 @@ namespace PrototypeWithAuth.ViewModels
             r.Product.Vendor = vendor;
             r.Product.ProductSubcategory = productSubcategory;
             r.Product.ProductSubcategory.ParentCategory = parentCategory;
-            r.UnitType = unitType;
-            r.SubUnitType = subUnitType;
-            r.SubSubUnitType = subSubUnitType;
+            r.Product.UnitType = unitType;
+            r.Product.SubUnitType = subUnitType;
+            r.Product.SubSubUnitType = subSubUnitType;
             Vendor = vendor;
             TotalCost = (r.Cost ?? 0) + r.VAT;
             ExchangeRate = r.ExchangeRate;
@@ -183,28 +183,15 @@ namespace PrototypeWithAuth.ViewModels
         public decimal ExchangeRate { get; set; }
         public string ButtonClasses { get; set; }
         public string ButtonText { get; set; }
-        private string GetLocationInstanceNameBefore(Request r)
-        {
-            var newLIName = "";
-            if (r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParentID == null)//is temporary location
-            {
-                newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName;
-            }
-            else
-            {
-                newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationInstanceName;
-            }
-            return newLIName;
-        }
         private static List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder, FavoriteRequest favoriteRequest = null, Request request = null, ApplicationUser user = null)
         {
-            var newIconList = AppUtility.DeepClone(iconList);
+            var newIconList = AppUtility.DeepClone<List<IconColumnViewModel>>(iconList);
             //favorite icon
             var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink?.Contains("request-favorite") ?? false);
 
             if (favIconIndex != -1 && favoriteRequest != null) 
             {
-                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "#5F79E2", "request-favorite request-unlike", "Unfavorite");
+                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "var(--order-inv-color);", "request-favorite request-unlike", "Unfavorite");
                 newIconList[favIconIndex] = unLikeIcon;
             }
             
@@ -227,12 +214,33 @@ namespace PrototypeWithAuth.ViewModels
                 }
                 //resend icon
                 var resendIconIndex = newIconList.FindIndex(ni => ni.IconClass.Equals("Resend"));
-                if (request.ParentQuote?.QuoteStatusID == 1)
+                if (request.QuoteStatusID == 1 && resendIconIndex != -1)
                 {
                     newIconList.RemoveAt(resendIconIndex);
                     newIconList.Insert(resendIconIndex, placeholder);
                 }
-
+               
+                var reorderIconIndex = newIconList.FindIndex(ni => ni.TooltipTitle=="Reorder");
+                if(reorderIconIndex !=-1)
+                {
+                    if(request.Product.UnitTypeID ==-1 || request.Product.ProductSubcategory.IsOldSubCategory)
+                    {
+                        newIconList.RemoveAt(reorderIconIndex);
+                        newIconList.Insert(reorderIconIndex, placeholder);
+                    }
+                }
+                var morePopoverIndex = newIconList.FindIndex(ni => ni.IconAjaxLink=="popover-more");
+                if (morePopoverIndex != -1)
+                {
+                    var popoverReorder = newIconList.ElementAt(morePopoverIndex).IconPopovers.FindIndex(ni => ni.Action =="Reorder");
+                    if (popoverReorder != -1)
+                    {
+                        if (request.Product.UnitTypeID == -1 || request.Product.ProductSubcategory.IsOldSubCategory)
+                        {
+                            newIconList[morePopoverIndex].IconPopovers.RemoveAt(popoverReorder);
+                        }
+                    }
+                }
             }
             return newIconList;
         }
@@ -242,18 +250,113 @@ namespace PrototypeWithAuth.ViewModels
         }
         private String GetSharedBy(Request request, ShareRequest shareRequest)
         {
-            var applicationUser = shareRequest.FromApplicationUser;
-            return applicationUser.FirstName + " " + applicationUser.LastName;
+            try
+            {
+                var applicationUser = shareRequest.FromApplicationUser;
+                return applicationUser.FirstName + " " + applicationUser.LastName;
+            }
+            catch(Exception ex)
+            {
+                return "No Person Specified";
+            }
         }
+        private List<string> GetApplicationUserName()
+        {
+            try
+            {
+                return new List<string>() { r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName } ;
+            }
+            catch (Exception ex)
+            {
+                return new List<string>() { "No Person Specified" };
+            }
+        }
+        private string GetLocationInstanceNameBefore()
+        {
+            try
+            {
+                var newLIName = "";
+                if (r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParentID == null)//is temporary location
+                {
+                    newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName;
+                }
+                else
+                {
+                    newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationInstanceName;
+                }
+                return newLIName;
+            }
+            catch (Exception ex)
+            {
+                return "location has an error";
+            }
 
+        }
+        private string GetImageURL()
+        {
+            try
+            {
+                return r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL;
+            }
+            catch (Exception ex)
+            {
+                return "image has an error";
+            }
+        }
+        private List<string> GetProductName()
+        {
+            try
+            {
+                return new List<string>() { r.Product.ProductName };
+            }
+            catch (Exception ex)
+            {
+                return new List<string>() { "item name has an error" };
+            }
+        }
+        private List<string> GetVendorName()
+        {
+            try
+            {
+                if(r.OrderType == AppUtility.OrderTypeEnum.Save.ToString())
+                {
+                    return new List<string>() { "Centarix" };
+                }
+                return new List<string>() { r.Product.Vendor.VendorEnName };
+            }
+            catch (Exception ex)
+            {
+                return new List<string>() { "vendor has an error" };
+            }
+        }
+        private List<string> GetPaymentDate()
+        {
+            try
+            {
+                return new List<string>() { payments.FirstOrDefault().PaymentDate.GetElixirDateFormat() };
+            }
+            catch (Exception ex)
+            {
+                return new List<string>() { "payment date has an error" };
+            }
+        }
+        private List<string> GetDateForFavoriteRequest()
+        {
+                if(r.OrderType == AppUtility.OrderTypeEnum.Save.ToString())
+                {
+                    return new List<string>() { r.CreationDate.GetElixirDateFormat() };
+                }
+                return new List<string>() { r.ArrivalDate.GetElixirDateFormat() };
+        }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetApproveColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, Value = new List<string>() { r.Product.Vendor.VendorEnName } , ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 12, Value = new List<string>() { r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value =  GetProductName() , AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, Value = GetVendorName() , ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product),
+                                                                        FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 12, Value = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { r.CreationDate.GetElixirDateFormat() } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, null, r, null), AjaxID = r.RequestID };
@@ -261,14 +364,15 @@ namespace PrototypeWithAuth.ViewModels
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetOrderedColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, Value = new List<string>() { r.Product.Vendor.VendorEnName }, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 12, Value = new List<string>() { r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, Value = GetVendorName(), ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), 
+                                                                        FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 12, Value = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 12, Value = new List<string>() { r.ParentRequest.OrderDate.GetElixirDateFormat() } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 12, Value = new List<string>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
@@ -279,15 +383,15 @@ namespace PrototypeWithAuth.ViewModels
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetReceivedInventoryFavoriteColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 9, Value = new List<string>() { r.Product.Vendor?.VendorEnName }, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, Value = new List<string>() { GetLocationInstanceNameBefore(r) } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, Value = new List<string>() { r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 9, Value = GetVendorName(), ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, Value = AppUtility.GetAmountColumn(r) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, Value = new List<string>() { GetLocationInstanceNameBefore() } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, Value = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width = 10, Value = new List<string>() { r.ArrivalDate.GetElixirDateFormat() } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width = 10, Value = GetDateForFavoriteRequest() };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
@@ -298,80 +402,81 @@ namespace PrototypeWithAuth.ViewModels
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetReceivedInventorySharedColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 9, Value = new List<string>() { r.Product.Vendor.VendorEnName }, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, Value = new List<string>() { GetLocationInstanceNameBefore(r) } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, Value = new List<string>() { r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 9, Value = GetVendorName(), ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, Value = AppUtility.GetAmountColumn(r) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, Value = new List<string>() { GetLocationInstanceNameBefore() } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, Value = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Shared By", Width = 10, Value = new List<string>() { GetSharedBy(r, shareRequest) } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false),
+                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, request: r),
                 AjaxID = r.RequestID
             };
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetReceivedInventoryColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 9, Value = new List<string>() { r.Product.Vendor.VendorEnName }, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, Value = new List<string>() { GetLocationInstanceNameBefore(r) } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, Value = new List<string>() { r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 9, Value = GetVendorName(), ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, Value = AppUtility.GetAmountColumn(r) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, Value = new List<string>() { GetLocationInstanceNameBefore() } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 9, Value = GetApplicationUserName()  };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width = 10, Value = new List<string>() { r.ArrivalDate.GetElixirDateFormat() } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, null, user),
+                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, request:r, user),
                 AjaxID = r.RequestID
             };
         }
+        
         private IEnumerable<RequestIndexPartialColumnViewModel> GetSummaryColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details-summary", AjaxID = r.RequestID, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 9, Value = new List<string>() { r.Product.Vendor.VendorEnName }, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, Value = new List<string>() { GetLocationInstanceNameBefore(r) } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, Value = new List<string>() { r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 9, Value = GetVendorName(), ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, Value = AppUtility.GetAmountColumn(r) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, Value = new List<string>() { GetLocationInstanceNameBefore() } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 9, Value = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 10, Value = new List<string>() { r.ParentRequest.OrderDate.GetElixirDateFormat() } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 10, Value = new List<string>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, null, user),
+                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, r, user),
                 AjaxID = r.RequestID
             };
         }
 
         private IEnumerable<RequestIndexPartialColumnViewModel> GetAccountingGeneralColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details-summary", AjaxID = r.RequestID, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = GetProductName(), AjaxLink = "load-product-details-summary", AjaxID = r.RequestID, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, Value = new List<string>() { r.Product.Vendor.VendorEnName } , ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = new List<string>() { r.Product.ProductSubcategory.ProductSubcategoryDescription } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 12, Value = new List<string>() { r.ParentRequest.OrderDate.GetElixirDateFormat() } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, Value = GetVendorName() , ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 12, Value = new List<string>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetSummaryProprietaryColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details-summary", AjaxID = r.RequestID , ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, Value = new List<string>() { GetLocationInstanceNameBefore(r) } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, Value = new List<string>() { r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = GetProductName(), AjaxLink = "load-product-details-summary", AjaxID = r.RequestID , ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, Value = AppUtility.GetAmountColumn(r) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, Value = new List<string>() { GetLocationInstanceNameBefore() } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, Value = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 10, Value = new List<string>() { r.CreationDate.GetElixirDateFormat() } };
             yield return new RequestIndexPartialColumnViewModel()
             {
@@ -383,13 +488,13 @@ namespace PrototypeWithAuth.ViewModels
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetReceivedInventoryOperationsColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 9, Value = new List<string>() { r.Product.Vendor.VendorEnName }, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, Value = new List<string>() { r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 9, Value = GetVendorName(), ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, Value = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 10, Value = new List<string>() { r.ParentRequest.OrderDate.GetElixirDateFormat() } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 10, Value = new List<string>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
@@ -401,13 +506,13 @@ namespace PrototypeWithAuth.ViewModels
 
         private IEnumerable<RequestIndexPartialColumnViewModel> GetOrderedOperationsColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, Value = new List<string>() { r.Product.Vendor.VendorEnName }, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 12, Value = new List<string>() { r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, Value = GetVendorName(), ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 12, Value = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 12, Value = new List<string>() { r.ParentRequest.OrderDate.GetElixirDateFormat() } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 12, Value = new List<string>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
@@ -419,17 +524,17 @@ namespace PrototypeWithAuth.ViewModels
         private IEnumerable<RequestIndexPartialColumnViewModel> GetCartColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() { checkboxString }, AjaxID = r.RequestID };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, Value = new List<string>() { r.Product.Vendor.VendorEnName }, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, Value = GetVendorName(), ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
                 Width = 10,
-                Icons = iconList,
+                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, request: r, user),
                 AjaxID = r.RequestID,
             };
 
@@ -437,12 +542,12 @@ namespace PrototypeWithAuth.ViewModels
         private IEnumerable<RequestIndexPartialColumnViewModel> GetAccountingNotificationsColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() { checkboxString}, AjaxID = r.RequestID };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details-summary", AjaxID = r.RequestID, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = GetProductName(), AjaxLink = "load-product-details-summary", AjaxID = r.RequestID, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date", Width = 12, Value = new List<string>() { r.ParentRequest.OrderDate.GetElixirDateFormat() } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 12, Value = new List<string>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
@@ -455,12 +560,12 @@ namespace PrototypeWithAuth.ViewModels
         private IEnumerable<RequestIndexPartialColumnViewModel> GetAccountingPaymentsDefaultColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() { checkboxString }, AjaxID = r.RequestID };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details-summary", AjaxID = r.RequestID, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = GetProductName(), AjaxLink = "load-product-details-summary", AjaxID = r.RequestID, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date", Width = 12, Value = new List<string>() { AppUtility.GetElixirDateFormat(r.ParentRequest.OrderDate) } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 12, Value = new List<string>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
@@ -472,15 +577,15 @@ namespace PrototypeWithAuth.ViewModels
         private IEnumerable<RequestIndexPartialColumnViewModel> GetAccountingPaymentsInstallmentsColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() { checkboxString }, AjaxID = r.RequestID };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details-summary", 
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = GetProductName(), AjaxLink = "load-product-details-summary", 
                                                                     AjaxID = r.RequestID, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, 
-                                                                    r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true};
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) };
+                                                                    r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true};
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, 
                                                                     requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Payment Date", Width = 12, Value = new List<string>() { payments.FirstOrDefault().PaymentDate.GetElixirDateFormat() } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Payment Date", Width = 12, Value = GetPaymentDate() };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
@@ -492,18 +597,18 @@ namespace PrototypeWithAuth.ViewModels
 
         private IEnumerable<RequestIndexPartialColumnViewModel> GetLabQuotesColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() { checkboxString }, AjaxID = r.RequestID };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, Value = new List<string>() { r.Product.Vendor.VendorEnName }, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 12, Value = new List<string>() { r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 3, Value = new List<string>() { checkboxString }, AjaxID = r.RequestID };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
+            //yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 12, Value = GetVendorName(), ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 10, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 8, Value = AppUtility.GetAmountColumn(r) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 9, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 8, Value = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
-                Width = 5,
+                Width = 15,
                 Icons = GetIconsByIndividualRequest(r.RequestID, iconList, true, null, r),
                 AjaxID = r.RequestID
             };
@@ -511,13 +616,13 @@ namespace PrototypeWithAuth.ViewModels
         private IEnumerable<RequestIndexPartialColumnViewModel> GetLabOrdersColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() { checkboxString }, AjaxID = r.RequestID };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, Value = new List<string>() { r.Product.Vendor.VendorEnName }, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 7, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
+            //yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, Value = GetVendorName(), ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 12, Value = new List<string>() { r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 12, Value = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
@@ -526,6 +631,5 @@ namespace PrototypeWithAuth.ViewModels
                 AjaxID = r.RequestID
             };
         }
-
     }
 }

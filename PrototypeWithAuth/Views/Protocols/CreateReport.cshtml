@@ -38,7 +38,7 @@
             <span asp-validation-for="Report.ReportTitle" class="text-danger-centarix"></span>
         </div>
     </div>
-    <div class="row report-text-div" style="min-height:50px; width:100%">
+    <div class="row text-editor-div" style="min-height:50px; width:100%">
         @{
             await Html.RenderPartialAsync("_ReportText", Model.Report);
         }

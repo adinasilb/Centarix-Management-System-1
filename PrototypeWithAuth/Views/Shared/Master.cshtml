@@ -13,9 +13,10 @@
     @*<link rel="stylesheet" href="~/lib/bootstrap/originalDist/css/bootstrap.min.css" />*@
 
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/jquery/dist/popper.min.js"></script>
-        <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
-        <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
+    <script src="~/lib/jquery/dist/popper.min.js"></script>
+    <script src="~/lib/jquery/dist/popper.min.js"></script>
+    <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
+    <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Master.css" asp-append-version="true" />
@@ -234,14 +235,12 @@
     <script type="text/javascript" src="~/js/popper.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" type="text/javascript"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/additional-methods.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/additional-methods.min.js"></script>
     @*<script type="text/javascript" src="~/js/site.js" asp-append-version="true"></script>*@
     @*<script src="~/js/site.js" asp-append-version="true"></script>*@
-    <script src="~/js/moment.js"></script>
     <script src="~/js/moment.min.js"></script>
+    <script src="~/js/jszip/jszip.min.js"></script>
     @*<script src="~/js/datepicker.min.js"></script>
 
          Include English language
@@ -354,7 +353,7 @@
             return false;
         });
 
-        $(".order-late").on("click", function (e) {
+    $(".order-late").on("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
         $("#loading").show();
@@ -407,7 +406,6 @@
             console.log("in if details");
             $('.mark-readonly').attr("disabled", false);
             $('.mark-readonly').removeClass("disabled");
-            $(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
             //TODO: add in mark-readonly fields for subunits
             //$.fn.CheckUnitsFilled();
             //$.fn.CheckSubUnitsFilled();
@@ -421,7 +419,7 @@
             if ($(element).hasClass('operations') || $(element).hasClass('orders')) {
                 console.log("orders operations");
                // $.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist');
-                //$.fn.EnableMaterialSelect('#sublist', 'select-options-sublist');
+                $.fn.EnableMaterialSelect('#sublist', 'select-options-sublist');
                 $.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList');
                 $.fn.EnableMaterialSelect('#currency', 'select-options-currency');
                 $.fn.EnableMaterialSelect('#operationsCategory', 'select-options-operationsCategory');
@@ -447,6 +445,10 @@
                     console.log("no quote")
                     $(".requestPriceQuote").prop("disabled", true);
                 }
+            }
+            if ($(element).hasClass('has-location-tab')) {
+                $.fn.MakeLocationsEditable();
+
             }
             if ($(element).hasClass('suppliers') || $(element).hasClass('accounting')) {
                 $.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
@@ -475,12 +477,33 @@
                 $("[modaltype = " + modalType + "]").attr("modaltype", "Edit");
                 $(".modalType").val("Edit");
                 modalType = $(".modalType").val();
-                $("." + modalType).removeClass("d-none")
-
+                if ($(".next-tab.active").hasClass("lines-tab")) {
+                    $("." + modalType + ".only-protocol-tab.li-function-bar").removeClass("d-none");
+                }
+                else {
+                    $("." + modalType + ".only-protocol-tab").addClass("d-none");
+                }
+                if ($(".next-tab.active").hasClass("results-tab")) {
+                    $("." + modalType + ".only-results-tab.li-function-bar").removeClass("d-none");
+                }
+                else {
+                    $("." + modalType + ".only-results-tab").addClass("d-none");
+                }
+                $("." + modalType + ":not(.only-protocol-tab):not(.only-results-tab)").removeClass("d-none");
             }
         }
 
-
+        $.fn.MakeLocationsEditable = function() {
+            console.log('locations');
+            $(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
+            $('#location .mark-readonly').removeClass("not-clickable")
+            $('#location .mark-readonly').attr("disabled", false);
+            $(".location-icon").removeClass("d-none");
+            $('.edit-mode-switch-description').text("Edit Mode On");
+            $('.turn-edit-on-off').attr('name', 'edit');
+            $('.open-archive-modal').removeClass('disabled-background-color');
+            $('.open-archive-modal').addClass('order-inv-background-color');
+        }
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
             console.log("itemurl " + $itemurl);
@@ -519,6 +542,11 @@
                             //$.fn.OnOpenModalView();
                             $.fn.OpenModal('modal', 'edits', modal)
                             $.fn.LoadSummaryModal('edits');
+                            $('.modal-content a:first').tab('show');
+                            break;
+                        case "summaryProtocolsParital":    
+                            $("._ProtocolsDetailsFloatModal").html(data);
+                            $.fn.LoadSummaryModal('_ProtocolsDetailsFloatModal');
                             $('.modal-content a:first').tab('show');
                             break;
                         case "create":
@@ -565,6 +593,10 @@
                             $.fn.OpenModal('modal', 'protocol-details', modal)
                             $.fn.ProtocolsMarkReadonly("protocol-details")
                             break
+                        case "protocolFloatModalPartial":
+                            $("._ProtocolsDetailsFloatModal").html(data);
+                            $.fn.ProtocolsMarkReadonly("protocol-details")
+                            break
                         case "addChange":
                             $.fn.OpenModal('modal', 'add-change-div', modal)
                             break;
@@ -600,12 +632,22 @@
             $("." + modalClass+ ' .mark-readonly').prop("disabled", true);
             $("." + modalClass + ' .mark-readonly input').prop("disabled", true);
             $("." + modalClass + ' .choose-location').addClass("disable-custom-mdbselect");
-            $("." + modalClass + ' .visual-locations td.mark-readonly').addClass("disabled");
+            $("." + modalClass + ' .visual-locations td.mark-readonly').addClass("not-clickable");
             $("." + modalClass + ' .mark-edditable').attr("data-val", false)
             $("." + modalClass + ' .edit-mode-switch-description').text("Edit Mode Off");
             $("." + modalClass + ' .turn-edit-on-off').attr('name', 'details')
             $("." + modalClass + ' .open-document-modal').attr("data-val", false);
             $("." + modalClass + ' .location-icon').addClass('d-none');
+            $("." + modalClass + ' .open-archive-modal').addClass('disabled-background-color');
+            $("." + modalClass + ' .open-archive-modal').removeClass('order-inv-background-color');
+
+            //console.log('locations edot mode off');
+            //$("." + modalClass +".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
+            //$("." + modalClass +'#location .mark-readonly').removeClass("not-clickable")
+            //$("." + modalClass +'#location .mark-readonly').attr("disabled", false);
+            //$("." + modalClass +'dit-on-off').attr('name', 'edit');
+            //$("." + modalClass +'.location-ico.edit-mode-switch-description').text("Edit Mode On");
+            //$("." + modalClass +'.turn-en').removeClass('d-none');
         };
 
         $.fn.LoadEditModalDetails = function () {
@@ -616,8 +658,18 @@
             console.log("in detilas of case")
             $.fn.TurnToDetails("edits");
             $('.open-document-modal').attr("showSwitch", true);
-            $('.edits .mdb-select').materialSelect();
-            $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+            if (!$('.turn-edit-on-off').hasClass('locations')) {
+                $('.edits .mdb-select').materialSelect();
+                $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+            }
+        }
+
+        $.fn.AddSaveItemClass = function(){
+            $(".top-menu").addClass("save-item");
+            $(".side-menu").addClass("save-item");
+            $(".module-button ").addClass("save-item");
+            $(".notificationDiv").addClass("save-item");
+            $(".home-nav-item").addClass("save-item");
         }
 
 
@@ -685,6 +737,10 @@
                     var modalType=$(".modalType").val();
                     $.fn.ProtocolsMarkReadonly("_IndexTable");
                     $("."+modalType).removeClass("d-none");
+                    if(tab == 4)
+                    {
+                        $(".only-results-tab").removeClass("d-none");
+                    }
                     return false;
                 }
             });
@@ -1107,20 +1163,44 @@
                 $("label[for='Clarify']").removeClass("white-background");
             }
         };
-        $.fn.getRequestIndexString = function(){
-            var selectedPriceSort = [];
+        $.fn.getRequestIndexString = function(status){
+            var selectedPriceSort = "";
             $("#priceSortContent1 .priceSort:checked").each(function (e) {
-                selectedPriceSort.push($(this).attr("enum"));
+                selectedPriceSort += "&SelectedPriceSort=" + $(this).attr("enum");
             })
-            return(
+            console.log(selectedPriceSort)
+
+            var requestStatusId = status;
+            if (status === undefined) {
+                requestStatusId = $(".request-status-id").val();
+            }
+            var searchText = $('.search-requests').val();
+            console.log(searchText);
+            //console.log('searchtext length before if' + searchText.length)
+            if (searchText == undefined || !searchText.length) {
+                searchText = $('.popover .search-requests-in-filter').val();
+                console.log(searchText)
+                if (searchText == undefined || !searchText.length) {
+                    searchText = $('.search-requests-in-filter').val();
+                    if (searchText == undefined || !searchText.length) {
+                        searchText = "";
+                    }
+                }
+            }
+            var queryString =
                 "PageNumber=" + $('.page-number').val() +
-                "&RequestStatusID=" + $(".request-status-id").val() +
+                "&RequestStatusID=" + requestStatusId +
                 "&PageType=" + $('#masterPageType').val() +
                 "&SectionType=" + $('#masterSectionType').val() +
                 "&SidebarType=" + $('#masterSidebarType').val() +
-                "&SelectedPriceSort=" + selectedPriceSort +
                 "&SelectedCurrency=" + $('#tempCurrency').val() +
-                "&SidebarFilterID=" + $('.sideBarFilterID').val());
+                "&SidebarFilterID=" + $('.sideBarFilterID').val() +
+                "&CategorySelected=" + $('#categorySortContent .select-category').is(":checked") +
+                "&SubCategorySelected=" + $('#categorySortContent .select-subcategory').is(":checked") +
+                "&searchText=" + searchText;
+            queryString += selectedPriceSort;
+            console.log(queryString)
+            return queryString;
         }
         $.fn.formatDateForSubmit = function(val)
         {
@@ -1158,6 +1238,7 @@
                 success: function (data) {
                     $('#loading').hide();
                     console.log("isreopen: " + isReopen);
+
                     if(isReopen)
                     {
                         console.log("before fx");
@@ -1180,17 +1261,34 @@
                     if (numCards < 1) {
                         $.fn.RemoveColorsOfDocs(enumString);
                     }
-                    else if (dontAllowMultipleFiles == 'True' || dontAllowMultipleFiles == 'true') {
-                        console.log("don't allow multiples")
-                        $(".upload-file").attr('disabled', true)
-                        $(".upload-file").addClass('disabled-background-color')
-                        $(".upload-file").removeClass('protocols-background-color')
-                        $(".file-select").attr('disabled', true)
-                    }
+                    //else if (dontAllowMultipleFiles == 'True' || dontAllowMultipleFiles == 'true') {
+                    //    console.log("don't allow multiples")
+                    //    $(".upload-file").attr('disabled', true)
+                    //    $(".upload-file").addClass('disabled-background-color')
+                    //    $(".upload-file").removeClass('protocols-background-color')
+                    //    $(".file-select").attr('disabled', true)
+                    //}
                     if ($(".addFunctionForm").length >0)
                     {
-                        $(".upload-file").addClass("d-none");
-                        $(".saveFunction").removeClass("d-none");
+                        if (numCards < 1) {
+                            $(".upload-file").attr('disabled', false)
+                            $(".upload-file").removeClass('disabled-background-color')
+                            $(".upload-file").addClass('protocols-background-color')
+                            $(".file-select").attr('disabled', false)
+                            $(".upload-file").removeClass("d-none");
+                            $(".saveFunction").addClass("d-none");
+                            $(".saveFunction").attr('disabled', true)
+                        }
+                        else {
+                            $(".upload-file").attr('disabled', true)
+                            $(".upload-file").addClass('disabled-background-color')
+                            $(".upload-file").removeClass('protocols-background-color')
+                            $(".file-select").attr('disabled', true)
+                            $(".upload-file").addClass("d-none");
+                            $(".saveFunction").attr('disabled', false)
+                            $(".saveFunction").removeClass("d-none");
+                        }
+
                     }
                     return true;
                 }
@@ -1253,39 +1351,66 @@
             }
         }
 
-        $.fn.AddTempRequestHiddenFors = function (guid, selector) {
+        $.fn.AddTempRequestHiddenFors = function (guid, sequence, selector) {
             //var guid = $('.hidden-guid').val();
-            alert("in $.fn.AddTempRequestHiddenFors : " + guid);
+            var error = "";
+            //alert("in $.fn.AddTempRequestHiddenFors : " + guid);
             $.ajax({
-                async: true,
-                url: "/Requests/_TempRequestHiddenFors?GUID=" + guid,
+                async: false,
+                url: "/Requests/RollbackTempRequestHiddenFors?GUID=" + guid + "&SequencePosition=" + sequence,
                 traditional: true,
                 type: "GET",
                 cache: false,
                 success: function (data) {
-                    $(selector).replaceWith(data);
-                    return false;
+                    //alert("data; " + data);
+                    if (data == "Error" ) {
+                        alert("in error");
+                        error = true;
+                    }
+                    else {
+                        //alert("not in error");
+                        $(selector).replaceWith(data);
+                        error = false;
+                    }
                 }
             });
+            return error;
         };
 
-        $.fn.BindSelectedFilters = function () {
+        $.fn.BindSelectedFilters = function (className) {
             console.log('in bind selected filters');
-            var selectedVendor = $(".popover .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
-            var selectedOwner = $(".popover .owner-col .selected button").map(function () { return $(this).attr("value"); }).get();
-            var selectedLocation = $(".popover .location-col .selected button").map(function () { return $(this).attr("value"); }).get();
-            var selectedCategory = $(".popover .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
-            var selectedSubCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedVendor = $(className + " .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedOwner = $(className + " .owner-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedLocation = $(className + " .location-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedCategory = $(className + " .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedSubCategory = $(className + " .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            console.log(selectedVendor);
+            var catalogNumber = $(className + ' .search-by-catalog-number').val()
+            if (catalogNumber == undefined) {
+                catalogNumber = "";
+            }
+            console.log(catalogNumber)
             var archived = $('.archive-check').val();
-            console.log('archived ' + archived);
-            return { SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived }
+            if (archived == undefined) {
+                archived = false;
+            }
+            var catalogNumber = $(className + ' .search-by-catalog-number').val()
+            if (catalogNumber == undefined) {
+                catalogNumber = "";
+            }
+            console.log(catalogNumber)
+            return {
+                SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation,
+                SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived, CatalogNumber: catalogNumber
+            }
         }
 
 
         $.fn.ClearFilter = function (sectionType, isProprietary) {
             //alert(sectionType);
+            console.log('clearing filter');
             $.ajax({
-                async: true,
+                async: false, //so it finishes clearing before the page is loaded. otherwise, the requests will be filtered.
                 url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType + "&isProprietary=" + isProprietary,
                 type: 'POST',
                 cache: false,
@@ -1296,6 +1421,22 @@
             });
         }
 
+        $.fn.CancelModal = function (modalClass, orderType, orderOrigin) {
+            var modalType = $('#RequestIndexObject_ModalType').val();
+            var guid = $('#GUID').val();
+            $.ajax({
+                contentType: true,
+                processData: true,
+                async: true,
+                url: '/Requests/CancelModal?Guid=' + guid + '&ModalType=' + modalType,
+                traditional: true,
+                type: 'GET',
+                cache: false,
+                success: function () {
+                    $.fn.CloseModal(modalClass);
+                }
+            })
+        }
         $.fn.ChangeTest = function (selectedTest) {
             var url = "/Biomarkers/_TestValues?TestID=" + selectedTest.attr("testid") + "&ListNumber=0&SiteID=" + /*$(this).attr("listnumber")*/ + $("#ExperimentEntry_SiteID").val() + "&ExperimentID=" + $("#ExperimentEntry_Participant_ExperimentID").val() + "&ExperimentEntryID=" + $("#ExperimentEntry_ExperimentEntryID").val();
             $.ajax({

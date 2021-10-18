@@ -65,7 +65,7 @@
             //console.log(...formData)
             $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/ReceivedModal/", "._IndexTableWithCounts", "POST", formData, "received-item");
         }
-        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';
 
         return false;
     });

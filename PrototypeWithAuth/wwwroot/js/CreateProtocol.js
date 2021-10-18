@@ -35,21 +35,26 @@
         else {
             $('.activeSubmit').removeClass('disabled-submit')
             var tab= $(this);
-            var selectedTab = tab.parent().index() +1;
+            var selectedTab = tab.parent(".nav-item").index() +1;
           
             console.log(selectedTab);
             $(".selectedTab").val(selectedTab);
             var formData = new FormData($(".createProtocolForm")[0]);
-                      var modalType = $(".modalType").val();
+            var modalType = $(".modalType").val();
+            var url= "/Protocols/CreateProtocol";
+            if(selectedTab ==1 || selectedTab==2)
+            {
+                url+="?IncludeSaveLines=true";
+            }
             $.ajax({
-                url: "/Protocols/CreateProtocol",
+                url: url,
                 traditional: true,
                 data: formData,
                 contentType: false,
                 processData: false,
                 type: "POST",
                 success: function (data) {
-                    if(modalType == "Create")
+                    if(modalType == "Create" ||modalType == "CreateNewVersion")
                     {
                         $("._CreateProtocolTabs").html(data)
                     }
@@ -59,28 +64,45 @@
 
                     $(".mdb-select").materialSelect();
           
+      
                     if (tab.hasClass("lines-tab")/* && $(".createProtocolMasterProtocolID").val()=="0"*/) {
                         $("."+modalType+".only-protocol-tab.li-function-bar").removeClass("d-none");
                     }
                     else {
                         $("."+modalType+".only-protocol-tab").addClass("d-none");
                     }
-                     $("."+modalType).removeClass("d-none");
+                     $("."+modalType+":not(.only-protocol-tab):not(.only-results-tab)").removeClass("d-none");
 
                 },
                 error: function (jqxhr) {
-                    if (jqxhr.status == 500) {
-                        $("._CreateProtocol").html(jqxhr.responseText)
+                     if(modalType == "Create")
+                    {
+                        $("._CreateProtocolTabs").html(jqxhr.responseText)
+                    }
+                    else{
+                        $("._IndexTable").html(jqxhr.responseText)
                     }
                     $(".mdb-select").materialSelect();
                     return true;
                 }
             });
         }
-        $('.createProtocolForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+        $('.createProtocolForm').data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';
 
 
     });
+
+
+    $("form").off("click", ".results-tab").on("click", ".results-tab", function (e) {
+       $(".only-results-tab").removeClass("d-none");      
+    }); 
+
+    $("form").off("click", ".next-tab:not(.results-tab)").on("click", ".next-tab:not(.results-tab)", function (e) {     
+      if($(".modalType").val() =="CheckListMode")
+      {
+        $(".only-results-tab").addClass("d-none");  
+      }
+    }); 
 
     $(".saveLines").off("click").click(function (e) {
         e.preventDefault();
@@ -89,7 +111,7 @@
             processData: false,
             contentType: false,
             data: new FormData($("#myForm")[0]),
-            url: "/Protocols/SaveTempLines?ProtocolID=" + $(".createProtocolMasterProtocolID").val()+"&guid=" + $(".createProtocolMasterGuid").val(),
+            url: "/Protocols/SaveTempLines?ProtocolVersionID=" + $(".createProtocolMasterProtocolVersionID").val()+"&guid=" + $(".createProtocolMasterGuid").val(),
             type: 'POST',
             success: function (data) {
                 //$("._Lines").html(data);
@@ -106,10 +128,53 @@
             }
         });
     });
-
+    $(".saveResults").off("click").click(function (e) {
+        e.preventDefault();
+        $(".saving-spinner").removeClass("d-none");
+        $.ajax({
+            processData: false,
+            contentType: false,
+            data: new FormData($("#myForm")[0]),
+            url: "/Protocols/SaveResults",
+            type: 'POST',
+            success: function (data) {
+                //$("._Lines").html(data);
+                $(".saving-spinner").addClass("d-none");
+                $(".saving-done").removeClass("d-none");
+                setTimeout(function () {
+                $(".saving-done").addClass("d-none");
+                }, 1000 * 30);
+            },
+            error: function (jqxhr) {
+                $(".error-message").html(jqxhr.responseText);
+                $(".error-message").removeClass("d-none");
+                $(".saving-spinner").addClass("d-none");
+            }
+        });
+    });
     $(".start-protocol-fx").off("click").click(function (e) {
         e.preventDefault();
         //switch this to universal share request and the modelsenum send in
         $.fn.StartProtocol($(this).attr("value"), false, 3);
     });
+
+    $("#more").off('click').click(function () {
+		$('[data-toggle="popover"]').popover('dispose');
+		$(this).popover({
+			sanitize: false,
+			placement: 'bottom',
+			html: true,
+			content: function () {
+				return $('#morePopover').html();
+			}
+		});
+		$(this).popover('toggle');
+
+		//set up remove share on here
+		
+		$(".popover .createNewVersion").click( function (e) {
+            e.preventDefault();
+			
+		});
+	});
 });

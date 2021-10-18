@@ -24,8 +24,8 @@ namespace PrototypeWithAuth.Models
         public DateTime OrderDate { get; set; }
         public DateTime OrderDate_submit { get { return OrderDate; } set { OrderDate = value; } }
 
-        [Display(Name = "Order Number")]
-        public int? OrderNumber { get; set; }
+        [Display(Name = "Company Order Number")]
+        public long? OrderNumber { get; set; }
 
         //[RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
         //[Display(Name = "Invoice Number")]
@@ -44,6 +44,7 @@ namespace PrototypeWithAuth.Models
         public double Credit { get; set; }
         public double Shipping { get; set; }
         public bool IsShippingPaid { get; set; }
+        public string QuartzyOrderNumber {get; set;}
     }
 }
 //list of request, owner, order date, (order number for an entire order or is it just for specific request) same for invoice number

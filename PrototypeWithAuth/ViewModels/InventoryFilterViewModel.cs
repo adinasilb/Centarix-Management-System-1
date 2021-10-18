@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PrototypeWithAuth.Models;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class InventoryFilterViewModel
+    public class InventoryFilterViewModel : ViewModelBase
     {
         //public List<CategoryType> Types { get; set; }
         //public List<CategoryType> SelectedTypes { get; set; }
@@ -26,6 +27,7 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.MenuItems SectionType { get; set; }
         public bool Archive { get; set; }
         public bool IsProprietary { get; set; }
+        public string CatalogNumber { get; set; }
         //public List<Project> Projects { get; set; }
         //public List<int> SelectedProjects { get; set; }
         //public List<SubProject> SubProjects { get; set; }

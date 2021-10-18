@@ -38,7 +38,9 @@
 </div>
 <div class="modal-body">
     <div class="container">
-        <div class="row text-danger-centarix"> @Model.ErrorMessage </div>
+        <div class="row error-message"> 
+        @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
+        </div>
         <div class="row">
 
             <div class="col-3">
@@ -108,6 +110,7 @@
         }
         else {
             $('.activeSubmit').removeClass('disabled-submit')
+            $(".submitTerms").prop('disabled', true)
             $("#loading").show();
             $("#RedirectAction").val(window.location.href);
             //alert("window: " + window.location.href);
@@ -123,37 +126,54 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    $('.termsModalForm .temprequesthiddenfors').html('');
-                    if (($("#SectionType").val() == "Operations" || $("#masterSectionType").val() == "Operations") && data == '') {
+                    $(".submitTerms").prop('disabled', false)
+                    if (/*($("#SectionType").val() == "Operations" ||*/ $("#masterSectionType").val() == "Operations" && data == '') {
                         //alert("if 1");
-                        window.location.href = "/Requests/Index?PageType=OperationsRequest&SectionType=Operations&RequestStatusID=2&SidebarType=List";
+                        var requestStatusId = '2';
+                        console.log($('#Requests_0__IsReceived').val())
+                        if ($('#Requests_0__IsReceived').val() == 'true') {
+                            requestStatusId = '3';
+                        }
+                        window.location.href = "/Requests/Index?PageType=OperationsRequest&SectionType=Operations&RequestStatusID=" + requestStatusId  + "&SidebarType=List";
                     }
-                    else if (($("#SectionType").val() == "Requests" || $("#masterSectionType").val() == "Requests") && data == '') {
+                    else if ($('#masterPageType').val() == "RequestSummary" && data == '') {
+                        window.location.href = "/Requests/IndexInventory?PageType=RequestSummary&SectionType=Requests&SidebarType=List";
+                    }
+                    else if (/*($("#SectionType").val() == "Requests" || */$("#masterPageType").val() == "RequestRequest" && data == '') {
                         //alert("if 2");
-                        window.location.href = "/Requests/Index?PageType=RequestRequest&SectionType=Requests&RequestStatusID=6&SidebarType=List";
+                        //console.log($("#RequestIndexObject_OrderType").val())
+                        if ($("#RequestIndexObject_OrderType").val() == 'AlreadyPurchased') {
+                            window.location.href = "/Requests/Index?PageType=RequestRequest&SectionType=Requests&RequestStatusID=2&SidebarType=List";
+                        } else {
+                            window.location.href = "/Requests?PageType=RequestRequest&SectionType=Requests&SidebarType=List";
+                        }
                     }
-                    else if (($("#RequestIndexObject_OrderType").val() == "AlreadyPurchased" || $("#masterSectionType").val() == "AlreadyPurchased") && data == '') {
-                        //alert("if 3");
-                        window.location.href = "/Requests?PageType=RequestRequest&SectionType=Requests&SidebarType=List";
+                    else if ($('#masterSectionType').val() == "Requests" && data == '') { //Location and personal
+                        $.fn.CloseModal('terms');
+                        $.fn.CloseModal('step-1');
+                        $.fn.CloseModal('reorder-item');
                     }
                     else {
                         //alert("else");
+                        $('.termsModalForm .temprequesthiddenfors').html('');
                         $.fn.OpenModal('emailModal', 'confirm-email', data);
                     }
                     $("#loading").hide();
                     return true;
                 },
                 error: function (jqxhr) {
-                    if (jqxhr.status == 500) {
+                    console.log('terms error')
+                    /*if (jqxhr.status == 500) {
                         $.fn.OpenModal('termsModal', 'terms', jqxhr.responseText);
-                    }
-
+                    }*/
+                    $('.termsModal .error-message').html(jqxhr.responseText)
+                    $(".submitTerms").prop('disabled', false)
                     $("#loading").hide();
                     return true;
                 }
             });
         }
-        $(".termsModalForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+        $(".termsModalForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';
 
         //return false;
     });</script>

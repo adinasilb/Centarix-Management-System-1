@@ -4,33 +4,31 @@
     return $.trim( value );
   },
 
-		"Request.Unit": {
+		"Requests[0].Unit": {
 			required: true,
 			number: true,
 			min: 1,
 			integer: true
 		},
-		"Request.SubUnit": {
+		"Requests[0].Product.SubUnit": {
 			required: true,
 			number: true,
-			min: 1,
-			integer: true
+			greaterThan: 0
 		},
-		"Request.SubSubUnit": {
+		"Requests[0].Product.SubSubUnit": {
 			required: true,
 			number: true,
-			min: 1,
-			integer: true
+			greaterThan: 0
 		},
-		"Request.Cost": {
+		"Requests[0].Cost": {
 			required: true,
 			number: true,
 			min: 1
 		},
 
-		"Request.UnitTypeID": "selectRequired",
-		"Request.SubUnitTypeID": "selectRequired",
-		"Request.SubSubUnitTypeID": "selectRequired"
+		"Requests[0].Product.UnitTypeID": "selectRequired",
+		"Requests[0].Product.SubUnitTypeID": "selectRequired",
+		"Requests[0].Product.SubSubUnitTypeID": "selectRequired"
 
 	},
 

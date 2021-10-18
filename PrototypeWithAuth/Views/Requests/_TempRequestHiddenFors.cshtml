@@ -1,6 +1,8 @@
 ﻿@model PrototypeWithAuth.ViewModels.TempRequestListViewModel
 <div class="temprequesthiddenfors">
-    @Html.HiddenFor(r => r.GUID)
+    @*@Html.HiddenFor(r => r.GUID)*@
+    <input type="hidden" asp-for="GUID" class="hidden-guid" />
+    @Html.HiddenFor(r => r.SequencePosition)
 
     @if (Model.TempRequestViewModels != null)
     {
@@ -12,11 +14,11 @@
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.Discount)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.RequestID)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.Unit)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.UnitTypeID)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.SubUnit)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.SubUnitTypeID)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.SubSubUnit)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.SubSubUnitTypeID)
+            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.Product.UnitTypeID)
+            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.Product.SubUnit)
+            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.Product.SubUnitTypeID)
+            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.Product.SubSubUnit)
+            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.Product.SubSubUnitTypeID)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.RequestStatusID)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.NoteToSupplier)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.IncludeVAT)
@@ -36,6 +38,7 @@
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.Currency)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.PaymentStatusID)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ParentRequestID)
+            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ParentRequest.ParentRequestID)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ParentRequest.ApplicationUserID)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ParentRequest.Discount)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ParentRequest.Credit)
@@ -45,7 +48,7 @@
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ParentRequest.SupplierOrderNumber)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ParentRequest.Taxes)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ParentQuoteID)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ParentQuote.QuoteStatusID)
+            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.QuoteStatusID)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ParentQuote.QuoteNumber)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ParentQuote.QuoteDate)
             @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.ProductID)
@@ -100,4 +103,5 @@
     @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
     @Html.HiddenFor(model => model.RequestIndexObject.OrderType)
     @Html.HiddenFor(model => model.RequestIndexObject.IsReorder)
+    @Html.HiddenFor(model => model.RequestIndexObject.ModalType)
 </div>

@@ -87,5 +87,6 @@ namespace PrototypeWithAuth.ViewModels
         public bool IsHistory { get; set; }
         public PricePopoverViewModel PricePopoverViewModel { get; set; }
         public TempRequestListViewModel TempRequestListViewModel { get; set; }
+        public List<string> LastUrls { get; set; }
     }
 }

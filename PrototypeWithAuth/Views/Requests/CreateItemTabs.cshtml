@@ -13,14 +13,9 @@
         bcColor = "oper-background-color";
     }
 }
-
-@if (Model.ErrorMessage != null)
-{
-    <div class="row">
-        <label class="text-danger-centarix p-2" style="width:100%; text-align: center">Error: @Model.ErrorMessage</label>
-
-    </div>
-}
+<div class="row justify-content-center error-message pt-3">
+    @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
+</div>
 
 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
 @Html.HiddenFor(model => model.RequestStatusID)

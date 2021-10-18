@@ -1743,7 +1743,7 @@ td .btn {
 
 .upload-btn-wrapper {
     position: relative;
-    overflow: hidden;
+/*    overflow: hidden;*/
     display: inline-block;
 }
 
@@ -2128,12 +2128,23 @@ span.caret {
     border-bottom: none !important;
     border: 2px solid var(--lab-man-color) !important;
 }
-
-.supplier-form .dropdown:focus, .supplier-form .dropdown-multiple:focus {
+.dropdown-multiple:focus, .dropdown:focus {
     outline: none;
     border-bottom: none !important;
-    border: 2px solid var(--lab-man-color) !important;
     border-radius: .25rem !important
+}
+.order-inv-form .dropdown:focus, .order-inv-form .dropdown-multiple:focus {
+    border: 2px solid var(--order-inv-color) !important;
+}
+.accounting-form .dropdown:focus, .accounting-form .dropdown-multiple:focus {
+    border: 2px solid var(--acc-color) !important;
+}
+.supplier-form .dropdown:focus, .supplier-form .dropdown-multiple:focus {
+    border: 2px solid var(--lab-man-color) !important;
+}
+
+.protocol-form .dropdown:focus, .protocol-form .dropdown-multiple:focus {
+    border: 2px solid var(--protocol-color) !important;
 }
 
 .protocol-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
@@ -2144,21 +2155,6 @@ span.caret {
 .protocol-form .select.form-control-plaintext:focus {
     border-bottom: none !important;
     border: 2px solid var(--protocol-color) !important;
-}
-
-.protocol-form .dropdown:focus, .protocol-form .dropdown-multiple:focus {
-    outline: none;
-    border-bottom: none !important;
-    border: 2px solid var(--protocol-color) !important;
-    border-radius: .25rem !important
-}
-  
-  
-  .order-inv-form .dropdown:focus, .supplier-form .dropdown-multiple:focus {
-    outline: none;
-    border-bottom: none !important;
-    border: 2px solid var(--lab-man-color) !important;
-    border-radius: .25rem !important
 }
 
 .supplier-form .input-group:focus-within > .input-group-text {
@@ -2775,7 +2771,11 @@ a {
     border: 2px solid var(--lab-man-color);
     background-color: var(--lab-man-color);
 }
-/*ACCOUNTING - FIGURE OUT LATER*/
+/*Accounting*/
+.accounting-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .accounting-form label.btn input[type="checkbox"].filled-in:checked + label:after {
+    border: 2px solid var(--acc-color);
+    background-color: var(--acc-color);
+}
 /*Expenses*/
 .expenses .form-check-input[type="checkbox"].filled-in:checked + label:after, .expenses label.btn input[type="checkbox"].filled-in:checked + label:after, .expenses-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .expenses-form label.btn input[type="checkbox"].fci-exp.filled-in:checked + label:after {
     border: 2px solid var(--expense-color);
@@ -2844,6 +2844,10 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
 
 .supplier-form .location-selected {
     background-color: var(--lab-man-color);
+}
+
+.accounting-form .location-selected {
+    background-color: var(--acc-color);
 }
 
 .visual-locations tr {
@@ -3061,13 +3065,17 @@ body.modal-open .popover {
   
 }
 .line-header {
-    font-size: 1.40rem;
+    font-size: 1.60rem;
+    font-weight: var(--bold-medium);
+   /* padding-bottom: 1rem !important;*/
+    padding-top: 1.5rem !important;
 }
 .line-subheader {
-    font-size: 1.20rem;
+    font-size: 1.30rem;
+    font-weight: var(--bold-medium);
 }
 .line-step{
-    font-size:1rem
+    font-size:1.30rem
 }
 .line-input {
    /* min-width: 10%;*/
@@ -3096,6 +3104,12 @@ body.modal-open .popover {
 
 .addFunctionModal .doc-card-outer-div {
     min-width: 100% !important;
+}
+
+.scroll-body {
+    overflow: auto;
+    height: 800px;
+    display: block;
 }
 
 .datacalculation {

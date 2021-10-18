@@ -2,7 +2,6 @@
 var isRequests = function () {
 	return $("#masterSectionType").val() == "Requests";
 }*/
-
 $('.receivedModalForm').validate({
 	 normalizer: function( value ) {
     return $.trim( value );
@@ -15,13 +14,21 @@ $('.receivedModalForm').validate({
 		"Request.ApplicationUserReceiverID": {
 			required: true,
 		},
-		"locationSelected": {
-			required: true /*isRequests*/
+		"locationTypeSelected": {
+			locationRequired: true /*isRequests*/
+		},
+		"subLocationSelected": {
+			locationRequired: true
+		},
+		"locationVisualSelected": {
+			locationRequired: true
 		}
 
-	},
-	messages:{
-		"locationSelected": "Please choose a location before submitting"
-}
+	}
+/*	messages: {
+		"subLocationSelected": "Please choose a location before submitting",
+		"locationVisualSelected": "Please choose a location before submitting",
+		"locationTypeSelected": "Please choose a location before submitting"
+}*/
 });
-$('#myForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled]';
+$('#myForm').data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible), [disabled]';

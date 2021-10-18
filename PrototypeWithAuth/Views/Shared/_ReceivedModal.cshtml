@@ -26,15 +26,10 @@
 @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
 
 
-
 <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
-@if (Model.ErrorMessage != null)
-{
-    <div class="modal-header border-bottom-0 modal-header-padding">
-        <h6 class="text-danger-centarix">@Model.ErrorMessage</h6>
-        <br />
-    </div>
-}
+<div class="error-message modal-header border-bottom-0 modal-header-padding">
+    @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage);}
+</div>
 
 <div class="modal-body p-0">
 
@@ -166,8 +161,8 @@
             </div>
             <br />
             @if (Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString() ||
-              Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.Biological.ToString() ||
-              Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.Clinical.ToString())
+            Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.Biological.ToString() ||
+            Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.Clinical.ToString())
             {
                 <div class="row">
                     <div class="col-md-3 ">
@@ -281,7 +276,8 @@
 </div>-->
 @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID != 2)
 {
-    <input type="hidden" style="pointer-events:none" id="locationSelected" name="locationSelected" />
+    <input type="hidden" class="location-error" id="locationTypeSelected" name="locationTypeSelected" data-val="" />
+    <div id="location-error-msg"></div>
 }
 
 <script src="~/js/InitializeDatePicker.js"></script>

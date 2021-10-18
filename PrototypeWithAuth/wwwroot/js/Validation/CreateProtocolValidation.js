@@ -5,19 +5,19 @@
 		},
 		rules: {
 
-			"Protocol.Name": {
+			"ProtocolVersion.Protocol.Name": {
 				required: true
 			},
-			"Protocol.UniqueCode": {
-				required: true
-			},
-			"Protocol.ProtocolSubCategory.ProtocolCategoryTypeID": {
+			"ProtocolVersion.Protocol.ProtocolSubCategory.ProtocolCategoryTypeID": {
 				selectRequired: true
 			},
-			"Protocol.ProtocolSubCategoryID": {
+			"ProtocolVersion.Protocol.ProtocolSubCategoryID": {
 				selectRequired: true
-			}
-		}
+			},
+			
+		},
+	
+
 	});
 });
 

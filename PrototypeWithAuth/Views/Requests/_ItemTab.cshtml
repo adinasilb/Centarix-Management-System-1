@@ -13,19 +13,20 @@
     var modalType = Model.ModalType;
     var markReadOnlyClass = "";
     var hiddenSummaryClass = "";
-    if (modalType == AppUtility.RequestModalType.Edit)
+    var disabled = "";
+    if (modalType != AppUtility.RequestModalType.Create)
     {
         markReadOnlyClass = "mark-readonly";
-    }
-    if (modalType == AppUtility.RequestModalType.Summary)
-    {
-        hiddenSummaryClass = "hidden";
-        markReadOnlyClass = "mark-readonly";
+        disabled = "disabled";
+        if (modalType == AppUtility.RequestModalType.Summary)
+        {
+            hiddenSummaryClass = "hidden";
+        }
     }
     var projectCategories = AppUtility.ParentCategoryEnum.Consumables
         + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
         + " " + AppUtility.ParentCategoryEnum.Biological
-        + " " + AppUtility.ParentCategoryEnum.Reusables
+        + " " + AppUtility.ParentCategoryEnum.Reusable
         + " " + AppUtility.ParentCategoryEnum.Clinical
         + " " + AppUtility.ParentCategoryEnum.Safety
         + " " + AppUtility.ParentCategoryEnum.General
@@ -33,7 +34,7 @@
     var subProjectCategories = AppUtility.ParentCategoryEnum.Consumables
         + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
         + " " + AppUtility.ParentCategoryEnum.Biological
-        + " " + AppUtility.ParentCategoryEnum.Reusables
+        + " " + AppUtility.ParentCategoryEnum.Reusable
         + " " + AppUtility.ParentCategoryEnum.Clinical
         + " " + AppUtility.ParentCategoryEnum.Safety
         + " " + AppUtility.ParentCategoryEnum.General
@@ -41,7 +42,7 @@
     var vendorCategories = AppUtility.ParentCategoryEnum.Consumables
 + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
 + " " + AppUtility.ParentCategoryEnum.Biological
-+ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Reusable
 + " " + AppUtility.ParentCategoryEnum.Clinical
 + " " + AppUtility.ParentCategoryEnum.Safety
         + " " + AppUtility.ParentCategoryEnum.General
@@ -49,7 +50,7 @@
     var companyIDCategories = AppUtility.ParentCategoryEnum.Consumables
 + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
 + " " + AppUtility.ParentCategoryEnum.Biological
-+ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Reusable
 + " " + AppUtility.ParentCategoryEnum.Clinical
 + " " + AppUtility.ParentCategoryEnum.Safety
         + " " + AppUtility.ParentCategoryEnum.General
@@ -57,7 +58,7 @@
     var quoteCategories = AppUtility.ParentCategoryEnum.Consumables
 + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
 + " " + AppUtility.ParentCategoryEnum.Biological
-+ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Reusable
 + " " + AppUtility.ParentCategoryEnum.Clinical
 + " " + AppUtility.ParentCategoryEnum.Safety
         + " " + AppUtility.ParentCategoryEnum.General
@@ -65,7 +66,7 @@
     var catalogCategories = AppUtility.ParentCategoryEnum.Consumables
 + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
 + " " + AppUtility.ParentCategoryEnum.Biological
-+ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Reusable
 + " " + AppUtility.ParentCategoryEnum.Clinical
 + " " + AppUtility.ParentCategoryEnum.Safety
         + " " + AppUtility.ParentCategoryEnum.General
@@ -76,14 +77,14 @@
     {
         batchCategories += " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals;
     }
-    var warrantyCategories = AppUtility.ParentCategoryEnum.Reusables
+    var warrantyCategories = AppUtility.ParentCategoryEnum.Reusable
 + " " + AppUtility.ParentCategoryEnum.Safety
         + " " + AppUtility.ParentCategoryEnum.General
         + " d-none";
     var supplyDaysCategories = AppUtility.ParentCategoryEnum.Consumables
 + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
 + " " + AppUtility.ParentCategoryEnum.Biological
-+ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Reusable
 + " " + AppUtility.ParentCategoryEnum.Clinical
 + " " + AppUtility.ParentCategoryEnum.Safety
         + " " + AppUtility.ParentCategoryEnum.General
@@ -91,14 +92,14 @@
     var websiteCategories = AppUtility.ParentCategoryEnum.Consumables
 + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
 + " " + AppUtility.ParentCategoryEnum.Biological
-+ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Reusable
 + " " + AppUtility.ParentCategoryEnum.Clinical
 + " " + AppUtility.ParentCategoryEnum.Safety
         + " " + AppUtility.ParentCategoryEnum.General
         + " d-none";
     var passageCategories = AppUtility.ParentCategoryEnum.Samples;
     var amountCategories = AppUtility.ParentCategoryEnum.Samples;
-    var dateCreatedCategories = AppUtility.ParentCategoryEnum.Samples;
+    var dateCreatedCategories = AppUtility.ParentCategoryEnum.Samples + " d-none";
 }
 
 @{ var request = Model.Requests[0];}
@@ -129,7 +130,8 @@
              "ParentCategoryID",
              "ParentCategoryDescription"
              ), "Select Category",
-             new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "parentlist", @searchable = "Select Category", @data_stop_refresh = "true" })
+             new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "parentlist", 
+                 @searchable = "Select Category", @data_stop_refresh = "true" })
             }
             <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" />
             <span asp-validation-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
@@ -144,7 +146,8 @@
                 "ProductSubcategoryID",
                 "ProductSubcategoryDescription"
                 ), "Select Sub Category",
-                new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category", @data_stop_refresh = "true" })
+                new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist",
+                    @searchable = "Select Sub Category", @data_stop_refresh = "true" })
             <input type="hidden" asp-for="Requests[0].Product.ProductSubcategoryID" disabled class="proprietryHidenCategory" />
             <span asp-validation-for="Requests[0].Product.ProductSubcategoryID" class="text-danger-centarix"></span>
         </div>
@@ -183,15 +186,16 @@
             <div class="form-group">
                 <label asp-for="Requests[0].Product.Vendor" class="control-label"></label>
                 @Html.DropDownListFor(
-    vm => vm.Requests[0].Product.VendorID,
-    new SelectList(
-    Model.Vendors,
-    dataValueField: "VendorID",
-    dataTextField: "VendorEnName"),
-    //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
-    "Select a Vendor",
-    htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext " + vendorCategories + " " + markReadOnlyClass, @id = "vendorList", @size = 1, @searchable = "Select A Vendor", @data_stop_refresh = "true" }
-    )
+                        vm => vm.Requests[0].Product.VendorID,
+                        new SelectList(
+                        Model.Vendors,
+                        dataValueField: "VendorID",
+                        dataTextField: "VendorEnName"),
+                        //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
+                        "Select a Vendor",
+                        htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext " + vendorCategories + " " + markReadOnlyClass, 
+                            @id = "vendorList", @size = 1, @searchable = "Select A Vendor", @data_stop_refresh = "true" }
+                        )
                 <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
             </div>
         </div>
@@ -266,11 +270,11 @@
                     {
                         if (Model.Requests[0].RequestStatusID == 2)
                         {
-                            <input value="@Model.Requests[0].ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).GetElixirDateFormat()" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories  " type="text" name="expected-supply-days" id="expected-supply-date" />
+                            <input value="@Model.Requests[0].ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).GetElixirDateFormat()" class="form-control-plaintext border-bottom datepicker expected-supply-date @supplyDaysCategories  @markReadOnlyClass" type="text" name="expected-supply-days" id="expected-supply-date" />
                         }
                         else
                         {
-                            <input value="@DateTime.Now.AddDays(request.ExpectedSupplyDays ?? 0).GetElixirDateFormat()" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories " type="text" name="expected-supply-days" id="expected-supply-date" />
+                            <input value="@DateTime.Now.AddDays(request.ExpectedSupplyDays ?? 0).GetElixirDateFormat()" class="form-control-plaintext border-bottom datepicker expected-supply-date @supplyDaysCategories @markReadOnlyClass" type="text" name="expected-supply-days" id="expected-supply-date" />
                         }
                     }
                 </div>
@@ -282,10 +286,52 @@
                 <span asp-validation-for="Requests[0].URL" class="text-danger-centarix"></span>
             </div>
         </div>
-        @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null || Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true)
-        {<div class="row">
-            @if (Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true)
+    @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null ||  Model.Requests[0].ParentRequest?.OrderNumber != null)
+    {
+        <div class="row">
+            @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null)
             {
+                <div class="col-md-3 ">
+                    <label asp-for="Requests[0].ParentRequest.SupplierOrderNumber" class="control-label"></label>
+                    <input value="@Model.Requests[0].ParentRequest.SupplierOrderNumber" class="form-control-plaintext border-bottom" @disabled type="text" />
+                    <span asp-validation-for="Requests[0].ParentRequest.SupplierOrderNumber" class="text-danger-centarix"></span>
+                </div>
+            }
+            @if(Model.Requests[0].ParentRequest?.OrderNumber != null)
+            {
+                <div class="col-md-3 ">
+                    <label asp-for="Requests[0].ParentRequest.OrderNumber" class="control-label"></label>
+                    <input value="@Model.Requests[0].ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" @disabled type="text" />
+                    <span asp-validation-for="Requests[0].ParentRequest.OrderNumber" class="text-danger-centarix"></span>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Requests[0].ParentRequest.OrderDate" class="control-label"></label>
+                    <input type="text" value="@Model.Requests[0].ParentRequest.OrderDate.GetElixirDateFormat()" class="form-control-plaintext border-bottom datepicker for-supply-date-calc"  @disabled @*asp-format="@AppUtility.AspDateFormatString"*@  />
+                    <span asp-validation-for="Requests[0].ParentRequest.OrderDate" class="text-danger-centarix"></span>
+                </div>
+            }
+
+        </div>
+    }
+    @if (Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true)
+    {
+        <div class="row">
+            @if (Model.Requests[0].RequestStatusID == 3)
+            {
+                <div class="col-md-3 ">
+                    <label asp-for="Requests[0].ArrivalDate" class="control-label"></label>
+                    <input asp-for="Requests[0].ArrivalDate" class="form-control-plaintext border-bottom" asp-format="@AppUtility.AspDateFormatString" disabled type="text" />
+                </div>
+                <div class="col-md-3">
+                    <label class="control-label">Received By</label>
+                    <input type="text" class="form-control-plaintext border-bottom" disabled value="@Model.Requests[0].ApplicationUserReceiver.FirstName @Model.Requests[0].ApplicationUserReceiver.LastName" />
+                    <input type="hidden" asp-for="Requests[0].ApplicationUserReceiverID" />
+                </div>
+            }
+            @if (Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true) //todo: make this a loop for each payment
+            {
+                <input type ="hidden" asp-for="Requests[0].Payments[0].InvoiceID" />
+                <input type ="hidden" asp-for="Requests[0].Payments[0].Invoice.InvoiceID" />
                 <div class="col-md-3 ">
                     <label asp-for="Requests[0].Payments[0].Invoice.InvoiceNumber" class="control-label"></label>
                     <input asp-for="Requests[0].Payments[0].Invoice.InvoiceNumber" class="form-control-plaintext border-bottom @markReadOnlyClass" />
@@ -297,38 +343,10 @@
                     <span asp-validation-for="Requests[0].Payments[0].Invoice.InvoiceDate" class="text-danger-centarix"></span>
                 </div>
             }
-            @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null)
-            {
-                <div class="col-md-3 ">
-                    <label asp-for="Requests[0].ParentRequest.SupplierOrderNumber" class="control-label"></label>
-                    <input asp-for="Requests[0].ParentRequest.SupplierOrderNumber" class="form-control-plaintext border-bottom @markReadOnlyClass" type="text" />
-                    <span asp-validation-for="Requests[0].ParentRequest.SupplierOrderNumber" class="text-danger-centarix"></span>
-                </div>
-                <div class="col-md-3">
-                    <label asp-for="Requests[0].ParentRequest.OrderDate" class="control-label"></label>
-                    <input type="text" asp-for="Requests[0].ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" asp-format="@AppUtility.AspDateFormatString"  />
-                    <span asp-validation-for="Requests[0].ParentRequest.OrderDate" class="text-danger-centarix"></span>
-                </div>
-            }
-
-        </div>
-    }
-    @if (Model.Requests[0].RequestStatusID == 3)
-    {
-        <div class="row">
-            <div class="col-md-3 ">
-                <label asp-for="Requests[0].ArrivalDate" class="control-label"></label>
-                <input asp-for="Requests[0].ArrivalDate" class="form-control-plaintext border-bottom" asp-format="@AppUtility.AspDateFormatString" disabled type="text" />
-            </div>
-            <div class="col-md-3">
-                <label class="control-label">Received By</label>
-                <input type="text" class="form-control-plaintext border-bottom" disabled value="@Model.Requests[0].ApplicationUserReceiver.FirstName @Model.Requests[0].ApplicationUserReceiver.LastName" />
-                <input type="hidden" asp-for="Requests[0].ApplicationUserReceiverID" />
-            </div>
         </div>
     }
 }
-else
+else //isProprietary
 {
     @*<div class="row">
         <div class="col-md-4 form-group">
@@ -360,7 +378,7 @@ else
     }
     <div class="row">
         <div class="col-md-3 ">
-            <label asp-for="Requests[0].CreationDate" class="control-label">Creation Date</label>
+            <label asp-for="Requests[0].CreationDate" class="control-label @dateCreatedCategories">Creation Date</label>
             <input asp-for="Requests[0].CreationDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass @dateCreatedCategories"  asp-format="@AppUtility.AspDateFormatString"  type="text" />
         </div>
     </div>

@@ -8,12 +8,11 @@
 		var valid = $("#myForm").valid();
 		console.log("valid form: " + valid)
 		if (!valid) {
-			$("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+			$("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';
 			$('.turn-edit-on-off').prop('checked', true);
 			console.log("not valid data");
 			return false;
 		}
-
 		var url = '';
 		if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
 			console.log("has class suppliers or accounting");
@@ -23,6 +22,7 @@
 			url = "/Admin/EditUser";
 
 		} else if ($('.turn-edit-on-off').hasClass('orders')) {
+				$("#loading").show();
 			console.log("has class orders");
 			url = "/Requests/EditModalView";
 		}
@@ -40,11 +40,16 @@
 				//console.log("has class locations in requests");
 				url = "/Requests/ReceivedModalVisual";
 				visualDiv = $(".visualView");
-            //}
+            //} 
 		}
 		else if($('.turn-edit-on-off').hasClass('protocols')){
-			console.log("has class users");
-			url = "/Protocols/CreateProtocol";
+			formData.set("ModalType", "Summary")
+			var tab = $(".protocol-tab.active");
+			var selectedTab = tab.parent().index() + 1;
+			formData.set("Tab", selectedTab)
+				console.log(selectedTab);
+				$(".selectedTab").val(selectedTab);
+			url = "/Protocols/CreateProtocol?IncludeSaveLines=true";
 		}
 		else {
 			alert("didn't go into any edits");
@@ -60,11 +65,15 @@
 			type: 'POST',
 			cache: false,
 			success: function (data) {
+				$("#loading").hide();
 				if ($('.turn-edit-on-off').hasClass('locations')) {
 					//alert("got data for locations");
 					//console.log(data)
-					if ($('.turn-edit-on-off').attr("section-type") == "LabManagement") {
-						//Reload visual of labmanagement
+					var pageType = $('#masterPageType').val();
+					console.log(pageType)
+					if (pageType == "LabManagementLocations" || pageType == 'RequestLocation') {
+						console.log('reload location ')
+						//Reload visual of locations box
 						var visualContainerId = $(".hasVisual").attr("parent-id");
 						var urlLocations = "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId;
 						$.ajax({
@@ -81,9 +90,10 @@
 					else if ($('.turn-edit-on-off').attr("section-type") == "Requests") {
 						console.log("reloading ajax partial view...");
 						$.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
+					
                     }
 					else {
-						visualDiv.html(data);
+						//visualDiv.html(data);
                     }
 
 				}
@@ -128,38 +138,17 @@
 
 					} else if ($('.turn-edit-on-off').hasClass('orders')) {
 						var viewClass = "_IndexTableData";
-						if ($('#masterSidebarType').val()) {
+						if ($('#masterSidebarType').val() === 'Cart') {
 							viewClass = "_IndexTableDataByVendor";
 						}
 						$.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass + "/", "." + viewClass, "GET");
 					}
 					else if ($('.turn-edit-on-off').hasClass('protocols')) {
-						var tab= $(".protocol-tab.active.show");
-						var selectedTab = tab.parent().index() +1;
-          
-						console.log(selectedTab);
-						$(".selectedTab").val(selectedTab);
-						var formData = new FormData($(".createProtocolForm")[0]);
-						$.ajax({
-							url: "/Protocols/CreateProtocol",
-							traditional: true,
-							data: formData,
-							contentType: false,
-							processData: false,
-							type: "POST",
-							success: function (data) {
-								$("._IndexTable").html(data)					
-								var modalType = $(".modalType").val();
-								$("."+modalType).removeClass("d-none")
-								$.fn.ProtocolsMarkReadonly("_IndexTable");   
-							},
-							error: function (jqxhr) {
-								if (jqxhr.status == 500) {
-									$("._CreateProtocol").html(jqxhr.responseText);						}
-								$(".mdb-select").materialSelect();
-								return true;
-							}
-						});
+						$("._IndexTable").html(data)					
+						$.fn.ProtocolsMarkReadonly("_IndexTable");
+						var modalType = $(".modalType").val();
+						$("."+modalType).removeClass("d-none")
+						
 					}
 				}
 				
@@ -174,6 +163,10 @@
 				if ($('.turn-edit-on-off').hasClass('operations') || $('.turn-edit-on-off').hasClass('orders')) {
 					$.fn.LoadEditModalDetails();
 				}
+				if ($('.turn-edit-on-off').hasClass('protocols')) {
+						$("._CreateProtocol").html(jqxhr.responseText);						
+						$(".mdb-select").materialSelect();
+					}
 				else {
 					$.fn.OnOpenModal();
                 }
@@ -219,8 +212,8 @@
 			url = "/Requests/ItemData?id=" + id + "&Tab=" + selectedTab + "&SectionType=" + section;
 
 		} else if ($('.turn-edit-on-off').hasClass('locations')) {
-			selectedTab = $('.tab-content').children('.active').attr("value");
-			console.log(selectedTab)
+			/*selectedTab = $('.tab-content').children('.active').attr("value");
+			console.log(selectedTab)*/
 			section = $("#masterSectionType").val();
 			url = "/Requests/_LocationTab?id=" + id;
 			reloadDiv = $("#location");
@@ -242,6 +235,7 @@
 				
 				if ($('.turn-edit-on-off').hasClass('users')) {
 					$('.userName').val($('#FirstName').val() + " " + $('#LastName').val())
+					$('.mark-readonly').prop('disabled', true) //for uplodad image button
 					console.log(currentPermissions)
 					$.fn.HideAllPermissionsDivs();
 					if (currentPermissions != null) {
@@ -251,6 +245,7 @@
 					else {
 						$.fn.ChangeUserPermissionsButtons();
 					}
+					$('#permissions .form-check :input[type=hidden]').remove(); /*remove automatically generated input cuz it causes the checkboxes to be hidden*/
 				} else {
 					$.ajax({
 						url: controller + viewClass + "?id=" + id + "&SectionType=" + section,

@@ -24,10 +24,7 @@
                     success: function (data) {
                         $(".outer-partial").html(data);
                         $(".mdb-select").materialSelect();
-                        $(".top-menu").addClass("save-item");
-                        $(".side-menu").addClass("save-item");
-                        $(".module-button ").addClass("save-item");
-                        $(".notificationDiv").addClass("save-item");
+                        $.fn.AddSaveItemClass();
                         $("#loading").hide();
                         var category = $("#categoryDescription").val();
                         console.log("category " + category)
@@ -206,7 +203,7 @@
                 }
             });
         }
-        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';
        
     })
     $('.ordersItemForm').off('click', '.remove-item').on('click','.remove-item', function (e) {

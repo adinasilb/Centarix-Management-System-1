@@ -13,8 +13,8 @@ namespace PrototypeWithAuth.Models
         public int ProtocolInstanceID { get; set; }
         public string ApplicationUserID { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
-        public int ProtocolID { get; set; }
-        public Protocol Protocol { get; set; }
+        public int ProtocolVersionID { get; set; }
+        public ProtocolVersion ProtocolVersion { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int CurrentLineID { get; set; }

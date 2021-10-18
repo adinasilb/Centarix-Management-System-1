@@ -5,6 +5,10 @@
     {
       "library": "jquery-validation-unobtrusive@3.2.11",
       "destination": "wwwroot/lib/jquery-validation-unobtrusive/"
+    },
+    {
+      "library": "jszip@3.6.0",
+      "destination": "wwwroot/js/jszip/"
     }
   ]
 }

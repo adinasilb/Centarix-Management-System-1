@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.Data;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Abp.Domain.Entities;
 using System.Threading.Tasks;
+using System.Transactions;
 using System.Threading;
 
 namespace PrototypeWithAuth.Data
@@ -27,6 +27,12 @@ namespace PrototypeWithAuth.Data
         public DbSet<TestHeader> TestHeaders { get; set; }
         public DbSet<TestOuterGroup> TestOuterGroups { get; set; }
         public DbSet<TestGroup> TestGroups { get; set; }
+        public DbSet<TempResultsJson> TempResultsJsons { get; set; }
+        public DbSet<TempReportJson> TempReportJsons { get; set; }
+        public DbSet<ProtocolVersion> ProtocolVersions { get; set; }
+        public DbSet<FunctionResult> FunctionResults { get; set; }
+        public DbSet<TempLineID> TempLineIDs { get; set; }
+        public DbSet<FunctionLineID> FunctionLineIDs { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<TestCategory> TestCategories { get; set; }
         public DbSet<Division> Divisions { get; set; }
@@ -221,6 +227,10 @@ namespace PrototypeWithAuth.Data
                   .Property(e => e.LineID)
                   .ValueGeneratedNever();
 
+            modelBuilder.Entity<FunctionLine>()
+                .Property(e => e.ID)
+                .ValueGeneratedNever();
+
             modelBuilder.Entity<Request>()
                 .HasOne(r => r.ApplicationUserReceiver)
                 .WithMany(au => au.RequestsReceived)
@@ -340,6 +350,15 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Material>()
                 .HasQueryFilter(item => !item.IsDeleted);
 
+            modelBuilder.Entity<ProductSubcategory>()
+           .HasQueryFilter(item => !item.IsOldSubCategory);
+
+            modelBuilder.Entity<LocationType>()
+           .HasQueryFilter(item => item.LocationTypeID !=600);
+
+            modelBuilder.Entity<LocationInstance>()
+        .HasQueryFilter(item => item.LocationTypeID != 600);
+
             modelBuilder.Entity<SalariedEmployee>().Ignore(e => e.WorkScope);
             modelBuilder.Entity<Employee>().Ignore(e => e.NetSalary);
             modelBuilder.Entity<Employee>().Ignore(e => e.TotalCost);
@@ -348,8 +367,6 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Employee>().Ignore(e => e.VacationDaysPerMonth);
             modelBuilder.Entity<Request>().Ignore(e => e.VAT);
             modelBuilder.Entity<Request>().Ignore(e => e.PricePerUnit);
-            modelBuilder.Entity<Request>().Ignore(e => e.PricePerSubUnit);
-            modelBuilder.Entity<Request>().Ignore(e => e.PricePerSubSubUnit);
             modelBuilder.Entity<Request>().Ignore(e => e.TotalWithVat);
             modelBuilder.Entity<Request>().Ignore(e => e.Ignore);
             modelBuilder.Entity<Request>().Ignore(e => e.IsReceived);
@@ -368,6 +385,12 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
             modelBuilder.Entity<Request>().Property(r => r.ExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Product>().Property(r => r.ProductCreationDate).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<TempLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<FunctionLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<ParentRequest>().HasIndex(p => p.OrderNumber).IsUnique();
+            modelBuilder.Entity<ParentRequest>().HasIndex(p => p.QuartzyOrderNumber).IsUnique();
+            modelBuilder.Entity<Product>().HasIndex(p => p.SerialNumber).IsUnique();
+            modelBuilder.Entity<Product>().HasIndex(p => new { p.SerialNumber, p.VendorID }).IsUnique();
             modelBuilder.Entity<ShareRequest>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<ShareProtocol>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<ShareResource>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
@@ -405,7 +428,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ProtocolInstance>().Property(r => r.ResultDescription).HasColumnType("ntext");
             modelBuilder.Entity<TempRequestJson>().Property(t => t.Json).HasColumnType("ntext");
             modelBuilder.Entity<TempLinesJson>().Property(t => t.Json).HasColumnType("ntext");
-            //modelBuilder.Entity<TempLine>().HasIndex(r => r.PermanentLineID).IsUnique();
+            modelBuilder.Entity<Protocol>().HasIndex(p => new { p.UniqueCode }).IsUnique();
+            modelBuilder.Entity<ProtocolVersion>().HasIndex(p => new {p.ProtocolID, p.VersionNumber }).IsUnique();
+            modelBuilder.Entity<ProtocolVersion>().Ignore(p => p.Name);
             modelBuilder.Seed();
 
             //foreach loop ensures that deletion is resticted - no cascade delete

@@ -611,6 +611,8 @@ $(function () {
 
 
 		$.ajax({
+			processData: false,
+			contentType: false,
 			url: url,
 			method: 'POST',
 			data: formData,
@@ -641,8 +643,6 @@ $(function () {
 
 				//return false;
 			},
-			processData: false,
-			contentType: false
 		});
 
 
@@ -1063,9 +1063,11 @@ $(function () {
 	});
 	$("#entry").off('click').click(function (e) {
 		e.preventDefault();
+		console.log('preventing default')
 	});
 	$("#exit").off('click').click(function (e) {
 		e.preventDefault();
+		console.log('preventing default')
 	});
 	$('.monthsHours .select-dropdown').off('change').change(function (e) {
 		console.log(".monthsHours chnage")
@@ -1312,19 +1314,18 @@ $(function () {
 				//	alert("else")
 					$(".render-body").html(data);
 				}
+				$(this).prop('disabled', false)
 			}
-
 		});
 	}
-
-
 
 	$("#saveOffDay").off('click').click(function (e) {
 		e.preventDefault();
 
 		var pageType = $('#masterPageType').val()
-
+		$(this).prop('disabled', true)
 		$.fn.SaveOffDays("OffDayModal", pageType, "");
+		console.log('got here')
 	});
 
 
@@ -1448,14 +1449,17 @@ $(function () {
 		else if ($(this).hasClass('locations')) {
 			console.log("has locations");
 			url = "/Requests/ReceivedModalVisual";
-			section = $(".turn-edit-on-off").attr("section-type"); //"Requests";
+			section = $(".turn-edit-on-off").attr("section-type");
 			console.log("section: " + section);
         }
 		if ($(this).hasClass('orders') && $(this).hasClass('equipment')) {
 			url = "/Requests/EditModalView";
 			section = "LabManagement";
 		}
-
+		if ($(this).hasClass('protocols')) {
+		//url = "/Protocols/EditModalView";
+		section = "Protocols";
+		}
 		if (type == 'edit') {
 			$("#loading").show();
 			console.log("in if edit");
@@ -1474,20 +1478,14 @@ $(function () {
 			});
 
 		}
-		else if (type == 'details') {
+		else if (type == 'details') {	
 			if ($(this).hasClass('locations')) {
-				console.log('locations');
-				$(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
-				$('#location .mark-readonly').removeClass("disabled")
-				$('#location .mark-readonly').attr("disabled", false);
-				$('.edit-mode-switch-description').text("Edit Mode On");
-				$('.turn-edit-on-off').attr('name', 'edit');
-				$('.location-icon').removeClass('d-none');
+				$.fn.MakeLocationsEditable();
 			}
 			else {
 				enableMarkReadonly($(this));
 				$(".proprietryHidenCategory").attr("disabled", false);
-			}
+            }
 		}
 		//}
 	});
@@ -1521,15 +1519,15 @@ $(function () {
 				switch (optgroup) {
 					case "Units":
 						console.log("Units")
-						selectedIndex = selectedIndex - 1;
+						selectedIndex = selectedIndex;
 						break;
 					case "Weight/Volume":
 						console.log("Volume")
-						selectedIndex = selectedIndex - 2;
+						selectedIndex = selectedIndex - 1;
 						break;
 					case "Test":
 						console.log("Test")
-						selectedIndex = selectedIndex - 3;
+						selectedIndex = selectedIndex - 2;
 						break;
 				} 
 

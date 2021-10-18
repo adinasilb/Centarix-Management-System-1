@@ -86,6 +86,11 @@ namespace PrototypeWithAuth.Data
                 {
                     CompanyAccountID = 4,
                     CompanyBankName = "Payoneer"
+                },
+                new CompanyAccount
+                {
+                    CompanyAccountID = 5,
+                    CompanyBankName = "Quartzy Bank"
                 }
             );
 
@@ -175,7 +180,7 @@ namespace PrototypeWithAuth.Data
                 new ParentCategory
                 {
                     ParentCategoryID = 4,
-                    ParentCategoryDescription = "Reusables",
+                    ParentCategoryDescription = "Reusable",
                     CategoryTypeID = 1
                 },
                 new ParentCategory
@@ -253,11 +258,11 @@ namespace PrototypeWithAuth.Data
                     UnitTypeID = 2,
                     ParentCategoryID = 1
                 },
-                new UnitTypeParentCategory
-                {
-                    UnitTypeID = 19,
-                    ParentCategoryID = 1
-                },
+                //new UnitTypeParentCategory
+                //{
+                //    UnitTypeID = 19,
+                //    ParentCategoryID = 1
+                //},
                 new UnitTypeParentCategory
                 {
                     UnitTypeID = 3,
@@ -293,11 +298,11 @@ namespace PrototypeWithAuth.Data
                     UnitTypeID = 2,
                     ParentCategoryID = 2
                 },
-                new UnitTypeParentCategory
-                {
-                    UnitTypeID = 19,
-                    ParentCategoryID = 2
-                },
+                //new UnitTypeParentCategory
+                //{
+                //    UnitTypeID = 19,
+                //    ParentCategoryID = 2
+                //},
                 new UnitTypeParentCategory
                 {
                     UnitTypeID = 3,
@@ -383,11 +388,11 @@ namespace PrototypeWithAuth.Data
                     UnitTypeID = 2,
                     ParentCategoryID = 4
                 },
-                new UnitTypeParentCategory
-                {
-                    UnitTypeID = 19,
-                    ParentCategoryID = 4
-                },
+                //new UnitTypeParentCategory
+                //{
+                //    UnitTypeID = 19,
+                //    ParentCategoryID = 4
+                //},
                 new UnitTypeParentCategory
                 {
                     UnitTypeID = 3,
@@ -458,11 +463,11 @@ namespace PrototypeWithAuth.Data
                     UnitTypeID = 2,
                     ParentCategoryID = 5
                 },
-                new UnitTypeParentCategory
-                {
-                    UnitTypeID = 19,
-                    ParentCategoryID = 5
-                },
+                //new UnitTypeParentCategory
+                //{
+                //    UnitTypeID = 19,
+                //    ParentCategoryID = 5
+                //},
                 new UnitTypeParentCategory
                 {
                     UnitTypeID = 3,
@@ -488,11 +493,11 @@ namespace PrototypeWithAuth.Data
                     UnitTypeID = 2,
                     ParentCategoryID = 7
                 },
-                new UnitTypeParentCategory
-                {
-                    UnitTypeID = 19,
-                    ParentCategoryID = 7
-                },
+                //new UnitTypeParentCategory
+                //{
+                //    UnitTypeID = 19,
+                //    ParentCategoryID = 7
+                //},
                 new UnitTypeParentCategory
                 {
                     UnitTypeID = 3,
@@ -598,11 +603,11 @@ namespace PrototypeWithAuth.Data
                     UnitTypeID = 18,
                     ParentCategoryID = 6
                 },
-                new UnitTypeParentCategory
-                {
-                    UnitTypeID = 19,
-                    ParentCategoryID = 6
-                },
+                //new UnitTypeParentCategory
+                //{
+                //    UnitTypeID = 19,
+                //    ParentCategoryID = 6
+                //},
                 new UnitTypeParentCategory
                 {
                     UnitTypeID = 20,
@@ -678,21 +683,21 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 107,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "Robot Consumables(Tips,Microplates, Reservoirs)",
+                    ProductSubcategoryDescription = "Robot Consumables",
                     ImageURL = "/images/css/CategoryImages/consumables/robot_consumables_tips.png"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 108,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "DdPCR Consumables (Gaskets, Cartridges, Microplates, Foil seal)",
+                    ProductSubcategoryDescription = "DD-PCR Plastics",
                     ImageURL = "/images/css/CategoryImages/consumables/ddpcr_consumables.png"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 109,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "RT-PCR",
+                    ProductSubcategoryDescription = "Q-PCR Plastics",
                     ImageURL = "/images/css/CategoryImages/consumables/rtpcr_consumables.png"
                 },
                 new ProductSubcategory
@@ -755,7 +760,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 118,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "Tapestation Consumables (Screentapes: gDNA/HS/RNA; Markers, Loading Buffers, Loading Tips)",
+                    ProductSubcategoryDescription = "Tapestation consumables",
                     ImageURL = "/images/css/CategoryImages/consumables/tapestation_consumables.png"
                 },
                 new ProductSubcategory
@@ -769,7 +774,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 120,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "General",
+                    ProductSubcategoryDescription = "General Consumables",
                     ImageURL = "/images/css/CategoryImages/consumables/general.png" // update
                 },
                 new ProductSubcategory
@@ -783,7 +788,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 202,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Antibodies",
+                    ProductSubcategoryDescription = "Antibody",
                     ImageURL = "/images/css/CategoryImages/reagents/antibody.png"
                 },
                 new ProductSubcategory
@@ -797,7 +802,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 204,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Solution",
+                    ProductSubcategoryDescription = "",
                     ImageURL = "/images/css/CategoryImages/reagents/chemical_solution2.png"
                 },
                 new ProductSubcategory
@@ -811,14 +816,14 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 206,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "PCR",
+                    ProductSubcategoryDescription = "PCR Reagents",
                     ImageURL = "/images/css/CategoryImages/reagents/PCR_reagent.png"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 207,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "RT-PCR",
+                    ProductSubcategoryDescription = "Q-PCR Reagents",
                     ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent2.png"
                 },
                 new ProductSubcategory
@@ -832,14 +837,14 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 209,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Primers",
+                    ProductSubcategoryDescription = "Primers and Oligos",
                     ImageURL = "/images/css/CategoryImages/reagents/primer.png"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 210,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Media Supplement",
+                    ProductSubcategoryDescription = "Cell Media Supplements",
                     ImageURL = "/images/css/CategoryImages/reagents/media_supplement.png"
                 },
                 new ProductSubcategory
@@ -853,14 +858,14 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 212,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Enzyme Restriction",
+                    ProductSubcategoryDescription = "Restriction Enzyme",
                     ImageURL = "/images/css/CategoryImages/reagents/restriction_enzyme.png"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 213,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Enzyme RNA",
+                    ProductSubcategoryDescription = "RNA Enzyme",
                     ImageURL = "/images/css/CategoryImages/reagents/rna_enzyme.png"
                 },
                 new ProductSubcategory
@@ -888,8 +893,29 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 217,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "General",
+                    ProductSubcategoryDescription = "General Reagents and Chemicals",
                     ImageURL = "/images/css/CategoryImages/reagents/general_reagents.png"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 218,
+                    ParentCategoryID = 2,
+                    ProductSubcategoryDescription = "DNA Enzymes",
+                    ImageURL = "/images/css/CategoryImages/reagents/dna_enzyme.png"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 219,
+                    ParentCategoryID = 2,
+                    ProductSubcategoryDescription = "Gas Refilling",
+                    ImageURL = "/images/css/CategoryImages/reagents/gas_refilling2.png"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 220,
+                    ParentCategoryID = 2,
+                    ProductSubcategoryDescription = "DD-PCR Reagents",
+                    ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent3.png"
                 },
                 new ProductSubcategory
                 {
@@ -916,14 +942,14 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 304,
                     ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Bacteria",
+                    ProductSubcategoryDescription = "Bacterial Stock",
                     ImageURL = "/images/css/CategoryImages/biological/bacteria.png"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 305,
                     ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "General",
+                    ProductSubcategoryDescription = "General Biological",
                     ImageURL = "/images/css/CategoryImages/biological/general.png"
                 },
                 new ProductSubcategory
@@ -1064,7 +1090,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 909,
                     ParentCategoryID = 9,
-                    ProductSubcategoryDescription = "General",
+                    ProductSubcategoryDescription = "General Day To Day",
                     ImageURL = "/images/css/CategoryImages/daytoday/general.png"
                 },
                 new ProductSubcategory
@@ -1141,7 +1167,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 1005,
                     ParentCategoryID = 10,
-                    ProductSubcategoryDescription = "Travel",
+                    ProductSubcategoryDescription = "General Travel",
                     ImageURL = "/images/css/CategoryImages/travel/travel.png"
                 },
                 new ProductSubcategory
@@ -1283,8 +1309,48 @@ namespace PrototypeWithAuth.Data
                     ParentCategoryID = 14,
                     ProductSubcategoryDescription = "Media",
                     ImageURL = "/images/css/CategoryImages/samples/media2.png"
-                }
+                },
 
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1501,
+                    ParentCategoryID = 1,
+                    ProductSubcategoryDescription = "Old Sub category",
+                    ImageURL = "/images/css/CategoryImages/consumables/general.png",
+                    IsOldSubCategory = true
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1502,
+                    ParentCategoryID = 2,
+                    ProductSubcategoryDescription = "Old Sub category",
+                    ImageURL = "/images/css/CategoryImages/reagents/general_reagents.png",
+                    IsOldSubCategory = true
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1503,
+                    ParentCategoryID = 3,
+                    ProductSubcategoryDescription = "Old Sub category",
+                    ImageURL = "/images/css/CategoryImages/biological/general.png",
+                    IsOldSubCategory = true
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1504,
+                    ParentCategoryID = 4,
+                    ProductSubcategoryDescription = "Old Sub category",
+                    ImageURL = "/images/css/CategoryImages/reusable/all_reusables.png",
+                    IsOldSubCategory = true
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1505,
+                    ParentCategoryID = 5,
+                    ProductSubcategoryDescription = "Old Sub category",
+                    ImageURL = "/images/css/CategoryImages/safety/safety.png",
+                    IsOldSubCategory = true
+                }
               );
 
             modelBuilder.Entity<RequestStatus>().HasData
@@ -1326,23 +1392,23 @@ namespace PrototypeWithAuth.Data
                 }
              );
             modelBuilder.Entity<UnitParentType>().HasData
-         (
-         new UnitParentType
-         {
-             UnitParentTypeID = 1,
-             UnitParentTypeDescription = "Units"
-         },
-         new UnitParentType
-         {
-             UnitParentTypeID = 2,
-             UnitParentTypeDescription = "Weight/Volume"
-         },
-         new UnitParentType
-         {
-             UnitParentTypeID = 3,
-             UnitParentTypeDescription = "Test"
-         }
-         );
+            (
+                new UnitParentType
+                {
+                    UnitParentTypeID = 1,
+                    UnitParentTypeDescription = "Units"
+                },
+                new UnitParentType
+                {
+                    UnitParentTypeID = 2,
+                    UnitParentTypeDescription = "Weight/Volume"
+                },
+                new UnitParentType
+                {
+                    UnitParentTypeID = 3,
+                    UnitParentTypeDescription = "Test"
+                }
+            );
 
             modelBuilder.Entity<UnitType>().HasData
          (
@@ -1358,12 +1424,12 @@ namespace PrototypeWithAuth.Data
                  UnitParentTypeID = 1,
                  UnitTypeDescription = "Box"
              },
-             new UnitType
-             {
-                 UnitTypeID = 19,
-                 UnitParentTypeID = 1,
-                 UnitTypeDescription = "Case"
-             },
+             //new UnitType
+             //{
+             //    UnitTypeID = 19,
+             //    UnitParentTypeID = 1,
+             //    UnitTypeDescription = "Case"
+             //},
              new UnitType
              {
                  UnitTypeID = 3,
@@ -1489,7 +1555,13 @@ namespace PrototypeWithAuth.Data
                  UnitTypeID = 18,
                  UnitParentTypeID = 3,
                  UnitTypeDescription = "assays"
-             }
+             },
+              new UnitType
+              {
+                  UnitTypeID = -1,
+                  UnitParentTypeID =1,
+                  UnitTypeDescription = "Quartzy Unit"
+              }
             );
 
             modelBuilder.Entity<Project>().HasData
@@ -1815,6 +1887,15 @@ namespace PrototypeWithAuth.Data
                     LocationTypeNameAbbre = "S",
                     LocationTypeParentID = 501,
                     Depth = 3
+                },
+                new LocationType
+                {
+                    LocationTypeID = 600,
+                    LocationTypeName = "Quartzy",
+                    LocationTypePluralName = "Quartzy",
+                    LocationTypeNameAbbre = "Q",
+                    LocationTypeParentID = null,
+                    Depth = 0
                 }
             );
             modelBuilder.Entity<LocationRoomType>().HasData(
@@ -1853,9 +1934,118 @@ namespace PrototypeWithAuth.Data
                         LocationRoomTypeID = 6,
                         LocationRoomTypeDescription = "Storage Room",
                         LocationAbbreviation = "S"
+                    },
+                    new LocationRoomType
+                    {
+                        LocationRoomTypeID = 7,
+                        LocationRoomTypeDescription = "Liquid Nitrogen Room",
+                        LocationAbbreviation = "LN"
                     }
                 );
+            modelBuilder.Entity<LocationRoomInstance>().HasData(
+                       new LocationRoomInstance
+                       {
+                           LocationRoomInstanceID = 1,
+                           LocationRoomTypeID = 1,
+                           LocationRoomInstanceName = "Laboratory 1",
+                           LocationRoomInstanceAbbrev = "L1",
+                       },
+                       new LocationRoomInstance
+                       {
+                           LocationRoomInstanceID = 2,
+                           LocationRoomTypeID = 1,
+                           LocationRoomInstanceName = "Laboratory 2",
+                           LocationRoomInstanceAbbrev = "L2",
+                       },
+                       
+                       new LocationRoomInstance
+                       {
+                           LocationRoomInstanceID = 3,
+                           LocationRoomInstanceName = "Tissue Culture 1",
+                           LocationRoomInstanceAbbrev = "TC1",
+                           LocationRoomTypeID = 2
+                       },
+                       
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID = 4,
+                            LocationRoomTypeID = 3,
+                            LocationRoomInstanceName = "Equipment Room 1",
+                            LocationRoomInstanceAbbrev = "E1"
 
+                        },
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID = 5,
+                            LocationRoomTypeID = 4,
+                            LocationRoomInstanceName = "Refrigerator Room 1",
+                            LocationRoomInstanceAbbrev = "R1"
+
+                        },
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID = 6,
+                            LocationRoomTypeID = 5,
+                            LocationRoomInstanceName = "Washing Room 1",
+                            LocationRoomInstanceAbbrev = "W1"
+                        },
+                        
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID = 7,
+                            LocationRoomTypeID = 6,
+                            LocationRoomInstanceName = "Storage Room 1",
+                            LocationRoomInstanceAbbrev = "S1"
+
+                        },
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID = 8,
+                            LocationRoomTypeID = 1,
+                            LocationRoomInstanceName = "DS-Lab 3",
+                            LocationRoomInstanceAbbrev = "DSL3",
+                        },
+                       new LocationRoomInstance
+                       {
+                           LocationRoomInstanceID = 9,
+                           LocationRoomTypeID = 1,
+                           LocationRoomInstanceName = "DS-Lab 4",
+                           LocationRoomInstanceAbbrev = "DSL4",
+                       },
+                       new LocationRoomInstance
+                       {
+                           LocationRoomInstanceID = 10,
+                           LocationRoomInstanceName = "DS-Tissue Culture 2",
+                           LocationRoomInstanceAbbrev = "DSTC2",
+                           LocationRoomTypeID = 2
+                       },
+                       new LocationRoomInstance
+                       {
+                           LocationRoomInstanceID = 11,
+                           LocationRoomTypeID = 5,
+                           LocationRoomInstanceName = "DS-Washing Room 2",
+                           LocationRoomInstanceAbbrev = "DSW2"
+                       },
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID = 12,
+                            LocationRoomTypeID = 7,
+                            LocationRoomInstanceName = "Liquid Nitrogen Room 1",
+                            LocationRoomInstanceAbbrev = "LN1"
+
+                        }
+                        );
+            modelBuilder.Entity<TemporaryLocationInstance>().HasData(
+                 new LocationInstance
+                 {
+                     LocationInstanceID = -1,
+                     LocationInstanceAbbrev = "Quartzy",
+                     LocationInstanceName = "Quartzy Temporary",
+                     LocationTypeID = 600,
+                     LocationNumber = 1,
+                     IsEmptyShelf = true
+                 }
+             );
             modelBuilder.Entity<LabPart>().HasData(
                     new LabPart
                     {

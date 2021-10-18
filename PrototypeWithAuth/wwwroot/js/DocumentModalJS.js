@@ -24,64 +24,93 @@
         $(".document-name#FileName").val(fileName)
 
 
-        var extn = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
-        console.log("extn: " + extn);
-        if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn != "ppt" && extn != "pptx" && extn != "") {
-            alert("invalid file extension");
-            return;
-        }
+		var extn = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
+		console.log("extn: " + extn);
+		//if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn != "ppt" && extn != "pptx" && extn !="") {
+		//	alert("invalid file extension");
+		//	return;
+		//}
 
-        //var $form = $(this).parents('form');
-        console.log("in save doc files");
-        //console.log("form: " + $form);
-        //$(this).ajaxSubmit();
-        //var url = $("#documentModalForm").data('string');
-        console.log("input button: " + inputButton);
-        var url = inputButton.attr("href");
-        var $isEdittable = $('.isEdittable').val();
-        //alert($isEdittable)
-        var $showSwitch = $('.showSwitch').val();
-        console.log("url : " + url);
+		//var $form = $(this).parents('form');
+		console.log("in save doc files");
+		//console.log("form: " + $form);
+		//$(this).ajaxSubmit();
+		//var url = $("#documentModalForm").data('string');
+		console.log("input button: " + inputButton);
+		var url = inputButton.attr("href");
+		var $isEdittable = $('.isEdittable').val();
+		//alert($isEdittable)
+		var $showSwitch =  $('.showSwitch').val();
+		console.log("url : " + url);
         var formData = new FormData($(".documentModalForm")[0]);
         var $CustomMainObjectID = $("#CustomMainObjectID").val();
-        //for(var i=0; i< $(this).get(0).files.length; i++)
-        //{
-        //	formData.append("FilesToSave", $(this).get(0).files[i])
-        //}
+		//for(var i=0; i< $(this).get(0).files.length; i++)
+		//{
+		//	formData.append("FilesToSave", $(this).get(0).files[i])
+		//}
+		//var files = [];
+		//var fileInput =		formData.get("FilesToSave");
+		// $.each(e.target.files, function(i, file) {
+		//	 console.log(file)
+		//	files.push(file);
+		// });
 
-        console.log(...formData)
-        $.ajax({
-            url: url,
-            method: 'POST',
-            data: formData,
-            success: (partialResult) => {
+		//var zip = new JSZip();
+		//	function addFileToZip(n) {
+		//		if(n >= files.length) {
+		//			zip.generateAsync({type:"blob", compression:"DEFLATE", compressionOptions: { level: 9    },}).then(function(content) {
+		//					formData.set("FilesToSave", content)
+		//	console.log(...formData)
 
-                //this.options.noteModalElement.modal('hide');
-                $(".carousel-item").remove();
+			$.ajax({
+				url: url,
+				method: 'POST',
+				data: formData,
+				success: (partialResult) => {
+		
+					//this.options.noteModalElement.modal('hide');
+					$(".carousel-item").remove();
+				
+
+					var $enumString =  $('.folderName').val();
+					var $requestId =  $('.objectID').val();
+					var section = $("#masterSectionType").val();
+					var guid = $("#Guid").val();
+                    var $CustomMainObjectID = $("#CustomMainObjectID").val();
 
 
-                var $enumString = $('.folderName').val();
-                var $requestId = $('.objectID').val();
-                var section = $("#masterSectionType").val();
-                var guid = $("#Guid").val();
-                var $CustomMainObjectID = $("#CustomMainObjectID").val();
-                //alert("$CustomMainObjectID: " + $CustomMainObjectID);
-
-                if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
-                    section = "Operations"
-                } else if ($(".open-document-modal.active-document-modal").hasClass('labManagement') || $(".open-document-modal.active-document-modal").hasClass('LabManagement')) {
-                    section = "LabManagement"
-                }
-                $.fn.ChangeColorsOfModal($enumString, section);
-                var parentFolder = $('.parentFolderName').val();
-                $.fn.OpenDocumentsModal(true, $enumString, $requestId, guid, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
-                return true;
-            },
-            processData: false,
-            contentType: false
-        });
+					if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
+						section = "Operations"
+					} else if ($(".open-document-modal.active-document-modal").hasClass('labManagement')|| $(".open-document-modal.active-document-modal").hasClass('LabManagement')) {
+						section = "LabManagement"
+					}
+					$.fn.ChangeColorsOfModal($enumString, section);
+					var parentFolder =  $('.parentFolderName').val();
+                    $.fn.OpenDocumentsModal(true, $enumString, $requestId, guid, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
+					return true;
+				},
+				processData: false,
+				contentType: false
+            });
         return true;
-    })
+		//			});
+				
+		//			return;
+		//		}
+		//		var file = files[n]; 
+		//		console.log(file);
+		//		var arrayBuffer;
+		//		var fileReader = new FileReader();
+		//		fileReader.onload = function(e) {
+		//			arrayBuffer = this.result;
+		//			zip.file(file.name, arrayBuffer,{ binary:true});
+		//			addFileToZip(n + 1);
+		//		};
+		//		fileReader.readAsArrayBuffer(file);
+		//	}
+		//addFileToZip(0);
+
+	})
 
     $(".file-select").on("change", function (e) {
         console.log("file was changed");

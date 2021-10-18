@@ -6,14 +6,13 @@
     var formdata = new FormData($("#myForm")[0]);
     console.log(formdata);
     if (!valid) {
-
         if (!$('.activeSubmit').hasClass('disabled-submit')) {
             $('.activeSubmit').addClass('disabled-submit')
         }
-
     }
     else {
         $('.activeSubmit ').removeClass('disabled-submit')
+        $(this).prop('disabled', true);
         var formData = new FormData($("#myForm")[0]);
         $.ajax({
             processData: false,
@@ -24,16 +23,18 @@
             data: formData,
             cache: false,
             success: function (data) {
+                $(this).prop('disabled', false);
                 $.fn.CloseModal('edit-quote');
                 $('._IndexTableDataByVendor').html(data);
             },
             error: function (jqxhr) {
+                $(this).prop('disabled', false);
                 $.fn.OpenModal('modal', 'edit-quote', jqxhr.responseText)
                 $('.mdb-select').materialSelect();
             }
         });
     }
-    $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+    $("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';
 
 })
 

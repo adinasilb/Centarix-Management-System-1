@@ -1,5 +1,8 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
 @using PrototypeWithAuth.AppData
+<div class="error-message">
+    @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage);}
+</div>
 @if (Model.RequestsByVendor.Count() > 0)
 {
     <input type="hidden" class="activeVendor" value="" />
@@ -41,7 +44,7 @@
         </thead>
 
     </table>
-    <div class="_IndexTableDataByVendor">
+    <div class="_IndexTableDataByVendor scroll-body">
         @{
             await Html.RenderPartialAsync("_IndexTableDataByVendor", Model);
         }

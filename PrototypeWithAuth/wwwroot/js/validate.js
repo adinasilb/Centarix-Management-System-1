@@ -56,10 +56,14 @@ $(function () {
 	
 	$.fn.AppendAsteriskToRequired();
 
-	$('#myForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled], #-error';
+	$('#myForm').data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden, input:visible, textarea:visible), [disabled], #-error';
 	$('#myForm').data("validator").settings.errorPlacement = function (error, element) {
+		console.log('in error placement')
 		if (element.hasClass('select-dropdown')) {
 			error.insertAfter(element);
+		} else if (element.hasClass('location-error')) {
+			error.insertAfter('#location-error-msg');
+			console.log('setting error text')
 		} else {
 			error.insertAfter(element);
 		}
@@ -130,7 +134,9 @@ $(function () {
 			console.log("min date" + minDate)
 	return selectedDate <= minDate;
 }, 'Please select a valid date');
-
+	$.validator.addMethod('greaterThan', function (value, el, param) {
+		return value > param;
+	}, 'Please enter a value greater than {0}');
 	$.validator.addMethod("lowercase", function (value, element) {
 		if (this.optional(element)) {
 			return true;
@@ -214,73 +220,75 @@ $(function () {
 				$('.activeSubmit').addClass('disabled-submit')
 			}
 		}
-		$("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled]';
+		$("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden, input:visible, textarea:visible), [disabled]';
 	});
 
 	$('.next-tab').off("click").click(function () {
 		var clickedElement= $(this);
-		
+		var currentTab = $(".current-tab")
+
 		if(!$(this).hasClass("current-tab"))
 		{
-			if ($(this).hasClass('request-price') ) {
-				$('#unitTypeID').rules("remove", "selectRequired");
-			}
 
 			if ($(this).hasClass('order-tab-link') ) {
 				$('.activeSubmit').removeClass('disabled-submit')
 			}
-
+			
 			//change previous tabs to accessible --> only adding prev-tab in case we need to somehow get it after
 
 			if (!$(this).hasClass("prev-tab")) {
+
+				if ($(this).parent("li").index() <= $('.request-price').parent("li").index()) {
+					$('#unitTypeID').rules("remove", "selectRequired");
+					console.log('removed price selects');
+				}
+				if ($(this).parent("li").index() <= $('.request-location').parent("li").index() &&$('#locationTypeSelected').length>0) {
+					$('#locationTypeSelected').rules("remove", "locationRequired");
+					$('#locationVisualSelected').rules("remove", "locationRequired");
+					$('#subLocationSelected').rules("remove", "locationRequired");
+					console.log('removed locationrequired');
+				}
+				console.log($("#myForm").validate().settings.rules)
+				console.log($("#myForm").validate().settings.ignore)
+				console.log('this index ' + $(this).parent("li").index());
+				console.log('location index ' + $('.request-location').parent("li").index())
 				var valid = $("#myForm").valid();
 
 				console.log("valid tab" + valid)
 				if (!valid) {
 					$(this).prop("disabled", true);
+
+				} else {
+					$(currentTab).removeClass("current-tab")
+					$(this).prop("disabled", false);
+					$(this).addClass("current-tab");
 				}
-				else {
-						var currentTab = $(".current-tab")
-						$(currentTab).removeClass("current-tab")
-						$(this).prop("disabled", false);
-						$(this).addClass("current-tab");
-						$(".next-tab").removeClass("prev-tab");
-						$('.next-tab').each(function(index, element){
-			
 
-							if($(clickedElement).parent("li").index() > $(element).parent("li").index())
-							{
-								//alert("true")
-								$(element).addClass("prev-tab");
-							}
+				//work around for now - because select hidden and location-error hidden are ignored
+				if ($(this).parent("li").index() <= $('.request-price').parent("li").index()) {
+					$('#unitTypeID').rules("add", "selectRequired");
+				}
+				if ($(this).parent("li").index() <= $('.request-location').parent("li").index()) {
+					$('#locationTypeSelected').rules("add", "locationRequired");
+					$('#locationVisualSelected').rules("add", "locationRequired");
+					$('#subLocationSelected').rules("add", "locationRequired");
+					console.log('added locationrequired');
+				}
+				//console.log(currentTab);
 
-						});
-					}
-			
-			}
-			else
-			{
-			    var currentTab = $(".current-tab")
+			} else {
 				$(currentTab).removeClass("current-tab")
 				$(this).prop("disabled", false);
 				$(this).addClass("current-tab");
-				$(".next-tab").removeClass("prev-tab");
-				$('.next-tab').each(function(index, element){
-	
-
-					if($(clickedElement).index() > $(element).parent("li").index())
-					{
-						//alert("true")
-						$(element).addClass("prev-tab");
-					}
-
-				});
-
 			}
-			//work around for now - because select hidden are ignored
-				if ($(this).hasClass('request-price')) {
-					$('#unitTypeID').rules("add", "selectRequired");
+			$(".next-tab").removeClass("prev-tab");
+			$('.next-tab').each(function (index, element) {
+
+				if ($('.current-tab').parent("li").index() > $(element).parent("li").index()) {
+					//alert("true")
+					$(element).addClass("prev-tab");
 				}
+			});
 		}
 		
 
@@ -294,17 +302,18 @@ $(function () {
 		$(this).data("validator").settings.ignore = "";
 		var valid = $(this).valid();
 		console.log("validate.js says valid form: " + valid)
+		
 		if (!valid) {
 			e.preventDefault();
 			if (!$('.activeSubmit').hasClass('disabled-submit')) {
 				$('.activeSubmit').addClass('disabled-submit')
 			}
 
-		}
-		else {
+		} else {
 			$('.activeSubmit ').removeClass('disabled-submit')
+			$("input[type='submit']").prop('disabled', true)
 		}
-		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+		$(this).data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden, input:visible, textarea:visible)';
 	});
 
 	$.validator.addMethod("fileRequired", function (value, element) {
@@ -312,4 +321,51 @@ $(function () {
 		return $(element).hasClass("contains-file");
 	}, 'Must upload a file before submitting');
 
+	$.validator.addMethod("locationRequired", function (value, element) {
+		console.log("in location required")
+		var locationSelected = $(element).attr("data-val") === 'true';
+		console.log($(element).attr("data-val"));
+		return locationSelected;
+	}, 'Please choose a location before submitting');
+
+	$.validator.addMethod("validTime", function (value, element) {
+	var t = value.split(':');
+	if (t[0].length == 1) {
+		value = "0" + value;
+	}
+	if (t[2] != null) {
+		$("#"+element.id).val(t[0] + ":" + t[1]);
+    }
+	var result = value.length == 0 || (/^\d\d:\d\d$/.test(value) &&
+		t[0] >= 0 && t[0] < 24 &&
+		t[1] >= 0 && t[1] < 60);
+	return result;
+	}, "Invalid time");
+
+	$.validator.addMethod("validTimeWithSeconds", function (value, element) {
+	var t = value.split(':');
+	if (t[0].length == 1) {
+		value = "0" + value;
+	}
+	if(t[0]==undefined)
+	{
+		t[0]="00";
+	}
+	if(t[1]==undefined)
+	{
+		t[1]="00";
+	}
+	if(t[2]==undefined)
+	{
+		t[2]="00";
+	}
+	$("#"+element.id).val(t[0] + ":" + t[1]+":" + t[2]);
+
+	var result = value.length == 0 || (/^\d\d:\d\d:\d\d$/.test(value) &&
+		t[0] >= 0 && t[0] < 24 &&
+		t[1] >= 0 && t[1] < 60 &&
+		t[2] >= 0 && t[2] < 60  
+		);
+	return result;
+	}, "Invalid time");
 });

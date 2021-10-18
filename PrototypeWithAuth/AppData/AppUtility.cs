@@ -18,6 +18,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 //using System.Web.Script.Serialization;
@@ -96,8 +97,9 @@ namespace PrototypeWithAuth.AppData
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
         public enum FolderNamesEnum { Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details, Custom } //Listed in the site.js (if you change here must change there)
-        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote, ExperimentEntries }
+        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote, ExperimentEntries, ParentRequest, FunctionResults }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
+        public enum ModalType { None, Terms, UploadOrder, UploadQuote, ConfirmEmail, Reorder }
         public static string AspDateFormatString = "{0:d MMM yyyy}";
         public static List<StringWithName> RequestRoleEnums()
         {
@@ -129,7 +131,7 @@ namespace PrototypeWithAuth.AppData
             return pre;
         }
         public enum RoleItems { Admin, CEO }
-        public enum CurrencyEnum { NIS, USD }
+        public enum CurrencyEnum { None, NIS, USD }
         public enum PaymentsPopoverEnum
         {
             //Share,
@@ -146,10 +148,10 @@ namespace PrototypeWithAuth.AppData
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }
-        public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusables, Equipment, Operation, Biological, Safety, General, Clinical }
+        public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusable, Equipment, Operation, Biological, Safety, General, Clinical }
         public enum RequestModalType { Create, Edit, Summary }
-        public enum ProtocolModalType { Create, CheckListMode, Summary, Edit, SummaryFloat }
-        public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
+        public enum ProtocolModalType {None, Create, CheckListMode, Summary, Edit, SummaryFloat, CreateNewVersion }
+        public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
         public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue }
         public enum PopoverEnum { None }
@@ -157,7 +159,10 @@ namespace PrototypeWithAuth.AppData
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
         public enum FavoriteIconTitle { FilledIn, Empty }
         public enum ProtocolFunctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
+        public enum FunctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
         public enum ReportsFunctionTypes { AddFile }
+        public enum ResultsFunctionTypes { AddImage, AddLinkToProduct, AddLinkToProtocol, AddFile }
+
         public enum ReportTypes { Daily, Weekly, Monthly }
         public static List<StringWithName> FavoriteIcons()
         {
@@ -171,7 +176,7 @@ namespace PrototypeWithAuth.AppData
         public enum IconNamesEnum { Share, Favorite, MorePopover, Edit, RemoveShare }
 
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
-        { Request, Resource, Protocol }
+        { Request, Resource, Protocols }
         public enum GlobalInfoType { ExchangeRate, LoginUpdates, LastProtocolLine }
         public enum DataTypeEnum { String, Double, DateTime, Bool, File }
         public enum DataCalculation { None, BMI }
@@ -483,57 +488,74 @@ namespace PrototypeWithAuth.AppData
 
         public static List<String> GetPriceColumn(List<String> priceFilterEnums, Request request, CurrencyEnum currency)
         {
-            List<String> priceColumn = new List<String>();
-            var currencyFormat = "he-IL";
-            var pricePerUnit = request.PricePerUnit;
-            var cost = request.Cost;
-            var total = request.TotalWithVat;
-            var vat = request.VAT;
-            var exchangeRate = request.ExchangeRate == 0 ? 1 : request.ExchangeRate;
+            try
+            {
+                List<String> priceColumn = new List<String>();
+                var currencyFormat = "he-IL";
+                var pricePerUnit = request.PricePerUnit;
+                var cost = request.Cost;
+                var total = request.TotalWithVat;
+                var vat = request.VAT;
+                //var exchangeRate = request.ExchangeRate == 0 ? 1 : request.ExchangeRate;
+                var exchangeRate = request.ExchangeRate;
 
-            if (currency == AppUtility.CurrencyEnum.USD)
-            {
-                currencyFormat = "en-US";
-                pricePerUnit = request.PricePerUnit / exchangeRate;
-                cost = request.Cost / exchangeRate;
-                total = request.TotalWithVat / exchangeRate;
-                vat = request.VAT / exchangeRate;
-            }
-            foreach (var p in priceFilterEnums)
-            {
-                switch (Enum.Parse(typeof(PriceSortEnum), p))
+                if (currency == AppUtility.CurrencyEnum.USD)
                 {
-                    case PriceSortEnum.Unit:
-                        priceColumn.Add("U: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", pricePerUnit));
-                        break;
-                    case PriceSortEnum.Total:
-                        priceColumn.Add("T: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", cost));
-                        break;
-                    case PriceSortEnum.Vat:
-                        priceColumn.Add("V: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", vat));
-                        break;
-                    case PriceSortEnum.TotalVat:
-                        priceColumn.Add("P: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", total));
-                        break;
+                    currencyFormat = "en-US";
+                    pricePerUnit = request.PricePerUnit / exchangeRate;
+                    cost = request.Cost / exchangeRate;
+                    total = request.TotalWithVat / exchangeRate;
+                    vat = request.VAT / exchangeRate;
                 }
+                foreach (var p in priceFilterEnums)
+                {
+                    switch (Enum.Parse(typeof(PriceSortEnum), p))
+                    {
+                        case PriceSortEnum.Unit:
+                            priceColumn.Add("U: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", pricePerUnit));
+                            break;
+                        case PriceSortEnum.Total:
+                            priceColumn.Add("T: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", cost));
+                            break;
+                        case PriceSortEnum.Vat:
+                            priceColumn.Add("V: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", vat));
+                            break;
+                        case PriceSortEnum.TotalVat:
+                            priceColumn.Add("P: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", total));
+                            break;
+                    }
+                }
+                return priceColumn;
             }
-            return priceColumn;
+            
+            catch(Exception ex)
+            {
+                return new List<String>() { "price has an error" };
+            }
         }
 
-        public static List<string> GetCategoryColumn(bool categorySelected, bool subcategorySelected, ProductSubcategory ps, ParentCategory pc)
+        public static List<string> GetCategoryColumn(bool categorySelected, bool subcategorySelected, Product p)
         {
-            List<string> categoryColumn = new List<String>();
-            var category = pc.ParentCategoryDescription;
-            var subcategory = ps.ProductSubcategoryDescription;
-            if (categorySelected)
+            try
             {
-                categoryColumn.Add(category);
+
+                List<string> categoryColumn = new List<String>();
+                var category = p.ProductSubcategory.ParentCategory.ParentCategoryDescription;
+                var subcategory = p.ProductSubcategory.ProductSubcategoryDescription;
+                if (categorySelected)
+                {
+                    categoryColumn.Add(category);
+                }
+                if (subcategorySelected)
+                {
+                    categoryColumn.Add(subcategory);
+                }
+                return categoryColumn;
             }
-            if (subcategorySelected)
+            catch (Exception ex)
             {
-                categoryColumn.Add(subcategory);
+                return new List<string>() { "category has an error" };
             }
-            return categoryColumn;
         }
         //public static List<T> CloneList<T>(T list)
         //{
@@ -550,24 +572,40 @@ namespace PrototypeWithAuth.AppData
             return newCopy;
         }
 
-        public static List<String> GetAmountColumn(Request request, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType)
+        public static List<String> GetAmountColumn(Request request)
         {
-            List<String> amountColumn = new List<String>();
-            if (request.Unit != null)
+            try
             {
-                amountColumn.Add(request.Unit + " " + unitType.UnitTypeDescription);
-                if (request.SubUnit != null)
+                List<String> amountColumn = new List<String>();
+                if (request.Unit != null)
                 {
-                    amountColumn.Add(request.SubUnit + " " + subUnitType.UnitTypeDescription);
-                    if (request.SubSubUnit != null)
+                    amountColumn.Add(request.Unit + " " + request.Product.UnitType.UnitTypeDescription);
+                    if (request.Product.SubUnit != null)
                     {
-                        amountColumn.Add(request.SubSubUnit + " " + subSubUnitType.UnitTypeDescription);
+                        amountColumn.Add(request.Product.SubUnit + " " + request.Product.SubUnitType.UnitTypeDescription);
+                        if (request.Product.SubSubUnit != null)
+                        {
+                            amountColumn.Add(request.Product.SubSubUnit + " " + request.Product.SubSubUnitType.UnitTypeDescription);
+                        }
+
                     }
 
                 }
-
+                return amountColumn;
             }
-            return amountColumn;
+            catch (Exception ex)
+            {
+                return new List<String>() { "unit has an error" };
+            }
+        }
+
+        public static decimal GetPricePerSubUnit(Request request)
+        {
+            return request.Product.SubUnit != null ? request.PricePerUnit / request.Product.SubUnit ?? 1 : 0;
+        }
+        public static decimal GetPricePerSubSubUnit(Request request)
+        {
+            return request.Product.SubSubUnit != null ? GetPricePerSubUnit(request) / request.Product.SubUnit ?? 1 : 0;
         }
 
         public static string GetNote(SidebarEnum sidebarEnum, Request request)
@@ -679,14 +717,13 @@ namespace PrototypeWithAuth.AppData
 
         public static string GetExceptionMessage(Exception ex)
         {
-            if (ex.InnerException != null)
+            Exception exception = ex;
+            while (exception.InnerException != null)
             {
-                return ex.InnerException.Message;
+                exception = exception.InnerException;
             }
-            else
-            {
-                return ex.Message;
-            }
+            return exception.Message;
+            
         }
 
         public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
@@ -782,5 +819,51 @@ namespace PrototypeWithAuth.AppData
         {
             return functionLines.Where(fl => fl.LineID == lineID).ToList();
         }
+
+        public static byte[] ConvertToByteArray(string str, Encoding encoding)
+        {
+            return encoding.GetBytes(str);
+        }
+
+        public static String ToBinary(Byte[] data)
+        {
+            return string.Join(" ", data.Select(byt => Convert.ToString(byt, 2).PadLeft(8, '0')));
+        }
+
+        public static decimal GetExchangeRateByDate(DateTime date)
+        {
+            var dateString = date.ToString("yyyy-MM-dd");
+            var client = new RestClient("http://api.currencylayer.com/historical?date=" + dateString + "&access_key=8a8f7defe393388b7249ffcdb09d6a34");
+            var request = new RestRequest(Method.GET);
+            IRestResponse response = client.Execute(request);
+            decimal rate = 0.0m;
+            try //try is b/c sometimes the api is down
+            {
+                dynamic tmp = JsonConvert.DeserializeObject(response.Content);
+                String stringRate = (string)tmp.quotes.USDILS;
+                stringRate = stringRate.Replace("{", "");
+                stringRate = stringRate.Replace("}", "");
+                decimal.TryParse(stringRate, out rate);
+                rate = Math.Round(rate, 3);
+                return rate;
+            }
+            catch (Exception ex)
+            {
+                return 0.0m;
+            }
+        }
+
+        public static String GetDateOrderedString(ParentRequest parentRequest)
+        {
+            try 
+            { 
+                return parentRequest.OrderDate.GetElixirDateFormat();
+            }
+            catch(Exception ex)
+            {
+                return "order date has an error";
+            }
+        }
     }
+
 }

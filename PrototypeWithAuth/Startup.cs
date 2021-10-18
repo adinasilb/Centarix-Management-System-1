@@ -24,6 +24,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace PrototypeWithAuth
 {
@@ -73,7 +75,7 @@ namespace PrototypeWithAuth
             {
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DevelopersDB"));
-                options.EnableSensitiveDataLogging(true);
+                options.EnableSensitiveDataLogging(true);   
             });
 
             services.AddControllersWithViews();
@@ -118,17 +120,16 @@ namespace PrototypeWithAuth
             // //       opt.Filters.Add<RequestFilterAttribute>());
 
 
-
             services.ConfigureApplicationCookie(options =>
             {
                 // Cookie settings
                 options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromHours(10);
+                options.ExpireTimeSpan = TimeSpan.FromDays(5);
                 options.LoginPath = "/Identity/Account/Login";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
                 options.Cookie.Name = "LoginCookie";
-            }); 
+            });
 
             //CookieOptions cookieOptions = new CookieOptions();
             //string GUID = new Guid().ToString();
@@ -172,9 +173,11 @@ namespace PrototypeWithAuth
                 endpoints.MapRazorPages();
             });
 
+
+            
             //ChangePassword(serviceProvider).Wait();
 
-            CreateRoles(serviceProvider).Wait();
+           // CreateRoles(serviceProvider).Wait();
             //AddRoles(serviceProvider).Wait();
 
             //app.UseApplicationInsightsRequestTelemetry();

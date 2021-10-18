@@ -12,7 +12,8 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
     console.log($('#masterSidebarType').val())
     //console.log($(".modal").hasClass('editModal'));
     if ($(".modal").hasClass('editModal')) {
-        var requestID = $('#history').find('button.open-history-item-modal').attr("value");
+        var requestID = $('#history').find('a.open-history-item-modal').attr("value");
+        //console.log('reqeustid ' + requestID);
         var selectedPriceSort = [];
         $("#priceSortContent2 .priceSort:checked").each(function (e) {
             selectedPriceSort.push($(this).attr("enum"));
@@ -25,24 +26,27 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
             cache: false,
             success: function (data) {
                 $('#history').html(data);
+            },
+            error: function (jqxhr) {
+                $('.modal .error-message').html(jqxhr.responseText);
             }
         });
     }
     else if ($("#masterSidebarType").val() == "Favorites" || $("#masterSidebarType").val() == "SharedRequests")
     {
-        $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "GET");
+        $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "POST");
     }
     else if ($('#masterPageType').val() == "RequestCart" || $('#masterPageType').val() == "LabManagementQuotes" || $('#masterPageType').val() == "AccountingPayments" || $('#masterPageType').val() == "AccountingNotifications") {
     
-            $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableDataByVendor", "._IndexTableDataByVendor", "GET");
+        $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableDataByVendor", "._IndexTableDataByVendor", "POST");
     }
     else {
-        if ($('#masterPageType').val() == "AccountingGeneral") {
+        /*if ($('#masterPageType').val() == "AccountingGeneral") {
             var year = $("#Years").val();
             var month = $("#Months").val();
 
-        }
-        $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "GET", undefined, "", month, year);
+        }*/
+        $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "POST"/*, undefined, "", month, year*/);
     }
     return false;
 
@@ -75,12 +79,12 @@ $(".open-price-popover").off('click').click(function () {
             $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableDataByVendor", "._IndexTableDataByVendor", "GET");
         }
         else {
-            if ($('#masterPageType').val() == "AccountingGeneral") {
+            /*if ($('#masterPageType').val() == "AccountingGeneral") {
                 var year = $("#Years").val();
                 var month = $("#Months").val();
 
-            }
-            $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "GET", undefined, "", month, year);
+            }*/
+            $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "POST"/*, undefined, "", month, year*/);
         }
         return false;
     })

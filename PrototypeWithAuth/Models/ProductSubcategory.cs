@@ -14,12 +14,14 @@ namespace PrototypeWithAuth.Models
         [Required]
         public int ParentCategoryID { get; set; }
         public ParentCategory ParentCategory { get; set; }
-        
+
         [Required]
         [Display(Name = "Subcategory")]
         public string ProductSubcategoryDescription { get; set; }
 
         public IEnumerable<Product> Products { get; set; }
         public string ImageURL { get; set; }
+
+        public bool IsOldSubCategory {get; set;}
     }
 }

@@ -427,6 +427,42 @@
     <Compile Remove="Data\Migrations\20210817075353_uniqueIndexOnParticipantAndVisitNumber.Designer.cs" />
     <Compile Remove="Data\Migrations\20210817080202_uniqueIndexOnParticipantAndVisitNumber.cs" />
     <Compile Remove="Data\Migrations\20210817080202_uniqueIndexOnParticipantAndVisitNumber.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210720095342_AddTempIDsTable.cs" />
+    <Compile Remove="Data\Migrations\20210720095342_AddTempIDsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210720114149_AddTempIDsTable.cs" />
+    <Compile Remove="Data\Migrations\20210720114149_AddTempIDsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210720114811_AddTempIDsTable.cs" />
+    <Compile Remove="Data\Migrations\20210720114811_AddTempIDsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210720124045_AddTempIDsTable3.cs" />
+    <Compile Remove="Data\Migrations\20210720124045_AddTempIDsTable3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210726130426_MoveUnitToProduct.cs" />
+    <Compile Remove="Data\Migrations\20210726130426_MoveUnitToProduct.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210726131100_MoveUnitToProduct.cs" />
+    <Compile Remove="Data\Migrations\20210726131100_MoveUnitToProduct.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802082857_quoteStatusOnRequest.cs" />
+    <Compile Remove="Data\Migrations\20210802082857_quoteStatusOnRequest.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802092205_testQuoteStatusBack.cs" />
+    <Compile Remove="Data\Migrations\20210802092205_testQuoteStatusBack.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802093434_moveQuoteStatusOver.cs" />
+    <Compile Remove="Data\Migrations\20210802093434_moveQuoteStatusOver.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802101525_RemoveQuoteStatusFromParentQuote.cs" />
+    <Compile Remove="Data\Migrations\20210802101525_RemoveQuoteStatusFromParentQuote.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802101837_RemoveQuoteStatusFromParentQuote.cs" />
+    <Compile Remove="Data\Migrations\20210802101837_RemoveQuoteStatusFromParentQuote.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802102104_RemoveQuoteStatusFromParentQuote.cs" />
+    <Compile Remove="Data\Migrations\20210802102104_RemoveQuoteStatusFromParentQuote.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802102412_RemoveQuoteStatusFromParentQuote.cs" />
+    <Compile Remove="Data\Migrations\20210802102412_RemoveQuoteStatusFromParentQuote.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802103031_RemoveQuoteStatusFromParentQuote.cs" />
+    <Compile Remove="Data\Migrations\20210802103031_RemoveQuoteStatusFromParentQuote.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210805073330_UpdatedOldSubcategoryName.cs" />
+    <Compile Remove="Data\Migrations\20210805073330_UpdatedOldSubcategoryName.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210802074407_sdsdf.cs" />
+    <Compile Remove="Data\Migrations\20210802074407_sdsdf.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210822065747_AddProtocolVersion.cs" />
+    <Compile Remove="Data\Migrations\20210822065747_AddProtocolVersion.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211005115854_TestMergeProtocolWithMaster.cs" />
+    <Compile Remove="Data\Migrations\20211005115854_TestMergeProtocolWithMaster.Designer.cs" />
   </ItemGroup>
 
 
@@ -439,6 +475,8 @@
     <PackageReference Include="GoogleAuthenticator" Version="2.0.1" />
     <PackageReference Include="jQuery.Fullcalendar" Version="3.9.0" />
     <PackageReference Include="jQuery.Validation" Version="1.19.2" />
+    <PackageReference Include="JSZip" Version="3.1.5" />
+    <PackageReference Include="LinqToExcel" Version="1.11.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.16.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
@@ -466,6 +504,7 @@
     <PackageReference Include="Select.HtmlToPdf.NetCore" Version="20.1.0" />
     <PackageReference Include="System-Web-Helpers.dll" Version="1.0.0" />
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
+    <PackageReference Include="System.Data.OleDb" Version="5.0.0" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0" />
     <PackageReference Include="WebcamCapturer.Controls.WPF" Version="1.1.1.2" />
     <PackageReference Include="WebcamCapturer.Core" Version="1.1.1.2" />

@@ -77,10 +77,10 @@ namespace PrototypeWithAuth.Controllers
                 request.RequestStatusID = 2; //ordered
                 ParentRequest parentRequest = new ParentRequest();
                 parentRequest.ApplicationUserID = _userManager.GetUserId(User);
-                int lastParentRequestOrderNum = 0;
+                long lastParentRequestOrderNum = 0;
                 if (_context.ParentRequests.Any())
                 {
-                    lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+                    lastParentRequestOrderNum = _context.ParentRequests.AsNoTracking().OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
                 }
                 parentRequest.OrderDate = DateTime.Now;
                 parentRequest.OrderNumber = lastParentRequestOrderNum;
