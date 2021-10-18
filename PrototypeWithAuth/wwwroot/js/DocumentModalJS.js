@@ -150,7 +150,7 @@
 		}
 	};
 
-	$("body, .modal").off("click").on("click",".delete-document", function (e) {
+	$("body, .modal").off("click", ".delete-document").on("click",".delete-document", function (e) {
 		e.preventDefault();
 		var hasClass = $(this).hasClass("delete-file-document");
 		var reportFile = $(this).hasClass("report-file");

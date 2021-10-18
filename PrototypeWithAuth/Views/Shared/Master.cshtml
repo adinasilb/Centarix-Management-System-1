@@ -1338,6 +1338,7 @@
                 $('.modal-backdrop').remove();
                 $('.body').removeClass('modal-open');
             }
+            $("body, .modal").bind("click");
         }
 
         $.fn.AddTempRequestHiddenFors = function (guid, sequence, selector) {

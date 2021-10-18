@@ -55,7 +55,7 @@
 			FavType = "unlike";
 			$.ajax({
 				async: true,
-				url: "/Protocols/FavoriteReport/?reportID=" + reportFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
+				url: "/Protocols/FavoriteReport?reportID=" + reportFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
 				traditional: true,
 				type: "GET",
 				cache: false,
@@ -77,7 +77,7 @@
 			title = "Unfavorite";
 			$.ajax({
 				async: true,
-				url: "/Protocols/FavoriteReport/?protocolID=" + reportFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
+				url: "/Protocols/FavoriteReport?reportID=" + reportFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
 				traditional: true,
 				type: "GET",
 				cache: false,

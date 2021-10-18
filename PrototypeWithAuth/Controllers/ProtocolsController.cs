@@ -284,7 +284,7 @@ namespace PrototypeWithAuth.Controllers
             }
             reportsIndexObject.ReportCategory = _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == reportsIndexObject.ReportCategoryID).FirstOrDefault();
             IQueryable<Report> ReportsPassedIn = Enumerable.Empty<Report>().AsQueryable();
-            IQueryable<Report> ReportsPassedInWithInclude = _context.Reports.Where(r => r.ReportCategoryID == reportsIndexObject.ReportCategoryID)
+            IQueryable<Report> ReportsPassedInWithInclude = _context.Reports
                 .Include(r => r.ReportType);
 
             switch (reportsIndexObject.PageType)
@@ -295,6 +295,7 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.SidebarEnum.DailyReports:
                             break;
                         case AppUtility.SidebarEnum.WeeklyReports:
+                            ReportsPassedInWithInclude = ReportsPassedInWithInclude.Where(r => r.ReportCategoryID == reportsIndexObject.ReportCategoryID);
                             ReportsPassedInWithInclude = ReportsPassedInWithInclude.Where(r => r.ReportTypeID == 2);
                             break;
                         case AppUtility.SidebarEnum.MonthlyReports:
@@ -302,6 +303,12 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.SidebarEnum.SharedWithMe:
                             break;
                         case AppUtility.SidebarEnum.LastProtocol:
+                            break;
+                        case AppUtility.SidebarEnum.Favorites:
+                            var favoriteReports = _context.FavoriteReports.Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+                    .Select(fr => fr.ReportID);
+                            ReportsPassedInWithInclude = ReportsPassedInWithInclude.Where(frl => favoriteReports.Contains(frl.ReportID));
+
                             break;
                     }
                     break;
@@ -332,6 +339,7 @@ namespace PrototypeWithAuth.Controllers
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--protocols-color)", "report-favorite", "Favorite");
 
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
+            var user = await _userManager.GetUserAsync(User);
             switch (reportsIndexObject.PageType)
             {
                 case AppUtility.PageTypeEnum.ProtocolsReports:
@@ -339,7 +347,9 @@ namespace PrototypeWithAuth.Controllers
                     {
                         case AppUtility.SidebarEnum.WeeklyReports:
                             iconList.Add(favoriteIcon);
-                            onePageOfReports = await GetReportListRows(reportsIndexObject, onePageOfReports, ReportPassedInWithInclude);
+                            onePageOfReports = await ReportPassedInWithInclude.OrderByDescending(r => r.DateCreated).Select(r => new ReportIndexPartialRowViewModel(AppUtility.ReportTypes.Weekly, r, r.ReportCategory, reportsIndexObject,
+                                _context.FavoriteReports.Where(fr => fr.ReportID == r.ReportID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(), iconList)
+                            ).ToPagedListAsync(reportsIndexObject.PageNumber == 0 ? 1 : reportsIndexObject.PageNumber, 20);
                             break;
                         case AppUtility.SidebarEnum.DailyReports:
                             break;
@@ -349,19 +359,18 @@ namespace PrototypeWithAuth.Controllers
                             break;
                         case AppUtility.SidebarEnum.LastProtocol:
                             break;
+                        case AppUtility.SidebarEnum.Favorites:
+                            iconList.Add(favoriteIcon);
+                            onePageOfReports = await ReportPassedInWithInclude.OrderByDescending(r => r.DateCreated).Select(r => new ReportIndexPartialRowViewModel(AppUtility.ReportTypes.Weekly, r, r.ReportCategory, reportsIndexObject,
+                                _context.FavoriteReports.Where(fr => fr.ReportID == r.ReportID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(), iconList)
+                            ).ToPagedListAsync(reportsIndexObject.PageNumber == 0 ? 1 : reportsIndexObject.PageNumber, 20);
+                            break;
                     }
                     break;
             }
             return onePageOfReports;
         }
 
-        private static async Task<IPagedList<ReportIndexPartialRowViewModel>> GetReportListRows(ReportsIndexObject reportsIndexObject, IPagedList<ReportIndexPartialRowViewModel> onePageOfReports, IQueryable<Report> ReportPassedInWithInclude)
-        {
-            var reports = ReportPassedInWithInclude.OrderByDescending(r => r.DateCreated);
-            onePageOfReports = await ReportPassedInWithInclude.OrderByDescending(r => r.DateCreated).ToList().Select(r => new ReportIndexPartialRowViewModel(AppUtility.ReportTypes.Weekly, r, r.ReportCategory, reportsIndexObject)
-            ).ToPagedListAsync(reportsIndexObject.PageNumber == 0 ? 1 : reportsIndexObject.PageNumber, 20);
-            return onePageOfReports;
-        }
 
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> CurrentProtocols()
@@ -2165,6 +2174,24 @@ namespace PrototypeWithAuth.Controllers
             return View(reportsIndexViewModel);
         }
 
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> IndexFavoriteReports(AppUtility.SidebarEnum SidebarType)
+        {
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Favorites;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsReports;
+
+            ReportsIndexObject reportsIndexObject = new ReportsIndexObject()
+            {
+                PageType = AppUtility.PageTypeEnum.ProtocolsReports,
+                SidebarType = SidebarType,
+
+            };
+            var reportsIndexViewModel = await GetReportsIndexViewModel(reportsIndexObject);
+
+            return View(reportsIndexViewModel);
+        }
+
         public async Task<IActionResult> _ReportsIndexTable(ReportsIndexObject reportsIndex)
         {
             var reportsIndexViewModel = await GetReportsIndexViewModel(reportsIndex);
@@ -3264,6 +3291,73 @@ namespace PrototypeWithAuth.Controllers
             }
             return new EmptyResult();
         }
+
+
+        [HttpGet]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> FavoriteReport(int reportID, string FavType, AppUtility.SidebarEnum sidebarType)
+        {
+            var userID = _userManager.GetUserId(User);
+            if (FavType == "favorite")
+            {
+                var favoriteReport = _context.FavoriteReports.Where(fr => fr.ReportID == reportID && fr.ApplicationUserID == userID).FirstOrDefault();
+                if (favoriteReport == null)
+                {
+                    using (var transaction = _context.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            favoriteReport = new FavoriteReport()
+                            {
+                                ReportID = reportID,
+                                ApplicationUserID = userID
+                            };
+                            _context.Add(favoriteReport);
+                            await _context.SaveChangesAsync();
+                            await transaction.CommitAsync();
+                        }
+                        //throw new Exception(); //check this after!
+                        catch (Exception e)
+                        {
+                            await transaction.RollbackAsync();
+                            await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
+                        }
+                    }
+                }
+            }
+            else if (FavType == "unlike")
+            {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var favoriteReport = _context.FavoriteReports
+                            .Where(fr => fr.ApplicationUserID == userID)
+                            .Where(fr => fr.ReportID == reportID).FirstOrDefault();
+                        _context.Remove(favoriteReport);
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    //throw new Exception(); //check this after!
+                    catch (Exception e)
+                    {
+                        await transaction.RollbackAsync();
+                        await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
+                    }
+                }
+                if (sidebarType == AppUtility.SidebarEnum.Favorites)
+                {
+                    ProtocolsIndexObject requestIndexObject = new ProtocolsIndexObject()
+                    {
+                        PageType = AppUtility.PageTypeEnum.ProtocolsReports,
+                        SidebarType = sidebarType
+                    };
+                    return RedirectToAction("_IndexTable", requestIndexObject);
+                }
+            }
+            return new EmptyResult();
+        }
+
 
         public string GetUniqueNumber()
         {

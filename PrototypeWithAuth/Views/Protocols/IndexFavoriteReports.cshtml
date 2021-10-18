@@ -5,10 +5,10 @@
 @inject SignInManager<ApplicationUser> SignInManager
 
 @{
-    ViewData["Title"] = "Weekly Reports";
+    ViewData["Title"] = "Favorite Reports";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
 <div class="_IndexTable">
-    @{ await Html.RenderPartialAsync("_ReportsIndexTableByCategory", Model);}
+    @{ await Html.RenderPartialAsync("_ReportsIndexTable", Model);}
 </div>
