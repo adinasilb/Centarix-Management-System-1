@@ -6,7 +6,7 @@
 
 }
 <input type="hidden" id="SectionType" value="@TempData[AppUtility.TempDataTypes.SidebarType.ToString()]" />
-<div class="resources-main">
+<div class="resources-main scroll-page">
     @{
         await Html.RenderPartialAsync("_Library", Model);
     }

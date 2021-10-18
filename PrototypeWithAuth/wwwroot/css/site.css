@@ -3058,6 +3058,17 @@ body.modal-open .popover {
 
 .scroll-body {
     overflow: auto;
-    height: 800px;
+    height: 750px;
     display: block;
+}
+ .scroll-page {
+     overflow: auto;
+     height: 900px;
+     display: block;
+ }
+
+.add-item-box {
+    width: 50% !important;
+    position: absolute !important;
+    left: 25% !important;
 }
