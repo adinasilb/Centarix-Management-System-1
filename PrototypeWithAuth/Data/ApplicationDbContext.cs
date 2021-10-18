@@ -21,6 +21,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<FavoriteReport> FavoriteReports { get; set; }
         public DbSet<TempResultsJson> TempResultsJsons { get; set; }
         public DbSet<TempReportJson> TempReportJsons { get; set; }
         public DbSet<ProtocolVersion> ProtocolVersions { get; set; }

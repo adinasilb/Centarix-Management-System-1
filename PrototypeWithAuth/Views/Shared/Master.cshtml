@@ -1173,14 +1173,14 @@
             if (status === undefined) {
                 requestStatusId = $(".request-status-id").val();
             }
-            var searchText = $('.search-requests').val();
+            var searchText = $('.search-by-name').val();
             console.log(searchText);
             //console.log('searchtext length before if' + searchText.length)
             if (searchText == undefined || !searchText.length) {
-                searchText = $('.popover .search-requests-in-filter').val();
+                searchText = $('.popover .search-by-name-in-filter').val();
                 console.log(searchText)
                 if (searchText == undefined || !searchText.length) {
-                    searchText = $('.search-requests-in-filter').val();
+                    searchText = $('.search-by-name-in-filter').val();
                     if (searchText == undefined || !searchText.length) {
                         searchText = "";
                     }
@@ -1366,12 +1366,30 @@
             return error;
         };
 
+        $.fn.SearchColumns = function (searchText, colName) {
+            if (searchText == "") {
+                $('.popover ' + colName + ' .not-selected button').removeClass("d-none");
+            }
+            else {
+                $('.popover ' + colName + ' .not-selected button').each(function (i, e) {
+                    if ($(e).attr("labelName").toString().toLowerCase().indexOf(searchText) < 0) {
+                        $(e).addClass("d-none")
+                    }
+                    else {
+                        $(e).removeClass("d-none")
+                    }
+                });
+            }
+
+        }
+
         $.fn.BindSelectedFilters = function (className) {
             console.log('in bind selected filters');
             var selectedVendor = $(className + " .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedOwner = $(className + " .owner-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedLocation = $(className + " .location-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedCategory = $(className + " .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedType = $(className + " .type-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedSubCategory = $(className + " .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
             console.log(selectedVendor);
             var catalogNumber = $(className + ' .search-by-catalog-number').val()
@@ -1390,22 +1408,173 @@
             console.log(catalogNumber)
             return {
                 SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation,
-                SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived, CatalogNumber: catalogNumber
+                SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived, CatalogNumber: catalogNumber,
+                SelectedTypesIDs: selectedType
             }
         }
 
+ 
 
-        $.fn.ClearFilter = function (sectionType, isProprietary) {
-            //alert(sectionType);
-            console.log('clearing filter');
+        $.fn.ButtonFilterClick =function(id , col, parent)
+        {
+            var data = $.fn.BindSelectedFilters('.popover');
+       
+            var arr;
+            if (col.hasClass('vendor-col')) {
+                arr = data.SelectedVendorsIDs;
+            } else if (col.hasClass('owner-col')) {
+                arr = data.SelectedOwnersIDs;
+            } else if (col.hasClass('location-col')) {
+                arr = data.SelectedLocationsIDs;
+            } else if (col.hasClass('category-col')) {
+                arr = data.SelectedCategoriesIDs;
+            } else if (col.hasClass('type-col')) {
+                arr = data.SelectedTypesIDs;
+            } else if (col.hasClass('subcategory-col')) {
+                arr = data.SelectedSubCategoriesIDs;
+            }
+            var numFilters;
+            if ($(parent).hasClass('not-selected')) {
+                arr.push(id);
+                numFilters = Number($('.numFilters').attr("value")) + 1;
+            } else {
+                arr.splice($.inArray(id, arr), 1);
+                numFilters = Number($('.numFilters').attr("value")) - 1;
+            }
+            //console.log('archived ' + archived);
+            $.fn.ReloadFilterDiv(numFilters, data);
+        }
+
+    
+        $.fn.ApplyFilterClick = function()
+        {
+            console.log('clicked!')
+            var sectionType = $('#masterSectionType').val();
+            var data = $.fn.BindSelectedFilters('.popover');
+            var searchText = $('.popover .search-by-name-in-filter').val();
+            console.log('search text here' + searchText)
+            var popoverID = "";
+            var url = "";
+
+            if (searchText != undefined && searchText.length) {
+                //clear other search box
+                $('.search-by-name').val("");
+            }
+            var numFilters = $('.numFilters').attr("value");
+            console.log('search text ' + searchText);
+            var catalogNumber = $('.popover .search-by-catalog-number').val()
+            //reset page number
+            $('.page-number').val(1);
+
+            var reloadDiv = '_IndexTableData';
+            if ($('.' + reloadDiv).length == 0) { //if it's showing the nothing is here page. not just using indextable when don't have to, so don't lose price and category filters
+                reloadDiv = '_IndexTable';
+            }
+
+            if (sectionType == "Protocols") {
+                url = "/Protocols/" + reloadDiv + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
+                    popoverID = "protocolFilterPopover";
+            }
+            else {
+                url = "/Requests/" + reloadDiv + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
+                    popoverID = "invFilterPopover";
+            }
+            //console.log(data);
             $.ajax({
-                async: false, //so it finishes clearing before the page is loaded. otherwise, the requests will be filtered.
-                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType + "&isProprietary=" + isProprietary,
+                //    processData: false,
+                //    contentType: false,
+                data: data,
+                async: true,
+                traditional: true,
+                url: url,
+                type: 'POST',
+                cache: false,
+                success: function (data) {
+                    $('.' + reloadDiv).html(data);
+                    $('[data-toggle="popover"]').popover('dispose');
+                    console.log($.type(searchText))
+                    $('.search-by-name-in-filter').attr('value', searchText);
+                    $('.search-by-catalog-number').attr('value', catalogNumber);
+                    $('body').removeClass('popover-open');
+                    $('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
+                    $('#invFilterPopover').addClass('custom-order-inv');
+                    $('#protocolFilterPopover').removeClass('protocols-background-color custom-button-font');
+                    $('#protocolFilterPopover').addClass('custom-protocols');
+                }
+            });
+        }
+
+        $.fn.ReloadFilterDiv = function (numFilters, data) {
+            console.log('in reload filter function');
+            var sectionType = $('#masterSectionType').val();
+            var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
+            console.log('status ' + $(".request-status-id").attr("value"));
+            var searchText = $('.popover .search-by-name-in-filter').val();
+            var catalogNumber = $('.popover .search-by-catalog-number').val();
+            console.log('search: ' + searchText);
+            var catalogNumber = $('.popover .search-by-catalog-number').val();
+            /*	var searchText2 = $('.popover .search-requests-in-filter').attr('value');
+                console.log('search 2: ' + searchText2);*/
+            var contentID = "";
+            var contentDivID = "";
+            var url = "";
+            if (sectionType == "Protocols") {
+                url = "/Protocols/_ProtocolFilterResults?numFilters=" + numFilters + "&sectionType=" + sectionType;
+                contentID = "protocolFilterContent";
+                contentDivID = "protocolFilterContentDiv";
+            }
+            else {
+                url = "/Requests/_InventoryFilterResults?numFilters=" + numFilters + "&sectionType=" + sectionType + "&isProprietary=" + isProprietary,
+                contentID = "inventoryFilterContent";
+                contentDivID = "inventoryFilterContentDiv";
+            }
+            $.ajax({
+                //processData: false,
+                //contentType: false,
+                data: data,
+                traditional: true,
+                async: true,
+                url: url,
                 type: 'POST',
                 cache: false,
                 success: function (newData) {
-                    $('#inventoryFilterContent').html(newData);
-                    $('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
+                    $('#' + contentID).html(newData);
+                    $('.search-by-name-in-filter').attr('value', searchText);
+                    //$('.search-requests-in-filter').val(searchText);
+                    $('.search-by-catalog-number').attr('value', catalogNumber);
+                    $('#' + contentDivID + ' .popover-body').html($('#' + contentID).html());
+                },
+                error: function (jqxhr) {
+                    $('#' + contentID + ' .error-message').html(jqxhr.responseText);
+                    $('#' + contentDivID + ' .popover-body').html($('#' + contentID).html());
+                }
+            });
+        }
+
+        $.fn.ClearFilter = function (sectionType, isProprietary) {
+            //alert(sectionType);
+            var contentID ="";
+            var contentDivID ="";
+            var url = "";
+            if(sectionType == "Protocols")
+            {
+                url = "/Protocols/_ProtocolFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType   
+                contentID = "protocolFilterContent";
+                contentDivID ="protocolFilterContentDiv";
+            }
+            else {
+                url = "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType + "&isProprietary=" + isProprietary;
+                contentID = "inventoryFilterContent";
+                contentDivID = "inventoryFilterContentDiv";
+            }
+            $.ajax({
+                async: false, //so it finishes clearing before the page is loaded. otherwise, the requests will be filtered.
+                url:url,
+                type: 'POST',
+                cache: false,
+                success: function (newData) {
+                    $('#'+contentID).html(newData);
+                    $('#'+contentDivID+ ' .popover-body').html($('#'+contentID).html());
                 }
             });
         }

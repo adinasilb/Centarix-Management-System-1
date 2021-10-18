@@ -2908,8 +2908,13 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     -webkit-box-orient: vertical;
 }
 
-.filter-btn-select {
-    background-color: #2196F3;
+.order-inv-form .filter-btn-select {
+    background-color: var(--order-inv-color) !important;
+    color: white;
+}
+
+.protocol-form .filter-btn-select {
+    background-color: var(--protocol-color) !important;
     color: white;
 }
 
