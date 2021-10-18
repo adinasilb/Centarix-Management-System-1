@@ -61,7 +61,15 @@ $(function () {
                 }
             });
         });
-
+        $(".popover .load-confirm-delete").click( function (e) {
+    console.log("in confirm delete");
+    e.preventDefault();
+    e.stopPropagation();
+    $("#loading").show();
+    var $itemurl = "/Requests/DeleteModal/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString();
+    $.fn.CallPageRequest($itemurl, "delete");
+    return false;
+});
     });
     $('._IndexTableData [data-toggle = "tooltip"], ._IndexTableDataByVendor [data-toggle = "tooltip"]' ).off('click').on("click", function (e) {
         e.preventDefault();
