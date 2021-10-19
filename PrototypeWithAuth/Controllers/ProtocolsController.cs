@@ -536,6 +536,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> AddChangeModal(int protocolInstanceID, int currentLineID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var protocolInstance = await _context.ProtocolInstances.Where(pi => pi.ProtocolInstanceID == protocolInstanceID).FirstOrDefaultAsync();
             var lineChange = await _context.LineChanges.Where(lc => lc.LineID == currentLineID && lc.ProtocolInstanceID == protocolInstanceID).FirstOrDefaultAsync();
             if (lineChange == null)
@@ -812,6 +816,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> AddMaterialModal(int materialTypeID, int ProtocolVersionID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var MaterialCategory = _context.MaterialCategories.Where(mc => mc.MaterialCategoryID == materialTypeID).FirstOrDefault();
 
             var viewModel = new AddMaterialViewModel()
@@ -828,6 +836,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> MaterialInfoModal(int materialID, AppUtility.ProtocolModalType ModalType)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var material = _context.Materials.Where(m => m.MaterialID == materialID).FirstOrDefault();
             return PartialView(new AddMaterialViewModel { Material = material, ModalType = ModalType });
         }
@@ -860,6 +872,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> _Lines(List<Line> Lines, int lineTypeID, int currentLineID, int protocolVersionID, AppUtility.ProtocolModalType modalType, Guid guid)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -1130,6 +1146,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> DeleteMaterial(int materialID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var material = _context.Materials.Where(m => m.MaterialID == materialID).Include(m => m.Product).FirstOrDefault();
             return PartialView(new AddMaterialViewModel { Material = material });
         }
@@ -1161,6 +1181,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> AddFunctionModal(int FunctionTypeID, int LineID, int functionIndex, AppUtility.ProtocolModalType modalType, Guid guid)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
             var tempLinesJson = await _context.TempLinesJsons.Where(tlj => tlj.TempLinesJsonID == guid).FirstOrDefaultAsync();
             var tempLines = tempLinesJson.DeserializeJson<ProtocolsLinesViewModel>();
@@ -1226,6 +1250,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> AddResultsFunctionModal(int FunctionTypeID, int protocolInstanceID, int functionResultID, AppUtility.ProtocolModalType modalType, string closingTags)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
             var viewmodel = new AddResultsFunctionViewModel
             {
@@ -1387,6 +1415,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> DeleteResultsDocumentModal(int FunctionResultID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var functionResult = _context.FunctionResults.Where(fr => fr.ID == FunctionResultID).FirstOrDefault();
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == functionResult.FunctionTypeID).FirstOrDefault();
             AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.FunctionResults;
@@ -1510,6 +1542,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> LinkMaterialToProductModal(int materialID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var material = _context.Materials.Where(m => m.MaterialID == materialID).FirstOrDefault();
             return PartialView(new AddMaterialViewModel { Material = material });
         }
@@ -1543,6 +1579,10 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> _AddFunctionModal(int objectID, string uniqueNumber, int functionTypeID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == functionTypeID).FirstOrDefault();
 
             var viewmodel = new AddFunctionViewModel<FunctionBase>
@@ -1771,12 +1811,20 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ProtocolsProductDetails(int? productID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             RequestItemViewModel requestItemViewModel = await GetProtocolsProductDetailsFunction(productID);
             return PartialView(requestItemViewModel);
         }
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> _ProtocolsProductDetails(int? productID, List<string> lastUrls, bool backButtonClicked)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             RequestItemViewModel requestItemViewModel = await GetProtocolsProductDetailsFunction(productID);
             if (backButtonClicked)
             {
@@ -1801,6 +1849,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ProtocolsDetailsFloatModal(int? protocolID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             CreateProtocolsViewModel createProtocolsViewModel = await GetProtocolsDetailsFloatModalFunction(protocolID);
             createProtocolsViewModel.LastUrls = new List<string>() {Request.Path+Request.QueryString };
             return PartialView(createProtocolsViewModel);
@@ -1809,6 +1861,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> _ProtocolsDetailsFloatModal(int? protocolID, List<string> lastUrls, bool backButtonClicked)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             CreateProtocolsViewModel createProtocolsViewModel = await GetProtocolsDetailsFloatModalFunction(protocolID);
             if(backButtonClicked)
             {
@@ -2048,6 +2104,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> _IndexTableWithEditProtocol(int protocolID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             CreateProtocolsViewModel viewmodel = new CreateProtocolsViewModel();
             viewmodel.ModalType = AppUtility.ProtocolModalType.Summary;
             viewmodel.Tab = 3;
@@ -2058,6 +2118,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> _IndexTable(ProtocolsIndexObject protocolsIndexObject, SelectedProtocolsFilters selectedFilters = null, int numFilters = 0)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             ProtocolsIndexViewModel viewmodel;
             protocolsIndexObject.SelectedFilters = selectedFilters;
             
@@ -2068,6 +2132,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> _IndexTableData(ProtocolsIndexObject protocolsIndexObject,  SelectedProtocolsFilters selectedFilters = null, int numFilters = 0)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             ProtocolsIndexViewModel viewmodel;
             viewmodel = await GetProtocolsIndexViewModelAsync(protocolsIndexObject, selectedFilters, numFilters);
             return PartialView(viewmodel);
@@ -2194,6 +2262,10 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> _ReportsIndexTable(ReportsIndexObject reportsIndex)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var reportsIndexViewModel = await GetReportsIndexViewModel(reportsIndex);
 
             return PartialView(reportsIndexViewModel);
@@ -2249,7 +2321,10 @@ namespace PrototypeWithAuth.Controllers
             //TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             //TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
             //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
-
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var resourceLibraryViewModel = new ResourceLibraryViewModel();
 
             resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories;
@@ -2263,7 +2338,10 @@ namespace PrototypeWithAuth.Controllers
             //TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             //TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
             //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
-
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel() { IsFavoritesPage = false };
 
             ResourcesListIndexViewModel.ResourcesWithFavorites = _context.Resources
@@ -2311,6 +2389,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> _ResourcesListIndex(ResourcesListIndexViewModel ResourcesListIndexViewModel = null, AppUtility.SidebarEnum? sidebarEnum = null, bool IsFavorites = false, bool IsShared = false)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             if (sidebarEnum == AppUtility.SidebarEnum.Favorites)
             {
                 ResourcesListIndexViewModel = GetFavoritesResourceListIndexViewModel();
@@ -2326,6 +2408,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ResourceNotesModal(int ResourceID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var resourceNote = new ResourceNote() { ResourceID = ResourceID };
             return PartialView(resourceNote);
         }
@@ -2398,7 +2484,10 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> AddResource(int? resourceType = 1)
         {
-
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var rc = _context.ResourceCategories.Where(rc => !rc.IsResourceType).ToList();
             ResourceCategoriesToAdd[] resourceCategoriesToAdds = new ResourceCategoriesToAdd[rc.Count];
             var addResourceViewModel = new AddResourceViewModel()
@@ -2588,6 +2677,10 @@ namespace PrototypeWithAuth.Controllers
         public ActionResult DocumentsModal(string id, Guid Guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
     AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Protocols, bool dontAllowMultipleFiles = false)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
                 FolderName = RequestFolderNameEnum,
@@ -2704,6 +2797,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ShareModal(int ID, AppUtility.ModelsEnum ModelsEnum)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             ShareModalViewModel shareModalViewModel = base.GetShareModalViewModel(ID, ModelsEnum);
             shareModalViewModel.MenuItem = AppUtility.MenuItems.Protocols;
             switch (ModelsEnum)
@@ -2837,6 +2934,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> NewReportModal(int reportCategoryId, AppUtility.SidebarEnum sidebarType)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var reportTypeID = 0;
             switch (sidebarType)
             {
@@ -2926,7 +3027,10 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.WeeklyReports;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsReports;
-
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var functionTypes = new List<FunctionType>();
             foreach (var functionType in Enum.GetValues(typeof(AppUtility.ReportsFunctionTypes)))
             {
@@ -2973,6 +3077,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> AddReportFunctionModal(int FunctionTypeID, int ReportID, int FunctionReportID, string closingTags)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
 
             var functionReport = new FunctionReport()
@@ -3114,6 +3222,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> DeleteReportDocumentModal(int FunctionReportID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var functionReport = _context.FunctionReports.Where(fr => fr.ID == FunctionReportID).FirstOrDefault();
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == functionReport.FunctionTypeID).FirstOrDefault();
             AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Reports;
