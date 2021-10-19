@@ -756,7 +756,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var part = await _context.LabParts.Where(lp => lp.LabPartID == id).FirstOrDefaultAsync();
             var locationOfTypeCount = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LabPartID == id && roomID == li.LocationInstanceParentID).Count();
-            var viewModel = new HasShelfViewModel() { HasShelves = part.HasShelves, LocationName = part.LabPartNameAbbrev + (locationOfTypeCount + 1) };
+            var viewModel = new HasShelfViewModel() { HasShelves = part.HasShelves, LocationNameAbrev = part.LabPartNameAbbrev + (locationOfTypeCount + 1), LocationName = part.LabPartName};
             return PartialView(viewModel);
         }
 

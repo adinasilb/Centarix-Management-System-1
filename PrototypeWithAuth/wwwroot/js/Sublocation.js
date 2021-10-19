@@ -45,6 +45,7 @@ $(".empty-shelf-check").on("change", function () {
 });
 
 $(".modal").off("change", "#labPartDDL").on("change", "#labPartDDL", function () {
+	$("#LocationInstances_2__Height").rules('add', "required");
 	if($(this).val()!="")
 	{
 	$.ajax({
@@ -55,6 +56,8 @@ $(".modal").off("change", "#labPartDDL").on("change", "#labPartDDL", function ()
             success: function (data) {
                 $(".hasShelfBlock").html(data);
 				$(".labPartNameLabel").html($(".labPartName").val())
+				console.log($(".Drawer").rules())
+				$(".Drawer").rules('remove', "required");
             }
     });
 		}
