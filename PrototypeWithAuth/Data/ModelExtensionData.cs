@@ -2072,6 +2072,7 @@ namespace PrototypeWithAuth.Data
                         LabPartID = 4,
                         LabPartNameAbbrev = "D",
                         LabPartName = "Drawer",
+                        HasShelves = true
                     },
                     new LabPart
                     {
