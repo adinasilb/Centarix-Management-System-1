@@ -668,7 +668,6 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-
                 string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ExperimentEntries.ToString());
                 string GuidFolder = Path.Combine(uploadFolder, guid.ToString());
                 string IDFolder = Path.Combine(uploadFolder, ExperimentEntryID.ToString());
@@ -694,7 +693,9 @@ namespace PrototypeWithAuth.Controllers
                         var fileName = AppUtility.GetLastFiles(file, 1);
                         var FileToSave = Path.Combine(SmallerFolder, fileName);
                         System.IO.File.Copy(file, FileToSave);
+                        System.IO.File.Delete(file);
                     }
+                    Directory.Delete(directory);
                 }
 
                 Directory.Delete(GuidFolder);

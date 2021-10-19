@@ -313,18 +313,15 @@ namespace PrototypeWithAuth.Controllers
                 {
                     documentsModalViewModel = SaveDocuments(uploadFolder3, documentsModalViewModel);
                 }
-                else
-                {
-                    string uploadFolderA = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
-                    var MiddleFolderNameA = documentsModalViewModel.CustomMainObjectID.ToString();
-                    string uploadFolderB = Path.Combine(uploadFolderA, MiddleFolderNameA);
-                    var FolderNameB = documentsModalViewModel.ObjectID.ToString();
-                    string uploadFolderC = Path.Combine(uploadFolderB, FolderNameB);
+                string uploadFolderA = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
+                var MiddleFolderNameA = documentsModalViewModel.CustomMainObjectID.ToString();
+                string uploadFolderB = Path.Combine(uploadFolderA, MiddleFolderNameA);
+                var FolderNameB = documentsModalViewModel.ObjectID.ToString();
+                string uploadFolderC = Path.Combine(uploadFolderB, FolderNameB);
 
-                    if (Directory.Exists(uploadFolderC))
-                    {
-                        documentsModalViewModel = SaveDocuments(uploadFolderC, documentsModalViewModel);
-                    }
+                if (Directory.Exists(uploadFolderC))
+                {
+                    documentsModalViewModel = SaveDocuments(uploadFolderC, documentsModalViewModel);
                 }
             }
             else
@@ -348,7 +345,10 @@ namespace PrototypeWithAuth.Controllers
             DirectoryInfo DirectoryToSearch = new DirectoryInfo(FinalUploadFolder);
             //searching for the partial file name in the directory
             FileInfo[] docfilesfound = DirectoryToSearch.GetFiles("*.*");
-            documentsModalViewModel.FileStrings = new List<String>();
+            if (documentsModalViewModel.FileStrings == null)
+            {
+                documentsModalViewModel.FileStrings = new List<String>();
+            }
             foreach (var docfile in docfilesfound)
             {
 
@@ -1255,10 +1255,12 @@ namespace PrototypeWithAuth.Controllers
             MoveDocumentsOutOfTempFolder(id, parentFolderName, additionalRequests, guid.ToString());
         }
 
+
         protected void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, int oldID, bool additionalRequests = false)
         {
             MoveDocumentsOutOfTempFolder(id, parentFolderName, additionalRequests, oldID.ToString());
         }
+
 
         private void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, bool additionalRequests, string oldID)
         {
