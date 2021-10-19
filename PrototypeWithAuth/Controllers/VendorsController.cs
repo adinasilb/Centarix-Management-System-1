@@ -350,12 +350,20 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting, LabManagement")]
         public async Task<IActionResult> EditPartial(int? id, AppUtility.MenuItems SectionType, int? Tab)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             return await editFunction(id, SectionType, Tab);
         }
 
         [Authorize(Roles = "Accounting, LabManagement")]
         public async Task<IActionResult> _VendorHeader(int? id, AppUtility.MenuItems SectionType)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             var createSupplierViewModel = new CreateSupplierViewModel()
             {
                 Vendor = await _context.Vendors.Include(v => v.VendorCategoryTypes).Where(v => v.VendorID == id).FirstOrDefaultAsync()
@@ -571,6 +579,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "LabManagement")]
         public async Task<IActionResult> CommentInfoPartialView(String type, int index)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             VendorComment comment = new VendorComment();
             comment.CommentType = type;
             comment.ApplicationUser = _userManager.GetUserAsync(User).Result;
@@ -582,6 +594,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "LabManagement")]
         public async Task<IActionResult> ContactInfoPartial(int index)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("_EmptyPagePartial");
+            }
             VendorContact contact = new VendorContact();
             AddContactViewModel addContactViewModel = new AddContactViewModel { VendorContact = contact, Index = index };
             return PartialView(addContactViewModel);
