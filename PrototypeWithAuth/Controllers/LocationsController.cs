@@ -755,7 +755,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> HasShelfBlock(int id, int roomID)
         {
             var part = await _context.LabParts.Where(lp => lp.LabPartID == id).FirstOrDefaultAsync();
-            var locationOfTypeCount = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LabPartID == id && roomID == li.LocationInstanceParentID).Count();
+            var locationOfTypeCount = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LabPartID == id && roomID == li.LocationInstanceParent.LocationRoomInstanceID).Count();
             var viewModel = new HasShelfViewModel() { HasShelves = part.HasShelves, LocationNameAbrev = part.LabPartNameAbbrev + (locationOfTypeCount + 1), LocationName = part.LabPartName};
             return PartialView(viewModel);
         }
