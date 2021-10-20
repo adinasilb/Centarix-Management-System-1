@@ -3459,12 +3459,12 @@ namespace PrototypeWithAuth.Controllers
                 }
                 if (sidebarType == AppUtility.SidebarEnum.Favorites)
                 {
-                    ProtocolsIndexObject requestIndexObject = new ProtocolsIndexObject()
+                    ReportsIndexObject reportIndexObject = new ReportsIndexObject()
                     {
                         PageType = AppUtility.PageTypeEnum.ProtocolsReports,
                         SidebarType = sidebarType
                     };
-                    return RedirectToAction("_IndexTable", requestIndexObject);
+                    return RedirectToAction("_ReportsIndexTable", reportIndexObject);
                 }
             }
             return new EmptyResult();
