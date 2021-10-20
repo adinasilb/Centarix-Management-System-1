@@ -1,7 +1,7 @@
 ﻿using PrototypeWithAuth.AppData;
 using System;
 
-namespace PrototypeWithAuth.ViewModels
+namespace PrototypeWithAuth.AppData.UtilityModels
 {
     public class IconPopoverViewModel
     {
