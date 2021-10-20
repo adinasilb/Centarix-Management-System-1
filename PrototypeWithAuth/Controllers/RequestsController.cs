@@ -3703,12 +3703,16 @@ namespace PrototypeWithAuth.Controllers
                 locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == LocationTypeID && !(li is TemporaryLocationInstance))
                 .Include(li => li.LocationRoomInstance).Include(li => li.LabPart).OrderBy(li => li.LocationNumber),
                 locationTypeNames = new List<string>(),
-                locationInstancesSelected = new List<LocationInstance>()
+                locationInstancesSelected = new List<LocationInstance>(),
             };
             bool finished = false;
             int locationTypeIDLoop = LocationTypeID;
-            while (!finished)
+            if (LocationTypeID == 500 )
             {
+                receivedModalSublocationsViewModel.LabPartTypes = _context.LabParts;
+            }
+            while (!finished)
+            {              
                 //need to get the whole thing b/c need both the name and the child id so it's instead of looping through the list twice
                 var nextType = _context.LocationTypes.Where(lt => lt.LocationTypeID == locationTypeIDLoop).FirstOrDefault();
                 string nextTYpeName = nextType.LocationTypeName;
@@ -4135,9 +4139,18 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
-        public JsonResult GetSublocationInstancesList(int locationInstanceParentId)
+        public JsonResult GetSublocationInstancesList(int locationInstanceParentId, int labPartID)
         {
-            var locationInstanceList = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == locationInstanceParentId).Include(li => li.LabPart).OrderBy(li => li.LocationNumber).ToList();
+            List<LocationInstance> locationInstanceList = new List<LocationInstance>();
+            if (labPartID!=0)
+            {
+                locationInstanceList = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == locationInstanceParentId && li.LabPartID == labPartID).Include(li => li.LabPart).OrderBy(li => li.LocationNumber).ToList();
+
+            }
+            else
+            {
+                locationInstanceList = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == locationInstanceParentId).Include(li => li.LabPart).OrderBy(li => li.LocationNumber).ToList();
+            }
             return Json(locationInstanceList);
         }
 
