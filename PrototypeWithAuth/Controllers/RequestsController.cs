@@ -1302,7 +1302,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             TempRequestJson tempRequestJson = _context.TempRequestJsons.Where(t => t.TempRequestJsonID == ID).FirstOrDefault();
             var fullRequestJson = tempRequestJson.DeserializeJson<FullRequestJson>();
@@ -1783,7 +1783,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             if (id == null)
             {
@@ -2074,7 +2074,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
 
@@ -2163,7 +2163,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var operationsItemViewModel = new OperationsItemViewModel()
             {
@@ -2256,7 +2256,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             //var shareRequestViewModel = new ShareRequestViewModel()
             //{
@@ -2361,7 +2361,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             List<string> selectedPriceSort = null;
             selectedPriceSort = new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() };
@@ -2374,7 +2374,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var categoryTypeId = 1;
             if (SectionType == AppUtility.MenuItems.Operations)
@@ -2394,7 +2394,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             selectedPriceSort = selectedPriceSort.Count == 0 ? new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() } : selectedPriceSort;
             var requestItemViewModel = await editModalViewFunction(id, Tab, SectionType, isEditable, selectedPriceSort, isProprietary: isProprietary);
@@ -2632,7 +2632,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             /*Object lockObj = new Object();
             lock (lockObj)
@@ -2819,7 +2819,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             TempRequestListViewModel tempRequestListViewModel =
                 await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
@@ -3746,7 +3746,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             //foreach(var li in _context.LocationInstances)
             //{
@@ -4071,7 +4071,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
@@ -4143,7 +4143,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             DeleteDocumentsViewModel deleteDocumentsViewModel = new DeleteDocumentsViewModel()
             {
@@ -4314,7 +4314,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             if (requestIds != null)
             {
@@ -4490,7 +4490,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             return PartialView(MenuItem);
         }
@@ -4501,7 +4501,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             ConfirmExitViewModel confirmExit = new ConfirmExitViewModel()
             {
@@ -4541,7 +4541,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             Comment comment = new Comment();
             comment.ApplicationUser = _userManager.GetUserAsync(User).Result;
@@ -4557,7 +4557,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             return PartialView(index);
         }
@@ -4569,7 +4569,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var request = _context.Requests
                 .Where(r => r.RequestID == id)
@@ -4797,7 +4797,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             List<Request> requestsToPay = new List<Request>();
             var requestsList = new List<Request>();
@@ -4946,7 +4946,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var payment = _context.Payments.Where(p => p.PaymentID == paymentid).FirstOrDefault();
             var requestToPay = _context.Requests.Where(r => r.RequestID == payment.RequestID).Include(r => r.ParentRequest)
@@ -5161,7 +5161,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var uploadQuoteViewModel = new UploadQuoteViewModel();
 
@@ -5346,7 +5346,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var uploadOrderViewModel = new UploadOrderViewModel();
 
@@ -5486,7 +5486,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             TempRequestListViewModel tempRequestListViewModel = new TempRequestListViewModel()
             {
@@ -5557,7 +5557,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             try
             {
@@ -5577,7 +5577,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var request = await _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.ApplicationUserCreator).FirstOrDefaultAsync();
             var vendor = await _context.Requests.Where(r => r.RequestID == requestID).Select(r => r.Product.Vendor).FirstOrDefaultAsync();
@@ -5600,7 +5600,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, false);
             requestItemViewModel.IsHistory = true;
@@ -5612,7 +5612,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             try
             {
@@ -5633,7 +5633,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var requestItemViewModel = await editModalViewFunction(id, isEditable: false);
             return PartialView(requestItemViewModel);
@@ -5645,7 +5645,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             ConfirmArchiveViewModel confirmArchiveViewModel = new ConfirmArchiveViewModel();
             confirmArchiveViewModel.LocationName = locationName;

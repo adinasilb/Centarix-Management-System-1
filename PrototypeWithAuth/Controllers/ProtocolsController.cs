@@ -538,7 +538,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var protocolInstance = await _context.ProtocolInstances.Where(pi => pi.ProtocolInstanceID == protocolInstanceID).FirstOrDefaultAsync();
             var lineChange = await _context.LineChanges.Where(lc => lc.LineID == currentLineID && lc.ProtocolInstanceID == protocolInstanceID).FirstOrDefaultAsync();
@@ -818,7 +818,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var MaterialCategory = _context.MaterialCategories.Where(mc => mc.MaterialCategoryID == materialTypeID).FirstOrDefault();
 
@@ -838,7 +838,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var material = _context.Materials.Where(m => m.MaterialID == materialID).FirstOrDefault();
             return PartialView(new AddMaterialViewModel { Material = material, ModalType = ModalType });
@@ -874,7 +874,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -1148,7 +1148,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var material = _context.Materials.Where(m => m.MaterialID == materialID).Include(m => m.Product).FirstOrDefault();
             return PartialView(new AddMaterialViewModel { Material = material });
@@ -1183,7 +1183,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
             var tempLinesJson = await _context.TempLinesJsons.Where(tlj => tlj.TempLinesJsonID == guid).FirstOrDefaultAsync();
@@ -1252,7 +1252,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
             var viewmodel = new AddResultsFunctionViewModel
@@ -1417,7 +1417,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var functionResult = _context.FunctionResults.Where(fr => fr.ID == FunctionResultID).FirstOrDefault();
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == functionResult.FunctionTypeID).FirstOrDefault();
@@ -1544,7 +1544,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var material = _context.Materials.Where(m => m.MaterialID == materialID).FirstOrDefault();
             return PartialView(new AddMaterialViewModel { Material = material });
@@ -1581,7 +1581,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == functionTypeID).FirstOrDefault();
 
@@ -1813,7 +1813,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             RequestItemViewModel requestItemViewModel = await GetProtocolsProductDetailsFunction(productID);
             return PartialView(requestItemViewModel);
@@ -1823,7 +1823,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             RequestItemViewModel requestItemViewModel = await GetProtocolsProductDetailsFunction(productID);
             if (backButtonClicked)
@@ -1851,7 +1851,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             CreateProtocolsViewModel createProtocolsViewModel = await GetProtocolsDetailsFloatModalFunction(protocolID);
             createProtocolsViewModel.LastUrls = new List<string>() {Request.Path+Request.QueryString };
@@ -1863,7 +1863,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             CreateProtocolsViewModel createProtocolsViewModel = await GetProtocolsDetailsFloatModalFunction(protocolID);
             if(backButtonClicked)
@@ -2106,7 +2106,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             CreateProtocolsViewModel viewmodel = new CreateProtocolsViewModel();
             viewmodel.ModalType = AppUtility.ProtocolModalType.Summary;
@@ -2120,7 +2120,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             ProtocolsIndexViewModel viewmodel;
             protocolsIndexObject.SelectedFilters = selectedFilters;
@@ -2134,7 +2134,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             ProtocolsIndexViewModel viewmodel;
             viewmodel = await GetProtocolsIndexViewModelAsync(protocolsIndexObject, selectedFilters, numFilters);
@@ -2264,7 +2264,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var reportsIndexViewModel = await GetReportsIndexViewModel(reportsIndex);
 
@@ -2323,7 +2323,7 @@ namespace PrototypeWithAuth.Controllers
             //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var resourceLibraryViewModel = new ResourceLibraryViewModel();
 
@@ -2340,7 +2340,7 @@ namespace PrototypeWithAuth.Controllers
             //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel() { IsFavoritesPage = false };
 
@@ -2391,7 +2391,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             if (sidebarEnum == AppUtility.SidebarEnum.Favorites)
             {
@@ -2410,7 +2410,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var resourceNote = new ResourceNote() { ResourceID = ResourceID };
             return PartialView(resourceNote);
@@ -2486,7 +2486,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var rc = _context.ResourceCategories.Where(rc => !rc.IsResourceType).ToList();
             ResourceCategoriesToAdd[] resourceCategoriesToAdds = new ResourceCategoriesToAdd[rc.Count];
@@ -2679,7 +2679,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
@@ -2799,7 +2799,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             ShareModalViewModel shareModalViewModel = base.GetShareModalViewModel(ID, ModelsEnum);
             shareModalViewModel.MenuItem = AppUtility.MenuItems.Protocols;
@@ -2936,7 +2936,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var reportTypeID = 0;
             switch (sidebarType)
@@ -3029,7 +3029,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsReports;
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var functionTypes = new List<FunctionType>();
             foreach (var functionType in Enum.GetValues(typeof(AppUtility.ReportsFunctionTypes)))
@@ -3079,7 +3079,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
 
@@ -3224,7 +3224,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var functionReport = _context.FunctionReports.Where(fr => fr.ID == FunctionReportID).FirstOrDefault();
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == functionReport.FunctionTypeID).FirstOrDefault();

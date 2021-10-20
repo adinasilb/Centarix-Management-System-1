@@ -89,7 +89,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             EmployeeDetailsViewModel employeeDetailsViewModel = GetWorkersDetailsViewModel();
 
@@ -132,7 +132,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             WorkersHoursViewModel viewModel = await hoursPagePopulate(yearlyMonthlyEnum, month, year, amountInYear);
             return PartialView(viewModel);
@@ -284,7 +284,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = GetAwaitingApprovalModel();
             if (awaitingApproval.Count > 0)
@@ -512,7 +512,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var ehaa = _context.EmployeeHoursAwaitingApprovals
                 .Include(ehaa => ehaa.EmployeeHours)

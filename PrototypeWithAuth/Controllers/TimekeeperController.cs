@@ -180,7 +180,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var userid = _userManager.GetUserId(User);
             var user = _context.Employees.Where(u => u.Id == userid).Include(u=>u.SalariedEmployee).FirstOrDefault();
@@ -293,7 +293,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             if (userId == null)
             {
@@ -326,7 +326,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var ehaa = _context.EmployeeHoursAwaitingApprovals
                 .Include(ehaa => ehaa.EmployeeHours).Include(ehaa => ehaa.PartialOffDayType)
@@ -349,7 +349,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             return PartialView(ReportDaysOffFunction(errorMessage));
         }
@@ -407,7 +407,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             return PartialView(await GetUpdateHoursViewModel(chosenDate, PageType, isWorkFromHome));
         }
@@ -601,7 +601,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             OffDayViewModel offDayViewModel = new OffDayViewModel()
             {
@@ -632,7 +632,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             OffDayViewModel offDayViewModel = new OffDayViewModel()
             {
@@ -648,7 +648,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -939,7 +939,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             if (id == null)
             {
