@@ -483,9 +483,9 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTable(RequestIndexObject requestIndexObject, List<int> months, List<int> years, SelectedFilters selectedFilters = null, int numFilters = 0)
+        public async Task<IActionResult> _IndexTable(RequestIndexObject requestIndexObject, List<int> months, List<int> years, SelectedFilters selectedFilters = null, int numFilters = 0, RequestsSearchViewModel requestsSearchViewModel = null)
         {
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters, numFilters);
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters, numFilters, requestsSearchViewModel);
             return PartialView(viewModel);
         }
 
@@ -3454,7 +3454,7 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests, LabManagement, Operations, Accounting")]
-        public async Task<IActionResult> Search(AppUtility.MenuItems SectionType, AppUtility.PageTypeEnum PageType)
+        public async Task<IActionResult> Search(AppUtility.MenuItems SectionType, AppUtility.PageTypeEnum PageType, RequestsSearchViewModel requestsSearchViewModel)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
@@ -3468,17 +3468,26 @@ namespace PrototypeWithAuth.Controllers
             {
                 categoryID = new List<int> { 1, 2 };
             }
-            RequestsSearchViewModel requestsSearchViewModel = new RequestsSearchViewModel
-            {
-                ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID != 1).ToListAsync(),
-                ProductSubcategories = await _context.ProductSubcategories.Where(ps => categoryID.Contains(ps.ParentCategory.CategoryTypeID)).ToListAsync(),
-                Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => categoryID.Contains(vc.CategoryTypeID)).Count() > 0).ToListAsync(),
-                ApplicationUsers = await _context.Users.ToListAsync()
-            };
 
-            return View(requestsSearchViewModel);
+            requestsSearchViewModel.ParentCategories = await _context.ParentCategories.Where(pc => categoryID.Contains(pc.CategoryTypeID)).ToListAsync();
+            requestsSearchViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => categoryID.Contains(ps.ParentCategory.CategoryTypeID)).ToListAsync();
+            requestsSearchViewModel.Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => categoryID.Contains(vc.CategoryTypeID)).Count() > 0).ToListAsync();
+            requestsSearchViewModel.ApplicationUsers = await _context.Users.ToListAsync();
+            
+            return View( requestsSearchViewModel);
         }
+        [HttpPost]
+        [Authorize(Roles = "Requests, LabManagement, Operations, Accounting")]
+        public async Task<IActionResult> Search(RequestsSearchViewModel requestsSearchViewModel, RequestIndexObject requestIndexObject)
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
 
+            var viewModel = await base.GetIndexViewModel(requestIndexObject, requestsSearchViewModel: requestsSearchViewModel);
+            viewModel.RequestsSearchViewModel = requestsSearchViewModel;
+            return PartialView("SearchResults", viewModel);
+        }
         //[HttpPost]
         //[Authorize(Roles = "Admin, Requests, Operations")]
         //public async Task<IActionResult> Search(RequestsSearchViewModel requestsSearchViewModel, int? page)

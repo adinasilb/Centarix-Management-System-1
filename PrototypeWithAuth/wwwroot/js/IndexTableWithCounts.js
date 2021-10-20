@@ -6,6 +6,7 @@
     //reset page number
     $('.page-number').val(1);
     var requestStatusId = $(this).attr("value");
+    console.log(requestStatusId)
     var isProprietary = requestStatusId == 7 ? true : false;
     var sectionType = $('#masterSectionType').val();
     //alert(sectionType);
@@ -18,7 +19,8 @@
     //var viewClass = pageType != 'RequestSummary' ? '_IndexTableWithCounts' : '_IndexTableWithProprietaryTabs';
     var viewClass = '_IndexTable'; //don't use counts now anyways so just reload data so search button doesn't get messed up
     console.log("viewclass: " + viewClass);
-    $.fn.ajaxPartialIndexTable(requestStatusId, "/Requests/" + viewClass, "." + viewClass, 'GET')
+    var searchFormdata = new FormData($("#searchHiddenForsForm")[0]);
+    $.fn.ajaxPartialIndexTable(requestStatusId, "/Requests/" + viewClass, "." + viewClass, 'GET', searchFormdata)
 });
 
 /*$('.view-archived-requests').off('click').on('click', function () {

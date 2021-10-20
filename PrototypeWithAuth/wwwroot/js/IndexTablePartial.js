@@ -423,8 +423,8 @@ $(function () {
             url += yearsString;
             //formdata = {}; //so won't crash when do object.assign()
             //console.log(formdata)
-		}
-		else {
+        }
+        else if (modalClass != "") {
 			$.fn.CloseModal(modalClass);
         }
         //var objectsToAdd = [];
