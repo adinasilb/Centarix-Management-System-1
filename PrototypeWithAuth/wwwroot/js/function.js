@@ -148,6 +148,7 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click', ".
                     newDiv[0].nextSibling?.remove();
                     newDiv.removeClass("added-div");
                     $('.text-editor').trigger("change")
+                    $(".createReportForm .back-arrow").addClass("load-save-report")
                 }
                 
                 //functionSelect.append(" <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none'></div>")

@@ -17,7 +17,7 @@
         <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
         <div class="col-5">
             <a style="z-index:2000" href="#"
-               class="title-label load-save-report btn-link heading-1 ">
+               class="title-label back-arrow btn-link heading-1 ">
                 <i class="icon-arrow_back_ios-24px-1" style="font-size:1.4rem;"></i>
                 <label class="px-2 ">Report</label>
             </a>
@@ -46,7 +46,7 @@
 </form>
 <script src="~/js/function.js"></script>
 <script>
-    $(".load-save-report").off("click").on("click", function (e) {
+    $(".createReportForm").off("click", ".load-save-report").on("click", ".load-save-report", function (e) {
         e.preventDefault();
         $('.createReportForm').data("validator").settings.ignore = "";
         var valid = $('.createReportForm').valid();

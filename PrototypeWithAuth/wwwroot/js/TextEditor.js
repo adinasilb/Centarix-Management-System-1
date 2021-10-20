@@ -8,6 +8,7 @@
         pasteHtmlAtCaret("<span class='focusedText'></span>")
         $("#TemporaryReportText").val($(this).html())
            $("#TemporaryResultDescription").val($(this).html())
+        $(".createReportForm .back-arrow").addClass("load-save-report");
     })
     function pasteHtmlAtCaret(html) {
         var sel, range;
