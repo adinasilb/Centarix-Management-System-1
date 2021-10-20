@@ -672,6 +672,14 @@
         }
 
 
+        $.fn.RemoveSaveItemClass = function () {
+            $(".top-menu").removeClass("save-item");
+            $(".side-menu").removeClass("save-item");
+            $(".module-button ").removeClass("save-item");
+            $(".notificationDiv").removeClass("save-item");
+            $(".home-nav-item").removeClass("save-item");
+        }
+
         $.fn.LoadSummaryModal = function (modalClass) {
             $("#cost").trigger('change');
             var category = $("#categoryDescription").val();

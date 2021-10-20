@@ -61,6 +61,7 @@
                 type: "POST",
                 success: function (data) {
                     $.fn.OpenModal('save-report-modal', 'save-report', data)
+                    $.fn.RemoveSaveItemClass();
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {

@@ -148,9 +148,10 @@
         @{ await Html.RenderPartialAsync("_CreateProtocolTabs", Model);}
     </div>
     <script>
-        $("input, select, textarea").change(function () {
+        $("input:not(.turn-edit-on-off), select, textarea, .text-editor, .line").change(function () {
+            console.log($(this));
             $.fn.AddSaveItemClass()
-            $(".back-arrow").addClass("save-item")
+            $(".back-arrow").addClass("save-item");
         });
     </script>
 </form>

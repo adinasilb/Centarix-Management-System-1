@@ -72,7 +72,8 @@
                         $("."+modalType+".only-protocol-tab").addClass("d-none");
                     }
                      $("."+modalType+":not(.only-protocol-tab):not(.only-results-tab)").removeClass("d-none");
-
+                    $.fn.RemoveSaveItemClass();
+                     $(".back-arrow").re("save-item");
                 },
                 error: function (jqxhr) {
                      if(modalType == "Create")
@@ -120,6 +121,8 @@
                 setTimeout(function () {
                 $(".saving-done").addClass("d-none");
                 }, 1000 * 30);
+                $.fn.RemoveSaveItemClass();
+                 $(".back-arrow").removeClass("save-item");
             },
             error: function (jqxhr) {
                 $(".error-message").html(jqxhr.responseText);
@@ -144,6 +147,8 @@
                 setTimeout(function () {
                 $(".saving-done").addClass("d-none");
                 }, 1000 * 30);
+                $.fn.RemoveSaveItemClass();
+                 $(".back-arrow").removeClass("save-item");
             },
             error: function (jqxhr) {
                 $(".error-message").html(jqxhr.responseText);
