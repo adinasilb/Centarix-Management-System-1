@@ -533,7 +533,7 @@ namespace PrototypeWithAuth.Controllers
                 Tests = tests,
                 TestValues = testValues,
                 ExperimentEntries = _context.ExperimentEntries
-                                  .Where(ee2 => ee2.SiteID == ee.SiteID && ee2.ParticipantID == ee.ParticipantID)
+                                  .Where(ee2 => ee2.ParticipantID == ee.ParticipantID)
                                   .Select(
                                       e => new SelectListItem
                                       {

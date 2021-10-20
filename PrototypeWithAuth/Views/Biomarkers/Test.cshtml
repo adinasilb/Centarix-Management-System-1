@@ -180,8 +180,22 @@
 
     $("#entries-list").on("change", function (e) {
         //alert("clicked change-ee with page reload");
-        url = "/Biomarkers/Test?ID=" + $(this).val();
-        top.location.href = url;
+        var newID = $(this).val();
+        if ($("._testvalues").hasClass("changed")) {
+            $.ajax({
+                async: false,
+                url: "/Biomarkers/SaveTestModal?ID=" + $("#ExperimentEntry_ExperimentEntryID").val(),
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $.fn.OpenModal('save-test-modal', 'save-bio-test-modal', data);
+                }
+            });
+        }
+        else {
+            url = "/Biomarkers/Test?ID=" + newID;
+            top.location.href = url;
+        }
         //$.ajax({
         //    async: true,
         //    url: url,
