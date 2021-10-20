@@ -65,7 +65,7 @@
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label asp-for="ParentCategoryID" class="control-label">Category</label>
-                                        <select searchable="Please select a category" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" id="parentlist" asp-for="ParentCategoryID">
+                                        <select searchable="Please select a category" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" data_stop_refresh="true" id="parentlist" asp-for="ParentCategoryID">
                                             <option value="">Select Category</option>
                                             @foreach (var parentCategory in Model.ParentCategories)
                                             {
@@ -126,8 +126,12 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="form-group">
-                                        <label asp-for="Currency" class="control-label"></label>
-                                        <input asp-for="Currency" class="form-control-plaintext border-bottom" />
+                                        <label class="control-label">Currency</label>
+                                        <select id="currencyList" asp-for="Currency" class="mdb-select custom select-dropdown form-control-plaintext">
+                                            <option value="">Select Currency</option>
+                                            <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
+                                            <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
