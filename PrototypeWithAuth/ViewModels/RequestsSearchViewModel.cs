@@ -51,5 +51,6 @@ namespace PrototypeWithAuth.ViewModels
         public long? OrderNumber { get; set; }
         [Display(Name = "Supplier Order Number")]
         public string SupplierOrderNumber { get; set; }
+        public string ApplicationUserOwnerID { get; set; }
     }
 }
