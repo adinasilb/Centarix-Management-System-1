@@ -283,9 +283,11 @@ namespace PrototypeWithAuth.Controllers
             {
                 Participant = new Participant()
                 {
-                    ExperimentID = ExperimentID
+                    ExperimentID = ExperimentID,
+                    DOB = DateTime.Now
                 },
                 Genders = _context.Genders.ToList()
+                
             };
 
             return PartialView(addParticipantViewModel);
@@ -319,9 +321,10 @@ namespace PrototypeWithAuth.Controllers
         {
             AddParticipantViewModel addParticipantViewModel = new AddParticipantViewModel()
             {
-                Participant = _context.Participants.Where(p => p.ParticipantID == ParticipantID).Include(p => p.Gender).Include(p=> p.ParticipantStatus).FirstOrDefault(),
+                Participant = _context.Participants.Where(p => p.ParticipantID == ParticipantID).Include(p => p.Gender).Include(p => p.ParticipantStatus).FirstOrDefault(),
                 Genders = _context.Genders.ToList(),
-                ParticipantStatuses = _context.ParticipantStatuses.ToList()
+                ParticipantStatuses = _context.ParticipantStatuses.ToList(),
+                DisableFields = true
             };
 
             return PartialView(addParticipantViewModel);

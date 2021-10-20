@@ -1,20 +1,24 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddParticipantViewModel
 @{
+    var disabled = Model.DisableFields ? "disabled" : "";
 }
 
 @Html.HiddenFor(m => m.Participant.ParticipantID)
 @Html.HiddenFor(m => m.Participant.ExperimentID)
+@Html.HiddenFor(m => m.Participant.CentarixID)
+@Html.HiddenFor(m => m.Participant.DOB)
+@Html.HiddenFor(m => m.Participant.GenderID)
 <div class="row">
     <div class="col-12">
         <label asp-for="Participant.CentarixID" class="control-label"></label>
-        <input asp-for="Participant.CentarixID" class="form-control-plaintext border-bottom" />
+        <input asp-for="Participant.CentarixID" class="form-control-plaintext border-bottom  @disabled" />
         <span asp-validation-for="Participant.CentarixID" class="text-danger-centarix"></span>
     </div>
 </div>
 <div class="row">
     <div class="col-12">
         <label asp-for="Participant.DOB" class="control-label"></label>
-        <input asp-for="Participant.DOB" class="form-control-plaintext border-bottom" />
+        <input asp-for="Participant.DOB" class="form-control-plaintext border-bottom @disabled" />
         <span asp-validation-for="Participant.DOB" class="text-danger-centarix"></span>
     </div>
 </div>
@@ -27,7 +31,7 @@
        dataValueField: "GenderID",
        dataTextField: "Description"),
        optionLabel: "Select Option",
-            new { @class = "mdb-select custom select-dropdown form-control-plaintext ", @searchable = "default value" }
+            new { @class = "mdb-select custom select-dropdown form-control-plaintext " + disabled, @searchable = "default value" }
         )
 
         @*<label asp-for="Participant.Gender" class="control-label"></label>

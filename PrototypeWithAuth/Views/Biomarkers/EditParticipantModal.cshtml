@@ -7,7 +7,7 @@
     <div class="elixir-modal-sm modal-dialog-centered mx-auto" style="width:27rem;">
         <div class="modal-content d-inline-block modal-box-shadow ">
             <div class="modal-header biomarkers-background-color">
-                <span class="heading-1 text-white">Edit Participant</span>
+                <span class="heading-1 text-white">Edit Participant Status</span>
                 <button type="button" class="close modal-close-padding modal-close-style cancel-edit" @*data-dismiss="modal"*@ aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -15,7 +15,8 @@
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="small-modal-padding editparticipantform on-form-modal">
 
                 <div class="container-fluid under-row-margin">
-                    @{ await Html.RenderPartialAsync("_ParticipantFields", Model); }
+                    @{ 
+                        await Html.RenderPartialAsync("_ParticipantFields", Model); }
                     <div class="row">
                         <div class="col-12">
                             <label asp-for="Participant.ParticipantStatus" class="control-label"></label>
