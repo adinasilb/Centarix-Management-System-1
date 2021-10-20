@@ -352,7 +352,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             return await editFunction(id, SectionType, Tab);
         }
@@ -362,7 +362,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             var createSupplierViewModel = new CreateSupplierViewModel()
             {
@@ -581,7 +581,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             VendorComment comment = new VendorComment();
             comment.CommentType = type;
@@ -596,7 +596,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
-                return PartialView("_EmptyPagePartial");
+                return PartialView("InvalidLinkPage");
             }
             VendorContact contact = new VendorContact();
             AddContactViewModel addContactViewModel = new AddContactViewModel { VendorContact = contact, Index = index };
