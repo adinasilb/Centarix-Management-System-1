@@ -155,7 +155,9 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click', ".
             }
             else {
                 $("._Lines").html(data);
-            }
+                }
+             console.log("save modal")
+                $(".protocols-edit-arrow.back-arrow").addClass("save-item");
             $.fn.CloseModal('add-function');
         },
         error: function (jqxhr) {

@@ -150,8 +150,9 @@
     <script>
         $("input:not(.turn-edit-on-off), select, textarea, .text-editor, .line").change(function () {
             console.log($(this));
+            console.log("changed text")
             $.fn.AddSaveItemClass()
-            $(".back-arrow").addClass("save-item");
+            $(".protocols-edit-arrow.back-arrow").addClass("save-item");
         });
     </script>
 </form>
