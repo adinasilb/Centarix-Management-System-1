@@ -244,7 +244,7 @@
             contentType: false,
             processData: false,
             async: true,
-            url: '/Requests/Search',
+            url: '/Requests/Search?' + $.fn.getRequestIndexString(),
             data: formdata,
             traditional: true,
             type: "POST",

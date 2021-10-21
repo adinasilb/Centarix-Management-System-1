@@ -395,7 +395,9 @@ $(function () {
         })
         var selectedPriceSortObj = { "SelectedPriceSort": selectedPriceSort }
         console.log(selectedPriceSortObj)*/
-		if (formdata == undefined) {
+        if (modalClass != "") {
+			$.fn.CloseModal(modalClass);
+        } else {
 			console.log("formdata is undefined");
 			/*formdata = {
 				PageNumber: $('.page-number').val(),
@@ -423,9 +425,6 @@ $(function () {
             url += yearsString;
             //formdata = {}; //so won't crash when do object.assign()
             //console.log(formdata)
-        }
-        else if (modalClass != "") {
-			$.fn.CloseModal(modalClass);
         }
         //var objectsToAdd = [];
         //if (selectedFilters != undefined/*should also somehow check if anything is chosen...*/) { objectsToAdd.push(selectedFilters) }
