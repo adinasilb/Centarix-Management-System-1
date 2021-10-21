@@ -21,6 +21,12 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+
+        public DbSet<ExperimentEntry> ExperimentEntries { get; set; }
+        public DbSet<TestValue> TestValues { get; set; }
+        public DbSet<TestHeader> TestHeaders { get; set; }
+        public DbSet<TestOuterGroup> TestOuterGroups { get; set; }
+        public DbSet<TestGroup> TestGroups { get; set; }
         public DbSet<FavoriteReport> FavoriteReports { get; set; }
         public DbSet<TempResultsJson> TempResultsJsons { get; set; }
         public DbSet<TempReportJson> TempReportJsons { get; set; }
@@ -28,7 +34,6 @@ namespace PrototypeWithAuth.Data
         public DbSet<FunctionResult> FunctionResults { get; set; }
         public DbSet<TempLineID> TempLineIDs { get; set; }
         public DbSet<FunctionLineID> FunctionLineIDs { get; set; }
-        public DbSet<TestFieldHeader> TestFieldHeaders { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<TestCategory> TestCategories { get; set; }
         public DbSet<Division> Divisions { get; set; }
@@ -157,6 +162,19 @@ namespace PrototypeWithAuth.Data
                 .HasOne(rrc => rrc.Resource)
                 .WithMany(r => r.ResourceResourceCategories)
                 .HasForeignKey(rrc => rrc.ResourceID);
+
+            modelBuilder.Entity<ExperimentTest>()
+                .HasKey(et => new { et.ExperimentID, et.TestID });
+
+            modelBuilder.Entity<ExperimentTest>()
+                .HasOne(et => et.Experiment)
+                .WithMany(e => e.ExperimentTests)
+                .HasForeignKey(et => et.ExperimentID);
+
+            modelBuilder.Entity<ExperimentTest>()
+                .HasOne(et => et.Test)
+                .WithMany(t => t.ExperimentTests)
+                .HasForeignKey(et => et.TestID);
 
             modelBuilder.Entity<RequestLocationInstance>()
                 .HasKey(rl => new { rl.RequestID, rl.LocationInstanceID });
@@ -374,8 +392,12 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ParentRequest>().HasIndex(p => p.QuartzyOrderNumber).IsUnique();
             modelBuilder.Entity<Product>().HasIndex(p => p.SerialNumber).IsUnique();
             modelBuilder.Entity<Product>().HasIndex(p => new { p.SerialNumber, p.VendorID }).IsUnique();
+            modelBuilder.Entity<ShareRequest>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<ShareProtocol>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<ShareResource>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<TestHeader>().HasIndex(th => new { th.SequencePosition, th.TestGroupID }).IsUnique();
+            modelBuilder.Entity<ExperimentEntry>().HasIndex(ee => new { ee.ParticipantID, ee.VisitNumber }).IsUnique();
             modelBuilder.Entity<Vendor>().HasIndex(v => new { v.VendorCountry, v.VendorBuisnessID }).IsUnique();
-
             /*PROTOCOLS*/
             ///set up composite keys
 

@@ -1,0 +1,94 @@
+﻿@model PrototypeWithAuth.ViewModels.AddParticipantViewModel
+@{
+}
+<script src="~/js/Validation/addnewparticipant.js"></script>
+
+<div class="modal modal-view edit-participant-modal" id="myModal" data-backdrop="false" style="z-index: 9100">
+    <div class="elixir-modal-sm modal-dialog-centered mx-auto" style="width:27rem;">
+        <div class="modal-content d-inline-block modal-box-shadow ">
+            <div class="modal-header biomarkers-background-color">
+                <span class="heading-1 text-white">Edit Participant Status</span>
+                <button type="button" class="close modal-close-padding modal-close-style cancel-edit" @*data-dismiss="modal"*@ aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="small-modal-padding editparticipantform on-form-modal">
+
+                <div class="container-fluid under-row-margin">
+                    @{ 
+                        await Html.RenderPartialAsync("_ParticipantFields", Model); }
+                    <div class="row">
+                        <div class="col-12">
+                            <label asp-for="Participant.ParticipantStatus" class="control-label"></label>
+                            @Html.DropDownListFor(m => m.Participant.ParticipantStatusID,
+                                new SelectList(
+                           Model.ParticipantStatuses,
+                           dataValueField: "ParticipantStatusID",
+                           dataTextField: "Description"),
+                           optionLabel: "Select Option",
+                                new { @class = "mdb-select custom select-dropdown form-control-plaintext ", @searchable = "default value" }
+                            )
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <input type="submit" class="cancel-edit custom-button custom-cancel text-black custom-button-small-font px-5" value="Cancel" />
+                    </div>
+                    <div class="col-6">
+                        <input type="submit" class="submit-edit custom-button custom-button-font biomarkers-background-color" value="Save" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(".cancel-edit").on("click", function (e) {
+        e.preventDefault();
+        $.fn.CloseModal('edit-participant');
+    });
+    $(".submit-edit").on("click", function (e) {
+        e.preventDefault();
+        $(this).attr("disabled", "disabled");
+        $('.editparticipantform').data("validator").settings.ignore = "";
+        var ExperimentID = $("#Participant_ExperimentID").val();
+        var valid = $('.editparticipantform').valid();
+        if (valid) {
+            $("#loading").show();
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: "/Biomarkers/EditParticipantModal",
+                data: new FormData($("#myForm")[0]),
+                traditional: true,
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    $("#loading").hide();
+                    $.fn.CloseModal('edit-participant');
+                    $("._ParticipantEntries").html(data);
+                    //$.ajax({
+                    //    async: true,
+                    //    url: "/Biomarkers/GetParticipantsCount?ExperimentID=" + ExperimentID,
+                    //    traditional: true,
+                    //    type: "GET",
+                    //    cache: false,
+                    //    success: function (data) {
+                    //        $("#NumberOfParticipants").html(data);
+                    //        return false;
+                    //    }
+                    //});
+                    return true;
+                },
+                error: function (jqxhr) {
+                    $(this).attr("disabled", "false");
+                    $("#loading").hide();
+                    return true;
+                }
+            });
+        }
+    });
+</script>

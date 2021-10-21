@@ -2011,6 +2011,9 @@ td .btn {
 .order-inv-form .select-wrapper.active span.caret, .order-inv-form .select-wrapper.active label.mdb-main-label {
     color: var(--order-inv-color) !important;
 }
+.bio-form .select-wrapper.active span.caret, .order-inv-form .select-wrapper.active label.mdb-main-label {
+    color: var(--order-inv-color) !important;
+}
 /*HOVER FOR EACH SECTION*/
 .order-inv-form .form-control-plaintext:not(.danger-box-shadow):focus {
     outline-width: 0px !important;
@@ -2038,6 +2041,26 @@ td .btn {
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
 }
 
+.bio-form .input-group:focus-within > .input-group-text {
+    box-shadow: 0 2px 0 0 var(--biomarkers-color) !important;
+}
+
+.bio-form .form-control-plaintext:not(.danger-box-shadow):focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--biomarkers-color) !important;
+}
+
+.bio-form .form-control-plaintext.danger-box-shadow:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--danger-color) !important;
+}
+
+.bio-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+    border-bottom: none !important;
+    border: 2px solid var(--biomarkers-color) !important;
+}
 .users-form .form-control-plaintext:focus {
     outline-width: 0px !important;
     outline-color: none !important;
@@ -2333,6 +2356,20 @@ span.caret {
     box-shadow: .5px .5px 0.323rem #707070;
 }
 
+.biomarkers-fieldset {
+    border-radius: .75rem;
+    width: 100%;
+    box-shadow: 4px 4px 9px -2px #707070;
+    /*display: flex;*/
+    padding: 2rem;
+    align-items: center;
+    justify-content: center;
+}
+
+    .biomarkers-fieldset.small-size {
+        height: 6.563rem;
+    }
+
 .resource-fieldset {
     border-radius: .75rem;
     /*height: 29.75rem;*/
@@ -2523,6 +2560,15 @@ span.caret {
     border: .5px solid #f3f3f3 !important;
 }
 
+.bio-form .switch label input[type="checkbox"]:checked + .lever:after {
+    background-color: var(--biomarkers-color) !important;
+}
+
+.bio-form .switch label input[type="checkbox"]:checked + .lever {
+    background-color: var(--biomarkers-25) !important;
+    opacity: 50 !important;
+    border: .5px solid #f3f3f3 !important;
+}
 .select-wrapper input.select-dropdown:disabled {
     color: var(--black-87) !important;
 }
@@ -2951,6 +2997,10 @@ body.modal-open .popover {
     border-right: .2rem solid #E5E5E5;
 }
 
+.form-element-border-right-small {
+    border-right: .1rem solid #E5E5E5;
+}
+
 .form-element-border-bottom-small {
     border-bottom: .1rem solid #E5E5E5;
 }
@@ -3066,11 +3116,16 @@ body.modal-open .popover {
     height: 750px;
     display: block;
 }
- .scroll-page {
-     overflow: auto;
-     height: 900px;
-     display: block;
- }
+
+.datacalculation {
+    border-radius: .5rem;
+    border: 2px solid var(--biomarkers-color);
+}
+.scroll-page {
+    overflow: auto;
+    height: 900px;
+    display: block;
+}
 
 .add-item-box {
     width: 50% !important;
