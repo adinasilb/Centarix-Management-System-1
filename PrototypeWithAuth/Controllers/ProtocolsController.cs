@@ -1510,7 +1510,7 @@ namespace PrototypeWithAuth.Controllers
             viewmodel.ProtocolCategories = _context.ProtocolCategories.ToList();
             viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.ToList();
             viewmodel.Creators = _context.Users.Select(u =>
-                new SelectListItem() { Value = u.Id, Text = u.FirstName + u.LastName }).ToList();
+                new SelectListItem() { Value = u.Id, Text = u.FirstName +" "+ u.LastName }).ToList();
             viewmodel.ProtocolVersions = _context.ProtocolVersions.Include(p=>p.Protocol).ToLookup(p=>p.ProtocolID).Select(pi=> pi.OrderByDescending(v => v.VersionNumber).First()).ToList();
         }
 
@@ -1630,7 +1630,7 @@ namespace PrototypeWithAuth.Controllers
                     viewmodel.ProtocolCategories = _context.ProtocolCategories.ToList();
                     viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.Where(ps => ps.ProtocolCategoryTypeID == protocol.Protocol.ProtocolSubCategory.ProtocolCategoryTypeID).ToList();
                     viewmodel.Creators = _context.Users.Select(u =>
-                        new SelectListItem() { Value = u.Id, Text = u.FirstName + u.LastName }).ToList();
+                        new SelectListItem() { Value = u.Id, Text = u.FirstName +" "+ u.LastName }).ToList();
                     viewmodel.ProtocolVersions = _context.ProtocolVersions.Include(p=>p.Protocol).Where(p => p.Protocol.ProtocolSubCategoryID == protocol.Protocol.ProtocolSubCategoryID && p.ApplicationUserCreatorID == protocol.ApplicationUserCreatorID).ToLookup(p => p.ProtocolID).Select(pi => pi.OrderByDescending(v => v.VersionNumber).First()).ToList();
                     break;
             }
