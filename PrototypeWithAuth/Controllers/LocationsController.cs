@@ -98,6 +98,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public IActionResult SublocationIndex(int parentId)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             SublocationIndexViewModel sublocationIndexViewModel = new SublocationIndexViewModel()
             {
                 SublocationInstances = _context.LocationInstances
@@ -138,6 +142,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, LabManagement")]
         public IActionResult VisualLocations(int VisualContainerId)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()
             {
                 ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == VisualContainerId).Include(m => m.LabPart).FirstOrDefault()
@@ -187,6 +195,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public IActionResult LocationIndex(int typeID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             LocationIndexViewModel locationIndexViewModel = new LocationIndexViewModel()
             {
                 //exclude the box and cell from locationsDepthOfZero
@@ -201,6 +213,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public IActionResult VisualLocationsZoom(int VisualContainerId, AppUtility.MenuItems SectionType = AppUtility.MenuItems.LabManagement)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()
             {
                 ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == VisualContainerId).FirstOrDefault(),
@@ -217,6 +233,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "LabManagement")]
         public IActionResult AddLocation()
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             AddLocationViewModel addLocationViewModel = new AddLocationViewModel
             {
                 LocationTypesDepthOfZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
@@ -230,6 +250,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "LabManagement")]
         public async Task<IActionResult> SubLocation(int ParentLocationTypeID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             SubLocationViewModel subLocationViewModel = new SubLocationViewModel();
             bool go = true;
             List<LocationType> listOfChildrenTypes = new List<LocationType>();
@@ -765,6 +789,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> HasShelfBlock(int id, int roomID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             var part = await _context.LabParts.Where(lp => lp.LabPartID == id).FirstOrDefaultAsync();
             var locationOfTypeCount = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LabPartID == id && roomID == li.LocationInstanceParentID).Count();
             var viewModel = new HasShelfViewModel() { HasShelves = part.HasShelves, LocationName = part.LabPartNameAbbrev + (locationOfTypeCount + 1) };

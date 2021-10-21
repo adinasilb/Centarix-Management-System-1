@@ -17,7 +17,7 @@ $('#invFilterPopover').on('shown.bs.popover', function () {
         });
 
 
-$('.search-requests').on('change', function (e) {
+$('.search-by-name').on('change', function (e) {
 	e.stopImmediatePropagation();
 	var searchText = $(this).val().toLowerCase();
 	console.log(searchText);

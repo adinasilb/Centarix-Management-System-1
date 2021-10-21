@@ -1300,6 +1300,10 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<PartialViewResult> _TempRequestHiddenFors(int ID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             TempRequestJson tempRequestJson = _context.TempRequestJsons.Where(t => t.TempRequestJsonID == ID).FirstOrDefault();
             var fullRequestJson = tempRequestJson.DeserializeJson<FullRequestJson>();
             var trlvm = new TempRequestListViewModel()
@@ -1777,6 +1781,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> DeleteModal(int? id, RequestIndexObject requestIndexObject)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             if (id == null)
             {
                 ViewBag.ErrorMessage = "Product not found (no id). Unable to delete.";
@@ -2063,7 +2071,13 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> CreateItemTabs(int productSubCategoryId, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, string itemName = "",
             bool isRequestQuote = false)
         { //TODO : CHECK IF WE NEED TO DELETE GUID DOCS HERE
+
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
+
             var categoryType = 1;
             var sectionType = AppUtility.MenuItems.Requests;
             if (PageType.ToString().StartsWith("Operations"))
@@ -2147,6 +2161,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _PartialItemOperationsTab(int index, int subcategoryID = 0)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             var operationsItemViewModel = new OperationsItemViewModel()
             {
                 RequestIndex = index,
@@ -2236,6 +2254,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ShareModal(int ID, AppUtility.ModelsEnum ModelsEnum)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             //var shareRequestViewModel = new ShareRequestViewModel()
             //{
             //    Request = _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault(),
@@ -2282,12 +2304,12 @@ namespace PrototypeWithAuth.Controllers
                                 RequestID = shareModalViewModel.ID,
                                 FromApplicationUserID = _userManager.GetUserId(User),
                                 ToApplicationUserID = userID,
-                                TimeStamp = DateTime.Now
+                                //TimeStamp = DateTime.Now
                             };
                         }
                         else
                         {
-                            sharedRequest.TimeStamp = DateTime.Now;
+                            //sharedRequest.TimeStamp = DateTime.Now;
                         }
                         _context.Update(sharedRequest);
                     }
@@ -2337,6 +2359,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ItemData(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             List<string> selectedPriceSort = null;
             selectedPriceSort = new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() };
             var requestItemViewModel = await editModalViewFunction(id, Tab, SectionType, isEditable, selectedPriceSort);
@@ -2346,6 +2372,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _ItemHeader(int? id, AppUtility.MenuItems SectionType)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             var categoryTypeId = 1;
             if (SectionType == AppUtility.MenuItems.Operations)
             {
@@ -2362,6 +2392,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> EditModalView(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true, List<string> selectedPriceSort = null, bool isProprietary = false, int? Tab = 0)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             selectedPriceSort = selectedPriceSort.Count == 0 ? new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() } : selectedPriceSort;
             var requestItemViewModel = await editModalViewFunction(id, Tab, SectionType, isEditable, selectedPriceSort, isProprietary: isProprietary);
             return PartialView(requestItemViewModel);
@@ -2596,6 +2630,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReOrderFloatModalView(RequestIndexObject requestIndexObject, int? id, String SectionType = "")
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             /*Object lockObj = new Object();
             lock (lockObj)
             {*/
@@ -2779,7 +2817,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmEmailModal(int id, RequestIndexObject requestIndexObject)
         {
-
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             TempRequestListViewModel tempRequestListViewModel =
                 await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
             //var allRequests = new List<Request>();
@@ -3703,6 +3744,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReceivedModal(int RequestID, RequestIndexObject requestIndexObject)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             //foreach(var li in _context.LocationInstances)
             //{
             //    li.IsFull = false;
@@ -4024,6 +4069,10 @@ namespace PrototypeWithAuth.Controllers
         public ActionResult DocumentsModal(string id, Guid Guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
             AppUtility.ParentFolderName parentFolderName, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
                 FolderName = RequestFolderNameEnum,
@@ -4091,6 +4140,11 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests)
         {
+
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             DeleteDocumentsViewModel deleteDocumentsViewModel = new DeleteDocumentsViewModel()
             {
                 FileName = FileString,
@@ -4258,6 +4312,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "LabManagement")]
         public IActionResult EditQuoteDetails(int id, int[] requestIds = null)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             if (requestIds != null)
             {
                 //user wants to edit only one quote, or for selected requests
@@ -4430,6 +4488,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, Users, Biomarkers, Accounting, Admin, Reports, Timekeeper, Operations, Protocols, Income, Operation, Expenses, LabManagement")]
         public async Task<IActionResult> ConfirmEdit(AppUtility.MenuItems MenuItem = AppUtility.MenuItems.Requests)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             return PartialView(MenuItem);
         }
 
@@ -4437,6 +4499,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, Users, Biomarkers, Accounting, Admin, Reports, Timekeeper, Operations, Protocols, Income, Operation, Expenses, LabManagement")]
         public async Task<IActionResult> ConfirmExit(String TempRequestGUID, AppUtility.MenuItems MenuItem = AppUtility.MenuItems.Requests, string url = "")
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             ConfirmExitViewModel confirmExit = new ConfirmExitViewModel()
             {
                 SectionType = MenuItem,
@@ -4473,6 +4539,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> CommentInfoPartialView(String type, int index)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             Comment comment = new Comment();
             comment.ApplicationUser = _userManager.GetUserAsync(User).Result;
             comment.ApplicationUserID = comment.ApplicationUser.Id;
@@ -4485,6 +4555,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> InstallmentsPartial(int index)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             return PartialView(index);
         }
 
@@ -4493,6 +4567,10 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> OrderLateModal(int id)
 
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             var request = _context.Requests
                 .Where(r => r.RequestID == id)
                 .Include(r => r.ApplicationUserCreator)
@@ -4717,6 +4795,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> PaymentsPayModal(int? vendorid, int? requestid, int[] requestIds, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             List<Request> requestsToPay = new List<Request>();
             var requestsList = new List<Request>();
             GetPaymentRequests(accountingPaymentsEnum).Result.ForEach(rp => requestsList.Add(rp.Request));
@@ -4862,6 +4944,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> PaymentsInvoiceModal(int? vendorid, int? paymentid, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             var payment = _context.Payments.Where(p => p.PaymentID == paymentid).FirstOrDefault();
             var requestToPay = _context.Requests.Where(r => r.RequestID == payment.RequestID).Include(r => r.ParentRequest)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
@@ -5073,6 +5159,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             var uploadQuoteViewModel = new UploadQuoteViewModel();
 
             uploadQuoteViewModel.OrderTypeEnum = requestIndexObject.OrderType;
@@ -5254,6 +5344,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadOrderModal(RequestIndexObject requestIndexObject)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             var uploadOrderViewModel = new UploadOrderViewModel();
 
             uploadOrderViewModel.TempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
@@ -5390,6 +5484,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, LabManagement")]
         public async Task<IActionResult> TermsModal(int vendorID, List<int> requestIds, RequestIndexObject requestIndexObject) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             TempRequestListViewModel tempRequestListViewModel = new TempRequestListViewModel()
             {
                 TempRequestViewModels = new List<TempRequestViewModel>()
@@ -5457,6 +5555,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public IActionResult _InventoryFilterResults(SelectedRequestFilters selectedFilters, int numFilters, AppUtility.MenuItems sectionType, bool isProprietary)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             try
             {
                 InventoryFilterViewModel inventoryFilterViewModel = base.GetInventoryFilterViewModel(selectedFilters, numFilters, sectionType, isProprietary);
@@ -5473,6 +5575,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _CartTotalModal(int requestID, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             var request = await _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.ApplicationUserCreator).FirstOrDefaultAsync();
             var vendor = await _context.Requests.Where(r => r.RequestID == requestID).Select(r => r.Product.Vendor).FirstOrDefaultAsync();
             var vendorCartTotal = _context.Requests.Where(r => r.Product.VendorID == vendor.VendorID && r.ApplicationUserCreatorID == request.ApplicationUserCreatorID &&
@@ -5492,6 +5598,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> HistoryItemModal(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, false);
             requestItemViewModel.IsHistory = true;
             return PartialView(requestItemViewModel);
@@ -5500,6 +5610,10 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         public async Task<IActionResult> _HistoryTab(int? id, List<string> selectedPriceSort, string selectedCurrency, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             try
             {
                 var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, false, selectedPriceSort, selectedCurrency);
@@ -5517,6 +5631,10 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public async Task<IActionResult> _LocationTab(int id)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             var requestItemViewModel = await editModalViewFunction(id, isEditable: false);
             return PartialView(requestItemViewModel);
         }
@@ -5525,6 +5643,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public IActionResult ConfirmArchiveModal(string locationName)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             ConfirmArchiveViewModel confirmArchiveViewModel = new ConfirmArchiveViewModel();
             confirmArchiveViewModel.LocationName = locationName;
             return PartialView(confirmArchiveViewModel);

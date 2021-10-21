@@ -20,5 +20,6 @@ namespace PrototypeWithAuth.Models
         public ParticipantStatus ParticipantStatus { get; set; }
         public int ExperimentID { get; set; }
         public Experiment Experiment { get; set; }
+        public IEnumerable<ExperimentEntry> ExperimentEntries { get; set; }
     }
 }

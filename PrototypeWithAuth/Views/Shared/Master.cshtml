@@ -412,6 +412,8 @@
             $('.mark-edditable').data("val", true);
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
+            $('.location-icon').removeClass('d-none');
+            
 
             //turn off document modals
             if ($(element).hasClass('operations') || $(element).hasClass('orders')) {
@@ -671,6 +673,14 @@
             $(".home-nav-item").addClass("save-item");
         }
 
+
+        $.fn.RemoveSaveItemClass = function () {
+            $(".top-menu").removeClass("save-item");
+            $(".side-menu").removeClass("save-item");
+            $(".module-button ").removeClass("save-item");
+            $(".notificationDiv").removeClass("save-item");
+            $(".home-nav-item").removeClass("save-item");
+        }
 
         $.fn.LoadSummaryModal = function (modalClass) {
             $("#cost").trigger('change');
@@ -1208,21 +1218,24 @@
 
 
 
-        $.fn.OpenDocumentsModal = function (isReopen, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles) {
+        $.fn.OpenDocumentsModal = function (isReopen, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID) {
             $('#loading').show();
             //alert("in documents modal in document modal js")
             //$(".modal-backdrop").first().removeClass();
             //alert(parentFolder)
             var urlbeginning = "/Requests/"
-            if(section === "Protocols") {
-                urlbeginning ="/Protocols/"
+            if (section === "Protocols") {
+                urlbeginning = "/Protocols/"
+            }
+            else if (section == "Biomarkers") {
+                urlbeginning = "/Biomarkers/"
             }
             if (isReopen) {
                 urltogo = urlbeginning + "_DocumentsModalData?id=" + requestId + "&Guid=" + guid + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
-                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
+                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles + "&CustomMainObjectID=" + $CustomMainObjectID;
             } else {
                 urltogo = urlbeginning + "DocumentsModal?id=" + requestId + "&Guid=" + guid + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
-                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
+                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles + "&CustomMainObjectID=" + $CustomMainObjectID;
             }
 
             console.log(urltogo);
@@ -1237,6 +1250,13 @@
 
                     if(isReopen)
                     {
+                        console.log("before fx");
+                        //if ($("._testvalues").length > 0) {
+
+                        //    if (!$("._testvalues").hasClass("changed")) {
+                        //        $("._testvalues").addClass("changed");
+                        //    }
+                        //}
                         //alert("._DocumentsModalData")
                         $("._DocumentsModalData").html(data);
                     }
@@ -1338,6 +1358,7 @@
                 $('.modal-backdrop').remove();
                 $('.body').removeClass('modal-open');
             }
+            $("body, .modal").bind("click");
         }
 
         $.fn.AddTempRequestHiddenFors = function (guid, sequence, selector) {
@@ -1595,6 +1616,25 @@
                 }
             })
         }
+        $.fn.ChangeTest = function (selectedTest) {
+            var url = "/Biomarkers/_TestValues?TestID=" + selectedTest.attr("testid") + "&ListNumber=0&SiteID=" + /*$(this).attr("listnumber")*/ + $("#ExperimentEntry_SiteID").val() + "&ExperimentID=" + $("#ExperimentEntry_Participant_ExperimentID").val() + "&ExperimentEntryID=" + $("#ExperimentEntry_ExperimentEntryID").val();
+            $.ajax({
+                async: true,
+                url: url,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $(".testvalues").html(data);
+                    if ($(".edit-mode-input").hasClass("off")) {
+                        $('._testvalues input').attr("disabled", true);
+                        $('._testvalues input').addClass("disabled");
+                        $(".open-document-modal").attr("data-val", "false")
+                    }
+                }
+            });
+            $(".biomarkers-test-name").removeClass("selected");
+            selectedTest.addClass("selected");
+        };
     </script>
 
     @if (IsSectionDefined("requestNavScript"))
