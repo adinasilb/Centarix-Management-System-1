@@ -51,7 +51,7 @@
             <li class="list-inline-item m-0">
                 <a class="@proprietaryClass countStatus reload-filter" value="7" href="#"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@proprietaryText</label> </a>
             </li>
-            @if ((AppUtility.SidebarEnum)TempData[AppUtility.TempDataTypes.SidebarType.ToString()] == AppUtility.SidebarEnum.Search)
+            @if ((AppUtility.SidebarEnum)TempData[AppUtility.TempDataTypes.SidebarType.ToString()] != AppUtility.SidebarEnum.Search)
             {
                 <li class="list-inline-item m-0">@{ await Html.RenderPartialAsync("_IndexFilter", Model.InventoryFilterViewModel);}</li>
             }
