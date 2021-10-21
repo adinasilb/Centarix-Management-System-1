@@ -1610,13 +1610,21 @@ namespace PrototypeWithAuth.Controllers
                         viewmodel.Products = _context.Products.Where(p => p.Requests.Where(r => r.RequestStatusID == 3 || r.RequestStatusID == 7).Any()).ToList();
 
                     }
-
                     viewmodel.ParentCategories = _context.ParentCategories.ToList();
                     viewmodel.Vendors = _context.Vendors.ToList();
 
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
-                    var protocol = _context.ProtocolVersions.Include(p=>p.Protocol).Where(p => p.ProtocolVersionID == objectID || p.Protocol.UniqueCode + 'V' + p.VersionNumber == uniqueNumber).Include(ps => ps.Protocol.ProtocolSubCategory).FirstOrDefault();
+                    ProtocolVersion protocol = new ProtocolVersion();
+                    if(uniqueNumber==null)
+                    {
+                        int maxVersionNum = _context.ProtocolVersions.Include(p => p.Protocol).Where(p => p.ProtocolID == objectID ).Max(p=>p.VersionNumber);
+                        protocol = _context.ProtocolVersions.Include(p => p.Protocol).Where(p => p.ProtocolID == objectID && p.VersionNumber==maxVersionNum).Include(ps => ps.Protocol.ProtocolSubCategory).FirstOrDefault();
+                    }
+                    else
+                    {
+                        protocol = _context.ProtocolVersions.Include(p => p.Protocol).Where(p => p.ProtocolID == objectID || p.Protocol.UniqueCode + 'V' + p.VersionNumber == uniqueNumber).Include(ps => ps.Protocol.ProtocolSubCategory).FirstOrDefault();
+                    }
                     viewmodel.Function.ProtocolVersion = protocol;
                     viewmodel.Function.ProtocolVersionID = protocol.ProtocolVersionID;
                     viewmodel.ProtocolCategories = _context.ProtocolCategories.ToList();
@@ -1741,7 +1749,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 protocolsList = protocolsList.Where(p => p.ApplicationUserCreatorID == creatorID);
             }
-            var protocolListJson = await protocolsList.ToLookup(p => p.ProtocolID).Select(pi => pi.OrderByDescending(v => v.VersionNumber).First()).Select(p => new { protocolID = p.ProtocolVersionID, name = p.Protocol.Name }).ToListAsync();
+            var protocolListJson = await protocolsList.ToLookup(p => p.ProtocolID).Select(pi => pi.OrderByDescending(v => v.VersionNumber).First()).Select(p => new { protocolID = p.ProtocolID, name = p.Protocol.Name }).ToListAsync();
             var subCategoryList = await _context.ProtocolSubCategories.Where(ps => ps.ProtocolCategoryTypeID == parentCategoryID).Select(ps => new { subCategoryID = ps.ProtocolSubCategoryTypeID, subCategoryDescription = ps.ProtocolSubCategoryTypeDescription }).ToListAsync();
             return Json(new { ProtocolSubCategories = subCategoryList, Protocols = protocolListJson });
         }
