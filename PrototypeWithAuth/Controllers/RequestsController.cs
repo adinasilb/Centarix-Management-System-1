@@ -1676,8 +1676,8 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             RequestIndexPartialViewModel requestIndexPartialViewModel = await GetIndexViewModel(requestIndexObject, Years: new List<int>() { DateTime.Now.Year }, Months: new List<int>() { DateTime.Now.Month }, requestsSearchViewModel: requestsSearchViewModel);
-            AccountingGeneralViewModel viewModel = new AccountingGeneralViewModel() { RequestIndexPartialViewModel = requestIndexPartialViewModel };
-            return PartialView(viewModel);
+            //AccountingGeneralViewModel viewModel = new AccountingGeneralViewModel() { RequestIndexPartialViewModel = requestIndexPartialViewModel };
+            return PartialView(requestIndexPartialViewModel);
         }
 
         [HttpGet]

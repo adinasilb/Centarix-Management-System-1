@@ -251,6 +251,7 @@
             cache: false,
             success: function (data) {
                 $('.render-body').html(data);
+                $('.mdb-select').materialSelect();
             },
             error: function (jqxhr) {
                 $('.error-message').html(jqxhr.responseText);

@@ -27,6 +27,8 @@ namespace PrototypeWithAuth.ViewModels
         public string? SidebarFilterName { get; set; }
         public InventoryFilterViewModel InventoryFilterViewModel { get; set; }
         public RequestsSearchViewModel RequestsSearchViewModel { get; set; }
+        public List<int> Months { get; set; }
+        public List<int> Years { get; set; }
 
     }
 }

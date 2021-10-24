@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.ViewModels.AccountingGeneralViewModel
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
 @using PrototypeWithAuth.AppData;
 @using PrototypeWithAuth.Data;
 @using Microsoft.AspNetCore.Identity
@@ -57,7 +57,7 @@
         </div>
     </div>
         <div class="_IndexTable">
-            @{ await Html.RenderPartialAsync("_IndexTable", Model.RequestIndexPartialViewModel);}
+            @{ await Html.RenderPartialAsync("_IndexTable", Model);}
         </div>
 
         <script src="~/js/PricePopoverScript.js"></script>
