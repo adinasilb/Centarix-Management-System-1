@@ -10,7 +10,6 @@ namespace PrototypeWithAuth.Models
 {
     public abstract class ShareBase
     {
-        private DateTime _timestamp { get; set; }
         [Key]
         public int ShareID { get; set; }
         public string FromApplicationUserID { get; set; }
@@ -19,12 +18,7 @@ namespace PrototypeWithAuth.Models
         public string ToApplicationUserID { get; set; }
         [ForeignKey("ToApplicationUserID")]
         public ApplicationUser ToApplicationUser { get; set; }
-
-        [DataType(DataType.Date)]
-        public DateTime TimeStamp
-        {
-            get => _timestamp == new DateTime() ? DateTime.Now : _timestamp;
-            set { _timestamp = value; }
-        }
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime TimeStamp { get; set; }
     }
 }
