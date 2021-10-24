@@ -21,6 +21,11 @@
         form = "order-inv-form";
         buttonSubmitClass = "order-inv-background-color";
     }
+    else if (Model.SectionType == AppUtility.MenuItems.Accounting)
+    {
+        form = "accounting-form";
+        buttonSubmitClass = "accounting-background-color";
+    }
     else
     {
         form = "oper-form";
@@ -65,7 +70,7 @@
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label asp-for="ParentCategoryID" class="control-label">Category</label>
-                                        <select searchable="Please select a category" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" data_stop_refresh="true" id="parentlist" asp-for="ParentCategoryID">
+                                        <select searchable="Please select a category" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" data-stop-refresh="true" id="parentlist" asp-for="ParentCategoryID">
                                             <option value="">Select Category</option>
                                             @foreach (var parentCategory in Model.ParentCategories)
                                             {
@@ -77,7 +82,7 @@
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label asp-for="ProductSubcategoryID" class="control-label">Subcategory</label>
-                                        <select searchable="Please select a subcategory" asp-for="ProductSubcategoryID" class="mdb-select-sublist  mdb-select custom select-dropdown form-control-plaintext" id="sublist" data-val="false">
+                                        <select searchable="Please select a subcategory" asp-for="ProductSubcategoryID" class="mdb-select-sublist  mdb-select custom select-dropdown form-control-plaintext" id="sublist" data-val="false" data-stop-refresh="true">
                                             <option value="">Select Subcategory</option>
                                             @foreach (var productSubcategory in Model.ProductSubcategories)
                                             {
@@ -89,7 +94,7 @@
                                 <div class="col-4 ">
                                     <div class="form-group">
                                         <label asp-for="VendorID" class="control-label">Supplier</label>
-                                        <select searchable="Select A Vendor" asp-for="VendorID" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" id="vendorList">
+                                        <select searchable="Select A Vendor" asp-for="VendorID" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" id="vendorList" data-stop-refresh="true">
                                             <option value="">Select Vendor</option>
                                             @foreach (var vendor in Model.Vendors)
                                             {
@@ -103,7 +108,7 @@
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label asp-for="ApplicationUserOwnerID" class="control-label">Owner</label>
-                                        <select  asp-for="ApplicationUserOwnerID" class="mdb-select custom select-dropdown form-control-plaintext" data-val="false" searchable="Please select a user"  id="ownerList">
+                                        <select  asp-for="ApplicationUserOwnerID" class="mdb-select custom select-dropdown form-control-plaintext" data-val="false" searchable="Please select a user"  id="ownerList" data-stop-refresh="true">
                                             <option value="">Select User</option>
                                             @foreach (var user in Model.ApplicationUsers)
                                             {
@@ -115,7 +120,7 @@
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label asp-for="ApplicationUserReceiverID" class="control-label">Received By</label>
-                                        <select  asp-for="ApplicationUserReceiverID" class=" mdb-select custom select-dropdown form-control-plaintext" data-val="false" searchable="Please select a user" id="receiverList">
+                                        <select  asp-for="ApplicationUserReceiverID" class=" mdb-select custom select-dropdown form-control-plaintext" data-val="false" searchable="Please select a user" id="receiverList" data-stop-refresh="true">
                                             <option value="">Select User</option>
                                             @foreach (var user in Model.ApplicationUsers)
                                             {
@@ -251,7 +256,7 @@
             cache: false,
             success: function (data) {
                 $('.render-body').html(data);
-                $('.mdb-select').materialSelect();
+                $.fn.ChangeCheckboxesToFilledIn();
             },
             error: function (jqxhr) {
                 $('.error-message').html(jqxhr.responseText);

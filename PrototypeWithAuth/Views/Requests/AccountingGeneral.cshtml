@@ -14,50 +14,51 @@
     }
 
 }
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-8"></div>
-            <div class="col-2  accounting-form ">
 
-                @{
-                    var years = Enumerable.Range(2010, DateTime.Today.Year - 2009);
-                    int curYear = DateTime.Today.Year /*Model.CurrentYear*/;
-                    int curMonth = DateTime.Today.Month;
-                }
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-8"></div>
+        <div class="col-2  accounting-form ">
 
-                @Html.DropDownListFor(vm =>vm.Years, years.Select(x =>
-            new SelectListItem
-            {
-            Text = x.ToString(),
-            Value = x.ToString(),
-            Selected = (x == curYear)
+            @{
+                var years = Enumerable.Range(2010, DateTime.Today.Year - 2009);
+                int curYear = DateTime.Today.Year /*Model.CurrentYear*/;
+                int curMonth = DateTime.Today.Month;
             }
-            ), htmlAttributes: new
-                 {
-                     @class = " mdb-select   custom select-dropdown form-control-plaintext reports-filters float-right ignore-mdb",
-                @multiple = "multiple",
-                     @name = "SelectedYear",
-                     @searchable = "Search here.."
-                 })
-            </div>
-            <div class="col-2 pr-0 accounting-form">
-                @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
-                @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
-                    new SelectListItem
-                    {
-                        Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m),
-                        Value = m.ToString(),
-                        Selected = (m == curMonth)
-                    }),
-                    htmlAttributes: new { @class = " mdb-select  custom select-dropdown form-control-plaintext float-right  ignore-mdb", @searchable = "Search here...", @multiple = "multiple" })
-                @*</div>
+
+            @Html.DropDownListFor(vm => vm.Years, years.Select(x =>
+        new SelectListItem
+        {
+        Text = x.ToString(),
+        Value = x.ToString(),
+        Selected = (x == curYear)
+        }
+        ), htmlAttributes: new
+             {
+                 @class = " mdb-select   custom select-dropdown form-control-plaintext reports-filters float-right ignore-mdb",
+            @multiple = "multiple",
+                 @name = "SelectedYear",
+                 @searchable = "Search here.."
+             })
+        </div>
+        <div class="col-2 pr-0 accounting-form">
+            @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
+            @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
+                new SelectListItem
+                {
+                    Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m),
+                    Value = m.ToString(),
+                    Selected = (m == curMonth)
+                }),
+                htmlAttributes: new { @class = " mdb-select  custom select-dropdown form-control-plaintext float-right  ignore-mdb", @searchable = "Search here...", @multiple = "multiple" })
+            @*</div>
                 <div class="col-1 p-0 monthsHours">*@
 
-            </div>
         </div>
     </div>
-        <div class="_IndexTable">
-            @{ await Html.RenderPartialAsync("_IndexTable", Model);}
-        </div>
+</div>
+<div class="_IndexTable">
+    @{ await Html.RenderPartialAsync("_IndexTable", Model);}
+</div>
 
-        <script src="~/js/PricePopoverScript.js"></script>
+<script src="~/js/PricePopoverScript.js"></script>

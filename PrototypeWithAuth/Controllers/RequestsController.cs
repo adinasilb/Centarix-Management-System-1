@@ -3473,6 +3473,7 @@ namespace PrototypeWithAuth.Controllers
             requestsSearchViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => categoryID.Contains(ps.ParentCategory.CategoryTypeID)).ToListAsync();
             requestsSearchViewModel.Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => categoryID.Contains(vc.CategoryTypeID)).Count() > 0).ToListAsync();
             requestsSearchViewModel.ApplicationUsers = await _context.Users.ToListAsync();
+            requestsSearchViewModel.SectionType = SectionType;
             
             return View( requestsSearchViewModel);
         }
