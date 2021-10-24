@@ -225,6 +225,7 @@ namespace PrototypeWithAuth.Controllers
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.Installments:
+                        case AppUtility.SidebarEnum.StandingOrders:
                             payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-invoice-one", "Pay");
                             checkboxString = "";
                             iconList.Add(payNowIcon);
@@ -1426,12 +1427,9 @@ namespace PrototypeWithAuth.Controllers
             var termsList = new List<SelectListItem>() { };
             await _context.PaymentStatuses.ForEachAsync(ps =>
             {
-                if (ps.PaymentStatusID != 7)//don't have standing orders as an option
-                {
                     var selected = false;
                     if (ps.PaymentStatusID == 2) { selected = true; }
                     termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription, Selected = selected });
-                }
             });
             TermsViewModel termsViewModel = new TermsViewModel()
             {
@@ -1552,10 +1550,15 @@ namespace PrototypeWithAuth.Controllers
                                     ShippingPaidHere = hasShippingOnPayment ? false : true
                                 };
                                 hasShippingOnPayment = true;
-                                if (tempRequest.Request.PaymentStatusID == 5)
+                                if (tempRequest.Request.PaymentStatusID == 5 )
                                 {
                                     payment.PaymentDate = termsViewModel.InstallmentDate.AddMonths(i);
                                     payment.Sum = ((tempRequest.Request.Cost ?? 0) / (tempRequest.Request.Installments ?? 0));
+                                }
+                                else if( tempRequest.Request.PaymentStatusID == 7)
+                                {
+                                    payment.PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddMonths(1);
+                                    payment.Sum = tempRequest.Request.Cost ?? 0;
                                 }
                                 else
                                 {
@@ -4698,10 +4701,11 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                     break;
-                //case AppUtility.SidebarEnum.StandingOrders:
-                //    requestsList = requestsList
-                //.Where(r => r.PaymentStatusID == 7).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
-                //    break;
+                case AppUtility.SidebarEnum.StandingOrders:
+                    requests = requests
+                .Where(r => r.PaymentStatusID == 7).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
+                    await requests.ForEachAsync(r => requestList.Add(new RequestPaymentsViewModel { Request = r, Payment = r.Payments.FirstOrDefault() }));
+                    break;
                 case AppUtility.SidebarEnum.SpecifyPayment:
                     requests = requests
                 .Where(r => r.PaymentStatusID == 8 && r.Payments.FirstOrDefault().HasInvoice);
@@ -4992,10 +4996,9 @@ namespace PrototypeWithAuth.Controllers
                     foreach (Request request in paymentsInvoiceViewModel.Requests)
                     {
                         var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
-                        if (requestToUpdate.PaymentStatusID == 5)
-                        {
-                            payment.Sum = request.Payments.FirstOrDefault().Sum;
-                        }
+
+                        payment.Sum = request.Payments.FirstOrDefault().Sum;
+                  
                         //else
                         //{
                         //    payment.Sum = request.Cost ?? 0;
