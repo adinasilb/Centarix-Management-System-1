@@ -142,7 +142,6 @@ namespace PrototypeWithAuth.Controllers
                 ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == VisualContainerId).Include(m => m.LabPart).FirstOrDefault()
             };
 
-
             if (!visualLocationsViewModel.ParentLocationInstance.IsEmptyShelf)
             {
                 visualLocationsViewModel.ChildrenLocationInstances =
@@ -172,12 +171,23 @@ namespace PrototypeWithAuth.Controllers
                 visualLocationsViewModel.CurrentEmptyChild = new LocationInstance(); // so you don't run into null problems when checking on the view
             }
             else
-            {
-                var ParentID = visualLocationsViewModel.ParentLocationInstance.LocationInstanceParentID;
-                visualLocationsViewModel.CurrentEmptyChild = visualLocationsViewModel.ParentLocationInstance;
-                visualLocationsViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == ParentID).FirstOrDefault();
-                visualLocationsViewModel.ChildrenLocationInstances = _context.LocationInstances.Where(li => li.LocationInstanceParentID == ParentID)
-                    .Include(li => li.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
+            {             
+                if (visualLocationsViewModel.ParentLocationInstance.IsEmptyShelf && visualLocationsViewModel.ParentLocationInstance.LabPartID!=null)
+                {
+                    visualLocationsViewModel.CurrentEmptyChild = visualLocationsViewModel.ParentLocationInstance;
+                    visualLocationsViewModel.ChildrenLocationInstances = new List<LocationInstance>();
+                    visualLocationsViewModel.ChildrenLocationInstances.Add(visualLocationsViewModel.ParentLocationInstance);
+                }
+                else
+                {
+                    var ParentID = visualLocationsViewModel.ParentLocationInstance.LocationInstanceParentID;
+                    visualLocationsViewModel.CurrentEmptyChild = visualLocationsViewModel.ParentLocationInstance;
+                    visualLocationsViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == ParentID).FirstOrDefault();
+
+                    visualLocationsViewModel.ChildrenLocationInstances = _context.LocationInstances.Where(li => li.LocationInstanceParentID == ParentID)
+                 .Include(li => li.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
+
+                }
             }
 
             return PartialView(visualLocationsViewModel);
@@ -200,6 +210,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public IActionResult VisualLocationsZoom(int VisualContainerId, AppUtility.MenuItems SectionType = AppUtility.MenuItems.LabManagement)
         {
+            //this only works for 80 and 196 it needs to be redone to work with 20 and 25
             VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()
             {
                 ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == VisualContainerId).FirstOrDefault(),
@@ -304,6 +315,11 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> AddLocation(AddLocationViewModel addLocationViewModel, SubLocationViewModel subLocationViewModel)
         {
+            if (subLocationViewModel.LocationInstances[1].LabPartID==4)
+            {
+                ModelState.Remove("LocationInstances[2].Height");
+            }
+
             if (ModelState.IsValid) //make sure this allows for sublocations to be binded
             {
                 List<LocationInstance> waitingLocations = new List<LocationInstance>();
@@ -617,17 +633,17 @@ namespace PrototypeWithAuth.Controllers
                                     subLocationViewModel.LocationInstances[i].LocationInstanceAbbrev = labPartNameAbrev;
                                     subLocationViewModel.LocationInstances[i].LocationNumber = labPartByTypeCount + 1;
 
-                                    if (subLocationViewModel.LocationInstances.Count() > 2)
+                                  
+                                    if (!labPart.HasShelves)
                                     {
-                                        subLocationViewModel.LocationInstances[i].Height = subLocationViewModel.LocationInstances[i + 1].Height;
+                                        subLocationViewModel.LocationInstances[i].IsEmptyShelf = !labPart.HasShelves;
+                                        subLocationViewModel.LocationInstances[i].Height = 1;
                                     }
                                     else
                                     {
-                                        subLocationViewModel.LocationInstances[i].Height = 1;
+                                        subLocationViewModel.LocationInstances[i].IsEmptyShelf = subLocationViewModel.LocationInstances[i + 1].Height == 0;
+                                        subLocationViewModel.LocationInstances[i].Height = subLocationViewModel.LocationInstances[i + 1].Height  == 0 ? 1 : subLocationViewModel.LocationInstances[i + 1].Height;
                                     }
-
-                                    subLocationViewModel.LocationInstances[i].IsEmptyShelf = !labPart.HasShelves;
-
                                     _context.Add(subLocationViewModel.LocationInstances[i]);
                                     await _context.SaveChangesAsync();
                                     lastParent = subLocationViewModel.LocationInstances[i];
@@ -755,8 +771,8 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> HasShelfBlock(int id, int roomID)
         {
             var part = await _context.LabParts.Where(lp => lp.LabPartID == id).FirstOrDefaultAsync();
-            var locationOfTypeCount = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LabPartID == id && roomID == li.LocationInstanceParentID).Count();
-            var viewModel = new HasShelfViewModel() { HasShelves = part.HasShelves, LocationName = part.LabPartNameAbbrev + (locationOfTypeCount + 1) };
+            var locationOfTypeCount = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LabPartID == id && roomID == li.LocationInstanceParent.LocationRoomInstanceID).Count();
+            var viewModel = new HasShelfViewModel() { HasShelves = part.HasShelves, LocationNameAbrev = part.LabPartNameAbbrev + (locationOfTypeCount + 1), LocationName = part.LabPartName};
             return PartialView(viewModel);
         }
 

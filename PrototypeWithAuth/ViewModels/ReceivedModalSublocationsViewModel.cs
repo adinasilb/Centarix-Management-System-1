@@ -14,6 +14,7 @@ namespace PrototypeWithAuth.ViewModels
 
         //this will fill the first select box
         public IEnumerable<LocationInstance> locationInstancesDepthZero { get; set; }
+        public IEnumerable<LabPart> LabPartTypes { get; set; }
 
         //use this to label the select boxes
         public List<string> locationTypeNames { get; set; }

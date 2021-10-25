@@ -11,7 +11,7 @@ namespace PrototypeWithAuth.AppData.UtilityModels
 
         [ExcelColumn("F")]
         public string OrderNumber { get; set; }
-
+ 
         private string _InvoiceNumber;
         [ExcelColumn("invoice number")]
         public string InvoiceNumber

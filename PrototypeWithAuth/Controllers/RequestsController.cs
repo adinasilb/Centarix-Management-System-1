@@ -3703,12 +3703,16 @@ namespace PrototypeWithAuth.Controllers
                 locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == LocationTypeID && !(li is TemporaryLocationInstance))
                 .Include(li => li.LocationRoomInstance).Include(li => li.LabPart).OrderBy(li => li.LocationNumber),
                 locationTypeNames = new List<string>(),
-                locationInstancesSelected = new List<LocationInstance>()
+                locationInstancesSelected = new List<LocationInstance>(),
             };
             bool finished = false;
             int locationTypeIDLoop = LocationTypeID;
-            while (!finished)
+            if (LocationTypeID == 500 )
             {
+                receivedModalSublocationsViewModel.LabPartTypes = _context.LabParts;
+            }
+            while (!finished)
+            {              
                 //need to get the whole thing b/c need both the name and the child id so it's instead of looping through the list twice
                 var nextType = _context.LocationTypes.Where(lt => lt.LocationTypeID == locationTypeIDLoop).FirstOrDefault();
                 string nextTYpeName = nextType.LocationTypeName;
@@ -4135,9 +4139,18 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
-        public JsonResult GetSublocationInstancesList(int locationInstanceParentId)
+        public JsonResult GetSublocationInstancesList(int locationInstanceParentId, int labPartID)
         {
-            var locationInstanceList = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == locationInstanceParentId).Include(li => li.LabPart).OrderBy(li => li.LocationNumber).ToList();
+            List<LocationInstance> locationInstanceList = new List<LocationInstance>();
+            if (labPartID!=0)
+            {
+                locationInstanceList = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == locationInstanceParentId && li.LabPartID == labPartID).Include(li => li.LabPart).OrderBy(li => li.LocationNumber).ToList();
+
+            }
+            else
+            {
+                locationInstanceList = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == locationInstanceParentId).Include(li => li.LabPart).OrderBy(li => li.LocationNumber).ToList();
+            }
             return Json(locationInstanceList);
         }
 
@@ -5579,8 +5592,8 @@ namespace PrototypeWithAuth.Controllers
         //[HttpGet]
         //public async Task UploadRequestsFromExcel()
         //{
-        //    var InventoryFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\Imported table 2-to uploadWithFixedVendorsAndCategoriesRealUsers.csv";
-        //    var POFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\orders new 17_10_21-Grid view.csv";
+        //    var InventoryFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\Imported table 2-to uploadWithFixedVendorsAndCategoriesFakeUsers.csv";
+        //    var POFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\_2019 - orders (07-10-21)2.csv";
 
         //    var lineNumber = 0;
 
@@ -5825,50 +5838,51 @@ namespace PrototypeWithAuth.Controllers
         //    }
         //}
 
-        //private async Task SetInvoiceAndPaymentsAccordingToResultsFromDB(UploadExcelModel r, Request request, UploadInvoiceExcelModel invoiceRow)
-        //{
-        //    string sourceFile = @"C:\Users\debbie\OneDrive - Centarix\Desktop\DocumentsInvoices\" + invoiceRow.DocumentNumber + ".pdf";
+        private async Task SetInvoiceAndPaymentsAccordingToResultsFromDB(UploadExcelModel r, Request request, UploadInvoiceExcelModel invoiceRow)
+        {
+            string sourceFile = @"C:\Users\debbie\OneDrive - Centarix\Desktop\DocumentsInvoices\" + invoiceRow.DocumentNumber + ".pdf";
 
-        //    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-        //    string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
-        //    string uploadFolderPathTo = Path.Combine(requestFolderTo, AppUtility.FolderNamesEnum.Invoices.ToString());
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+            string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
+            string uploadFolderPathTo = Path.Combine(requestFolderTo, AppUtility.FolderNamesEnum.Invoices.ToString());
 
-        //    try
-        //    {
-        //        if (!Directory.Exists(requestFolderTo))
-        //        {
-        //            Directory.CreateDirectory(requestFolderTo);
-        //            Directory.CreateDirectory(uploadFolderPathTo);
-        //        }
-        //        else
-        //        {
-        //            if (!Directory.Exists(uploadFolderPathTo))
-        //            {
-        //                Directory.CreateDirectory(uploadFolderPathTo);
-        //            }
-        //        }
-        //        System.IO.File.Copy(sourceFile, uploadFolderPathTo + @"\" + invoiceRow.DocumentNumber + ".pdf", true);
-        //        WriteErrorToFile("file was addeded for request id:" + request.RequestID);
-        //    }
-        //    catch (IOException iox)
-        //    {
-        //        WriteErrorToFile("error adding file" + request.RequestID);
-        //    }
-        //    var invoiceDB = _context.Invoices.Where(i => i.InvoiceNumber == invoiceRow.InvoiceNumber && i.InvoiceNumber != null && i.InvoiceDate == invoiceRow.InvoiceDate).AsNoTracking().FirstOrDefault();
-        //    if (invoiceDB != null)
-        //    {
-        //        var payment = new Payment() { InvoiceID = invoiceDB.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
-        //        _context.Entry(payment).State = EntityState.Added;
-        //    }
-        //    else
-        //    {
-        //        var invoice = new Invoice() { InvoiceNumber = invoiceRow.InvoiceNumber, InvoiceDate = invoiceRow.InvoiceDate };
-        //        _context.Entry(invoice).State = EntityState.Added;
-        //        await _context.SaveChangesAsync();
-        //        var payment = new Payment() { InvoiceID = invoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
-        //        _context.Entry(payment).State = EntityState.Added;
-        //    }
-        //}
+            try
+            {
+                if (!Directory.Exists(requestFolderTo))
+                {
+                    Directory.CreateDirectory(requestFolderTo);
+                    Directory.CreateDirectory(uploadFolderPathTo);
+                }
+                else
+                {
+                    if (!Directory.Exists(uploadFolderPathTo))
+                    {
+                        Directory.CreateDirectory(uploadFolderPathTo);
+                    }
+                }
+                System.IO.File.Copy(sourceFile, uploadFolderPathTo + @"\" + invoiceRow.DocumentNumber + ".pdf", true);
+                WriteErrorToFile("file was addeded for request id:" + request.RequestID);
+            }
+            catch (IOException iox)
+            {
+                WriteErrorToFile("error adding file" + request.RequestID);
+            }
+            var invoiceDB = _context.Invoices.Where(i => i.InvoiceNumber == invoiceRow.InvoiceNumber && i.InvoiceNumber != null).AsNoTracking().FirstOrDefault();
+            if (invoiceDB != null)
+            {
+                var payment = new Payment() { InvoiceID = invoiceDB.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
+                _context.Entry(payment).State = EntityState.Added;
+            }
+            else
+            {
+                var invoice = new Invoice() { InvoiceNumber = invoiceRow.InvoiceNumber, InvoiceDate = invoiceRow.InvoiceDate };
+                _context.Entry(invoice).State = EntityState.Added;
+                await _context.SaveChangesAsync();
+                var payment = new Payment() { InvoiceID = invoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
+                _context.Entry(payment).State = EntityState.Added;
+            }
+        }
+
         private static void WriteErrorToFile(string message)
         {
             var errorFilePath = "InventoryError.txt";
