@@ -6,12 +6,16 @@
         <ul class="pl-0">
             @foreach (var l in Model.Lists)
             {
-            <li class="list-inline-item active m-0">
-                <a class="change-list" value="@l.ListID" href="#"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@l.Title</label> </a>
-            </li>
+                <li class="list-inline-item active m-0">
+                    <a class="change-list" value="@l.ListID" href="#"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@l.Title</label> </a>
+                </li>
             }
 
         </ul>
+        <a class="btn-link text no-hover requests add-new-list">
+            <i class="icon-add_circle_outline-24px1"></i>
+            <label>New List</label>
+        </a>
     </div>
 </div>
 <div class="_IndexTable">

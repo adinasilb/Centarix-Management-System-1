@@ -5823,6 +5823,30 @@ namespace PrototypeWithAuth.Controllers
             return error;
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> NewListModal()
+        {
+            NewListViewModel viewModel = new NewListViewModel
+            {
+                OwnerID = _userManager.GetUserId(User)
+            };
+            return PartialView(viewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> NewListModal(NewListViewModel newListViewModel)
+        {
+            RequestList newList = new RequestList
+            {
+                ApplicationUserOwnerID = newListViewModel.OwnerID,
+                Title = newListViewModel.ListTitle,
+                DateCreated = DateTime.Now
+            };
+            return RedirectToAction("_IndexTableWithListTabs");
+        }
+
             //[HttpGet]
             //public async Task<IActionResult> CancelModal(Guid Guid, AppUtility.ModalType ModalType)
             //{
