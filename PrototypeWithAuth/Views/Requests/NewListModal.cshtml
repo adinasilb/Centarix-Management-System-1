@@ -1,0 +1,64 @@
+﻿@model PrototypeWithAuth.ViewModels.MoveListViewModel;
+
+<div class="modal modal-view newListModal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9100">
+    <div class="modal-dialog-centered elixir-modal-xs mx-auto order-inv-form" role="document">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+            <button type="button" class="close modal-close-padding modal-close-style " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('new-list');">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="newListForm">
+                <input type="hidden" asp-for="Request.RequestID" />
+                <input type="hidden" asp-for="PreviousListID" />
+                <div class="modal-padding">
+                    <div class="modal-header pt-0" style="border-bottom: 0;">
+                        <input type="hidden" text="open" class="modal-open-state" />
+                        <div class="row top-menu">
+                            <div class="col text-center">Move&nbsp;<span class="font-weight-bold">@Model.Request.Product.ProductName</span>&nbsp;To List</div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-4 offset-3">
+                                <input />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <a class="btn-link text no-hover requests add-new-list">
+                                <i class="icon-add_circle_outline-24px1"></i>
+                                <label>New List</label>
+                            </a>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer border-0 p-0">
+                        <div class="mx-auto modal-footer-mt">
+                            <button type="submit" class="custom-button custom-button-font between-button-margin createList">Create</button>
+                            <button type="button" class="custom-button custom-cancel close-move-modal" onclick="$.fn.CloseModal('new-list');">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(".moveListItem").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var url = "/Requests/MoveToListModal";
+        var formData = new FormData($(".moveListItemForm")[0]);
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: formData,
+            success: (e) => {
+                if (!e) {
+                    $.fn.CloseModal("move-list");
+                }
+                //find error here!
+            },
+            processData: false,
+            contentType: false
+        })
+    });
+</script>
