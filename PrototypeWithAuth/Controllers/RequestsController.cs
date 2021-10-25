@@ -3938,18 +3938,9 @@ namespace PrototypeWithAuth.Controllers
                             await SaveLocations(receivedModalVisualViewModel, requestReceived, false);
                         }
                     }
-                    if (receivedLocationViewModel.Clarify)
-                    {
-                        requestReceived.RequestStatusID = 5;
-                    }
-                    else if (receivedLocationViewModel.PartialDelivery)
-                    {
-                        requestReceived.RequestStatusID = 4;
-                    }
-                    else
-                    {
-                        requestReceived.RequestStatusID = 3;
-                    }
+                    
+                    requestReceived.RequestStatusID = 3;
+                    
                     if(receivedLocationViewModel.Request.ArrivalDate == DateTime.Today)
                     {
                         requestReceived.ArrivalDate = DateTime.Now;

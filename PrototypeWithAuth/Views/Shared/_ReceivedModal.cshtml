@@ -51,6 +51,7 @@
                     <input asp-for="Request.Product.ProductName" class="form-control-plaintext heading-1 mt-2 center-horizontally my-auto" readonly />
                 </div>
             </div>
+
             <br />
             <div class="row">
                 <div class="col-4">
@@ -66,9 +67,9 @@
                     </div>
                 </div>
                 @*<div class="col-1 text-center">
-                        <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
-                        <label asp-for="Arrival">Arrival</label>
-                    </div>*@
+                <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
+                <label asp-for="Arrival">Arrival</label>
+            </div>*@
                 <div class="col-2 text-center">
                     <br />
                     <div class="form-check">
@@ -89,9 +90,45 @@
                     </div>
                 </div>
                 @*<div class="col-1 text-center">
-                        <input type="checkbox" id="test-chkbx" class="new-chckbx" />
-                        <label for="test-chkbx">Trial</label>
-                    </div>*@
+                <input type="checkbox" id="test-chkbx" class="new-chckbx" />
+                <label for="test-chkbx">Trial</label>
+            </div>*@
+            </div>
+            <div class="row">
+                <div class="col">
+                  @{ var paritalString = "Out of" + Model.Request.Unit + " " + Model.Request.Product.UnitType.UnitTypeDescription + "arrived"; }
+                    @paritalString
+                    <label asp-for="AmountArrived" class="control-label"></label>
+                    <input asp-for="AmountArrived" type="text" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
+                    <span asp-validation-for="AmountArrived" class="text-danger-centarix"></span>                   
+                </div>
+                @*<div class="col-1 text-center">
+                <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
+                <label asp-for="Arrival">Arrival</label>
+            </div>*@
+                <div class="col-2 text-center">
+                    <br />
+                    <div class="form-check">
+                        <button href="#" id="clarifyPopover" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow">
+                        </button>
+                        <input type="checkbox" class="form-check-input filled-in clarify-checkbox" asp-for="Request.IsClarify" />
+                        <label class="form-check-label " asp-for="Request.IsClarify">Clarify</label>
+
+                    </div>
+                </div>
+                <div class="col-2 text-center">
+                    <br />
+                    <div class="form-check">
+                        <button href="#" id="partialPopover" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow">
+                        </button>
+                        <input type="checkbox" class="form-check-input filled-in partial-checkbox" asp-for="Request.IsPartial" />
+                        <label class="form-check-label " asp-for="Request.IsPartial">Partial</label>
+                    </div>
+                </div>
+                @*<div class="col-1 text-center">
+                <input type="checkbox" id="test-chkbx" class="new-chckbx" />
+                <label for="test-chkbx">Trial</label>
+            </div>*@
             </div>
             <div class="row">
                 <div class="col-4">
@@ -101,9 +138,9 @@
 
                 </div>
                 @*<div class="col-1 text-center">
-                        <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
-                        <label asp-for="Arrival">Arrival</label>
-                    </div>*@
+                <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
+                <label asp-for="Arrival">Arrival</label>
+            </div>*@
                 <div class="clarify-popover m-5" style="display:none">
                     <label asp-for="Request.NoteForClarifyDelivery" class="control-label">Clarify Note</label>
                     <div>
@@ -129,40 +166,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="partial-popover" style="display:none">
-                    <label asp-for="Request.NoteForPartialDelivery" class="control-label">Partial Note</label>
-                    <div>
-                        <div class="container">
-                            <div class="">
-                                <textarea asp-for="Request.NoteForPartialDelivery" class="popover-partial-note"></textarea>
-                            </div>
-                            <div class="row mt-2 text-center">
-                                <div class="col-6 p-1">
-                                    <button type="button" href="#" class="rounded-pill small-text p-0 m-0 btn text-capitalize partial-note-close" style="width: 100%;
-                                                        border: 1px solid var(--acc-color);
-                                                        background-color: transparent;
-                                                        color: var(--acc-color);">
-                                        Save
-                                    </button>
-                                </div>
-                                <div class="col-6 p-1 ">
-                                    <button class="rounded-pill p-0 m-0 small-text partial-note-close" style="background-color: transparent; border-width:1px !important; width: 100%;">
-                                        Cancel
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @*<div class="col-1 text-center">
-                        <input type="checkbox" id="test-chkbx" class="new-chckbx" />
-                        <label for="test-chkbx">Trial</label>
-                    </div>*@
+
             </div>
             <br />
             @if (Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString() ||
-            Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.Biological.ToString() ||
-            Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.Clinical.ToString())
+           Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.Biological.ToString() ||
+           Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.Clinical.ToString())
             {
                 <div class="row">
                     <div class="col-md-3 ">
@@ -229,13 +238,13 @@
                 </div>
 
                 @*<div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label class="control-label">Location Details</label>
-                                <input class="form-control-plaintext border-bottom" placeholder="Notes..." disabled />
-                            </div>
-                        </div>
-                    </div>*@}
+                <div class="col-12">
+                    <div class="form-group">
+                        <label class="control-label">Location Details</label>
+                        <input class="form-control-plaintext border-bottom" placeholder="Notes..." disabled />
+                    </div>
+                </div>
+            </div>*@}
         </div>
         @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
         {
