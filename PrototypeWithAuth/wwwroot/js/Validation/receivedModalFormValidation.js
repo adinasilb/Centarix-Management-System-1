@@ -24,7 +24,7 @@ $('.receivedModalForm').validate({
 			locationRequired: true
 		},
 		"AmountArrived": {
-			min: 0,
+			min:1,
 			integer: true,
 			required: true,
 			max: parseInt($(".unitAmount").val())-1
