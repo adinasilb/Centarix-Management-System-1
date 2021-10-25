@@ -900,7 +900,7 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters, requestIndexObject.SectionType, isProprietary);
             return requestIndexViewModel;
         }
-        protected static IQueryable<Request> filterListBySelectFilters(SelectedRequestFilters selectedFilters, IQueryable<Request> fullRequestsList)
+        protected static IQueryable<Request> FilterListBySelectFilters(SelectedRequestFilters selectedFilters, IQueryable<Request> fullRequestsList)
         {
             if (selectedFilters != null)
             {
