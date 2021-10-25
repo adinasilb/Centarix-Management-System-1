@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211025071258_addedOldVendorCountry")]
+    partial class addedOldVendorCountry
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6668,6 +6670,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
+                    b.Property<string>("VendorCountry")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
                     b.Property<string>("VendorEnName")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
@@ -6706,7 +6713,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasKey("VendorID");
 
-                    b.HasIndex("CountryID", "VendorBuisnessID")
+                    b.HasIndex("CountryID");
+
+                    b.HasIndex("VendorCountry", "VendorBuisnessID")
                         .IsUnique();
 
                     b.ToTable("Vendors");

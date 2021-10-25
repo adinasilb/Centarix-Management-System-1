@@ -3389,7 +3389,7 @@ namespace PrototypeWithAuth.Controllers
                     message.To.Add(new MailboxAddress(vendorName, vendorEmail));
 
                     //subject
-                    message.Subject = "Order from Centarix to " + vendorName;
+                    message.Subject = "Request for a Price Quote from Centarix to " + vendorName;
 
                     //body
                     builder.TextBody = @"Hello," + "\n\n" + "Please send a price quote for the items listed in the attached pdf. \n\nThank you.\n"
