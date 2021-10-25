@@ -91,6 +91,8 @@ namespace PrototypeWithAuth.Models
 
         [Display(Name = "Gold Account")]
         public string VendorGoldAccount { get; set; }
+
+        [Display(Name = "Country")]
         public int CountryID { get; set; }
         public Country Country { get; set; }
         public IEnumerable<VendorCategoryType> VendorCategoryTypes { get; set; }

@@ -228,6 +228,11 @@ namespace PrototypeWithAuth.Controllers
             List<VendorComment> vendorComments = new List<VendorComment>();
             //only allowed to have 10 contacts
             //have to hard coded becasuse did not know how to render dynamic partial views
+            createSupplierViewModel.Countries = new List<SelectListItem>();
+            foreach (var country in _context.Countries)
+            {
+                createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
+            }
             createSupplierViewModel.VendorContacts = vendorContacts;
             createSupplierViewModel.VendorComments = vendorComments;
             createSupplierViewModel.SectionType = SectionType; //TODO: take this out when all the views are combined
