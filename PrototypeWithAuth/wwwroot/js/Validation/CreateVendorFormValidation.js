@@ -9,9 +9,22 @@
 		"Vendor.VendorBuisnessID": {
 			required: true,
 			number: true,
-			min: 1
+			min: 1,
+			remote: {
+				url: '/Vendors/CheckUniqueCompanyIDAndCountry',
+				type: 'POST',
+				data: {
+					"CompanyID": function () { return $("#Vendor_VendorBuisnessID").val() },
+					"Country": function () { return $("#VendorCountries").val() },
+					"VendorID": function () {
+						if ($(".turn-edit-on-off").length > 0) {
+							return $(".turn-edit-on-off").attr("value");
+						} else { return null }
+					}
+				},
+			},
 		},
-		"Vendor.VendorCountry": "required",
+		"Vendor.VendorCountry": { selectRequired: true },
 		"Vendor.VendorCity": "required",
 		"Vendor.VendorTelephone": {
 			required: true,
@@ -34,10 +47,15 @@
 			number: true,
 			min: 1,
 			integer: true
-		},
-
-
+		}
 	},
+
+	messages: {
+		"Vendor.VendorBuisnessID": {
+			remote: "this company has already been added"
+		},
+	}
+	
 });
 $(".contact-name").rules("add", "required");
 $(".contact-email").rules("add", {
@@ -47,4 +65,17 @@ $(".contact-email").rules("add", {
 $(".contact-phone").rules("add", {
 	required: true,
 	minlength: 9
+});
+
+$("body").off("change", '#VendorCountries').on("change", '#VendorCountries', function () {
+	console.log("in change country")
+	$('.error').addClass("beforeCallValid");
+	$('#Vendor_VendorBuisnessID').valid();
+	$(".error:not(.beforeCallValid)").addClass("afterCallValid")
+	$(".error:not(.beforeCallValid)").removeClass("error")
+	$("label.afterCallValid").remove()
+	$(".error").removeClass('beforeCallValid')
+	$(".afterCallValid").removeClass('error')
+	$(".afterCallValid").removeClass('afterCallValid')
+
 });

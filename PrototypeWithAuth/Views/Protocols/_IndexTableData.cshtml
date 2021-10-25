@@ -11,6 +11,7 @@
     <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text error-msg"></span></div>
     <br />
 }
+
 <div class="">
     <input type="hidden" asp-for="PageNumber" class="page-number" />
     <table class="table table-headerspaced table-noheaderlines table-hover ">
@@ -61,7 +62,7 @@
                                         </a>*@
                                                             <a class="btn-link text no-hover Protocols @iconpopover.AjaxCall" value="@col.AjaxID" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation" data-share-resource-id="@col.AjaxID"
                                                                data-route-request="@col.AjaxID" data-route-newStatus="@iconpopover.Description">
-                                                                <i class="@iconpopover.Icon @iconpopover.AjaxCall" style="color: @iconpopover.Color"></i>
+                                                                <i class="@iconpopover.Icon @*@iconpopover.AjaxCall*@" style="color: @iconpopover.Color"></i>
                                                                 <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
                                                             </a>
                                                         </div>

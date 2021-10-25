@@ -1,0 +1,96 @@
+﻿@model Experiment; 
+@using PrototypeWithAuth.AppData
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div class="col-12 heading-1 mb-5">
+    @Model.Description
+</div>
+<div class="row">
+    <div class="col-3">
+        <fieldset class="biomarkers-fieldset small-size tabs-font under-row-margin">
+            <div class="row">
+                <div class="col-9 mx-0">
+                    Number of Participants
+                </div>
+                <div class="col-3 mx-0 biomarkers-color">
+                    @Model.NumberOfParticipants
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="biomarkers-fieldset small-size tabs-font under-row-margin">
+            <div class="row">
+                <div class="col-9 mx-0">
+                    Number of Dropouts
+                </div>
+                <div class="col-3 mx-0 biomarkers-color">
+                    @Model.Participants.Where(p => p.ParticipantStatusID == 2).Count()
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="biomarkers-fieldset small-size tabs-font under-row-margin">
+            <div class="row">
+                <div class="col-9 mx-0">
+                    Numbers Left
+                </div>
+                <div class="col-3 mx-0 biomarkers-color">
+                    @Model.Participants.Where(p => p.ParticipantStatusID == 1).Count()
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="biomarkers-fieldset small-size tabs-font under-row-margin">
+            <div class="row">
+                <div class="col-9 mx-0">
+                    Minimum Age
+                </div>
+                <div class="col-3 mx-0 biomarkers-color">
+                    @Model.MinimumAge
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="biomarkers-fieldset small-size tabs-font under-row-margin">
+            <div class="row">
+                <div class="col-9 mx-0">
+                    Maximum Age
+                </div>
+                <div class="col-3 mx-0 biomarkers-color">
+                    @Model.MaximumAge
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="col-6">
+        <fieldset class="biomarkers-fieldset small-size tabs-font under-row-margin">
+        </fieldset>
+    </div>
+    <div class="col-3">
+        <fieldset class="biomarkers-fieldset tabs-font under-row-margin">
+            <div class="row form-element-border-bottom under-row-padding under-row-margin">
+                <div class="col-7 mx-0">
+                    Start Date
+                </div>
+                <div class="col-5 mx-0 biomarkers-color">
+                    @Model.StartDateTime.Date.GetElixirDateFormat()
+                </div>
+            </div>
+            <div class="row form-element-border-bottom under-row-padding under-row-margin">
+                <div class="col-7 mx-0">
+                    End Date
+                </div>
+                <div class="col-5 mx-0 biomarkers-color">
+                    @Model.EndDateTime.Date.GetElixirDateFormat()
+                </div>
+            </div>
+            <div class="row form-element-border-bottom under-row-padding under-row-margin">
+                <div class="col-7 mx-0">
+                    Time Period (Days)
+                </div>
+                <div class="col-5 mx-0 biomarkers-color">
+                    @{ var timeperiod = (Model.EndDateTime - Model.StartDateTime).TotalDays; }
+                    @timeperiod
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>

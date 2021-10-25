@@ -25,7 +25,7 @@
         sectionClass = "accounting-form";
     }
 
-    <div class="col-12  mx-auto on-form-modal @sectionClass " style="width: 60%">
+    <div class="col-12  mx-auto on-form-modal @sectionClass add-item-box scroll-page" @*style="width: 60%"*@>
         <div class="on-form-modal-border" id="addVendorModal">
             <form action="" id="myForm" class="createVendorForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 @Html.HiddenFor(c => c.SectionType)
@@ -98,7 +98,13 @@
                                     <div class="row mb-3">
                                         <div class="col-3">
                                             <label asp-for="Vendor.VendorCountry" class="control-label"></label>
-                                            <input asp-for="Vendor.VendorCountry" class="form-control-plaintext border-bottom" />
+                                            <select class="mdb-select custom select-dropdown form-control-plaintext" asp-for="Vendor.VendorCountry" id="VendorCountries">
+                                                <option disabled selected class="d-none" value="">Select Country</option>
+                                                @foreach (var country in Enum.GetValues(typeof(AppUtility.VendorCountries)))
+                                                {
+                                                    <option value="@country">@country</option>
+                                                }
+                                            </select>
                                             <span asp-validation-for="Vendor.VendorCountry" class="text-danger-centarix"></span>
                                         </div>
                                         <div class="col-3">
@@ -153,7 +159,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="categories" class="tab-pane fade">
+                            @*<div id="categories" class="tab-pane fade">
                                 <div class="modal-sides modal-body-top-p">
                                     <div class="row">
                                         <div class="col-2">
@@ -178,7 +184,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>*@
                             <div id="payment" class="tab-pane fade">
                                 <div class="modal-sides modal-body-top-p">
                                     <div class="row ">

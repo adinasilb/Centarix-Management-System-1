@@ -63,8 +63,8 @@ namespace PrototypeWithAuth.Controllers
             entryExitViewModel.TimekeeperNotifications = notifications;
             if (errorMessage != null)
             {
-                entryExitViewModel.ErrorMessage += (errorMessage ?? "");
-                Response.StatusCode = 550;
+                entryExitViewModel.ErrorMessage += errorMessage;
+                Response.StatusCode = 500;
                 //return PartialView(entryExitViewModel);
             }
             return View(entryExitViewModel);
@@ -177,6 +177,11 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimekeeperSummary;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SummaryDaysOff;
+
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             var userid = _userManager.GetUserId(User);
             var user = _context.Employees.Where(u => u.Id == userid).Include(u=>u.SalariedEmployee).FirstOrDefault();
             if (user != null)
@@ -286,6 +291,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> HoursPage(int month = 0, int year = 0, string userId = null, AppUtility.PageTypeEnum pageType = AppUtility.PageTypeEnum.TimekeeperSummary)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             if (userId == null)
             {
                 userId = _userManager.GetUserId(User);
@@ -315,6 +324,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> _EmployeeHoursAwaitingApproval(int ehaaID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             var ehaa = _context.EmployeeHoursAwaitingApprovals
                 .Include(ehaa => ehaa.EmployeeHours).Include(ehaa => ehaa.PartialOffDayType)
                 .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ehaaID).FirstOrDefault();
@@ -334,6 +347,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> _ReportDaysOff(string errorMessage = null)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             return PartialView(ReportDaysOffFunction(errorMessage));
         }
 
@@ -388,6 +405,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> UpdateHours(DateTime chosenDate, String PageType, bool isWorkFromHome=false)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             return PartialView(await GetUpdateHoursViewModel(chosenDate, PageType, isWorkFromHome));
         }
 
@@ -559,15 +580,15 @@ namespace PrototypeWithAuth.Controllers
                 {
                     await transaction.RollbackAsync();
                     updateHoursViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
-                    updateHoursViewModel.PartialOffDayTypes = _context.OffDayTypes.Where(od => od.OffDayTypeID == 1 /*Sick Day*/ || od.OffDayTypeID == 2 /*Vacation Day*/);
+                    /*updateHoursViewModel.PartialOffDayTypes = _context.OffDayTypes.Where(od => od.OffDayTypeID == 1 *//*Sick Day*//* || od.OffDayTypeID == 2 *//*Vacation Day*//*);
                     var userID = _userManager.GetUserId(User);
                     var user = await _context.Employees.Where(u => u.Id == userID).FirstOrDefaultAsync();
                     updateHoursViewModel.EmployeeHour.Employee = user;
                     var offDayType = await _context.OffDayTypes.Where(odt => odt.OffDayTypeID == updateHoursViewModel.EmployeeHour.OffDayTypeID).FirstOrDefaultAsync();
                     updateHoursViewModel.EmployeeHour.OffDayType = offDayType;
-                  
-                    Response.StatusCode = 550;
-                    return PartialView("UpdateHours", updateHoursViewModel);
+                  */
+                    Response.StatusCode = 500;
+                    return PartialView("_ErrorMessage", updateHoursViewModel.ErrorMessage);
 
                 }
             }
@@ -578,6 +599,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> OffDayModal(AppUtility.PageTypeEnum PageType, AppUtility.OffDayTypeEnum OffDayType)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             OffDayViewModel offDayViewModel = new OffDayViewModel()
             {
                 OffDayType = OffDayType,
@@ -593,6 +618,7 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 await SaveOffDay(offDayViewModel.FromDate, offDayViewModel.ToDate, offDayViewModel.OffDayType);
+                //throw new Exception();
             }
             catch(Exception ex)
             {
@@ -604,6 +630,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> OffDayConfirmModal(AppUtility.PageTypeEnum PageType, DateTime date, AppUtility.OffDayTypeEnum OffDayType)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             OffDayViewModel offDayViewModel = new OffDayViewModel()
             {
                 PageType = PageType,
@@ -616,6 +646,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> ExitModal()
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -654,6 +688,7 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 await SaveOffDay(offDayViewModel.FromDate, new DateTime(), offDayViewModel.OffDayType);
+                //throw new Exception();
             }
             catch(Exception ex)
             {
@@ -902,6 +937,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> DeleteHourModal(int? id, AppUtility.MenuItems sectionType)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             if (id == null)
             {
                 ViewBag.ErrorMessage = "Employee Hour not found (no id). Unable to delete.";
@@ -1040,7 +1079,8 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    return RedirectToAction("ReportHours", new { errorMessage = AppUtility.GetExceptionMessage(ex) });
+                    Response.StatusCode = 500;
+                    return PartialView("_ErrorMessage", AppUtility.GetExceptionMessage(ex));
                 }
             }
             

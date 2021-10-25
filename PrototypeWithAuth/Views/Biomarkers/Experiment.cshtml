@@ -16,12 +16,12 @@
         </div>*@
     <div class="item-table">
         <div class="list-inline-item m-0 float-left" style="width:15%;">
-            <button class="custom-button custom-button-font light-gray-background-color">
-                <a href="@Url.Action("HumanTrialsList", "Biomarkers")" class="text-black">
+            <a href="@Url.Action("HumanTrialsList", "Biomarkers")">
+                <button class="custom-button custom-button-font light-gray-background-color text-black">
                     <i class="icon-arrow_back_ios-24px-1" style="font-size: 1.2rem;"></i>
                     Back
-                </a>
-            </button>
+                </button>
+            </a>
         </div>
         <ul class=" pl-0 nav float-left overflow-auto" style="width:85%;">
             <li class="list-inline-item m-0 nav-item float-left">
@@ -46,7 +46,7 @@
 
         <div id="Summary" class="tab-pane fade in ">
             <div class="container-fluid">
-                Summary
+                @{ await Html.RenderPartialAsync("_Summary", Model.Experiment); }
             </div>
         </div>
     </div>

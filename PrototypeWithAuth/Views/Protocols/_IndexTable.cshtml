@@ -4,7 +4,7 @@
 
 @if (Model.PagedList.Count() > 0)
 {
-
+    <div>@{ await Html.RenderPartialAsync("_IndexFilter", Model.ProtocolsFilterViewModel);}</div>
     <table class="table table-headerspaced table-noheaderlines table-hover ">
         <thead>
             <tr class="text-center">
@@ -19,7 +19,7 @@
             </tr>
         </thead>
     </table>
-    <div class="_IndexTableData">
+    <div class="_IndexTableData scroll-body">
         @{
             await Html.RenderPartialAsync("_IndexTableData", Model);
         }

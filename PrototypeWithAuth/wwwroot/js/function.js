@@ -148,13 +148,16 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click', ".
                     newDiv[0].nextSibling?.remove();
                     newDiv.removeClass("added-div");
                     $('.text-editor').trigger("change")
+                    $(".createReportForm .back-arrow").addClass("load-save-report")
                 }
                 
                 //functionSelect.append(" <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none'></div>")
             }
             else {
                 $("._Lines").html(data);
-            }
+                }
+             console.log("save modal")
+                $(".protocols-edit-arrow.back-arrow").addClass("save-item");
             $.fn.CloseModal('add-function');
         },
         error: function (jqxhr) {

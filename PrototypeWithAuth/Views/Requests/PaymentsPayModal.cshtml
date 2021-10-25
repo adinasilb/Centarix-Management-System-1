@@ -37,12 +37,11 @@
                             }
 
                         </div>
-                        @if (Model.ErrorMessage != null)
-                        {
-                            <div class="row">
-                                <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
-                            </div>
-                        }
+                        
+                        <div class="row error-message">
+                            @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
+                        </div>
+                        
                         <div class="row">
                             <div class="col-2 pl-0">
                                 <div class="form-group">
@@ -283,7 +282,8 @@
                     return true;
                 },
                 error: function (jqxhr) {
-                    $.fn.OpenModal("modal", "payments-pay", jqxhr.responseText);
+                    //$.fn.OpenModal("modal", "payments-pay", jqxhr.responseText);
+                    $('.payments-pay .error-message').html(jqxhr.responseText);
                 }
             })
         }

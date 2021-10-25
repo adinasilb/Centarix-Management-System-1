@@ -33,9 +33,10 @@
     var editMode = AppUtility.ProtocolModalType.Edit;
     var summaryMode = AppUtility.ProtocolModalType.Summary;
     var createMode = AppUtility.ProtocolModalType.Create;
+    var createNewVersionMode = AppUtility.ProtocolModalType.CreateNewVersion;
 }
 
-<form action="" id="myForm" class=" on-form-modal protocol-form createProtocolForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+<form action="" id="myForm" class=" on-form-modal protocol-form createProtocolForm scroll-body" method="post" enctype="multipart/form-data">
     <input type="hidden" asp-for="ProtocolVersion.Protocol.ProtocolTypeID" />
     <div class="row text-danger-centarix error-message d-none"> @Model.ErrorMessage </div>
 
@@ -65,7 +66,7 @@
                     <label class="new-button-text">Results</label>
                 </a>
             </li>
-            <li class="only-protocol-tab li-function-bar  @editMode @createMode d-none">
+            <li class="only-protocol-tab li-function-bar @createNewVersionMode @editMode @createMode d-none">
                 <div class=" function-bar">
                     @foreach (var type in Model.ProtocolFunctionTypes)
                     {
@@ -81,7 +82,7 @@
                     }
                 </div>
             </li>
-            <li class="only-protocol-tab @editMode @createMode  d-none li-function-bar">
+            <li class="only-protocol-tab @createNewVersionMode @editMode @createMode  d-none li-function-bar">
                 <div class="h-100 d-flex ml-6" style=" align-items: center;">
                     <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveLines" value="Save">Save</button>
                 </div>
@@ -108,16 +109,20 @@
             </li>
             @{
                 var isChecked = "";
+                var editModeText = "Edit Mode Off";
+                var switchName = "details";
                 if (Model.ModalType == AppUtility.ProtocolModalType.Edit)
                 {
                     isChecked = "checked";
+                    editModeText = "Edit Mode On";
+                    switchName = "edit";
                 }
             }
             <li class="@editMode @summaryMode d-none">
                 <div class="switch col-12 switch-margin">
                     <label>
-                        <label class="edit-mode-switch-description">Edit Mode Off</label>
-                        <input type="checkbox" class="turn-edit-on-off protocols" value="@Model.ProtocolVersion.ProtocolVersionID" name="details" @isChecked>
+                        <label class="edit-mode-switch-description">@editModeText</label>
+                        <input type="checkbox" class="turn-edit-on-off protocols" value="@Model.ProtocolVersion.ProtocolVersionID" name="@switchName" @isChecked>
                         <span class="lever"></span>
                     </label>
                 </div>
@@ -130,10 +135,10 @@
             <div style="display:none;" id="morePopover">
                 <div class="container ">
                     <div class="row moreOffDay-btn p-1">
-                        <a asp-action="CreateNewVersion" asp-route-protocolID="@Model.ProtocolVersion.ProtocolID" asp-route-protocolVersionID="@Model.ProtocolVersion.ProtocolVersionID" class=" text-black " >
-                           Create New Version
+                        <a asp-action="CreateNewVersion" asp-route-protocolID="@Model.ProtocolVersion.ProtocolID" asp-route-protocolVersionID="@Model.ProtocolVersion.ProtocolVersionID" class=" text-black ">
+                            Create New Version
                         </a>
-                    </div>                   
+                    </div>
                 </div>
 
             </div>
@@ -143,9 +148,11 @@
         @{ await Html.RenderPartialAsync("_CreateProtocolTabs", Model);}
     </div>
     <script>
-        $("input, select, textarea").change(function(){        
+        $("input:not(.turn-edit-on-off), select, textarea, .text-editor, .line").change(function () {
+            console.log($(this));
+            console.log("changed text")
             $.fn.AddSaveItemClass()
-            $(".back-arrow").addClass("save-item")
+            $(".protocols-edit-arrow.back-arrow").addClass("save-item");
         });
     </script>
 </form>

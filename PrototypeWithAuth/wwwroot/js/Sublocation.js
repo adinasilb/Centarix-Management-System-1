@@ -47,7 +47,7 @@ $(".empty-shelf-check").on("change", function () {
 $(".modal").off("change", "#labPartDDL").on("change", "#labPartDDL", function () {
 	if($(this).val()!="")
 	{
-	$.ajax({
+		$.ajax({
             async: true,
             type: 'GET',
             cache: false,
@@ -56,8 +56,8 @@ $(".modal").off("change", "#labPartDDL").on("change", "#labPartDDL", function ()
                 $(".hasShelfBlock").html(data);
 				$(".labPartNameLabel").html($(".labPartName").val())
             }
-    });
-		}
+		});
+	}
 	
 });
 

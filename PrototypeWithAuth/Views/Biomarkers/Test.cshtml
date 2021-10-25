@@ -1,0 +1,206 @@
+﻿@using PrototypeWithAuth.AppData
+@using PrototypeWithAuth.ViewModels
+@model PrototypeWithAuth.ViewModels.TestViewModel
+@{
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+<script src="~/js/biomarkerssave.js"></script>
+@{ var listNumber = 0;}
+<form action="" method="POST" enctype="multipart/form-data" class="test-forms on-form-modal bio-form" id="BioTestForm">
+    <input type="submit" class="hidden" />
+    @Html.HiddenFor(m => m.ExperimentEntry.ExperimentEntryID)
+    <input type="hidden" value="@Model.ExperimentEntry.ExperimentEntryID" id="CustomMainObjectID" />
+    @Html.HiddenFor(m => m.ExperimentEntry.ParticipantID)
+    @Html.HiddenFor(m => m.ExperimentEntry.SiteID)
+    @Html.HiddenFor(m => m.ExperimentEntry.VisitNumber)
+    @Html.HiddenFor(m => m.ExperimentEntry.Participant.ExperimentID)
+    @Html.HiddenFor(m => m.ExperimentID)
+    <input type="hidden" asp-for="Guid" class="hidden-guid" />
+    <input type="hidden" value="@AppUtility.MenuItems.Biomarkers.ToString()" id="#masterSectionType" />
+
+    @*@for (int e = 0; e < Model.FieldViewModels.Count; e++)
+            {
+        <div class="fieldviewmodelshiddenfor">
+            @Html.HiddenFor(m => m.FieldViewModels[e].DataTypeEnum)
+            @Html.HiddenFor(m => m.FieldViewModels[e].String)
+            @Html.HiddenFor(m => m.FieldViewModels[e].FieldID)
+            @Html.HiddenFor(m => m.FieldViewModels[e].TestHeader.TestHeaderID)
+            @Html.HiddenFor(m => m.FieldViewModels[e].TestHeader.Name)
+        </div>
+            }*@
+    <div class="row under-row-margin" style="margin-top: 2.063rem">
+        <div class="col-6">
+            @{ await Html.RenderPartialAsync("_participantsheader", Model.ExperimentEntry.Participant);}
+        </div>
+        <div class="col-6">
+            <div class="entries-header font-weight-medium text float-right">
+                Entry Number: <span class="biomarkers-color">@Model.ExperimentEntry.VisitNumber </span> |
+                Date: <span class="biomarkers-color">@Model.ExperimentEntry.DateTime.GetElixirDateFormat() </span>
+                      <select asp-for="Guid" class="mdb-select custom select-dropdown form-control-plaintext" id="entries-list">
+                          @foreach (var e in Model.ExperimentEntries)
+                          {
+                              if (e.Value.ToString() == Model.ExperimentEntry.ExperimentEntryID.ToString())
+                              {
+                                  <option selected class="change-ee" value="@e.Value">@e.Text</option>
+                              }
+                              else
+                              {
+
+                                  <option class="change-ee" value="@e.Value">@e.Text</option>
+                              }
+                          }
+                      </select>
+                @*@Html.DropDownList("ExperimentEntries",
+                        Model.ExperimentEntries,
+                        optionLabel: "Select A Category",
+                        htmlAttributes: new { @class = " ", @searchable = "default value", }
+                    )*@
+            </div>
+        </div>
+    </div>
+    <div class="row under-row-margin">
+        <div class="col-6">
+            <a href="@Url.Action("Entries", "Biomarkers", new { ParticipantID = Model.ExperimentEntry.ParticipantID })">
+                <button class="custom-button custom-button-font light-gray-background-color ml-0 text-black" type="button">
+                    <i class="icon-arrow_back_ios-24px-1" style="font-size: 1.2rem;"></i>
+                    Back
+                </button>
+            </a>
+            <span class="col-2 heading-1">
+                @Model.ExperimentEntry.Site.Name
+            </span>
+        </div>
+        <div class="col-6 float-right">
+            <div class=" row text-right m">
+                <div class="switch col-12 switch-margin">
+                    <label>
+                        <label class="edit-mode-label off">edit mode off</label>
+                        <input type="checkbox" class="biomarkers-color biomarkers-test edit-mode-input off" value="true" name="details">
+                        <span class="lever"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card border">
+        <div class="row">
+            <div class="col-3 border-right p-4">
+                <ul class="list-group">
+                    @{ var origClasses = "biomarkers-test-name list-group-item mb-2";
+                        var classes = origClasses + " selected";}
+                    @for (int t = 0; t < Model.Tests.Count; t++)
+                    {
+                        var id = "BioTest" + t;
+                        @Html.HiddenFor(m => m.Tests[t].TestID);
+                        <li class="@classes" listnumber="@listNumber" testid="@Model.Tests[t].TestID" id="@id">@Model.Tests[t].Name</li>
+                        classes = origClasses;
+                        listNumber++;
+                    }
+                </ul>
+            </div>
+            <div class="col-7 small-modal-padding testvalues">
+                @{
+                    TestValuesViewModel testValuesViewModel = new TestValuesViewModel()
+                    {
+                        Test = Model.Tests.FirstOrDefault(),
+                        TestValues = Model.TestValues,
+                        ListNumber = 0,
+                        FilesPrevFilled = Model.FilesPrevFilled
+                    };
+                    await Html.RenderPartialAsync("_TestValues", testValuesViewModel);
+                }
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(".biomarkers-test-name").on("click", function (e) {
+        if (!$(this).hasClass("selected")) {
+            if ($("._testvalues").hasClass("changed")) {
+                //if ($(".edit-mode-input").hasClass("on")) {
+                    $.ajax({
+                        async: false,
+                        url: "/Biomarkers/SaveTestModal?ID=" + $(this).attr("ID"),
+                        type: 'GET',
+                        cache: false,
+                        success: function (data) {
+                            $.fn.OpenModal('save-test-modal', 'save-bio-test-modal', data);
+                        }
+                    });
+                //}
+            }
+            else {
+                $.fn.ChangeTest($(this));
+            }
+        }
+    });
+
+    //$(".edit-mode-input").on("click", function (e) {
+    //    console.log("in click");
+    //    if ($(this).hasClass("on")) {
+
+    //        $('.test-field').attr("disabled", "disabled");
+    //        $('.test-field').addClass("disabled");
+    //        $(".disable-custom-mdbselect").addClass("disable-custom-mdbselect");
+    //        $(".edit-mode-label").removeClass("on");
+    //        $(".edit-mode-label").addClass("off");
+    //        $(".edit-mode-label").html("Edit Mode Off");
+    //        $(this).removeClass("on");
+    //        $(this).addClass("off");
+    //        $(this).attr("checked", false);
+    //        $(this).val(false);
+    //        $(this).attr("name", "details");
+    //    }
+    //    else {
+    //        console.log("in if off");
+    //        $('.test-field').attr("disabled", false);
+    //        $('.test-field').removeClass("disabled");
+    //        $(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect");
+    //        $(".edit-mode-label").addClass("on");
+    //        $(".edit-mode-label").removeClass("off");
+    //        $(".edit-mode-label").html("Edit Mode On");
+    //        $(this).addClass("on");
+    //        $(this).removeClass("off");
+    //        $(this).attr("checked", "checked");
+    //        $(this).val(true);
+    //        $(this).attr("name", "edit");
+    //    }
+    //});
+
+
+    $("body").on("change", "input", function (e) {
+        console.log($(this))
+        //this is also on change of the documents modal so don't change unless you change there too
+        if (!$("._testvalues").hasClass("changed") && !$(this).hasClass("turn-edit-doc-on-off")) {
+            $("._testvalues").addClass("changed");
+        }
+        $(".bio-form").valid()
+
+    });
+
+    $("#entries-list").on("change", function (e) {
+        //alert("clicked change-ee with page reload");
+        var newID = $(this).val();
+        if ($("._testvalues").hasClass("changed")) {
+            $.ajax({
+                async: false,
+                url: "/Biomarkers/SaveTestModal?ID=" + $("#ExperimentEntry_ExperimentEntryID").val(),
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $.fn.OpenModal('save-test-modal', 'save-bio-test-modal', data);
+                }
+            });
+        }
+        else {
+            url = "/Biomarkers/Test?ID=" + newID;
+            top.location.href = url;
+        }
+        //$.ajax({
+        //    async: true,
+        //    url: url,
+        //    type: 'POST',
+        //    cache: true
+        //});
+    });
+</script>

@@ -2011,6 +2011,9 @@ td .btn {
 .order-inv-form .select-wrapper.active span.caret, .order-inv-form .select-wrapper.active label.mdb-main-label {
     color: var(--order-inv-color) !important;
 }
+.bio-form .select-wrapper.active span.caret, .order-inv-form .select-wrapper.active label.mdb-main-label {
+    color: var(--order-inv-color) !important;
+}
 /*HOVER FOR EACH SECTION*/
 .order-inv-form .form-control-plaintext:not(.danger-box-shadow):focus {
     outline-width: 0px !important;
@@ -2038,6 +2041,26 @@ td .btn {
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
 }
 
+.bio-form .input-group:focus-within > .input-group-text {
+    box-shadow: 0 2px 0 0 var(--biomarkers-color) !important;
+}
+
+.bio-form .form-control-plaintext:not(.danger-box-shadow):focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--biomarkers-color) !important;
+}
+
+.bio-form .form-control-plaintext.danger-box-shadow:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--danger-color) !important;
+}
+
+.bio-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+    border-bottom: none !important;
+    border: 2px solid var(--biomarkers-color) !important;
+}
 .users-form .form-control-plaintext:focus {
     outline-width: 0px !important;
     outline-color: none !important;
@@ -2333,6 +2356,20 @@ span.caret {
     box-shadow: .5px .5px 0.323rem #707070;
 }
 
+.biomarkers-fieldset {
+    border-radius: .75rem;
+    width: 100%;
+    box-shadow: 4px 4px 9px -2px #707070;
+    /*display: flex;*/
+    padding: 2rem;
+    align-items: center;
+    justify-content: center;
+}
+
+    .biomarkers-fieldset.small-size {
+        height: 6.563rem;
+    }
+
 .resource-fieldset {
     border-radius: .75rem;
     /*height: 29.75rem;*/
@@ -2523,6 +2560,15 @@ span.caret {
     border: .5px solid #f3f3f3 !important;
 }
 
+.bio-form .switch label input[type="checkbox"]:checked + .lever:after {
+    background-color: var(--biomarkers-color) !important;
+}
+
+.bio-form .switch label input[type="checkbox"]:checked + .lever {
+    background-color: var(--biomarkers-25) !important;
+    opacity: 50 !important;
+    border: .5px solid #f3f3f3 !important;
+}
 .select-wrapper input.select-dropdown:disabled {
     color: var(--black-87) !important;
 }
@@ -2725,7 +2771,11 @@ a {
     border: 2px solid var(--lab-man-color);
     background-color: var(--lab-man-color);
 }
-/*ACCOUNTING - FIGURE OUT LATER*/
+/*Accounting*/
+.accounting-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .accounting-form label.btn input[type="checkbox"].filled-in:checked + label:after {
+    border: 2px solid var(--acc-color);
+    background-color: var(--acc-color);
+}
 /*Expenses*/
 .expenses .form-check-input[type="checkbox"].filled-in:checked + label:after, .expenses label.btn input[type="checkbox"].filled-in:checked + label:after, .expenses-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .expenses-form label.btn input[type="checkbox"].fci-exp.filled-in:checked + label:after {
     border: 2px solid var(--expense-color);
@@ -2904,8 +2954,13 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     -webkit-box-orient: vertical;
 }
 
-.filter-btn-select {
-    background-color: #2196F3;
+.order-inv-form .filter-btn-select {
+    background-color: var(--order-inv-color) !important;
+    color: white;
+}
+
+.protocol-form .filter-btn-select {
+    background-color: var(--protocol-color) !important;
     color: white;
 }
 
@@ -2940,6 +2995,10 @@ body.modal-open .popover {
 
 .form-element-border-right {
     border-right: .2rem solid #E5E5E5;
+}
+
+.form-element-border-right-small {
+    border-right: .1rem solid #E5E5E5;
 }
 
 .form-element-border-bottom-small {
@@ -3054,6 +3113,22 @@ body.modal-open .popover {
 
 .scroll-body {
     overflow: auto;
-    height: 800px;
+    height: 750px;
     display: block;
+}
+
+.datacalculation {
+    border-radius: .5rem;
+    border: 2px solid var(--biomarkers-color);
+}
+.scroll-page {
+    overflow: auto;
+    height: 900px;
+    display: block;
+}
+
+.add-item-box {
+    width: 50% !important;
+    position: absolute !important;
+    left: 25% !important;
 }

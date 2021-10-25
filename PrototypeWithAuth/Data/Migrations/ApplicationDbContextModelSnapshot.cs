@@ -1086,6 +1086,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AmountOfVisits")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -1112,6 +1115,55 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("Experiments");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.ExperimentEntry", b =>
+                {
+                    b.Property<int>("ExperimentEntryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ParticipantID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SiteID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VisitNumber")
+                        .HasColumnType("int");
+
+                    b.HasKey("ExperimentEntryID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("SiteID");
+
+                    b.HasIndex("ParticipantID", "VisitNumber")
+                        .IsUnique();
+
+                    b.ToTable("ExperimentEntries");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ExperimentTest", b =>
+                {
+                    b.Property<int>("ExperimentID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TestID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ExperimentID", "TestID");
+
+                    b.HasIndex("TestID");
+
+                    b.ToTable("ExperimentTest");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteProtocol", b =>
                 {
                     b.Property<int>("FavoriteID")
@@ -1132,6 +1184,28 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ProtocolVersionID");
 
                     b.ToTable("FavoriteProtocols");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteReport", b =>
+                {
+                    b.Property<int>("FavoriteID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("ReportID")
+                        .HasColumnType("int");
+
+                    b.HasKey("FavoriteID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("ReportID");
+
+                    b.ToTable("FavoriteReports");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteRequest", b =>
@@ -3405,7 +3479,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/consumables/rtpcr_consumables.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "RT-PCR Plastics"
+                            ProductSubcategoryDescription = "Q-PCR Plastics"
                         },
                         new
                         {
@@ -3509,7 +3583,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/antibody.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Antibodies"
+                            ProductSubcategoryDescription = "Antibody"
                         },
                         new
                         {
@@ -3549,7 +3623,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent2.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "RT-PCR Reagents"
+                            ProductSubcategoryDescription = "Q-PCR Reagents"
                         },
                         new
                         {
@@ -3565,7 +3639,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/primer.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Primers"
+                            ProductSubcategoryDescription = "Primers and Oligos"
                         },
                         new
                         {
@@ -3637,7 +3711,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/dna_enzyme.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "DNA Enzyme"
+                            ProductSubcategoryDescription = "DNA Enzymes"
                         },
                         new
                         {
@@ -5146,7 +5220,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("ToApplicationUserID")
                         .HasColumnType("nvarchar(450)");
@@ -5176,7 +5252,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("ToApplicationUserID")
                         .HasColumnType("nvarchar(450)");
@@ -5206,7 +5284,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("ToApplicationUserID")
                         .HasColumnType("nvarchar(450)");
@@ -5229,10 +5309,27 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Line1Address")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PrimaryContactID")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("SiteID");
+
+                    b.HasIndex("PrimaryContactID");
 
                     b.ToTable("Sites");
                 });
@@ -5453,18 +5550,18 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ExperimentID")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TestCategoryID")
+                    b.Property<int>("SiteID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TestCategoryID")
                         .HasColumnType("int");
 
                     b.HasKey("TestID");
 
-                    b.HasIndex("ExperimentID");
+                    b.HasIndex("SiteID");
 
                     b.HasIndex("TestCategoryID");
 
@@ -5491,30 +5588,119 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("TestCategories");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.TestFieldHeader", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.TestGroup", b =>
                 {
-                    b.Property<int>("TestFieldHeaderID")
+                    b.Property<int>("TestGroupID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("FieldList")
+                    b.Property<bool>("IsNone")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FieldNames")
+                    b.Property<int>("SequencePosition")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TestOuterGroupID")
+                        .HasColumnType("int");
+
+                    b.HasKey("TestGroupID");
+
+                    b.HasIndex("TestOuterGroupID");
+
+                    b.ToTable("TestGroups");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TestHeader", b =>
+                {
+                    b.Property<int>("TestHeaderID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Calculation")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FieldTypes")
+                    b.Property<bool>("IsSkip")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("List")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SequencePosition")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TestGroupID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TestHeaderID");
+
+                    b.HasIndex("TestGroupID");
+
+                    b.HasIndex("SequencePosition", "TestGroupID")
+                        .IsUnique();
+
+                    b.ToTable("TestHeaders");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TestOuterGroup", b =>
+                {
+                    b.Property<int>("TestOuterGroupID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsNone")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SequencePosition")
+                        .HasColumnType("int");
 
                     b.Property<int>("TestID")
                         .HasColumnType("int");
 
-                    b.HasKey("TestFieldHeaderID");
+                    b.HasKey("TestOuterGroupID");
 
                     b.HasIndex("TestID");
 
-                    b.ToTable("TestFieldHeaders");
+                    b.ToTable("TestOuterGroups");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TestValue", b =>
+                {
+                    b.Property<int>("TestValueID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ExperimentEntryID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TestHeaderID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TestValueID");
+
+                    b.HasIndex("ExperimentEntryID");
+
+                    b.HasIndex("TestHeaderID");
+
+                    b.ToTable("TestValues");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.TimekeeperNotification", b =>
@@ -5645,12 +5831,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             UnitTypeID = 2,
                             UnitParentTypeID = 1,
                             UnitTypeDescription = "Box"
-                        },
-                        new
-                        {
-                            UnitTypeID = 19,
-                            UnitParentTypeID = 1,
-                            UnitTypeDescription = "Case"
                         },
                         new
                         {
@@ -5813,11 +5993,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
-                            UnitTypeID = 19,
-                            ParentCategoryID = 1
-                        },
-                        new
-                        {
                             UnitTypeID = 3,
                             ParentCategoryID = 1
                         },
@@ -5849,11 +6024,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             UnitTypeID = 2,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 19,
                             ParentCategoryID = 2
                         },
                         new
@@ -5943,11 +6113,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
-                            UnitTypeID = 19,
-                            ParentCategoryID = 4
-                        },
-                        new
-                        {
                             UnitTypeID = 3,
                             ParentCategoryID = 4
                         },
@@ -6018,11 +6183,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
-                            UnitTypeID = 19,
-                            ParentCategoryID = 5
-                        },
-                        new
-                        {
                             UnitTypeID = 3,
                             ParentCategoryID = 5
                         },
@@ -6044,11 +6204,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             UnitTypeID = 2,
-                            ParentCategoryID = 7
-                        },
-                        new
-                        {
-                            UnitTypeID = 19,
                             ParentCategoryID = 7
                         },
                         new
@@ -6158,11 +6313,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
-                            UnitTypeID = 19,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
                             UnitTypeID = 20,
                             ParentCategoryID = 6
                         },
@@ -6220,7 +6370,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("VendorBuisnessID")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("VendorCellPhone")
                         .HasColumnType("nvarchar(max)");
@@ -6272,6 +6422,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("VendorID");
+
+                    b.HasIndex("VendorCountry", "VendorBuisnessID")
+                        .IsUnique();
 
                     b.ToTable("Vendors");
                 });
@@ -6726,6 +6879,41 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.ExperimentEntry", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Participant", "Participant")
+                        .WithMany("ExperimentEntries")
+                        .HasForeignKey("ParticipantID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Site", "Site")
+                        .WithMany("ExperimentEntries")
+                        .HasForeignKey("SiteID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ExperimentTest", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Experiment", "Experiment")
+                        .WithMany("ExperimentTests")
+                        .HasForeignKey("ExperimentID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Test", "Test")
+                        .WithMany("ExperimentTests")
+                        .HasForeignKey("TestID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteProtocol", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
@@ -6736,6 +6924,19 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
                         .WithMany()
                         .HasForeignKey("ProtocolVersionID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteReport", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Report", "Report")
+                        .WithMany()
+                        .HasForeignKey("ReportID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -7385,6 +7586,14 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.Site", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "PrimaryContact")
+                        .WithMany()
+                        .HasForeignKey("PrimaryContactID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.SubProject", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.Project", "Project")
@@ -7419,17 +7628,16 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Test", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Models.Experiment", "Experiment")
-                        .WithMany()
-                        .HasForeignKey("ExperimentID")
+                    b.HasOne("PrototypeWithAuth.Models.Site", "Site")
+                        .WithMany("Tests")
+                        .HasForeignKey("SiteID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Models.TestCategory", "TestCategory")
+                    b.HasOne("PrototypeWithAuth.Models.TestCategory", null)
                         .WithMany("Tests")
                         .HasForeignKey("TestCategoryID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.TestCategory", b =>
@@ -7441,11 +7649,44 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.TestFieldHeader", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.TestGroup", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.TestOuterGroup", "TestOuterGroup")
+                        .WithMany("TestGroups")
+                        .HasForeignKey("TestOuterGroupID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TestHeader", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.TestGroup", "TestGroup")
+                        .WithMany("TestHeaders")
+                        .HasForeignKey("TestGroupID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TestOuterGroup", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.Test", "Test")
-                        .WithMany()
+                        .WithMany("TestOuterGroups")
                         .HasForeignKey("TestID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TestValue", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.ExperimentEntry", "ExperimentEntry")
+                        .WithMany()
+                        .HasForeignKey("ExperimentEntryID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.TestHeader", "TestHeader")
+                        .WithMany()
+                        .HasForeignKey("TestHeaderID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

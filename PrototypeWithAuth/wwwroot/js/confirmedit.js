@@ -13,7 +13,6 @@
 			console.log("not valid data");
 			return false;
 		}
-
 		var url = '';
 		if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
 			console.log("has class suppliers or accounting");
@@ -41,13 +40,13 @@
 				//console.log("has class locations in requests");
 				url = "/Requests/ReceivedModalVisual";
 				visualDiv = $(".visualView");
-            //}
+            //} 
 		}
 		else if($('.turn-edit-on-off').hasClass('protocols')){
 			formData.set("ModalType", "Summary")
-				var tab= $(".protocol-tab.active.show");
-				var selectedTab = tab.parent().index() +1;
-          
+			var tab = $(".protocol-tab.active");
+			var selectedTab = tab.parent().index() + 1;
+			formData.set("Tab", selectedTab)
 				console.log(selectedTab);
 				$(".selectedTab").val(selectedTab);
 			url = "/Protocols/CreateProtocol?IncludeSaveLines=true";
@@ -70,10 +69,12 @@
 				if ($('.turn-edit-on-off').hasClass('locations')) {
 					//alert("got data for locations");
 					//console.log(data)
-					if ($('.turn-edit-on-off').attr("section-type") == "LabManagement") {
-						//alert('reload location ')
-						//Reload visual of labmanagement
-						/*var visualContainerId = $(".hasVisual").attr("parent-id");
+					var pageType = $('#masterPageType').val();
+					console.log(pageType)
+					if (pageType == "LabManagementLocations" || pageType == 'RequestLocation') {
+						console.log('reload location ')
+						//Reload visual of locations box
+						var visualContainerId = $(".hasVisual").attr("parent-id");
 						var urlLocations = "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId;
 						$.ajax({
 							async: true,
@@ -84,7 +85,7 @@
 								$(".hasVisual").html(d);
 								$("#loading").hide();
 							}
-						});*/
+						});
 					}
 					else if ($('.turn-edit-on-off').attr("section-type") == "Requests") {
 						console.log("reloading ajax partial view...");
@@ -288,6 +289,7 @@
 		}
 		if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
 			$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
+			$.fn.EnableMaterialSelect('#VendorCountries', 'select-options-VendorCountries');
 		}
 		if ($(this).hasClass('users')) {
 			$.fn.EnableMaterialSelect('#NewEmployee_JobSubcategoryType_JobCategoryTypeID', 'select-options-NewEmployee_JobSubcategoryType_JobCategoryTypeID');

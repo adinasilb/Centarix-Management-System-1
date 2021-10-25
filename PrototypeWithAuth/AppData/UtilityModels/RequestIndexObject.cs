@@ -125,7 +125,7 @@ namespace PrototypeWithAuth.AppData
             }
             set { _searchText = value; }
         }
-        public SelectedFilters SelectedFilters { get; set; }
+        public SelectedRequestFilters SelectedFilters { get; set; }
                                        //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
         public AppUtility.ModalType ModalType { get; set; }
     }
