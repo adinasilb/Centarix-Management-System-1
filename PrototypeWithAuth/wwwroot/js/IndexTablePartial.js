@@ -374,6 +374,10 @@ $(function () {
     $.fn.ajaxPartialIndexTable = function (status, url, viewClass, type, formdata, modalClass = "", /*months, years, */) {
         console.log("in ajax partial index call " + url);
         //alert('before bind filter')
+        if ($('#searchHiddenForsForm').length) {
+            var moreFormData = new FormData($('#searchHiddenForsForm')[0])
+            formdata = $.fn.CombineTwoFormDatas(moreFormData, formdata);
+        }
         if ($("#inventoryFilterContent").length) {
             var selectedFilters = $.fn.BindSelectedFilters("");
             console.log('in if')
@@ -397,7 +401,7 @@ $(function () {
         if (modalClass != "") {
 			$.fn.CloseModal(modalClass);
         } else {
-			console.log("formdata is undefined");
+			console.log("in else");
 			/*formdata = {
 				PageNumber: $('.page-number').val(),
 				RequestStatusID: status,
@@ -473,36 +477,6 @@ $(function () {
 
         return false;
     }
-    $.fn.AddObjectToFormdata = function (formdata, object) {
-
-            console.log('in add object to formdata')
-            /*console.log(arrayOfObjects)
-            var newFormData = formdata;
-            for (var obj of arrayOfObjects) {
-                Object.assign(newFormData, obj);
-                console.log('obj ' + obj)
-            } */
-        if (formdata == undefined) {
-            var formdata = new FormData();
-        }
-        for (var key in object) {
-
-            if (Array.isArray(object[key])) {
-                for (const val of object[key].values()) {
-                    formdata.append(key, val);
-                    console.log('key' + key);
-                    console.log('val' + val)
-                }
-            }
-            else {
-                formdata.append(key, object[key]);
-                console.log('key ' + key);
-                console.log('value ' + object[key])
-            }
-        }
-        console.log(...formdata);
     
-        return formdata;
-    }
 
 });

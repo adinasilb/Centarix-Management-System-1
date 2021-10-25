@@ -53,18 +53,21 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col">
                                     <div class="form-group">
                                         <label asp-for="ItemName" class="control-label">Item Name: </label>
                                         <input asp-for="ItemName" data-val="false" class="form-control-plaintext border-bottom" />
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label asp-for="ProductHebrewName" class="control-label">Item Hebrew Name: </label>
-                                        <input asp-for="ProductHebrewName" data-val="false" class="form-control-plaintext border-bottom" />
+                                @if(Model.SectionType == AppUtility.MenuItems.Operations)
+                                {
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label asp-for="ProductHebrewName" class="control-label">Item Hebrew Name: </label>
+                                            <input asp-for="ProductHebrewName" data-val="false" class="form-control-plaintext border-bottom" />
+                                        </div>
                                     </div>
-                                </div>
+                                }
                             </div>
                             <div class="row">
                                 <div class="col-4">
