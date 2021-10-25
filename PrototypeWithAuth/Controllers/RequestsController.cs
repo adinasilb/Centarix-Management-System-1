@@ -3757,7 +3757,7 @@ namespace PrototypeWithAuth.Controllers
             //    _context.Update(li);
             //}
             //_context.SaveChanges();
-            var request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+            var request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r=>r.Product.UnitType)
                     .FirstOrDefault();
 
             ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
@@ -3906,8 +3906,19 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
-             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
+                    var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)                
+             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
+
+                    if (receivedLocationViewModel.Request.IsPartial)
+                    {
+                        requestReceived.RequestID = 0;
+                        requestReceived.Unit = (uint)(requestReceived.Unit - receivedLocationViewModel.AmountArrived);
+                        _context.Entry(requestReceived).State = EntityState.Added;
+                        await _context.SaveChangesAsync();
+                        requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
+             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
+                        requestReceived.Unit = (uint)receivedLocationViewModel.AmountArrived;
+                    }
                     if (receivedLocationViewModel.CategoryType == 1)
                     {
                         if (receivedLocationViewModel.TemporaryLocation)
@@ -3953,6 +3964,7 @@ namespace PrototypeWithAuth.Controllers
                     requestReceived.ApplicationUserReceiver = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault();
                     requestReceived.NoteForPartialDelivery = receivedLocationViewModel.Request.NoteForPartialDelivery;
                     requestReceived.IsPartial = receivedLocationViewModel.Request.IsPartial;
+                   
                     requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
                     requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
                     requestReceived.IsInInventory = true;
@@ -3965,10 +3977,15 @@ namespace PrototypeWithAuth.Controllers
                     {
                         requestReceived.PaymentStatusID = 3;
                     }
-                    _context.Update(requestReceived);
+          
+
+                        _context.Update(requestReceived);
+                        await _context.SaveChangesAsync();
+
+         
 
                     //need to do this function before save changes because if new request it should not have an id yet
-                    await _context.SaveChangesAsync();
+           
                     await RemoveOldRequestFromInventory(requestReceived.RequestID);
                
                     RequestNotification requestNotification = new RequestNotification();
