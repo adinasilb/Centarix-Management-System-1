@@ -22,6 +22,7 @@ namespace PrototypeWithAuth.Data
 
         }
 
+        public DbSet<Country> Countries { get; set; }
         public DbSet<ExperimentEntry> ExperimentEntries { get; set; }
         public DbSet<TestValue> TestValues { get; set; }
         public DbSet<TestHeader> TestHeaders { get; set; }
