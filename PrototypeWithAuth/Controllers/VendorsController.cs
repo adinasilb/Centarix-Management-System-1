@@ -105,6 +105,7 @@ namespace PrototypeWithAuth.Controllers
                 //ParentCategories = _context.ParentCategories.ToList(),
                 CategoryTypes = _context.CategoryTypes.ToList(),
                 Vendors = _context.Vendors.ToList(),
+                Countries = _context.Countries.ToList(),
                 SectionType = SectionType
             };
 
@@ -146,7 +147,7 @@ namespace PrototypeWithAuth.Controllers
              &&
              (String.IsNullOrEmpty(vendorSearchViewModel.VendorBuisnessID) || fv.VendorBuisnessID.ToLower().Contains(vendorSearchViewModel.VendorBuisnessID.ToLower()))
              &&
-             (String.IsNullOrEmpty(vendorSearchViewModel.VendorCountry) || fv.VendorCountry.ToLower().Contains(vendorSearchViewModel.VendorCountry.ToLower()))
+             (String.IsNullOrEmpty(vendorSearchViewModel.CountryID) || fv.CountryID.Equals(vendorSearchViewModel.CountryID))
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorCity) || fv.VendorCity.ToLower().Contains(vendorSearchViewModel.VendorCity.ToLower()))
              &&
@@ -609,15 +610,15 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        public bool CheckUniqueCompanyIDAndCountry(string CompanyID, string Country, int? VendorID = null)
+        public bool CheckUniqueCompanyIDAndCountry(string CompanyID, int CountryID, int? VendorID = null)
         {
             //validation for the create
-            if (CompanyID != null && Country != null && (VendorID == null && _context.Vendors.Where(v => v.VendorBuisnessID.Equals(CompanyID) && v.VendorCountry.Equals(Country)).Any()))
+            if (CompanyID != null && CountryID != null && (VendorID == null && _context.Vendors.Where(v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID.Equals(CountryID)).Any()))
             {
                 return false;
             }
             //validation for the edit
-            if (VendorID != null && _context.Vendors.Where(v => v.VendorBuisnessID.Equals(CompanyID) && v.VendorCountry.Equals(Country) && v.VendorID != VendorID).Any())
+            if (VendorID != null && _context.Vendors.Where(v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID.Equals(CountryID) && v.VendorID != VendorID).Any())
             {
                 return false;
             }

@@ -48,7 +48,7 @@ namespace PrototypeWithAuth.ViewModels
         public string VendorCity { get; set; }
         [MaxLength(50)]
         [Display(Name = "Country")]
-        public string VendorCountry { get; set; }
+        public string CountryID { get; set; }
         [MaxLength(50)]
         [Display(Name = "Street")]
         public string VendorStreet { get; set; }
@@ -83,6 +83,7 @@ namespace PrototypeWithAuth.ViewModels
         [Display(Name = "Gold Account")]
         public string VendorGoldAccount { get; set; }
 
+        public IEnumerable<Country> Countries { get; set; }
         public IEnumerable<Request> Requests { get; set; } //not sure if we need this 
 
         public IQueryable<Vendor> ReturnVendors { get; set; }

@@ -83,15 +83,15 @@
 
                                     <div class=" row">
                                         <div class="form-group col-md-4">
-                                            <label asp-for="VendorCountry" class="control-label"></label>
-                                            <select class="mdb-select custom select-dropdown form-control-plaintext" asp-for="VendorCountry" id="VendorCountries">
+                                            <label asp-for="CountryID" class="control-label"></label>
+                                            <select class="mdb-select custom select-dropdown form-control-plaintext" asp-for="CountryID" id="VendorCountries">
                                                 <option disabled selected class="d-none" value="">Select Country</option>
-                                                @foreach (AppUtility.VendorCountries country in Enum.GetValues(typeof(AppUtility.VendorCountries)))
+                                                @foreach (var country in Model.Countries)
                                                 {
-                                                    <option value="@country">@Html.DisplayFor(e=> country)</option>
+                                                    <option value="@country.CountryID">@Html.DisplayFor(e=> country.CountryName)</option>
                                                 }
                                             </select>
-                                            <span asp-validation-for="VendorCountry" class="text-danger-centarix"></span>
+                                            <span asp-validation-for="CountryID" class="text-danger-centarix"></span>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label asp-for=" VendorCity" class="control-label"></label>
