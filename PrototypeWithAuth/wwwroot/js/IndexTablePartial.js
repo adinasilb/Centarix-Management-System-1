@@ -61,7 +61,32 @@ $(function () {
                 }
             });
         });
-
+        $(".popover .move-to-list").off("click").on("click", function (e) {
+            e.preventDefault()
+            console.log("move")
+            var requestID = $(this).attr("value")
+            console.log($(this))
+            var prevListID = $("#ListID").val()
+            var url = "/Requests/MoveToListModal/?requestID=" + requestID
+            if (prevListID != null) {
+                url = url + "&prevListID=" + prevListID
+            }
+            $.ajax({
+                async: true,
+                url: url,
+                traditional: true,
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    $.fn.OpenModal("moveListItemModal", "move-list", data)
+                    $.fn.EnableMaterialSelect('#NewListID', 'select-options-NewListID')
+                    return true;
+                },
+                error: function (jqxhr) {
+                    $('.error-message').html(jqxhr.responseText);
+                }
+            });
+        })
     });
     $('._IndexTableData [data-toggle = "tooltip"], ._IndexTableDataByVendor [data-toggle = "tooltip"]' ).off('click').on("click", function (e) {
         e.preventDefault();
@@ -506,4 +531,5 @@ $(function () {
         return formdata;
     }
 
+   
 });

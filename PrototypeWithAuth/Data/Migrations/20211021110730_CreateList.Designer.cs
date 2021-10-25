@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211021110730_CreateList")]
+    partial class CreateList
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2237,6 +2239,29 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ProtocolVersionID");
 
                     b.ToTable("Links");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.List", b =>
+                {
+                    b.Property<int>("ListID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserOwnerID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ListID");
+
+                    b.HasIndex("ApplicationUserOwnerID");
+
+                    b.ToTable("Lists");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
@@ -4796,44 +4821,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("Requests");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestList", b =>
-                {
-                    b.Property<int>("ListID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ApplicationUserOwnerID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ListID");
-
-                    b.HasIndex("ApplicationUserOwnerID");
-
-                    b.ToTable("RequestLists");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestListRequest", b =>
-                {
-                    b.Property<int>("ListID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RequestID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ListID", "RequestID");
-
-                    b.HasIndex("RequestID");
-
-                    b.ToTable("RequestListRequest");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestLocationInstance", b =>
                 {
                     b.Property<int>("RequestID")
@@ -7154,6 +7141,14 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.List", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUserOwner")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserOwnerID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.LabPart", "LabPart")
@@ -7480,29 +7475,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("Requests")
                         .HasForeignKey("SubProjectID")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestList", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUserOwner")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserOwnerID")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestListRequest", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.RequestList", "List")
-                        .WithMany("ListRequests")
-                        .HasForeignKey("ListID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
-                        .WithMany("ListRequests")
-                        .HasForeignKey("RequestID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestLocationInstance", b =>

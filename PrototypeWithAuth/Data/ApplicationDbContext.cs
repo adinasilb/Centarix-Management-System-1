@@ -54,6 +54,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<ResourceCategory> ResourceCategories { get; set; }
         public DbSet<FavoriteRequest> FavoriteRequests { get; set; }
         public DbSet<ShareRequest> ShareRequests { get; set; }
+        public DbSet<RequestList> RequestLists { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<AuthorProtocol> AuthorProtocols { get; set; }
         public DbSet<ProtocolType> ProtocolTypes { get; set; }
@@ -143,6 +144,8 @@ namespace PrototypeWithAuth.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<RequestListRequest>()
+                .HasKey(v => new { v.ListID, v.RequestID });
 
             modelBuilder.Entity<VendorCategoryType>()
                 .HasKey(v => new { v.VendorID, v.CategoryTypeID });

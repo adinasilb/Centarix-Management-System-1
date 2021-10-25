@@ -1,0 +1,23 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestListIndexViewModel
+@using PrototypeWithAuth.AppData
+
+<div class="">
+    <div class="item-table">
+        <ul class="pl-0">
+            @foreach (var l in Model.Lists)
+            {
+            <li class="list-inline-item active m-0">
+                <a class="change-list" value="@l.ListID" href="#"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@l.Title</label> </a>
+            </li>
+            }
+
+        </ul>
+    </div>
+</div>
+<div class="_IndexTable">
+    @{ await Html.RenderPartialAsync("_IndexTable", Model.RequestIndexPartialViewModel);}
+</div>
+<script src="~/js/IndexTableWithCounts.js"></script>
+<script>
+
+</script>

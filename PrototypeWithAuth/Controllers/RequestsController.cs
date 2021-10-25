@@ -564,6 +564,52 @@ namespace PrototypeWithAuth.Controllers
             RequestIndexPartialViewModel viewModel = await base.GetIndexViewModel(requestIndexObject);
             return viewModel;
         }
+        [Authorize(Roles = "Requests")]
+        public async Task<RequestListIndexViewModel> GetRequestListIndexObjectAsync()
+        {
+            var userLists = _context.RequestLists.Where(l => l.ApplicationUserOwnerID == _userManager.GetUserId(User)).ToList();
+            var listId = 0;
+            if (userLists.Count == 0)
+            {
+                RequestList requestList = new RequestList
+                {
+                    Title = "List 1",
+                    ApplicationUserOwnerID = _userManager.GetUserId(User),
+                    RequestListRequests = new List<RequestListRequest>()
+                };
+                try
+                {
+                    _context.Entry(requestList).State = EntityState.Added;
+                    await _context.SaveChangesAsync();
+                    listId = requestList.ListID;
+                }
+                catch
+                { }
+            }
+            else
+            {
+                listId = userLists.OrderBy(rl => rl.DateCreated).FirstOrDefault().ListID;
+            }
+            return await GetRequestListIndexObjectAsync(listId);
+        }
+            [Authorize(Roles = "Requests")]
+        public async Task<RequestListIndexViewModel> GetRequestListIndexObjectAsync(int listId)
+        {
+
+            RequestIndexObject requestIndexObject = new RequestIndexObject()
+            {
+                PageType = AppUtility.PageTypeEnum.RequestCart,
+                SidebarType = AppUtility.SidebarEnum.MyLists
+            };
+            RequestIndexPartialViewModel requestIndexViewModel = await base.GetIndexViewModel(requestIndexObject, listID:listId);
+            RequestListIndexViewModel viewModel = new RequestListIndexViewModel
+            {
+                RequestIndexPartialViewModel = requestIndexViewModel,
+                ListID = listId,
+                Lists = _context.RequestLists.Where(l => l.ApplicationUserOwnerID == _userManager.GetUserId(User)).ToList()
+        };
+            return viewModel;
+        }
 
         [Authorize(Roles = "Requests,Operations")]
         public async Task<RedirectToActionResult> SaveAddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
@@ -1737,6 +1783,23 @@ namespace PrototypeWithAuth.Controllers
             //    SidebarType = AppUtility.SidebarEnum.SharedRequests
             //};
             RequestIndexPartialViewModel viewModel = await GetSharedRequestIndexObjectAsync();
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> IndexLists()
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.MyLists;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+            //RequestIndexObject requestIndexObject = new RequestIndexObject()
+            //{
+            //    PageType = AppUtility.PageTypeEnum.RequestCart,
+            //    SidebarType = AppUtility.SidebarEnum.SharedRequests
+            //};
+            
+            RequestListIndexViewModel viewModel = await GetRequestListIndexObjectAsync();
             return View(viewModel);
         }
 
@@ -5681,76 +5744,147 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    throw new Exception(AppUtility.GetExceptionMessage(ex)); ;
+                    throw new Exception(AppUtility.GetExceptionMessage(ex)); 
                 }
             }
             return RedirectToAction("_LocationTab", new { id = requestId });
         }
 
-
-
-        //[HttpGet]
-        //public async Task<IActionResult> CancelModal(Guid Guid, AppUtility.ModalType ModalType)
-        //{
-        //    //if (ModalType != AppUtility.ModalType.Reorder) //no point in doing it for reorder....
-
-        //    var oldTempRequestJson = await GetTempRequestAsync(Guid);
-        //    var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
-        //    var deserializedTempRequestListViewModel = new TempRequestListViewModel()
-        //    {
-        //        TempRequestViewModels = newTempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
-        //    };
-
-        //    switch (ModalType)
-        //    {
-        //        case AppUtility.ModalType.Reorder:
-        //            DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, Guid);
-        //            DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, Guid);
-        //            await RemoveTempRequestAsync(Guid);
-        //            return new EmptyResult();
-        //        case AppUtility.ModalType.UploadOrder:
-        //            foreach (var tempRequest in deserializedTempRequestListViewModel.TempRequestViewModels)
-        //            {
-        //                tempRequest.Request.RequestStatusID = 6;
-        //            }
-        //            break;
-        //        case AppUtility.ModalType.UploadQuote:
-        //            break;
-        //        case AppUtility.ModalType.ConfirmEmail:
-        //            break;
-        //        case AppUtility.ModalType.Terms:
-        //            break;
-        //    }
-        //    await SetTempRequestAsync(newTempRequestJson, deserializedTempRequestListViewModel);
-        //    //await KeepTempRequestJsonCurrentAsOriginal(newTempRequestJson.GuidID);
-        //    return new EmptyResult();
-        //}
-
-
-        //public async Task<bool> PopulateProductSerialNumber()
-        //{
-        //    var products = _context.Products.Select(p => p).Include(p => p.ProductSubcategory.ParentCategory).ToList();
-        //    var operationSerialNumber = 0;
-        //    var orderSerialNumber = 0;
-        //    foreach (var product in products)
-        //    {
-        //        if (product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-        //        {
-        //            product.SerialNumber = "L" + orderSerialNumber;
-        //            orderSerialNumber++;
-        //        }
-        //        else
-        //        {
-        //            product.SerialNumber = "P" + operationSerialNumber;
-        //            operationSerialNumber++;
-        //        }
-        //        _context.Update(product);
-        //        _context.SaveChanges();
-        //    }
-        //    return true;
-        //}
-
         [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> MoveToListModal(int requestID, int prevListID=0)
+        {
+            var userLists = _context.RequestLists.Where(rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User)).OrderBy(rl => rl.DateCreated).ToList();
+            if(userLists.Count == 0)
+            {
+                RequestList requestList = new RequestList
+                {
+                    Title = "List 1",
+                    ApplicationUserOwnerID = _userManager.GetUserId(User),
+                    RequestListRequests = new List<RequestListRequest>()
+                };
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        _context.Entry(requestList).State = EntityState.Added;
+                        await _context.SaveChangesAsync();
+                        userLists.Add(requestList);
+                        await transaction.CommitAsync();
+                    }
+                    catch(Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        throw new Exception(AppUtility.GetExceptionMessage(ex));
+                    }
+                }
+            }
+            MoveListViewModel viewModel = new MoveListViewModel
+            {
+                Request = _context.Requests.Where(r => r.RequestID == requestID).Include(r=> r.Product).FirstOrDefault(),
+                PreviousListID = prevListID,
+                RequestLists = userLists
+            };
+            return PartialView(viewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<bool> MoveToListModal(MoveListViewModel moveListViewModel)
+        {
+            bool error = false;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    RequestListRequest requestListRequest = new RequestListRequest
+                    {
+                        RequestID = moveListViewModel.Request.RequestID,
+                        ListID = moveListViewModel.NewListID
+                    };
+                    _context.Entry(requestListRequest).State = EntityState.Added;
+                    if (moveListViewModel.PreviousListID != 0)
+                    {
+                        var oldlist = _context.RequestLists.Where(rl => rl.ListID == moveListViewModel.PreviousListID)
+                            .Include(rl => rl.RequestListRequests).FirstOrDefault();
+                        var oldRequestListRequest = oldlist.RequestListRequests
+                            .Where(rlr => rlr.RequestID == moveListViewModel.Request.RequestID).FirstOrDefault();
+                        _context.Remove(oldRequestListRequest);
+                    }
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    error = true;
+                }
+            }
+            return error;
+        }
+
+            //[HttpGet]
+            //public async Task<IActionResult> CancelModal(Guid Guid, AppUtility.ModalType ModalType)
+            //{
+            //    //if (ModalType != AppUtility.ModalType.Reorder) //no point in doing it for reorder....
+
+            //    var oldTempRequestJson = await GetTempRequestAsync(Guid);
+            //    var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
+            //    var deserializedTempRequestListViewModel = new TempRequestListViewModel()
+            //    {
+            //        TempRequestViewModels = newTempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
+            //    };
+
+            //    switch (ModalType)
+            //    {
+            //        case AppUtility.ModalType.Reorder:
+            //            DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, Guid);
+            //            DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, Guid);
+            //            await RemoveTempRequestAsync(Guid);
+            //            return new EmptyResult();
+            //        case AppUtility.ModalType.UploadOrder:
+            //            foreach (var tempRequest in deserializedTempRequestListViewModel.TempRequestViewModels)
+            //            {
+            //                tempRequest.Request.RequestStatusID = 6;
+            //            }
+            //            break;
+            //        case AppUtility.ModalType.UploadQuote:
+            //            break;
+            //        case AppUtility.ModalType.ConfirmEmail:
+            //            break;
+            //        case AppUtility.ModalType.Terms:
+            //            break;
+            //    }
+            //    await SetTempRequestAsync(newTempRequestJson, deserializedTempRequestListViewModel);
+            //    //await KeepTempRequestJsonCurrentAsOriginal(newTempRequestJson.GuidID);
+            //    return new EmptyResult();
+            //}
+
+
+            //public async Task<bool> PopulateProductSerialNumber()
+            //{
+            //    var products = _context.Products.Select(p => p).Include(p => p.ProductSubcategory.ParentCategory).ToList();
+            //    var operationSerialNumber = 0;
+            //    var orderSerialNumber = 0;
+            //    foreach (var product in products)
+            //    {
+            //        if (product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+            //        {
+            //            product.SerialNumber = "L" + orderSerialNumber;
+            //            orderSerialNumber++;
+            //        }
+            //        else
+            //        {
+            //            product.SerialNumber = "P" + operationSerialNumber;
+            //            operationSerialNumber++;
+            //        }
+            //        _context.Update(product);
+            //        _context.SaveChanges();
+            //    }
+            //    return true;
+            //}
+
+            [HttpGet]
         public async Task UploadRequestsFromExcel()
         {
             var InventoryFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\inventoryexcel2.csv";

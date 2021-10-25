@@ -156,6 +156,9 @@ namespace PrototypeWithAuth.ViewModels
                 case AppUtility.IndexTableTypes.LabOrders:
                     Columns = GetLabOrdersColumns();
                     break;
+                case AppUtility.IndexTableTypes.RequestLists:
+                    Columns = GetRequestListColumns();
+                    break;
             }
 
         }
@@ -630,6 +633,25 @@ namespace PrototypeWithAuth.ViewModels
                 Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false),
                 AjaxID = r.RequestID
             };
+
+        }
+        private IEnumerable<RequestIndexPartialColumnViewModel> GetRequestListColumns()
+        {
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 7, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, Value = GetVendorName(), ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, Value = new List<string>() { GetLocationInstanceNameBefore() } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 12, Value = new List<string>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
+            yield return new RequestIndexPartialColumnViewModel()
+            {
+                Title = "",
+                Width = 10,
+                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false),
+                AjaxID = r.RequestID
+            };
+
         }
     }
 }
