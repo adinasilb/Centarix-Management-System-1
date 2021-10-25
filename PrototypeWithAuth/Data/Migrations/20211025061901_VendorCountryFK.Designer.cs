@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211025061901_VendorCountryFK")]
+    partial class VendorCountryFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3130,24 +3132,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             OffDayTypeID = 5,
                             Description = "Unpaid Leave"
                         });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.OldVendorCountry", b =>
-                {
-                    b.Property<int>("OldVendorCountryID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("OldVendorCountryName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("VendorID")
-                        .HasColumnType("int");
-
-                    b.HasKey("OldVendorCountryID");
-
-                    b.ToTable("OldVendorCountries");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
@@ -6630,7 +6614,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CountryID")
+                    b.Property<int?>("CountryID")
                         .HasColumnType("int");
 
                     b.Property<string>("InfoEmail")
@@ -8039,8 +8023,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Country", "Country")
                         .WithMany("Vendors")
                         .HasForeignKey("CountryID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.VendorCategoryType", b =>

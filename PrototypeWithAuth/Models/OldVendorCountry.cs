@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Country
+    public class OldVendorCountry
     {
         [Key]
-        public int CountryID { get; set; }
-        public string CountryName { get; set; }
-        public IEnumerable<Vendor> Vendors { get; set; }
+        public int OldVendorCountryID { get; set; }
+        public int VendorID { get; set; }
+        public string OldVendorCountryName { get; set; }
     }
 }

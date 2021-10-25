@@ -109,10 +109,10 @@
             <div class="row">
                 <div class="col-3">
                     <div class="form-group">
-                        <label asp-for="Vendor.VendorCountry" class="control-label"></label>
+                        <label asp-for="Vendor.CountryID" class="control-label"></label>
                         @Html.DropDownListFor(
-                            vm => vm.Vendor.VendorCountry,
-                            new SelectList(Enum.GetValues(typeof(AppUtility.VendorCountries))),
+                            vm => vm.Vendor.CountryID,
+                            Model.Countries,
                             "Select Country",
                             htmlAttributes: new
                             {

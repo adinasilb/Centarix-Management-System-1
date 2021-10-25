@@ -135,8 +135,8 @@ namespace PrototypeWithAuth.Controllers
         {
             IQueryable<Vendor> filteredVendors = _context.Vendors.Include(v => v.VendorCategoryTypes).AsQueryable();
             List<int> orderedVendorCategoryTypes = null;
-            if (vendorSearchViewModel.VendorCategoryTypes != null) 
-            { 
+            if (vendorSearchViewModel.VendorCategoryTypes != null)
+            {
                 orderedVendorCategoryTypes = vendorSearchViewModel.VendorCategoryTypes.OrderBy(e => e).ToList();
             }
             var listfilteredVendors = filteredVendors
@@ -378,6 +378,11 @@ namespace PrototypeWithAuth.Controllers
             }
 
             CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
+            createSupplierViewModel.Countries = new List<SelectListItem>();
+            foreach (var country in _context.Countries)
+            {
+                createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
+            }
             createSupplierViewModel.Vendor = await _context.Vendors.Include(v => v.VendorCategoryTypes).Where(v => v.VendorID == id).FirstOrDefaultAsync();
             createSupplierViewModel.SectionType = SectionType;
             createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
@@ -478,7 +483,7 @@ namespace PrototypeWithAuth.Controllers
                                 if (!String.IsNullOrEmpty(vendorComment.CommentText))
                                 {
                                     vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
-                                    if(vendorComment.VendorCommentID == 0)
+                                    if (vendorComment.VendorCommentID == 0)
                                     {
                                         vendorComment.CommentTimeStamp = DateTime.Now;
                                     }
