@@ -3915,6 +3915,7 @@ namespace PrototypeWithAuth.Controllers
                         requestReceived.Unit = (uint)(requestReceived.Unit - receivedLocationViewModel.AmountArrived);
                         _context.Entry(requestReceived).State = EntityState.Added;
                         await _context.SaveChangesAsync();
+                        MoveDocumentsOutOfTempFolder(requestReceived.RequestID, AppUtility.ParentFolderName.Requests, receivedLocationViewModel.Request.RequestID, true);
                         requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
                         requestReceived.Unit = (uint)receivedLocationViewModel.AmountArrived;
