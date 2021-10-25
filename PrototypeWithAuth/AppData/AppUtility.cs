@@ -633,7 +633,7 @@ namespace PrototypeWithAuth.AppData
             }
             catch (Exception ex)
             {
-                return "Error retrieving receiving details";
+                return "Error retrieving receival details";
             }
          
         }
