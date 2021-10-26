@@ -203,6 +203,11 @@
     border-color: var(--biomarkers-color) !important;
 }
 
+.biomarkers-link{
+    color: var(--biomarkers-color) !important;
+    text-decoration: underline;
+}
+
 .lab-man-filter {
     filter: var(--lab-man-filter) !important;
 }
@@ -341,6 +346,7 @@ table.visual-locations td .content {
 
 
 body {
+    overflow: hidden;
     color: var(--black-87);
     text-transform: capitalize;
     font-weight: var(--bold-regular)
@@ -491,7 +497,9 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     opacity: 0.67;
 }
 
-
+.font-weight-medium {
+    font-weight: 600 !important;
+}
 
 table td, table td .btn, .text, table th {
     font-size: var(--text-font-size) !important;
@@ -594,7 +602,8 @@ table td, table td .btn, .text, table th {
     margin-bottom: 2.063rem;
 }
 
-.under-td-padding {
+.under-td-padding,
+.under-row-padding{
     padding-bottom: 2.063rem !important;
 }
 
@@ -761,6 +770,9 @@ table td, table td .btn, .text, table th {
     border: 1px solid var(--lab-man-color) !important;
 }
 
+.bio-form .document-border.hasFile {
+    border: 2px solid var(--biomarkers-color) !important;
+}
 .accounting-form .document-border:hover, .accounting-form .document-border.hasFile {
     border: 1px solid var(--acc-color) !important;
 }
@@ -862,5 +874,18 @@ span.resources-tags-big {
 .open-experiment{
     color: var(--biomarkers-25) !important;
     text-decoration: underline !important;
+}
+
+.biomarkers-test-name {
+    padding-top: .7rem;
+    padding-bottom: .7rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
+    border-radius: 15px !important;
+    border: 0 !important;
+}
+
+.biomarkers-test-name.selected {
+    background-color: var(--biomarkers-25);
 }
 

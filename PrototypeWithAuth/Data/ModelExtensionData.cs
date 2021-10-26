@@ -1559,7 +1559,7 @@ namespace PrototypeWithAuth.Data
               new UnitType
               {
                   UnitTypeID = -1,
-                  UnitParentTypeID =1,
+                  UnitParentTypeID = 1,
                   UnitTypeDescription = "Quartzy Unit"
               }
             );
@@ -1957,7 +1957,7 @@ namespace PrototypeWithAuth.Data
                            LocationRoomInstanceName = "Laboratory 2",
                            LocationRoomInstanceAbbrev = "L2",
                        },
-                       
+
                        new LocationRoomInstance
                        {
                            LocationRoomInstanceID = 3,
@@ -1965,7 +1965,7 @@ namespace PrototypeWithAuth.Data
                            LocationRoomInstanceAbbrev = "TC1",
                            LocationRoomTypeID = 2
                        },
-                       
+
                         new LocationRoomInstance
                         {
                             LocationRoomInstanceID = 4,
@@ -1989,7 +1989,7 @@ namespace PrototypeWithAuth.Data
                             LocationRoomInstanceName = "Washing Room 1",
                             LocationRoomInstanceAbbrev = "W1"
                         },
-                        
+
                         new LocationRoomInstance
                         {
                             LocationRoomInstanceID = 7,
@@ -2072,6 +2072,7 @@ namespace PrototypeWithAuth.Data
                         LabPartID = 4,
                         LabPartNameAbbrev = "D",
                         LabPartName = "Drawer",
+                        HasShelves = true
                     },
                     new LabPart
                     {
@@ -3116,18 +3117,18 @@ namespace PrototypeWithAuth.Data
                 }
           );
 
-          modelBuilder.Entity<Gender>().HasData(
-                new Gender
-                {
-                    GenderID = 1,
-                    Description = "Male"
-                },
-                new Gender
-                {
-                    GenderID = 2,
-                    Description = "Female"
-                }
-           );
+            modelBuilder.Entity<Gender>().HasData(
+                  new Gender
+                  {
+                      GenderID = 1,
+                      Description = "Male"
+                  },
+                  new Gender
+                  {
+                      GenderID = 2,
+                      Description = "Female"
+                  }
+             );
 
             modelBuilder.Entity<ParticipantStatus>().HasData(
                   new ParticipantStatus
@@ -3141,6 +3142,12 @@ namespace PrototypeWithAuth.Data
                       Description = "Dropout"
                   }
              );
+
+            modelBuilder.Entity<Country>().HasData(
+                
+                SeededData.CountryData.GetCountries()
+                );
+
         }
     }
 }

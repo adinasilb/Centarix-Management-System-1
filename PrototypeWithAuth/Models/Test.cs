@@ -11,11 +11,11 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int TestID { get; set; }
         public string Name { get; set; }
-        public int ExperimentID { get; set; }
-        public Experiment Experiment { get; set; }
-        public int TestCategoryID { get; set; }
-        public TestCategory TestCategory { get; set; }
-        //public int TestFieldHeaderID { get; set; }
-        //public TestFieldHeader TestFieldHeader { get; set; }
+        public IEnumerable<ExperimentTest> ExperimentTests { get; set; }
+        //public int TestCategoryID { get; set; }
+        //public TestCategory TestCategory { get; set; }
+        public int SiteID { get; set; }
+        public Site Site { get; set; }
+        public List<TestOuterGroup> TestOuterGroups { get; set; }
     }
 }

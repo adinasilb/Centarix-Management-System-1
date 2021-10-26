@@ -78,7 +78,7 @@
                             vm => vm.Requests[0].Product.UnitTypeID,
                             Model.UnitTypeList,
                             "",
-                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @id = "unitTypeID" }
+                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select" + markReadOnlyClass, @id = "unitTypeID" }
                             )
                         <span asp-validation-for="Requests[0].Product.UnitType" class="text-danger-centarix"></span>
                     </div>
@@ -87,7 +87,7 @@
                     @{
                         var unitLabel = Model.Requests[0].Product.UnitType != null ? Model.Requests[0].Product.UnitType.UnitTypeDescription : "Unit";
                     }
-                    <label class="control-label price-per-unit-label">Price Per @unitLabel:</label>
+                    <label class="control-label price-per-unit-label" style="text-transform: none">Price Per @unitLabel:</label>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="input-group">
@@ -178,7 +178,7 @@
                     @{
                         var subunitLabel = Model.Requests[0].Product.SubUnitType != null ? Model.Requests[0].Product.SubUnitType.UnitTypeDescription : "Subunit";
                     }
-                    <label class="control-label price-per-subunit-label">Price Per @subunitLabel:</label>
+                    <label class="control-label price-per-subunit-label"style="text-transform: none">Price Per @subunitLabel:</label>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="input-group">
@@ -274,7 +274,7 @@
                     @{
                         var subsubunitLabel = Model.Requests[0].Product.SubSubUnitType != null ? Model.Requests[0].Product.SubSubUnitType.UnitTypeDescription : "Sub-Subunit";
                     }
-                    <label class="control-label price-per-sub-subunit-label">Price Per @subsubunitLabel:</label>
+                    <label class="control-label price-per-sub-subunit-label" style="text-transform: none">Price Per @subsubunitLabel:</label>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="input-group">

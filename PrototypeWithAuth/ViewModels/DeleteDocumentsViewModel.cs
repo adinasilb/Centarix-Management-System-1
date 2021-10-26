@@ -9,6 +9,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class DeleteDocumentsViewModel : ViewModelBase
     {
+        public string FullFileName { get; set; }
         public string FileName { get; set; }
         public int ObjectID { get; set; }
         public AppUtility.FolderNamesEnum FolderName { get; set; }

@@ -18,14 +18,16 @@ namespace PrototypeWithAuth.ViewModels
         private FavoriteRequest favoriteRequest;
         private ShareRequest shareRequest;
         private string checkboxString;
+        private FavoriteReport favoriteReport;
 
         public ReportIndexPartialRowViewModel() { }
-        public ReportIndexPartialRowViewModel(AppUtility.ReportTypes reportType, Report report, ResourceCategory reportCategory, ReportsIndexObject reportIndexObject)
+        public ReportIndexPartialRowViewModel(AppUtility.ReportTypes reportType, Report report, ResourceCategory reportCategory, ReportsIndexObject reportIndexObject, FavoriteReport favoriteReport, List<IconColumnViewModel> iconList)
         {
             r = report;
             r.ReportCategory = reportCategory;
+            this.favoriteReport = favoriteReport;
             ReportIndexPartialRowViewModel.reportIndexObject = reportIndexObject;
-            //this.iconList = iconList;
+            this.iconList = iconList;
             this.user = user;
             //this.favoriteRequest = favoriteRequest;
             //this.shareRequest = shareRequest;
@@ -43,11 +45,17 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<RequestIndexPartialColumnViewModel> Columns { get; set; }
         public string ButtonClasses { get; set; }
         public string ButtonText { get; set; }
-        private static List<IconColumnViewModel> GetIcons()
+        private static List<IconColumnViewModel> GetIcons(FavoriteReport favoriteReport, List<IconColumnViewModel> iconList )
         {
-            var newIconList = new List<IconColumnViewModel>();
-            //var editIcon = new IconColumnViewModel("icon-edit_doc-24px", "#009688", "edit-report");
-            //newIconList.Add(editIcon);
+            var newIconList = AppUtility.DeepClone<List<IconColumnViewModel>>(iconList);
+            //favorite icon
+            var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink?.Contains("report-favorite")?? false);
+
+            if (favIconIndex != -1 && favoriteReport != null) //check these checks
+            {
+                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "var(--protocols-color)", "report-favorite report-unlike", "Unfavorite");
+                newIconList[favIconIndex] = unLikeIcon;
+            }
             return newIconList;
         }
         private String GetSharedBy(Request request, ShareRequest shareRequest)
@@ -60,7 +68,7 @@ namespace PrototypeWithAuth.ViewModels
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "Name", Width = 10, Value = new List<string>() { r.ReportTitle }, AjaxLink = "edit-report", AjaxID = r.ReportID };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Dates", Width = 10, Value = new List<string>() { AppUtility.GetWeekStartEndDates(r.DateCreated) } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Icons = GetIcons(), AjaxID = r.ReportID };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Icons = GetIcons(favoriteReport, iconList), AjaxID = r.ReportID };
         }
         
 

@@ -22,6 +22,12 @@ $('.receivedModalForm').validate({
 		},
 		"locationVisualSelected": {
 			locationRequired: true
+		},
+		"AmountArrived": {
+			min:1,
+			integer: true,
+			required: true,
+			max: parseInt($(".unitAmount").val())-1
 		}
 
 	}

@@ -293,7 +293,7 @@ $(function () {
 		//});
 	});
 
-	$(".open-document-modal").off('click').on("click", function (e) {
+	$("body, .modal").off("click", ".open-document-modal").on("click", ".open-document-modal", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 		console.log("clicked open doc modal 2");
@@ -309,12 +309,15 @@ $(function () {
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
 		var showSwitch = $(".active-document-modal").attr("showSwitch");
+		console.log("showSwitch: " + showSwitch);
 		var parentFolder = $(".active-document-modal").attr("parentfolder");
 		console.log('parentfolder' + parentFolder)
 		var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
 		console.log(dontAllowMultipleFiles)
+		var $CustomMainObjectID = $("#CustomMainObjectID").val();
+		console.log("CustomMainObjectID " + $("#CustomMainObjectID").val());
 		//alert("before open doc modal");
-		$.fn.OpenDocumentsModal(false, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles);
+		$.fn.OpenDocumentsModal(false, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
 		return true;
 	});
 
@@ -1640,6 +1643,10 @@ $(function () {
 		$.fn.CallPageRequest($itemurl, "delete");
     })
 
+	$('.close-document-modal').off("click").click(function (e) {
+		console.log("click 1")
+		$.fn.CloseModal("documents");
+	})
 });
 
 

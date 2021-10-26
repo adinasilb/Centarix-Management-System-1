@@ -102,8 +102,10 @@ namespace PrototypeWithAuth.Controllers
 
             VendorSearchViewModel vendorSearchViewModel = new VendorSearchViewModel
             {
-                ParentCategories = _context.ParentCategories.ToList(),
+                //ParentCategories = _context.ParentCategories.ToList(),
+                CategoryTypes = _context.CategoryTypes.ToList(),
                 Vendors = _context.Vendors.ToList(),
+                Countries = _context.Countries.ToList(),
                 SectionType = SectionType
             };
 
@@ -132,17 +134,26 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Search(VendorSearchViewModel vendorSearchViewModel)
 
         {
-            IQueryable<Vendor> filteredVendors = _context.Vendors.AsQueryable();
-            filteredVendors = filteredVendors
-                .Where(fv => (String.IsNullOrEmpty(vendorSearchViewModel.VendorEnName) || fv.VendorEnName.Contains(vendorSearchViewModel.VendorEnName))
+            IQueryable<Vendor> filteredVendors = _context.Vendors.Include(v => v.VendorCategoryTypes).AsQueryable();
+            List<int> orderedVendorCategoryTypes = null;
+            if (vendorSearchViewModel.VendorCategoryTypes != null)
+            {
+                orderedVendorCategoryTypes = vendorSearchViewModel.VendorCategoryTypes.OrderBy(e => e).ToList();
+            }
+            var listfilteredVendors = filteredVendors
+                .Where(fv => (String.IsNullOrEmpty(vendorSearchViewModel.VendorEnName) || fv.VendorEnName.ToLower().Contains(vendorSearchViewModel.VendorEnName.ToLower()))
                  &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorHeName) || fv.VendorHeName.Contains(vendorSearchViewModel.VendorHeName))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorHeName) || fv.VendorHeName.ToLower().Contains(vendorSearchViewModel.VendorHeName.ToLower()))
              &&
-             (String.IsNullOrEmpty(vendorSearchViewModel.VendorBuisnessID) || fv.VendorBuisnessID.Contains(vendorSearchViewModel.VendorBuisnessID))
+             (String.IsNullOrEmpty(vendorSearchViewModel.VendorBuisnessID) || fv.VendorBuisnessID.ToLower().Contains(vendorSearchViewModel.VendorBuisnessID.ToLower()))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.InfoEmail) || fv.InfoEmail.Contains(vendorSearchViewModel.InfoEmail))
-            &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.OrdersEmail) || fv.OrdersEmail.Contains(vendorSearchViewModel.OrdersEmail))
+             (String.IsNullOrEmpty(vendorSearchViewModel.CountryID.ToString()) || fv.CountryID.ToString().ToLower().Equals(vendorSearchViewModel.CountryID.ToLower()))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorCity) || fv.VendorCity.ToLower().Contains(vendorSearchViewModel.VendorCity.ToLower()))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorStreet) || fv.VendorStreet.ToLower().Contains(vendorSearchViewModel.VendorStreet.ToLower()))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorZip) || fv.VendorZip.ToLower().Contains(vendorSearchViewModel.VendorZip.ToLower()))
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorTelephone) || fv.VendorTelephone.Contains(vendorSearchViewModel.VendorTelephone))
               &&
@@ -150,51 +161,29 @@ namespace PrototypeWithAuth.Controllers
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorFax) || fv.VendorFax.Contains(vendorSearchViewModel.VendorFax))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorCity) || fv.VendorCity.Contains(vendorSearchViewModel.VendorCity))
+            (String.IsNullOrEmpty(vendorSearchViewModel.OrdersEmail) || fv.OrdersEmail.ToLower().Contains(vendorSearchViewModel.OrdersEmail.ToLower()))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorStreet) || fv.VendorStreet.Contains(vendorSearchViewModel.VendorStreet))
+            (String.IsNullOrEmpty(vendorSearchViewModel.InfoEmail) || fv.InfoEmail.ToLower().Contains(vendorSearchViewModel.InfoEmail.ToLower()))
+            &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorWebsite) || fv.VendorWebsite.ToLower().Contains(vendorSearchViewModel.VendorWebsite.ToLower()))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorZip) || fv.VendorZip.Contains(vendorSearchViewModel.VendorZip))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorBank) || fv.VendorBank.ToLower().Contains(vendorSearchViewModel.VendorBank.ToLower()))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorWebsite) || fv.VendorWebsite.Contains(vendorSearchViewModel.VendorWebsite))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorBankBranch) || fv.VendorBankBranch.ToLower().Contains(vendorSearchViewModel.VendorBankBranch.ToLower()))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorBank) || fv.VendorBank.Contains(vendorSearchViewModel.VendorBank))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorAccountNum) || fv.VendorAccountNum.ToLower().Contains(vendorSearchViewModel.VendorAccountNum.ToLower()))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorBankBranch) || fv.VendorBankBranch.Contains(vendorSearchViewModel.VendorBankBranch))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorSwift) || fv.VendorSwift.ToLower().Contains(vendorSearchViewModel.VendorSwift.ToLower()))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorAccountNum) || fv.VendorAccountNum.Contains(vendorSearchViewModel.VendorAccountNum))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorBIC) || fv.VendorBIC.ToLower().Contains(vendorSearchViewModel.VendorBIC.ToLower()))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorSwift) || fv.VendorSwift.Contains(vendorSearchViewModel.VendorSwift))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorGoldAccount) || fv.VendorGoldAccount.ToLower().Contains(vendorSearchViewModel.VendorGoldAccount.ToLower()))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorBIC) || fv.VendorBIC.Contains(vendorSearchViewModel.VendorBIC))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorRoutingNum) || fv.VendorRoutingNum.Contains(vendorSearchViewModel.VendorBIC))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorGoldAccount) || fv.VendorGoldAccount.Contains(vendorSearchViewModel.VendorGoldAccount)));
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorRoutingNum) || fv.VendorRoutingNum.ToLower().Contains(vendorSearchViewModel.VendorRoutingNum.ToLower()))).ToList();
 
+            //listfilteredVendors = listfilteredVendors.Where(fv => (orderedVendorCategoryTypes == null || orderedVendorCategoryTypes.SequenceEqual(fv.VendorCategoryTypes.OrderBy( ct => ct.CategoryTypeID).Select(ct => ct.CategoryTypeID)))).ToList(); //if choose lab, will not show vendors that have both lab and operations
+            listfilteredVendors = listfilteredVendors.Where(fv => (orderedVendorCategoryTypes == null || orderedVendorCategoryTypes.All(fv.VendorCategoryTypes.Select(ct => ct.CategoryTypeID).Contains))).ToList(); //if choose lab, will include vendors that have both lab and operations
 
-            if (vendorSearchViewModel.SelectedParentCategoryID > 0)
-            {
-                foreach (var v in filteredVendors)
-                {
-
-                    bool vendorContainsParentCategory = false;
-                    foreach (var p in _context.Products.Include(p => p.ProductSubcategory))
-                    {
-                        //var psc = _context.ProductSubcategories.Where(psc => psc.ProductSubcategoryID == p.ProductSubcategoryID) //need to instatntaite subcategories before refrenceing to parent
-                        if ((p.ProductSubcategory.ParentCategoryID == vendorSearchViewModel.SelectedParentCategoryID) && (p.VendorID == v.VendorID))
-                        {
-                            vendorContainsParentCategory = true;
-
-                        }
-                    }
-                    if (!vendorContainsParentCategory)
-                    {
-                        filteredVendors = filteredVendors.Where(fv => fv.VendorID != v.VendorID);
-
-                    }
-                }
-            }
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = vendorSearchViewModel.SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
             if (vendorSearchViewModel.SectionType == AppUtility.MenuItems.LabManagement)
@@ -205,7 +194,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
             }
-            return View("IndexForPayment", filteredVendors.ToList());
+            return View("IndexForPayment", listfilteredVendors);
         }
 
 
@@ -239,6 +228,11 @@ namespace PrototypeWithAuth.Controllers
             List<VendorComment> vendorComments = new List<VendorComment>();
             //only allowed to have 10 contacts
             //have to hard coded becasuse did not know how to render dynamic partial views
+            createSupplierViewModel.Countries = new List<SelectListItem>();
+            foreach (var country in _context.Countries)
+            {
+                createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
+            }
             createSupplierViewModel.VendorContacts = vendorContacts;
             createSupplierViewModel.VendorComments = vendorComments;
             createSupplierViewModel.SectionType = SectionType; //TODO: take this out when all the views are combined
@@ -362,12 +356,20 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting, LabManagement")]
         public async Task<IActionResult> EditPartial(int? id, AppUtility.MenuItems SectionType, int? Tab)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             return await editFunction(id, SectionType, Tab);
         }
 
         [Authorize(Roles = "Accounting, LabManagement")]
         public async Task<IActionResult> _VendorHeader(int? id, AppUtility.MenuItems SectionType)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             var createSupplierViewModel = new CreateSupplierViewModel()
             {
                 Vendor = await _context.Vendors.Include(v => v.VendorCategoryTypes).Where(v => v.VendorID == id).FirstOrDefaultAsync()
@@ -382,6 +384,11 @@ namespace PrototypeWithAuth.Controllers
             }
 
             CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
+            createSupplierViewModel.Countries = new List<SelectListItem>();
+            foreach (var country in _context.Countries)
+            {
+                createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
+            }
             createSupplierViewModel.Vendor = await _context.Vendors.Include(v => v.VendorCategoryTypes).Where(v => v.VendorID == id).FirstOrDefaultAsync();
             createSupplierViewModel.SectionType = SectionType;
             createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
@@ -482,7 +489,7 @@ namespace PrototypeWithAuth.Controllers
                                 if (!String.IsNullOrEmpty(vendorComment.CommentText))
                                 {
                                     vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
-                                    if(vendorComment.VendorCommentID == 0)
+                                    if (vendorComment.VendorCommentID == 0)
                                     {
                                         vendorComment.CommentTimeStamp = DateTime.Now;
                                     }
@@ -583,6 +590,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "LabManagement")]
         public async Task<IActionResult> CommentInfoPartialView(String type, int index)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             VendorComment comment = new VendorComment();
             comment.CommentType = type;
             comment.ApplicationUser = _userManager.GetUserAsync(User).Result;
@@ -594,9 +605,29 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "LabManagement")]
         public async Task<IActionResult> ContactInfoPartial(int index)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             VendorContact contact = new VendorContact();
             AddContactViewModel addContactViewModel = new AddContactViewModel { VendorContact = contact, Index = index };
             return PartialView(addContactViewModel);
+        }
+
+        [HttpPost]
+        public bool CheckUniqueCompanyIDAndCountry(string CompanyID, int CountryID, int? VendorID = null)
+        {
+            //validation for the create
+            if (CompanyID != null && CountryID != null && (VendorID == null && _context.Vendors.Where(v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID.Equals(CountryID)).Any()))
+            {
+                return false;
+            }
+            //validation for the edit
+            if (VendorID != null && _context.Vendors.Where(v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID.Equals(CountryID) && v.VendorID != VendorID).Any())
+            {
+                return false;
+            }
+            return true;
         }
     }
 

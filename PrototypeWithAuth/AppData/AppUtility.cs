@@ -96,10 +96,18 @@ namespace PrototypeWithAuth.AppData
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
-        public enum FolderNamesEnum { Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
-        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote, ParentRequest, FunctionResults }
+        public enum FolderNamesEnum { Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details, Custom } //Listed in the site.js (if you change here must change there)
+        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote, ExperimentEntries, ParentRequest, FunctionResults }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum ModalType { None, Terms, UploadOrder, UploadQuote, ConfirmEmail, Reorder }
+        public enum VendorCountries { 
+            Israel, 
+            [Display(Name = "North America")]
+            NorthAmerica,
+            [Display(Name = "South America")]
+            SouthAmerica, 
+            Europe, 
+            Asia }
         public static string AspDateFormatString = "{0:d MMM yyyy}";
         public static List<StringWithName> RequestRoleEnums()
         {
@@ -121,14 +129,14 @@ namespace PrototypeWithAuth.AppData
         }
         public static List<StringWithName> ProtocolRoleEnums()
         {
-            List<StringWithName> ore = new List<StringWithName>()
+            List<StringWithName> pre = new List<StringWithName>()
             {
                 new StringWithName(){StringName = "General", StringDefinition = "Protocols"},
                 new StringWithName(){StringName = "Biomarkers", StringDefinition = "ProtocolsBiomarkers"},
                 new StringWithName(){StringName = "Rejuvenation", StringDefinition = "ProtocolsRejuvenation"},
                 new StringWithName(){StringName = "Delivery Systems", StringDefinition = "ProtocolsDeliverySystems"}
             };
-            return ore;
+            return pre;
         }
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum { None, NIS, USD }
@@ -178,6 +186,8 @@ namespace PrototypeWithAuth.AppData
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
         { Request, Resource, Protocols }
         public enum GlobalInfoType { ExchangeRate, LoginUpdates, LastProtocolLine }
+        public enum DataTypeEnum { String, Double, DateTime, Bool, File }
+        public enum DataCalculation { None, BMI }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -608,14 +618,26 @@ namespace PrototypeWithAuth.AppData
 
         public static string GetNote(SidebarEnum sidebarEnum, Request request)
         {
-            if (sidebarEnum == SidebarEnum.PartialDelivery)
+            try
             {
-                return request.NoteForPartialDelivery;
+                if (sidebarEnum == SidebarEnum.PartialDelivery)
+                {
+                    if (request.Unit == 1)
+                    {
+                        return request.Unit + " was never received";
+                    }
+                    return request.Unit + " were never received";
+                }
+                else
+                {
+                    return request.NoteForClarifyDelivery;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return request.NoteForClarifyDelivery;
+                return "Error retrieving receival details";
             }
+         
         }
 
         public static string GetDocumentIcon(FolderNamesEnum folderName)

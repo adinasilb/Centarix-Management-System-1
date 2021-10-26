@@ -51,10 +51,10 @@ namespace PrototypeWithAuth.Models
         [MaxLength(50)]
         [Display(Name = "City")]
         public string VendorCity { get; set; }
-        [Required]
-        [MaxLength(50)]
-        [Display(Name = "Country")]
-        public string VendorCountry { get; set; }
+        //[Required]
+        //[MaxLength(50)]
+        //[Display(Name = "Country")]
+        //public string VendorCountry { get; set; }
         
         [MaxLength(50)]
         [Display(Name = "Street")]
@@ -91,6 +91,10 @@ namespace PrototypeWithAuth.Models
 
         [Display(Name = "Gold Account")]
         public string VendorGoldAccount { get; set; }
+
+        [Display(Name = "Country")]
+        public int CountryID { get; set; }
+        public Country Country { get; set; }
         public IEnumerable<VendorCategoryType> VendorCategoryTypes { get; set; }
         public IEnumerable<Product> Products { get; set; }
 

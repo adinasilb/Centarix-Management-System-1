@@ -25,7 +25,7 @@
         sectionClass = "accounting-form";
     }
 
-    <div class="col-12  mx-auto on-form-modal @sectionClass " style="width: 60%">
+    <div class="col-12  mx-auto on-form-modal @sectionClass add-item-box scroll-page" @*style="width: 60%"*@>
         <div class="on-form-modal-border" id="addVendorModal">
             <form action="" id="myForm" class="createVendorForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 @Html.HiddenFor(c => c.SectionType)
@@ -97,9 +97,22 @@
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-3">
-                                            <label asp-for="Vendor.VendorCountry" class="control-label"></label>
-                                            <input asp-for="Vendor.VendorCountry" class="form-control-plaintext border-bottom" />
-                                            <span asp-validation-for="Vendor.VendorCountry" class="text-danger-centarix"></span>
+                                            <label asp-for="Vendor.CountryID" class="control-label"></label>
+
+                                            @Html.DropDownListFor(
+                            vm => vm.Vendor.CountryID,
+                            Model.Countries,
+                            "Select Country",
+                            htmlAttributes: new
+                            {
+                                @class = " mdb-select custom select-dropdown form-control-plaintext  mark-readonly",
+                                @id = "VendorCountries",
+                                @size = 1,
+                                @data_stop_refresh = "true",
+                                @searchable = "default value",
+                            }
+                        )
+                                            <span asp-validation-for="Vendor.CountryID" class="text-danger-centarix"></span>
                                         </div>
                                         <div class="col-3">
                                             <label asp-for="Vendor.VendorCity" class="control-label"></label>
@@ -154,31 +167,31 @@
                                 </div>
                             </div>
                             @*<div id="categories" class="tab-pane fade">
-                                <div class="modal-sides modal-body-top-p">
-                                    <div class="row">
-                                        <div class="col-2">
-                                            <label class="control-label">Sub category 1</label>
-                                            <input class="form-control-plaintext border-bottom" />
-                                        </div>
-                                        <div class="col-2">
-                                            <label class="control-label">Sub category 2</label>
-                                            <input class="form-control-plaintext border-bottom" />
-                                        </div>
-                                        <div class="col-2">
-                                            <label class="control-label">Sub category 3</label>
-                                            <input class="form-control-plaintext border-bottom" />
-                                        </div>
-                                        <div class="col-2">
-                                            <label class="control-label">Sub category 4</label>
-                                            <input class="form-control-plaintext border-bottom" />
-                                        </div>
-                                        <div class="col-2">
-                                            <label class="control-label">Sub category 5</label>
-                                            <input class="form-control-plaintext border-bottom" />
+                                    <div class="modal-sides modal-body-top-p">
+                                        <div class="row">
+                                            <div class="col-2">
+                                                <label class="control-label">Sub category 1</label>
+                                                <input class="form-control-plaintext border-bottom" />
+                                            </div>
+                                            <div class="col-2">
+                                                <label class="control-label">Sub category 2</label>
+                                                <input class="form-control-plaintext border-bottom" />
+                                            </div>
+                                            <div class="col-2">
+                                                <label class="control-label">Sub category 3</label>
+                                                <input class="form-control-plaintext border-bottom" />
+                                            </div>
+                                            <div class="col-2">
+                                                <label class="control-label">Sub category 4</label>
+                                                <input class="form-control-plaintext border-bottom" />
+                                            </div>
+                                            <div class="col-2">
+                                                <label class="control-label">Sub category 5</label>
+                                                <input class="form-control-plaintext border-bottom" />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>*@
+                                </div>*@
                             <div id="payment" class="tab-pane fade">
                                 <div class="modal-sides modal-body-top-p">
                                     <div class="row ">

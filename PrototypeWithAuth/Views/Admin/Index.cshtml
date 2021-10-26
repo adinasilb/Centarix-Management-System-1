@@ -15,6 +15,6 @@
     <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span></div>
     <br />
 }
-<div id="usersTable">
+<div id="usersTable" class=" scroll-page">
     @{ await Html.RenderPartialAsync("_Index", Model);}
 </div>

@@ -51,3 +51,5 @@ $('.addLocationForm').validate({
 		"LocationInstances[2].LocationTypeID": "selectRequired"
 	}
 });
+
+

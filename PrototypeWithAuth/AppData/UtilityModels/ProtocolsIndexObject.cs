@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PrototypeWithAuth.AppData.UtilityModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -57,5 +58,22 @@ namespace PrototypeWithAuth.AppData
             set { _PageType = value; }
         }
         public AppUtility.MenuItems SectionType { get; set; }
+        private string _searchText;
+        public string SearchText
+        {
+            get
+            {
+                if (_searchText == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    return _searchText;
+                }
+            }
+            set { _searchText = value; }
+        }
+        public SelectedProtocolsFilters SelectedFilters { get; set; }
     }
 }
