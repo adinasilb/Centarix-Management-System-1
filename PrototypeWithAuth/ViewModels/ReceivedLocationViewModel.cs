@@ -37,5 +37,6 @@ namespace PrototypeWithAuth.ViewModels
         public RequestIndexObject RequestIndexObject { get; set; }
         public ReceivedModalVisualViewModel ReceivedModalVisualViewModel { get; set; }
         public bool TemporaryLocation { get; set; }
+        public int AmountArrived { get; set; }
     }
 }

@@ -4,10 +4,10 @@
     ViewData["Title"] = "Current Protocols";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-    <div class="_IndexTable">
+    <div class="_IndexTable ">
         <div class="container-fluid">
             <label class="m-2 heading-1 mb-lg-4">Current Protocols</label>
-            <div class="under-row-margin row text-center">
+            <div class="under-row-margin row text-center scroll-body">
                 @foreach (var workflow in Model)
                 {
                     <div class="type-div" style="width:22%;">

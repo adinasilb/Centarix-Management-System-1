@@ -147,7 +147,7 @@
             </div>
             <div class="col-6">
                 <div class="form-group">
-                    <label asp-for="Function.ProtocolVersion.ProtocolVersionID" class="control-label"></label>
+                    <label asp-for="Function.ProtocolVersion.Protocol.ProtocolID" class="control-label"></label>
                     @Html.DropDownListFor(
         vm => vm.Function.ProtocolVersion.Protocol.ProtocolID,
         new SelectList(

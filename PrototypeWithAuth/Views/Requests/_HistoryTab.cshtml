@@ -5,86 +5,87 @@
 @using PrototypeWithAuth.AppData
 
 
-    <div class="row modal-tab-name">
-        <span class="heading-1 col-12 modal-tab-name">History</span>
-    </div>
-    
-    <table class="table table-headerspaced table-noheaderlines table-hover text-center">
-        <thead>
-            <tr>
-                <th>
-                    Item Name
-                </th>
-                <th>
-                    Date Created
-                </th>
-                <th>
-                    Owner
-                </th>
+<div class="row modal-tab-name">
+    <span class="heading-1 col-12 modal-tab-name">History</span>
+</div>
 
-                <th>
-                    Amount
-                </th>
-                <th>
-                    Price
-                    <div class="d-inline-block history-price">
-                        @if(!Model.IsProprietary)
-                        {
-                            await Html.RenderPartialAsync("_PricePopover", Model.PricePopoverViewModel);
-                        }
-                    </div>
-                </th>
+<table class="table table-headerspaced table-noheaderlines table-hover text-center">
+    <thead>
+        <tr>
+            <th>
+                Item Name
+            </th>
+            <th>
+                Date Created
+            </th>
+            <th>
+                Owner
+            </th>
 
-            </tr>
-        </thead>
-        <tbody>
-            
-            @foreach (var item in Model.RequestsByProduct)
-            {
-                <tr class="inv-list-item">
-                    <td>
-                        @*<button class="open-history-item-modal btn p-0 m-0 inv-link-clr no-box-shadow" value="@item.RequestID">
+            <th>
+                Amount
+            </th>
+            <th>
+                Price
+                <div class="d-inline-block history-price">
+                    @if (!Model.IsProprietary)
+                    {
+                        await Html.RenderPartialAsync("_PricePopover", Model.PricePopoverViewModel);
+                    }
+                </div>
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.RequestsByProduct)
+        {
+            <tr class="inv-list-item">
+                <td>
+                    @*<button class="open-history-item-modal btn p-0 m-0 inv-link-clr no-box-shadow" value="@item.RequestID">
                             @Html.DisplayFor(modelItem => item.Product.ProductName)
                         </button>*@
-                        <a class="open-history-item-modal btn p-0 m-0 inv-link-clr no-box-shadow" data-toggle="tooltip" data-placement="top" data-original-title="@item.Product.ProductName" 
-                           value="@item.RequestID" data-target="item" href="item">
-                            <div class="d-block" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;max-width:200px;">
-                                <p class="m-0" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap">@item.Product.ProductName</p>
-                            </div>
-                        </a>
-                    </td>
-                    <td>
-                        @item.CreationDate.GetElixirDateFormat()
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ApplicationUserCreator.FirstName)&nbsp;
-                        @Html.DisplayFor(modelItem => item.ApplicationUserCreator.LastName)
-                    </td>
-                    <td>
-                        <ul style="list-style: none;" class="mb-0 pl-0">
+                    <a class="open-history-item-modal btn p-0 m-0 inv-link-clr no-box-shadow" data-toggle="tooltip" data-placement="top" data-original-title="@item.Product.ProductName"
+                       value="@item.RequestID" data-target="item" href="item">
+                        <div class="d-block" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;max-width:200px;">
+                            <p class="m-0" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap">@(item.Product==null?"Product Name has an error" : item.Product.ProductName)</p>
+                        </div>
+                    </a>
+                </td>
+                <td>
+                    @(item.CreationDate == new DateTime() ? "Date has an error" : item.CreationDate.GetElixirDateFormat())
+                </td>
+                <td>
+                    @(item.ApplicationUserCreator == null ? "Owner Name has an error" : item.ApplicationUserCreator.FirstName + " " + item.ApplicationUserCreator.LastName)
+                </td>
+
+                <td>
+
+                    <ul style="list-style: none; text-transform: none" class="mb-0 pl-0">
+                        <li>
+                            @(item.Unit == 0 ? "Unit Number has an error" : item.Unit.ToString())
+                            @(item.Product?.UnitType?.UnitTypeDescription == null ? "unit type has an error" : item.Product.UnitType.UnitTypeDescription.ToString())
+                        </li>
+                        @if (item.Product?.SubUnit != null)
+                        {
                             <li>
-                                @Html.DisplayFor(modelItem => item.Unit)
-                                @Html.DisplayFor(modelItem => item.Product.UnitType.UnitTypeDescription)
+                                @(item.Product?.SubUnit == 0? "Subunit Number has an error" : Html.DisplayFor(modelItem => item.Product.SubUnit).ToString())
+                                @(item.Product?.SubUnitType?.UnitTypeDescription == null ? "subunit type has an error" : Html.DisplayFor(modelItem => item.Product.SubUnitType.UnitTypeDescription).ToString())
                             </li>
-                            @if (item.Product.SubUnit != null)
+                            @if (item.Product?.SubSubUnit != null)
                             {
                                 <li>
-                                    @Html.DisplayFor(modelItem => item.Product.SubUnit)
-                                    @Html.DisplayFor(modelItem => item.Product.SubUnitType.UnitTypeDescription)
+                                    @(item.Product?.SubSubUnit == 0? "Subsubunit Number has an error" : Html.DisplayFor(modelItem => item.Product.SubSubUnit).ToString())
+                                    @(item.Product?.SubSubUnitType?.UnitTypeDescription == null ? "subsubunit type has an error" : Html.DisplayFor(modelItem => item.Product.SubSubUnitType.UnitTypeDescription).ToString())
                                 </li>
-                                @if (item.Product.SubSubUnit != null)
-                                {
-                                    <li>
-                                        @Html.DisplayFor(modelItem => item.Product.SubSubUnit)
-                                        @Html.DisplayFor(modelItem => item.Product.SubSubUnitType.UnitTypeDescription)
-                                    </li>
-                                }
                             }
-                        </ul>
-                    </td>
-                    <td>
+                        }
+                    </ul>
+                </td>
+                <td>
 
-                        @*@if (Model.RequestsByProduct[0].Currency == "NIS")
+                    @*@if (Model.RequestsByProduct[0].Currency == "NIS")
                         {
                             <label>&#x20aa;</label>
                             @Html.DisplayFor(modelItem => item.PricePerUnit)
@@ -98,23 +99,23 @@
                             //@dollarPricePerUnit
                         }*@
 
-                        @{
-                            var prices = AppUtility.GetPriceColumn(Model.PricePopoverViewModel.PriceSortEnums.Where(pse => pse.Selected == true).Select(pse => pse.PriceSortEnum.ToString()).ToList(), item, Model.PricePopoverViewModel.SelectedCurrency);
-                            for (int val = 0; val < prices.Count; val++)
+                    @{
+                        var prices = AppUtility.GetPriceColumn(Model.PricePopoverViewModel.PriceSortEnums.Where(pse => pse.Selected == true).Select(pse => pse.PriceSortEnum.ToString()).ToList(), item, Model.PricePopoverViewModel.SelectedCurrency);
+                        for (int val = 0; val < prices.Count; val++)
+                        {
+                            if (val != 0)
                             {
-                                if (val != 0)
-                                {
-                                    <br />
-                                }
-                                <label class="m-0 p-0">@prices[val]</label>
+                                <br />
                             }
+                            <label class="m-0 p-0">@prices[val]</label>
                         }
-                    </td>
-                </tr>
+                    }
+                </td>
+            </tr>
 
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
 <script>
     $("body, .modal").off('click', ".open-price-popover").on('click', ".open-price-popover", function () {
         console.log('price popover from modal');
@@ -150,7 +151,7 @@
             $.ajax({
                 async: false,
                 url: '/Requests/_HistoryTab',
-                data: { id: requestID, selectedPriceSort: selectedPriceSort, selectedCurrency: $('#tempCurrency').val()},
+                data: { id: requestID, selectedPriceSort: selectedPriceSort, selectedCurrency: $('#tempCurrency').val() },
                 type: 'Post',
                 cache: false,
                 success: function (data) {

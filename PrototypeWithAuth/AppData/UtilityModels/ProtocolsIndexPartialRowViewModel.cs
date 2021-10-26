@@ -167,7 +167,7 @@ namespace PrototypeWithAuth.ViewModels
         {
             var newIconList = AppUtility.DeepClone<List<IconColumnViewModel>>(iconList);
             //favorite icon
-            var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("protocol-favorite"));
+            var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink?.Contains("protocol-favorite")??false);
 
             if (favIconIndex != -1 && favoriteProtocol != null) //check these checks
             {

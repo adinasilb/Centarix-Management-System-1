@@ -11,7 +11,7 @@
     //alert(sectionType);
     if ($(this).hasClass('reload-filter')) {
         $.fn.ClearFilter(sectionType, isProprietary);
-        $('.search-requests').val("");
+        $('.search-by-name').val("");
     }
     //alert('after clear filter');
     var pageType = $('#masterPageType').val();

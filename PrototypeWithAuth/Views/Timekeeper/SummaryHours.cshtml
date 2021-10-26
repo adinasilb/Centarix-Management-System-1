@@ -24,6 +24,6 @@
 <div class="row error-message">
     @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
 </div>
-<div class=" container-fluid" id="hoursTable">
+<div class=" container-fluid scroll-page" id="hoursTable">
     @{await Html.RenderPartialAsync("HoursPage", Model); }  
 </div>
