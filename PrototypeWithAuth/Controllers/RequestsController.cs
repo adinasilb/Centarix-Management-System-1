@@ -3920,11 +3920,18 @@ namespace PrototypeWithAuth.Controllers
                         MoveDocumentsOutOfTempFolder(requestReceived.RequestID, AppUtility.ParentFolderName.Requests, receivedLocationViewModel.Request.RequestID, true);
 
                         var comments = _context.Comments.Where(c => c.RequestID == receivedLocationViewModel.Request.RequestID).AsNoTracking();
-                        foreach(var C in comments)
+                        foreach(var c in comments)
                         {
-                            C.CommentID = 0;
-                            C.RequestID = requestReceived.RequestID;
-                            _context.Entry(comments).State = EntityState.Added;
+                            c.CommentID = 0;
+                            c.RequestID = requestReceived.RequestID;
+                            _context.Entry(c).State = EntityState.Added;
+                        }
+                        var payments = _context.Payments.Where(p => p.RequestID == receivedLocationViewModel.Request.RequestID).AsNoTracking();
+                        foreach (var p in payments)
+                        {
+                            p.PaymentID = 0;
+                            p.RequestID = requestReceived.RequestID;
+                            _context.Entry(p).State = EntityState.Added;
                         }
                         await _context.SaveChangesAsync();
                         requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
