@@ -70,8 +70,8 @@ namespace PrototypeWithAuth.AppData
                     menuID = 4,
                     MenuDescription = AppUtility.MenuItems.Biomarkers.ToString(),
                     MenuViewName = "Biomarkers",
-                    ControllerName = "",
-                    ActionName = "",
+                    ControllerName = "Biomarkers",
+                    ActionName = "HumanTrialsList",
                     MenuImageURL = "/images/css/main_menu_icons/biomarkers.png",
                     SmallMenuImageURL = "/images/css/main_menu_small_icons/biomarkers_menu_button.png"
                 },
