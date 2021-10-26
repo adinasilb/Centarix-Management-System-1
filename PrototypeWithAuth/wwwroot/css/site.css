@@ -2015,7 +2015,7 @@ td .btn {
     color: var(--order-inv-color) !important;
 }
 /*HOVER FOR EACH SECTION*/
-.order-inv-form .form-control-plaintext:not(.danger-box-shadow):focus {
+.order-inv-form .form-control-plaintext:not(.danger-box-shadow):focus, .order-inv-form input[type="text"]:not(.danger-box-shadow):focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
@@ -2061,7 +2061,7 @@ td .btn {
     border-bottom: none !important;
     border: 2px solid var(--biomarkers-color) !important;
 }
-.users-form .form-control-plaintext:focus {
+.users-form .form-control-plaintext:focus, .users-form input[type="text"]:focus{
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--user-color) !important;
@@ -2089,16 +2089,16 @@ span.caret {
     color: #495057;
 }
 
-.supplier-form .form-control-plaintext:focus {
+.supplier-form .form-control-plaintext:focus, .supplier-form input[type="text"]:focus {
     box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
 }
 
-.form-control-plaintext:focus {
+.form-control-plaintext:focus, input[type="text"]:focus {
     outline-width: 0px !important;
     outline-color: none !important;
 }
 
-.protocol-form .form-control-plaintext:focus {
+.protocol-form .form-control-plaintext:focus, .protocol-form input[type="text"]:focus {
     box-shadow: 0 2px 0 0 var(--protocol-color) !important;
 }
 .protocol-form.createReportForm .form-control-plaintext:focus {
@@ -2124,7 +2124,7 @@ span.caret {
     border: 2px solid var(--lab-man-color) !important;
 }
 
-.supplier-form .select.form-control-plaintext:focus {
+.supplier-form .select.form-control-plaintext:focus, .supplier-form input[type="text"]:focus {
     border-bottom: none !important;
     border: 2px solid var(--lab-man-color) !important;
 }
@@ -2152,7 +2152,7 @@ span.caret {
     border: 2px solid var(--protocol-color) !important;
 }
 
-.protocol-form .select.form-control-plaintext:focus {
+.protocol-form .select.form-control-plaintext:focus, .protocol-form  input[type="text"]:focus {
     border-bottom: none !important;
     border: 2px solid var(--protocol-color) !important;
 }
@@ -2166,7 +2166,7 @@ span.caret {
     color: var(--acc-color) !important;
 }
 
-.accounting-form .form-control-plaintext:focus {
+.accounting-form .form-control-plaintext:focus, .accounting-form input[type="text"]:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--acc-color) !important;
@@ -2181,7 +2181,7 @@ span.caret {
     box-shadow: 0 2px 0 0 var(--acc-color) !important;
 }
 
-.oper-form .form-control-plaintext:focus {
+.oper-form .form-control-plaintext:focus, .oper-form input[type="text"]:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --operations-color) !important;
@@ -2205,7 +2205,7 @@ span.caret {
     border: 2px solid var(--user-color) !important;
 }
 
-.users-form .form-control-plaintext:focus {
+.users-form .form-control-plaintext:focus,  .users-form input[type="text"]:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --user-color) !important;
@@ -2235,7 +2235,7 @@ span.caret {
     border-radius: .25rem;
 }
 
-.timekeeper-form .form-control-plaintext:focus {
+.timekeeper-form .form-control-plaintext:focus, .timekeeper input[type="text"]:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --timekeeper-color) !important;
@@ -2270,7 +2270,7 @@ span.caret {
     border: 2px solid var(--timekeeper-color) !important;
 }
 /*begin change to reports*/
-.expenses-form .form-control-plaintext:focus {
+.expenses-form .form-control-plaintext:focus, .expenses-form input[type="text"]:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --expense-color) !important;

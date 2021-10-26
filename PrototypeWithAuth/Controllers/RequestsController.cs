@@ -3757,7 +3757,7 @@ namespace PrototypeWithAuth.Controllers
             //    _context.Update(li);
             //}
             //_context.SaveChanges();
-            var request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+            var request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r=>r.Product.UnitType)
                     .FirstOrDefault();
 
             ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
@@ -3906,8 +3906,40 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
-             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
+                    var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)                
+             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
+                    decimal pricePerUnit = 0;
+                    if (receivedLocationViewModel.Request.IsPartial)
+                    {
+                        requestReceived.RequestID = 0;
+                        pricePerUnit = requestReceived.PricePerUnit;
+                        requestReceived.Unit = (uint)(requestReceived.Unit - receivedLocationViewModel.AmountArrived);
+                        requestReceived.Cost = pricePerUnit * requestReceived.Unit;
+                        _context.Entry(requestReceived).State = EntityState.Added;
+                        await _context.SaveChangesAsync();
+                        MoveDocumentsOutOfTempFolder(requestReceived.RequestID, AppUtility.ParentFolderName.Requests, receivedLocationViewModel.Request.RequestID, true);
+
+                        var comments = _context.Comments.Where(c => c.RequestID == receivedLocationViewModel.Request.RequestID).AsNoTracking();
+                        foreach(var c in comments)
+                        {
+                            c.CommentID = 0;
+                            c.RequestID = requestReceived.RequestID;
+                            _context.Entry(c).State = EntityState.Added;
+                        }
+                        var payments = _context.Payments.Where(p => p.RequestID == receivedLocationViewModel.Request.RequestID).AsNoTracking();
+                        foreach (var p in payments)
+                        {
+                            p.PaymentID = 0;
+                            p.RequestID = requestReceived.RequestID;
+                            _context.Entry(p).State = EntityState.Added;
+                        }
+                        await _context.SaveChangesAsync();
+                        requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
+             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
+                        pricePerUnit = requestReceived.PricePerUnit;
+                        requestReceived.Unit = (uint)receivedLocationViewModel.AmountArrived;
+                        requestReceived.Cost = pricePerUnit * requestReceived.Unit;
+                    }
                     if (receivedLocationViewModel.CategoryType == 1)
                     {
                         if (receivedLocationViewModel.TemporaryLocation)
@@ -3938,18 +3970,9 @@ namespace PrototypeWithAuth.Controllers
                             await SaveLocations(receivedModalVisualViewModel, requestReceived, false);
                         }
                     }
-                    if (receivedLocationViewModel.Clarify)
-                    {
-                        requestReceived.RequestStatusID = 5;
-                    }
-                    else if (receivedLocationViewModel.PartialDelivery)
-                    {
-                        requestReceived.RequestStatusID = 4;
-                    }
-                    else
-                    {
-                        requestReceived.RequestStatusID = 3;
-                    }
+                    
+                    requestReceived.RequestStatusID = 3;
+                    
                     if(receivedLocationViewModel.Request.ArrivalDate == DateTime.Today)
                     {
                         requestReceived.ArrivalDate = DateTime.Now;
@@ -3960,8 +3983,9 @@ namespace PrototypeWithAuth.Controllers
                     }
                     requestReceived.ApplicationUserReceiverID = receivedLocationViewModel.Request.ApplicationUserReceiverID;
                     requestReceived.ApplicationUserReceiver = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault();
-                    requestReceived.NoteForPartialDelivery = receivedLocationViewModel.Request.NoteForPartialDelivery;
+
                     requestReceived.IsPartial = receivedLocationViewModel.Request.IsPartial;
+                   
                     requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
                     requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
                     requestReceived.IsInInventory = true;
@@ -3974,10 +3998,15 @@ namespace PrototypeWithAuth.Controllers
                     {
                         requestReceived.PaymentStatusID = 3;
                     }
-                    _context.Update(requestReceived);
+          
+
+                        _context.Update(requestReceived);
+                        await _context.SaveChangesAsync();
+
+         
 
                     //need to do this function before save changes because if new request it should not have an id yet
-                    await _context.SaveChangesAsync();
+           
                     await RemoveOldRequestFromInventory(requestReceived.RequestID);
                
                     RequestNotification requestNotification = new RequestNotification();
