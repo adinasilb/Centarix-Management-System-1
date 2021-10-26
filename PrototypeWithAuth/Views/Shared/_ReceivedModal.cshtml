@@ -122,7 +122,7 @@
             <div class="row isPartial-div d-none">
                 <div class="col-12">
                     <div class="text-transform-none">
-                        @{ var partialString = "Out of " + Model.Request.Unit + " "+ Model.Request.Product.UnitType.UnitTypeDescription+"s arrived "; }
+                        @{ var partialString = "Out of " + Model.Request.Unit + " "+ Model.Request.Product.UnitType.UnitTypeDescription+" arrived "; }
                         <div style="margin-bottom: 4px;">
                             <label>@partialString</label> <input class=" border-right-0 border-left-0 border-top-0 border-bottom" disabled value="" type="text" asp-for="AmountArrived" />
                         </div>

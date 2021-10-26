@@ -3908,17 +3908,30 @@ namespace PrototypeWithAuth.Controllers
                 {
                     var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)                
              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
-
+                    decimal pricePerUnit = 0;
                     if (receivedLocationViewModel.Request.IsPartial)
                     {
                         requestReceived.RequestID = 0;
+                        pricePerUnit = requestReceived.PricePerUnit;
                         requestReceived.Unit = (uint)(requestReceived.Unit - receivedLocationViewModel.AmountArrived);
+                        requestReceived.Cost = pricePerUnit * requestReceived.Unit;
                         _context.Entry(requestReceived).State = EntityState.Added;
                         await _context.SaveChangesAsync();
                         MoveDocumentsOutOfTempFolder(requestReceived.RequestID, AppUtility.ParentFolderName.Requests, receivedLocationViewModel.Request.RequestID, true);
+
+                        var comments = _context.Comments.Where(c => c.RequestID == receivedLocationViewModel.Request.RequestID).AsNoTracking();
+                        foreach(var C in comments)
+                        {
+                            C.CommentID = 0;
+                            C.RequestID = requestReceived.RequestID;
+                            _context.Entry(comments).State = EntityState.Added;
+                        }
+                        await _context.SaveChangesAsync();
                         requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
+                        pricePerUnit = requestReceived.PricePerUnit;
                         requestReceived.Unit = (uint)receivedLocationViewModel.AmountArrived;
+                        requestReceived.Cost = pricePerUnit * requestReceived.Unit;
                     }
                     if (receivedLocationViewModel.CategoryType == 1)
                     {
