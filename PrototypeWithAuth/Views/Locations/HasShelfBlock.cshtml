@@ -5,12 +5,12 @@
     var locationTypeID = "LocationInstances_2__LocationTypeID";
     var locationTypeName = "LocationInstances[2].LocationTypeID";
 }
-<input type="hidden" class="labPartName" value="@Model.LocationName" />
+<input type="hidden" class="labPartName" value="@Model.LocationNameAbrev" />
 @if (Model.HasShelves)
 {
     <span class="">
         Shelves
     </span>
-    <input name="@locationHeightName" id="@locationHeightID" min="0" class="form-control-plaintext border-bottom" />
+    <input name="@locationHeightName" id="@locationHeightID" min="0" class="form-control-plaintext border-bottom @Model.LocationName" />
     <input name="@locationTypeName" id="@locationTypeID" value="502" style="display: none;" />
 }

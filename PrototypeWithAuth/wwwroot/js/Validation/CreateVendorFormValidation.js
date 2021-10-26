@@ -15,7 +15,7 @@
 				type: 'POST',
 				data: {
 					"CompanyID": function () { return $("#Vendor_VendorBuisnessID").val() },
-					"Country": function () { return $("#VendorCountries").val() },
+					"CountryID": function () { return $("#VendorCountries").val() },
 					"VendorID": function () {
 						if ($(".turn-edit-on-off").length > 0) {
 							return $(".turn-edit-on-off").attr("value");
@@ -24,7 +24,7 @@
 				},
 			},
 		},
-		"Vendor.VendorCountry": { selectRequired: true },
+		"Vendor.CountryID": { selectRequired: true },
 		"Vendor.VendorCity": "required",
 		"Vendor.VendorTelephone": {
 			required: true,

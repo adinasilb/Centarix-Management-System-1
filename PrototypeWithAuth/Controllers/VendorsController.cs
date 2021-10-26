@@ -147,7 +147,7 @@ namespace PrototypeWithAuth.Controllers
              &&
              (String.IsNullOrEmpty(vendorSearchViewModel.VendorBuisnessID) || fv.VendorBuisnessID.ToLower().Contains(vendorSearchViewModel.VendorBuisnessID.ToLower()))
              &&
-             (String.IsNullOrEmpty(vendorSearchViewModel.CountryID) || fv.CountryID.Equals(vendorSearchViewModel.CountryID))
+             (String.IsNullOrEmpty(vendorSearchViewModel.CountryID.ToString()) || fv.CountryID.ToString().ToLower().Equals(vendorSearchViewModel.CountryID.ToLower()))
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorCity) || fv.VendorCity.ToLower().Contains(vendorSearchViewModel.VendorCity.ToLower()))
              &&
@@ -228,6 +228,11 @@ namespace PrototypeWithAuth.Controllers
             List<VendorComment> vendorComments = new List<VendorComment>();
             //only allowed to have 10 contacts
             //have to hard coded becasuse did not know how to render dynamic partial views
+            createSupplierViewModel.Countries = new List<SelectListItem>();
+            foreach (var country in _context.Countries)
+            {
+                createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
+            }
             createSupplierViewModel.VendorContacts = vendorContacts;
             createSupplierViewModel.VendorComments = vendorComments;
             createSupplierViewModel.SectionType = SectionType; //TODO: take this out when all the views are combined

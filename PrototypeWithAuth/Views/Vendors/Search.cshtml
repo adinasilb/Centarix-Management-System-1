@@ -84,8 +84,8 @@
                                     <div class=" row">
                                         <div class="form-group col-md-4">
                                             <label asp-for="CountryID" class="control-label"></label>
-                                            <select class="mdb-select custom select-dropdown form-control-plaintext" asp-for="CountryID" id="VendorCountries">
-                                                <option disabled selected class="d-none" value="">Select Country</option>
+                                            <select class="mdb-select custom select-dropdown form-control-plaintext" asp-for="CountryID" id="VendorCountries" searchable="Select Country">
+                                                <option selected class="d-none" value="">Select Country</option>
                                                 @foreach (var country in Model.Countries)
                                                 {
                                                     <option value="@country.CountryID">@Html.DisplayFor(e=> country.CountryName)</option>

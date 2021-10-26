@@ -92,10 +92,10 @@
 				$(".hasRackBlock").removeClass("d-none");
 			}
 		}
-		var nextSelect = $(el).parents('.form-group').nextAll().first().find('.dropdown-menu')
+		var nextSelect = $(el).parents('.form-group').nextAll(".form-group").first().find('.dropdown-menu')
 		$(nextSelect).html('');
 		//clear all the next selects
-		$(el).parents('.form-group').nextAll().each(function(){
+		$(el).parents('.form-group').nextAll(".form-group").each(function(){
 			$(this).find('.dropdown-menu').html('');
 			$(this).find('.dropdown-main').find('span:not(.caret)').text('select');
 		});
@@ -191,10 +191,19 @@
 
 		$(el).parents('.dropdown-main').find('span:not(.caret)').text($(el).text());
 		$(el).parents('.dropdown-main').find('span:not(.caret)').attr("description", $(el).attr("data-string"));
+		$(el).parents('.dropdown-main').find('span:not(.caret)').attr("parentID", locationInstanceParentId);
 	};
 
+	
+	$("select.part-type").off("change").change(function(){
+			var parentID = $(this).parents('.parent-group').prev(".form-group").find('.dropdown-main').find('span:not(.caret)').attr("parentID");
+			var nextSelect = $(this).parents('.parent-group').nextAll(".form-group").first().find('.dropdown-menu');
+			$(nextSelect).html('');
+			FillNextSelect(nextSelect, parentID);
+	});
+
 	function FillNextSelect(nextSelect, locationInstanceParentId) {
-		var url = "/Requests/GetSublocationInstancesList?locationInstanceParentId=" + locationInstanceParentId;
+		var url = "/Requests/GetSublocationInstancesList?locationInstanceParentId=" + locationInstanceParentId+"&labPartID="+$("select.part-type").val();
 		$.getJSON(url, { locationInstanceParentId, locationInstanceParentId }, function (result) {
 			var item = "<li>Select Location Instance</li>";
 			$.each(result, function (i, field) {
