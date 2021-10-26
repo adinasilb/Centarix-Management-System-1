@@ -33,11 +33,10 @@ namespace PrototypeWithAuth.AppData
                 new Menu()
                 {
                     menuID = 2,
-                    //MenuDescription = AppUtility.MenuItems.Protocols.ToString(),
-                    //MenuViewName = "Protocols",
+                     MenuDescription = AppUtility.MenuItems.Protocols.ToString(),
+                     MenuViewName = "Protocols",
                     //ControllerName = "Protocols",
                     //ActionName = "CurrentProtocols",
-                     MenuDescription = "Report",
                      ControllerName = "Protocols",
                      ActionName = "ReportsCategories",
                      RouteValues = new Microsoft.AspNetCore.Routing.RouteValueDictionary()
