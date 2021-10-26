@@ -547,5 +547,22 @@ $(function () {
             }
         });
     })
+
+    $(".change-list").click(function (e) {
+        $.ajax({
+            async: true,
+            url: "/Requests/_Index",
+            traditional: true,
+            type: "GET",
+            cache: false,
+            success: function (data) {
+                $.fn.OpenModal("newListModal", "new-list", data)
+                return true;
+            },
+            error: function (jqxhr) {
+                $('.error-message').html(jqxhr.responseText);
+            }
+        });
+    })
    
 });
