@@ -147,7 +147,7 @@ namespace PrototypeWithAuth.Controllers
              &&
              (String.IsNullOrEmpty(vendorSearchViewModel.VendorBuisnessID) || fv.VendorBuisnessID.ToLower().Contains(vendorSearchViewModel.VendorBuisnessID.ToLower()))
              &&
-             (String.IsNullOrEmpty(vendorSearchViewModel.CountryID) || fv.CountryID.Equals(vendorSearchViewModel.CountryID))
+             (String.IsNullOrEmpty(vendorSearchViewModel.CountryID.ToString()) || fv.CountryID.ToString().ToLower().Equals(vendorSearchViewModel.CountryID.ToLower()))
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorCity) || fv.VendorCity.ToLower().Contains(vendorSearchViewModel.VendorCity.ToLower()))
              &&
