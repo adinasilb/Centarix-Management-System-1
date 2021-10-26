@@ -65,7 +65,7 @@
                     <ul style="list-style: none; text-transform: none" class="mb-0 pl-0">
                         <li>
                             @(item.Unit == 0 ? "Unit Number has an error" : item.Unit.ToString())
-                            @(item.Product?.UnitType.UnitTypeDescription == null ? "unit type has an error" : item.Product.UnitType.UnitTypeDescription.ToString())
+                            @(item.Product?.UnitType?.UnitTypeDescription == null ? "unit type has an error" : item.Product.UnitType.UnitTypeDescription.ToString())
                         </li>
                         @if (item.Product?.SubUnit != null)
                         {

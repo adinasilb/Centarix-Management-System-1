@@ -465,12 +465,16 @@
     <Compile Remove="Data\Migrations\20211005115854_TestMergeProtocolWithMaster.Designer.cs" />
     <Compile Remove="Data\Migrations\20211018104323_BiomarkerMerge.cs" />
     <Compile Remove="Data\Migrations\20211018104323_BiomarkerMerge.Designer.cs" />
-    <Compile Remove="Data\Migrations\20211021104846_CreateList.cs" />
-    <Compile Remove="Data\Migrations\20211021104846_CreateList.Designer.cs" />
-    <Compile Remove="Data\Migrations\20211021105216_CreateList.cs" />
-    <Compile Remove="Data\Migrations\20211021105216_CreateList.Designer.cs" />
-    <Compile Remove="Data\Migrations\20211024071240_RenameRequestListRequestVariable.cs" />
-    <Compile Remove="Data\Migrations\20211024071240_RenameRequestListRequestVariable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211025060156_123.cs" />
+    <Compile Remove="Data\Migrations\20211025060156_123.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211025070731_addedOldVendorCountry.cs" />
+    <Compile Remove="Data\Migrations\20211025070731_addedOldVendorCountry.Designer.cs" />
+	  <Compile Remove="Data\Migrations\20211021104846_CreateList.cs" />
+	  <Compile Remove="Data\Migrations\20211021104846_CreateList.Designer.cs" />
+	  <Compile Remove="Data\Migrations\20211021105216_CreateList.cs" />
+	  <Compile Remove="Data\Migrations\20211021105216_CreateList.Designer.cs" />
+	  <Compile Remove="Data\Migrations\20211024071240_RenameRequestListRequestVariable.cs" />
+	  <Compile Remove="Data\Migrations\20211024071240_RenameRequestListRequestVariable.Designer.cs" />
   </ItemGroup>
 
 

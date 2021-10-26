@@ -619,14 +619,26 @@ namespace PrototypeWithAuth.AppData
 
         public static string GetNote(SidebarEnum sidebarEnum, Request request)
         {
-            if (sidebarEnum == SidebarEnum.PartialDelivery)
+            try
             {
-                return request.NoteForPartialDelivery;
+                if (sidebarEnum == SidebarEnum.PartialDelivery)
+                {
+                    if (request.Unit == 1)
+                    {
+                        return request.Unit + " was never received";
+                    }
+                    return request.Unit + " were never received";
+                }
+                else
+                {
+                    return request.NoteForClarifyDelivery;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return request.NoteForClarifyDelivery;
+                return "Error retrieving receival details";
             }
+         
         }
 
         public static string GetDocumentIcon(FolderNamesEnum folderName)

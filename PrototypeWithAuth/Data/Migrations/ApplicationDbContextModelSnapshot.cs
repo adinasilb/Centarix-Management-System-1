@@ -718,6 +718,273 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.Country", b =>
+                {
+                    b.Property<int>("CountryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CountryName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CountryID");
+
+                    b.ToTable("Countries");
+
+                    b.HasData(
+                        new
+                        {
+                            CountryID = 1,
+                            CountryName = "Armenia"
+                        },
+                        new
+                        {
+                            CountryID = 2,
+                            CountryName = "Australia"
+                        },
+                        new
+                        {
+                            CountryID = 3,
+                            CountryName = "Austria"
+                        },
+                        new
+                        {
+                            CountryID = 4,
+                            CountryName = "Belgium"
+                        },
+                        new
+                        {
+                            CountryID = 5,
+                            CountryName = "Bosnia and Herzegovina"
+                        },
+                        new
+                        {
+                            CountryID = 6,
+                            CountryName = "Bulgaria"
+                        },
+                        new
+                        {
+                            CountryID = 7,
+                            CountryName = "Canada"
+                        },
+                        new
+                        {
+                            CountryID = 8,
+                            CountryName = "Chile"
+                        },
+                        new
+                        {
+                            CountryID = 9,
+                            CountryName = "Costa Rica"
+                        },
+                        new
+                        {
+                            CountryID = 10,
+                            CountryName = "Cyprus"
+                        },
+                        new
+                        {
+                            CountryID = 11,
+                            CountryName = "Czech Republic"
+                        },
+                        new
+                        {
+                            CountryID = 12,
+                            CountryName = "Denmark"
+                        },
+                        new
+                        {
+                            CountryID = 13,
+                            CountryName = "Estonia"
+                        },
+                        new
+                        {
+                            CountryID = 14,
+                            CountryName = "Finland"
+                        },
+                        new
+                        {
+                            CountryID = 15,
+                            CountryName = "France"
+                        },
+                        new
+                        {
+                            CountryID = 16,
+                            CountryName = "Georgia"
+                        },
+                        new
+                        {
+                            CountryID = 17,
+                            CountryName = "Germany"
+                        },
+                        new
+                        {
+                            CountryID = 18,
+                            CountryName = "Greece"
+                        },
+                        new
+                        {
+                            CountryID = 19,
+                            CountryName = "Hungary"
+                        },
+                        new
+                        {
+                            CountryID = 20,
+                            CountryName = "Iceland"
+                        },
+                        new
+                        {
+                            CountryID = 21,
+                            CountryName = "India"
+                        },
+                        new
+                        {
+                            CountryID = 22,
+                            CountryName = "Ireland"
+                        },
+                        new
+                        {
+                            CountryID = 23,
+                            CountryName = "Israel"
+                        },
+                        new
+                        {
+                            CountryID = 24,
+                            CountryName = "Italy"
+                        },
+                        new
+                        {
+                            CountryID = 25,
+                            CountryName = "Japan"
+                        },
+                        new
+                        {
+                            CountryID = 26,
+                            CountryName = "Latvia"
+                        },
+                        new
+                        {
+                            CountryID = 27,
+                            CountryName = "Lithuania"
+                        },
+                        new
+                        {
+                            CountryID = 28,
+                            CountryName = "Luxembourg"
+                        },
+                        new
+                        {
+                            CountryID = 29,
+                            CountryName = "Malaysia"
+                        },
+                        new
+                        {
+                            CountryID = 30,
+                            CountryName = "Mauritius"
+                        },
+                        new
+                        {
+                            CountryID = 31,
+                            CountryName = "Moldova"
+                        },
+                        new
+                        {
+                            CountryID = 32,
+                            CountryName = "Netherlands"
+                        },
+                        new
+                        {
+                            CountryID = 33,
+                            CountryName = "New Zealand"
+                        },
+                        new
+                        {
+                            CountryID = 34,
+                            CountryName = "North Macedonia"
+                        },
+                        new
+                        {
+                            CountryID = 35,
+                            CountryName = "Norway"
+                        },
+                        new
+                        {
+                            CountryID = 36,
+                            CountryName = "Poland"
+                        },
+                        new
+                        {
+                            CountryID = 37,
+                            CountryName = "Portugal"
+                        },
+                        new
+                        {
+                            CountryID = 38,
+                            CountryName = "Romania"
+                        },
+                        new
+                        {
+                            CountryID = 39,
+                            CountryName = "Russia"
+                        },
+                        new
+                        {
+                            CountryID = 40,
+                            CountryName = "Singapore"
+                        },
+                        new
+                        {
+                            CountryID = 41,
+                            CountryName = "Slovakia"
+                        },
+                        new
+                        {
+                            CountryID = 42,
+                            CountryName = "Slovenia"
+                        },
+                        new
+                        {
+                            CountryID = 43,
+                            CountryName = "South Africa"
+                        },
+                        new
+                        {
+                            CountryID = 44,
+                            CountryName = "South Korea"
+                        },
+                        new
+                        {
+                            CountryID = 45,
+                            CountryName = "Spain"
+                        },
+                        new
+                        {
+                            CountryID = 46,
+                            CountryName = "Sweden"
+                        },
+                        new
+                        {
+                            CountryID = 47,
+                            CountryName = "Switzerland"
+                        },
+                        new
+                        {
+                            CountryID = 48,
+                            CountryName = "United Kingdom"
+                        },
+                        new
+                        {
+                            CountryID = 49,
+                            CountryName = "United States"
+                        },
+                        new
+                        {
+                            CountryID = 50,
+                            CountryName = "Uruguay"
+                        });
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.CreditCard", b =>
                 {
                     b.Property<int>("CreditCardID")
@@ -2098,7 +2365,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             LabPartID = 4,
-                            HasShelves = false,
+                            HasShelves = true,
                             LabPartName = "Drawer",
                             LabPartNameAbbrev = "D"
                         },
@@ -2863,6 +3130,24 @@ namespace PrototypeWithAuth.Data.Migrations
                             OffDayTypeID = 5,
                             Description = "Unpaid Leave"
                         });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.OldVendorCountry", b =>
+                {
+                    b.Property<int>("OldVendorCountryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("OldVendorCountryName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("VendorID")
+                        .HasColumnType("int");
+
+                    b.HasKey("OldVendorCountryID");
+
+                    b.ToTable("OldVendorCountries");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
@@ -4726,9 +5011,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("NoteForClarifyDelivery")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NoteForPartialDelivery")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NoteToSupplier")
                         .HasColumnType("nvarchar(max)");
 
@@ -6383,6 +6665,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("CountryID")
+                        .HasColumnType("int");
+
                     b.Property<string>("InfoEmail")
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
@@ -6414,11 +6699,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VendorCity")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("VendorCountry")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
@@ -6461,7 +6741,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasKey("VendorID");
 
-                    b.HasIndex("VendorCountry", "VendorBuisnessID")
+                    b.HasIndex("CountryID", "VendorBuisnessID")
                         .IsUnique();
 
                     b.ToTable("Vendors");
@@ -7801,6 +8081,15 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.UnitType", "UnitType")
                         .WithMany("UnitTypeParentCategory")
                         .HasForeignKey("UnitTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Vendor", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Country", "Country")
+                        .WithMany("Vendors")
+                        .HasForeignKey("CountryID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

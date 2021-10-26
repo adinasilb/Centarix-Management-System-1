@@ -225,6 +225,7 @@ namespace PrototypeWithAuth.Controllers
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.Installments:
+                        case AppUtility.SidebarEnum.StandingOrders:
                             payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-invoice-one", "Pay");
                             checkboxString = "";
                             iconList.Add(payNowIcon);
@@ -1472,12 +1473,9 @@ namespace PrototypeWithAuth.Controllers
             var termsList = new List<SelectListItem>() { };
             await _context.PaymentStatuses.ForEachAsync(ps =>
             {
-                if (ps.PaymentStatusID != 7)//don't have standing orders as an option
-                {
                     var selected = false;
                     if (ps.PaymentStatusID == 2) { selected = true; }
                     termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription, Selected = selected });
-                }
             });
             TermsViewModel termsViewModel = new TermsViewModel()
             {
@@ -1598,10 +1596,15 @@ namespace PrototypeWithAuth.Controllers
                                     ShippingPaidHere = hasShippingOnPayment ? false : true
                                 };
                                 hasShippingOnPayment = true;
-                                if (tempRequest.Request.PaymentStatusID == 5)
+                                if (tempRequest.Request.PaymentStatusID == 5 )
                                 {
                                     payment.PaymentDate = termsViewModel.InstallmentDate.AddMonths(i);
                                     payment.Sum = ((tempRequest.Request.Cost ?? 0) / (tempRequest.Request.Installments ?? 0));
+                                }
+                                else if( tempRequest.Request.PaymentStatusID == 7)
+                                {
+                                    payment.PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddMonths(1);
+                                    payment.Sum = tempRequest.Request.Cost ?? 0;
                                 }
                                 else
                                 {
@@ -3446,7 +3449,7 @@ namespace PrototypeWithAuth.Controllers
                     message.To.Add(new MailboxAddress(vendorName, vendorEmail));
 
                     //subject
-                    message.Subject = "Order from Centarix to " + vendorName;
+                    message.Subject = "Request for a Price Quote from Centarix to " + vendorName;
 
                     //body
                     builder.TextBody = @"Hello," + "\n\n" + "Please send a price quote for the items listed in the attached pdf. \n\nThank you.\n"
@@ -3817,7 +3820,7 @@ namespace PrototypeWithAuth.Controllers
             //    _context.Update(li);
             //}
             //_context.SaveChanges();
-            var request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+            var request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r=>r.Product.UnitType)
                     .FirstOrDefault();
 
             ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
@@ -3847,12 +3850,16 @@ namespace PrototypeWithAuth.Controllers
                 locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == LocationTypeID && !(li is TemporaryLocationInstance))
                 .Include(li => li.LocationRoomInstance).Include(li => li.LabPart).OrderBy(li => li.LocationNumber),
                 locationTypeNames = new List<string>(),
-                locationInstancesSelected = new List<LocationInstance>()
+                locationInstancesSelected = new List<LocationInstance>(),
             };
             bool finished = false;
             int locationTypeIDLoop = LocationTypeID;
-            while (!finished)
+            if (LocationTypeID == 500 )
             {
+                receivedModalSublocationsViewModel.LabPartTypes = _context.LabParts;
+            }
+            while (!finished)
+            {              
                 //need to get the whole thing b/c need both the name and the child id so it's instead of looping through the list twice
                 var nextType = _context.LocationTypes.Where(lt => lt.LocationTypeID == locationTypeIDLoop).FirstOrDefault();
                 string nextTYpeName = nextType.LocationTypeName;
@@ -3966,8 +3973,40 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
-             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
+                    var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)                
+             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
+                    decimal pricePerUnit = 0;
+                    if (receivedLocationViewModel.Request.IsPartial)
+                    {
+                        requestReceived.RequestID = 0;
+                        pricePerUnit = requestReceived.PricePerUnit;
+                        requestReceived.Unit = (uint)(requestReceived.Unit - receivedLocationViewModel.AmountArrived);
+                        requestReceived.Cost = pricePerUnit * requestReceived.Unit;
+                        _context.Entry(requestReceived).State = EntityState.Added;
+                        await _context.SaveChangesAsync();
+                        MoveDocumentsOutOfTempFolder(requestReceived.RequestID, AppUtility.ParentFolderName.Requests, receivedLocationViewModel.Request.RequestID, true);
+
+                        var comments = _context.Comments.Where(c => c.RequestID == receivedLocationViewModel.Request.RequestID).AsNoTracking();
+                        foreach(var c in comments)
+                        {
+                            c.CommentID = 0;
+                            c.RequestID = requestReceived.RequestID;
+                            _context.Entry(c).State = EntityState.Added;
+                        }
+                        var payments = _context.Payments.Where(p => p.RequestID == receivedLocationViewModel.Request.RequestID).AsNoTracking();
+                        foreach (var p in payments)
+                        {
+                            p.PaymentID = 0;
+                            p.RequestID = requestReceived.RequestID;
+                            _context.Entry(p).State = EntityState.Added;
+                        }
+                        await _context.SaveChangesAsync();
+                        requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
+             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
+                        pricePerUnit = requestReceived.PricePerUnit;
+                        requestReceived.Unit = (uint)receivedLocationViewModel.AmountArrived;
+                        requestReceived.Cost = pricePerUnit * requestReceived.Unit;
+                    }
                     if (receivedLocationViewModel.CategoryType == 1)
                     {
                         if (receivedLocationViewModel.TemporaryLocation)
@@ -3998,18 +4037,9 @@ namespace PrototypeWithAuth.Controllers
                             await SaveLocations(receivedModalVisualViewModel, requestReceived, false);
                         }
                     }
-                    if (receivedLocationViewModel.Clarify)
-                    {
-                        requestReceived.RequestStatusID = 5;
-                    }
-                    else if (receivedLocationViewModel.PartialDelivery)
-                    {
-                        requestReceived.RequestStatusID = 4;
-                    }
-                    else
-                    {
-                        requestReceived.RequestStatusID = 3;
-                    }
+                    
+                    requestReceived.RequestStatusID = 3;
+                    
                     if(receivedLocationViewModel.Request.ArrivalDate == DateTime.Today)
                     {
                         requestReceived.ArrivalDate = DateTime.Now;
@@ -4020,8 +4050,9 @@ namespace PrototypeWithAuth.Controllers
                     }
                     requestReceived.ApplicationUserReceiverID = receivedLocationViewModel.Request.ApplicationUserReceiverID;
                     requestReceived.ApplicationUserReceiver = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault();
-                    requestReceived.NoteForPartialDelivery = receivedLocationViewModel.Request.NoteForPartialDelivery;
+
                     requestReceived.IsPartial = receivedLocationViewModel.Request.IsPartial;
+                   
                     requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
                     requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
                     requestReceived.IsInInventory = true;
@@ -4034,10 +4065,15 @@ namespace PrototypeWithAuth.Controllers
                     {
                         requestReceived.PaymentStatusID = 3;
                     }
-                    _context.Update(requestReceived);
+          
+
+                        _context.Update(requestReceived);
+                        await _context.SaveChangesAsync();
+
+         
 
                     //need to do this function before save changes because if new request it should not have an id yet
-                    await _context.SaveChangesAsync();
+           
                     await RemoveOldRequestFromInventory(requestReceived.RequestID);
                
                     RequestNotification requestNotification = new RequestNotification();
@@ -4290,9 +4326,18 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
-        public JsonResult GetSublocationInstancesList(int locationInstanceParentId)
+        public JsonResult GetSublocationInstancesList(int locationInstanceParentId, int labPartID)
         {
-            var locationInstanceList = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == locationInstanceParentId).Include(li => li.LabPart).OrderBy(li => li.LocationNumber).ToList();
+            List<LocationInstance> locationInstanceList = new List<LocationInstance>();
+            if (labPartID!=0)
+            {
+                locationInstanceList = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == locationInstanceParentId && li.LabPartID == labPartID).Include(li => li.LabPart).OrderBy(li => li.LocationNumber).ToList();
+
+            }
+            else
+            {
+                locationInstanceList = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == locationInstanceParentId).Include(li => li.LabPart).OrderBy(li => li.LocationNumber).ToList();
+            }
             return Json(locationInstanceList);
         }
 
@@ -4761,10 +4806,11 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                     break;
-                //case AppUtility.SidebarEnum.StandingOrders:
-                //    requestsList = requestsList
-                //.Where(r => r.PaymentStatusID == 7).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
-                //    break;
+                case AppUtility.SidebarEnum.StandingOrders:
+                    requests = requests
+                .Where(r => r.PaymentStatusID == 7).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
+                    await requests.ForEachAsync(r => requestList.Add(new RequestPaymentsViewModel { Request = r, Payment = r.Payments.FirstOrDefault() }));
+                    break;
                 case AppUtility.SidebarEnum.SpecifyPayment:
                     requests = requests
                 .Where(r => r.PaymentStatusID == 8 && r.Payments.FirstOrDefault().HasInvoice);
@@ -5055,10 +5101,9 @@ namespace PrototypeWithAuth.Controllers
                     foreach (Request request in paymentsInvoiceViewModel.Requests)
                     {
                         var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
-                        if (requestToUpdate.PaymentStatusID == 5)
-                        {
-                            payment.Sum = request.Payments.FirstOrDefault().Sum;
-                        }
+
+                        payment.Sum = request.Payments.FirstOrDefault().Sum;
+                  
                         //else
                         //{
                         //    payment.Sum = request.Cost ?? 0;

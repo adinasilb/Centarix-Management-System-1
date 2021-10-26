@@ -22,6 +22,8 @@ namespace PrototypeWithAuth.Data
 
         }
 
+        public DbSet<OldVendorCountry> OldVendorCountries { get; set; }
+        public DbSet<Country> Countries { get; set; }
         public DbSet<ExperimentEntry> ExperimentEntries { get; set; }
         public DbSet<TestValue> TestValues { get; set; }
         public DbSet<TestHeader> TestHeaders { get; set; }
@@ -400,7 +402,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ShareResource>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<TestHeader>().HasIndex(th => new { th.SequencePosition, th.TestGroupID }).IsUnique();
             modelBuilder.Entity<ExperimentEntry>().HasIndex(ee => new { ee.ParticipantID, ee.VisitNumber }).IsUnique();
-            modelBuilder.Entity<Vendor>().HasIndex(v => new { v.VendorCountry, v.VendorBuisnessID }).IsUnique();
+            modelBuilder.Entity<Vendor>().HasIndex(v => new { v.CountryID, v.VendorBuisnessID }).IsUnique();
             /*PROTOCOLS*/
             ///set up composite keys
 
