@@ -131,7 +131,7 @@ $(function () {
     });
 
 
-    $("body").off("click").on("click", ".load-order-details", function (e) {
+    $("body").off("click", ".load-order-details").on("click", ".load-order-details", function (e) {
         //alert('in function')
         e.preventDefault();
         e.stopImmediatePropagation();
