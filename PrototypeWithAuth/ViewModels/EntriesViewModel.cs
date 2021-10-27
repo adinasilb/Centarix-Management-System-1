@@ -11,5 +11,6 @@ namespace PrototypeWithAuth.ViewModels
         public Participant Participant { get; set; }
         public List<TDViewModel> EntryHeaders { get; set; }
         public List<List<TDViewModel>> EntryRows { get; set; }
+        public bool IsTestPage { get; set; }
     }
 }

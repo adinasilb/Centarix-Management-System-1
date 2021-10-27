@@ -1,41 +1,68 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddParticipantViewModel
 @{
-    var disabled = Model.DisableFields ? "disabled" : "";
+    var disabled = Model.DisableFields ? true : false;
 }
-
 @Html.HiddenFor(m => m.Participant.ParticipantID)
 @Html.HiddenFor(m => m.Participant.ExperimentID)
-@Html.HiddenFor(m => m.Participant.CentarixID)
-@Html.HiddenFor(m => m.Participant.DOB)
-@Html.HiddenFor(m => m.Participant.GenderID)
 <div class="row">
     <div class="col-12">
         <label asp-for="Participant.CentarixID" class="control-label"></label>
-        <input asp-for="Participant.CentarixID" class="form-control-plaintext border-bottom  @disabled" />
+        @if (!disabled)
+        {
+            <input asp-for="Participant.CentarixID" class="form-control-plaintext border-bottom" />
+        }
+        else
+        {
+            <input asp-for="Participant.CentarixID" class="form-control-plaintext border-bottom disabled" />
+            Html.HiddenFor(Model => Model.Participant.CentarixID);
+        }
         <span asp-validation-for="Participant.CentarixID" class="text-danger-centarix"></span>
     </div>
 </div>
 <div class="row">
     <div class="col-12">
         <label asp-for="Participant.DOB" class="control-label"></label>
-        <input asp-for="Participant.DOB" class="form-control-plaintext border-bottom @disabled" />
+        @if (!disabled)
+        {
+            <input asp-for="Participant.DOB" class="form-control-plaintext border-bottom" />
+        }
+        else
+        {
+            <input asp-for="Participant.DOB" class="form-control-plaintext border-bottom disabled" />
+            Html.HiddenFor(Model => Model.Participant.DOB);
+        }
         <span asp-validation-for="Participant.DOB" class="text-danger-centarix"></span>
     </div>
 </div>
 <div class="row">
     <div class="col-12">
         <label asp-for="Participant.Gender" class="control-label"></label>
-        @Html.DropDownListFor(m => m.Participant.GenderID,
-            new SelectList(
-       Model.Genders,
-       dataValueField: "GenderID",
-       dataTextField: "Description"),
-       optionLabel: "Select Option",
-            new { @class = "mdb-select custom select-dropdown form-control-plaintext " + disabled, @searchable = "default value" }
-        )
+        @if (!disabled)
+        {
+            @Html.DropDownListFor(m => m.Participant.GenderID,
+                new SelectList(
+           Model.Genders,
+           dataValueField: "GenderID",
+           dataTextField: "Description"),
+           optionLabel: "Select Option",
+                new { @class = "mdb-select custom select-dropdown form-control-plaintext ", @searchable = "default value" }
+            )
 
+        }
+        else
+        {
+            @Html.DropDownListFor(m => m.Participant.GenderID,
+          new SelectList(
+     Model.Genders,
+     dataValueField: "GenderID",
+     dataTextField: "Description"),
+     optionLabel: "Select Option",
+          new { @class = "mdb-select custom select-dropdown form-control-plaintext disabled", @searchable = "default value" }
+      )
+            @Html.HiddenFor(m => m.Participant.GenderID);
+        }
         @*<label asp-for="Participant.Gender" class="control-label"></label>
-            <input asp-for="Participant.Gender" class="form-control-plaintext border-bottom" value="" />
-            <span asp-validation-for="Participant.Gender" class="text-danger-centarix"></span>*@
+            <input asp-for="Participant.Gender" class="form-control-plaintext border-bottom" value="" />*@
+        @*<span asp-validation-for="Participant.Gender" class="text-danger-centarix"></span>*@
     </div>
 </div>
