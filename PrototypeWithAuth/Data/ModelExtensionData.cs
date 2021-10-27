@@ -3145,7 +3145,7 @@ namespace PrototypeWithAuth.Data
 
             modelBuilder.Entity<Country>().HasData(
                 
-                SeededData.CountryData.GetCountries()
+                SeededData.CountryData.Get()
                 );
 
         }

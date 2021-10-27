@@ -8,7 +8,8 @@ namespace PrototypeWithAuth.Data.SeededData
 {
     public static class CountryData
     {
-        public static List<Country> GetCountries()
+      
+        public static List<Country> Get()
         {
             List<Country> countryList = new List<Country>();
             countryList.Add(new Country()
