@@ -15,7 +15,8 @@
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="small-modal-padding editparticipantform on-form-modal">
 
                 <div class="container-fluid under-row-margin">
-                    @{ 
+                    @Html.HiddenFor(m => m.IsTestPage)
+                    @{
                         await Html.RenderPartialAsync("_ParticipantFields", Model); }
                     <div class="row">
                         <div class="col-12">
@@ -69,7 +70,14 @@
                 success: function (data) {
                     $("#loading").hide();
                     $.fn.CloseModal('edit-participant');
-                    $("._ParticipantEntries").html(data);
+                    console.log("data" + data);
+                    console.log($("#IsTestPage").attr("value"));
+                    if ($("#IsTestPage").attr("value") == "false") {
+                        $("._ParticipantEntries").html(data);
+                    }
+                    else {
+                        $(".entries-header").html(data);
+                    }
                     //$.ajax({
                     //    async: true,
                     //    url: "/Biomarkers/GetParticipantsCount?ExperimentID=" + ExperimentID,

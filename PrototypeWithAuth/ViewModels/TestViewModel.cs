@@ -17,5 +17,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<TestValue> TestValues { get; set; } //THIS IS ONLY FOR THE FIRST ONE!!!!
         public List<FieldViewModel> FieldViewModels { get; set; }
         public List<BoolIntViewModel> FilesPrevFilled { get; set; }
+        public bool IsTestPage { get; set; }
     }
 }
