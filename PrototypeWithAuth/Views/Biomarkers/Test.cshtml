@@ -16,6 +16,7 @@
     @Html.HiddenFor(m => m.ExperimentEntry.Participant.ExperimentID)
     @Html.HiddenFor(m => m.ExperimentID)
     <input type="hidden" asp-for="Guid" class="hidden-guid" />
+    <input asp-for="IsTestPage" value="true" />
     <input type="hidden" value="@AppUtility.MenuItems.Biomarkers.ToString()" id="#masterSectionType" />
 
     @*@for (int e = 0; e < Model.FieldViewModels.Count; e++)
@@ -114,6 +115,10 @@
     </div>
 </form>
 <script>
+    //$(".bio-form").ready(function () {
+    //    alert("in bio form ready");
+    //    $(".mdb-select-entries").materialSelect();
+    //});
     $(".biomarkers-test-name").on("click", function (e) {
         if (!$(this).hasClass("selected")) {
             if ($("._testvalues").hasClass("changed")) {
