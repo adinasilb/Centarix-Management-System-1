@@ -74,7 +74,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DevelopersDB"));
+                    Configuration.GetConnectionString("DefaultConnection"));
                 options.EnableSensitiveDataLogging(true);   
             });
 
@@ -177,7 +177,7 @@ namespace PrototypeWithAuth
             
             //ChangePassword(serviceProvider).Wait();
 
-            CreateRoles(serviceProvider).Wait();
+         //   CreateRoles(serviceProvider).Wait();
             //AddRoles(serviceProvider).Wait();
 
             //app.UseApplicationInsightsRequestTelemetry();
@@ -187,7 +187,7 @@ namespace PrototypeWithAuth
         //private async Task ChangePassword(IServiceProvider serviceProvider)
         //{
         //    var _userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        //    var user = await _userManager.FindByEmailAsync("debbie@centarix.com");
+        //    var user = await _userManager.FindByEmailAsync("tauba@centarix.com");
         //    var code = await _userManager.GeneratePasswordResetTokenAsync(user);
         //    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         //    var result = await _userManager.ResetPasswordAsync(user, code, "Centarix.2020");
@@ -263,18 +263,27 @@ namespace PrototypeWithAuth
 
             //var adminuser = new Employee()
             //{
-            //    UserName = "adinasilberberg@gmail.com",
-            //    Email = "adinasilberberg@gmail.com",
-            //    FirstName = "Adina",
-            //    LastName = "Gayer",
+            //    UserName = "tauba@centarix.com",
+            //    Email = "tauba@centarix.com",
+            //    FirstName = "Tauba",
+            //    LastName = "Praw",
             //    EmailConfirmed = true,
             //    TwoFactorEnabled = true,
-            //    EmployeeStatusID = 4,
+            //    EmployeeStatusID = 1,
             //    LockoutEnabled = true,
             //    LockoutEnd = new DateTime(2999, 01, 01),
             //    NeedsToResetPassword = true,
             //    UserNum = 1,
             //    IsUser = true,
+            //    JobSubcategoryTypeID = 701,
+            //    IDNumber = "55555555",
+            //    DegreeID = 1,
+            //    DOB = new DateTime(2000, 06, 02),
+            //    CitizenshipID =1,
+            //    MaritalStatusID = 1,
+            //    StartedWorking = new DateTime(2021, 06, 02),
+            //    PhoneNumber = "123234444444"
+
             //};
             //var createAdminUser = await UserManager.CreateAsync(adminuser, "ElixirSA29873$*");
             //adminuser.EmailConfirmed = true;
@@ -290,7 +299,7 @@ namespace PrototypeWithAuth
             ////    Email = Configuration.GetSection("UserSettings")["UserEmail"]
             ////};
             //string UserPassword = /*Configuration.GetSection("UserSettings")["UserEmail"]*/ "adinabCE2063*!";
-            //var _user = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
+           // var _user = await UserManager.FindByEmailAsync("tauba@centarix.com");
             //if (_user == null)
             //{
             //    var createPowerUser = await UserManager.CreateAsync(poweruser, UserPassword);
