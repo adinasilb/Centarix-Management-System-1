@@ -1386,7 +1386,51 @@
             });
             return error;
         };
+        $.fn.AddObjectToFormdata = function (formdata, object) {
 
+            console.log('in add object to formdata')
+            /*console.log(arrayOfObjects)
+            var newFormData = formdata;
+            for (var obj of arrayOfObjects) {
+                Object.assign(newFormData, obj);
+                console.log('obj ' + obj)
+            } */
+            if (formdata == undefined) {
+                var formdata = new FormData();
+            }
+            for (var key in object) {
+
+                if (Array.isArray(object[key])) {
+                    for (const val of object[key].values()) {
+                        formdata.append(key, val);
+                        console.log('key' + key);
+                        console.log('val' + val)
+                    }
+                }
+                else {
+                    formdata.append(key, object[key]);
+                    console.log('key ' + key);
+                    console.log('value ' + object[key])
+                }
+            }
+            console.log(...formdata);
+            return formdata;
+        }
+        $.fn.CombineTwoFormDatas = function (formdata1, formdata2) {
+            if (formdata1 == undefined) {
+                var formdata1 = new FormData();
+            }
+            if (formdata2 != undefined) {
+                for (var pair of formdata2.entries()) {
+                    formdata1.append(pair[0], pair[1]);
+                    console.log('key ' + pair[0]);
+                    console.log('value ' + pair[1])
+
+                }
+            }
+            console.log(...formdata1);
+            return formdata1;
+        }
         $.fn.SearchColumns = function (searchText, colName) {
             if (searchText == "") {
                 $('.popover ' + colName + ' .not-selected button').removeClass("d-none");
