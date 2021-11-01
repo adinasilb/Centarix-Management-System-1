@@ -2771,18 +2771,8 @@ namespace PrototypeWithAuth.Controllers
                     action = "UploadOrderModal";
                 }
                 else if(OrderTypeEnum == AppUtility.OrderTypeEnum.RequestPriceQuote)
-                {
-                    switch(tempRequestListViewModel.RequestIndexObject.PageType)
-                    {
-                        case AppUtility.PageTypeEnum.RequestRequest:
-                            action = "Index";
-                            break;
-                        case AppUtility.PageTypeEnum.RequestSummary:
-                            action = "IndexInventory";
-                            break;
-                        case AppUtility.PageTypeEnum.RequestLocation:
-                            return new EmptyResult();
-                    }
+                {                    
+                     return new EmptyResult();
                 }
                 tempRequestListViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
                 tempRequestListViewModel.RequestIndexObject.IsReorder = true;
@@ -2968,19 +2958,7 @@ namespace PrototypeWithAuth.Controllers
                 //var pr = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest; //eventually(when ready to test all cases) put this in instead of next line and put it in for loop below
                 deserializedTempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest);
 
-                var action = "Index";
-                if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
-                {
-                    action = "IndexInventory";
-                }
-                else if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
-                {
-                    action = "LabManageOrders";
-                }
-                else if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString())
-                {
-                    action = "Cart";
-                }
+           
                 //var isEmail = true;
                 //var emailNum = 1;
                 //var emails = new List<string>();
@@ -3264,39 +3242,16 @@ namespace PrototypeWithAuth.Controllers
 
                 }
                 tempRequestListViewModel.RequestIndexObject.RequestStatusID = 2;
-                if(tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestLocation) 
-                {
-                    //TODO change to ajax call, return new empty result and close modals in success of ajax
-                    return RedirectToAction("Index", "Locations", new { SectionType = AppUtility.MenuItems.Requests });
-                }
-                return RedirectToAction(action, tempRequestListViewModel.RequestIndexObject);
+          
+                return new EmptyResult();
             }
             catch (Exception ex)
             {
                 await RollbackCurrentTempAsync(tempRequestListViewModel.GUID);
                 tempRequestListViewModel.RequestIndexObject.ErrorMessage += AppUtility.GetExceptionMessage(ex); 
                 Response.StatusCode = 500;
-                if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
-                {
-                    return RedirectToAction("LabManageOrders", new { errorMessage = tempRequestListViewModel.RequestIndexObject.ErrorMessage });
-                }
-                else if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
-                {
-                    return RedirectToAction("Cart", new { errorMessage = tempRequestListViewModel.RequestIndexObject.ErrorMessage });
-                }
-                else if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
-                {
-                    return RedirectToAction("IndexInventory", tempRequestListViewModel.RequestIndexObject);
-                }
-                else if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestLocation)
-                {
-                    return RedirectToAction("Index", "Locations", new { SectionType = AppUtility.MenuItems.Requests, 
-                            ErrorMessage = tempRequestListViewModel.RequestIndexObject.ErrorMessage });
-                }
-                else
-                {
-                    return RedirectToAction("Index", tempRequestListViewModel.RequestIndexObject);
-                }
+                await Response.WriteAsync(tempRequestListViewModel.RequestIndexObject.ErrorMessage);
+                return new EmptyResult();
             }
 
         }
