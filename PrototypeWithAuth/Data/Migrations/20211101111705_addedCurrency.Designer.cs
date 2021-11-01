@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211101111705_addedCurrency")]
+    partial class addedCurrency
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -728,12 +730,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("CountryName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CurrencyID")
-                        .HasColumnType("int");
-
                     b.HasKey("CountryID");
-
-                    b.HasIndex("CurrencyID");
 
                     b.ToTable("Countries");
 
@@ -741,302 +738,252 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             CountryID = 1,
-                            CountryName = "Armenia",
-                            CurrencyID = -1
+                            CountryName = "Armenia"
                         },
                         new
                         {
                             CountryID = 2,
-                            CountryName = "Australia",
-                            CurrencyID = -1
+                            CountryName = "Australia"
                         },
                         new
                         {
                             CountryID = 3,
-                            CountryName = "Austria",
-                            CurrencyID = -1
+                            CountryName = "Austria"
                         },
                         new
                         {
                             CountryID = 4,
-                            CountryName = "Belgium",
-                            CurrencyID = -1
+                            CountryName = "Belgium"
                         },
                         new
                         {
                             CountryID = 5,
-                            CountryName = "Bosnia and Herzegovina",
-                            CurrencyID = -1
+                            CountryName = "Bosnia and Herzegovina"
                         },
                         new
                         {
                             CountryID = 6,
-                            CountryName = "Bulgaria",
-                            CurrencyID = -1
+                            CountryName = "Bulgaria"
                         },
                         new
                         {
                             CountryID = 7,
-                            CountryName = "Canada",
-                            CurrencyID = -1
+                            CountryName = "Canada"
                         },
                         new
                         {
                             CountryID = 8,
-                            CountryName = "Chile",
-                            CurrencyID = -1
+                            CountryName = "Chile"
                         },
                         new
                         {
                             CountryID = 9,
-                            CountryName = "Costa Rica",
-                            CurrencyID = -1
+                            CountryName = "Costa Rica"
                         },
                         new
                         {
                             CountryID = 10,
-                            CountryName = "Cyprus",
-                            CurrencyID = -1
+                            CountryName = "Cyprus"
                         },
                         new
                         {
                             CountryID = 11,
-                            CountryName = "Czech Republic",
-                            CurrencyID = -1
+                            CountryName = "Czech Republic"
                         },
                         new
                         {
                             CountryID = 12,
-                            CountryName = "Denmark",
-                            CurrencyID = -1
+                            CountryName = "Denmark"
                         },
                         new
                         {
                             CountryID = 13,
-                            CountryName = "Estonia",
-                            CurrencyID = -1
+                            CountryName = "Estonia"
                         },
                         new
                         {
                             CountryID = 14,
-                            CountryName = "Finland",
-                            CurrencyID = -1
+                            CountryName = "Finland"
                         },
                         new
                         {
                             CountryID = 15,
-                            CountryName = "France",
-                            CurrencyID = -1
+                            CountryName = "France"
                         },
                         new
                         {
                             CountryID = 16,
-                            CountryName = "Georgia",
-                            CurrencyID = -1
+                            CountryName = "Georgia"
                         },
                         new
                         {
                             CountryID = 17,
-                            CountryName = "Germany",
-                            CurrencyID = -1
+                            CountryName = "Germany"
                         },
                         new
                         {
                             CountryID = 18,
-                            CountryName = "Greece",
-                            CurrencyID = -1
+                            CountryName = "Greece"
                         },
                         new
                         {
                             CountryID = 19,
-                            CountryName = "Hungary",
-                            CurrencyID = -1
+                            CountryName = "Hungary"
                         },
                         new
                         {
                             CountryID = 20,
-                            CountryName = "Iceland",
-                            CurrencyID = -1
+                            CountryName = "Iceland"
                         },
                         new
                         {
                             CountryID = 21,
-                            CountryName = "India",
-                            CurrencyID = -1
+                            CountryName = "India"
                         },
                         new
                         {
                             CountryID = 22,
-                            CountryName = "Ireland",
-                            CurrencyID = -1
+                            CountryName = "Ireland"
                         },
                         new
                         {
                             CountryID = 23,
-                            CountryName = "Israel",
-                            CurrencyID = 2
+                            CountryName = "Israel"
                         },
                         new
                         {
                             CountryID = 24,
-                            CountryName = "Italy",
-                            CurrencyID = -1
+                            CountryName = "Italy"
                         },
                         new
                         {
                             CountryID = 25,
-                            CountryName = "Japan",
-                            CurrencyID = -1
+                            CountryName = "Japan"
                         },
                         new
                         {
                             CountryID = 26,
-                            CountryName = "Latvia",
-                            CurrencyID = -1
+                            CountryName = "Latvia"
                         },
                         new
                         {
                             CountryID = 27,
-                            CountryName = "Lithuania",
-                            CurrencyID = -1
+                            CountryName = "Lithuania"
                         },
                         new
                         {
                             CountryID = 28,
-                            CountryName = "Luxembourg",
-                            CurrencyID = -1
+                            CountryName = "Luxembourg"
                         },
                         new
                         {
                             CountryID = 29,
-                            CountryName = "Malaysia",
-                            CurrencyID = -1
+                            CountryName = "Malaysia"
                         },
                         new
                         {
                             CountryID = 30,
-                            CountryName = "Mauritius",
-                            CurrencyID = -1
+                            CountryName = "Mauritius"
                         },
                         new
                         {
                             CountryID = 31,
-                            CountryName = "Moldova",
-                            CurrencyID = -1
+                            CountryName = "Moldova"
                         },
                         new
                         {
                             CountryID = 32,
-                            CountryName = "Netherlands",
-                            CurrencyID = -1
+                            CountryName = "Netherlands"
                         },
                         new
                         {
                             CountryID = 33,
-                            CountryName = "New Zealand",
-                            CurrencyID = -1
+                            CountryName = "New Zealand"
                         },
                         new
                         {
                             CountryID = 34,
-                            CountryName = "North Macedonia",
-                            CurrencyID = -1
+                            CountryName = "North Macedonia"
                         },
                         new
                         {
                             CountryID = 35,
-                            CountryName = "Norway",
-                            CurrencyID = -1
+                            CountryName = "Norway"
                         },
                         new
                         {
                             CountryID = 36,
-                            CountryName = "Poland",
-                            CurrencyID = -1
+                            CountryName = "Poland"
                         },
                         new
                         {
                             CountryID = 37,
-                            CountryName = "Portugal",
-                            CurrencyID = -1
+                            CountryName = "Portugal"
                         },
                         new
                         {
                             CountryID = 38,
-                            CountryName = "Romania",
-                            CurrencyID = -1
+                            CountryName = "Romania"
                         },
                         new
                         {
                             CountryID = 39,
-                            CountryName = "Russia",
-                            CurrencyID = -1
+                            CountryName = "Russia"
                         },
                         new
                         {
                             CountryID = 40,
-                            CountryName = "Singapore",
-                            CurrencyID = -1
+                            CountryName = "Singapore"
                         },
                         new
                         {
                             CountryID = 41,
-                            CountryName = "Slovakia",
-                            CurrencyID = -1
+                            CountryName = "Slovakia"
                         },
                         new
                         {
                             CountryID = 42,
-                            CountryName = "Slovenia",
-                            CurrencyID = -1
+                            CountryName = "Slovenia"
                         },
                         new
                         {
                             CountryID = 43,
-                            CountryName = "South Africa",
-                            CurrencyID = -1
+                            CountryName = "South Africa"
                         },
                         new
                         {
                             CountryID = 44,
-                            CountryName = "South Korea",
-                            CurrencyID = -1
+                            CountryName = "South Korea"
                         },
                         new
                         {
                             CountryID = 45,
-                            CountryName = "Spain",
-                            CurrencyID = -1
+                            CountryName = "Spain"
                         },
                         new
                         {
                             CountryID = 46,
-                            CountryName = "Sweden",
-                            CurrencyID = -1
+                            CountryName = "Sweden"
                         },
                         new
                         {
                             CountryID = 47,
-                            CountryName = "Switzerland",
-                            CurrencyID = -1
+                            CountryName = "Switzerland"
                         },
                         new
                         {
                             CountryID = 48,
-                            CountryName = "United Kingdom",
-                            CurrencyID = -1
+                            CountryName = "United Kingdom"
                         },
                         new
                         {
                             CountryID = 49,
-                            CountryName = "United States",
-                            CurrencyID = 1
+                            CountryName = "United States"
                         },
                         new
                         {
                             CountryID = 50,
-                            CountryName = "Uruguay",
-                            CurrencyID = -1
+                            CountryName = "Uruguay"
                         });
                 });
 
@@ -1124,23 +1071,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("CurrencyID");
 
                     b.ToTable("Currencies");
-
-                    b.HasData(
-                        new
-                        {
-                            CurrencyID = -1,
-                            CurrencyName = "None"
-                        },
-                        new
-                        {
-                            CurrencyID = 1,
-                            CurrencyName = "USD"
-                        },
-                        new
-                        {
-                            CurrencyID = 2,
-                            CurrencyName = "NIS"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Degree", b =>
@@ -7166,15 +7096,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.CompanyDayOffType", "CompanyDayOffType")
                         .WithMany()
                         .HasForeignKey("CompanyDayOffTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Country", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.Currency", "Currency")
-                        .WithMany("Countries")
-                        .HasForeignKey("CurrencyID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

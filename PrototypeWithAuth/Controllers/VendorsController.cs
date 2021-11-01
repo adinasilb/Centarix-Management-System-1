@@ -630,9 +630,9 @@ namespace PrototypeWithAuth.Controllers
             return true;
         }
 
-        public string GetVendorCountryID(int VendorID)
+        public string GetVendorCountryCurrencyID(int VendorID)
         {
-            return _context.Vendors.Where(v => v.VendorID == VendorID).Select(v => v.CountryID).FirstOrDefault().ToString();
+            return _context.Vendors.Include(v => v.Country).Where(v => v.VendorID == VendorID).Select(v => v.Country).FirstOrDefault().ToString();
         }
     }
 

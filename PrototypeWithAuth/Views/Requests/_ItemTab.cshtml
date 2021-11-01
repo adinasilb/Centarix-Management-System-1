@@ -204,7 +204,7 @@
                         )
                 <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
             </div>
-            <input type="hidden" asp-for="Requests[0].Product.Vendor.CountryID" />
+            <input type="hidden" id="VendorCurrencyID" />
         </div>
         <input class="@vendorCategories" type="hidden" value="" id="vendor-primary-email" />
         <div class="col-md-6 @companyIDCategories">

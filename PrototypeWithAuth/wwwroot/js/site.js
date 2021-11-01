@@ -192,11 +192,11 @@ $(function () {
     $.fn.AddVendorCurrencyType = function (vendorid) {
         $.ajax({
             async: false,
-            url: '/Vendors/GetVendorCountryID?VendorID=' + vendorid,
+            url: '/Vendors/GetVendorCountryCurrencyID?VendorID=' + vendorid,
             type: 'GET',
             cache: false,
             success: function (data) {
-                $("#Requests_0__Product_Vendor_CountryID").val(data);
+                $("#VendorCurrencyID").val(data);
                 if (String(data) == '49') {
                     $("#currency").val("USD");
                     //$.fn.DisableMaterialSelect("#currency", "select-options-currency");
