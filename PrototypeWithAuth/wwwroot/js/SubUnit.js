@@ -402,14 +402,14 @@ $(function () {
 		var warningMessage = "Warning: Default currency for selected Vendor is ";
 		switch (currencyType) {
 			case "USD":
-				if ($("#Requests_0__Product_Vendor_CountryID").attr("value") != '49') {
-					console.log("inside warning");
-					warning = true;
-					warningMessage += "Shekel"
-				}
-				else {
-					warning = false;
-                }
+				//if ($("#VendorCurrencyID").attr("value") != '1') {
+				//	console.log("inside warning");
+				//	warning = true;
+				//	warningMessage += "Shekel"
+				//}
+				//else {
+				//	warning = false;
+    //            }
 				$(shekelSelector).prop("readonly", true);
 				$(shekelSelector).addClass('disabled-text');
 				$(dollarSelector).prop("disabled", false);
@@ -431,14 +431,14 @@ $(function () {
 				break;
 			case "NIS":
 			case undefined: //for the reorder modal
-				if ($("#Requests_0__Product_Vendor_CountryID").attr("value") == '49') {
-					console.log("inside warning for shekel");
-					warning = true;
-					warningMessage += "Dollars"
-				}
-				else {
-					warning = false;
-				}
+				//if ($("#VendorCurrencyID").attr("value") == '1') {
+				//	console.log("inside warning for shekel");
+				//	warning = true;
+				//	warningMessage += "Dollars"
+				//}
+				//else {
+				//	warning = false;
+				//}
 				$(shekelSelector).prop("readonly", false);
 				$(shekelSelector).removeClass('disabled-text');
 				$(dollarSelector).prop("disabled", true);
@@ -459,18 +459,42 @@ $(function () {
 
 				break;
 		}
-		if (warning) {
-			$("#price-warning").html(warningMessage);
-		}
-		else {
-			$("#price-warning").html("");
-        }
 		if (isRequestQuote) {
 			$(".requestPriceQuote ").attr("disabled", true);
         }
 	};
 
-
+	$.fn.CheckForVendorCurrencyWarning = function (vendorCurrencyID, currencySelected) {
+		console.log("vendorcurrencyid: " + vendorCurrencyID);
+		console.log("currencySelected: " + currencySelected);
+		var changeWarnings = false;
+		priceWarning = $("#price-warning");
+		vendorPriceWarning = $("#vendor-price-warning");
+		priceWarningText = "Warning: Default Currency For Selected Vendor is ";
+		vendorWarningText = "Warning: Selected Currency is "
+		if (currencySelected == "USD" && vendorCurrencyID == "2") {
+			console.log("if (currencySelected == ");
+			priceWarningText += "Shekel";
+			vendorWarningText += "Dollars";
+			changeWarnings = true;
+		}
+		else if (currencySelected == "NIS" && vendorCurrencyID == "1") {
+			console.log("else if (currencySelected == ");
+			priceWarningText += "Dollars";
+			vendorWarningText += "Shekel";
+			changeWarnings = true;
+		}
+		else {
+			console.log("else");
+			priceWarning.html("");
+			vendorPriceWarning.html("");
+		}
+		if (changeWarnings) {
+			console.log("changewarnings is true")
+			priceWarning.html(priceWarningText);
+			vendorPriceWarning.html(vendorWarningText);
+        }
+    }
 
 
 	$("#unit").change(function () {
@@ -549,6 +573,8 @@ $(function () {
 		$.fn.CheckCurrency();
 		if ($("#price").hasClass("active")) {
 			$(this).attr("changed", "true");
+			console.log("going to vendor currency warnings");
+			$.fn.CheckForVendorCurrencyWarning($("#VendorCurrencyID").val(), $("#currency").val());
         }
 	});
 	$(".modal").on("change", "#currency", function (e) {

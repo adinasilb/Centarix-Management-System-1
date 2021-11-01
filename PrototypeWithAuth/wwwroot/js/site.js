@@ -197,20 +197,24 @@ $(function () {
             cache: false,
             success: function (data) {
                 $("#VendorCurrencyID").val(data);
-                if (String(data) == '49') {
-                    $("#currency").val("USD");
-                    //$.fn.DisableMaterialSelect("#currency", "select-options-currency");
-                    //$.fn.EnableMaterialSelect("#currency", "select-options-currency");
-                	$("#currency").trigger("change");
+                console.log("CurrencyID: " + data);
+                if ($("#currency").attr("changed") == "true") {
+                    var currencySelected = $("#currency").val();
+                    $.fn.CheckForVendorCurrencyWarning(data, currencySelected);
                 }
                 else {
-                    $("#currency").val("NIS");
-                    //$.fn.DisableMaterialSelect("#currency", "select-options-currency");
-                    //$.fn.EnableMaterialSelect("#currency", "select-options-currency");
-                	$("#currency").trigger("change");
-                }
-                if ($("#currency").attr("changed") == "true") {
-
+                    if (String(data) == '1') {
+                        $("#currency").val("USD");
+                        //$.fn.DisableMaterialSelect("#currency", "select-options-currency");
+                        //$.fn.EnableMaterialSelect("#currency", "select-options-currency");
+                        $("#currency").trigger("change");
+                    }
+                    else {
+                        $("#currency").val("NIS");
+                        //$.fn.DisableMaterialSelect("#currency", "select-options-currency");
+                        //$.fn.EnableMaterialSelect("#currency", "select-options-currency");
+                        $("#currency").trigger("change");
+                    }
                 }
                 return false;
             }

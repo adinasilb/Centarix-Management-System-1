@@ -632,7 +632,7 @@ namespace PrototypeWithAuth.Controllers
 
         public string GetVendorCountryCurrencyID(int VendorID)
         {
-            return _context.Vendors.Include(v => v.Country).Where(v => v.VendorID == VendorID).Select(v => v.Country).FirstOrDefault().ToString();
+            return _context.Vendors.Include(v => v.Country).Where(v => v.VendorID == VendorID).Select(v => v.Country.CurrencyID).FirstOrDefault().ToString();
         }
     }
 
