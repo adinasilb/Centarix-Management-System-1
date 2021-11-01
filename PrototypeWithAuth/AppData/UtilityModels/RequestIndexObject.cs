@@ -126,6 +126,7 @@ namespace PrototypeWithAuth.AppData
             }
             set { _searchText = value; }
         }
+        public string CentarixOrderNumber { get; set; }
         public SelectedRequestFilters SelectedFilters { get; set; }
         public RequestsSearchViewModel RequestsSearchViewModel { get; set; }
         //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
