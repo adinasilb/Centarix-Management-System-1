@@ -629,6 +629,11 @@ namespace PrototypeWithAuth.Controllers
             }
             return true;
         }
+
+        public string GetVendorCountryID(int VendorID)
+        {
+            return _context.Vendors.Where(v => v.VendorID == VendorID).Select(v => v.CountryID).FirstOrDefault().ToString();
+        }
     }
 
 }

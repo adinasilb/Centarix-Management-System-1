@@ -68,6 +68,7 @@
                     <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " readonly />
                 </div>
             </div>
+            <input type="hidden" asp-for="Requests[0].Product.Vendor.CountryID" />
         }
         @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary)
         {
