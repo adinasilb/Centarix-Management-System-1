@@ -21,7 +21,7 @@ namespace PrototypeWithAuth.AppData
 
                 case AppUtility.MenuItems.Requests:
                     ActiveClasses = " activeNavLink";
-                    if (pageType == AppUtility.PageTypeEnum.RequestRequest) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    if (pageType == AppUtility.PageTypeEnum.RequestRequest) { AllClasses += ActiveClasses+OrigClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Requests",
@@ -224,8 +224,9 @@ namespace PrototypeWithAuth.AppData
                     });
                     break;
                 case AppUtility.MenuItems.LabManagement:
-                    ActiveClasses = " text-dark lab-man-filter";
-                    if (pageType == AppUtility.PageTypeEnum.LabManagementSuppliers) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    ActiveClasses = " text-dark lab-man-filter ";
+                    OrigClasses += " lab-man-underline "; 
+                    if (pageType == AppUtility.PageTypeEnum.LabManagementSuppliers) { AllClasses =  ActiveClasses+OrigClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Suppliers",

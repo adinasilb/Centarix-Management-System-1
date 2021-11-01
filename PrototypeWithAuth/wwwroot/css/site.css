@@ -800,7 +800,8 @@ input.select-dropdown {
 
     .lab-man-link-clr:hover {
         font-weight: bold;
-        filter: brightness(0) saturate(100%) var(--lab-man-filter);
+        /*filter: brightness(0) saturate(100%) var(--lab-man-filter);*/
+        color: red !important;
         text-decoration: none !important;
     }
 
@@ -809,6 +810,16 @@ input.select-dropdown {
         filter: brightness(0) saturate(100%) var(--lab-man-filter);
         text-decoration: none !important;
     }
+
+.lab-man-underline{
+    text-decoration: underline !important;
+    
+}
+
+/*.lab-man-underline:active {
+    text-decoration: underline !important;
+}*/
+
 
 
 .acc-link-clr {
