@@ -1,4 +1,5 @@
 ﻿using PrototypeWithAuth.AppData.UtilityModels;
+using PrototypeWithAuth.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -126,7 +127,8 @@ namespace PrototypeWithAuth.AppData
             set { _searchText = value; }
         }
         public SelectedRequestFilters SelectedFilters { get; set; }
-                                       //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
+        public RequestsSearchViewModel RequestsSearchViewModel { get; set; }
+        //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
         public AppUtility.ModalType ModalType { get; set; }
     }
 }
