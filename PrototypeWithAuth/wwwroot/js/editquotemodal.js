@@ -73,7 +73,9 @@ $("#currency").change(function (e) {
             });
             break;
     }
+    $.fn.CheckForVendorCurrencyWarning($("#VendorCurrencyID").val(), currencyType);
 });
+
 $('.sum-dollars').change(function (e) {
     var index = $(this).attr("index");
     var costDollars = $('.sum-dollars.' + index).val()

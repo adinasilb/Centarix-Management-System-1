@@ -464,38 +464,6 @@ $(function () {
         }
 	};
 
-	$.fn.CheckForVendorCurrencyWarning = function (vendorCurrencyID, currencySelected) {
-		console.log("vendorcurrencyid: " + vendorCurrencyID);
-		console.log("currencySelected: " + currencySelected);
-		var changeWarnings = false;
-		priceWarning = $("#price-warning");
-		vendorPriceWarning = $("#vendor-price-warning");
-		priceWarningText = "Warning: Default Currency For Selected Vendor is ";
-		vendorWarningText = "Warning: Selected Currency is "
-		if (currencySelected == "USD" && vendorCurrencyID == "2") {
-			console.log("if (currencySelected == ");
-			priceWarningText += "Shekel";
-			vendorWarningText += "Dollars";
-			changeWarnings = true;
-		}
-		else if (currencySelected == "NIS" && vendorCurrencyID == "1") {
-			console.log("else if (currencySelected == ");
-			priceWarningText += "Dollars";
-			vendorWarningText += "Shekel";
-			changeWarnings = true;
-		}
-		else {
-			console.log("else");
-			priceWarning.html("");
-			vendorPriceWarning.html("");
-		}
-		if (changeWarnings) {
-			console.log("changewarnings is true")
-			priceWarning.html(priceWarningText);
-			vendorPriceWarning.html(vendorWarningText);
-        }
-    }
-
 
 	$("#unit").change(function () {
 		if ($("#currency").val() == "USD") {
