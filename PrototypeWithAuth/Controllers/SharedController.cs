@@ -722,7 +722,7 @@ namespace PrototypeWithAuth.Controllers
                 categoryID = 2;
             }
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
-            IQueryable<Request> fullRequestsList = _context.Requests.IgnoreQueryFilters().Where(r=>!r.IsDeleted).Where(r => r.Product.ProductName.Contains(requestIndexObject.SearchText)).Include(r => r.ApplicationUserCreator)
+            IQueryable<Request> fullRequestsList = _context.Requests.IgnoreQueryFilters().Where(r=>!r.IsDeleted).Where(r => r.Product.ProductName.Contains(selectedFilters==null?"":selectedFilters.SearchText)).Include(r => r.ApplicationUserCreator)
          .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)/*.Where(r => r.IsArchived == requestIndexObject.IsArchive)*/;
 
             int sideBarID = 0;

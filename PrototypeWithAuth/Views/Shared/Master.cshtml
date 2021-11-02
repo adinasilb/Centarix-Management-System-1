@@ -1183,19 +1183,7 @@
             if (status === undefined) {
                 requestStatusId = $(".request-status-id").val();
             }
-            var searchText = $('.search-by-name').val();
-            console.log(searchText);
-            //console.log('searchtext length before if' + searchText.length)
-            if (searchText == undefined || !searchText.length) {
-                searchText = $('.popover .search-by-name-in-filter').val();
-                console.log(searchText)
-                if (searchText == undefined || !searchText.length) {
-                    searchText = $('.search-by-name-in-filter').val();
-                    if (searchText == undefined || !searchText.length) {
-                        searchText = "";
-                    }
-                }
-            }
+     
             var queryString =
                 "PageNumber=" + $('.page-number').val() +
                 "&RequestStatusID=" + requestStatusId +
@@ -1205,8 +1193,7 @@
                 "&SelectedCurrency=" + $('#tempCurrency').val() +
                 "&SidebarFilterID=" + $('.sideBarFilterID').val() +
                 "&CategorySelected=" + $('#categorySortContent .select-category').is(":checked") +
-                "&SubCategorySelected=" + $('#categorySortContent .select-subcategory').is(":checked") +
-                "&searchText=" + searchText;
+                "&SubCategorySelected=" + $('#categorySortContent .select-subcategory').is(":checked");
             queryString += selectedPriceSort;
             console.log(queryString)
             return queryString;
@@ -1471,10 +1458,23 @@
                 catalogNumber = "";
             }
             console.log(catalogNumber)
+            var searchText = $('.search-by-name').val();
+            console.log(searchText);
+            //console.log('searchtext length before if' + searchText.length)
+            if (searchText == undefined || !searchText.length) {
+                searchText = $('.popover .search-by-name-in-filter').val();
+                console.log(searchText)
+                if (searchText == undefined || !searchText.length) {
+                    searchText = $('.search-by-name-in-filter').val();
+                    if (searchText == undefined || !searchText.length) {
+                        searchText = "";
+                    }
+                }
+            }
             return {
                 SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation,
                 SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived, CatalogNumber: catalogNumber,
-                SelectedTypesIDs: selectedType, NumFilters: $("#NumFilters").val()
+                SelectedTypesIDs: selectedType, NumFilters: $("#NumFilters").val(), "SearchText" :searchText
             }
         }
 

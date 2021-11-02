@@ -418,7 +418,7 @@ namespace PrototypeWithAuth.Controllers
             IQueryable<Request> fullRequestsList = _context.Requests
               .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)
               .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor);
-            IQueryable<Request> changingList = _context.Requests.Where(r => r.Product.ProductName.Contains(requestIndexObject.SearchText))
+            IQueryable<Request> changingList = _context.Requests.Where(r => r.Product.ProductName.Contains(selectedFilters.SearchText))
                 .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)
                 .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor);
             changingList = FilterListBySelectFilters(selectedFilters, changingList);
@@ -538,12 +538,12 @@ namespace PrototypeWithAuth.Controllers
             if (requestIndexObject.RequestStatusID == 7)
             {
                 fullRequestsListProprietary = FilterListBySelectFilters(selectedFilters, fullRequestsListProprietary);
-                fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.Product.ProductName.Contains(requestIndexObject.SearchText));
+                fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.Product.ProductName.Contains(selectedFilters.SearchText));
             }
             else
             {
                 fullRequestsList = FilterListBySelectFilters(selectedFilters, fullRequestsList);
-                fullRequestsList = fullRequestsList.Where(r => r.Product.ProductName.Contains(requestIndexObject.SearchText));
+                fullRequestsList = fullRequestsList.Where(r => r.Product.ProductName.Contains(selectedFilters.SearchText));
             }
 
             //int nonProprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
