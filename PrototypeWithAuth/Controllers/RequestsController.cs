@@ -124,7 +124,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Requests, LabManagement, Operations")]
-        private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject)
+        private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject, NotificationFilterViewModel notificationFilterViewModel=null)
         {
             RequestIndexPartialViewModelByVendor viewModelByVendor = new RequestIndexPartialViewModelByVendor();
             if (!requestIndexObject.CategorySelected && !requestIndexObject.SubcategorySelected)
@@ -193,8 +193,18 @@ namespace PrototypeWithAuth.Controllers
                     }
                     break;
                 case AppUtility.PageTypeEnum.AccountingNotifications:
-
+                   
                     var accountingNotificationsList = GetPaymentNotificationRequests(requestIndexObject.SidebarType);
+                    if (notificationFilterViewModel == null)
+                    {
+                        notificationFilterViewModel = new NotificationFilterViewModel() { Vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(v => v.CategoryTypeID).Contains(1)).ToList()};
+                    }
+                    else
+                    {
+                        accountingNotificationsList = accountingNotificationsList.Where(r => (notificationFilterViewModel.SelectedVendor == null || r.Product.VendorID == notificationFilterViewModel.SelectedVendor)
+                        && (notificationFilterViewModel.CentarixOrderNumber == null || r.ParentRequest.OrderNumber == notificationFilterViewModel.CentarixOrderNumber)
+                        && (notificationFilterViewModel.ProductName == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.ProductName.ToLower()))) ;
+                    }
                     iconList.Add(popoverPartialClarifyIcon);
                     switch (requestIndexObject.SidebarType)
                     {
@@ -219,7 +229,7 @@ namespace PrototypeWithAuth.Controllers
                         ButtonClasses = " invoice-add-all accounting-background-color ",
                         ButtonText = buttonText
                     }).ToLookup(c => c.Vendor);
-
+                    viewModelByVendor.NotificationFilterViewModel = notificationFilterViewModel;
                     break;
                 case AppUtility.PageTypeEnum.AccountingPayments:
 
@@ -3476,9 +3486,16 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [HttpPost]
-        public async Task<IActionResult> _IndexTableDataByVendor(RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> _IndexTableDataByVendor(RequestIndexObject requestIndexObject, NotificationFilterViewModel notificationFilterViewModel)
         {
-            return PartialView(await GetIndexViewModelByVendor(requestIndexObject));
+            return PartialView(await GetIndexViewModelByVendor(requestIndexObject, notificationFilterViewModel));
+        }
+
+        [HttpGet]
+        [HttpPost]
+        public async Task<IActionResult> _IndexTableByVendor(RequestIndexObject requestIndexObject, NotificationFilterViewModel notificationFilterViewModel)
+        {
+            return PartialView(await GetIndexViewModelByVendor(requestIndexObject, notificationFilterViewModel));
         }
 
         /*
@@ -4614,7 +4631,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Accounting")]
-        public async Task<IActionResult> AccountingNotifications(AppUtility.SidebarEnum accountingNotificationsEnum = AppUtility.SidebarEnum.NoInvoice)
+        public async Task<IActionResult> AccountingNotifications(AppUtility.SidebarEnum accountingNotificationsEnum = AppUtility.SidebarEnum.NoInvoice )
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingNotifications;
