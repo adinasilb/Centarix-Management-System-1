@@ -14,6 +14,7 @@
     var markReadOnlyClass = "";
     var hiddenSummaryClass = "";
     var disabled = "";
+    var vendorcurrencyid = "";
     if (modalType != AppUtility.RequestModalType.Create)
     {
         markReadOnlyClass = "mark-readonly";
@@ -21,6 +22,10 @@
         if (modalType == AppUtility.RequestModalType.Summary)
         {
             hiddenSummaryClass = "hidden";
+        }
+        if (Model.Requests[0].Product.Vendor.Country.CurrencyID != null)
+        {
+            vendorcurrencyid = Model.Requests[0].Product.Vendor.Country.CurrencyID.ToString();
         }
     }
     var projectCategories = AppUtility.ParentCategoryEnum.Consumables
@@ -204,7 +209,7 @@
                         )
                 <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
             </div>
-            <input type="hidden" id="VendorCurrencyID" />
+            <input type="hidden" id="VendorCurrencyID" value="@vendorcurrencyid" />
         </div>
         <input class="@vendorCategories" type="hidden" value="" id="vendor-primary-email" />
         <div class="col-md-6 @companyIDCategories">

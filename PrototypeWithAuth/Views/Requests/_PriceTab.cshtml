@@ -18,11 +18,13 @@
     var shekelReadOnly = "";
     var shekelSelected = "selected";
     var disabledProperty = "";
+    var changed = "false";
     if (modalType == AppUtility.RequestModalType.Edit || modalType == AppUtility.RequestModalType.Summary)
     {
         disabledProperty = "disabled";
         markReadOnlyClass = "mark-readonly";
         shekelReadOnly = "mark-readonly";
+        changed = "true";
         if (Model.Requests[0].Currency.Equals("USD"))
         {
             disableShekel = "disabled-text";
@@ -56,7 +58,7 @@
             <div class="col-6">
                 <div class="form-group">
                     <label class="control-label">Currency</label>
-                    <select id="currency" asp-for="Requests[0].Currency" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass">
+                    <select id="currency" asp-for="Requests[0].Currency" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass" changed="@changed">
                             <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
                             <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
                     </select>

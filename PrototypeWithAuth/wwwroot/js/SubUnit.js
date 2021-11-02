@@ -575,10 +575,14 @@ $(function () {
 			$(this).attr("changed", "true");
 			console.log("going to vendor currency warnings");
 			$.fn.CheckForVendorCurrencyWarning($("#VendorCurrencyID").val(), $("#currency").val());
+		}
+		if ($("#masterSectionType").val() == "Operations") {
+			$.fn.CheckForVendorCurrencyWarning($("#VendorCurrencyID").val(), $("#currency").val());
         }
 	});
 	$(".modal").on("change", "#currency", function (e) {
-		$.fn.CheckCurrency();
+		$.fn.CheckCurrency(); 
+		$.fn.CheckForVendorCurrencyWarning($("#VendorCurrencyID").val(), $("#currency").val());
 	});
 	$("#exchangeRate").change(function (e) {
 		$.fn.CalculateSumPlusVat();
