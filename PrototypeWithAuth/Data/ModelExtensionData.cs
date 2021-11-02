@@ -2792,361 +2792,39 @@ namespace PrototypeWithAuth.Data
                 ProtocolCategoryDescription = "Delivery Systems"
             }
         );
-
             modelBuilder.Entity<ProtocolSubCategory>().HasData(
-             new ProtocolSubCategory
-             {
-                 ProtocolSubCategoryTypeID = 1,
-                 ProtocolCategoryTypeID = 1,
-                 ProtocolSubCategoryTypeDescription = "Telomeres "
-             },
-             new ProtocolSubCategory
-             {
-                 ProtocolSubCategoryTypeID = 2,
-                 ProtocolCategoryTypeID = 1,
-                 ProtocolSubCategoryTypeDescription = "Epigenetics"
-             },
-            new ProtocolSubCategory
-            {
-                ProtocolSubCategoryTypeID = 3,
-                ProtocolCategoryTypeID = 2,
-                ProtocolSubCategoryTypeDescription = "Telomeres "
-            },
-             new ProtocolSubCategory
-             {
-                 ProtocolSubCategoryTypeID = 4,
-                 ProtocolCategoryTypeID = 2,
-                 ProtocolSubCategoryTypeDescription = "Transcription"
-             },
-              new ProtocolSubCategory
-              {
-                  ProtocolSubCategoryTypeID = 5,
-                  ProtocolCategoryTypeID = 2,
-                  ProtocolSubCategoryTypeDescription = "Methylation"
-              },
-                 new ProtocolSubCategory
-                 {
-                     ProtocolSubCategoryTypeID = 6,
-                     ProtocolCategoryTypeID = 3,
-                     ProtocolSubCategoryTypeDescription = "AAV"
-                 }
+               SeededData.ProtocolSubCategoryData.Get()
           );
-
+        
             modelBuilder.Entity<ResourceCategory>().HasData(
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 1,
-                    ResourceCategoryDescription = "Rejuvenation",
-                    IsMain = true,
-                    IsResourceType = false,
-                    ImageUrl = "rejuvenation_image.svg",
-                    IsReportsCategory = true
-                },
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 2,
-                    ResourceCategoryDescription = "Biomarkers",
-                    IsMain = true,
-                    IsResourceType = false,
-                    ImageUrl = "biomarkers_image.svg",
-                    IsReportsCategory = true
-                },
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 3,
-                    ResourceCategoryDescription = "Delivery Systems",
-                    IsMain = true,
-                    IsResourceType = false,
-                    ImageUrl = "delivery_systems_image.svg",
-                    IsReportsCategory = true
-                },
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 4,
-                    ResourceCategoryDescription = "Clinical Trials",
-                    IsMain = true,
-                    IsResourceType = false,
-                    ImageUrl = "clinical_trials_image.svg"
-                },
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 5,
-                    ResourceCategoryDescription = "AAV",
-                    IsMain = false,
-                    IsResourceType = false
-                },
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 6,
-                    ResourceCategoryDescription = "Telomere Rejuvenation",
-                    IsMain = false,
-                    IsResourceType = false
-                },
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 7,
-                    ResourceCategoryDescription = "Telomere Measurement",
-                    IsMain = false,
-                    IsResourceType = false
-                },
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 8,
-                    ResourceCategoryDescription = "Methylation Biomarker",
-                    IsMain = false,
-                    IsResourceType = false
-                },
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 9,
-                    ResourceCategoryDescription = "Transcriptome",
-                    IsMain = false,
-                    IsResourceType = false
-                },
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 10,
-                    ResourceCategoryDescription = "Serum Rejuvenation",
-                    IsMain = false,
-                    IsResourceType = false
-                },
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 11,
-                    ResourceCategoryDescription = "Reprogramming",
-                    IsMain = false,
-                    IsResourceType = false
-                },
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 12,
-                    ResourceCategoryDescription = "Methylation Rejuvenation",
-                    IsMain = false,
-                    IsResourceType = false
-                },
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 13,
-                    ResourceCategoryDescription = "New Methods",
-                    IsMain = false,
-                    IsResourceType = false
-                },
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 14,
-                    ResourceCategoryDescription = "Software",
-                    IsMain = false,
-                    IsResourceType = true,
-                    ImageUrl = "software_image.svg"
-                },
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 15,
-                    ResourceCategoryDescription = "Learning",
-                    IsMain = false,
-                    IsResourceType = true,
-                    ImageUrl = "learning_image.svg"
-                },
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 16,
-                    ResourceCategoryDescription = "Companies",
-                    IsMain = false,
-                    IsResourceType = true,
-                    ImageUrl = "companies_image.svg"
-                },
-                new ResourceCategory
-                {
-                    ResourceCategoryID = 17,
-                    ResourceCategoryDescription = "News",
-                    IsMain = false,
-                    IsResourceType = true,
-                    ImageUrl = "news_image.svg"
-                }
-                );
+                SeededData.ResourceCategoryData.Get()
+            );
 
             modelBuilder.Entity<ReportType>().HasData(
-               new ReportType
-               {
-                   ReportTypeID = 1,
-                   ReportTypeDescription = "Daily"
-               },
-               new ReportType
-               {
-                   ReportTypeID = 2,
-                   ReportTypeDescription = "Weekly"
-               },
-               new ReportType
-               {
-                   ReportTypeID = 3,
-                   ReportTypeDescription = "Monthly"
-               }
-        );
+               SeededData.ReportTypeData.Get()               
+            );
             modelBuilder.Entity<MaterialCategory>().HasData(
-                new MaterialCategory
-                {
-                    MaterialCategoryID = 1,
-                    MaterialCategoryDescription = "Reagents",
-                },
-                new MaterialCategory
-                {
-                    MaterialCategoryID = 2,
-                    MaterialCategoryDescription = "Plastics",
-                },
-                new MaterialCategory
-                {
-                    MaterialCategoryID = 3,
-                    MaterialCategoryDescription = "Equipment",
-                },
-                new MaterialCategory
-                {
-                    MaterialCategoryID = 4,
-                    MaterialCategoryDescription = "Buffers",
-                }
+                SeededData.MaterialCategoryData.Get()               
            );
 
             modelBuilder.Entity<LineType>().HasData(
-                new LineType
-                {
-                    LineTypeID = 1,
-                    LineTypeDescription = "Header",
-                    LineTypeChildID = 2
-                },
-                new LineType
-                {
-                    LineTypeID = 2,
-                    LineTypeDescription = "Sub Header",
-                    LineTypeParentID = 1,
-                    LineTypeChildID = 3
-                },
-                new LineType
-                {
-                    LineTypeID = 3,
-                    LineTypeDescription = "Step",
-                    LineTypeParentID = 2
-                }
+                SeededData.LineTypeData.Get()               
              );
             modelBuilder.Entity<FunctionType>().HasData(
-                new FunctionType
-                {
-                    FunctionTypeID = 1,
-                    FunctionDescription = "Add Image",
-                    Icon = "icon-account_box-24px1",
-                    IconActionClass = "add-image-to-line",
-                    DescriptionEnum = "AddImage"
-                },
-                new FunctionType
-                {
-                    FunctionTypeID = 2,
-                    FunctionDescription = "Add Timer",
-                    Icon = "icon-centarix-icons-19",
-                    IconActionClass = "add-timer-to-line",
-                    DescriptionEnum = "AddTimer"
-                },
-                new FunctionType
-                {
-                    FunctionTypeID = 3,
-                    FunctionDescription = "Add Comment",
-                    Icon = "icon-comment-24px",
-                    IconActionClass = "add-comment-to-line",
-                    DescriptionEnum = "AddComment"
-                },
-                new FunctionType
-                {
-                    FunctionTypeID = 4,
-                    FunctionDescription = "Add Warning",
-                    Icon = "icon-report_problem-24px",
-                    IconActionClass = "add-warning-to-line",
-                    DescriptionEnum = "AddWarning"
-                },
-                new FunctionType
-                {
-                    FunctionTypeID = 5,
-                    FunctionDescription = "Add Tip",
-                    Icon = "icon-tip-24px",
-                    IconActionClass = "add-tip-to-line",
-                    DescriptionEnum = "AddTip"
-                },
-                new FunctionType
-                {
-                    FunctionTypeID = 6,
-                    FunctionDescription = "Add Table",
-                    Icon = "icon-table_chart-24px1",
-                    IconActionClass = "add-table-to-line",
-                    DescriptionEnum = "AddTable"
-                },
-                new FunctionType
-                {
-                    FunctionTypeID = 7,
-                    FunctionDescription = "Add Template",
-                    Icon = "",
-                    IconActionClass = "add-template-to-line",
-                    DescriptionEnum = "AddTemplate"
-                },
-                new FunctionType
-                {
-                    FunctionTypeID = 8,
-                    FunctionDescription = "Add Stop",
-                    Icon = "icon-stop-24px",
-                    IconActionClass = "add-stop-to-line",
-                    DescriptionEnum = "AddStop"
-                },
-                new FunctionType
-                {
-                    FunctionTypeID = 9,
-                    FunctionDescription = "Add Link To Product",
-                    Icon = "icon-attach-item-24px",
-                    IconActionClass = "add-product-to-line",
-                    DescriptionEnum = "AddLinkToProduct"
-                },
-                new FunctionType
-                {
-                    FunctionTypeID = 10,
-                    FunctionDescription = "Add Link To Protocol",
-                    Icon = "icon-attach-protocol-24px",
-                    IconActionClass = "add-protocol-to-line",
-                    DescriptionEnum = "AddLinkToProtocol"
-                },
-                new FunctionType
-                {
-                    FunctionTypeID = 11,
-                    FunctionDescription = "Add File",
-                    Icon = "icon-description-24px2",
-                    IconActionClass = "add-file-to-line",
-                    DescriptionEnum = "AddFile"
-                }
-          );
+               SeededData.FunctionTypeData.Get()
+            );
 
             modelBuilder.Entity<Gender>().HasData(
-                  new Gender
-                  {
-                      GenderID = 1,
-                      Description = "Male"
-                  },
-                  new Gender
-                  {
-                      GenderID = 2,
-                      Description = "Female"
-                  }
-             );
+               SeededData.GenderData.Get()
+            );
 
             modelBuilder.Entity<ParticipantStatus>().HasData(
-                  new ParticipantStatus
-                  {
-                      ParticipantStatusID = 1,
-                      Description = "Active"
-                  },
-                  new ParticipantStatus
-                  {
-                      ParticipantStatusID = 2,
-                      Description = "Dropout"
-                  }
-             );
+                SeededData.ParticipantStatusData.Get()
+            );
 
             modelBuilder.Entity<Country>().HasData(
-                
                 SeededData.CountryData.Get()
-                );
+            );
 
         }
     }
