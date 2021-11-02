@@ -469,7 +469,7 @@ namespace PrototypeWithAuth.Controllers
                     locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
                     locationInstancesSelected = new List<LocationInstance>(),
                 };
-
+                requestItemViewModel.ReceivedLocationViewModel = receivedLocationViewModel;
 
                 if (requestLocationInstances.Any())
                 {
@@ -483,7 +483,7 @@ namespace PrototypeWithAuth.Controllers
                     if (parentLocationInstance == null)
                     {
                         var locationType = _context.TemporaryLocationInstances.IgnoreQueryFilters().Where(l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID).Select(li => li.LocationType).FirstOrDefault();
-                        requestItemViewModel.ReceivedLocationViewModel = receivedLocationViewModel;
+                        
                         ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
                         {
                             locationInstancesDepthZero = new List<LocationInstance>(),

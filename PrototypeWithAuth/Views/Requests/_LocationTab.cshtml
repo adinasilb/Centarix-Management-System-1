@@ -75,7 +75,7 @@
                     </div>
 
                     <ul class="p-0 locationinstance dropdown-menu ">
-                        @if (Model.ReceivedLocationViewModel != null)
+                        @if (@*Model.ReceivedLocationViewModel != null*@ Model.ModalType == AppUtility.RequestModalType.Edit && Model.Requests[0].RequestStatusID == 3)
                         {
                             foreach (var locationType in Model.ReceivedLocationViewModel.locationTypesDepthZero)
                             {
