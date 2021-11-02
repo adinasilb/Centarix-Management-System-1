@@ -23,7 +23,7 @@
         {
             hiddenSummaryClass = "hidden";
         }
-        if (Model.Requests[0].Product.Vendor.Country.CurrencyID != null)
+        if (Model.Requests[0].Product.Vendor?.Country.CurrencyID != null)
         {
             vendorcurrencyid = Model.Requests[0].Product.Vendor.Country.CurrencyID.ToString();
         }
