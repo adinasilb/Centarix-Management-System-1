@@ -3111,17 +3111,17 @@ body.modal-open .popover {
     min-width: 100% !important;
 }
 
-.scroll-body {
+/*.scroll-body {
     overflow: auto;
     height: 750px;
     display: block;
-}
+}*/
 
 .datacalculation {
     border-radius: .5rem;
     border: 2px solid var(--biomarkers-color);
 }
-.scroll-page {
+/*.scroll-page {
     overflow: auto;
     height: 900px;
     display: block;
@@ -3131,4 +3131,4 @@ body.modal-open .popover {
     width: 50% !important;
     position: absolute !important;
     left: 25% !important;
-}
+}*/
