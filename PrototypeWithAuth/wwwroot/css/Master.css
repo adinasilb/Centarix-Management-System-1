@@ -346,7 +346,7 @@ table.visual-locations td .content {
 
 
 body {
-    overflow: hidden;
+  /*  overflow: hidden;*/
     color: var(--black-87);
     text-transform: capitalize;
     font-weight: var(--bold-regular)
