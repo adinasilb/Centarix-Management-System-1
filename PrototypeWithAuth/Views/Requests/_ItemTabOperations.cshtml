@@ -24,7 +24,7 @@
         //disabled = "";
         disabledText = "";
     }
-    
+
 }
 
 <div class="operations-item-div">
@@ -34,7 +34,7 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label class="control-label">Currency</label>
-                        <select id="currency" asp-for="Requests[0].Currency" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass @disabledText" >
+                        <select id="currency" asp-for="Requests[0].Currency" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass @disabledText">
                             <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
                             <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
                         </select>
@@ -46,6 +46,9 @@
                         <input name="Requests[0].ExchangeRate" value="@Model.Requests[0].ExchangeRate" class="form-control-plaintext border-bottom @markReadOnlyClass" id="exchangeRate" />
                         <span asp-validation-for="Requests[0].ExchangeRate" class="text-danger-centarix"></span>
                     </div>
+                </div>
+                <div class="col-12">
+                    <span style="color: #EED202;" class="small-text" id="price-warning"></span>
                 </div>
             </div>
         </div>

@@ -66,6 +66,11 @@
     --timekeeper-alt-color: #009688;
     --disabled-filter: invert(69%) sepia(13%) saturate(0%) hue-rotate(166deg) brightness(100%) contrast(94%);
     --light-gray: #E5E5E5;
+    --warning-color: #EED202;
+}
+
+.warning-color {
+    color: var(--warning-color);
 }
 
 .success-color {

@@ -3148,6 +3148,10 @@ namespace PrototypeWithAuth.Data
                 SeededData.CountryData.GetCountries()
                 );
 
+            modelBuilder.Entity<Currency>().HasData(
+                SeededData.CurrencyData.GetCurrencies()
+                );
+
         }
     }
 }
