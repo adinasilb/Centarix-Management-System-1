@@ -29,7 +29,10 @@
                 </button>
             </div>
 
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; ">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; " class="confirmEmailModalForm">
+                <div class="row error-message">
+                    @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
+                </div>
                 @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel);}
                 <input asp-for="RequestID" style="display: none;" />
 
@@ -39,16 +42,16 @@
 
                 <div class="modal-footer p-4">
                     <div class="m-auto">
-                        <input type="submit" class="custom-button custom-button-font @bcColor between-button-margin complete-order" asp-action="ConfirmEmailModal" value="Confirm & Send Email" />
+                        <input type="button" class="custom-button custom-button-font @bcColor between-button-margin complete-order submitConfirmEmail" value="Confirm & Send Email" />
 
                         <input type="button" class="custom-cancel custom-button cancel-email cancelEmail" asp-action="CancelEmailModal @bcColor" value="Cancel Email" />
                     </div>
                 </div>
                 @*<script> //not sure why setting with js ????
-                    var today = new Date();
-                    var date = moment(today);
-                    document.getElementById("date").innerHTML = date.format("D MMM YYYY");
-                </script>*@
+            var today = new Date();
+            var date = moment(today);
+            document.getElementById("date").innerHTML = date.format("D MMM YYYY");
+        </script>*@
 
 
             </form>
@@ -58,6 +61,55 @@
 </div>
 <script src="~/js/CreateItem.js"></script>
 <script>
+    $(".submitConfirmEmail").off('click').on("click", function (e) {
+        e.preventDefault();
+        console.log("submit confirm email");
+        //alert("validate form");
+   
+        $('.activeSubmit').removeClass('disabled-submit')
+        $(".confirmEmailModalForm").prop('disabled', true)
+        $("#loading").show();
+        $("#RedirectAction").val(window.location.href);
+        //alert("window: " + window.location.href);
+        console.log("$('#SectionType').val() : " + $("#masterSectionType").val())
+        var formData = new FormData($(".confirmEmailModalForm")[0]);
+        $.ajax({
+            contentType: false,
+            processData: false,
+            async: true,
+            url: "/Requests/ConfirmEmailModal",
+            data: formData,
+            traditional: true,
+            type: "POST",
+            cache: false,
+            success: function (data) {
+                $(".submitConfirmEmail").prop('disabled', false)
+
+                //this if is not necessary right now because everythin is always _indextabledata
+                var sidebarType = $('#masterSidebarType').val();
+                var viewClass = "_IndexTableData";
+                if (sidebarType == "Quotes" || sidebarType == "Orders" || sidebarType == "Cart") {
+                    viewClass = "_IndexTableDataByVendor";
+                }                    
+                $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "terms, step-1, reorder-item, confirm-email");
+                                        
+                $("#loading").hide();
+                return true;
+            },
+            error: function (jqxhr) {
+                console.log('confirm email modal error')
+                /*if (jqxhr.status == 500) {
+                    $.fn.OpenModal('termsModal', 'terms', jqxhr.responseText);
+                }*/
+                $('.confirmEmailModalForm .error-message').html(jqxhr.responseText)
+                $(".submitConfirmEmail").prop('disabled', false)
+                $("#loading").hide();
+                return true;
+            }
+        });
+
+     });
+
     $('.cancelEmail').off('click').on('click', function (e) {
         e.preventDefault();
         console.log("in cancel email");

@@ -198,10 +198,14 @@
 
                     if (orderType == 'RequestPriceQuote') {
                         $('.submitOrder').prop('disabled', false)
-                        $.fn.CloseModal('reorder-item')
-                        if (data != '') {
-                            $('.render-body').html(data);
+                        //this if is not necessary right now because everythin is always _indextabledata
+                        var sidebarType = $('#masterSidebarType').val();
+                        var viewClass = "_IndexTableData";
+                        if (sidebarType == "Quotes" || sidebarType == "Orders" || sidebarType == "Cart") {
+                            viewClass = "_IndexTableDataByVendor";
                         }
+                        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "reorder-item");
+
                     }
                     else {
                         $(".modal .temprequesthiddenfors").html('');
