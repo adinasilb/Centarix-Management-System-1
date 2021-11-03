@@ -3127,8 +3127,8 @@ body.modal-open .popover {
     display: block;
 }
 */
-/*.add-item-box {
+.add-item-box {
     width: 50% !important;
     position: absolute !important;
     left: 25% !important;
-}*/
+}
