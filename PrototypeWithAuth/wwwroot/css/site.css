@@ -3111,11 +3111,11 @@ body.modal-open .popover {
     min-width: 100% !important;
 }
 
-/*.scroll-body {
+._IndexTableData.scroll-body {
     overflow: auto;
-    height: 750px;
+    max-height: 500px;
     display: block;
-}*/
+}
 
 .datacalculation {
     border-radius: .5rem;
@@ -3126,8 +3126,8 @@ body.modal-open .popover {
     height: 900px;
     display: block;
 }
-
-.add-item-box {
+*/
+/*.add-item-box {
     width: 50% !important;
     position: absolute !important;
     left: 25% !important;
