@@ -14,13 +14,13 @@
         e.preventDefault();
         $.ajax({
             async: true,
-            url: "/Biomarkers/EditParticipantModal?ParticipantID=" + $(this).attr("value"),
+            url: "/Biomarkers/EditParticipantModal?ParticipantID=" + $(this).attr("value") + "&IsTestPage=" + $("#IsTestPage").attr("value"),
             traditional: true,
             type: "GET",
             cache: false,
             success: function (data) {
                 $.fn.OpenModal('edit-participant-modal', 'edit-participant', data);
-                $(".mdb-select").materialSelect();
+                $(".edit-participant-modal .mdb-select").materialSelect();
                 return false;
             }
         });

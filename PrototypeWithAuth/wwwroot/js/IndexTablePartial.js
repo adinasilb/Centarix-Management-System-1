@@ -179,7 +179,7 @@ $(function () {
     });
 
 
-    $("body").off("click", ".load-order-details").on("click", ".load-order-details", function (e) {
+    $("body, .modal").off("click", ".load-order-details").on("click", ".load-order-details", function (e) {
         //alert('in function')
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -430,6 +430,10 @@ $(function () {
     $.fn.ajaxPartialIndexTable = function (status, url, viewClass, type, formdata, modalClass = "", /*months, years, */) {
         console.log("in ajax partial index call " + url);
         //alert('before bind filter')
+        if ($('#searchHiddenForsForm').length) {
+            var moreFormData = new FormData($('#searchHiddenForsForm')[0])
+            formdata = $.fn.CombineTwoFormDatas(moreFormData, formdata);
+        }
         if ($("#inventoryFilterContent").length) {
             var selectedFilters = $.fn.BindSelectedFilters("");
             console.log('in if')
@@ -455,8 +459,17 @@ $(function () {
         })
         var selectedPriceSortObj = { "SelectedPriceSort": selectedPriceSort }
         console.log(selectedPriceSortObj)*/
-		if (formdata == undefined) {
-			console.log("formdata is undefined");
+        if (modalClass != "") {
+
+           var classes = modalClass.split( ",")
+            console.log(modalClass)
+            $.each( classes, function( index){
+                console.log(classes[index])
+            	$.fn.CloseModal($.trim(classes[index]));
+                });
+		
+        } else {
+			console.log("in else");
 			/*formdata = {
 				PageNumber: $('.page-number').val(),
 				RequestStatusID: status,
@@ -484,9 +497,6 @@ $(function () {
             url += listString;
             //formdata = {}; //so won't crash when do object.assign()
             //console.log(formdata)
-		}
-		else {
-			$.fn.CloseModal(modalClass);
         }
         //var objectsToAdd = [];
         //if (selectedFilters != undefined/*should also somehow check if anything is chosen...*/) { objectsToAdd.push(selectedFilters) }
@@ -536,37 +546,7 @@ $(function () {
 
         return false;
     }
-    $.fn.AddObjectToFormdata = function (formdata, object) {
-
-            console.log('in add object to formdata')
-            /*console.log(arrayOfObjects)
-            var newFormData = formdata;
-            for (var obj of arrayOfObjects) {
-                Object.assign(newFormData, obj);
-                console.log('obj ' + obj)
-            } */
-        if (formdata == undefined) {
-            var formdata = new FormData();
-        }
-        for (var key in object) {
-
-            if (Array.isArray(object[key])) {
-                for (const val of object[key].values()) {
-                    formdata.append(key, val);
-                    console.log('key' + key);
-                    console.log('val' + val)
-                }
-            }
-            else {
-                formdata.append(key, object[key]);
-                console.log('key ' + key);
-                console.log('value ' + object[key])
-            }
-        }
-        console.log(...formdata);
     
-        return formdata;
-    }
 
     
 });

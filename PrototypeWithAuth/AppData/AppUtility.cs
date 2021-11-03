@@ -816,6 +816,11 @@ namespace PrototypeWithAuth.AppData
         {
             return date?.ToString("d MMM yyyy") ?? "";
         }
+
+        public static DateTime? GetJustDateOnNullableDateTime(this DateTime? date)
+        {
+            return date?.Date?? null;
+        }
         public static string GetElixirDateFormat(this DateTime date)
         {
             return date.ToString("d MMM yyyy");

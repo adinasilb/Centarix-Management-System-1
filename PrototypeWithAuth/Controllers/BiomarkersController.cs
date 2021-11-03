@@ -317,14 +317,15 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Biomarkers")]
-        public ActionResult EditParticipantModal(int ParticipantID)
+        public ActionResult EditParticipantModal(int ParticipantID, bool IsTestPage)
         {
             AddParticipantViewModel addParticipantViewModel = new AddParticipantViewModel()
             {
                 Participant = _context.Participants.Where(p => p.ParticipantID == ParticipantID).Include(p => p.Gender).Include(p => p.ParticipantStatus).FirstOrDefault(),
                 Genders = _context.Genders.ToList(),
                 ParticipantStatuses = _context.ParticipantStatuses.ToList(),
-                DisableFields = true
+                DisableFields = true,
+                IsTestPage = IsTestPage
             };
 
             return PartialView(addParticipantViewModel);
@@ -348,7 +349,22 @@ namespace PrototypeWithAuth.Controllers
                     throw ex;
                 }
             }
-            return RedirectToAction("_Entries", new {ParticipantID = editParticipant.Participant.ParticipantID });
+            if (editParticipant.IsTestPage)
+            {
+                Participant participant = editParticipant.Participant;
+                participant.Gender = _context.Genders.Where(g => g.GenderID == participant.GenderID).FirstOrDefault();
+                participant.ParticipantStatus = _context.ParticipantStatuses.Where(g => g.ParticipantStatusID == participant.ParticipantStatusID).FirstOrDefault();
+                return PartialView ("_ParticipantsHeader", participant);
+            }
+            else
+            {
+                return RedirectToAction("_Entries", new { ParticipantID = editParticipant.Participant.ParticipantID });
+            }
+        }
+
+        public async Task<ActionResult> _ParticipantsHeader(int ParticipantID)
+        {
+            return PartialView (_context.Participants.Where(p => p.ParticipantID == ParticipantID).FirstOrDefault());
         }
 
         public async Task<int> GetParticipantsCount(int ExperimentID)

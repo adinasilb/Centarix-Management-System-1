@@ -12,5 +12,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<Gender> Genders { get; set; }
         public List<ParticipantStatus> ParticipantStatuses { get; set; }
         public bool DisableFields { get; set; }
+        public bool IsTestPage { get; set; }
     }
 }

@@ -1,0 +1,87 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
+@using PrototypeWithAuth.AppData
+@using Microsoft.Extensions.Primitives
+@{
+    StringValues action;
+    Context.Request.Headers.TryGetValue("Referer", out action);
+}
+
+<div class="row pb-3">
+    <a style="z-index:100" url="@action" class="title-label back-to-search btn-link heading-1 ">
+        <i class="icon-arrow_back_ios-24px-1" style="font-size:1.4rem;"></i>
+        <label class="pl-2">Search</label>
+    </a>
+</div>
+<form id="searchHiddenForsForm">
+    <input type="hidden" asp-for="RequestsSearchViewModel.ParentCategoryID" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.ProductSubcategoryID" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.VendorID" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.ItemName" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.ProductHebrewName" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.InvoiceNumber" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.InvoiceDate" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.Batch" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.ExpirationDate" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.CreationDate" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.Currency" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.ArrivalDate" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.ApplicationUserReceiverID" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.QuoteNumber" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.CatalogNumber" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.SerialNumber" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.OrderDate" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.OrderNumber" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.SupplierOrderNumber" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.ApplicationUserOwnerID" />
+</form>
+@{
+    string view = "";
+
+}
+@switch ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()])
+{
+    case AppUtility.PageTypeEnum.RequestRequest:
+    case AppUtility.PageTypeEnum.OperationsRequest:
+        view = "_IndexTableWithCounts";
+        break;
+    case AppUtility.PageTypeEnum.RequestSummary:
+        view = "_IndexTableWithProprietaryTabs";
+        break;
+    case AppUtility.PageTypeEnum.AccountingGeneral:
+        view = "AccountingGeneral";
+        break;
+    case AppUtility.PageTypeEnum.LabManagementQuotes:
+        //how do we know if it's quotes or orders?
+        break;
+    case AppUtility.PageTypeEnum.AccountingPayments:
+        //how do we know which payment type to show?
+        break;
+
+}
+<div class="@view">
+    @{ await Html.RenderPartialAsync(view, Model);}
+</div>
+<script>
+    $('.back-to-search').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var url = $(this).attr('url');
+        console.log(url)
+        var formdata = new FormData($("#searchHiddenForsForm")[0]);
+        var formdataAsString = new URLSearchParams(formdata).toString();
+        $.ajax({
+            async: true,
+            url: url + '&' + formdataAsString,
+            traditional: true,
+            type: "GET",
+            cache: false,
+            success: function (data) {
+                $('.render-body').html(data);
+                $('#search-form .mdb-select').materialSelect();
+            },
+            error: function (jqxhr) {
+                $('.error-message').html(jqxhr.responseText);
+            }
+        })
+    })
+</script>
