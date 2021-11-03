@@ -3110,12 +3110,12 @@ body.modal-open .popover {
 .addFunctionModal .doc-card-outer-div {
     min-width: 100% !important;
 }
-
+/*
 ._IndexTableData.scroll-body {
-    overflow: auto;
-    max-height: 500px;
+    overflow: scroll;
+    max-height:750px;
     display: block;
-}
+}*/
 
 .datacalculation {
     border-radius: .5rem;
