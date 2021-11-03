@@ -1,7 +1,6 @@
 ﻿
 
 $('.search-by-name, .search-by-vendor, .search-by-order-number').on('change', function (e) {
-	alert("here")
 	var searchText = $('.search-by-name').val();
 	var vendorID = $('select.search-by-vendor').val();
 	var orderNumber =$('.search-by-order-number').val();
