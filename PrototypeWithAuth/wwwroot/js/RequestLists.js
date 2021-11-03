@@ -39,22 +39,10 @@
         });
     })
 
-    $(".change-list").click(function (e) {
-        $.ajax({
-            async: true,
-            url: "/Requests/_IndexTableWithListTabs/?listID=" + $(this).attr("value"),
-            traditional: true,
-            type: "GET",
-            cache: false,
-            success: function (data) {
-                console.log("update tabs")
-                $("._IndexTableListTabs").html(data)
-                return true;
-            },
-            error: function (jqxhr) {
-                $('.error-message').html(jqxhr.responseText);
-            }
-        });
+    $(".change-list").off("click").on("click",function (e) {
+        $("#ListID").val($(this).attr("value"))
+        var url = "/Requests/_IndexTableWithListTabs/?" + $.fn.getRequestIndexString()
+        $.fn.ajaxPartialIndexTable(-1,url, "._IndexTableListTabs", "GET")
     })
 
     $(".save-list").off("click").on("click", function (e) {

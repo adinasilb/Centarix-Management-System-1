@@ -204,6 +204,9 @@
                         if (sidebarType == "Quotes" || sidebarType == "Orders" || sidebarType == "Cart") {
                             viewClass = "_IndexTableDataByVendor";
                         }
+                        //if (sidebarType = "MyLists") {
+                        //    viewClass = "_IndexTableWithListTabs";
+                        //}
                         $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "reorder-item");
 
                     }

@@ -573,11 +573,11 @@ namespace PrototypeWithAuth.Controllers
             RequestIndexPartialViewModel viewModel = await base.GetIndexViewModel(requestIndexObject);
             return viewModel;
         }
+
         [Authorize(Roles = "Requests")]
-        public async Task<RequestListIndexViewModel> GetRequestListIndexObjectAsync()
+        public async Task<RequestListIndexViewModel> GetRequestListIndexObjectAsync(RequestIndexObject requestIndexObject)
         {
-            var userLists = _context.RequestLists.Where(l => l.ApplicationUserOwnerID == _userManager.GetUserId(User)).ToList();
-            var listId = 0;
+            var userLists = _context.RequestLists.Where(l => l.ApplicationUserOwnerID == _userManager.GetUserId(User)).OrderBy(l => l.DateCreated).ToList();
             if (userLists.Count == 0)
             {
                 RequestList requestList = new RequestList
@@ -586,44 +586,28 @@ namespace PrototypeWithAuth.Controllers
                     ApplicationUserOwnerID = _userManager.GetUserId(User),
                     RequestListRequests = new List<RequestListRequest>(),
                     DateCreated = DateTime.Now,
-                    IsDefault= true
+                    IsDefault = true
                 };
                 try
                 {
                     _context.Entry(requestList).State = EntityState.Added;
                     await _context.SaveChangesAsync();
-                    listId = requestList.ListID;
+                    requestIndexObject.ListID = requestList.ListID;
                 }
                 catch
                 { }
             }
-            else
+            if(requestIndexObject.ListID == 0)
             {
-                listId = userLists.OrderBy(rl => rl.DateCreated).FirstOrDefault().ListID;
+                requestIndexObject.ListID = userLists.First().ListID;
             }
-            return await GetRequestListIndexObjectAsync(listId);
-        }
-            [Authorize(Roles = "Requests")]
-        public async Task<RequestListIndexViewModel> GetRequestListIndexObjectAsync(int listId)
-        {
-            var userLists = _context.RequestLists.Where(l => l.ApplicationUserOwnerID == _userManager.GetUserId(User)).OrderBy(l => l.DateCreated).ToList();
-            if(listId == 0)
-            {
-                listId = userLists.First().ListID;
-            }
-            RequestIndexObject requestIndexObject = new RequestIndexObject()
-            {
-                PageType = AppUtility.PageTypeEnum.RequestCart,
-                SidebarType = AppUtility.SidebarEnum.MyLists,
-                ListID = listId
-            };
             RequestIndexPartialViewModel requestIndexViewModel = await base.GetIndexViewModel(requestIndexObject);
             RequestListIndexViewModel viewModel = new RequestListIndexViewModel
             {
                 RequestIndexPartialViewModel = requestIndexViewModel,
-                ListID = listId,
+                ListID = requestIndexObject.ListID,
                 Lists = userLists
-        };
+            };
             return viewModel;
         }
 
@@ -1812,20 +1796,21 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.MyLists;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            //RequestIndexObject requestIndexObject = new RequestIndexObject()
-            //{
-            //    PageType = AppUtility.PageTypeEnum.RequestCart,
-            //    SidebarType = AppUtility.SidebarEnum.SharedRequests
-            //};
-            
-            RequestListIndexViewModel viewModel = await GetRequestListIndexObjectAsync();
+            RequestIndexObject requestIndexObject = new RequestIndexObject()
+            {
+                PageType = AppUtility.PageTypeEnum.RequestCart,
+                SidebarType = AppUtility.SidebarEnum.MyLists
+            };
+
+            RequestListIndexViewModel viewModel = await GetRequestListIndexObjectAsync(requestIndexObject);
             return View(viewModel);
         }
         [HttpGet]
+        [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTableWithListTabs(int listID = 0)
+        public async Task<IActionResult> _IndexTableWithListTabs(RequestIndexObject requestIndexObject)
         {
-            RequestListIndexViewModel viewModel = await GetRequestListIndexObjectAsync(listID);
+            RequestListIndexViewModel viewModel = await GetRequestListIndexObjectAsync(requestIndexObject);
             return PartialView(viewModel);
         }
 

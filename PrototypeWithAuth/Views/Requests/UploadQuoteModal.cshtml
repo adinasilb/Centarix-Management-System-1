@@ -199,7 +199,6 @@
                     if (sidebarType == "Quotes" || sidebarType == "Orders" || sidebarType == "Cart") {
                         viewClass = "_IndexTableDataByVendor";
                     }
-
                     if (data == "") {
                         $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "step-1, reorder-item");
                         $(".save-item").removeClass("save-item").off('click')
