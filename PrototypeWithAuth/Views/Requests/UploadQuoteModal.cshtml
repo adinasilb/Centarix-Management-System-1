@@ -194,27 +194,16 @@
                     $('.modal .temprequesthiddenfors').html('');
                     console.log($("#OrderTypeEnum").val())
                     $('.submitQuote').prop('disabled', false);
-                    if ($("#OrderTypeEnum").val() == "AddToCart" || jqxhr.status == "210") {
-                        $.fn.CloseModal("step-1");
-                        $.fn.CloseModal("edits");
-                        $.fn.CloseModal("reorder-item");
-                        console.log('remove save item')
-                        $(".save-item").removeClass("save-item").off('click')
-                        console.log("Index");
-                        /*if ($(".editModal").length > 0) { //will never get in cuz of closemodal('edits')
-                            $(".render-body").html(data)
-                        }
-                        else*/ if ($('#masterPageType').val() == "RequestSummary") {
-                            window.location.href = "/Requests/IndexInventory?" + $.fn.getRequestIndexString();
-                        }
-                        else if ($('#masterPageType').val() == "RequestLocation") {
-                            //just close modals
-                        }
-                        else {
-                            window.location.href = "/Requests/Index"
-                        }
-                        //$('.modal').modal('hide');
+                    var sidebarType = $('#masterSidebarType').val();
+                    var viewClass = "_IndexTableData";
+                    if (sidebarType == "Quotes" || sidebarType == "Orders" || sidebarType == "Cart") {
+                        viewClass = "_IndexTableDataByVendor";
                     }
+
+                    if (data == "") {
+                        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "step-1, reorder-item");
+                        $(".save-item").removeClass("save-item").off('click')
+                    }                    
                     else {
                         $.fn.OpenModal('termsModal', 'terms', data)
                     }

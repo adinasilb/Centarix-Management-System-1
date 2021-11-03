@@ -127,32 +127,16 @@
                 cache: false,
                 success: function (data) {
                     $(".submitTerms").prop('disabled', false)
-                    if (/*($("#SectionType").val() == "Operations" ||*/ $("#masterSectionType").val() == "Operations" && data == '') {
-                        //alert("if 1");
-                        var requestStatusId = '2';
-                        console.log($('#Requests_0__IsReceived').val())
-                        if ($('#Requests_0__IsReceived').val() == 'true') {
-                            requestStatusId = '3';
-                        }
-                        window.location.href = "/Requests/Index?PageType=OperationsRequest&SectionType=Operations&RequestStatusID=" + requestStatusId  + "&SidebarType=List";
+
+                    //this if is not necessary right now because everythin is always _indextabledata
+                    var sidebarType = $('#masterSidebarType').val();
+                    var viewClass = "_IndexTableData";
+                    if (sidebarType == "Quotes" || sidebarType == "Orders" || sidebarType == "Cart") {
+                        viewClass = "_IndexTableDataByVendor";
                     }
-                    else if ($('#masterPageType').val() == "RequestSummary" && data == '') {
-                        window.location.href = "/Requests/IndexInventory?PageType=RequestSummary&SectionType=Requests&SidebarType=List";
-                    }
-                    else if (/*($("#SectionType").val() == "Requests" || */$("#masterPageType").val() == "RequestRequest" && data == '') {
-                        //alert("if 2");
-                        //console.log($("#RequestIndexObject_OrderType").val())
-                        if ($("#RequestIndexObject_OrderType").val() == 'AlreadyPurchased') {
-                            window.location.href = "/Requests/Index?PageType=RequestRequest&SectionType=Requests&RequestStatusID=2&SidebarType=List";
-                        } else {
-                            window.location.href = "/Requests?PageType=RequestRequest&SectionType=Requests&SidebarType=List";
-                        }
-                    }
-                    else if ($('#masterSectionType').val() == "Requests" && data == '') { //Location and personal
-                        $.fn.CloseModal('terms');
-                        $.fn.CloseModal('step-1');
-                        $.fn.CloseModal('reorder-item');
-                    }
+                    if(data==""){
+                        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/"+viewClass, "."+viewClass, "POST", formData, "terms, step-1, reorder-item");
+                    }               
                     else {
                         //alert("else");
                         $('.termsModalForm .temprequesthiddenfors').html('');
