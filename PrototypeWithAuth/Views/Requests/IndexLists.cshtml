@@ -30,7 +30,8 @@
         <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
     </div>
 }
-<div class="_IndexTable">
+<div class="_IndexTableListTabs">
     @{ await Html.RenderPartialAsync("_IndexTableWithListTabs", Model);}
 </div>
 <script src="~/js/PricePopoverScript.js"></script>
+<script src="~/js/RequestLists.js"></script>

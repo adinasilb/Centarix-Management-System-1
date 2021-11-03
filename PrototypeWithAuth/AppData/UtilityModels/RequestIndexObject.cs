@@ -128,5 +128,7 @@ namespace PrototypeWithAuth.AppData
         public SelectedRequestFilters SelectedFilters { get; set; }
                                        //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
         public AppUtility.ModalType ModalType { get; set; }
+
+        public int ListID { get; set; }
     }
 }

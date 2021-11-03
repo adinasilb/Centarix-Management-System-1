@@ -14,6 +14,7 @@ namespace PrototypeWithAuth.Models
         public string ApplicationUserOwnerID { get; set; }
         public Employee ApplicationUserOwner { get; set; }
         public DateTime DateCreated { get; set; }
+        public bool IsDefault { get; set; }
         public IEnumerable<RequestListRequest> RequestListRequests { get; set; }
     }
 }

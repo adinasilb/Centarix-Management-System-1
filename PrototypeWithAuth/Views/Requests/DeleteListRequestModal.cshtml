@@ -1,0 +1,52 @@
+﻿@model PrototypeWithAuth.ViewModels.DeleteListRequestViewModel
+@using PrototypeWithAuth.AppData
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<div class="modal modal-view deleteListRequestModal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+
+    <div class="modal-dialog-centered modal-lg mx-auto " role="document" style="max-height:100%;  overflow-y:auto;">
+
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+            <button type="button" class="close modal-close-padding modal-close-style"  aria-label="Close" onclick="$.fn.CloseModal('delete-list-request');">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding" id="myForm">
+                <input type="hidden" asp-for="Request.RequestID" />
+                <input type="hidden" asp-for="List.ListID" />
+                <div class="modal-header border-bottom modal-header-padding">
+                    <span class="heading-1">Are you sure you would like to delete @Model.Request.Product.ProductName from @Model.List.Title?</span>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center mx-auto modal-footer-mt">
+                        <button type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin delete-request" value="@Model.Request.RequestID">Confirm</button>
+                        <button type="button" class="custom-cancel custom-button " onclick="$.fn.CloseModal('delete-list-request');">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(".delete-request").off('click').on("click", function (e) {
+        console.log("delete list request");
+        e.preventDefault();
+        var formdata = new FormData($("#myForm")[0])
+        $.ajax({
+            url: "/Requests/DeleteListRequestModal",
+            method: 'POST',
+            data: formdata,
+            success: function (data) {
+                $.fn.CloseModal("delete-list-request");
+                $("._IndexTableListTabs").html(data)
+                return true;
+            },
+            error: function (jqxhr) {
+                $('.moveListItemForm .error-message').html(jqxhr.responseText);
+            },
+            processData: false,
+            contentType: false
+        })
+        return false;
+    });
+</script>

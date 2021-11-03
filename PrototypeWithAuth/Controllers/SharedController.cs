@@ -720,7 +720,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 categoryID = 2;
             }
-            IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
+            IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable().AsNoTracking();
             IQueryable<Request> fullRequestsList = _context.Requests.IgnoreQueryFilters().Where(r=>!r.IsDeleted).Where(r => r.Product.ProductName.Contains(requestIndexObject.SearchText)).Include(r => r.ApplicationUserCreator)
          .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)/*.Where(r => r.IsArchived == requestIndexObject.IsArchive)*/;
 
@@ -825,6 +825,11 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart && requestIndexObject.SidebarType == AppUtility.SidebarEnum.MyLists)
             {
+                if(requestIndexObject.ListID == 0)
+                {
+                    requestIndexObject.ListID = _context.RequestLists.Where(rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User))
+                        .OrderBy(rl => rl.DateCreated).FirstOrDefault().ListID;
+                }
                 RequestsPassedIn = _context.Requests.Include(r => r.RequestListRequests).ThenInclude(rlr => rlr.List)
                     .Where(r => r.RequestListRequests.Any(rlr => rlr.ListID == listID));
             }
@@ -1142,7 +1147,10 @@ namespace PrototypeWithAuth.Controllers
                             iconList.Add(favoriteIcon);
                             popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverMoveList, popoverDeleteFromList };
                             iconList.Add(popoverMoreIcon);
-                            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r =>
+                            onePageOfProducts = _context.request
+                                
+                                await RequestPassedInWithInclude.Include(r => r.RequestListRequests).ThenInclude(rlr => rlr.List)
+                    .Where(r => r.RequestListRequests.Any(rlr => rlr.ListID == requestIndexObject.ListID)).Select(r =>
                             new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.RequestLists,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                           r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage,

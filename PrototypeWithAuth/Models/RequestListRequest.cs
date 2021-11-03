@@ -13,5 +13,6 @@ namespace PrototypeWithAuth.Models
         public RequestList List { get; set; }
         public int RequestID { get; set; }
         public Request Request { get; set; }
+        public DateTime TimeStamp { get; set; }
     }
 }

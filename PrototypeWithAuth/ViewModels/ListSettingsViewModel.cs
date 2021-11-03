@@ -10,12 +10,10 @@ using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class MoveListViewModel : ViewModelBase
+    public class ListSettingsViewModel : ViewModelBase
     {
-        public int PreviousListID { get; set; }
-        public int NewListID { get; set; }
-        public Request Request { get; set; }
         public List<RequestList> RequestLists { get; set; }
-        public AppUtility.PageTypeEnum PageType { get; set; }
+        public RequestList SelectedList { get; set; }
+        public bool ReloadModal { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.NewListViewModel;
 
-<div class="modal modal-view newListModal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9100">
+<div class="modal modal-view newListModal on-form-modal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9100">
     <div class="modal-dialog-centered elixir-modal-sm mx-auto order-inv-form" role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('new-list');">
@@ -8,6 +8,7 @@
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="newListForm">
                 <input type="hidden" asp-for="OwnerID" />
+                <input type="hidden" asp-for="RequestToAddID" />
                 <div class="modal-padding">
                     <div class="modal-header pt-0" style="border-bottom: 0;">
                         <input type="hidden" text="open" class="modal-open-state" />
@@ -19,14 +20,14 @@
                         <div class="row">
                             <div class="col-10">
                                 <label asp-for="ListTitle" class="control-label">List Name (up to 20 characters)</label>
-                                <input asp-for="ListTitle" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                                <input asp-for="ListTitle" class="form-control-plaintext border-bottom" />
                                 <span asp-validation-for="ListTitle" class="text-danger-centarix"></span>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer border-0 p-0">
                         <div class="mx-auto modal-footer-mt">
-                            <button type="submit" class="custom-button custom-button-font between-button-margin order-inv-color createList">Save</button>
+                            <button type="submit" class="custom-button custom-button-font between-button-margin order-inv-background-color createList">Save</button>
                             <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('new-list');">Cancel</button>
                         </div>
                     </div>
@@ -35,22 +36,6 @@
         </div>
     </div>
 </div>
-<script>
-    $(".createList").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var url = "/Requests/NewListModal";
-        var formData = new FormData($(".newListForm")[0]);
-        $.ajax({
-            url: url,
-            method: 'POST',
-            processData: false,
-            contentType: false,
-            data: formData,
-            success: (data) => {
-                $.fn.CloseModal("new-list");
-                $("._IndexTable").html(data);
-            }
-        })
-    });
-</script>
+<script src="~/js/Validation/ListsValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<script src="~/js/RequestLists.js"></script>

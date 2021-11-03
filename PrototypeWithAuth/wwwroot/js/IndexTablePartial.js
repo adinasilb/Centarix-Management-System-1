@@ -79,7 +79,29 @@ $(function () {
                 cache: false,
                 success: function (data) {
                     $.fn.OpenModal("moveListItemModal", "move-list", data)
-                    $.fn.EnableMaterialSelect('#NewListID', 'select-options-NewListID')
+                    //$.fn.EnableMaterialSelect('#NewListID', 'select-options-NewListID')
+                    return true;
+                },
+                error: function (jqxhr) {
+                    $('.error-message').html(jqxhr.responseText);
+                }
+            });
+        })
+        $(".popover .remove-from-list").off("click").on("click", function (e) {
+            e.preventDefault()
+            console.log("remove")
+            var requestID = $(this).attr("value")
+            console.log($(this))
+            var listID = $("#ListID").val()
+            var url = "/Requests/DeleteListRequestModal/?requestID=" + requestID + "&listID=" + listID
+            $.ajax({
+                async: true,
+                url: url,
+                traditional: true,
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    $.fn.OpenModal("deleteListRequestModal", "delete-list-request", data)
                     return true;
                 },
                 error: function (jqxhr) {
@@ -414,13 +436,18 @@ $(function () {
         }
         var monthsString = "";
         var yearsString = "";
+        var listString = "";
         var months = $("#Months").val();
         var years = $("#Years").val();
+        var listID = $("#ListID").val();
         if (months != undefined) {
             months.forEach(month => monthsString += "&months=" + month)
         }
         if (years != undefined) {
             years.forEach(year => yearsString += "&years=" + year)
+        }
+        if (listID != undefined) {
+            listString += "&listID=" + listID
         }
 /*        var selectedPriceSort = [];
         $("#priceSortContent1 .priceSort:checked").each(function (e) {
@@ -454,6 +481,7 @@ $(function () {
             url += $.fn.getRequestIndexString(status);
             url += monthsString;
             url += yearsString;
+            url += listString;
             //formdata = {}; //so won't crash when do object.assign()
             //console.log(formdata)
 		}
@@ -540,38 +568,5 @@ $(function () {
         return formdata;
     }
 
-    $(".add-new-list").click(function (e) {
-        $.ajax({
-            async: true,
-            url: "/Requests/NewListModal",
-            traditional: true,
-            type: "GET",
-            cache: false,
-            success: function (data) {
-                $.fn.OpenModal("newListModal", "new-list", data)
-                return true;
-            },
-            error: function (jqxhr) {
-                $('.error-message').html(jqxhr.responseText);
-            }
-        });
-    })
-
-    $(".change-list").click(function (e) {
-        $.ajax({
-            async: true,
-            url: "/Requests/_Index",
-            traditional: true,
-            type: "GET",
-            cache: false,
-            success: function (data) {
-                $.fn.OpenModal("newListModal", "new-list", data)
-                return true;
-            },
-            error: function (jqxhr) {
-                $('.error-message').html(jqxhr.responseText);
-            }
-        });
-    })
-   
+    
 });
