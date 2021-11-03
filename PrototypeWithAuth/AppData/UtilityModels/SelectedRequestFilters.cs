@@ -45,6 +45,23 @@ namespace PrototypeWithAuth.AppData.UtilityModels
                 _selectedLocationsIDs = value;
             }
         }
-    
+
+        private string _searchText;
+        public string SearchText
+        {
+            get
+            {
+                if (_searchText == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    return _searchText;
+                }
+            }
+            set { _searchText = value; }
+        }
+
     }
 }

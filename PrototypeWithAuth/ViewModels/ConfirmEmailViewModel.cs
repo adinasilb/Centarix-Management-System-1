@@ -17,5 +17,6 @@ namespace PrototypeWithAuth.ViewModels
         public int RequestID { get; set; }
         //public RequestIndexObject RequestIndexObject { get; set; }
         public TempRequestListViewModel TempRequestListViewModel { get; set; }
+        
     }
 }

@@ -346,17 +346,20 @@ table.visual-locations td .content {
 
 
 body {
-    overflow: hidden;
+  /*  overflow: hidden;*/
     color: var(--black-87);
     text-transform: capitalize;
     font-weight: var(--bold-regular)
 }
 
-/*fonts*/
-.heading-1 {
-    font-size: 1.75rem !important;
-    font-weight: var(--bold-medium) !important;
-}
+    body < ._IndexTableWithCounts{
+        overflow:hidden;
+    }
+    /*fonts*/
+    .heading-1 {
+        font-size: 1.75rem !important;
+        font-weight: var(--bold-medium) !important;
+    }
 
 .tabs-font {
     font-size: 1.25rem;

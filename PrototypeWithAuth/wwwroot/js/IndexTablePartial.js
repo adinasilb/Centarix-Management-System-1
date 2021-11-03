@@ -407,7 +407,14 @@ $(function () {
         var selectedPriceSortObj = { "SelectedPriceSort": selectedPriceSort }
         console.log(selectedPriceSortObj)*/
         if (modalClass != "") {
-			$.fn.CloseModal(modalClass);
+
+           var classes = modalClass.split( ",")
+            console.log(modalClass)
+            $.each( classes, function( index){
+                console.log(classes[index])
+            	$.fn.CloseModal($.trim(classes[index]));
+                });
+		
         } else {
 			console.log("in else");
 			/*formdata = {
