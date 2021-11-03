@@ -823,16 +823,6 @@ namespace PrototypeWithAuth.Controllers
                     .Select(sr => sr.RequestID).ToList();
                 RequestsPassedIn = fullRequestsList.Where(frl => sharedWithMe.Contains(frl.RequestID));
             }
-            else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart && requestIndexObject.SidebarType == AppUtility.SidebarEnum.MyLists)
-            {
-                if(requestIndexObject.ListID == 0)
-                {
-                    requestIndexObject.ListID = _context.RequestLists.Where(rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User))
-                        .OrderBy(rl => rl.DateCreated).FirstOrDefault().ListID;
-                }
-                RequestsPassedIn = _context.Requests.Include(r => r.RequestListRequests).ThenInclude(rlr => rlr.List)
-                    .Where(r => r.RequestListRequests.Any(rlr => rlr.ListID == listID));
-            }
             else //we just want what is in inventory
             {
                 RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3 || r.RequestStatus.RequestStatusID == 4 || r.RequestStatus.RequestStatusID == 5);
@@ -1147,10 +1137,8 @@ namespace PrototypeWithAuth.Controllers
                             iconList.Add(favoriteIcon);
                             popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverMoveList, popoverDeleteFromList };
                             iconList.Add(popoverMoreIcon);
-                            onePageOfProducts = _context.request
-                                
-                                await RequestPassedInWithInclude.Include(r => r.RequestListRequests).ThenInclude(rlr => rlr.List)
-                    .Where(r => r.RequestListRequests.Any(rlr => rlr.ListID == requestIndexObject.ListID)).Select(r =>
+                            onePageOfProducts = await _context.RequestListRequests.Where(rlr => rlr.ListID == requestIndexObject.ListID).OrderByDescending(rlr => rlr.TimeStamp)
+                                .Select(rlr => rlr.Request).Select(r =>
                             new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.RequestLists,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                           r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage,

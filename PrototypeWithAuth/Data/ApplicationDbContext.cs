@@ -57,6 +57,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<FavoriteRequest> FavoriteRequests { get; set; }
         public DbSet<ShareRequest> ShareRequests { get; set; }
         public DbSet<RequestList> RequestLists { get; set; }
+        public DbSet<RequestListRequest> RequestListRequests { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<AuthorProtocol> AuthorProtocols { get; set; }
         public DbSet<ProtocolType> ProtocolTypes { get; set; }
