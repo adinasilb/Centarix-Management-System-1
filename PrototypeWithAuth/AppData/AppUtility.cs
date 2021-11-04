@@ -873,15 +873,15 @@ namespace PrototypeWithAuth.AppData
             }
         }
 
-        public static String GetDateOrderedString(ParentRequest parentRequest)
+        public static StringWithBool GetDateOrderedString(ParentRequest parentRequest)
         {
             try 
             { 
-                return parentRequest.OrderDate.GetElixirDateFormat();
+                return new StringWithBool { String = parentRequest.OrderDate.GetElixirDateFormat() };
             }
             catch(Exception ex)
             {
-                return "order date has an error";
+                return new StringWithBool { String = "order date has an error", Bool = true };
             }
         }
     }

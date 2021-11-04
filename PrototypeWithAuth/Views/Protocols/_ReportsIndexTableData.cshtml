@@ -39,51 +39,52 @@
                     *@
                     @foreach (var col in Model.PagedList[i].Columns)
                     {
-                        <td width="@col.Width%" class="@(col.Width==0 ? "p-0" :"")">
-                            @if (col.Image != "")
-                            {
-                                <img src="@col.Image" alt="Image" width="75" class="category-image" />
-                            }
-                            else if (col.Icons != null)
-                            {
-                                <div class="d-inline-flex">
+                    <td width="@col.Width%" class="@(col.Width==0 ? "p-0" :"")">
+                        @{var imgDangerColor = col.Image.Contains("error") ? " text-danger-centarix " : "";}
+                        @if (col.Image != "")
+                        {
+                            <img src="@col.Image" alt="Image" width="75" class="category-image @imgDangerColor" />
+                        }
+                        else if (col.Icons != null)
+                        {
+                            <div class="d-inline-flex">
 
-                                    @foreach (var icon in col.Icons)
-                                    {
-                                        <div class="table-icon-div">
-
-                                            <a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
-                                               title="@icon.TooltipTitle" value="@col.AjaxID">
-                                                <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
-                                            </a>
-
-                                        </div>
-                                    }
-                                </div>
-                            }
-                            else
-                            {
-                                for (int val = 0; val < col.ValueWithError.Count; val++)
+                                @foreach (var icon in col.Icons)
                                 {
-                                    var dangerColor = col.ValueWithError[val].Bool ? " text-danger-centarix " : "";
-                                    if (val != 0)
-                                    {
-                                        <br />
-                                    }
-                                    if (col.AjaxLink != null)
-                                    {
-                                        <button class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" title="Details" value="@col.AjaxID">
-                                            <p class="m-0 @dangerColor">@(col.ValueWithError[val].String??"?")</p>
-                                        </button>
-                                    }
-                                    else
-                                    {
-                                        <label class="m-0 p-0 @dangerColor">@col.ValueWithError[val].String</label>
-                                    }
-                                }
+                                    <div class="table-icon-div">
 
+                                        <a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                           title="@icon.TooltipTitle" value="@col.AjaxID">
+                                            <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                        </a>
+
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            for (int val = 0; val < col.ValueWithError.Count; val++)
+                            {
+                                var dangerColor = col.ValueWithError[val].Bool ? " text-danger-centarix " : "";
+                                if (val != 0)
+                                {
+                                    <br />
+                                }
+                                if (col.AjaxLink != null)
+                                {
+                                    <button class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" title="Details" value="@col.AjaxID">
+                                        <p class="m-0 @dangerColor">@(col.ValueWithError[val].String??"?")</p>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <label class="m-0 p-0 @dangerColor">@col.ValueWithError[val].String</label>
+                                }
                             }
-                        </td>
+
+                        }
+                    </td>
                     }
 
                 </tr>
