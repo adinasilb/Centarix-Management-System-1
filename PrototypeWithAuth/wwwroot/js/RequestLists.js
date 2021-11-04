@@ -51,20 +51,8 @@
         var valid = $('.listSettingsForm').valid();
         if (valid) {
             var formData = new FormData($(".listSettingsForm")[0]);
-            $.ajax({
-                url: "/Requests/ListSettingsModal",
-                method: 'POST',
-                data: formData,
-                success: function (data) {
-                    $.fn.CloseModal("list-settings");
-                    $("._IndexTableListTabs").html(data);
-                },
-                error: function (jqxhr) {
-                    $('.moveListItemForm .error-message').html(jqxhr.responseText);
-                },
-                processData: false,
-                contentType: false
-            })
+            var viewClass = "._IndexTableListTabs"
+            $.fn.ajaxPartialIndexTable(-1, "/Requests/ListSettingsModal", viewClass, "POST", formData, "list-settings");
         }
     });
 
@@ -139,20 +127,8 @@
             console.log("from move "+ fromMoveModal)
             var url = "/Requests/NewListModal";
             var formData = new FormData($(".newListForm")[0]);
-            $.ajax({
-                url: url,
-                method: 'POST',
-                processData: false,
-                contentType: false,
-                data: formData,
-                success: (data) => {
-                    $.fn.CloseModal("new-list");
-                    if (fromMoveModal) {
-                        $.fn.CloseModal("move-list");
-                    }
-                    $("._IndexTableListTabs").html(data);
-                }
-            })
+            var viewClass = "._IndexTableListTabs"
+            $.fn.ajaxPartialIndexTable(-1, "/Requests/NewListModal", viewClass, "POST", formData, "new-list, move-list");
         }
     });
     $("#ListTitle").on('input', function (e) {
@@ -255,23 +231,7 @@
         var url = "/Requests/MoveToListModal";
         $("#NewListID").val($(this).attr("listId"));
         var formData = new FormData($(".moveListItemForm")[0]);
-        $.ajax({
-            url: url,
-            method: 'POST',
-            data: formData,
-            success: function (data) {
-
-                $.fn.CloseModal("move-list");
-                if (data.length > 0) {
-                    console.log("index")
-                    $("._IndexTableListTabs").html(data)
-                }
-            },
-            error: function (jqxhr) {
-                $('.moveListItemForm .error-message').html(jqxhr.responseText);
-            },
-            processData: false,
-            contentType: false
-        })
+        var viewClass = "._IndexTableListTabs"
+        $.fn.ajaxPartialIndexTable(-1, url, viewClass, "POST", formData, "move-list");
     });
 })

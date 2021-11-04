@@ -5745,7 +5745,13 @@ namespace PrototypeWithAuth.Controllers
                     throw new Exception(AppUtility.GetExceptionMessage(ex));
                 }
             }
-            return RedirectToAction("_IndexTableWithListTabs", new { listID = newList.ListID});
+            RequestIndexObject indexObject = new RequestIndexObject
+            {
+                PageType = AppUtility.PageTypeEnum.RequestCart,
+                SidebarType = AppUtility.SidebarEnum.MyLists,
+                ListID = newList.ListID
+            };
+            return RedirectToAction("_IndexTableWithListTabs", new { requestIndexObject = indexObject });
         }
 
         [HttpGet]
