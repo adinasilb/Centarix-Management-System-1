@@ -3913,7 +3913,7 @@ namespace PrototypeWithAuth.Controllers
                     var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)                
              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
                     decimal pricePerUnit = 0;
-                    if (receivedLocationViewModel.Request.IsPartial)
+                    if (receivedLocationViewModel.IsPartial)
                     {
                         requestReceived.RequestID = 0;
                         pricePerUnit = requestReceived.PricePerUnit;
