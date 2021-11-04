@@ -41,10 +41,10 @@
         {
             @Html.DropDownListFor(m => m.Participant.GenderID,
                 new SelectList(
-           Model.Genders,
-           dataValueField: "GenderID",
-           dataTextField: "Description"),
-           optionLabel: "Select Option",
+           Model.Genders, 
+           "GenderID",
+           "Description"),
+           "Select Option",
                 new { @class = "mdb-select custom select-dropdown form-control-plaintext ", @searchable = "default value" }
             )
 

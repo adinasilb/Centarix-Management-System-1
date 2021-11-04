@@ -2,6 +2,7 @@
 @{
 }
 <script src="~/js/Validation/addnewparticipant.js"></script>
+<script src="~/js/validate.js"></script>
 
 <div class="modal modal-view edit-participant-modal" id="myModal" data-backdrop="false" style="z-index: 9100">
     <div class="elixir-modal-sm modal-dialog-centered mx-auto" style="width:27rem;">
@@ -24,10 +25,9 @@
                             @Html.DropDownListFor(m => m.Participant.ParticipantStatusID,
                                 new SelectList(
                            Model.ParticipantStatuses,
-                           dataValueField: "ParticipantStatusID",
-                           dataTextField: "Description"),
-                           optionLabel: "Select Option",
-                                new { @class = "mdb-select custom select-dropdown form-control-plaintext ", @searchable = "default value" }
+                           "ParticipantStatusID",
+                           "Description"),
+                                new { @class = "mdb-select custom select-dropdown form-control-plaintext ", @searchable = "Select Option" }
                             )
                         </div>
                     </div>
@@ -56,6 +56,7 @@
         $('.editparticipantform').data("validator").settings.ignore = "";
         var ExperimentID = $("#Participant_ExperimentID").val();
         var valid = $('.editparticipantform').valid();
+        console.log(valid)
         if (valid) {
             $("#loading").show();
             $.ajax({
