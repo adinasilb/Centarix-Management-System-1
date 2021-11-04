@@ -15,5 +15,6 @@ namespace PrototypeWithAuth.ViewModels
         public string OwnerID { get; set; }
         public string ListTitle { get; set; }
         public int RequestToAddID { get; set; }
+        public int RequestPreviousListID { get; set; }
     }
 }

@@ -21,7 +21,7 @@
         var url = "/Requests/NewListModal";
 
         if ($(this).hasClass("fill-list")) {
-            url = url +"/?requestToAddId="+$(".request-to-move").val()
+            url = url + "/?requestToAddId=" + $(".request-to-move").val() +"&requestPreviousListID="+$("#ListID").val()
         }
         $.ajax({
             async: true,
@@ -136,21 +136,9 @@
     })
 
     $(".close-settings").off("click").on("click", function (e) {
-        $.fn.CloseModal("list-settings");
-        $.ajax({
-            async: true,
-            url: "/Requests/_IndexTableWithListTabs",
-            traditional: true,
-            type: "GET",
-            cache: false,
-            success: function (data) {
-                $("._IndexTableListTabs").html(data);
-                return true;
-            },
-            error: function (jqxhr) {
-                $('.error-message').html(jqxhr.responseText);
-            }
-        });
+        var viewClass = "._IndexTableListTabs"
+        var url = "/Requests/_IndexTableWithListTabs/?"+ $.fn.getRequestIndexString()
+        $.fn.ajaxPartialIndexTable(-1, url, viewClass, "GET", null, "list-settings");
     })
 
     $(".cancel-save").on("click", function (e) {

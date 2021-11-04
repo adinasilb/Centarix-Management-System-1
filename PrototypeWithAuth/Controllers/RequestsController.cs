@@ -578,28 +578,34 @@ namespace PrototypeWithAuth.Controllers
         public async Task<RequestListIndexViewModel> GetRequestListIndexObjectAsync(RequestIndexObject requestIndexObject)
         {
             var userLists = _context.RequestLists.Where(l => l.ApplicationUserOwnerID == _userManager.GetUserId(User)).OrderBy(l => l.DateCreated).ToList();
-            if (userLists.Count == 0)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                RequestList requestList = new RequestList
-                {
-                    Title = "List 1",
-                    ApplicationUserOwnerID = _userManager.GetUserId(User),
-                    RequestListRequests = new List<RequestListRequest>(),
-                    DateCreated = DateTime.Now,
-                    IsDefault = true
-                };
                 try
                 {
-                    _context.Entry(requestList).State = EntityState.Added;
-                    await _context.SaveChangesAsync();
-                    requestIndexObject.ListID = requestList.ListID;
+                    if (userLists.Count == 0)
+                    {
+                        RequestList requestList = new RequestList
+                        {
+                            Title = "List 1",
+                            ApplicationUserOwnerID = _userManager.GetUserId(User),
+                            RequestListRequests = new List<RequestListRequest>(),
+                            DateCreated = DateTime.Now,
+                            IsDefault = true
+                        };
+
+                        _context.Entry(requestList).State = EntityState.Added;
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                        requestIndexObject.ListID = requestList.ListID;
+                        userLists.Add(requestList);
+                    }
                 }
                 catch
                 { }
             }
             if(requestIndexObject.ListID == 0)
             {
-                requestIndexObject.ListID = userLists.First().ListID;
+                requestIndexObject.ListID = userLists.Where(l => l.IsDefault).FirstOrDefault().ListID;
             }
             RequestIndexPartialViewModel requestIndexViewModel = await base.GetIndexViewModel(requestIndexObject);
             RequestListIndexViewModel viewModel = new RequestListIndexViewModel
@@ -5645,40 +5651,44 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(viewModel);
         }
 
+        public async void MoveLists(int requestToMoveId, int newListID, int prevListID = 0)
+        {
+            
+            var existingListRequest = _context.RequestListRequests.Where(l => l.RequestID == requestToMoveId && l.ListID == newListID).FirstOrDefault();
+            if (existingListRequest != null)
+            {
+                existingListRequest.TimeStamp = DateTime.Now;
+                _context.Update(existingListRequest);
+            }
+            else
+            {
+                RequestListRequest requestListRequest = new RequestListRequest
+                {
+                    RequestID = requestToMoveId,
+                    ListID = newListID,
+                    TimeStamp = DateTime.Now
+                };
+                _context.Entry(requestListRequest).State = EntityState.Added;
+            }
+            if (prevListID != 0)
+            {
+                var oldRequestListRequest = _context.RequestListRequests
+                    .Where(rlr => rlr.RequestID == requestToMoveId && rlr.ListID == prevListID).FirstOrDefault();
+                _context.Remove(oldRequestListRequest);
+            }
+                    
+        }
+
         [HttpPost]
         [Authorize(Roles = "Requests")]
+
         public async Task<IActionResult> MoveToListModal(MoveListViewModel moveListViewModel)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    var listRequests = _context.RequestLists.Where(l => l.ListID == moveListViewModel.NewListID)
-                        .Include(l => l.RequestListRequests).FirstOrDefault().RequestListRequests;
-                    var exisitngListRequest = listRequests.Where(l => l.RequestID == moveListViewModel.Request.RequestID && l.ListID == moveListViewModel.NewListID).FirstOrDefault();
-                    if(exisitngListRequest != null)
-                    {
-                        exisitngListRequest.TimeStamp = DateTime.Now;
-                        _context.Update(exisitngListRequest);
-                    }
-                    else
-                    {
-                        RequestListRequest requestListRequest = new RequestListRequest
-                        {
-                            RequestID = moveListViewModel.Request.RequestID,
-                            ListID = moveListViewModel.NewListID,
-                            TimeStamp = DateTime.Now
-                        };
-                        _context.Entry(requestListRequest).State = EntityState.Added;
-                    }
-                    if (moveListViewModel.PreviousListID != 0)
-                    {
-                        var oldlist = _context.RequestLists.Where(rl => rl.ListID == moveListViewModel.PreviousListID)
-                            .Include(rl => rl.RequestListRequests).FirstOrDefault();
-                        var oldRequestListRequest = oldlist.RequestListRequests
-                            .Where(rlr => rlr.RequestID == moveListViewModel.Request.RequestID).FirstOrDefault();
-                        _context.Remove(oldRequestListRequest);
-                    }
+                    MoveLists(moveListViewModel.Request.RequestID, moveListViewModel.NewListID, moveListViewModel.PreviousListID);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
@@ -5690,7 +5700,13 @@ namespace PrototypeWithAuth.Controllers
             }
             if (moveListViewModel.PageType == AppUtility.PageTypeEnum.RequestCart)
             {
-                return RedirectToAction("_IndexTableWithListTabs", new { listID = moveListViewModel.PreviousListID});
+                RequestIndexObject indexObject = new RequestIndexObject
+                {
+                    PageType = AppUtility.PageTypeEnum.RequestCart,
+                    SidebarType = AppUtility.SidebarEnum.MyLists,
+                    ListID = moveListViewModel.PreviousListID
+                };
+                return RedirectToAction("_IndexTableWithListTabs", indexObject);
             }
             else
             {
@@ -5700,12 +5716,13 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> NewListModal(int requestToAddId = 0)
+        public async Task<IActionResult> NewListModal(int requestToAddId = 0, int requestPreviousListID =0)
         {
             NewListViewModel viewModel = new NewListViewModel
             {
                 OwnerID = _userManager.GetUserId(User),
-                RequestToAddID = requestToAddId
+                RequestToAddID = requestToAddId,
+                RequestPreviousListID = requestPreviousListID
             };
             return PartialView(viewModel);
         }
@@ -5719,7 +5736,6 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-
                     newList.ApplicationUserOwnerID = newListViewModel.OwnerID;
                      newList.Title = newListViewModel.ListTitle;
                      newList.DateCreated = DateTime.Now;
@@ -5729,13 +5745,8 @@ namespace PrototypeWithAuth.Controllers
 
                     if(newListViewModel.RequestToAddID != 0)
                     {
-                        RequestListRequest newRequest = new RequestListRequest
-                        {
-                            RequestID = newListViewModel.RequestToAddID,
-                            ListID = newList.ListID,
-                            TimeStamp = DateTime.Now
-                        };
-                        _context.Entry(newRequest).State = EntityState.Added;
+                        MoveLists(newListViewModel.RequestToAddID, newList.ListID, newListViewModel.RequestPreviousListID);
+
                         await _context.SaveChangesAsync();
                     }
                     await transaction.CommitAsync();
@@ -5752,7 +5763,7 @@ namespace PrototypeWithAuth.Controllers
                 SidebarType = AppUtility.SidebarEnum.MyLists,
                 ListID = newList.ListID
             };
-            return RedirectToAction("_IndexTableWithListTabs", new { requestIndexObject = indexObject });
+            return RedirectToAction("_IndexTableWithListTabs", indexObject);
         }
 
         [HttpGet]
@@ -5801,9 +5812,8 @@ namespace PrototypeWithAuth.Controllers
             ListSettingsViewModel viewModel = new ListSettingsViewModel
             {
                 RequestLists = userLists,
-                SelectedList = selectedListID == 0 ? userLists.First() : userLists.Where(l => l.ListID == selectedListID).FirstOrDefault()
+                SelectedList = selectedListID == 0 ? userLists.Where(l => l.IsDefault).FirstOrDefault() : userLists.Where(l => l.ListID == selectedListID).FirstOrDefault()
             };
-
             return PartialView(viewModel);
         }
 
@@ -5813,7 +5823,12 @@ namespace PrototypeWithAuth.Controllers
         {
             await UpdateListDetails(listSettings.SelectedList);
 
-            return RedirectToAction("_IndexTableWithListTabs");
+            RequestIndexObject indexObject = new RequestIndexObject
+            {
+                PageType = AppUtility.PageTypeEnum.RequestCart,
+                SidebarType = AppUtility.SidebarEnum.MyLists
+            };
+            return RedirectToAction("_IndexTableWithListTabs", indexObject);
         }
 
         [HttpGet]
@@ -5845,7 +5860,6 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
             return true;
-            
         }
 
         [HttpGet]
