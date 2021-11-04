@@ -1424,7 +1424,7 @@
             }
             else {
                 $('.popover ' + colName + ' .not-selected button').each(function (i, e) {
-                    if ($(e).attr("labelName").toString().toLowerCase().indexOf(searchText) < 0) {
+                    if ($(e).attr("labelName").toString().toLowerCase().indexOf(searchText.toLowerCase()) < 0) {
                         $(e).addClass("d-none")
                     }
                     else {
