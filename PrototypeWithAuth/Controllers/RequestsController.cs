@@ -5603,7 +5603,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var pageType = AppUtility.PageTypeEnum.RequestCart;
             var userLists = _context.RequestLists.Where(rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User))
-                .Where(ul => ul.ListID != prevListID).OrderBy(rl => rl.DateCreated).ToList();
+               .OrderBy(rl => rl.DateCreated).ToList();
             if(userLists.Count == 0)
             {
                 RequestList requestList = new RequestList
@@ -5630,7 +5630,8 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
             }
-            if(prevListID == 0)
+            userLists = userLists.Where(ul => ul.ListID != prevListID).ToList();
+            if (prevListID == 0)
             {
                 pageType = AppUtility.PageTypeEnum.RequestInventory;
             }
