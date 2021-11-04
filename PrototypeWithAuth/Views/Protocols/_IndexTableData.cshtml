@@ -102,6 +102,7 @@
                             {
                                 for (int val = 0; val < col.ValueWithError.Count; val++)
                                 {
+                                    var dangerColor = col.ValueWithError[val].Bool ? " text-danger-centarix " : "";
                                     if (val != 0)
                                     {
                                         <br />
@@ -109,12 +110,12 @@
                                     if (col.AjaxLink != null)
                                     {
                                         <button class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" title="Details" value="@col.AjaxID">
-                                            <p class="m-0 text-center">@col.ValueWithError[val].String @*.Value[val]*@</p>
+                                            <p class="m-0 text-center @dangerColor">@col.ValueWithError[val].String @*.Value[val]*@</p>
                                         </button>
                                     }
                                     else
                                     {
-                                        <label class="m-0 p-0">@col.ValueWithError[val].String [val]</label>
+                                        <label class="m-0 p-0 @dangerColor">@col.ValueWithError[val].String [val]</label>
                                     }
                                 }
 

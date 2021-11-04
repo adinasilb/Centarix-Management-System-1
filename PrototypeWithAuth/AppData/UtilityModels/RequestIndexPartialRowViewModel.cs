@@ -272,7 +272,7 @@ namespace PrototypeWithAuth.ViewModels
                 return new List<StringWithBool>() { new StringWithBool { String = "No Person Specified", Bool = true } };
             }
         }
-        private string GetLocationInstanceNameBefore()
+        private StringWithBool GetLocationInstanceNameBefore()
         {
             try
             {
@@ -285,11 +285,11 @@ namespace PrototypeWithAuth.ViewModels
                 {
                     newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationInstanceName;
                 }
-                return newLIName;
+                return new StringWithBool { String = newLIName };
             }
             catch (Exception ex)
             {
-                return "location has an error";
+                return new StringWithBool { String = "location has an error", Bool = true };
             }
 
         }
@@ -400,7 +400,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, ValueWithError = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 9, ValueWithError = GetVendorName(), ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, ValueWithError = AppUtility.GetAmountColumn(r) };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = GetLocationInstanceNameBefore(), Bool = false } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, ValueWithError = new List<StringWithBool>() { GetLocationInstanceNameBefore()} };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, ValueWithError = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, ValueWithError = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, ValueWithError = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
@@ -419,7 +419,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, ValueWithError = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 9, ValueWithError = GetVendorName(), ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, ValueWithError = AppUtility.GetAmountColumn(r) };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = GetLocationInstanceNameBefore(), Bool = false } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, ValueWithError = new List<StringWithBool>() { GetLocationInstanceNameBefore() } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, ValueWithError = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, ValueWithError = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, ValueWithError = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
@@ -438,7 +438,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, ValueWithError = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 9, ValueWithError = GetVendorName(), ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, ValueWithError = AppUtility.GetAmountColumn(r) };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = GetLocationInstanceNameBefore(), Bool = false } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, ValueWithError = new List<StringWithBool>() { GetLocationInstanceNameBefore()} };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, ValueWithError = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 9, ValueWithError = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, ValueWithError = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
@@ -458,7 +458,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, ValueWithError = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 9, ValueWithError = GetVendorName(), ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, ValueWithError = AppUtility.GetAmountColumn(r) };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = GetLocationInstanceNameBefore(), Bool = false } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, ValueWithError = new List<StringWithBool>() { GetLocationInstanceNameBefore() } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, ValueWithError = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 9, ValueWithError = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, ValueWithError = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
@@ -487,7 +487,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = GetImageURL() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, ValueWithError = GetProductName(), AjaxLink = "load-product-details-summary", AjaxID = r.RequestID, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 9, ValueWithError = AppUtility.GetAmountColumn(r) };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = GetLocationInstanceNameBefore(), Bool = false } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Location", Width = 9, ValueWithError = new List<StringWithBool>() { GetLocationInstanceNameBefore() } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, ValueWithError = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 10, ValueWithError = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = r.CreationDate.GetElixirDateFormat(), Bool = false } } };
