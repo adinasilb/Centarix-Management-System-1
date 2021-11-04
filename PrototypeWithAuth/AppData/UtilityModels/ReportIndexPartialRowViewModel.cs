@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 
@@ -66,8 +67,8 @@ namespace PrototypeWithAuth.ViewModels
 
         private IEnumerable<RequestIndexPartialColumnViewModel> GetWeeklyColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Name", Width = 10, Value = new List<string>() { r.ReportTitle }, AjaxLink = "edit-report", AjaxID = r.ReportID };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Dates", Width = 10, Value = new List<string>() { AppUtility.GetWeekStartEndDates(r.DateCreated) } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Name", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = r.ReportTitle } }, AjaxLink = "edit-report", AjaxID = r.ReportID };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Dates", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = AppUtility.GetWeekStartEndDates(r.DateCreated) } } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Icons = GetIcons(favoriteReport, iconList), AjaxID = r.ReportID };
         }
         

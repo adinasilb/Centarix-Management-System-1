@@ -100,7 +100,7 @@
                             }
                             else
                             {
-                                for (int val = 0; val < col.Value.Count; val++)
+                                for (int val = 0; val < col.ValueWithError.Count; val++)
                                 {
                                     if (val != 0)
                                     {
@@ -109,12 +109,12 @@
                                     if (col.AjaxLink != null)
                                     {
                                         <button class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" title="Details" value="@col.AjaxID">
-                                            <p class="m-0 text-center">@col.Value[val]</p>
+                                            <p class="m-0 text-center">@col.ValueWithError[val].String @*.Value[val]*@</p>
                                         </button>
                                     }
                                     else
                                     {
-                                        <label class="m-0 p-0">@col.Value[val]</label>
+                                        <label class="m-0 p-0">@col.ValueWithError[val].String [val]</label>
                                     }
                                 }
 

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 
@@ -24,8 +25,8 @@ namespace PrototypeWithAuth.ViewModels
 
         public ProtocolsIndexPartialRowViewModel() { }
 
-        public ProtocolsIndexPartialRowViewModel(ProtocolVersion pv, Protocol protocol, ProtocolType protocolType, ProtocolSubCategory protocolSubCategory, ApplicationUser userCreator,  ProtocolsIndexObject protocolsIndexObject, List<IconColumnViewModel> iconList, FavoriteProtocol favoriteProtocol, ApplicationUser user, ProtocolInstance protocolInstance) : this(pv, protocol, protocolType, protocolSubCategory, userCreator, protocolsIndexObject, iconList,  null, favoriteProtocol, user, protocolInstance)
-        {         
+        public ProtocolsIndexPartialRowViewModel(ProtocolVersion pv, Protocol protocol, ProtocolType protocolType, ProtocolSubCategory protocolSubCategory, ApplicationUser userCreator, ProtocolsIndexObject protocolsIndexObject, List<IconColumnViewModel> iconList, FavoriteProtocol favoriteProtocol, ApplicationUser user, ProtocolInstance protocolInstance) : this(pv, protocol, protocolType, protocolSubCategory, userCreator, protocolsIndexObject, iconList, null, favoriteProtocol, user, protocolInstance)
+        {
         }
         public ProtocolsIndexPartialRowViewModel(ProtocolVersion pv, Protocol protocol, ProtocolType protocolType, ProtocolSubCategory protocolSubCategory, ApplicationUser userCreator, ProtocolsIndexObject protocolsIndexObject, List<IconColumnViewModel> iconList, ApplicationUser user, ProtocolInstance protocolInstance) : this(pv, protocol, protocolType, protocolSubCategory, userCreator, protocolsIndexObject, iconList, null, user, protocolInstance)
         {
@@ -69,7 +70,7 @@ namespace PrototypeWithAuth.ViewModels
                     break;
             }
         }
-        
+
         public IEnumerable<RequestIndexPartialColumnViewModel> Columns { get; set; }
         public string ButtonClasses { get; set; }
         public string ButtonText { get; set; }
@@ -77,47 +78,48 @@ namespace PrototypeWithAuth.ViewModels
         private IEnumerable<RequestIndexPartialColumnViewModel> GetProtocolsList()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = "" };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = pv.ProtocolVersionID, Width = 15, Value = new List<string>() { pv.Protocol.Name } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, Value = new List<string>() { pv.VersionNumber+"" } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Creator", Width = 10, Value = new List<string>() { pv.ApplicationUserCreator.FirstName + " " + pv.ApplicationUserCreator.LastName } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, Value = new List<string>() { } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { pv.CreationDate.ToString("dd'/'MM'/'yyyy") } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Type", Width = 10, Value = new List<string>() { pv.Protocol.ProtocolType.ProtocolTypeDescription } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, Value = new List<string>() { pv.Protocol.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = pv.ProtocolVersionID, Width = 15, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.Protocol.Name } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.VersionNumber + "" } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Creator", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.ApplicationUserCreator.FirstName + " " + pv.ApplicationUserCreator.LastName } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, ValueWithError = new List<StringWithBool>() { } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.CreationDate.ToString("dd'/'MM'/'yyyy") } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Type", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.Protocol.ProtocolType.ProtocolTypeDescription } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.Protocol.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
                 Width = 10,
                 Icons = GetIconsByIndividualProtocol(favoriteProtocol, user),
                 AjaxID = pv.ProtocolVersionID
-            };  }
+            };
+        }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetLastProtocolList()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = "" };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = pv.ProtocolVersionID, Width = 15, Value = new List<string>() { pv.Protocol.Name } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 8, Value = new List<string>() { pv.VersionNumber+"" } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Creator", Width = 10, Value = new List<string>() { pv.ApplicationUserCreator.FirstName + " " + pv.ApplicationUserCreator.LastName } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 8, Value = new List<string>() { } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Start Date", Width = 10, Value = new List<string>() { protocolInstance.StartDate.GetElixirDateFormatWithTime() } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "End Date", Width = 10, Value = new List<string>() { protocolInstance.EndDate.GetElixirDateFormatWithTime()} };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, Value = new List<string>() { pv.Protocol.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = pv.ProtocolVersionID, Width = 15, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.Protocol.Name } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 8, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.VersionNumber + "" } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Creator", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.ApplicationUserCreator.FirstName + " " + pv.ApplicationUserCreator.LastName } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 8, ValueWithError = new List<StringWithBool>() { } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Start Date", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = protocolInstance.StartDate.GetElixirDateFormatWithTime() } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "End Date", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = protocolInstance.EndDate.GetElixirDateFormatWithTime() } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.Protocol.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
                 Width = 10,
                 Icons = iconList,
-                AjaxID =protocolInstance.ProtocolInstanceID
+                AjaxID = protocolInstance.ProtocolInstanceID
             };
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetMyProtocols()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = "" };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = pv.ProtocolVersionID, Width = 15, Value = new List<string>() { pv.Protocol.Name } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, Value = new List<string>() { pv.VersionNumber+"" } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, Value = new List<string>() { } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { pv.CreationDate.GetElixirDateFormat()} };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Type", Width = 10, Value = new List<string>() { pv.Protocol.ProtocolType.ProtocolTypeDescription } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, Value = new List<string>() { pv.Protocol.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = pv.ProtocolVersionID, Width = 15, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.Protocol.Name } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.VersionNumber + "" } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, ValueWithError = new List<StringWithBool>() { } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.CreationDate.GetElixirDateFormat() } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Type", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.Protocol.ProtocolType.ProtocolTypeDescription } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.Protocol.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
@@ -129,14 +131,14 @@ namespace PrototypeWithAuth.ViewModels
         private IEnumerable<RequestIndexPartialColumnViewModel> GetSharedColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = "" };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = pv.ProtocolVersionID, Width = 15, Value = new List<string>() { pv.Protocol.Name } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, Value = new List<string>() { pv.VersionNumber+"" } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Creator", Width = 10, Value = new List<string>() { pv.ApplicationUserCreator.FirstName + " " + pv.ApplicationUserCreator.LastName } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, Value = new List<string>() { } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { pv.CreationDate.GetElixirDateFormat() } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Type", Width = 10, Value = new List<string>() { pv.Protocol.ProtocolType.ProtocolTypeDescription } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, Value = new List<string>() { pv.Protocol.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Shared By", Width = 10, Value = new List<string>() { GetSharedBy(shareProtocol) } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = pv.ProtocolVersionID, Width = 15, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.Protocol.Name } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.VersionNumber + "" } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Creator", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.ApplicationUserCreator.FirstName + " " + pv.ApplicationUserCreator.LastName } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, ValueWithError = new List<StringWithBool>() { } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.CreationDate.GetElixirDateFormat() } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Type", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.Protocol.ProtocolType.ProtocolTypeDescription } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.Protocol.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Shared By", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = GetSharedBy(shareProtocol) } } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
@@ -148,13 +150,13 @@ namespace PrototypeWithAuth.ViewModels
         private IEnumerable<RequestIndexPartialColumnViewModel> GetFavoriteColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = "" };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = pv.ProtocolVersionID, Width = 15, Value = new List<string>() { pv.Protocol.Name } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, ValueWithError = new List<string>() { pv.VersionNumber+"" } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Creator", Width = 10, Value = new List<string>() { pv.ApplicationUserCreator.FirstName + " " + pv.ApplicationUserCreator.LastName } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, Value = new List<string>() { } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, Value = new List<string>() { pv.CreationDate.GetElixirDateFormat() } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Type", Width = 10, Value = new List<string>() { pv.Protocol.ProtocolType.ProtocolTypeDescription } };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, Value = new List<string>() { pv.Protocol.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink = " load-protocol ", AjaxID = pv.ProtocolVersionID, Width = 15, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.Protocol.Name } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Version", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.VersionNumber + "" } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Creator", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.ApplicationUserCreator.FirstName + " " + pv.ApplicationUserCreator.LastName } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Time", Width = 11, ValueWithError = new List<StringWithBool>() { } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.CreationDate.GetElixirDateFormat() } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Type", Width = 10, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.Protocol.ProtocolType.ProtocolTypeDescription } } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 12, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = pv.Protocol.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
@@ -163,11 +165,11 @@ namespace PrototypeWithAuth.ViewModels
                 AjaxID = pv.ProtocolVersionID
             };
         }
-        private static List<IconColumnViewModel> GetIconsByIndividualProtocol( FavoriteProtocol favoriteProtocol, ApplicationUser user)
+        private static List<IconColumnViewModel> GetIconsByIndividualProtocol(FavoriteProtocol favoriteProtocol, ApplicationUser user)
         {
             var newIconList = AppUtility.DeepClone<List<IconColumnViewModel>>(iconList);
             //favorite icon
-            var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink?.Contains("protocol-favorite")??false);
+            var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink?.Contains("protocol-favorite") ?? false);
 
             if (favIconIndex != -1 && favoriteProtocol != null) //check these checks
             {
@@ -187,7 +189,7 @@ namespace PrototypeWithAuth.ViewModels
             //}
             return newIconList;
         }
-        private String GetSharedBy( ShareProtocol shareProtocol)
+        private String GetSharedBy(ShareProtocol shareProtocol)
         {
             var applicationUser = shareProtocol.FromApplicationUser;
             return applicationUser.FirstName + " " + applicationUser.LastName;
