@@ -22,6 +22,7 @@ namespace PrototypeWithAuth.Data
 
         }
 
+        public DbSet<Currency> Currencies { get; set; }
         public DbSet<OldVendorCountry> OldVendorCountries { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<ExperimentEntry> ExperimentEntries { get; set; }

@@ -469,6 +469,16 @@
     <Compile Remove="Data\Migrations\20211025060156_123.Designer.cs" />
     <Compile Remove="Data\Migrations\20211025070731_addedOldVendorCountry.cs" />
     <Compile Remove="Data\Migrations\20211025070731_addedOldVendorCountry.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211101101602_addedCurrency.cs" />
+    <Compile Remove="Data\Migrations\20211101101602_addedCurrency.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211101102853_addedCurrency2.cs" />
+    <Compile Remove="Data\Migrations\20211101102853_addedCurrency2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211101103257_addedCurrency.cs" />
+    <Compile Remove="Data\Migrations\20211101103257_addedCurrency.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211101104120_addedCurrency.cs" />
+    <Compile Remove="Data\Migrations\20211101104120_addedCurrency.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211101110255_CleanUpDB2.cs" />
+    <Compile Remove="Data\Migrations\20211101110255_CleanUpDB2.Designer.cs" />
   </ItemGroup>
 
 
