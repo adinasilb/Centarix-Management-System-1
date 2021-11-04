@@ -135,8 +135,13 @@
                         viewClass = "_IndexTableDataByVendor";
                     }
                     if(data==""){
-                        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/"+viewClass, "."+viewClass, "POST", formData, "terms, step-1, reorder-item");
-                    }               
+                        if (sidebarType == "Add") {
+                            window.location.href = "/Requests/?PageType=RequestRequest&SectionType=Requests&SidebarType=List"
+                        }
+                        else {
+                            $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "terms, step-1, reorder-item");
+                        }
+                     }               
                     else {
                         //alert("else");
                         $('.termsModalForm .temprequesthiddenfors').html('');
