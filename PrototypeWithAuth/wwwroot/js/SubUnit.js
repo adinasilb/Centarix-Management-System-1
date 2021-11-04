@@ -398,8 +398,18 @@ $(function () {
 			dollarSelector = ".dollar-cost";
 		}
 		var isRequestQuote = false; //always false for now $(".isRequest").is(":checked")
+		var warning = false;
+		var warningMessage = "Warning: Default currency for selected Vendor is ";
 		switch (currencyType) {
 			case "USD":
+				//if ($("#VendorCurrencyID").attr("value") != '1') {
+				//	console.log("inside warning");
+				//	warning = true;
+				//	warningMessage += "Shekel"
+				//}
+				//else {
+				//	warning = false;
+    //            }
 				$(shekelSelector).prop("readonly", true);
 				$(shekelSelector).addClass('disabled-text');
 				$(dollarSelector).prop("disabled", false);
@@ -421,6 +431,14 @@ $(function () {
 				break;
 			case "NIS":
 			case undefined: //for the reorder modal
+				//if ($("#VendorCurrencyID").attr("value") == '1') {
+				//	console.log("inside warning for shekel");
+				//	warning = true;
+				//	warningMessage += "Dollars"
+				//}
+				//else {
+				//	warning = false;
+				//}
 				$(shekelSelector).prop("readonly", false);
 				$(shekelSelector).removeClass('disabled-text');
 				$(dollarSelector).prop("disabled", true);
@@ -445,8 +463,6 @@ $(function () {
 			$(".requestPriceQuote ").attr("disabled", true);
         }
 	};
-
-
 
 
 	$("#unit").change(function () {
@@ -523,9 +539,18 @@ $(function () {
 
 	$("#currency").change(function (e) {
 		$.fn.CheckCurrency();
+		if ($("#price").hasClass("active")) {
+			$(this).attr("changed", "true");
+			console.log("going to vendor currency warnings");
+			$.fn.CheckForVendorCurrencyWarning($("#VendorCurrencyID").val(), $("#currency").val());
+		}
+		if ($("#masterSectionType").val() == "Operations") {
+			$.fn.CheckForVendorCurrencyWarning($("#VendorCurrencyID").val(), $("#currency").val());
+        }
 	});
 	$(".modal").on("change", "#currency", function (e) {
-		$.fn.CheckCurrency();
+		$.fn.CheckCurrency(); 
+		$.fn.CheckForVendorCurrencyWarning($("#VendorCurrencyID").val(), $("#currency").val());
 	});
 	$("#exchangeRate").change(function (e) {
 		$.fn.CalculateSumPlusVat();

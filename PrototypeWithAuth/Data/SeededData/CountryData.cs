@@ -14,252 +14,302 @@ namespace PrototypeWithAuth.Data.SeededData
             countryList.Add(new Country()
             {
                 CountryID = 1,
-                CountryName = "Armenia"
+                CountryName = "Armenia",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 2,
-                CountryName = "Australia"
+                CountryName = "Australia",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 3,
-                CountryName = "Austria"
+                CountryName = "Austria",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 4,
-                CountryName = "Belgium"
+                CountryName = "Belgium",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 5,
-                CountryName = "Bosnia and Herzegovina"
+                CountryName = "Bosnia and Herzegovina",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 6,
-                CountryName = "Bulgaria"
+                CountryName = "Bulgaria",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 7,
-                CountryName = "Canada"
+                CountryName = "Canada",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 8,
-                CountryName = "Chile"
+                CountryName = "Chile",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 9,
-                CountryName = "Costa Rica"
+                CountryName = "Costa Rica",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 10,
-                CountryName = "Cyprus"
+                CountryName = "Cyprus",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 11,
-                CountryName = "Czech Republic"
+                CountryName = "Czech Republic",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 12,
-                CountryName = "Denmark"
+                CountryName = "Denmark",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 13,
-                CountryName = "Estonia"
+                CountryName = "Estonia",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 14,
-                CountryName = "Finland"
+                CountryName = "Finland",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 15,
-                CountryName = "France"
+                CountryName = "France",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 16,
-                CountryName = "Georgia"
+                CountryName = "Georgia",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 17,
-                CountryName = "Germany"
+                CountryName = "Germany",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 18,
-                CountryName = "Greece"
+                CountryName = "Greece",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 19,
-                CountryName = "Hungary"
+                CountryName = "Hungary",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 20,
-                CountryName = "Iceland"
+                CountryName = "Iceland",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 21,
-                CountryName = "India"
+                CountryName = "India",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 22,
-                CountryName = "Ireland"
+                CountryName = "Ireland",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 23,
-                CountryName = "Israel"
+                CountryName = "Israel",
+                CurrencyID = 2
             });
             countryList.Add(new Country()
             {
                 CountryID = 24,
-                CountryName = "Italy"
+                CountryName = "Italy",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 25,
-                CountryName = "Japan"
+                CountryName = "Japan",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 26,
-                CountryName = "Latvia"
+                CountryName = "Latvia",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 27,
-                CountryName = "Lithuania"
+                CountryName = "Lithuania",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 28,
-                CountryName = "Luxembourg"
+                CountryName = "Luxembourg",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 29,
-                CountryName = "Malaysia"
+                CountryName = "Malaysia",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 30,
-                CountryName = "Mauritius"
+                CountryName = "Mauritius",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 31,
-                CountryName = "Moldova"
+                CountryName = "Moldova",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 32,
-                CountryName = "Netherlands"
+                CountryName = "Netherlands",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 33,
-                CountryName = "New Zealand"
+                CountryName = "New Zealand",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 34,
-                CountryName = "North Macedonia"
+                CountryName = "North Macedonia",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 35,
-                CountryName = "Norway"
+                CountryName = "Norway",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 36,
-                CountryName = "Poland"
+                CountryName = "Poland",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 37,
-                CountryName = "Portugal"
+                CountryName = "Portugal",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 38,
-                CountryName = "Romania"
+                CountryName = "Romania",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 39,
-                CountryName = "Russia"
+                CountryName = "Russia",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 40,
-                CountryName = "Singapore"
+                CountryName = "Singapore",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 41,
-                CountryName = "Slovakia"
+                CountryName = "Slovakia",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 42,
-                CountryName = "Slovenia"
+                CountryName = "Slovenia",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 43,
-                CountryName = "South Africa"
+                CountryName = "South Africa",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 44,
-                CountryName = "South Korea"
+                CountryName = "South Korea",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 45,
-                CountryName = "Spain"
+                CountryName = "Spain",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 46,
-                CountryName = "Sweden"
+                CountryName = "Sweden",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 47,
-                CountryName = "Switzerland"
+                CountryName = "Switzerland",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 48,
-                CountryName = "United Kingdom"
+                CountryName = "United Kingdom",
+                CurrencyID = -1
             });
             countryList.Add(new Country()
             {
                 CountryID = 49,
-                CountryName = "United States"
+                CountryName = "United States",
+                CurrencyID = 1
             });
             countryList.Add(new Country()
             {
                 CountryID = 50,
-                CountryName = "Uruguay"
+                CountryName = "Uruguay",
+                CurrencyID = -1
             });
             return countryList;
         }
