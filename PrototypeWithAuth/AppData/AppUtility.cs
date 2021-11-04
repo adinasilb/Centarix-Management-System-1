@@ -622,6 +622,10 @@ namespace PrototypeWithAuth.AppData
             {
                 if (sidebarEnum == SidebarEnum.PartialDelivery)
                 {
+                    if (request == null)
+                    {
+                        return "everything was finally received";
+                    }
                     if (request.Unit == 1)
                     {
                         return request.Unit + " was never received";

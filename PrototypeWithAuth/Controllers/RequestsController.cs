@@ -212,7 +212,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     viewModelByVendor.RequestsByVendor = accountingNotificationsList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
                     (AppUtility.IndexTableTypes.AccountingNotifications, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString)
+                        r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString, _context.Requests.Where(pr=>pr.ParentRequestID == pr.ParentRequestID &&r.ProductID == pr.ProductID && r.RequestStatusID==2).FirstOrDefault())
                     {
                         ButtonClasses = " invoice-add-all accounting-background-color ",
                         ButtonText = buttonText
@@ -3919,6 +3919,7 @@ namespace PrototypeWithAuth.Controllers
                         pricePerUnit = requestReceived.PricePerUnit;
                         requestReceived.Unit = (uint)(requestReceived.Unit - receivedLocationViewModel.AmountArrived);
                         requestReceived.Cost = pricePerUnit * requestReceived.Unit;
+                        requestReceived.IsPartial = true;
                         _context.Entry(requestReceived).State = EntityState.Added;
                         await _context.SaveChangesAsync();
                         MoveDocumentsOutOfTempFolder(requestReceived.RequestID, AppUtility.ParentFolderName.Requests, receivedLocationViewModel.Request.RequestID, true);
@@ -3987,8 +3988,6 @@ namespace PrototypeWithAuth.Controllers
                     }
                     requestReceived.ApplicationUserReceiverID = receivedLocationViewModel.Request.ApplicationUserReceiverID;
                     requestReceived.ApplicationUserReceiver = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault();
-
-                    requestReceived.IsPartial = receivedLocationViewModel.Request.IsPartial;
                    
                     requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
                     requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
@@ -4773,7 +4772,7 @@ namespace PrototypeWithAuth.Controllers
                     requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
                     break;
                 case AppUtility.SidebarEnum.PartialDelivery:
-                    requestsList = requestsList.Where(r => r.IsPartial);
+                    requestsList = requestsList.Where(r => r.RequestStatusID ==2 && r.IsPartial);
                     break;
                 case AppUtility.SidebarEnum.ForClarification:
                     requestsList = requestsList.Where(r => r.IsClarify);
