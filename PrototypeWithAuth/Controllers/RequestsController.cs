@@ -3252,7 +3252,6 @@ namespace PrototypeWithAuth.Controllers
 
                 }
                 tempRequestListViewModel.RequestIndexObject.RequestStatusID = 2;
-          
                 return new EmptyResult();
             }
             catch (Exception ex)
