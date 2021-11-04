@@ -38,5 +38,6 @@ namespace PrototypeWithAuth.ViewModels
         public ReceivedModalVisualViewModel ReceivedModalVisualViewModel { get; set; }
         public bool TemporaryLocation { get; set; }
         public int AmountArrived { get; set; }
+        public bool IsPartial { get; set; }
     }
 }
