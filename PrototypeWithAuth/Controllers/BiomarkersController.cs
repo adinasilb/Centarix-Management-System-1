@@ -1953,5 +1953,16 @@ namespace PrototypeWithAuth.Controllers
 
             }
         }
+
+        public bool CheckUniqueCentarixID(string CentarixID)
+        {
+            var boolCheck = true;
+           
+            if (CentarixID != null && _context.Participants.Where(r => r.CentarixID == CentarixID).Any())
+            {
+                return false;
+            }
+            return boolCheck;
+        }
     }
 }
