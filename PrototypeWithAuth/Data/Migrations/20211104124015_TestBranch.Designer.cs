@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211104124015_TestBranch")]
+    partial class TestBranch
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1391,11 +1393,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("ApplicationUserID")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
@@ -3368,15 +3365,10 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CentarixID")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateCreated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
 
                     b.Property<int>("ExperimentID")
                         .HasColumnType("int");
@@ -3394,10 +3386,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("GenderID");
 
                     b.HasIndex("ParticipantStatusID");
-
-                    b.HasIndex("ParticipantID", "CentarixID")
-                        .IsUnique()
-                        .HasFilter("[CentarixID] IS NOT NULL");
 
                     b.ToTable("Participants");
                 });
@@ -3898,7 +3886,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/reagents/chemical_solution2.png",
                             IsOldSubCategory = false,
                             ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Solutions"
+                            ProductSubcategoryDescription = ""
                         },
                         new
                         {
