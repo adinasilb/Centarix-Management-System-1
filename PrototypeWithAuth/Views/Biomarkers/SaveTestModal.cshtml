@@ -30,11 +30,25 @@
 <script>
     $(".cancel-save").on("click", function (e) {
         e.preventDefault();
-        if ($("#String").val() != "none") {
+        if ($("#BioTestString").val() != "none") {
             var selected = $("#" + $("#BioTestString").val());
             $.fn.ChangeTest(selected);
-            $.fn.CloseModal('save-bio-test-modal');
         }
+        else {
+            $(".edit-mode-input").prop("checked", false);
+            var editLabel = $(".edit-mode-label");
+            editLabel.text("Edit Mode Off");
+            editLabel.removeClass("on");
+            editLabel.addClass("off")
+            var editModeInput = $(".edit-mode-input");
+            editModeInput.addClass("off");
+            editModeInput.removeClass("on");
+            $('.open-document-modal').attr("data-val", false);
+            $('._testvalues input').attr("disabled", true);
+            $('._testvalues input').addClass("disabled");
+            $('.open-document-modal').attr("showSwitch", "false")
+        }
+        $.fn.CloseModal('save-bio-test-modal');
     });
 
     $(".submit-save").on("click", function (e) {
