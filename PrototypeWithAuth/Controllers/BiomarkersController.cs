@@ -753,6 +753,7 @@ namespace PrototypeWithAuth.Controllers
             return String.Format("{0:N2}", value);
         }
 
+        [HttpGet]
         public async Task<ActionResult> RunScriptsAsync()
         {
             var testvalues = _context.TestValues;
