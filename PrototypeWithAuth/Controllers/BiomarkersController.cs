@@ -1980,7 +1980,7 @@ namespace PrototypeWithAuth.Controllers
                 Test test = new Test()
                 {
                     Name = "Ultrasound",
-                    SiteID = _context.Sites.Where(s => s.Name == "Centarix Biotech").Select(s => s.SiteID).FirstOrDefault()
+                    SiteID = _context.Sites.Where(s => s.Name == "O2").Select(s => s.SiteID).FirstOrDefault()
                 };
                 _context.Add(test);
                 _context.SaveChanges();
