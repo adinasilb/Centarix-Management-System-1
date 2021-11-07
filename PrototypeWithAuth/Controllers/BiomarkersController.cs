@@ -45,8 +45,8 @@ namespace PrototypeWithAuth.Controllers
                 new TDViewModel(){ Value="Experiment Code"},
                 new TDViewModel(){ Value="Participant"},
                 new TDViewModel(){ Value="Age Range"},
-                new TDViewModel(){ Value="Timepoints"},
-                new TDViewModel(){ Value="Visits"},
+                //new TDViewModel(){ Value="Timepoints"},
+                //new TDViewModel(){ Value="Visits"},
                 new TDViewModel(){ Value="Start Date"},
                 new TDViewModel(){ Value="End Date" }
             };
@@ -75,14 +75,14 @@ namespace PrototypeWithAuth.Controllers
                     {
                         Value = e.MinimumAge.ToString() + " - " + e.MaximumAge.ToString()
                     },
-                    new TDViewModel()
-                    {
-                        Value = e.Timepoints == null ? "0" : e.Timepoints.Count().ToString()
-                    },
-                    new TDViewModel()
-                    {
-                        Value = e.Timepoints == null ? "0" : e.Timepoints.Select(t => t.AmountOfVisits).Sum().ToString()
-                    },
+                    //new TDViewModel()
+                    //{
+                    //    Value = e.Timepoints == null ? "0" : e.Timepoints.Count().ToString()
+                    //},
+                    //new TDViewModel()
+                    //{
+                    //    Value = e.Timepoints == null ? "0" : e.Timepoints.Select(t => t.AmountOfVisits).Sum().ToString()
+                    //},
                     new TDViewModel()
                     {
                         Value = e.StartDateTime.GetElixirDateFormat()
@@ -200,14 +200,14 @@ namespace PrototypeWithAuth.Controllers
                 {
                     Value = "Gender"
                 },
-                new TDViewModel()
-                {
-                    Value = "Timepoint"
-                },
-                new TDViewModel()
-                {
-                    Value = "Visit"
-                },
+                //new TDViewModel()
+                //{
+                //    Value = "Timepoint"
+                //},
+                //new TDViewModel()
+                //{
+                //    Value = "Visit"
+                //},
                 new TDViewModel()
                 {
                     Value = "Status"
@@ -257,14 +257,14 @@ namespace PrototypeWithAuth.Controllers
                         {
                             Value = p.Gender.Description
                         },
-                        new TDViewModel()
-                        {
-                            Value = "0"
-                        },
-                        new TDViewModel()
-                        {
-                            Value = "0"
-                        },
+                        //new TDViewModel()
+                        //{
+                        //    Value = "0"
+                        //},
+                        //new TDViewModel()
+                        //{
+                        //    Value = "0"
+                        //},
                         new TDViewModel()
                         {
                             Value = p.ParticipantStatus.Description
@@ -1147,14 +1147,14 @@ namespace PrototypeWithAuth.Controllers
                     .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
                 var weight = new TestHeader()
                 {
-                    Name = "Weight",
+                    Name = "Weight(kg)",
                     Type = AppUtility.DataTypeEnum.Double.ToString(),
                     SequencePosition = 1,
                     TestGroupID = tgId,
                 };
                 var height = new TestHeader()
                 {
-                    Name = "Height",
+                    Name = "Height(cm)",
                     Type = AppUtility.DataTypeEnum.Double.ToString(),
                     SequencePosition = 2,
                     TestGroupID = tgId,
@@ -1175,7 +1175,7 @@ namespace PrototypeWithAuth.Controllers
                 };
                 var muscleMass = new TestHeader()
                 {
-                    Name = "MuscleMass",
+                    Name = "Muscle Mass(kg)",
                     Type = AppUtility.DataTypeEnum.Double.ToString(),
                     SequencePosition = 5,
                     TestGroupID = tgId,
