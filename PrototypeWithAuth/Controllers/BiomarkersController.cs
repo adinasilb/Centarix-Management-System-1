@@ -816,7 +816,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 _context.Remove(e);
             }
-
+            _context.SaveChanges();
             await _1InsertExeriments();
             await _2InsertSites();
             await _3Add02TestsBloodPressure();
