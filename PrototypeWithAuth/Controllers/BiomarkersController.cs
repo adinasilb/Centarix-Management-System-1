@@ -1150,14 +1150,14 @@ namespace PrototypeWithAuth.Controllers
                     .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
                 var weight = new TestHeader()
                 {
-                    Name = "Weight(kg)",
+                    Name = "Weight (kg)",
                     Type = AppUtility.DataTypeEnum.Double.ToString(),
                     SequencePosition = 1,
                     TestGroupID = tgId,
                 };
                 var height = new TestHeader()
                 {
-                    Name = "Height(cm)",
+                    Name = "Height (cm)",
                     Type = AppUtility.DataTypeEnum.Double.ToString(),
                     SequencePosition = 2,
                     TestGroupID = tgId,
@@ -1178,7 +1178,7 @@ namespace PrototypeWithAuth.Controllers
                 };
                 var muscleMass = new TestHeader()
                 {
-                    Name = "Muscle Mass(kg)",
+                    Name = "Muscle Mass (kg)",
                     Type = AppUtility.DataTypeEnum.Double.ToString(),
                     SequencePosition = 5,
                     TestGroupID = tgId,
