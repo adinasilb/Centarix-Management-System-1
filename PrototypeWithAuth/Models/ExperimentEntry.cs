@@ -19,5 +19,6 @@ namespace PrototypeWithAuth.Models
         public ApplicationUser ApplicationUser { get; set; }
         public int SiteID { get; set; }
         public Site Site { get; set; }
+        public DateTime DateCreated { get; set; }
     }
 }

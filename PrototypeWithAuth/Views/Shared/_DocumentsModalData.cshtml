@@ -147,13 +147,19 @@
                                     {
                                         var iframeFilestring = Model.FileStrings[i];
                                         var ext = iframeFilestring.Split(".").Last();
-                                        if (ext == "pptx" || ext == "ppt")
+                                        switch (ext)
                                         {
-                                            iframeFilestring = "images/powerpoint.png";
-                                        }
-                                        if (ext == "doc" || ext == "docx")
-                                        {
-                                            iframeFilestring = "images/wordicon.png";
+                                            case "pptx":
+                                            case "ppt":
+                                                iframeFilestring = "/images/powerpoint.png";
+                                                break;
+                                            case "doc":
+                                            case "docx":
+                                                iframeFilestring = "images/wordicon.png";
+                                                break;
+                                            case "xlsx":
+                                                iframeFilestring = "images/excel.png";
+                                                break;
                                         }
                                         <div class="card iframe-container document-border m-0">
                                             <div class="card-body responsive-iframe-container">

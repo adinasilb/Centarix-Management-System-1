@@ -64,7 +64,7 @@
                 processData: false,
                 async: true,
                 url: "/Biomarkers/EditParticipantModal",
-                data: new FormData($("#myForm")[0]),
+                data: new FormData($(".editparticipantform")[0]),
                 traditional: true,
                 type: "POST",
                 cache: false,
@@ -98,6 +98,9 @@
                     return true;
                 }
             });
+        }
+        else {
+            $(this).removeAttr("disabled");
         }
     });
 </script>
