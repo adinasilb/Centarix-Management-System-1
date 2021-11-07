@@ -47,7 +47,10 @@
             $('._testvalues input').attr("disabled", true);
             $('._testvalues input').addClass("disabled");
             $('.open-document-modal').attr("showSwitch", "false")
+            var selected = $(".biomarkers-test-name.selected");
+            $.fn.ChangeTest(selected);
         }
+
         $.fn.CloseModal('save-bio-test-modal');
     });
 

@@ -41,7 +41,7 @@
         {
             case AppUtility.DataTypeEnum.Double:
                 <label class="control-label text-transform-none">@Model.TestHeader.Name</label>
-                <input asp-for="Double" id="@DoubleID" name="@DoubleName" value="@Model.Double" class="@Model.TestHeader.Name form-control-plaintext border-bottom test-field double" />
+                <input asp-for="Double" id="@DoubleID" name="@DoubleName" value="@(Model.Double ==0 ? "" : Model.Double.ToString())" class="@Model.TestHeader.Name form-control-plaintext border-bottom test-field double" />
                 <span asp-validation-for="Double" class="text-danger-centarix mark-readonly"></span>
                 break;
             case AppUtility.DataTypeEnum.String:
