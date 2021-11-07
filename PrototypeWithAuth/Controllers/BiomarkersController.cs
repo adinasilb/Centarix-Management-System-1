@@ -541,7 +541,7 @@ namespace PrototypeWithAuth.Controllers
             var value2 = tests.SelectMany(t => t.TestOuterGroups/*.Where(tog => tog.TestID == tests.FirstOrDefault().TestID)*/.SelectMany(to => to.TestGroups.SelectMany(tg => tg.TestHeaders))).Count();
             if (value1 < value2)
             {
-                testValues = CreateTestValuesIfNone(tests, testValues, ee.ExperimentEntryID);
+                testValues = await CreateTestValuesIfNoneAsync(tests, testValues, ee.ExperimentEntryID);
             }
             List<BoolIntViewModel> filesPrevFilled = CheckForFiles(testValues, ee.ExperimentEntryID);
             TestViewModel testViewModel = new TestViewModel()
@@ -609,7 +609,7 @@ namespace PrototypeWithAuth.Controllers
             }
             return FilesWithDocsSaved;
         }
-        private List<TestValue> CreateTestValuesIfNone(List<Test> tests, List<TestValue> testValues, int ExperimentEntryID)
+        private async Task<List<TestValue>> CreateTestValuesIfNoneAsync(List<Test> tests, List<TestValue> testValues, int ExperimentEntryID)
         {
             var allTests = tests.SelectMany(t => t.TestOuterGroups.SelectMany(tog => tog.TestGroups.SelectMany(tg => tg.TestHeaders)));
             foreach (var testheader in tests.SelectMany(t => t.TestOuterGroups.SelectMany(tog => tog.TestGroups.SelectMany(tg => tg.TestHeaders))))
@@ -622,10 +622,11 @@ namespace PrototypeWithAuth.Controllers
                         ExperimentEntryID = ExperimentEntryID
                     };
                     _context.Update(tv);
-                    _context.SaveChanges();
+          
                     testValues.Add(tv);
                 }
             }
+            await _context.SaveChangesAsync();
             return testValues;
         }
 
