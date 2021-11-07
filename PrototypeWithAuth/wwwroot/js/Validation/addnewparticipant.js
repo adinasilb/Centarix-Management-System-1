@@ -36,6 +36,9 @@
                     type: 'POST',
                     data: {
                         "CentarixID": function () { return $("#Participant_CentarixID").val() },
+                        "ParticipantID": function () {
+                            return $("#Participant_ParticipantID").val()
+                        },  
                     },
                 },
             },

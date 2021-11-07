@@ -1954,13 +1954,19 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        public bool CheckUniqueCentarixID(string CentarixID)
+        public bool CheckUniqueCentarixID(string CentarixID, int? ParticipantID)
         {
             var boolCheck = true;
+            //validation for create
            
-            if (CentarixID != null && _context.Participants.Where(r => r.CentarixID == CentarixID).Any())
+            if (CentarixID != null && ParticipantID == null && _context.Participants.Where(r => r.CentarixID == CentarixID).Any())
             {
-                return false;
+                boolCheck = false;
+            }
+            //validation for edit
+            else if (CentarixID != null && ParticipantID != null && _context.Participants.Where(p => p.CentarixID == CentarixID && p.ParticipantID != ParticipantID).Any())
+            {
+                boolCheck = false;
             }
             return boolCheck;
         }
