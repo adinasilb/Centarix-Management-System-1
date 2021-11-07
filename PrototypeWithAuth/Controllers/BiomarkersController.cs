@@ -227,7 +227,7 @@ namespace PrototypeWithAuth.Controllers
             List<List<TDViewModel>> BioRows = new List<List<TDViewModel>>();
             if (ExperimentID != null)
             {
-                BioRows = await GetParticipantsRows(_context.Participants.Include(p => p.Gender).Include(p => p.ParticipantStatus).Where(p => p.ExperimentID == ExperimentID));
+                BioRows = await GetParticipantsRows(_context.Participants.Include(p => p.Gender).Include(p => p.ParticipantStatus).Where(p => p.ExperimentID == ExperimentID).OrderByDescending(p=>p.DateCreated));
             }
             else if (ParticipantID != null)
             {
@@ -430,7 +430,7 @@ namespace PrototypeWithAuth.Controllers
         {
             List<List<TDViewModel>> rows = new List<List<TDViewModel>>();
             var experimentEntries = _context.ExperimentEntries
-                .Include(ee => ee.ApplicationUser).Include(ee => ee.Site)
+                .Include(ee => ee.ApplicationUser).Include(ee => ee.Site).OrderByDescending(p=>p.DateCreated)
                 .Where(ee => ee.ParticipantID == ParticipantID);
             foreach (var ee in experimentEntries)
             {

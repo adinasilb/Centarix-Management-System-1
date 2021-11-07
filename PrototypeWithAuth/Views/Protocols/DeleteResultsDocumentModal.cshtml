@@ -31,13 +31,19 @@
                                         var rootPath = $"{Context.Request.Scheme}://{Context.Request.Host.Value}{Context.Request.PathBase.Value.ToString()}";
                                         var iframeFilestring = Model.DocumentsInfo.FirstOrDefault()?.FileStrings[0];
                                         var ext = iframeFilestring.Split(".").Last();
-                                        if (ext == "pptx" || ext == "ppt")
+                                        switch (ext)
                                         {
-                                            iframeFilestring = "images/powerpoint.png";
-                                        }
-                                        if (ext == "doc" || ext == "docx")
-                                        {
-                                            iframeFilestring = "images/wordicon.png";
+                                            case "pptx":
+                                            case "ppt":
+                                                iframeFilestring = "/images/powerpoint.png";
+                                                break;
+                                            case "doc":
+                                            case "docx":
+                                                iframeFilestring = "images/wordicon.png";
+                                                break;
+                                            case "xlsx":
+                                                iframeFilestring = "images/excel.png";
+                                                break;
                                         }
                                     }
                                     <div class="card-body responsive-iframe-container p-0">
