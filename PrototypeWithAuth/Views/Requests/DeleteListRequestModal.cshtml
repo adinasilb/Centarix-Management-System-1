@@ -11,7 +11,7 @@
             <button type="button" class="close modal-close-padding modal-close-style"  aria-label="Close" onclick="$.fn.CloseModal('delete-list-request');">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding" id="myForm">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding deleteListRequestForm" id="myForm">
                 <input type="hidden" asp-for="Request.RequestID" />
                 <input type="hidden" asp-for="List.ListID" />
                 <div class="modal-header border-bottom modal-header-padding">
@@ -27,26 +27,4 @@
         </div>
     </div>
 </div>
-<script>
-    $(".delete-request").off('click').on("click", function (e) {
-        console.log("delete list request");
-        e.preventDefault();
-        var formdata = new FormData($("#myForm")[0])
-        $.ajax({
-            url: "/Requests/DeleteListRequestModal",
-            method: 'POST',
-            data: formdata,
-            success: function (data) {
-                $.fn.CloseModal("delete-list-request");
-                $("._IndexTableListTabs").html(data)
-                return true;
-            },
-            error: function (jqxhr) {
-                $('.moveListItemForm .error-message').html(jqxhr.responseText);
-            },
-            processData: false,
-            contentType: false
-        })
-        return false;
-    });
-</script>
+<script src="~/js/RequestLists.js"></script>

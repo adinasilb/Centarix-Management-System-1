@@ -5799,7 +5799,13 @@ namespace PrototypeWithAuth.Controllers
                     throw new Exception(AppUtility.GetExceptionMessage(ex));
                 }
             }
-            return RedirectToAction("_IndexTableWithListTabs", new { listID = viewModel.List.ListID });
+            RequestIndexObject indexObject = new RequestIndexObject
+            {
+                PageType = AppUtility.PageTypeEnum.RequestCart,
+                SidebarType = AppUtility.SidebarEnum.MyLists,
+                ListID = viewModel.List.ListID
+            };
+            return RedirectToAction("_IndexTableWithListTabs", indexObject);
         }
 
 
@@ -5819,14 +5825,15 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ListSettingsModal(ListSettingsViewModel listSettings)
+        public async Task<IActionResult> ListSettingsModal(ListSettingsViewModel listSettings, int selectedIndexListID)
         {
             await UpdateListDetails(listSettings.SelectedList);
 
             RequestIndexObject indexObject = new RequestIndexObject
             {
                 PageType = AppUtility.PageTypeEnum.RequestCart,
-                SidebarType = AppUtility.SidebarEnum.MyLists
+                SidebarType = AppUtility.SidebarEnum.MyLists,
+                ListID = selectedIndexListID
             };
             return RedirectToAction("_IndexTableWithListTabs", indexObject);
         }

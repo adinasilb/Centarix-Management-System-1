@@ -50,7 +50,9 @@
         e.stopPropagation();
         var valid = $('.listSettingsForm').valid();
         if (valid) {
+            console.log($("#ListID").val())
             var formData = new FormData($(".listSettingsForm")[0]);
+            formData.append('selectedIndexListID', $("#ListID").val())
             var viewClass = "._IndexTableListTabs"
             $.fn.ajaxPartialIndexTable(-1, "/Requests/ListSettingsModal", viewClass, "POST", formData, "list-settings");
         }
@@ -221,5 +223,14 @@
         var formData = new FormData($(".moveListItemForm")[0]);
         var viewClass = "._IndexTableListTabs"
         $.fn.ajaxPartialIndexTable(-1, url, viewClass, "POST", formData, "move-list");
+    });
+
+    $(".delete-request").off('click').on("click", function (e) {
+        e.preventDefault();
+        console.log("delete list request");
+        var formData = new FormData($(".deleteListRequestForm")[0])
+        var viewClass = "._IndexTableListTabs"
+        $.fn.ajaxPartialIndexTable(-1, "/Requests/DeleteListRequestModal", viewClass, "POST", formData, "delete-list-request");
+        return false;
     });
 })
