@@ -355,8 +355,12 @@ namespace PrototypeWithAuth.Controllers
 
             List<ProductSubcategory> SubProducts = new List<ProductSubcategory>();
             SubProducts = _context.ProductSubcategories.Include(p => p.ParentCategory).Where(q => q.ParentCategory.CategoryTypeID == 1).ToList();
-            //TaubasProductCategoriesViewModel.SubPro
-            return View(SubProducts);//return view model as list as property 
+            TaubasProductCategoriesViewModel taubasproductcategoriesViewModel = new TaubasProductCategoriesViewModel()
+            {
+                SubProducts = _context.ProductSubcategories.Include(p => p.ParentCategory).Where(q => q.ParentCategory.CategoryTypeID == 1).ToList()
+            };
+                
+            return View(taubasproductcategoriesViewModel);//return view model as list as property 
            
         }
 
