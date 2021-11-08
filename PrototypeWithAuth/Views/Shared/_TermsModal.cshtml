@@ -84,12 +84,16 @@
             </div>
 
         </div>
-        <div class="row">
-            <div class="col-12">
-                <label class="control-label">Notes to the supplier</label>
-                <input asp-for="ParentRequest.NoteToSupplier" class="form-control-plaintext border-bottom" />
+        @if (Model.TempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderType != AppUtility.OrderTypeEnum.AlreadyPurchased.ToString() && Model.TempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderType != AppUtility.OrderTypeEnum.SaveOperations.ToString())
+        {
+            <div class="row">
+                <div class="col-12">
+                    <label class="control-label">Notes to the supplier</label>
+                    <input asp-for="ParentRequest.NoteToSupplier" class="form-control-plaintext border-bottom" />
+                </div>
             </div>
-        </div>
+        }
+
     </div>
 </div>
 <input type="hidden" asp-for="ParentRequest.OrderDate" />
