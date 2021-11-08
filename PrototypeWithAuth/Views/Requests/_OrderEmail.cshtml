@@ -58,7 +58,7 @@ Model.TempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.Side
         </div>
         <div class="col-6 offset-2">
             <div class="note-message p-4 pl-5">                   
-                    @if (Model.Requests[0].ParentRequest.NoteToSupplier != null)
+                    @if (Model.Requests[0]?.ParentRequest?.NoteToSupplier != null)
                     {
                        <span class="heading-1">Please Note:</span><br>
                       <span class="text">@Model.Requests[0].ParentRequest.NoteToSupplier</span>
