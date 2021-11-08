@@ -897,6 +897,7 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
             bool isProprietary = requestIndexObject.RequestStatusID == 7 ? true : false;
             requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters, requestIndexObject.SectionType, isProprietary);
+            requestIndexViewModel.InventoryFilterViewModel.PageType = requestIndexObject.PageType;
             return requestIndexViewModel;
         }
         protected static IQueryable<Request> FilterListBySelectFilters(SelectedRequestFilters selectedFilters, IQueryable<Request> fullRequestsList)

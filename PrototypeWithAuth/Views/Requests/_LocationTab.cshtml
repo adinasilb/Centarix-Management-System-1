@@ -225,7 +225,7 @@
     </div>
 
 </div>
-@if (Model.ModalType != AppUtility.RequestModalType.Create  && Model.Requests[0].IsArchived == false)
+@if (Model.ModalType != AppUtility.RequestModalType.Create  && Model.Requests[0].IsArchived == false && Model.PageType==AppUtility.PageTypeEnum.RequestSummary)
 {
     <div class="row justify-content-center">
         <div class="">

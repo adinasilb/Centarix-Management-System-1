@@ -152,7 +152,7 @@ $(function () {
         e.stopPropagation();
         $(".tooltip").remove();
         $("#loading").show();
-        var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr('value') + "&SectionType=" + $("#masterSectionType").val();
+        var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr('value') + "&SectionType=" + $("#masterSectionType").val()+"&PageType=" + $("#masterPageType").val();
         $.fn.CallPageRequest($itemurl, "details");
         return false;
     });
@@ -168,7 +168,7 @@ $(function () {
         console.log('in load products details summary');
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
-        var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false" + "&SectionType=" + $("#masterSectionType").val() + "&isProprietary=" + isProprietary;
+        var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false" + "&SectionType=" + $("#masterSectionType").val() + "&PageType=" + $("#masterPageType").val() + "&isProprietary=" + isProprietary;
         /*alert("$itemurl: " + $itemurl);*/
         $.fn.CallPageRequest($itemurl, "summary");
         return false;

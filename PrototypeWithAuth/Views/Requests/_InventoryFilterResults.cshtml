@@ -43,7 +43,7 @@
             </div>
         }
         <div class="col-3"></div>
-        @if (Model.IsProprietary)
+        @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary)
         {
             <div class="col-2 text-center custom-control custom-checkbox plain-form archive-button">
                 <input type="checkbox" class=" custom-control-input archive-check" asp-for="Archive" value=" @Model.Archive" />

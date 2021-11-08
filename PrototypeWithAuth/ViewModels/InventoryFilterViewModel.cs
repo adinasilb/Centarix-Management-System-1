@@ -28,6 +28,7 @@ namespace PrototypeWithAuth.ViewModels
         public bool Archive { get; set; }
         public bool IsProprietary { get; set; }
         public string CatalogNumber { get; set; }
+        public AppUtility.PageTypeEnum PageType { get; set; }
         //public List<Project> Projects { get; set; }
         //public List<int> SelectedProjects { get; set; }
         //public List<SubProject> SubProjects { get; set; }

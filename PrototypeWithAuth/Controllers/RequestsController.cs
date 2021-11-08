@@ -2403,7 +2403,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> EditModalView(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true, List<string> selectedPriceSort = null, bool isProprietary = false, int? Tab = 0)
+        public async Task<IActionResult> EditModalView(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true, List<string> selectedPriceSort = null, bool isProprietary = false, int? Tab = 0, AppUtility.PageTypeEnum pageType = AppUtility.PageTypeEnum.RequestRequest)
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
@@ -2411,6 +2411,7 @@ namespace PrototypeWithAuth.Controllers
             }
             selectedPriceSort = selectedPriceSort.Count == 0 ? new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() } : selectedPriceSort;
             var requestItemViewModel = await editModalViewFunction(id, Tab, SectionType, isEditable, selectedPriceSort, isProprietary: isProprietary);
+            requestItemViewModel.PageType = pageType;
             return PartialView(requestItemViewModel);
         }
 
