@@ -788,7 +788,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> RunScriptsAsync()
+        private async Task<ActionResult> RunScriptsAsync()
         {
             var testvalues = _context.TestValues;
             foreach (var tv in testvalues)
