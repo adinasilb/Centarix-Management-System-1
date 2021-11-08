@@ -227,7 +227,7 @@ namespace PrototypeWithAuth.Controllers
             List<List<TDViewModel>> BioRows = new List<List<TDViewModel>>();
             if (ExperimentID != null)
             {
-                BioRows = await GetParticipantsRows(_context.Participants.Include(p => p.Gender).Include(p => p.ParticipantStatus).Where(p => p.ExperimentID == ExperimentID).OrderByDescending(p=>p.DateCreated));
+                BioRows = await GetParticipantsRows(_context.Participants.Include(p => p.Gender).Include(p => p.ParticipantStatus).Where(p => p.ExperimentID == ExperimentID));
             }
             else if (ParticipantID != null)
             {
@@ -239,7 +239,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<List<List<TDViewModel>>> GetParticipantsRows(IEnumerable<Participant> Participants)
         {
             List<List<TDViewModel>> rows = new List<List<TDViewModel>>();
-            Participants.ToList().ForEach(p =>
+            Participants.OrderByDescending(p => p.DateCreated).ToList().ForEach(p =>
                  rows.Add(
                      new List<TDViewModel>()
                      {
@@ -430,7 +430,7 @@ namespace PrototypeWithAuth.Controllers
         {
             List<List<TDViewModel>> rows = new List<List<TDViewModel>>();
             var experimentEntries = _context.ExperimentEntries
-                .Include(ee => ee.ApplicationUser).Include(ee => ee.Site).OrderByDescending(p=>p.DateCreated)
+                .Include(ee => ee.ApplicationUser).Include(ee => ee.Site).OrderByDescending(p => p.DateCreated)
                 .Where(ee => ee.ParticipantID == ParticipantID);
             foreach (var ee in experimentEntries)
             {
@@ -622,7 +622,7 @@ namespace PrototypeWithAuth.Controllers
                         ExperimentEntryID = ExperimentEntryID
                     };
                     _context.Update(tv);
-          
+
                     testValues.Add(tv);
                 }
             }
@@ -630,10 +630,17 @@ namespace PrototypeWithAuth.Controllers
             return testValues;
         }
 
-        public async Task<ActionResult> SaveTestModal(string? ID = null)
+        public async Task<ActionResult> SaveTestModal(string? ID = null, string? GuidString = null)
         {
             var String1 = ID == null ? "none" : ID;
-            return PartialView("SaveTestModal", String1);
+            Guid CurrentGuid;
+            Guid.TryParse(GuidString, out CurrentGuid);
+            SaveTestViewModel saveTestViewModel = new SaveTestViewModel()
+            {
+                ID = String1,
+                Guid = CurrentGuid
+            };
+            return PartialView("SaveTestModal", saveTestViewModel);
         }
 
         public async Task<ActionResult> SaveTests(TestViewModel testViewModel, TestValuesViewModel testValuesViewModel, List<FieldViewModel> fieldViewModels)
@@ -684,6 +691,20 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("_TestValues", new { TestID = testViewModel.FieldViewModels.FirstOrDefault().TestID, ListNumber = 0, SiteID = testViewModel.ExperimentEntry.SiteID, ExperimentID = testViewModel.ExperimentID, ExperimentEntryID = testViewModel.ExperimentEntry.ExperimentEntryID });
         }
 
+        private void DeleteFiles(Guid guid, int ExperimentID, List<TestValue> testValues)
+        {
+            try
+            {
+                string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ExperimentEntries.ToString());
+                string GuidFolder = Path.Combine(uploadFolder, guid.ToString());
+
+                Directory.Delete(GuidFolder, true);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
         private void SaveFiles(Guid guid, int ExperimentEntryID)
         {
             try
@@ -727,6 +748,19 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
+        private List<TestValue> GetTestValuesFromTestIDAndExperimentEntryID(int TestID, int ExperimentEntryID)
+        {
+            return _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ExperimentEntryID
+                              && tv.TestHeader.TestGroup.TestOuterGroup.TestID == TestID).ToList();
+        }
+
+        public async Task<ActionResult> CancelTestChanges(Guid CurrentGuid, int TestID, int ListNumber, int SiteID, int ExperimentID, int ExperimentEntryID)
+        {
+            var testValues = GetTestValuesFromTestIDAndExperimentEntryID(TestID, ExperimentEntryID);
+            DeleteFiles(CurrentGuid, ExperimentID, testValues);
+            return RedirectToAction("_TestValues", new { TestId = TestID, ListNumber = ListNumber, SiteID = SiteID, ExperimentID = ExperimentID, ExperimentEntryID = ExperimentEntryID });
+        }
+
         public async Task<ActionResult> _TestValues(int TestID, int ListNumber, int SiteID, int ExperimentID, int ExperimentEntryID)
         {
             var test = _context.Tests.Where(t => t.TestID == TestID).FirstOrDefault();
@@ -734,8 +768,7 @@ namespace PrototypeWithAuth.Controllers
                      .Include(t => t.TestOuterGroups).ThenInclude(tog => tog.TestGroups).ThenInclude(tg => tg.TestHeaders)
                      .Where(t => t.ExperimentTests.Select(et => et.ExperimentID).Contains(ExperimentID))
                      .ToList();
-            var testValues = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ExperimentEntryID
-                              && tv.TestHeader.TestGroup.TestOuterGroup.TestID == test.TestID).ToList();
+            var testValues = GetTestValuesFromTestIDAndExperimentEntryID(TestID, ExperimentEntryID);
             List<BoolIntViewModel> filesPrevFilled = CheckForFiles(testValues, ExperimentEntryID);
             TestValuesViewModel testValuesViewModel = new TestValuesViewModel()
             {
@@ -1961,7 +1994,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var boolCheck = true;
             //validation for create
-           
+
             if (CentarixID != null && ParticipantID == null && _context.Participants.Where(r => r.CentarixID == CentarixID).Any())
             {
                 boolCheck = false;
