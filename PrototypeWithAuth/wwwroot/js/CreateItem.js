@@ -280,4 +280,7 @@
         $.fn.CallPageRequest($itemurl, 'historyItem');
     });
 
+    $(".url-shown").on("click", function (e) {
+        $("#url-click").click();
+    });
 })
