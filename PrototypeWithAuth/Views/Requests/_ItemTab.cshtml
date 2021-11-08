@@ -295,6 +295,7 @@
             }
             <div class="col-md-4 @websiteCategories">
                 <label asp-for="Requests[0].URL" class="control-label"></label>
+                <input type="hidden" id="url-click" value="@AppUtility" />
                 <input asp-for="Requests[0].URL" class="form-control-plaintext border-bottom @websiteCategories @markReadOnlyClass" />
                 <span asp-validation-for="Requests[0].URL" class="text-danger-centarix"></span>
             </div>
