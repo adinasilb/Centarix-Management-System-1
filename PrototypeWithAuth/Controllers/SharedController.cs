@@ -800,7 +800,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 //we need both categories
                 RequestsPassedIn = _context.Requests.IgnoreQueryFilters().Where(r => !r.IsDeleted).Where(r => r.RequestStatusID == 3)
-                    .Where(r => !r.IsClarify && !r.IsPartial && r.Payments.Where(p => p.IsPaid && p.HasInvoice).Count() == r.Payments.Count())
+                    .Where(r => !r.IsClarify && r.Payments.Where(p => p.IsPaid && p.HasInvoice).Count() == r.Payments.Count())
                     .Where(r => Years.Contains(r.ParentRequest.OrderDate.Year));
                 if (Months != null && Months.Count() > 0)
                 {
