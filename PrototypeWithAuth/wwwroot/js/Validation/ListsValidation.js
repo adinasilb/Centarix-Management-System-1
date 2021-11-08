@@ -15,7 +15,8 @@ $('.newListForm').validate({
     },
     rules: {
         "ListTitle": {
-            minlength: 0,
+            required: true,
+            minlength: 1,
             maxlength: 20
         },
     }
@@ -27,7 +28,8 @@ $('.listSettingsForm').validate({
     },
     rules: {
         "SelectedList.Title": {
-            minlength: 0,
+            required:true,
+            minlength: 1,
             maxlength: 20
         },
     }
