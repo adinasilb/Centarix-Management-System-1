@@ -2598,55 +2598,14 @@ namespace PrototypeWithAuth.Data
                 }
             );
             modelBuilder.Entity<Citizenship>().HasData(
-                  new Citizenship
-                  {
-                      CitizenshipID = 1,
-                      Description = "Israel"
-                  },
-                 new Citizenship
-                 {
-                     CitizenshipID = 2,
-                     Description = "USA"
-                 }
+                 SeededData.CitizenshipData.Get()
             );
             modelBuilder.Entity<MaritalStatus>().HasData(
-                new MaritalStatus
-                {
-                    MaritalStatusID = 1,
-                    Description = "Married"
-                },
-                new MaritalStatus
-                {
-                    MaritalStatusID = 2,
-                    Description = "Single"
-                },
-                new MaritalStatus
-                {
-                    MaritalStatusID = 3,
-                    Description = "Divorced"
-                }
+                SeededData.MaritalStatusData.Get()
             );
             modelBuilder.Entity<CalibrationType>().HasData(
-             new CalibrationType
-             {
-                 CalibrationTypeID = 1,
-                 Description = "Repair",
-                 Icon = "icon-build-24px"
-             }
-             ,
-             new CalibrationType
-             {
-                 CalibrationTypeID = 2,
-                 Description = "External Calibration",
-                 Icon = "icon-miscellaneous_services-24px-1"
-             },
-             new CalibrationType
-             {
-                 CalibrationTypeID = 3,
-                 Description = "In House Maintainance",
-                 Icon = "icon-inhouse-maintainance-24px"
-             }
-         );
+            SeededData.CalibrationTypeData.Get()
+         ) ;
 
             modelBuilder.Entity<CompanyDayOffType>().HasData(
            SeededData.CompanyDayOffTypeData.Get()
