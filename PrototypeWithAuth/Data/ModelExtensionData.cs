@@ -2566,62 +2566,53 @@ namespace PrototypeWithAuth.Data
                 }
             );
             modelBuilder.Entity<Degree>().HasData(
-               SeededData.DegreeData.Get()
+                SeededData.DegreeData.Get()
             );
             modelBuilder.Entity<Citizenship>().HasData(
-                 SeededData.CitizenshipData.Get()
+                SeededData.CitizenshipData.Get()
             );
             modelBuilder.Entity<MaritalStatus>().HasData(
                 SeededData.MaritalStatusData.Get()
             );
             modelBuilder.Entity<CalibrationType>().HasData(
-            SeededData.CalibrationTypeData.Get()
-         ) ;
-
+                SeededData.CalibrationTypeData.Get()
+            ) ;
             modelBuilder.Entity<CompanyDayOffType>().HasData(
-           SeededData.CompanyDayOffTypeData.Get()
-         );
-
+                SeededData.CompanyDayOffTypeData.Get()
+            );
             modelBuilder.Entity<ProtocolType>().HasData(
-              SeededData.ProtocolTypeData.Get()
-        );
+                SeededData.ProtocolTypeData.Get()
+            );
             modelBuilder.Entity<ProtocolCategory>().HasData(
-              SeededData.ProtocolCategoryData.Get()
-           );
+                SeededData.ProtocolCategoryData.Get()
+            );
             modelBuilder.Entity<ProtocolSubCategory>().HasData(
-               SeededData.ProtocolSubCategoryData.Get()
-          );
-
+                SeededData.ProtocolSubCategoryData.Get()
+            );
             modelBuilder.Entity<ResourceCategory>().HasData(
                 SeededData.ResourceCategoryData.Get()
             );
-
             modelBuilder.Entity<ReportType>().HasData(
-               SeededData.ReportTypeData.Get()
+                SeededData.ReportTypeData.Get()
             );
             modelBuilder.Entity<MaterialCategory>().HasData(
                 SeededData.MaterialCategoryData.Get()
-           );
-
+            );
             modelBuilder.Entity<LineType>().HasData(
                 SeededData.LineTypeData.Get()
-             );
+            );
             modelBuilder.Entity<FunctionType>().HasData(
-               SeededData.FunctionTypeData.Get()
+                SeededData.FunctionTypeData.Get()
             );
-
             modelBuilder.Entity<Gender>().HasData(
-               SeededData.GenderData.Get()
+                SeededData.GenderData.Get()
             );
-
             modelBuilder.Entity<ParticipantStatus>().HasData(
                 SeededData.ParticipantStatusData.Get()
             );
-
             modelBuilder.Entity<Country>().HasData(
                 SeededData.CountryData.Get()
             );
-
         }
     }
 }
