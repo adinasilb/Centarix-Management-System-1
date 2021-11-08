@@ -103,7 +103,7 @@
 }
 
 @{ var request = Model.Requests[0];}
-<span class="heading-1 modal-tab-name">Item</span>
+<span class="heading-1 modal-tab-name requests-funky-label-font">Item</span>
 @*@if (modalType == AppUtility.RequestModalType.Create && !Model.IsProprietary)
 {
     <div class="row">
@@ -200,10 +200,10 @@
             </div>
         </div>
         <input class="@vendorCategories" type="hidden" value="" id="vendor-primary-email" />
-        <div class="col-md-6 @companyIDCategories">
+        <div class="col-md-6   @companyIDCategories">
             <div class="form-group">
                 @* IN MIDDLE *@
-                <label asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="control-label"></label>
+                <label asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="requests-additem-companyID-border" class="control-label"></label>
                 <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " disabled />
                 @*don't need a validation here because you it's not saving*@
             </div>
@@ -239,7 +239,7 @@
     @if (modalType != AppUtility.RequestModalType.Create && Model.Requests[0].ParentQuote?.QuoteNumber != null)
     {
         <div class="row @hiddenSummaryClass @quoteCategories">
-            <div class="col-md-6">
+            <div class="col-md-6 requests-funky-label-font">
                 <label asp-for="Requests[0].ParentQuote.QuoteNumber" class="control-label"></label>
                 <input asp-for="Requests[0].ParentQuote.QuoteNumber" readonly class="form-control-plaintext border-bottom @quoteCategories @markReadOnlyClass" disabled />
                 <span asp-validation-for="Requests[0].ParentQuote.QuoteNumber" class="text-danger-centarix" />

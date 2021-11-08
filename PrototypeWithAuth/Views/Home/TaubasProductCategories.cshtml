@@ -1,0 +1,142 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model List<ProductSubcategory>
+
+@using PrototypeWithAuth.AppData
+
+@{
+
+    //ViewData["Title"] = "TaubasEmployeesView";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+
+@{
+    var row = 1;
+    var col = 1;
+    var number = 1;
+    int colcounter = 1;
+    int itemcounter = 1;
+    bool PageisFull = false;
+    bool NextCol = false;
+    var temp=0;
+}
+<div class="container-fluid">
+    <input type="hidden"  />
+    <div class="row">
+        @foreach (var p in Model)
+        {
+            <div class="col-2 col-hov">
+                @Url.Action("ItemTableType","Requests")
+                <span >@p.ProductSubcategoryDescription @p.ProductSubcategoryID </span>
+                @{
+                    temp = p.ProductSubcategoryID;
+                }
+                
+            </div>
+        }
+    </div>
+    
+</div>
+
+@*
+
+
+    <div class="col">
+    @foreach (ProductSubcategory p in Model)
+    {
+
+    @if (itemcounter <= 6)
+    {
+    <div>@p.ProductSubcategoryDescription.ToString()</div>
+
+    itemcounter += 1;
+    }
+    <br></br>
+
+
+
+    @if (itemcounter==7)
+    {
+
+    break;
+    }
+
+
+    </div>
+    PageisFull = true;
+
+    }
+    itemcounter = 0;
+    colcounter += 1;
+    }
+
+*@
+
+
+
+
+
+
+}
+
+
+@* //<div class="container">
+    //<div class="row">
+    //@while(counter<=6)
+    {
+
+    }
+    //         {
+    //             <div class="col">
+    //                 foreach(ProductSubcategory p in Model)
+    //                 {
+    //                     <div>
+    //                     p.ProductSubcategoryDescription.ToString();
+    //                     counter++;
+    //                     </div>
+
+    //                 }
+    //             </div>
+    //         }
+    //     </div>
+    //</div>*@
+
+
+    @{
+    }
+@*<div class="row pb-3">
+    <a style="z-index:100" href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType =TempData[AppUtility.TempDataTypes.MenuType.ToString()] }).ToString()"
+       class="title-label  btn-link heading-1 ">
+        <i class="icon-arrow_back_ios-24px-1" style="font-size:1.4rem;"></i>
+        <label class="pl-2">@Model.SidebarFilterName</label>
+    </a>
+</div>
+@if ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()] == AppUtility.PageTypeEnum.RequestRequest || (AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()] == AppUtility.PageTypeEnum.OperationsRequest)
+{
+    <div class="_IndexTableWithCounts">
+        @{ await Html.RenderPartialAsync("_IndexTableWithCounts", Model);}
+    </div>*@
+
+}
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

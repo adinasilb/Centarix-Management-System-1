@@ -30,7 +30,7 @@ namespace PrototypeWithAuth.Models
         
         public ProductSubcategory ProductSubcategory { get; set; }
         
-        public IEnumerable<Request> Requests { get; set; }
+        public IEnumerable<Request> Requests { get; set; } //list of requests
 
         public int? UnitTypeID { get; set; }
         [ForeignKey("UnitTypeID")]

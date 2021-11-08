@@ -25,11 +25,13 @@ namespace PrototypeWithAuth.Controllers
     {
         private readonly UrlEncoder _urlEncoder;
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+        private readonly ApplicationDbContext _context;
 
         public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, UrlEncoder urlEncoder, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
             : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
             _urlEncoder = urlEncoder;
+            _context = context;
         }
 
         public async Task<IActionResult> Index()
@@ -332,6 +334,30 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> WebCam()
         {
             return null;
+        }
+
+        public async Task<IActionResult> TaubasEmployeesView() //IActionResult is a view and 
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestRequest;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
+
+            List<Product> Products = new List<Product>();
+            Products = _context.Products.Include(p => p.Requests).ThenInclude(r => r.ParentRequest).ToList();
+            return View(Products); 
+        }
+
+        public async Task<IActionResult> TaubasProductCategories() //IActionResult is a view and 
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestRequest;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
+
+            List<ProductSubcategory> SubProducts = new List<ProductSubcategory>();
+            SubProducts = _context.ProductSubcategories.Include(p => p.ParentCategory).Where(q => q.ParentCategory.CategoryTypeID == 1).ToList();
+            //TaubasProductCategoriesViewModel.SubPro
+            return View(SubProducts);//return view model as list as property 
+           
         }
 
 

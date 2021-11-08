@@ -6,13 +6,13 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
-    if (!AppUtility.IsAjaxRequest(Context.Request))
+    if (!AppUtility.IsAjaxRequest(Context.Request)) //context from https call
     {
         Layout = "~/Views/Shared/Master.cshtml";
     }
 
 
-    AppUtility.PageTypeEnum pageType = AppUtility.PageTypeEnum.None;
+    AppUtility.PageTypeEnum pageType = AppUtility.PageTypeEnum.None; //assigning none value to pagetype as default
     var categoryType = AppUtility.CategoryTypeEnum.Lab;
 
     AppUtility.MenuItems MenuType = (AppUtility.MenuItems)TempData[AppUtility.TempDataTypes.MenuType.ToString()];
@@ -45,16 +45,19 @@
     bool Summary = false;
 
 
-    string originalNavClasses = " lab-man-underline ";
+    string originalNavClasses = " ";
     string activeClass = "text-dark order-inv-filter ";
 
     List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
-    AppUtility.SidebarEnum sidebarType = AppUtility.SidebarEnum.None;
-    if (TempData[AppUtility.TempDataTypes.SidebarType.ToString()] != null)
-    {
-        sidebarType = (AppUtility.SidebarEnum)TempData[AppUtility.TempDataTypes.SidebarType.ToString()];
+    AppUtility.SidebarEnum sidebarType = AppUtility.SidebarEnum.None; // ints attatched never use the value 
+    if (TempData[AppUtility.TempDataTypes.SidebarType.ToString()] != null) // temp data 3 types of tempdata, viewdata, viewbag don't have ability to cary through more then one view caries strings 
+    {//TempData["Adina"] = "Programmer"
+        //TempData["SidebarType"]
+        sidebarType = (AppUtility.SidebarEnum)TempData[AppUtility.TempDataTypes.SidebarType.ToString()]; //sent in from controll,er
+    //parsing and assigning it taking the the sring into enum 
     }
+
 
     var menuClass = originalNavClasses;
     if (pageType == AppUtility.PageTypeEnum.RequestInventory)
@@ -93,22 +96,27 @@
     }
     else if (pageType == AppUtility.PageTypeEnum.LabManagementSuppliers)
     {
+        originalNavClasses += " lab-man-underline ";
         SidebarMenuItems = CreateMenus.CreateLabManageSuppliersSidebar(sidebarType, originalNavClasses, "lab-man-filter");
     }
     else if (pageType == AppUtility.PageTypeEnum.LabManagementLocations)
     {
+        originalNavClasses += " lab-man-underline ";
         SidebarMenuItems = CreateMenus.CreateLabManageLocationsSidebar(sidebarType, originalNavClasses, "lab-man-filter");
     }
     else if (pageType == AppUtility.PageTypeEnum.LabManagementQuotes)
     {
+        originalNavClasses += " lab-man-underline ";
         SidebarMenuItems = CreateMenus.CreateLabManageOrdersSidebar(sidebarType, originalNavClasses, "lab-man-filter");
     }
     else if (pageType == AppUtility.PageTypeEnum.LabManagementSearch)
     {
+        originalNavClasses += " lab-man-underline ";
         SidebarMenuItems = CreateMenus.CreateLabManageSearchSidebar(sidebarType, originalNavClasses, "lab-man-filter");
     }
     else if (pageType == AppUtility.PageTypeEnum.LabManagementEquipment)
     {
+        originalNavClasses += " lab-man-underline ";
         SidebarMenuItems = CreateMenus.CreateLabManageEquipmentSidebar(sidebarType, originalNavClasses, "lab-man-filter");
     }
     else if (pageType == AppUtility.PageTypeEnum.AccountingPayments)
@@ -257,13 +265,13 @@
                         <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-placement="bottom" data-container="body" class="btn no-box-shadow p-0 m-0 " style="margin-right: 1.313rem !important;"><div class="alerts-icon"><i style='font-size: 2.3rem;   color: #808080;' class='icon-notification_top_menu'></i> <span id="alertCount" class="alert-count "></span></div>  </button> </li>
                         <div style="display:none;" id="notifications-popover">
                             <button type="button" class="close popover-close" style="font-size:2rem;">&times;</button>
-                            <div style="width:410px" class="p-4 heading-1">
+                            <div style="width:410px" class="p-4 heading-1 ">
                                 Notifications
                             </div>
                         </div>
                     </ul>
                 </div>
-                <div class="  ">
+                <div class="  " style=background-color: yellow !important; >
                     <ul class="list-unstyled mb-0 ">
                         <li>
                             <div class="form-inline pr-3">

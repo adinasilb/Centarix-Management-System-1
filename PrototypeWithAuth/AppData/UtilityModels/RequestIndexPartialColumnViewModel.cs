@@ -15,7 +15,7 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<IconColumnViewModel> Icons { get; set; }
         public int AjaxID { get; set; } = 0;
         public string Image { get; set; } = "";
-        public string AjaxLink { get; set; } = "";
+        public string AjaxLink { get; set; } = ""; //list of classes 
         public AppUtility.FilterEnum FilterEnum { get; set; } = AppUtility.FilterEnum.None;
         public string Note { get; set; } = "";
         public bool ShowTooltip { get; set; }

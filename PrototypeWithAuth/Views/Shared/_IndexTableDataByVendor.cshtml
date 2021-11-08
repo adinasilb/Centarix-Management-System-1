@@ -45,7 +45,7 @@
                 break;
         }
     }
-    @foreach (var vendor in Model.RequestsByVendor)
+    @foreach (var vendor in Model.RequestsByVendor) //go though vendor 
     {
         <table class="table table-headerspaced  table-borderless table-hover mb-5 ">
             <tr class="text-dark border-0 no-hover h-50">
@@ -60,7 +60,7 @@
             <tbody class="@sectionClass">
                 @{ var requests = vendor.Select(r => r).ToList();}
 
-                @foreach (var row in requests)
+                @foreach (var row in requests) // get row I'm on fill up trhe columns
                 {
                     <tr class="text-center inv-list-item">
                         @foreach (var col in row.Columns)

@@ -1745,7 +1745,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ItemTableType(RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> ItemTableType(RequestIndexObject requestIndexObject)//
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;

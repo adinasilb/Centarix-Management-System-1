@@ -17,7 +17,7 @@
 </div>*@
 <div class="row">
     <div class="col-12">
-        <span class="heading-1 modal-tab-name">Order</span>
+        <span class="heading-1 modal-tab-name requests-funky-label-font">Order</span>
     </div>
 </div>
 <div class="row">
@@ -58,13 +58,13 @@
         <div class="col-7 align-vertical-middle-col">
             <span class="small-text">If you want to order multiple items</span>
         </div>
-        <div class="col-5">
+        <div class="col-5 requests-orderbutton-purple">
             @*<button type="submit" asp-action="AddItemView" asp-controller="Requests" asp-route-OrderType="@AppUtility.OrderTypeEnum.AddToCart.ToString()"
                         class="text w-100 custom-order-inv custom-button float-right">
                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
                 </button>*@
             <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart"
-                    class="text w-100 custom-order-inv custom-button float-right submitOrder ">
+                    class="text w-100 custom-order-inv custom-button float-right submitOrder  ">
                 @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
             </button>
 

@@ -180,11 +180,49 @@ span.choose {
     .hidden {
         display: none !important;
     }
+    /*//////////////////////////////////////*/
+    .requests-bigger-date {
+        font-size:100px !important;
+        color: aqua !important;
+    }
 
-.order-inv-form .RequestUnitCard div:first-child, .order-inv-form .RequestSubunitCard div:first-child, .order-inv-form .RequestSubsubunitCard div:first-child {
-    border-radius: 18px;
-    border-color: var(--order-inv-color) !important;
+    .requests-additem-companyID-border {
+        border-color: blue;
+        border-left-style: dotted;
+    }
+
+    .requests-document-margin {
+        margin-left: 50px !important;
+    }
+
+    .requests-funky-label-font {
+        font-style: italic !important;
+        font-family: fantasy;
+    }
+
+    .requests-orderbutton-purple {
+        background-color: purple !important;
+    }
+
+    .thick-border {
+    border-width: thick !important;
+    border-style: solid !important;
+    /*border-radius: 50px 10px;*/
+    padding: 20px;
+    margin: 20px
+    }
+
+.col-hov:hover {
+    background-color: aqua !important;
+
 }
+
+
+
+    .order-inv-form .RequestUnitCard div:first-child, .order-inv-form .RequestSubunitCard div:first-child, .order-inv-form .RequestSubsubunitCard div:first-child {
+        border-radius: 18px;
+        border-color: var(--order-inv-color) !important;
+    }
 .supplier-form .RequestUnitCard div:first-child, .supplier-form .RequestSubunitCard div:first-child, .supplier-form .RequestSubsubunitCard div:first-child {
     border-radius: 18px;
     border-color: var(--lab-man-color) !important;
@@ -577,13 +615,14 @@ body {
     border-bottom: 2px solid var(--order-inv-color);
 }
 
-
+/*added here fon-style for funky-font to change on all labels*/
 .control-label {
     font-size: 15px;
     color: #212020;
     font-weight: normal;
     /*margin-bottom: 0px;*/
     line-height: 100%;
+    /*font-family: fantasy;*/
 }
 
 .form-control-plaintext, .mdb-select {
@@ -998,7 +1037,14 @@ ul li.lab-man-sidebar.active {
 
 .users-tr:hover {
     border: 2px double var(--user-color) !important;
+    
+
 }
+.users-detail-table .users-tr:nth-child(odd) {
+    background-color: yellow;
+}
+
+
 
 .table-hover tbody tr:hover > td div span.input-group-text {
     color: #212529;
@@ -1462,10 +1508,10 @@ table.table.visualzoom {
     width: auto;
     height: auto;
 }
-
+/*
 .thick-border {
     border: 2px solid black !important;
-}
+}*/
 
 table.table.visualzoom tr td {
     height: 80px;
@@ -2018,9 +2064,11 @@ td .btn {
 .tab-content {
     padding: 0 !important;
 }
+    
 
 .order-inv-form .select-wrapper.active span.caret, .order-inv-form .select-wrapper.active label.mdb-main-label {
     color: var(--order-inv-color) !important;
+    
 }
 .bio-form .select-wrapper.active span.caret, .order-inv-form .select-wrapper.active label.mdb-main-label {
     color: var(--order-inv-color) !important;
@@ -2030,13 +2078,16 @@ td .btn {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
+    
 }
 
 .order-inv-form .form-control-plaintext.danger-box-shadow:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--danger-color) !important;
+    
 }
+
 
 .order-inv-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
@@ -2050,6 +2101,13 @@ td .btn {
 
 .order-inv-form .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
+    
+}
+
+.order-inv-form.css-label
+{
+    font-family: fantsy !important; 
+
 }
 
 .bio-form .input-group:focus-within > .input-group-text {
@@ -2147,6 +2205,11 @@ span.caret {
 .order-inv-form .dropdown:focus, .order-inv-form .dropdown-multiple:focus {
     border: 2px solid var(--order-inv-color) !important;
 }
+
+.order-inv-form .-current- {
+   font-family: fantasy !important;
+}
+
 .accounting-form .dropdown:focus, .accounting-form .dropdown-multiple:focus {
     border: 2px solid var(--acc-color) !important;
 }
@@ -2214,6 +2277,7 @@ span.caret {
 .users-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
     border: 2px solid var(--user-color) !important;
+   /* background-color: yellow !important;*/
 }
 
 .users-form .form-control-plaintext:focus,  .users-form input[type="text"]:focus {
@@ -2927,6 +2991,10 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
 .users.no-hours-reported.select-wrapper {
     border: solid 1px var(--user-color);
     border-radius: .25rem;
+}
+
+.users-ulternate-background-color {
+    background-color: yellow !important;
 }
 
 .not-form-ddl.select-wrapper input.select-dropdown {

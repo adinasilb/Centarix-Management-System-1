@@ -165,10 +165,14 @@
 
 .order-inv-color {
     color: var(--order-inv-color);
+    
+
+.order-inv-filter
+{
+    filter: var(--order-inv-filter);
+    font-family: fantasy !important;
 }
 
-.order-inv-filter {
-    filter: var(--order-inv-filter);
 }
 
 .oper-filter {

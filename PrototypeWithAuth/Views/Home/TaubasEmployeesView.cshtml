@@ -1,0 +1,77 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using static PrototypeWithAuth.AppData.AppUtility;
+@model List<Product>
+@{
+    //ViewData["Title"] = "TaubasEmployeesView";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+
+
+<h1>List Of Products</h1>
+<table style="width:50%">
+    <tr>
+        <th>Product Name</th>
+        <th>Product Hebrew Name</th>
+        <th>Date Ordered</th>
+    </tr>
+            
+            
+    @{
+        string NoHebrewName = " N/A ";
+        bool HasHebrewName= true;
+        
+
+        foreach (Product p in Model)
+        {
+            var text2= p.ProductName
+           
+    +NoHebrewName  + p.Requests.FirstOrDefault().ParentRequest.OrderDate;//get spaces here 
+            var text1 =p.ProductName + NoHebrewName  + p.Requests.FirstOrDefault().ParentRequest.OrderDate.GetElixirDateFormat();
+            @if (p.ProductHebrewName==null )
+            {
+                <tr>
+                <td>@p.ProductName </td>
+                <td>@NoHebrewName </td>
+                <td>@p.Requests.FirstOrDefault().ParentRequest.OrderDate.GetElixirDateFormat() </td>
+                </tr>
+            }
+            else
+            {
+                //text = text - NoHebrewName ;
+                //text=text+ p.ProductHebrewName.ToString;
+                <tr>
+                <td>@p.ProductName </td>
+                 <td>@p.ProductHebrewName </td>
+                  <td>@p.Requests.FirstOrDefault().ParentRequest.OrderDate_submit </td>
+                </tr>
+                //@p.ProductName
+                //@p.ProductHebrewName
+                //@p.Requests.FirstOrDefault().ParentRequest.OrderDate </td>
+            }
+            //if (HasHebrewName == true)
+            //{
+            //    <tr>@p.ProductName @p.ProductHebrewName @p.Requests.FirstOrDefault().ParentRequest.OrderDate </tr>
+            //}
+            //else
+            //{
+            //    <tr>p.ProductName @p.ProductHebrewName @p.Requests.FirstOrDefault().ParentRequest.OrderDate</tr>
+            //}
+
+
+            
+        
+
+    }//in model i passed in
+    
+}
+
+        </table>
+        <br />
+        <a href="/Requests/AddItemView">
+        <button class= "text custom-button custom-button-font order-inv-background-color exit-edit-modal between-button-margin" > Click Here </button>
+         </a>
+@*
+//controler called view 
+*@

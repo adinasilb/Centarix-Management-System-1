@@ -21,7 +21,7 @@ namespace PrototypeWithAuth.AppData
 
                 case AppUtility.MenuItems.Requests:
                     ActiveClasses = " activeNavLink";
-                    if (pageType == AppUtility.PageTypeEnum.RequestRequest) { AllClasses += ActiveClasses+OrigClasses; } else { AllClasses = OrigClasses; }
+                    if (pageType == AppUtility.PageTypeEnum.RequestRequest) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Requests",
@@ -457,11 +457,11 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> GetOrdersAndInventoryRequestsSidebarMenuItems(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses, AppUtility.PageTypeEnum pageType, AppUtility.CategoryTypeEnum categoryType)
         {
-            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();//named same thing
 
             string menuClass = OrigClasses;
             if (SidebarTitle == AppUtility.SidebarEnum.List) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
-            SidebarMenuItems.Add(new MenuItems()
+            SidebarMenuItems.Add(new MenuItems() //
             {
                 Description = "Last Item",
                 Controller = "Requests",
@@ -744,7 +744,8 @@ namespace PrototypeWithAuth.AppData
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
             string Classes = OrigClasses;
-            if (SidebarTitle == AppUtility.SidebarEnum.AllSuppliers) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            OrigClasses = " lab-man-underline ";
+            if (SidebarTitle == AppUtility.SidebarEnum.AllSuppliers) { Classes += ActiveClasses+OrigClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "All",
@@ -757,7 +758,7 @@ namespace PrototypeWithAuth.AppData
                 IconName = "icon-storefront-24px1",
                 Classes = Classes
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.NewSupplier) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.NewSupplier) { Classes += ActiveClasses+OrigClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "New Supplier",
@@ -770,7 +771,7 @@ namespace PrototypeWithAuth.AppData
                 IconName = "icon-add_circle_outline-24px1",
                 Classes = Classes
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.Search) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.Search) { Classes += ActiveClasses+OrigClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Search",
@@ -791,7 +792,8 @@ namespace PrototypeWithAuth.AppData
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
             string Classes = OrigClasses;
-            if (SidebarTitle == AppUtility.SidebarEnum.Calibrate) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            OrigClasses = " lab-man-underline ";
+            if (SidebarTitle == AppUtility.SidebarEnum.Calibrate) { Classes += ActiveClasses+OrigClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Calibrate",
@@ -804,7 +806,7 @@ namespace PrototypeWithAuth.AppData
                 IconName = "icon-calibrate-24px",
                 Classes = Classes
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.List) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.List) { Classes += ActiveClasses+OrigClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "List",
@@ -818,7 +820,7 @@ namespace PrototypeWithAuth.AppData
                 IconName = "icon-format_list_bulleted-24px-01",
                 Classes = Classes
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.Type) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.Type) { Classes += ActiveClasses+OrigClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Categories",
@@ -831,7 +833,7 @@ namespace PrototypeWithAuth.AppData
                 IconName = "icon-category-24px1",
                 Classes = Classes
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.Search) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.Search) { Classes += ActiveClasses+OrigClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Search",
@@ -912,7 +914,8 @@ namespace PrototypeWithAuth.AppData
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
             string Classes = OrigClasses;
-            if (SidebarTitle == AppUtility.SidebarEnum.Search) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            OrigClasses = " lab-man-underline ";
+            if (SidebarTitle == AppUtility.SidebarEnum.Search) { Classes = ActiveClasses+OrigClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Search",

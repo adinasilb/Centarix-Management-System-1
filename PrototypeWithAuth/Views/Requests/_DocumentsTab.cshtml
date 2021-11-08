@@ -5,7 +5,7 @@
 @using PrototypeWithAuth.AppData
 
 <script src="~/js/site.js"></script>
-<div class="row"><span class="heading-1 modal-tab-name">Documents</span></div>
+<div class="row"><span class="heading-1 modal-tab-name requests-funky-label-font">Documents</span></div>
 
 @{
     var urlAction = Url.Action("DocumentsModal", "Requests");
@@ -59,7 +59,7 @@
         @if (i < Model.DocumentsInfo?.Count)
         {
             var folder = Model.DocumentsInfo?[i];
-            <div class=" @(i == 3 ? "" : "document-margin")">
+            <div  class=" @(i == 3 ? "" : "document-margin")">
                 @{
                     var filterClass = "opac87";
                     var hasFileClass = "";
@@ -71,8 +71,8 @@
                     var id = folder.ObjectID == null ? "0" : folder.ObjectID;
                 }
                 <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@id" id="@folder.FolderName.ToString()" data-val="@true" showSwitch="@false" parentFolder="@folder.ParentFolderName">
-                    <div class="card document-border @hasFileClass ">
-                        <div class="document-card text-center">
+                    <div class="card document-border @hasFileClass requests-document-margin">
+                        <div class="document-card text-center ">
                             <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
                         </div>
                     </div>

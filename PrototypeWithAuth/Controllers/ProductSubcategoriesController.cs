@@ -25,6 +25,8 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: ProductSubcategories
+
+
         [Authorize(Roles = "Requests, Operations, LabManagement")]
         public async Task<IActionResult> Index(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
