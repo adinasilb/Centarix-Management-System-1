@@ -2649,166 +2649,32 @@ namespace PrototypeWithAuth.Data
          );
 
             modelBuilder.Entity<CompanyDayOffType>().HasData(
-             new CompanyDayOffType
-             {
-                 CompanyDayOffTypeID = 1,
-                 Name = "Purim 1"
-             },
-              new CompanyDayOffType
-              {
-                  CompanyDayOffTypeID = 2,
-                  Name = "Purim 2"
-              },
-               new CompanyDayOffType
-               {
-                   CompanyDayOffTypeID = 3,
-                   Name = "Erev Pesach"
-               },
-               new CompanyDayOffType
-               {
-                   CompanyDayOffTypeID = 4,
-                   Name = "Pesach"
-               },
-               new CompanyDayOffType
-               {
-                   CompanyDayOffTypeID = 5,
-                   Name = "Erev Shviei Pesach"
-               },
-               new CompanyDayOffType
-               {
-                   CompanyDayOffTypeID = 6,
-                   Name = "Shviei Pesach"
-               },
-                new CompanyDayOffType
-                {
-                    CompanyDayOffTypeID = 7,
-                    Name = "Yom Hazmaut"
-                },
-               new CompanyDayOffType
-               {
-                   CompanyDayOffTypeID = 8,
-                   Name = "Erev Shavuous"
-               },
-               new CompanyDayOffType
-               {
-                   CompanyDayOffTypeID = 9,
-                   Name = "Shavuous"
-               },
-
-                new CompanyDayOffType
-                {
-                    CompanyDayOffTypeID = 10,
-                    Name = "Erev Rosh Hashana"
-                },
-               new CompanyDayOffType
-               {
-                   CompanyDayOffTypeID = 11,
-                   Name = "Rosh Hashana 1"
-               },
-               new CompanyDayOffType
-               {
-                   CompanyDayOffTypeID = 12,
-                   Name = "Rosh Hashana 2"
-               },
-               new CompanyDayOffType
-               {
-                   CompanyDayOffTypeID = 13,
-                   Name = "Erev Yom Kippur"
-               },
-               new CompanyDayOffType
-               {
-                   CompanyDayOffTypeID = 14,
-                   Name = "Yom Kippur"
-               },
-               new CompanyDayOffType
-               {
-                   CompanyDayOffTypeID = 15,
-                   Name = "Erev Sukkot"
-               },
-               new CompanyDayOffType
-               {
-                   CompanyDayOffTypeID = 16,
-                   Name = "Sukkot"
-               },
-               new CompanyDayOffType
-               {
-                   CompanyDayOffTypeID = 17,
-                   Name = "Erev Simchat Torah"
-               },
-                new CompanyDayOffType
-                {
-                    CompanyDayOffTypeID = 18,
-                    Name = "Simchat Torah"
-                }
+           SeededData.CompanyDayOffTypeData.Get()
          );
 
             modelBuilder.Entity<ProtocolType>().HasData(
-               new ProtocolType
-               {
-                   ProtocolTypeID = 1,
-                   ProtocolTypeDescription = "Research"
-               },
-               new ProtocolType
-               {
-                   ProtocolTypeID = 2,
-                   ProtocolTypeDescription = "Kit"
-               },
-               new ProtocolType
-               {
-                   ProtocolTypeID = 3,
-                   ProtocolTypeDescription = "SOP"
-               },
-               new ProtocolType
-               {
-                   ProtocolTypeID = 4,
-                   ProtocolTypeDescription = "Buffer"
-               }
-               ,
-               new ProtocolType
-               {
-                   ProtocolTypeID = 5,
-                   ProtocolTypeDescription = "Robiotic"
-               },
-               new ProtocolType
-               {
-                   ProtocolTypeID = 6,
-                   ProtocolTypeDescription = "Maintenance"
-               }
+              SeededData.ProtocolTypeData.Get()
         );
             modelBuilder.Entity<ProtocolCategory>().HasData(
-            new ProtocolCategory
-            {
-                ProtocolCategoryTypeID = 1,
-                ProtocolCategoryDescription = "Rejuvenation"
-            },
-            new ProtocolCategory
-            {
-                ProtocolCategoryTypeID = 2,
-                ProtocolCategoryDescription = "Biomarkers"
-            },
-            new ProtocolCategory
-            {
-                ProtocolCategoryTypeID = 3,
-                ProtocolCategoryDescription = "Delivery Systems"
-            }
-        );
+              SeededData.ProtocolCategoryData.Get()
+           );
             modelBuilder.Entity<ProtocolSubCategory>().HasData(
                SeededData.ProtocolSubCategoryData.Get()
           );
-        
+
             modelBuilder.Entity<ResourceCategory>().HasData(
                 SeededData.ResourceCategoryData.Get()
             );
 
             modelBuilder.Entity<ReportType>().HasData(
-               SeededData.ReportTypeData.Get()               
+               SeededData.ReportTypeData.Get()
             );
             modelBuilder.Entity<MaterialCategory>().HasData(
-                SeededData.MaterialCategoryData.Get()               
+                SeededData.MaterialCategoryData.Get()
            );
 
             modelBuilder.Entity<LineType>().HasData(
-                SeededData.LineTypeData.Get()               
+                SeededData.LineTypeData.Get()
              );
             modelBuilder.Entity<FunctionType>().HasData(
                SeededData.FunctionTypeData.Get()
