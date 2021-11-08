@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PrototypeWithAuth.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,28 +8,39 @@ namespace PrototypeWithAuth.Data.SeededData
 {
     public class DegreeData
     {
-        public static List<LineType> Get()
+        public static List<Degree> Get()
         {
-            List<LineType> list = new List<LineType>();
-            list.Add(new LineType
+            List<Degree> list = new List<Degree>();
+            list.Add(new Degree
             {
-                LineTypeID = 1,
-                LineTypeDescription = "Header",
-                LineTypeChildID = 2
+                DegreeID = 1,
+                Description = "B.Sc"
             });
-            list.Add(new LineType
+            list.Add(new Degree
             {
-                LineTypeID = 2,
-                LineTypeDescription = "Sub Header",
-                LineTypeParentID = 1,
-                LineTypeChildID = 3
+                DegreeID = 2,
+                Description = "M.Sc"
             });
-            list.Add(new LineType
+            list.Add(new Degree
             {
-                LineTypeID = 3,
-                LineTypeDescription = "Step",
-                LineTypeParentID = 2
+                DegreeID = 3,
+                Description = "P.hd"
             });
+            list.Add(new Degree
+            {
+                DegreeID = 4,
+                Description = "Post P.hd"
+            });
+            list.Add(new Degree
+            {
+                DegreeID = 5,
+                Description = "No Degree"
+            });
+            list.Add(new Degree
+            {
+                DegreeID = 6,
+                Description = "Certificate"
+            });           
             return list;
         }
     }

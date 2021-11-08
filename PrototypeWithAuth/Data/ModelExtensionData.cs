@@ -2566,36 +2566,7 @@ namespace PrototypeWithAuth.Data
                 }
             );
             modelBuilder.Entity<Degree>().HasData(
-                new Degree
-                {
-                    DegreeID = 1,
-                    Description = "B.Sc"
-                },
-                  new Degree
-                  {
-                      DegreeID = 2,
-                      Description = "M.Sc"
-                  },
-                new Degree
-                {
-                    DegreeID = 3,
-                    Description = "P.hd"
-                },
-                new Degree
-                {
-                    DegreeID = 4,
-                    Description = "Post P.hd"
-                },
-                new Degree
-                {
-                    DegreeID = 5,
-                    Description = "No Degree"
-                },
-                new Degree
-                {
-                    DegreeID = 6,
-                    Description = "Certificate"
-                }
+               SeededData.DegreeData.Get()
             );
             modelBuilder.Entity<Citizenship>().HasData(
                  SeededData.CitizenshipData.Get()
