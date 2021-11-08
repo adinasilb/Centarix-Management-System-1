@@ -865,10 +865,11 @@ namespace PrototypeWithAuth.Controllers
             await _13InsertBloodCountTest();
             await _14InsertUltrasoundTest();
             await _15InsertAgeReaderTest();
+            await _16InsertProcedureDocTest();
             return RedirectToAction("HumanTrialsList");
         }
 
-        public async Task _1InsertExeriments()
+        private async Task _1InsertExeriments()
         {
             DateTime startDate;
             DateTime.TryParseExact("20210106", "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
@@ -901,7 +902,7 @@ namespace PrototypeWithAuth.Controllers
             _context.SaveChanges();
         }
 
-        public async Task _2InsertSites()
+        private async Task _2InsertSites()
         {
             Site Centarix = new Site()
             {
@@ -926,7 +927,7 @@ namespace PrototypeWithAuth.Controllers
             _context.SaveChanges();
         }
 
-        public async Task _3Add02TestsBloodPressure()
+        private async Task _3Add02TestsBloodPressure()
         {
             Test BloodPressure = new Test()
             {
@@ -1053,7 +1054,7 @@ namespace PrototypeWithAuth.Controllers
             _context.SaveChanges();
         }
 
-        public async Task _4InsertECGTest()
+        private async Task _4InsertECGTest()
         {
             var Test = new Test()
             {
@@ -1137,7 +1138,7 @@ namespace PrototypeWithAuth.Controllers
             _context.SaveChanges();
         }
 
-        public async Task _5InsertAnthropometryTest()
+        private async Task _5InsertAnthropometryTest()
         {
             try
             {
@@ -1261,7 +1262,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        public async Task _6InsertFlexibilityTest()
+        private async Task _6InsertFlexibilityTest()
         {
             Test test = new Test()
             {
@@ -1351,7 +1352,7 @@ namespace PrototypeWithAuth.Controllers
             _context.SaveChanges();
         }
 
-        public async Task _7InsertBalanceTest()
+        private async Task _7InsertBalanceTest()
         {
             try
             {
@@ -1501,7 +1502,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        public async Task _8InsertMuscleStrengthTest()
+        private async Task _8InsertMuscleStrengthTest()
         {
             try
             {
@@ -1651,7 +1652,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        public async Task _9InsertCPETandSpirometryTest()
+        private async Task _9InsertCPETandSpirometryTest()
         {
             try
             {
@@ -1710,7 +1711,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        public async Task _10InsertDexaTest()
+        private async Task _10InsertDexaTest()
         {
             try
             {
@@ -1779,7 +1780,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        public async Task _11InsertImmunochemistryTest()
+        private async Task _11InsertImmunochemistryTest()
         {
             try
             {
@@ -1850,7 +1851,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        public async Task _12InsertBloodChemicalsTest()
+        private async Task _12InsertBloodChemicalsTest()
         {
             try
             {
@@ -1921,7 +1922,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        public async Task _13InsertBloodCountTest()
+        private async Task _13InsertBloodCountTest()
         {
             try
             {
@@ -2007,7 +2008,7 @@ namespace PrototypeWithAuth.Controllers
             return boolCheck;
         }
 
-        public async Task _14InsertUltrasoundTest()
+        private async Task _14InsertUltrasoundTest()
         {
             try
             {
@@ -2076,7 +2077,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        public async Task _15InsertAgeReaderTest()
+        private async Task _15InsertAgeReaderTest()
         {
             try
             {
@@ -2144,5 +2145,67 @@ namespace PrototypeWithAuth.Controllers
 
             }
         }
+
+
+        private async Task _16InsertProcedureDocTest()
+        {
+            try
+            {
+                Test test = new Test()
+                {
+                    Name = "Procedure Document",
+                    SiteID = _context.Sites.Where(s => s.Name == "Centarix Biotech").Select(s => s.SiteID).FirstOrDefault()
+                };
+                _context.Add(test);
+                _context.SaveChanges();
+                var testId = _context.Tests.Where(t => t.Name == "Procedure Document").Select(t => t.TestID).FirstOrDefault();
+                var experimentTest = new ExperimentTest()
+                {
+                    TestID = testId,
+                    ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex1").Select(e => e.ExperimentID).FirstOrDefault()
+                };
+                var experimentTest2 = new ExperimentTest()
+                {
+                    TestID = testId,
+                    ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex2").Select(e => e.ExperimentID).FirstOrDefault()
+                };
+                _context.Add(experimentTest);
+                _context.Add(experimentTest2);
+                _context.SaveChanges();
+                var testoutergroup = new TestOuterGroup()
+                {
+                    IsNone = true,
+                    TestID = testId,
+                    SequencePosition = 1
+                };
+                _context.Add(testoutergroup);
+                _context.SaveChanges();
+                var testgroup = new TestGroup()
+                {
+                    IsNone = true,
+                    TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                        .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                    SequencePosition = 1
+                };
+                _context.Add(testgroup);
+                _context.SaveChanges();
+                var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                    .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+                var procDoc = new TestHeader()
+                {
+                    Name = "File",
+                    Type = AppUtility.DataTypeEnum.File.ToString(),
+                    SequencePosition = 1,
+                    TestGroupID = tgId,
+                };
+                _context.Add(procDoc);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
     }
 }
