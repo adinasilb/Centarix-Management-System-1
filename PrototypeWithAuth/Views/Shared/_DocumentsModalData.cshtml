@@ -147,9 +147,19 @@
                                     {
                                         var iframeFilestring = Model.FileStrings[i];
                                         var ext = iframeFilestring.Split(".").Last();
-                                        if (ext == "pptx" || ext == "ppt")
+                                        switch (ext)
                                         {
-                                            iframeFilestring = "images/powerpoint.png";
+                                            case "pptx":
+                                            case "ppt":
+                                                iframeFilestring = "images/powerpoint.png";
+                                                break;
+                                            case "doc":
+                                            case "docx":
+                                                iframeFilestring = "images/wordicon.png";
+                                                break;
+                                            case "xlsx":
+                                                iframeFilestring = "images/excel.png";
+                                                break;
                                         }
                                         if (ext == "doc" || ext == "docx")
                                         {

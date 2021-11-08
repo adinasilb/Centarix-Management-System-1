@@ -2,12 +2,13 @@
 @{
 }
 <script src="~/js/Validation/addnewparticipant.js"></script>
+<script src="~/js/validate.js"></script>
 
 <div class="modal modal-view edit-participant-modal" id="myModal" data-backdrop="false" style="z-index: 9100">
     <div class="elixir-modal-sm modal-dialog-centered mx-auto" style="width:27rem;">
         <div class="modal-content d-inline-block modal-box-shadow ">
             <div class="modal-header biomarkers-background-color">
-                <span class="heading-1 text-white">Edit Participant Status</span>
+                <span class="heading-1 text-white">Edit Participant</span>
                 <button type="button" class="close modal-close-padding modal-close-style cancel-edit" @*data-dismiss="modal"*@ aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -24,10 +25,9 @@
                             @Html.DropDownListFor(m => m.Participant.ParticipantStatusID,
                                 new SelectList(
                            Model.ParticipantStatuses,
-                           dataValueField: "ParticipantStatusID",
-                           dataTextField: "Description"),
-                           optionLabel: "Select Option",
-                                new { @class = "mdb-select custom select-dropdown form-control-plaintext ", @searchable = "default value" }
+                           "ParticipantStatusID",
+                           "Description"),
+                                new { @class = "mdb-select custom select-dropdown form-control-plaintext ", @searchable = "Select Option" }
                             )
                         </div>
                     </div>
@@ -56,6 +56,7 @@
         $('.editparticipantform').data("validator").settings.ignore = "";
         var ExperimentID = $("#Participant_ExperimentID").val();
         var valid = $('.editparticipantform').valid();
+        console.log(valid)
         if (valid) {
             $("#loading").show();
             $.ajax({
@@ -63,7 +64,7 @@
                 processData: false,
                 async: true,
                 url: "/Biomarkers/EditParticipantModal",
-                data: new FormData($("#myForm")[0]),
+                data: new FormData($(".editparticipantform")[0]),
                 traditional: true,
                 type: "POST",
                 cache: false,
@@ -97,6 +98,9 @@
                     return true;
                 }
             });
+        }
+        else {
+            $(this).removeAttr("disabled");
         }
     });
 </script>

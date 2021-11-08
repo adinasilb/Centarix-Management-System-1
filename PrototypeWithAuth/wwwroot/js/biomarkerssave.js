@@ -1,24 +1,30 @@
 ﻿$(function (e) {
     $(".edit-mode-input").on("click", function (e) {
-        //e.preventDefault();
+        console.log($(this))
         if ($(this).hasClass("on")) {
-            console.log($(this))
-            $.ajax({
-                async: true,
-                url: "/Biomarkers/SaveTestModal/",
-                type: 'GET',
-                cache: false,
-                success: function (data) {
-                    $.fn.OpenModal('save-test-modal', 'save-bio-test-modal', data);
-                }
-            });
+            var valid = $(".bio-form").valid()
+            if (valid) {
+                
+                $.ajax({
+                    async: true,
+                    url: "/Biomarkers/SaveTestModal/",
+                    type: 'GET',
+                    cache: false,
+                    success: function (data) {
+                        $.fn.OpenModal('save-test-modal', 'save-bio-test-modal', data);
+                    }
+                });
+            }
+            else{
+                $(".edit-mode-input").prop('checked', true);
+            }
         }
         else if ($(this).hasClass("off")) {
             console.log($(this))
             $(this).addClass("on");
             $(this).removeClass("off");
             $(this).attr("value", "true");
-            $(this).attr("checked", "checked");
+            $(".edit-mode-input").prop('checked', true);
             $('.open-document-modal').attr("data-val", true);
             var editLabel = $(".edit-mode-label");
             editLabel.text("Edit Mode On");
