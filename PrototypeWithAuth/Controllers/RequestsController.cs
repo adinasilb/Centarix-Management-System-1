@@ -2896,6 +2896,7 @@ namespace PrototypeWithAuth.Controllers
                     if (tempRequest.Request.ParentRequest != null)
                     {
                         pr.Shipping = tempRequest.Request.ParentRequest.Shipping;
+                        pr.NoteToSupplier = tempRequest.Request.ParentRequest.NoteToSupplier;
                     }
                     tempRequest.Request.ParentRequest = pr;
                     if (tempRequest.Request.Product == null)

@@ -57,22 +57,13 @@ Model.TempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.Side
             </div>
         </div>
         <div class="col-6 offset-2">
-            <div class="note-message p-4 pl-5">
-
-                @{
-                    var notes = "";
-                    foreach (var request in Model.Requests)
+            <div class="note-message p-4 pl-5">                   
+                    @if (Model.Requests[0].ParentRequest.NoteToSupplier != null)
                     {
-                        if (!string.IsNullOrEmpty(request.ParentRequest.NoteToSupplier))
-                        {
-                            notes += "<span class='text'>" + @request.ParentRequest.NoteToSupplier + "</span><br/>";
-                        }
-    }
-    if (notes != "")
-    { <span class="heading-1">Please Note:</span><br> }
-                    @Html.Raw(notes);
-
-                }
+                       <span class="heading-1">Please Note:</span><br>
+                      <span class="text">@Model.Requests[0].ParentRequest.NoteToSupplier</span>
+                        
+                    }
             </div>
         </div>
     </div>
