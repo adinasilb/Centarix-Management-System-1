@@ -63,9 +63,9 @@ Model.TempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.Side
                     var notes = "";
                     foreach (var request in Model.Requests)
                     {
-                        if (!string.IsNullOrEmpty(request.NoteToSupplier))
+                        if (!string.IsNullOrEmpty(request.ParentRequest.NoteToSupplier))
                         {
-                            notes += "<span class='text'>" + @request.NoteToSupplier + "</span><br/>";
+                            notes += "<span class='text'>" + @request.ParentRequest.NoteToSupplier + "</span><br/>";
                         }
     }
     if (notes != "")

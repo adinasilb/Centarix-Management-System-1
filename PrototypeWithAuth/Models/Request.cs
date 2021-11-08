@@ -75,7 +75,6 @@ namespace PrototypeWithAuth.Models
         public ParentQuote ParentQuote { get; set; }
 
 
-        public string? NoteToSupplier { get; set; }
         public IEnumerable<RequestNotification> RequestNotifications { get; set; }
         public string OrderType { get; set; }
 
