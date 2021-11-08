@@ -4,10 +4,10 @@
         if ($(this).hasClass("on")) {
             var valid = $(".bio-form").valid()
             if (valid) {
-                
+                var guid = $(".hidden-guid").val();
                 $.ajax({
                     async: true,
-                    url: "/Biomarkers/SaveTestModal/",
+                    url: "/Biomarkers/SaveTestModal?Guid=" + guid,
                     type: 'GET',
                     cache: false,
                     success: function (data) {
