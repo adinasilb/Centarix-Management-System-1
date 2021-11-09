@@ -1193,7 +1193,8 @@
                 "&SelectedCurrency=" + $('#tempCurrency').val() +
                 "&SidebarFilterID=" + $('.sideBarFilterID').val() +
                 "&CategorySelected=" + $('#categorySortContent .select-category').is(":checked") +
-                "&SubCategorySelected=" + $('#categorySortContent .select-subcategory').is(":checked");
+                "&SubCategorySelected=" + $('#categorySortContent .select-subcategory').is(":checked") +
+                "&ListID="+$("#ListID").val();
             queryString += selectedPriceSort;
             console.log(queryString)
             return queryString;

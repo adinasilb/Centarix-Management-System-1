@@ -52,7 +52,7 @@ namespace PrototypeWithAuth.AppData
         public enum SidebarEnum
         {
             None, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
-            Quotes, List, Calibrate, Location, Cart, Favorites, Notifications,
+            Quotes, List, Calibrate, Location, Cart, Favorites, Notifications, MyLists,
             ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences,
             PieCharts, Tables, Graphs, Project, Item, Worker,
             Category, Details, Hours, Salary,
@@ -87,7 +87,8 @@ namespace PrototypeWithAuth.AppData
             AccountingPaymentsDefault,
             AccountingPaymentsInstallments,
             LabQuotes,
-            LabOrders
+            LabOrders,
+            RequestLists
         }
 
 
@@ -161,7 +162,7 @@ namespace PrototypeWithAuth.AppData
         public enum ProtocolModalType {None, Create, CheckListMode, Summary, Edit, SummaryFloat, CreateNewVersion }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
-        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue }
+        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveList, DeleteFromList }
         public enum PopoverEnum { None }
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }

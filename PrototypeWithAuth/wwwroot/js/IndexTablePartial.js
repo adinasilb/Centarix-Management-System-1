@@ -61,15 +61,63 @@ $(function () {
                 }
             });
         });
-        $(".popover .load-confirm-delete").click( function (e) {
-    console.log("in confirm delete");
-    e.preventDefault();
-    e.stopPropagation();
-    $("#loading").show();
-    var $itemurl = "/Requests/DeleteModal/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString();
-    $.fn.CallPageRequest($itemurl, "delete");
-    return false;
-});
+        $(".popover .move-to-list").off("click").on("click", function (e) {
+            e.preventDefault()
+            console.log("move")
+            var requestID = $(this).attr("value")
+            console.log($(this))
+            var prevListID = $("#ListID").val()
+            var url = "/Requests/MoveToListModal/?requestID=" + requestID
+            if (prevListID != null) {
+                url = url + "&prevListID=" + prevListID
+            }
+            $.ajax({
+                async: true,
+                url: url,
+                traditional: true,
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    $.fn.OpenModal("moveListItemModal", "move-list", data)
+                    //$.fn.EnableMaterialSelect('#NewListID', 'select-options-NewListID')
+                    return true;
+                },
+                error: function (jqxhr) {
+                    $('.error-message').html(jqxhr.responseText);
+                }
+            });
+        })
+        $(".popover .remove-from-list").off("click").on("click", function (e) {
+            e.preventDefault()
+            console.log("remove")
+            var requestID = $(this).attr("value")
+            console.log($(this))
+            var listID = $("#ListID").val()
+            var url = "/Requests/DeleteListRequestModal/?requestID=" + requestID + "&listID=" + listID
+            $.ajax({
+                async: true,
+                url: url,
+                traditional: true,
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    $.fn.OpenModal("deleteListRequestModal", "delete-list-request", data)
+                    return true;
+                },
+                error: function (jqxhr) {
+                    $('.error-message').html(jqxhr.responseText);
+                }
+            });
+        })
+        $(".popover .load-confirm-delete").click(function (e) {
+            console.log("in confirm delete");
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "/Requests/DeleteModal/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString();
+            $.fn.CallPageRequest($itemurl, "delete");
+            return false;
+        });
     });
     $('._IndexTableData [data-toggle = "tooltip"], ._IndexTableDataByVendor [data-toggle = "tooltip"]' ).off('click').on("click", function (e) {
         e.preventDefault();
@@ -392,13 +440,18 @@ $(function () {
         }
         var monthsString = "";
         var yearsString = "";
+        var listString = "";
         var months = $("#Months").val();
         var years = $("#Years").val();
+        var listID = $("#ListID").val();
         if (months != undefined) {
             months.forEach(month => monthsString += "&months=" + month)
         }
         if (years != undefined) {
             years.forEach(year => yearsString += "&years=" + year)
+        }
+        if (listID != undefined) {
+            listString += "&listID=" + listID
         }
 /*        var selectedPriceSort = [];
         $("#priceSortContent1 .priceSort:checked").each(function (e) {
@@ -441,6 +494,7 @@ $(function () {
             url += $.fn.getRequestIndexString(status);
             url += monthsString;
             url += yearsString;
+            url += listString;
             //formdata = {}; //so won't crash when do object.assign()
             //console.log(formdata)
         }
@@ -494,4 +548,5 @@ $(function () {
     }
     
 
+    
 });
