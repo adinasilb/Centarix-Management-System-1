@@ -1429,7 +1429,10 @@ namespace PrototypeWithAuth.Controllers
             {
                 var selected = false;
                 if (ps.PaymentStatusID == 2) { selected = true; }
-                termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription, Selected = selected });
+                if (ps.PaymentStatusID != 4 && ps.PaymentStatusID != 7)
+                {
+                    termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription, Selected = selected });
+                }
             });
             TermsViewModel termsViewModel = new TermsViewModel()
             {
