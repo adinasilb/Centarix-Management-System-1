@@ -894,6 +894,21 @@ namespace PrototypeWithAuth.AppData
                 return new StringWithBool { String = "order date has an error", Bool = true };
             }
         }
+
+        public static String ConvertIntToString(uint number)
+        {
+            return ConvertIntToString((int)number);
+        }
+        public static String ConvertIntToString(decimal number)
+        {
+            var returnString = "";
+            if(number != 0)
+            {
+                returnString = number.ToString();
+            }
+
+            return returnString;
+        }
     }
 
 }
