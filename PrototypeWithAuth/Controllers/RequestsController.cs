@@ -3930,8 +3930,8 @@ namespace PrototypeWithAuth.Controllers
                         await _context.SaveChangesAsync();
                         MoveDocumentsOutOfTempFolder(requestReceived.RequestID, AppUtility.ParentFolderName.Requests, receivedLocationViewModel.Request.RequestID, true);
 
-                        await CopyComments(receivedLocationViewModel.Request.RequestID, requestReceived.RequestID);
-                        await CopyPayments(receivedLocationViewModel.Request.RequestID, requestReceived.RequestID);
+                        await CopyCommentsAsync(receivedLocationViewModel.Request.RequestID, requestReceived.RequestID);
+                        await CopyPaymentsAsync(receivedLocationViewModel.Request.RequestID, requestReceived.RequestID);
 
                         requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
@@ -4051,7 +4051,7 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        public async Task CopyComments(int OldRequestID, int NewRequestID)
+        public async Task CopyCommentsAsync(int OldRequestID, int NewRequestID)
         {
             var comments = _context.Comments.Where(c => c.RequestID == OldRequestID).AsNoTracking();
             foreach (var c in comments)
@@ -4060,9 +4060,10 @@ namespace PrototypeWithAuth.Controllers
                 c.RequestID = NewRequestID;
                 _context.Entry(c).State = EntityState.Added;
             }
+            await _context.SaveChangesAsync();
         }
 
-        public async Task CopyPayments(int OldRequestID, int NewRequestID)
+        public async Task CopyPaymentsAsync(int OldRequestID, int NewRequestID)
         {
             var payments = _context.Payments.Where(p => p.RequestID == OldRequestID).AsNoTracking();
             foreach (var p in payments)
@@ -4077,7 +4078,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task SplitPartialsAsync()
         {
             var RequestsOriginal = _context.Requests.Where(r => r.IsPartial);
-            var RequestsCopy = _context.Requests.Where(r => r.IsPartial).AsNoTracking();
+            var RequestsCopy = _context.Requests.Include(r=>r.Product.ProductSubcategory.ParentCategory).Where(r => r.IsPartial).AsNoTracking();
             foreach (var rc in RequestsCopy)
             {
                 var OldRequestID = rc.RequestID;
@@ -4089,10 +4090,15 @@ namespace PrototypeWithAuth.Controllers
                 rc.IsInInventory = false;
                 rc.NoteForClarifyDelivery = null;
                 rc.DevelopersBoolean = true;
+                if (rc.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString())
+                {
+                    rc.Batch = null;
+                    rc.BatchExpiration = null;
+                }
                 _context.Entry(rc).State = EntityState.Added;
-                _context.SaveChanges();
-                await CopyComments(OldRequestID, rc.RequestID);
-                await CopyPayments(OldRequestID, rc.RequestID);
+                await _context.SaveChangesAsync();
+                await CopyCommentsAsync(OldRequestID, rc.RequestID);
+                await CopyPaymentsAsync(OldRequestID, rc.RequestID);
                 MoveDocumentsOutOfTempFolder(rc.RequestID, AppUtility.ParentFolderName.Requests, OldRequestID, true);
                 //Didn't arrive notification may not have moved over;
             }
@@ -4112,7 +4118,7 @@ namespace PrototypeWithAuth.Controllers
             var SplitRequests = _context.Requests.Where(r => r.DevelopersBoolean && r.IsPartial);
             foreach (var or in OriginalRequests)
             {
-                var sr = SplitRequests.Where(sp => sp.ParentRequestID == or.RequestID).FirstOrDefault();
+                var sr = SplitRequests.Where(sp => sp.ParentRequestID == or.ParentRequestID && sp.ProductID == or.ProductID).FirstOrDefault();
                 uint FullAmount = sr.Unit + or.Unit;
                 decimal PricePerUnit = (or.Cost ?? 0) / (or.Unit == 0 ? 1 : or.Unit);
                 or.Cost = or.Unit * PricePerUnit;
