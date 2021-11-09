@@ -80,7 +80,7 @@
                             vm => vm.Requests[0].Product.UnitTypeID,
                             Model.UnitTypeList,
                             "",
-                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select" + markReadOnlyClass, @id = "unitTypeID" }
+                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @id = "unitTypeID" }
                             )
                         <span asp-validation-for="Requests[0].Product.UnitType" class="text-danger-centarix"></span>
                     </div>
