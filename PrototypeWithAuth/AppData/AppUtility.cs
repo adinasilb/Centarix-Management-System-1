@@ -495,11 +495,11 @@ namespace PrototypeWithAuth.AppData
             return list;
         }
 
-        public static List<String> GetPriceColumn(List<String> priceFilterEnums, Request request, CurrencyEnum currency)
+        public static List<StringWithBool> GetPriceColumn(List<String> priceFilterEnums, Request request, CurrencyEnum currency)
         {
             try
             {
-                List<String> priceColumn = new List<String>();
+                List<StringWithBool> priceColumn = new List<StringWithBool>();
                 var currencyFormat = "he-IL";
                 var pricePerUnit = request.PricePerUnit;
                 var cost = request.Cost;
@@ -521,16 +521,16 @@ namespace PrototypeWithAuth.AppData
                     switch (Enum.Parse(typeof(PriceSortEnum), p))
                     {
                         case PriceSortEnum.Unit:
-                            priceColumn.Add("U: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", pricePerUnit));
+                            priceColumn.Add( new StringWithBool { String = "U: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", pricePerUnit), Bool = false });
                             break;
                         case PriceSortEnum.Total:
-                            priceColumn.Add("T: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", cost));
+                            priceColumn.Add(new StringWithBool { String = "T: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", cost), Bool = false });
                             break;
                         case PriceSortEnum.Vat:
-                            priceColumn.Add("V: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", vat));
+                            priceColumn.Add(new StringWithBool { String = "V: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", vat), Bool = false });
                             break;
                         case PriceSortEnum.TotalVat:
-                            priceColumn.Add("P: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", total));
+                            priceColumn.Add(new StringWithBool { String = "P: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", total), Bool = false });
                             break;
                     }
                 }
@@ -539,31 +539,31 @@ namespace PrototypeWithAuth.AppData
             
             catch(Exception ex)
             {
-                return new List<String>() { "price has an error" };
+                return new List<StringWithBool>() { new StringWithBool { String = "price has an error", Bool = true }};
             }
         }
 
-        public static List<string> GetCategoryColumn(bool categorySelected, bool subcategorySelected, Product p)
+        public static List<StringWithBool> GetCategoryColumn(bool categorySelected, bool subcategorySelected, Product p)
         {
             try
             {
 
-                List<string> categoryColumn = new List<String>();
+                List<StringWithBool> categoryColumn = new List<StringWithBool>();
                 var category = p.ProductSubcategory.ParentCategory.ParentCategoryDescription;
                 var subcategory = p.ProductSubcategory.ProductSubcategoryDescription;
                 if (categorySelected)
                 {
-                    categoryColumn.Add(category);
+                    categoryColumn.Add( new StringWithBool { String = category, Bool = false });
                 }
                 if (subcategorySelected)
                 {
-                    categoryColumn.Add(subcategory);
+                    categoryColumn.Add( new StringWithBool { String = subcategory, Bool = false });
                 }
                 return categoryColumn;
             }
             catch (Exception ex)
             {
-                return new List<string>() { "category has an error" };
+                return new List<StringWithBool>() { new StringWithBool { String = "category has an error", Bool = true } };
             }
         }
         //public static List<T> CloneList<T>(T list)
@@ -581,20 +581,20 @@ namespace PrototypeWithAuth.AppData
             return newCopy;
         }
 
-        public static List<String> GetAmountColumn(Request request)
+        public static List<StringWithBool> GetAmountColumn(Request request)
         {
             try
             {
-                List<String> amountColumn = new List<String>();
+                List<StringWithBool> amountColumn = new List<StringWithBool>();
                 if (request.Unit != null)
                 {
-                    amountColumn.Add(request.Unit + " " + request.Product.UnitType.UnitTypeDescription);
+                    amountColumn.Add( new StringWithBool { String = request.Unit + " " + request.Product.UnitType.UnitTypeDescription, Bool = false });
                     if (request.Product.SubUnit != null)
                     {
-                        amountColumn.Add(request.Product.SubUnit + " " + request.Product.SubUnitType.UnitTypeDescription);
+                        amountColumn.Add(new StringWithBool { String = request.Product.SubUnit + " " + request.Product.SubUnitType.UnitTypeDescription, Bool = false });
                         if (request.Product.SubSubUnit != null)
                         {
-                            amountColumn.Add(request.Product.SubSubUnit + " " + request.Product.SubSubUnitType.UnitTypeDescription);
+                            amountColumn.Add(new StringWithBool { String = request.Product.SubSubUnit + " " + request.Product.SubSubUnitType.UnitTypeDescription, Bool = false });
                         }
 
                     }
@@ -604,7 +604,7 @@ namespace PrototypeWithAuth.AppData
             }
             catch (Exception ex)
             {
-                return new List<String>() { "unit has an error" };
+                return new List<StringWithBool>() { new StringWithBool { String = "unit has an error", Bool = true } };
             }
         }
 
@@ -883,15 +883,15 @@ namespace PrototypeWithAuth.AppData
             }
         }
 
-        public static String GetDateOrderedString(ParentRequest parentRequest)
+        public static StringWithBool GetDateOrderedString(ParentRequest parentRequest)
         {
             try 
             { 
-                return parentRequest.OrderDate.GetElixirDateFormat();
+                return new StringWithBool { String = parentRequest.OrderDate.GetElixirDateFormat() };
             }
             catch(Exception ex)
             {
-                return "order date has an error";
+                return new StringWithBool { String = "order date has an error", Bool = true };
             }
         }
     }
