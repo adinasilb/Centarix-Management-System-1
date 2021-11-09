@@ -588,13 +588,13 @@ namespace PrototypeWithAuth.AppData
                 List<StringWithBool> amountColumn = new List<StringWithBool>();
                 if (request.Unit != null)
                 {
-                    amountColumn.Add( new StringWithBool { String = request.Unit + " " + request.Product.UnitType.UnitTypeDescription, Bool = false });
+                    amountColumn.Add( new StringWithBool { String = TrimZeros(request.Unit) + " " + request.Product.UnitType.UnitTypeDescription, Bool = false });
                     if (request.Product.SubUnit != null)
                     {
-                        amountColumn.Add(new StringWithBool { String = request.Product.SubUnit + " " + request.Product.SubUnitType.UnitTypeDescription, Bool = false });
+                        amountColumn.Add(new StringWithBool { String = TrimZeros(request.Product.SubUnit??0) + " " + request.Product.SubUnitType.UnitTypeDescription, Bool = false });
                         if (request.Product.SubSubUnit != null)
                         {
-                            amountColumn.Add(new StringWithBool { String = request.Product.SubSubUnit + " " + request.Product.SubSubUnitType.UnitTypeDescription, Bool = false });
+                            amountColumn.Add(new StringWithBool { String = TrimZeros(request.Product.SubSubUnit ?? 0) + " " + request.Product.SubSubUnitType.UnitTypeDescription, Bool = false });
                         }
 
                     }
@@ -893,6 +893,16 @@ namespace PrototypeWithAuth.AppData
             {
                 return new StringWithBool { String = "order date has an error", Bool = true };
             }
+        }
+
+        public static decimal TrimZeros(decimal number)
+        {
+            var returnNum = number;
+            if((number % 1) == 0)
+            {
+                returnNum = Math.Round(returnNum, 0);
+            }
+            return returnNum;
         }
     }
 

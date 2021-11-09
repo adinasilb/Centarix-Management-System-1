@@ -142,7 +142,7 @@
                 <div class="row ">
                     <div class="col-md-4 pl-0 form-group">
                         <label asp-for="Requests[0].Product.SubUnit" class="control-label"></label>
-                        <input type="number" name="Requests[0].Product.SubUnit" value="@Model.Requests[0].Product.SubUnit" class="form-control-plaintext border-bottom @subMarkReadOnly " 
+                        <input type="number" name="Requests[0].Product.SubUnit" value="@(AppUtility.TrimZeros(Model.Requests[0].Product.SubUnit ?? 0))" class="form-control-plaintext border-bottom @subMarkReadOnly " 
                                 id="subUnit" @disableIfNotReorder @cardDisabledSub/>
                         <span asp-validation-for="Requests[0].Product.SubUnit" class="text-danger-centarix"></span>
                     </div>
@@ -242,7 +242,7 @@
                 <div class="row">
                     <div class="col-md-4 pl-0 form-group">
                         <label asp-for="Requests[0].Product.SubSubUnit" class="control-label"></label>
-                        <input type="number" name="Requests[0].Product.SubSubUnit" value="@Model.Requests[0].Product.SubSubUnit" class="form-control-plaintext border-bottom 
+                        <input type="number" name="Requests[0].Product.SubSubUnit" value="@(AppUtility.TrimZeros(Model.Requests[0].Product.SubSubUnit ?? 0))" class="form-control-plaintext border-bottom 
                                @subsubMarkReadOnly " @cardDisabledSubSub @disableIfNotReorder id="subSubUnit" />
                         <span asp-validation-for="Requests[0].Product.SubSubUnit" class="text-danger-centarix"></span>
                     </div>
