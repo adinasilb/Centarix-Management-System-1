@@ -56,8 +56,10 @@
                 <div class="row">
                     <div class="col-md-4 form-group">
                         <label asp-for="Requests[0].Unit" class="control-label"></label>
-                        @Html.EditorFor(vm => vm.Requests[0].Unit, 
-                       new { htmlAttributes = new { @class = "form-control-plaintext border-bottom " + @markReadOnlyClass, @min = "1", @id = "unit" } })
+                        <input type="number" asp-for="@Model.Requests[0].Unit" value="@(AppUtility.ConvertIntToString(Model.Requests[0].Unit))" class="form-control-plaintext border-bottom @markReadOnlyClass "
+                               id="unit" />
+                        @*@Html.EditorFor(vm => vm.Requests[0].Unit,
+                       new { htmlAttributes = new { @class = "form-control-plaintext border-bottom " + @markReadOnlyClass, @min = "1", @id = "unit", @value = AppUtility.ConvertIntToString(Model.Requests[0].Unit) } })*@
                         <span asp-validation-for="Requests[0].Unit" class="text-danger-centarix"></span>
                     </div>
                     <div class="col-md-8 form-group dropdown-select-div">
@@ -78,7 +80,7 @@
                             vm => vm.Requests[0].Product.UnitTypeID,
                             Model.UnitTypeList,
                             "",
-                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select" + markReadOnlyClass, @id = "unitTypeID" }
+                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @id = "unitTypeID" }
                             )
                         <span asp-validation-for="Requests[0].Product.UnitType" class="text-danger-centarix"></span>
                     </div>
@@ -92,16 +94,16 @@
                         <div class="col-md-6">
                             <div class="input-group">
                                 <span class="input-group-text border-bottom request-cost-dollar-icon @disableDollar">&#36;</span>
-                                <input type="number" class="form-control-plaintext border-bottom @dollarReadOnly  @disableDollar requestPriceQuote" name="unit-price-dollars" 
-                                       value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].PricePerUnit / Model.Requests[0].ExchangeRate,2))" 
+                                <input type="text" class="form-control-plaintext border-bottom @dollarReadOnly  @disableDollar requestPriceQuote" name="unit-price-dollars" 
+                                       value="@(AppUtility.ConvertIntToString(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].PricePerUnit / Model.Requests[0].ExchangeRate,2)))" 
                                        id="unit-price-dollars" @disabledDollarProperty />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-group">
                                 <span class="input-group-text request-cost-shekel-icon @disableShekel">&#x20aa;</span>
-                                <input type="number" class="form-control-plaintext border-bottom requestPriceQuote @shekelReadOnly @disableShekel" name="unit-price-shekel" 
-                                       id="unit-price-shekel" value="@Math.Round(Model.Requests[0].PricePerUnit, 2)" @disabledShekelProperty />
+                                <input type="text" class="form-control-plaintext border-bottom requestPriceQuote @shekelReadOnly @disableShekel" name="unit-price-shekel" 
+                                       id="unit-price-shekel" value="@(AppUtility.ConvertIntToString(Math.Round(Model.Requests[0].PricePerUnit, 2)))" @disabledShekelProperty />
                             </div>
                         </div>
                     </div>
@@ -142,7 +144,7 @@
                 <div class="row ">
                     <div class="col-md-4 pl-0 form-group">
                         <label asp-for="Requests[0].Product.SubUnit" class="control-label"></label>
-                        <input type="number" name="Requests[0].Product.SubUnit" value="@(AppUtility.TrimZeros(Model.Requests[0].Product.SubUnit ?? 0))" class="form-control-plaintext border-bottom @subMarkReadOnly " 
+                        <input type="number" name="Requests[0].Product.SubUnit" value="@(Model.Requests[0].Product.SubUnit==0? "" : AppUtility.TrimZeros(Model.Requests[0].Product.SubUnit??0))" class="form-control-plaintext border-bottom @subMarkReadOnly " 
                                 id="subUnit" @disableIfNotReorder @cardDisabledSub/>
                         <span asp-validation-for="Requests[0].Product.SubUnit" class="text-danger-centarix"></span>
                     </div>
@@ -183,16 +185,16 @@
                         <div class="col-md-6">
                             <div class="input-group">
                                 <span class="input-group-text disabled-text" disabled>&#36;</span>
-                                <input class="form-control-plaintext border-bottom requestPriceQuote disabled-text" disabled name="subunit-price-dollars" id="subunit-price-dollars" 
-                                       value="@(Model.Requests[0].ExchangeRate == 0 || Model.Requests[0].Product.SubSubUnit== null ? 0 : 
-                                        Math.Round(AppUtility.GetPricePerSubUnit(Model.Requests[0]) / Model.Requests[0].ExchangeRate,2))" />
+                                <input type="text" class="form-control-plaintext border-bottom requestPriceQuote disabled-text" disabled name="subunit-price-dollars" id="subunit-price-dollars" 
+                                       value="@(AppUtility.ConvertIntToString(Model.Requests[0].ExchangeRate == 0 || Model.Requests[0].Product.SubSubUnit== null ? 0 : 
+                                        Math.Round(AppUtility.GetPricePerSubUnit(Model.Requests[0]) / Model.Requests[0].ExchangeRate,2)))" />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-group">
                                 <span class="input-group-text requestPriceQuote disabled-text" disabled>&#x20aa;</span>
-                                <input class="form-control-plaintext border-bottom disabled-text" disabled name="subunit-price-shekel" id="subunit-price-shekel" 
-                                       value="@(Model.Requests[0].Product.SubSubUnit!= null?Math.Round(AppUtility.GetPricePerSubUnit(Model.Requests[0]), 2):0)" />
+                                <input type="text" class="form-control-plaintext border-bottom disabled-text" disabled name="subunit-price-shekel" id="subunit-price-shekel" 
+                                       value="@(AppUtility.ConvertIntToString(Model.Requests[0].Product.SubSubUnit!= null?Math.Round(AppUtility.GetPricePerSubUnit(Model.Requests[0]), 2):0))" />
                             </div>
                         </div>
                     </div>
@@ -242,7 +244,7 @@
                 <div class="row">
                     <div class="col-md-4 pl-0 form-group">
                         <label asp-for="Requests[0].Product.SubSubUnit" class="control-label"></label>
-                        <input type="number" name="Requests[0].Product.SubSubUnit" value="@(AppUtility.TrimZeros(Model.Requests[0].Product.SubSubUnit ?? 0))" class="form-control-plaintext border-bottom 
+                        <input type="number" name="Requests[0].Product.SubSubUnit" value="@(Model.Requests[0].Product.SubUnit==0? "" : AppUtility.TrimZeros(Model.Requests[0].Product.SubUnit??0))" class="form-control-plaintext border-bottom 
                                @subsubMarkReadOnly " @cardDisabledSubSub @disableIfNotReorder id="subSubUnit" />
                         <span asp-validation-for="Requests[0].Product.SubSubUnit" class="text-danger-centarix"></span>
                     </div>
@@ -279,16 +281,16 @@
                         <div class="col-md-6">
                             <div class="input-group">
                                 <span class="input-group-text disabled-text" disabled>&#36;</span>
-                                <input class="form-control-plaintext border-bottom requestPriceQuote disabled-text" disabled name="subsubunit-price-dollars" id="subsubunit-price-dollars"
-                                       value="@(Model.Requests[0].ExchangeRate == 0 || Model.Requests[0].Product.SubSubUnit==null ? 0 : 
-                                        Math.Round(AppUtility.GetPricePerSubSubUnit(Model.Requests[0])/ Model.Requests[0].ExchangeRate,2))" />
+                                <input type="text" class="form-control-plaintext border-bottom requestPriceQuote disabled-text" disabled name="subsubunit-price-dollars" id="subsubunit-price-dollars"
+                                       value="@(AppUtility.ConvertIntToString(Model.Requests[0].ExchangeRate == 0 || Model.Requests[0].Product.SubSubUnit==null ? 0 : 
+                                        Math.Round(AppUtility.GetPricePerSubSubUnit(Model.Requests[0])/ Model.Requests[0].ExchangeRate,2)))" />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-group ">
                                 <span class="input-group-text requestPriceQuote disabled-text" disabled>&#x20aa;</span>
-                                <input class="form-control-plaintext border-bottom disabled-text" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled
-                                       value="@(Model.Requests[0].Product.SubSubUnit!=null?Math.Round(AppUtility.GetPricePerSubSubUnit(Model.Requests[0]) ):0)" />
+                                <input type="text" class="form-control-plaintext border-bottom disabled-text" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled
+                                       value="@(AppUtility.ConvertIntToString(Model.Requests[0].Product.SubSubUnit!=null?Math.Round(AppUtility.GetPricePerSubSubUnit(Model.Requests[0]) ):0))" />
                                 <span asp-validation-for="Requests[0].Product.SubSubUnit" class="text-danger-centarix"></span>
                             </div>
                         </div>
@@ -307,8 +309,8 @@
             <label asp-for="Requests[0].Cost" class="control-label">Total:</label>
             <div class="input-group">
                 <span class="input-group-text request-cost-dollar-icon @disableDollar">&#36;</span>
-                <input class="form-control-plaintext border-bottom @dollarReadOnly @disableDollar requestPriceQuote" id="sum-dollars" name="sum-dollars" 
-                       value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round((Model.Requests[0].Cost??0) / Model.Requests[0].ExchangeRate,2))" @disabledDollarProperty />
+                <input type="text" class="form-control-plaintext border-bottom @dollarReadOnly @disableDollar requestPriceQuote" id="sum-dollars" name="sum-dollars" 
+                       value="@(AppUtility.ConvertIntToString((Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round((Model.Requests[0].Cost??0) / Model.Requests[0].ExchangeRate,2))))" @disabledDollarProperty />
             </div>
         </div>
     </div>
@@ -319,11 +321,11 @@
                 <span class="input-group-text request-cost-shekel-icon @disableShekel">&#x20aa;</span>
                 @if (disabledShekelProperty != "")
                 {
-                    <input asp-for="Requests[0].Cost" class="form-control-plaintext border-bottom  @disableShekel requestPriceQuote" min="1" readonly id="cost" />
+                    <input type="text" asp-for="Requests[0].Cost" value="@AppUtility.ConvertIntToString(Model.Requests[0].Cost??0)" class="form-control-plaintext border-bottom  @disableShekel requestPriceQuote" min="1" readonly id="cost" />
                 }
                 else
                 {
-                    <input asp-for="Requests[0].Cost" class="form-control-plaintext border-bottom @shekelReadOnly requestPriceQuote" min="1" id="cost" />
+                    <input type="text" asp-for="Requests[0].Cost" value="@AppUtility.ConvertIntToString(Model.Requests[0].Cost??0)" class="form-control-plaintext border-bottom @shekelReadOnly requestPriceQuote" min="1" id="cost" />
 
                 }
                 <span class="text-danger-centarix" asp-validation-for="Requests[0].Cost"></span>
@@ -335,8 +337,8 @@
             <label asp-for="Requests[0].VAT" class="control-label"></label>
             <div class="input-group">
                 <span class="input-group-text disabled-text">&#36;</span>
-                <input class="form-control-plaintext border-bottom vatInDollars disabled-text requestPriceQuote" id="vatInDollars" disabled 
-                       value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].VAT / Model.Requests[0].ExchangeRate, 2))" />
+                <input type="text" class="form-control-plaintext border-bottom vatInDollars disabled-text requestPriceQuote" id="vatInDollars" disabled 
+                       value="@(AppUtility.ConvertIntToString(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].VAT / Model.Requests[0].ExchangeRate, 2)))" />
             </div>
         </div>
     </div>
@@ -345,7 +347,7 @@
             <label class="control-label"></label>
             <div class="input-group">
                 <span class="input-group-text disabled-text">&#x20aa;</span>
-                <input asp-for="Requests[0].VAT" class="form-control-plaintext border-bottom disabled-text requestPriceQuote" id="vat" disabled />
+                <input type="text" asp-for="Requests[0].VAT" value="@AppUtility.ConvertIntToString(Model.Requests[0].VAT)" class="form-control-plaintext border-bottom disabled-text requestPriceQuote" id="vat" disabled />
                 <span class="text-danger-centarix" asp-validation-for="Requests[0].VAT"></span>
             </div>
         </div>
@@ -355,8 +357,8 @@
             <label class="control-label">Total + VAT:</label>
             <div class="input-group">
                 <span class="input-group-text disabled-text">&#36;</span>
-                <input class="form-control-plaintext border-bottom disabled-text requestPriceQuote" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled 
-                       value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].TotalWithVat/Model.Requests[0].ExchangeRate,2))" />
+                <input type="text" class="form-control-plaintext border-bottom disabled-text requestPriceQuote" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled 
+                       value="@(AppUtility.ConvertIntToString(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].TotalWithVat/Model.Requests[0].ExchangeRate,2)))" />
             </div>
         </div>
     </div>
@@ -365,7 +367,7 @@
             <label class="control-label"></label>
             <div class="input-group">
                 <span class="input-group-text disabled-text">&#x20aa;</span>
-                <input asp-for="Requests[0].TotalWithVat" class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
+                <input type="text" asp-for="Requests[0].TotalWithVat" value="@AppUtility.ConvertIntToString(Model.Requests[0].TotalWithVat)" class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
             </div>
         </div>
     </div>

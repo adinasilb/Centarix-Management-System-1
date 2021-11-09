@@ -4,7 +4,7 @@ $(function () {
 	$.fn.ShowResults = function ($inputBox, $value) { //this function ensures that the value passed back won't be NaN or undefined --> it'll instead send back a blank
 		var theResult = parseFloat($value);
 		theResult = theResult.toFixed(2);
-		theResult = isFinite(theResult) && theResult || "";
+		theResult = (isFinite(theResult) && theResult != 0) ? theResult : "";
 		$inputBox.val(theResult);
 	}
 
@@ -48,11 +48,15 @@ $(function () {
 			$.fn.ShowResults($iptBox, $sumShekel);
 		}
 		$sumShekel = parseFloat($("#" + shekelId).val());
+		//console.log("sum shekel " + $sumShekel)
+		//if ($sumShekel == "NaN") {
+		//	$sumShekel = 0;
+  //      }
 		var vatCalc = $sumShekel * .17;
 		//$vatOnshekel = $sumShekel * parseFloat(vatCalc);
-		$('#' + vatId).val(vatCalc.toFixed(2));
-		console.log("vat calc " + vatCalc)
-		$('#' + vatDollarId).val((vatCalc * inverseExchangeRate).toFixed(2));
+		$.fn.ShowResults($('#' + vatId), vatCalc.toFixed(2));
+		//$('#' + vatDollarId).val((vatCalc * inverseExchangeRate).toFixed(2));
+		$.fn.ShowResults($('#' + vatDollarId), (vatCalc * inverseExchangeRate).toFixed(2));
 		$sumTotalVatShekel = $sumShekel + vatCalc;
 		$iptBox = $("#" + totalVatId);
 		$.fn.ShowResults($iptBox, $sumTotalVatShekel);
