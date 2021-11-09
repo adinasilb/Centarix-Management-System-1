@@ -4,7 +4,7 @@ $(function () {
 	$.fn.ShowResults = function ($inputBox, $value) { //this function ensures that the value passed back won't be NaN or undefined --> it'll instead send back a blank
 		var theResult = parseFloat($value);
 		theResult = theResult.toFixed(2);
-		theResult = (isFinite(theResult) || theResult == 0) ? theResult : "";
+		theResult = (isFinite(theResult) && theResult != 0) ? theResult : "";
 		$inputBox.val(theResult);
 	}
 

@@ -56,7 +56,7 @@
                 <div class="row">
                     <div class="col-md-4 form-group">
                         <label asp-for="Requests[0].Unit" class="control-label"></label>
-                        <input type="number" name="@Model.Requests[0].Unit" value="@(AppUtility.ConvertIntToString(Model.Requests[0].Product.SubUnit??0))" class="form-control-plaintext border-bottom @markReadOnlyClass "
+                        <input type="number" asp-for="@Model.Requests[0].Unit" value="@(AppUtility.ConvertIntToString(Model.Requests[0].Unit))" class="form-control-plaintext border-bottom @markReadOnlyClass "
                                id="unit" />
                         @*@Html.EditorFor(vm => vm.Requests[0].Unit,
                        new { htmlAttributes = new { @class = "form-control-plaintext border-bottom " + @markReadOnlyClass, @min = "1", @id = "unit", @value = AppUtility.ConvertIntToString(Model.Requests[0].Unit) } })*@
@@ -244,7 +244,7 @@
                 <div class="row">
                     <div class="col-md-4 pl-0 form-group">
                         <label asp-for="Requests[0].Product.SubSubUnit" class="control-label"></label>
-                        <input type="text" name="Requests[0].Product.SubSubUnit" value="@(AppUtility.ConvertIntToString(Model.Requests[0].Product.SubSubUnit??0))" class="form-control-plaintext border-bottom 
+                        <input type="number" name="Requests[0].Product.SubSubUnit" value="@(AppUtility.ConvertIntToString(Model.Requests[0].Product.SubSubUnit??0))" class="form-control-plaintext border-bottom 
                                @subsubMarkReadOnly " @cardDisabledSubSub @disableIfNotReorder id="subSubUnit" />
                         <span asp-validation-for="Requests[0].Product.SubSubUnit" class="text-danger-centarix"></span>
                     </div>
