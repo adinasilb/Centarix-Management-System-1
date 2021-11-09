@@ -4077,8 +4077,10 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task SplitPartialsAsync()
         {
-            var RequestsOriginal = _context.Requests.Where(r => r.IsPartial);
-            var RequestsCopy = _context.Requests.Where(r => r.IsPartial).AsNoTracking().ToList();
+            var RequestsOriginal = _context.Requests.Where(r => r.IsPartial).ToList();
+            var RequestsCopy = _context.Requests.Where(r => r.IsPartial)
+                .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                .AsNoTracking().ToList();
             foreach (var rc in RequestsCopy)
             {
                 var OldRequestID = rc.RequestID;
@@ -4097,8 +4099,8 @@ namespace PrototypeWithAuth.Controllers
                 }
                 _context.Entry(rc).State = EntityState.Added;
                 await _context.SaveChangesAsync();
-                await CopyComments(OldRequestID, rc.RequestID);
-                await CopyPayments(OldRequestID, rc.RequestID);
+                await CopyCommentsAsync(OldRequestID, rc.RequestID);
+                await CopyPaymentsAsync(OldRequestID, rc.RequestID);
                 MoveDocumentsOutOfTempFolder(rc.RequestID, AppUtility.ParentFolderName.Requests, OldRequestID, true);
                 //Didn't arrive notification may not have moved over;
             }
@@ -4106,7 +4108,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 ro.IsPartial = false;
                 ro.DevelopersBoolean = true;
-                _context.Update(ro);
+                _context.Entry(ro).State = EntityState.Modified;
             }
             await _context.SaveChangesAsync();
             //await _context.SaveChangesAsync();
@@ -4114,8 +4116,8 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task SplitCostsAsync()
         {
-            List<PrototypeWithAuth.Models.Request> OriginalRequests = _context.Requests.ToList();//.Where(r => (r.DevelopersBoolean && !r.IsPartial));
-            List<PrototypeWithAuth.Models.Request> SplitRequests = _context.Requests.Where(r => (r.DevelopersBoolean && r.IsPartial)).ToList();
+            var OriginalRequests = _context.Requests.Where(r => (r.DevelopersBoolean && !r.IsPartial)).ToList();
+            var SplitRequests = _context.Requests.Where(r => (r.DevelopersBoolean && r.IsPartial)).ToList();
             foreach (var or in OriginalRequests)
             {
                 var sr = SplitRequests.Where(sp => sp.ParentRequestID == or.ParentRequestID && sp.ProductID == or.ProductID).FirstOrDefault();
@@ -4123,8 +4125,8 @@ namespace PrototypeWithAuth.Controllers
                 decimal PricePerUnit = (or.Cost ?? 0) / (FullAmount == 0 ? 1 : FullAmount);
                 or.Cost = or.Unit * PricePerUnit;
                 sr.Cost = sr.Unit * PricePerUnit;
-                _context.Update(or);
-                _context.Update(sr);
+                _context.Entry(or).State = EntityState.Modified;
+                _context.Entry(sr).State = EntityState.Modified;
             }
             await _context.SaveChangesAsync();
         }

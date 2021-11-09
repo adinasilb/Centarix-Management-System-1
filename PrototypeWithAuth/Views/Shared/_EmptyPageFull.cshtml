@@ -12,21 +12,6 @@
 ">
         <label class="empty-page-text">Nothing is here</label>
         <div class="py-3">
-            @{
-                if (Model.PageType == AppUtility.PageTypeEnum.AccountingNotifications)
-                {
-                    <div class="row">
-
-                        @if (Model.SidebarType == AppUtility.SidebarEnum.PartialDelivery)
-                        {
-                            <div class="accounting-form">
-                                @Html.ActionLink("Split Partials", "SplitPartials", "Requests", null, new { @class = "custom-button" })
-                                @Html.ActionLink("Split Costs", "SplitCosts", "Requests", null, new { @class = "custom-button" })
-                            </div>
-                        }
-                    </div>
-                }
-            }
             <img src="~/images/css/Empty_Page.png" width="350" alt="Empty Page">
         </div>
     </div>
