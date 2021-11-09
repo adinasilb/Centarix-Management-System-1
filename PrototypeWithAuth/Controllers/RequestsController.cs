@@ -1427,9 +1427,12 @@ namespace PrototypeWithAuth.Controllers
             var termsList = new List<SelectListItem>() { };
             await _context.PaymentStatuses.ForEachAsync(ps =>
             {
-                    var selected = false;
-                    if (ps.PaymentStatusID == 2) { selected = true; }
+                var selected = false;
+                if (ps.PaymentStatusID == 2) { selected = true; }
+                if (ps.PaymentStatusID != 4 && ps.PaymentStatusID != 7)
+                {
                     termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription, Selected = selected });
+                }
             });
             TermsViewModel termsViewModel = new TermsViewModel()
             {
@@ -3930,7 +3933,8 @@ namespace PrototypeWithAuth.Controllers
                             c.CommentID = 0;
                             c.RequestID = requestReceived.RequestID;
                             _context.Entry(c).State = EntityState.Added;
-                        }
+                        }    
+                        
                         var payments = _context.Payments.Where(p => p.RequestID == receivedLocationViewModel.Request.RequestID).AsNoTracking();
                         foreach (var p in payments)
                         {
