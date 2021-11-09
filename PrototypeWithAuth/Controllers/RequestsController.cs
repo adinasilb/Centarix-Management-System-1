@@ -574,6 +574,49 @@ namespace PrototypeWithAuth.Controllers
             return viewModel;
         }
 
+        [Authorize(Roles = "Requests")]
+        public async Task<RequestListIndexViewModel> GetRequestListIndexObjectAsync(RequestIndexObject requestIndexObject)
+        {
+            var userLists = _context.RequestLists.Where(l => l.ApplicationUserOwnerID == _userManager.GetUserId(User)).OrderBy(l => l.DateCreated).ToList();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (userLists.Count == 0)
+                    {
+                        RequestList requestList = new RequestList
+                        {
+                            Title = "List 1",
+                            ApplicationUserOwnerID = _userManager.GetUserId(User),
+                            RequestListRequests = new List<RequestListRequest>(),
+                            DateCreated = DateTime.Now,
+                            IsDefault = true
+                        };
+
+                        _context.Entry(requestList).State = EntityState.Added;
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                        requestIndexObject.ListID = requestList.ListID;
+                        userLists.Add(requestList);
+                    }
+                }
+                catch
+                { }
+            }
+            if(requestIndexObject.ListID == 0)
+            {
+                requestIndexObject.ListID = userLists.Where(l => l.IsDefault).FirstOrDefault().ListID;
+            }
+            RequestIndexPartialViewModel requestIndexViewModel = await base.GetIndexViewModel(requestIndexObject);
+            RequestListIndexViewModel viewModel = new RequestListIndexViewModel
+            {
+                RequestIndexPartialViewModel = requestIndexViewModel,
+                ListID = requestIndexObject.ListID,
+                Lists = userLists
+            };
+            return viewModel;
+        }
+
         [Authorize(Roles = "Requests,Operations")]
         public async Task<RedirectToActionResult> SaveAddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
@@ -1750,6 +1793,31 @@ namespace PrototypeWithAuth.Controllers
             //};
             RequestIndexPartialViewModel viewModel = await GetSharedRequestIndexObjectAsync();
             return View(viewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> IndexLists()
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.MyLists;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+            RequestIndexObject requestIndexObject = new RequestIndexObject()
+            {
+                PageType = AppUtility.PageTypeEnum.RequestCart,
+                SidebarType = AppUtility.SidebarEnum.MyLists
+            };
+
+            RequestListIndexViewModel viewModel = await GetRequestListIndexObjectAsync(requestIndexObject);
+            return View(viewModel);
+        }
+        [HttpGet]
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> _IndexTableWithListTabs(RequestIndexObject requestIndexObject)
+        {
+            RequestListIndexViewModel viewModel = await GetRequestListIndexObjectAsync(requestIndexObject);
+            return PartialView(viewModel);
         }
 
         [HttpGet]
@@ -5526,13 +5594,330 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    throw new Exception(AppUtility.GetExceptionMessage(ex)); ;
+                    throw new Exception(AppUtility.GetExceptionMessage(ex)); 
                 }
             }
             return RedirectToAction("_LocationTab", new { id = requestId });
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> MoveToListModal(int requestID, int prevListID=0)
+        {
+            var pageType = AppUtility.PageTypeEnum.RequestCart;
+            var userLists = _context.RequestLists.Where(rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User))
+               .OrderBy(rl => rl.DateCreated).ToList();
+            if(userLists.Count == 0)
+            {
+                RequestList requestList = new RequestList
+                {
+                    Title = "List 1",
+                    ApplicationUserOwnerID = _userManager.GetUserId(User),
+                    RequestListRequests = new List<RequestListRequest>(),
+                    DateCreated = DateTime.Now,
+                    IsDefault = true
+                };
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        _context.Entry(requestList).State = EntityState.Added;
+                        await _context.SaveChangesAsync();
+                        userLists.Add(requestList);
+                        await transaction.CommitAsync();
+                    }
+                    catch(Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        throw new Exception(AppUtility.GetExceptionMessage(ex));
+                    }
+                }
+            }
+            userLists = userLists.Where(ul => ul.ListID != prevListID).ToList();
+            if (prevListID == 0)
+            {
+                pageType = AppUtility.PageTypeEnum.RequestInventory;
+            }
+            MoveListViewModel viewModel = new MoveListViewModel
+            {
+                Request = _context.Requests.Where(r => r.RequestID == requestID).Include(r=> r.Product).FirstOrDefault(),
+                PreviousListID = prevListID,
+                RequestLists = userLists,
+                PageType= pageType
+            };
+            return PartialView(viewModel);
+        }
 
+        public async void MoveLists(int requestToMoveId, int newListID, int prevListID = 0)
+        {
+            
+            var existingListRequest = _context.RequestListRequests.Where(l => l.RequestID == requestToMoveId && l.ListID == newListID).FirstOrDefault();
+            if (existingListRequest != null)
+            {
+                existingListRequest.TimeStamp = DateTime.Now;
+                _context.Update(existingListRequest);
+            }
+            else
+            {
+                RequestListRequest requestListRequest = new RequestListRequest
+                {
+                    RequestID = requestToMoveId,
+                    ListID = newListID,
+                    TimeStamp = DateTime.Now
+                };
+                _context.Entry(requestListRequest).State = EntityState.Added;
+            }
+            if (prevListID != 0)
+            {
+                var oldRequestListRequest = _context.RequestListRequests
+                    .Where(rlr => rlr.RequestID == requestToMoveId && rlr.ListID == prevListID).FirstOrDefault();
+                _context.Remove(oldRequestListRequest);
+            }
+                    
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+
+        public async Task<IActionResult> MoveToListModal(MoveListViewModel moveListViewModel)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    MoveLists(moveListViewModel.Request.RequestID, moveListViewModel.NewListID, moveListViewModel.PreviousListID);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw new Exception(AppUtility.GetExceptionMessage(ex));
+                }
+            }
+            if (moveListViewModel.PageType == AppUtility.PageTypeEnum.RequestCart)
+            {
+                RequestIndexObject indexObject = new RequestIndexObject
+                {
+                    PageType = AppUtility.PageTypeEnum.RequestCart,
+                    SidebarType = AppUtility.SidebarEnum.MyLists,
+                    ListID = moveListViewModel.PreviousListID
+                };
+                return RedirectToAction("_IndexTableWithListTabs", indexObject);
+            }
+            else
+            {
+                return new EmptyResult();
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> NewListModal(int requestToAddId = 0, int requestPreviousListID =0)
+        {
+            NewListViewModel viewModel = new NewListViewModel
+            {
+                OwnerID = _userManager.GetUserId(User),
+                RequestToAddID = requestToAddId,
+                RequestPreviousListID = requestPreviousListID
+            };
+            return PartialView(viewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> NewListModal(NewListViewModel newListViewModel)
+        {
+            var newList = new RequestList();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    newList.ApplicationUserOwnerID = newListViewModel.OwnerID;
+                     newList.Title = newListViewModel.ListTitle;
+                     newList.DateCreated = DateTime.Now;
+                    _context.Entry(newList).State = EntityState.Added;
+
+                    await _context.SaveChangesAsync();
+
+                    if(newListViewModel.RequestToAddID != 0)
+                    {
+                        MoveLists(newListViewModel.RequestToAddID, newList.ListID, newListViewModel.RequestPreviousListID);
+
+                        await _context.SaveChangesAsync();
+                    }
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw new Exception(AppUtility.GetExceptionMessage(ex));
+                }
+            }
+            RequestIndexObject indexObject = new RequestIndexObject
+            {
+                PageType = AppUtility.PageTypeEnum.RequestCart,
+                SidebarType = AppUtility.SidebarEnum.MyLists,
+                ListID = newList.ListID
+            };
+            return RedirectToAction("_IndexTableWithListTabs", indexObject);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> DeleteListRequestModal(int requestID, int listID)
+        {
+            DeleteListRequestViewModel viewModel = new DeleteListRequestViewModel
+            {
+                Request = _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault(),
+                List = _context.RequestLists.Where(l => l.ListID == listID).FirstOrDefault()            
+            };
+            return PartialView(viewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> DeleteListRequestModal(DeleteListRequestViewModel viewModel)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var list = _context.RequestLists.Where(l => l.ListID == viewModel.List.ListID)
+                        .Include(l => l.RequestListRequests).FirstOrDefault();
+                    var requestListRequest = list.RequestListRequests.Where(rlr => rlr.RequestID == viewModel.Request.RequestID).FirstOrDefault();
+                    _context.Remove(requestListRequest);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw new Exception(AppUtility.GetExceptionMessage(ex));
+                }
+            }
+            RequestIndexObject indexObject = new RequestIndexObject
+            {
+                PageType = AppUtility.PageTypeEnum.RequestCart,
+                SidebarType = AppUtility.SidebarEnum.MyLists,
+                ListID = viewModel.List.ListID
+            };
+            return RedirectToAction("_IndexTableWithListTabs", indexObject);
+        }
+
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ListSettingsModal(int selectedListID=0)
+        {
+            var userLists = _context.RequestLists.Where(rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User)).OrderBy(rl => rl.DateCreated).ToList();
+
+            ListSettingsViewModel viewModel = new ListSettingsViewModel
+            {
+                RequestLists = userLists,
+                SelectedList = selectedListID == 0 ? userLists.Where(l => l.IsDefault).FirstOrDefault() : userLists.Where(l => l.ListID == selectedListID).FirstOrDefault()
+            };
+            return PartialView(viewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ListSettingsModal(ListSettingsViewModel listSettings, int selectedIndexListID)
+        {
+            await UpdateListDetails(listSettings.SelectedList);
+
+            RequestIndexObject indexObject = new RequestIndexObject
+            {
+                PageType = AppUtility.PageTypeEnum.RequestCart,
+                SidebarType = AppUtility.SidebarEnum.MyLists,
+                ListID = selectedIndexListID
+            };
+            return RedirectToAction("_IndexTableWithListTabs", indexObject);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> _ListSettings(int listID)
+        { 
+            var list = _context.RequestLists.Where(rl => rl.ListID == listID).FirstOrDefault();
+
+            return PartialView(list);
+        }
+
+        [Authorize(Roles = "Requests")]
+        public async Task<bool> UpdateListDetails(RequestList newList)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var list = _context.RequestLists.Where(rl => rl.ListID == newList.ListID).FirstOrDefault();
+                    list.Title = newList.Title;
+                    _context.Update(list);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw new Exception(AppUtility.GetExceptionMessage(ex));
+                }
+            }
+            return true;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> DeleteListModal(int listID)
+        {
+            var viewModel = _context.RequestLists.Where(rl => rl.ListID == listID).FirstOrDefault();
+
+            return PartialView(viewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> DeleteListModal(RequestList deleteList)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var list = _context.RequestLists.Where(l => l.ListID == deleteList.ListID)
+                        .Include(l => l.RequestListRequests).FirstOrDefault();
+                    foreach (var rlr in list.RequestListRequests)
+                    {
+                        _context.Remove(rlr);
+                    }
+                    _context.Remove(list);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw new Exception(AppUtility.GetExceptionMessage(ex));
+                }
+            }
+
+            return RedirectToAction("ListSettingsModal");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> SaveListModal(int listID)
+        {
+            return PartialView(listID);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> SaveListModal(RequestList SelectedList)
+        {
+            await UpdateListDetails(SelectedList);
+
+            return new EmptyResult();
+        }
 
         //[HttpGet]
         //public async Task<IActionResult> CancelModal(Guid Guid, AppUtility.ModalType ModalType)

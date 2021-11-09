@@ -5179,6 +5179,50 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("Requests");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.RequestList", b =>
+                {
+                    b.Property<int>("ListID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserOwnerID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ListID");
+
+                    b.HasIndex("ApplicationUserOwnerID");
+
+                    b.ToTable("RequestLists");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.RequestListRequest", b =>
+                {
+                    b.Property<int>("ListID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ListID", "RequestID");
+
+                    b.HasIndex("RequestID");
+
+                    b.ToTable("RequestListRequests");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestLocationInstance", b =>
                 {
                     b.Property<int>("RequestID")
@@ -7832,6 +7876,29 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("Requests")
                         .HasForeignKey("SubProjectID")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.RequestList", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUserOwner")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserOwnerID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.RequestListRequest", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.RequestList", "List")
+                        .WithMany("RequestListRequests")
+                        .HasForeignKey("ListID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
+                        .WithMany("RequestListRequests")
+                        .HasForeignKey("RequestID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestLocationInstance", b =>
