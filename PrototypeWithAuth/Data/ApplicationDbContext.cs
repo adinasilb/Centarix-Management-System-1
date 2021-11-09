@@ -347,6 +347,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Comment>()
                 .HasQueryFilter(item => !item.IsDeleted);
 
+            modelBuilder.Entity<Request>()
+                .HasQueryFilter(item => !item.DevelopersBoolean);
+
             //modelBuilder.Entity<LocationInstance>()
             //    .HasQueryFilter(item => !(item is TemporaryLocationInstance));
 
