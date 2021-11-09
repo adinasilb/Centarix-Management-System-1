@@ -5069,6 +5069,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         TempData["RequestStatus"] = 1;
                     }
+                    tempRequestViewModel.Request.Discount = uploadQuoteOrderViewModel.Discount;
                 }
 
                 if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderType != AppUtility.OrderTypeEnum.AddToCart.ToString())
@@ -5088,11 +5089,7 @@ namespace PrototypeWithAuth.Controllers
                         try
                         {
                             foreach (var tempRequestViewModel in deserializedTempRequestListViewModel.TempRequestViewModels)
-                            {
-                                if (uploadQuoteOrderViewModel.ExpectedSupplyDays != null)
-                                {
-                                    tempRequestViewModel.Request.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
-                                }
+                            {                          
                                 _context.Entry(tempRequestViewModel.Request.ParentQuote).State = EntityState.Added;
                                 if (tempRequestViewModel.Request.Product.ProductID == 0)
                                 {
