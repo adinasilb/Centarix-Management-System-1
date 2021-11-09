@@ -1479,6 +1479,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("ApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
@@ -3409,6 +3414,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsShippingPaid")
                         .HasColumnType("bit");
 
+                    b.Property<string>("NoteToSupplier")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
@@ -3450,10 +3458,15 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CentarixID")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<int>("ExperimentID")
                         .HasColumnType("int");
@@ -3471,6 +3484,10 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("GenderID");
 
                     b.HasIndex("ParticipantStatusID");
+
+                    b.HasIndex("ParticipantID", "CentarixID")
+                        .IsUnique()
+                        .HasFilter("[CentarixID] IS NOT NULL");
 
                     b.ToTable("Participants");
                 });
@@ -5096,9 +5113,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("NoteForClarifyDelivery")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NoteToSupplier")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrderType")

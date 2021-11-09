@@ -315,7 +315,7 @@
                                 {
                                     @foreach (var testgroup in testoutergroup.TestGroups.OrderBy(tg => tg.SequencePosition))
                                     {
-                                        <div class="col-6">
+                                        <div class="col-6 m-2">
                                             <span class="biomarkers-color">@testgroup.Name</span>
                                             @foreach (var testheader in testgroup.TestHeaders.OrderBy(th => th.SequencePosition))
                                             {
@@ -339,4 +339,5 @@
         </div>
     }
 </div>
-<script src="~/js/Validation/BiomarkersTestValidation.js"></script>
+
+

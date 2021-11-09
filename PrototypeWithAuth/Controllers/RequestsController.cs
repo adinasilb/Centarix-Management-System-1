@@ -2896,6 +2896,7 @@ namespace PrototypeWithAuth.Controllers
                     if (tempRequest.Request.ParentRequest != null)
                     {
                         pr.Shipping = tempRequest.Request.ParentRequest.Shipping;
+                        pr.NoteToSupplier = tempRequest.Request.ParentRequest.NoteToSupplier;
                     }
                     tempRequest.Request.ParentRequest = pr;
                     if (tempRequest.Request.Product == null)
@@ -3252,7 +3253,6 @@ namespace PrototypeWithAuth.Controllers
 
                 }
                 tempRequestListViewModel.RequestIndexObject.RequestStatusID = 2;
-          
                 return new EmptyResult();
             }
             catch (Exception ex)
@@ -3715,7 +3715,7 @@ namespace PrototypeWithAuth.Controllers
                     var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)                
              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
                     decimal pricePerUnit = 0;
-                    if (receivedLocationViewModel.Request.IsPartial)
+                    if (receivedLocationViewModel.IsPartial)
                     {
                         requestReceived.RequestID = 0;
                         pricePerUnit = requestReceived.PricePerUnit;

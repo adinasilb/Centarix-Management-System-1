@@ -117,6 +117,22 @@
                                     </div>
                                 </div>
                             }
+                        <div>
+                            </div>
+                            <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="control-label">Discount</label>
+
+                                    <div class="input-group">
+                                        <input asp-for="Discount" class="form-control-plaintext border-bottom requestPriceQuote" />
+                                        <div class="input-group-text">%</div>
+                                    </div>
+                                    <span asp-validation-for="Discount" />
+                                </div>
+                            </div>
+                        </div>
+                           
                             @*<div class="row">
                         <div class="form-group ">
                             <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
@@ -201,8 +217,13 @@
                     }
 
                     if (data == "") {
-                        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "step-1, reorder-item");
-                        $(".save-item").removeClass("save-item").off('click')
+                        if (sidebarType == "Add") {
+                            window.location.href = "/Requests/?PageType=RequestRequest&SectionType=Requests&SidebarType=List"
+                        }
+                        else {
+                            $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "step-1, reorder-item");
+                        }
+                         $(".save-item").removeClass("save-item").off('click')
                     }                    
                     else {
                         $.fn.OpenModal('termsModal', 'terms', data)

@@ -40,5 +40,6 @@ namespace PrototypeWithAuth.ViewModels
        
         public bool TemporaryLocation { get; set; }
         public int AmountArrived { get; set; }
+        public bool IsPartial { get; set; }
     }
 }

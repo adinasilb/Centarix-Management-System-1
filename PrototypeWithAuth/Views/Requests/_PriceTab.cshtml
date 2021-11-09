@@ -78,6 +78,8 @@
 @* @if (Category != null && !Category.Equals(AppUtility.ParentCategoryEnum.Operation))
 {*@
 <div class="row requestPriceQuote @hideNoQuote">
+    @if (Model.ModalType != AppUtility.RequestModalType.Create)
+    {
     <div class="col-md-2">
         <div class="form-group">
             <label class="control-label">Discount</label>
@@ -89,6 +91,7 @@
             <span asp-validation-for="Requests[0].Discount" />
         </div>
     </div>
+    }
     @{
         var includeVatChecked = "checked";
         var noVatChecked = "";
