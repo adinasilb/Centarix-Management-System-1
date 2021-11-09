@@ -146,7 +146,7 @@
             }
             else if ((section == "Biomarkers")) {
                 div.addClass("biomarkers-filter");
-
+                $(".active-document-modal" + " div.card .document-border").addClass("hasFile");
             }
             else {
                 div.addClass("order-inv-filter");

@@ -45,8 +45,8 @@ namespace PrototypeWithAuth.Controllers
                 new TDViewModel(){ Value="Experiment Code"},
                 new TDViewModel(){ Value="Participant"},
                 new TDViewModel(){ Value="Age Range"},
-                new TDViewModel(){ Value="Timepoints"},
-                new TDViewModel(){ Value="Visits"},
+                //new TDViewModel(){ Value="Timepoints"},
+                //new TDViewModel(){ Value="Visits"},
                 new TDViewModel(){ Value="Start Date"},
                 new TDViewModel(){ Value="End Date" }
             };
@@ -75,14 +75,14 @@ namespace PrototypeWithAuth.Controllers
                     {
                         Value = e.MinimumAge.ToString() + " - " + e.MaximumAge.ToString()
                     },
-                    new TDViewModel()
-                    {
-                        Value = e.Timepoints == null ? "0" : e.Timepoints.Count().ToString()
-                    },
-                    new TDViewModel()
-                    {
-                        Value = e.Timepoints == null ? "0" : e.Timepoints.Select(t => t.AmountOfVisits).Sum().ToString()
-                    },
+                    //new TDViewModel()
+                    //{
+                    //    Value = e.Timepoints == null ? "0" : e.Timepoints.Count().ToString()
+                    //},
+                    //new TDViewModel()
+                    //{
+                    //    Value = e.Timepoints == null ? "0" : e.Timepoints.Select(t => t.AmountOfVisits).Sum().ToString()
+                    //},
                     new TDViewModel()
                     {
                         Value = e.StartDateTime.GetElixirDateFormat()
@@ -200,14 +200,14 @@ namespace PrototypeWithAuth.Controllers
                 {
                     Value = "Gender"
                 },
-                new TDViewModel()
-                {
-                    Value = "Timepoint"
-                },
-                new TDViewModel()
-                {
-                    Value = "Visit"
-                },
+                //new TDViewModel()
+                //{
+                //    Value = "Timepoint"
+                //},
+                //new TDViewModel()
+                //{
+                //    Value = "Visit"
+                //},
                 new TDViewModel()
                 {
                     Value = "Status"
@@ -227,7 +227,7 @@ namespace PrototypeWithAuth.Controllers
             List<List<TDViewModel>> BioRows = new List<List<TDViewModel>>();
             if (ExperimentID != null)
             {
-                BioRows = await GetParticipantsRows(_context.Participants.Include(p => p.Gender).Include(p => p.ParticipantStatus).Where(p => p.ExperimentID == ExperimentID));
+                BioRows = await GetParticipantsRows(_context.Participants.Include(p => p.Gender).Include(p => p.ParticipantStatus).Where(p => p.ExperimentID == ExperimentID).OrderByDescending(p=>p.DateCreated));
             }
             else if (ParticipantID != null)
             {
@@ -257,14 +257,14 @@ namespace PrototypeWithAuth.Controllers
                         {
                             Value = p.Gender.Description
                         },
-                        new TDViewModel()
-                        {
-                            Value = "0"
-                        },
-                        new TDViewModel()
-                        {
-                            Value = "0"
-                        },
+                        //new TDViewModel()
+                        //{
+                        //    Value = "0"
+                        //},
+                        //new TDViewModel()
+                        //{
+                        //    Value = "0"
+                        //},
                         new TDViewModel()
                         {
                             Value = p.ParticipantStatus.Description
@@ -287,7 +287,7 @@ namespace PrototypeWithAuth.Controllers
                     DOB = DateTime.Now
                 },
                 Genders = _context.Genders.ToList()
-                
+
             };
 
             return PartialView(addParticipantViewModel);
@@ -354,7 +354,7 @@ namespace PrototypeWithAuth.Controllers
                 Participant participant = editParticipant.Participant;
                 participant.Gender = _context.Genders.Where(g => g.GenderID == participant.GenderID).FirstOrDefault();
                 participant.ParticipantStatus = _context.ParticipantStatuses.Where(g => g.ParticipantStatusID == participant.ParticipantStatusID).FirstOrDefault();
-                return PartialView ("_ParticipantsHeader", participant);
+                return PartialView("_ParticipantsHeader", participant);
             }
             else
             {
@@ -364,7 +364,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<ActionResult> _ParticipantsHeader(int ParticipantID)
         {
-            return PartialView (_context.Participants.Where(p => p.ParticipantID == ParticipantID).FirstOrDefault());
+            return PartialView(_context.Participants.Where(p => p.ParticipantID == ParticipantID).FirstOrDefault());
         }
 
         public async Task<int> GetParticipantsCount(int ExperimentID)
@@ -430,7 +430,7 @@ namespace PrototypeWithAuth.Controllers
         {
             List<List<TDViewModel>> rows = new List<List<TDViewModel>>();
             var experimentEntries = _context.ExperimentEntries
-                .Include(ee => ee.ApplicationUser).Include(ee => ee.Site)
+                .Include(ee => ee.ApplicationUser).Include(ee => ee.Site).OrderByDescending(p=>p.DateCreated)
                 .Where(ee => ee.ParticipantID == ParticipantID);
             foreach (var ee in experimentEntries)
             {
@@ -476,7 +476,7 @@ namespace PrototypeWithAuth.Controllers
                 prevVisitNums = _context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.ExperimentEntries.Select(ee => ee.VisitNumber)).FirstOrDefault().ToList();
                 //lastVisitNum = _context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.ExperimentEntries.OrderByDescending(ee => ee.VisitNumber).FirstOrDefault().VisitNumber).FirstOrDefault();
             }
-            
+
             var visitList = new List<SelectListItem>();
             for (int v = 1; v <= visits; v++)
             {
@@ -541,7 +541,7 @@ namespace PrototypeWithAuth.Controllers
             var value2 = tests.SelectMany(t => t.TestOuterGroups/*.Where(tog => tog.TestID == tests.FirstOrDefault().TestID)*/.SelectMany(to => to.TestGroups.SelectMany(tg => tg.TestHeaders))).Count();
             if (value1 < value2)
             {
-                testValues = CreateTestValuesIfNone(tests, testValues, ee.ExperimentEntryID);
+                testValues = await CreateTestValuesIfNoneAsync(tests, testValues, ee.ExperimentEntryID);
             }
             List<BoolIntViewModel> filesPrevFilled = CheckForFiles(testValues, ee.ExperimentEntryID);
             TestViewModel testViewModel = new TestViewModel()
@@ -609,7 +609,7 @@ namespace PrototypeWithAuth.Controllers
             }
             return FilesWithDocsSaved;
         }
-        private List<TestValue> CreateTestValuesIfNone(List<Test> tests, List<TestValue> testValues, int ExperimentEntryID)
+        private async Task<List<TestValue>> CreateTestValuesIfNoneAsync(List<Test> tests, List<TestValue> testValues, int ExperimentEntryID)
         {
             var allTests = tests.SelectMany(t => t.TestOuterGroups.SelectMany(tog => tog.TestGroups.SelectMany(tg => tg.TestHeaders)));
             foreach (var testheader in tests.SelectMany(t => t.TestOuterGroups.SelectMany(tog => tog.TestGroups.SelectMany(tg => tg.TestHeaders))))
@@ -622,10 +622,11 @@ namespace PrototypeWithAuth.Controllers
                         ExperimentEntryID = ExperimentEntryID
                     };
                     _context.Update(tv);
-                    _context.SaveChanges();
+          
                     testValues.Add(tv);
                 }
             }
+            await _context.SaveChangesAsync();
             return testValues;
         }
 
@@ -753,6 +754,7 @@ namespace PrototypeWithAuth.Controllers
             return String.Format("{0:N2}", value);
         }
 
+        [HttpGet]
         public async Task<ActionResult> RunScriptsAsync()
         {
             var testvalues = _context.TestValues;
@@ -828,6 +830,8 @@ namespace PrototypeWithAuth.Controllers
             await _11InsertImmunochemistryTest();
             await _12InsertBloodChemicalsTest();
             await _13InsertBloodCountTest();
+            await _14InsertUltrasoundTest();
+            await _15InsertAgeReaderTest();
             return RedirectToAction("HumanTrialsList");
         }
 
@@ -837,30 +841,30 @@ namespace PrototypeWithAuth.Controllers
             DateTime.TryParseExact("20210106", "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
             DateTime endDate;
             DateTime.TryParseExact("20240106", "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate);
-            Experiment CrossSectionalAgingStudy = new Experiment()
+            Experiment HighFrequency = new Experiment()
             {
-                Description = "Cross Sectional Aging Study",
+                Description = "High Frequency",
                 ExperimentCode = "ex1",
-                NumberOfParticipants = 128,
-                MinimumAge = 20,
-                MaximumAge = 60,
+                NumberOfParticipants = 40,
+                MinimumAge = 30,
+                MaximumAge = 80,
                 StartDateTime = startDate,
                 EndDateTime = endDate
             };
-            _context.Add(CrossSectionalAgingStudy);
+            _context.Add(HighFrequency);
             DateTime.TryParseExact("20210106", "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
             DateTime.TryParseExact("20240106", "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate);
-            Experiment LongitudinalAgingStudy = new Experiment()
+            Experiment LowFrequency = new Experiment()
             {
-                Description = "Longitudinal Aging Study",
+                Description = "Low Frequency",
                 ExperimentCode = "ex2",
-                NumberOfParticipants = 32,
+                NumberOfParticipants = 120,
                 MinimumAge = 20,
                 MaximumAge = 80,
                 StartDateTime = startDate,
                 EndDateTime = endDate
             };
-            _context.Add(LongitudinalAgingStudy);
+            _context.Add(LowFrequency);
             _context.SaveChanges();
         }
 
@@ -1147,14 +1151,14 @@ namespace PrototypeWithAuth.Controllers
                     .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
                 var weight = new TestHeader()
                 {
-                    Name = "Weight",
+                    Name = "Weight (kg)",
                     Type = AppUtility.DataTypeEnum.Double.ToString(),
                     SequencePosition = 1,
                     TestGroupID = tgId,
                 };
                 var height = new TestHeader()
                 {
-                    Name = "Height",
+                    Name = "Height (cm)",
                     Type = AppUtility.DataTypeEnum.Double.ToString(),
                     SequencePosition = 2,
                     TestGroupID = tgId,
@@ -1175,7 +1179,7 @@ namespace PrototypeWithAuth.Controllers
                 };
                 var muscleMass = new TestHeader()
                 {
-                    Name = "MuscleMass",
+                    Name = "Muscle Mass (kg)",
                     Type = AppUtility.DataTypeEnum.Double.ToString(),
                     SequencePosition = 5,
                     TestGroupID = tgId,
@@ -1697,7 +1701,7 @@ namespace PrototypeWithAuth.Controllers
                 };
                 _context.Add(experimentTest);
                 _context.Add(experimentTest2);
-                _context.SaveChanges(); 
+                _context.SaveChanges();
                 var testoutergroup = new TestOuterGroup()
                 {
                     IsNone = true,
@@ -1749,12 +1753,12 @@ namespace PrototypeWithAuth.Controllers
 
                 Test test = new Test()
                 {
-                    Name = "Immunochemistry",
+                    Name = "Cognifit",
                     SiteID = _context.Sites.Where(s => s.Name == "Centarix Biotech").Select(s => s.SiteID).FirstOrDefault()
                 };
                 _context.Add(test);
                 _context.SaveChanges();
-                var testId = _context.Tests.Where(t => t.Name == "Immunochemistry").Select(t => t.TestID).FirstOrDefault();
+                var testId = _context.Tests.Where(t => t.Name == "Cognifit").Select(t => t.TestID).FirstOrDefault();
                 var experimentTest = new ExperimentTest()
                 {
                     TestID = testId,
@@ -1804,7 +1808,7 @@ namespace PrototypeWithAuth.Controllers
                     TestGroupID = tgId,
                 };
                 _context.Add(file2);
-               await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -1888,7 +1892,6 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-
                 Test test = new Test()
                 {
                     Name = "Blood Count",
@@ -1946,6 +1949,161 @@ namespace PrototypeWithAuth.Controllers
                     TestGroupID = tgId,
                 };
                 _context.Add(file2);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public bool CheckUniqueCentarixID(string CentarixID, int? ParticipantID)
+        {
+            var boolCheck = true;
+            //validation for create
+           
+            if (CentarixID != null && ParticipantID == null && _context.Participants.Where(r => r.CentarixID == CentarixID).Any())
+            {
+                boolCheck = false;
+            }
+            //validation for edit
+            else if (CentarixID != null && ParticipantID != null && _context.Participants.Where(p => p.CentarixID == CentarixID && p.ParticipantID != ParticipantID).Any())
+            {
+                boolCheck = false;
+            }
+            return boolCheck;
+        }
+
+        public async Task _14InsertUltrasoundTest()
+        {
+            try
+            {
+                Test test = new Test()
+                {
+                    Name = "Ultrasound",
+                    SiteID = _context.Sites.Where(s => s.Name == "O2").Select(s => s.SiteID).FirstOrDefault()
+                };
+                _context.Add(test);
+                _context.SaveChanges();
+                var testId = _context.Tests.Where(t => t.Name == "Ultrasound").Select(t => t.TestID).FirstOrDefault();
+                var experimentTest = new ExperimentTest()
+                {
+                    TestID = testId,
+                    ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex1").Select(e => e.ExperimentID).FirstOrDefault()
+                };
+                var experimentTest2 = new ExperimentTest()
+                {
+                    TestID = testId,
+                    ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex2").Select(e => e.ExperimentID).FirstOrDefault()
+                };
+                _context.Add(experimentTest);
+                _context.Add(experimentTest2);
+                _context.SaveChanges();
+                var testoutergroup = new TestOuterGroup()
+                {
+                    IsNone = true,
+                    TestID = testId,
+                    SequencePosition = 1
+                };
+                _context.Add(testoutergroup);
+                _context.SaveChanges();
+                var testgroup = new TestGroup()
+                {
+                    IsNone = true,
+                    TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                        .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                    SequencePosition = 1
+                };
+                _context.Add(testgroup);
+                _context.SaveChanges();
+                var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                    .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+                var file1 = new TestHeader()
+                {
+                    Name = "Echogardiagram File",
+                    Type = AppUtility.DataTypeEnum.File.ToString(),
+                    SequencePosition = 1,
+                    TestGroupID = tgId,
+                };
+                _context.Add(file1);
+                await _context.SaveChangesAsync();
+                var file2 = new TestHeader()
+                {
+                    Name = "cIMT File",
+                    Type = AppUtility.DataTypeEnum.File.ToString(),
+                    SequencePosition = 2,
+                    TestGroupID = tgId,
+                };
+                _context.Add(file2);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public async Task _15InsertAgeReaderTest()
+        {
+            try
+            {
+                Test test = new Test()
+                {
+                    Name = "Age Reader",
+                    SiteID = _context.Sites.Where(s => s.Name == "Centarix Biotech").Select(s => s.SiteID).FirstOrDefault()
+                };
+                _context.Add(test);
+                _context.SaveChanges();
+                var testId = _context.Tests.Where(t => t.Name == "Age Reader").Select(t => t.TestID).FirstOrDefault();
+                var experimentTest = new ExperimentTest()
+                {
+                    TestID = testId,
+                    ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex1").Select(e => e.ExperimentID).FirstOrDefault()
+                };
+                var experimentTest2 = new ExperimentTest()
+                {
+                    TestID = testId,
+                    ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex2").Select(e => e.ExperimentID).FirstOrDefault()
+                };
+                _context.Add(experimentTest);
+                _context.Add(experimentTest2);
+                _context.SaveChanges();
+                var testoutergroup = new TestOuterGroup()
+                {
+                    IsNone = true,
+                    TestID = testId,
+                    SequencePosition = 1
+                };
+                _context.Add(testoutergroup);
+                _context.SaveChanges();
+                var testgroup = new TestGroup()
+                {
+                    IsNone = true,
+                    TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                        .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                    SequencePosition = 1
+                };
+                _context.Add(testgroup);
+                _context.SaveChanges();
+                var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                    .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+                var rightarm = new TestHeader()
+                {
+                    Name = "Right Arm",
+                    Type = AppUtility.DataTypeEnum.Double.ToString(),
+                    SequencePosition = 1,
+                    TestGroupID = tgId,
+                };
+                _context.Add(rightarm);
+                await _context.SaveChangesAsync();
+                var leftarm = new TestHeader()
+                {
+                    Name = "Left Arm",
+                    Type = AppUtility.DataTypeEnum.Double.ToString(),
+                    SequencePosition = 2,
+                    TestGroupID = tgId,
+                };
+                _context.Add(leftarm);
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
