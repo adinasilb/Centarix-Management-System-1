@@ -7,14 +7,6 @@
 {
     <input type="hidden" class="activeVendor" value="" />
 
-    @if (Model.SidebarType == AppUtility.SidebarEnum.PartialDelivery)
-    {
-        <div class="accounting-form">
-            @Html.ActionLink("Split Partials", "SplitPartials", "Requests", null, new { @class = "custom-button" })
-            @Html.ActionLink("Split Costs", "SplitCosts", "Requests", null, new { @class = "custom-button" })
-        </div>
-    }
-
     <table class="table table-headerspaced table-noheaderlines table-hover ">
         <thead>
             <tr class="text-center">

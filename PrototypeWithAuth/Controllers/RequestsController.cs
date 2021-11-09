@@ -4077,7 +4077,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task SplitPartialsAsync()
         {
             var RequestsOriginal = _context.Requests.Where(r => r.IsPartial);
-            var RequestsCopy = _context.Requests.Where(r => r.IsPartial).AsNoTracking();
+            var RequestsCopy = _context.Requests.Where(r => r.IsPartial).AsNoTracking().ToList();
             foreach (var rc in RequestsCopy)
             {
                 var OldRequestID = rc.RequestID;
@@ -4090,7 +4090,7 @@ namespace PrototypeWithAuth.Controllers
                 rc.NoteForClarifyDelivery = null;
                 rc.DevelopersBoolean = true;
                 _context.Entry(rc).State = EntityState.Added;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 await CopyComments(OldRequestID, rc.RequestID);
                 await CopyPayments(OldRequestID, rc.RequestID);
                 MoveDocumentsOutOfTempFolder(rc.RequestID, AppUtility.ParentFolderName.Requests, OldRequestID, true);
@@ -4108,13 +4108,13 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task SplitCostsAsync()
         {
-            var OriginalRequests = _context.Requests.Where(r => r.DevelopersBoolean && !r.IsPartial);
-            var SplitRequests = _context.Requests.Where(r => r.DevelopersBoolean && r.IsPartial);
+            List<PrototypeWithAuth.Models.Request> OriginalRequests = _context.Requests.ToList();//.Where(r => (r.DevelopersBoolean && !r.IsPartial));
+            List<PrototypeWithAuth.Models.Request> SplitRequests = _context.Requests.Where(r => (r.DevelopersBoolean && r.IsPartial)).ToList();
             foreach (var or in OriginalRequests)
             {
                 var sr = SplitRequests.Where(sp => sp.ParentRequestID == or.RequestID).FirstOrDefault();
                 uint FullAmount = sr.Unit + or.Unit;
-                decimal PricePerUnit = (or.Cost ?? 0) / (or.Unit == 0 ? 1 : or.Unit);
+                decimal PricePerUnit = (or.Cost ?? 0) / (FullAmount == 0 ? 1 : FullAmount);
                 or.Cost = or.Unit * PricePerUnit;
                 sr.Cost = sr.Unit * PricePerUnit;
                 _context.Update(or);
