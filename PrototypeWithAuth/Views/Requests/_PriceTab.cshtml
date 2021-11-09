@@ -83,7 +83,7 @@
             <label class="control-label">Discount</label>
 
             <div class="input-group">
-                <input asp-for="Requests[0].Discount" class="form-control-plaintext border-bottom requestPriceQuote @markReadOnlyClass" />
+                <input asp-for="Requests[0].Discount" value="@(AppUtility.ConvertIntToString(Model.Requests[0].Discount))" class="form-control-plaintext border-bottom requestPriceQuote @markReadOnlyClass" />
                 <div class="input-group-text">%</div>
             </div>
             <span asp-validation-for="Requests[0].Discount" />

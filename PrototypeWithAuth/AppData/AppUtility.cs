@@ -893,6 +893,21 @@ namespace PrototypeWithAuth.AppData
                 return "order date has an error";
             }
         }
+
+        public static String ConvertIntToString(uint number)
+        {
+            return ConvertIntToString((int)number);
+        }
+        public static String ConvertIntToString(decimal number)
+        {
+            var returnString = "";
+            if(number != 0)
+            {
+                returnString = number.ToString();
+            }
+
+            return returnString;
+        }
     }
 
 }
