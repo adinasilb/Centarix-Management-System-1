@@ -59,7 +59,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests, LabManagement")]
-        public async Task<IActionResult> Index(AppUtility.MenuItems SectionType)
+        public async Task<IActionResult> Index(AppUtility.MenuItems SectionType, string ErrorMessage)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
@@ -79,7 +79,8 @@ namespace PrototypeWithAuth.Controllers
                 LocationTypeViewModel locationTypeViewModel = new LocationTypeViewModel()
                 {
                     LocationTypes = _context.LocationTypes.Where(lt => lt.Depth == 0),
-                    SectionType = SectionType
+                    SectionType = SectionType,
+                    ErrorMessage = ErrorMessage
                 };
                 if (AppUtility.IsAjaxRequest(Request))
                 {
@@ -97,6 +98,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public IActionResult SublocationIndex(int parentId)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             SublocationIndexViewModel sublocationIndexViewModel = new SublocationIndexViewModel()
             {
                 SublocationInstances = _context.LocationInstances
@@ -137,6 +142,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, LabManagement")]
         public IActionResult VisualLocations(int VisualContainerId)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()
             {
                 ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == VisualContainerId).Include(m => m.LabPart).FirstOrDefault()
@@ -196,6 +205,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public IActionResult LocationIndex(int typeID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             LocationIndexViewModel locationIndexViewModel = new LocationIndexViewModel()
             {
                 //exclude the box and cell from locationsDepthOfZero
@@ -210,6 +223,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public IActionResult VisualLocationsZoom(int VisualContainerId, AppUtility.MenuItems SectionType = AppUtility.MenuItems.LabManagement)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             //this only works for 80 and 196 it needs to be redone to work with 20 and 25
             VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()
             {
@@ -227,6 +244,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "LabManagement")]
         public IActionResult AddLocation()
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             AddLocationViewModel addLocationViewModel = new AddLocationViewModel
             {
                 LocationTypesDepthOfZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
@@ -240,6 +261,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "LabManagement")]
         public async Task<IActionResult> SubLocation(int ParentLocationTypeID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             SubLocationViewModel subLocationViewModel = new SubLocationViewModel();
             bool go = true;
             List<LocationType> listOfChildrenTypes = new List<LocationType>();
@@ -332,173 +357,71 @@ namespace PrototypeWithAuth.Controllers
                 int locationNumber = 1;
                 using (var transaction = _context.Database.BeginTransaction())
                 {
-                    switch (subLocationViewModel.LocationTypeParentID)
+                    try
                     {
-                        case 100:
-                            //save parent
-                            addLocationViewModel.LocationInstance.Height = subLocationViewModel.LocationInstances[0].Height;
-                            addLocationViewModel.LocationInstance.Width = 1;
-                            addLocationViewModel.LocationInstance.LocationTypeID = subLocationViewModel.LocationTypeParentID;
-                            addLocationViewModel.LocationInstance.LocationRoomInstanceID = subLocationViewModel.LocationInstances[0].LocationRoomInstanceID;
+                        switch (subLocationViewModel.LocationTypeParentID)
+                        {
+                            case 100:
+                                //save parent
+                                addLocationViewModel.LocationInstance.Height = subLocationViewModel.LocationInstances[0].Height;
+                                addLocationViewModel.LocationInstance.Width = 1;
+                                addLocationViewModel.LocationInstance.LocationTypeID = subLocationViewModel.LocationTypeParentID;
+                                addLocationViewModel.LocationInstance.LocationRoomInstanceID = subLocationViewModel.LocationInstances[0].LocationRoomInstanceID;
 
-                            _context.Add(addLocationViewModel.LocationInstance);
-                            await _context.SaveChangesAsync();
-
-                            int previousH = addLocationViewModel.LocationInstance.Height;
-                            int previousW = addLocationViewModel.LocationInstance.Width;
-                            for (int a = 0; a < subLocationViewModel.LocationInstances.Count; a++)
-                            {
-                                waitingLocations.Clear();
-                                placeholderInstanceIds.Add(new List<int>());
-                                typeName = _context.LocationTypes.Where(x => x.LocationTypeID == subLocationViewModel.LocationInstances[a].LocationTypeID)
-                                    .FirstOrDefault().LocationTypeName.Substring(0, 1);
-                                typeId = subLocationViewModel.LocationInstances[a].LocationTypeID;
-                                parentId = 0;
-                                int height = 0;
-                                int width = 0;
-                                if (a == 0) //this should just be for rack
-                                {
-                                    height = subLocationViewModel.LocationInstances[1].Height;
-                                    width = 1;
-                                }
-                                else if (a == 1)
-                                {
-                                    height = subLocationViewModel.LocationInstances[2].Height;
-                                    width = subLocationViewModel.LocationInstances[2].Height;
-                                }
-                                int amountOfParentLevels = 1;
-                                if (!first)
-                                {
-                                    amountOfParentLevels = placeholderInstanceIds[a - 1].Count;
-                                }
-                                for (int w = 0; w < amountOfParentLevels; w++)//until finished with names from the list before
-                                {
-                                    if (first)
-                                    {
-                                        //if this is the first level - locations with no parents
-                                        parentId = addLocationViewModel.LocationInstance.LocationInstanceID;
-                                        first = false;
-                                    }
-                                    else
-                                    {
-                                        parentId = placeholderInstanceIds[a - 1][w]; //get the first id in the list in the depth before
-                                    }
-                                    lastParent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parentId).FirstOrDefault();
-                                    locationNumber = 1; //reset location number to order locations
-                                    typeNumber = 1; //the number of this depth added to this name
-                                                    //RESET THE HEIGHTS ANDS WIDTHS TO ACCOUNT FOR FIRSTS BEFORE RUNNIN OR ITLL CRASHs
-                                    int sublocationHeight = subLocationViewModel.LocationInstances[a].Height;
-                                    for (int x = 0; x < sublocationHeight; x++)
-                                    {
-                                        //add letter to place
-                                        int unicode = x + 65;
-                                        char character = (char)unicode;
-                                        int sublocationWidth = subLocationViewModel.LocationInstances[a].Width;
-                                        if (a == 2)
-                                        {
-                                            sublocationWidth = sublocationHeight;
-                                            typeName = character.ToString();
-                                            typeNumber = 1;
-                                        }
-                                        else if (sublocationWidth == 0)
-                                        {
-                                            sublocationWidth = 1;
-                                        }
-                                        for (int y = 0; y < sublocationWidth; y++)
-                                        {
-                                            //add number to place
-                                            currentAbbrev = typeName + (typeNumber).ToString(); //add number to the type x + y is the current number but is zero based so add one
-                                            typeNumber++; //increment this
-                                            LocationInstance newSublocationInstance = new LocationInstance()
-                                            {
-                                                LocationInstanceAbbrev = currentAbbrev,
-                                                LocationInstanceName = lastParent.LocationInstanceName + currentAbbrev,
-                                                LocationInstanceParentID = parentId,
-                                                Height = height,
-                                                Width = width,
-                                                LocationTypeID = typeId,
-                                                LocationNumber = locationNumber
-                                            };
-                                            locationNumber++;
-                                            _context.Add(newSublocationInstance);
-                                            waitingLocations.Add(newSublocationInstance);
-                                        }
-                                    }
-                                }
+                                _context.Add(addLocationViewModel.LocationInstance);
                                 await _context.SaveChangesAsync();
-                                foreach (var location in waitingLocations)
-                                {
-                                    placeholderInstanceIds[a].Add(location.LocationInstanceID);
-                                }
-                            }
-                            break;
-                        case 200://save parent
-                            addLocationViewModel.LocationInstance.Height = subLocationViewModel.LocationInstances[0].Height;
-                            addLocationViewModel.LocationInstance.Width = 1;
-                            addLocationViewModel.LocationInstance.LocationTypeID = subLocationViewModel.LocationTypeParentID;
-                            addLocationViewModel.LocationInstance.LocationRoomInstanceID = subLocationViewModel.LocationInstances[0].LocationRoomInstanceID;
 
-                            _context.Add(addLocationViewModel.LocationInstance);
-                            await _context.SaveChangesAsync();
-
-                            previousH = addLocationViewModel.LocationInstance.Height;
-                            previousW = addLocationViewModel.LocationInstance.Width;
-                            for (int b = 0; b < subLocationViewModel.LocationInstances.Count; b++)
-                            {
-                                waitingLocations.Clear();
-                                placeholderInstanceIds.Add(new List<int>());
-                                typeName = _context.LocationTypes.Where(x => x.LocationTypeID == subLocationViewModel.LocationInstances[b].LocationTypeID)
-                                    .FirstOrDefault().LocationTypeName.Substring(0, 1);
-                                typeId = subLocationViewModel.LocationInstances[b].LocationTypeID;
-                                parentId = 0;
-                                int height = 0;
-                                int width = 0;
-                                if (b == 0)
+                                int previousH = addLocationViewModel.LocationInstance.Height;
+                                int previousW = addLocationViewModel.LocationInstance.Width;
+                                for (int a = 0; a < subLocationViewModel.LocationInstances.Count; a++)
                                 {
-                                    height = subLocationViewModel.LocationInstances[1].Height;
-                                    width = 1;
-                                }
-                                else if (b == 3)
-                                {
-                                    height = subLocationViewModel.LocationInstances[4].Height;
-                                    width = subLocationViewModel.LocationInstances[4].Height;
-                                }
-                                else
-                                {
-                                    height = subLocationViewModel.LocationInstances[b - 1].Height;
-                                    width = subLocationViewModel.LocationInstances[b - 1].Height;
-                                }
-                                int amountOfParentLevels = 1;
-                                if (!first)
-                                {
-                                    amountOfParentLevels = placeholderInstanceIds[b - 1].Count;
-                                }
-                                for (int w = 0; w < amountOfParentLevels; w++)//until finished with names from the list before
-                                {
-                                    if (first)
+                                    waitingLocations.Clear();
+                                    placeholderInstanceIds.Add(new List<int>());
+                                    typeName = _context.LocationTypes.Where(x => x.LocationTypeID == subLocationViewModel.LocationInstances[a].LocationTypeID)
+                                        .FirstOrDefault().LocationTypeName.Substring(0, 1);
+                                    typeId = subLocationViewModel.LocationInstances[a].LocationTypeID;
+                                    parentId = 0;
+                                    int height = 0;
+                                    int width = 0;
+                                    if (a == 0) //this should just be for rack
                                     {
-                                        //if this is the first level - locations with no parents
-                                        parentId = addLocationViewModel.LocationInstance.LocationInstanceID;
-                                        first = false;
+                                        height = subLocationViewModel.LocationInstances[1].Height;
+                                        width = 1;
                                     }
-                                    else
+                                    else if (a == 1)
                                     {
-                                        parentId = placeholderInstanceIds[b - 1][w]; //get the first id in the list in the depth before
+                                        height = subLocationViewModel.LocationInstances[2].Height;
+                                        width = subLocationViewModel.LocationInstances[2].Height;
                                     }
-                                    lastParent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parentId).FirstOrDefault();
-                                    if (lastParent != null && !lastParent.IsEmptyShelf)
+                                    int amountOfParentLevels = 1;
+                                    if (!first)
                                     {
-                                        locationNumber = 1;
+                                        amountOfParentLevels = placeholderInstanceIds[a - 1].Count;
+                                    }
+                                    for (int w = 0; w < amountOfParentLevels; w++)//until finished with names from the list before
+                                    {
+                                        if (first)
+                                        {
+                                            //if this is the first level - locations with no parents
+                                            parentId = addLocationViewModel.LocationInstance.LocationInstanceID;
+                                            first = false;
+                                        }
+                                        else
+                                        {
+                                            parentId = placeholderInstanceIds[a - 1][w]; //get the first id in the list in the depth before
+                                        }
+                                        lastParent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parentId).FirstOrDefault();
+                                        locationNumber = 1; //reset location number to order locations
                                         typeNumber = 1; //the number of this depth added to this name
                                                         //RESET THE HEIGHTS ANDS WIDTHS TO ACCOUNT FOR FIRSTS BEFORE RUNNIN OR ITLL CRASHs
-                                        int sublocationHeight = subLocationViewModel.LocationInstances[b].Height;
-
+                                        int sublocationHeight = subLocationViewModel.LocationInstances[a].Height;
                                         for (int x = 0; x < sublocationHeight; x++)
                                         {
+                                            //add letter to place
                                             int unicode = x + 65;
                                             char character = (char)unicode;
-                                            int sublocationWidth = subLocationViewModel.LocationInstances[b].Width;
-                                            if (b == 4)
+                                            int sublocationWidth = subLocationViewModel.LocationInstances[a].Width;
+                                            if (a == 2)
                                             {
                                                 sublocationWidth = sublocationHeight;
                                                 typeName = character.ToString();
@@ -510,9 +433,9 @@ namespace PrototypeWithAuth.Controllers
                                             }
                                             for (int y = 0; y < sublocationWidth; y++)
                                             {
-                                                currentAbbrev = typeName + (typeNumber).ToString();
+                                                //add number to place
+                                                currentAbbrev = typeName + (typeNumber).ToString(); //add number to the type x + y is the current number but is zero based so add one
                                                 typeNumber++; //increment this
-
                                                 LocationInstance newSublocationInstance = new LocationInstance()
                                                 {
                                                     LocationInstanceAbbrev = currentAbbrev,
@@ -520,118 +443,222 @@ namespace PrototypeWithAuth.Controllers
                                                     LocationInstanceParentID = parentId,
                                                     Height = height,
                                                     Width = width,
-                                                    LocationNumber = locationNumber,
-                                                    LocationTypeID = typeId
+                                                    LocationTypeID = typeId,
+                                                    LocationNumber = locationNumber
                                                 };
                                                 locationNumber++;
-                                                if (b == 0) //Testing Shelves
-                                                {
-                                                    if (subLocationViewModel.EmptyShelves80?.ContainsKey(x) == true && subLocationViewModel.EmptyShelves80[x])
-                                                    {
-                                                        newSublocationInstance.IsEmptyShelf = true;
-                                                    }
-                                                }
                                                 _context.Add(newSublocationInstance);
                                                 waitingLocations.Add(newSublocationInstance);
                                             }
                                         }
                                     }
+                                    await _context.SaveChangesAsync();
+                                    foreach (var location in waitingLocations)
+                                    {
+                                        placeholderInstanceIds[a].Add(location.LocationInstanceID);
+                                    }
                                 }
+                                break;
+                            case 200://save parent
+                                addLocationViewModel.LocationInstance.Height = subLocationViewModel.LocationInstances[0].Height;
+                                addLocationViewModel.LocationInstance.Width = 1;
+                                addLocationViewModel.LocationInstance.LocationTypeID = subLocationViewModel.LocationTypeParentID;
+                                addLocationViewModel.LocationInstance.LocationRoomInstanceID = subLocationViewModel.LocationInstances[0].LocationRoomInstanceID;
+
+                                _context.Add(addLocationViewModel.LocationInstance);
                                 await _context.SaveChangesAsync();
-                                foreach (var location in waitingLocations)
+
+                                previousH = addLocationViewModel.LocationInstance.Height;
+                                previousW = addLocationViewModel.LocationInstance.Width;
+                                for (int b = 0; b < subLocationViewModel.LocationInstances.Count; b++)
                                 {
-                                    placeholderInstanceIds[b].Add(location.LocationInstanceID);
-                                }
-                            }
-                            break;
-                        case 300:
-                        case 400: //for now the same as 300
-                            addLocationViewModel.LocationInstance.Height = subLocationViewModel.LocationInstances[0].Height;
-                            addLocationViewModel.LocationInstance.Width = 1;
-                            addLocationViewModel.LocationInstance.LocationTypeID = subLocationViewModel.LocationTypeParentID;
-                            addLocationViewModel.LocationInstance.LocationRoomInstanceID = subLocationViewModel.LocationInstances[0].LocationRoomInstanceID;
-
-                            _context.Add(addLocationViewModel.LocationInstance);
-                            await _context.SaveChangesAsync();
-
-                            typeName = _context.LocationTypes.Where(x => x.LocationTypeID == subLocationViewModel.LocationInstances[0].LocationTypeID)
-                                    .FirstOrDefault().LocationTypeName.Substring(0, 1);
-                            typeId = subLocationViewModel.LocationInstances[0].LocationTypeID;
-                            typeNumber = 1;
-
-                            parentId = 0;
-                            parentId = addLocationViewModel.LocationInstance.LocationInstanceID;
-                            lastParent = addLocationViewModel.LocationInstance;
-
-                            int sublocationHeight1 = subLocationViewModel.LocationInstances[0].Height;
-
-                            for (int x = 0; x < sublocationHeight1; x++)
-                            {
-                                waitingLocations.Clear();
-                                int sublocationWidth1 = subLocationViewModel.LocationInstances[0].Width;
-                                if (sublocationWidth1 == 0) { sublocationWidth1 = 1; }
-                                for (int y = 0; y < sublocationWidth1; y++)
-                                {
-                                    currentAbbrev = typeName + (typeNumber).ToString();
-                                    typeNumber++; //increment this
-                                    LocationInstance newSublocationInstance = new LocationInstance()
+                                    waitingLocations.Clear();
+                                    placeholderInstanceIds.Add(new List<int>());
+                                    typeName = _context.LocationTypes.Where(x => x.LocationTypeID == subLocationViewModel.LocationInstances[b].LocationTypeID)
+                                        .FirstOrDefault().LocationTypeName.Substring(0, 1);
+                                    typeId = subLocationViewModel.LocationInstances[b].LocationTypeID;
+                                    parentId = 0;
+                                    int height = 0;
+                                    int width = 0;
+                                    if (b == 0)
                                     {
-                                        LocationInstanceAbbrev = currentAbbrev,
-                                        LocationInstanceName = lastParent.LocationInstanceName + currentAbbrev,
-                                        LocationInstanceParentID = parentId,
-                                        LocationTypeID = typeId,
-                                        IsEmptyShelf = true
-                                    };
-                                    _context.Add(newSublocationInstance);
-                                    waitingLocations.Add(newSublocationInstance);
-                                }
-                            }
-                            await _context.SaveChangesAsync();
-                            break;
-                        case 500:
-                            for (int i = 0; i < subLocationViewModel.LocationInstances.Count(); i++)
-                            {
-                                var childHeight = subLocationViewModel.LocationInstances[i].Height;
-
-                                if (i == 0)
-                                {
-                                    var existingRoom = await _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationTypeID == 500 && li.LocationRoomInstanceID == subLocationViewModel.LocationInstances[i].LocationRoomInstanceID).FirstOrDefaultAsync();
-                                    if (existingRoom == null)
+                                        height = subLocationViewModel.LocationInstances[1].Height;
+                                        width = 1;
+                                    }
+                                    else if (b == 3)
                                     {
-                                        var room = await _context.LocationRoomInstances.Where(lp => lp.LocationRoomInstanceID == subLocationViewModel.LocationInstances[i].LocationRoomInstanceID).FirstOrDefaultAsync();
-                                        subLocationViewModel.LocationInstances[i].LocationInstanceName = room.LocationRoomInstanceAbbrev;
-                                        subLocationViewModel.LocationInstances[i].LocationInstanceAbbrev = room.LocationRoomInstanceAbbrev;
-                                        subLocationViewModel.LocationInstances[i].LocationTypeID = 500;
-                                        subLocationViewModel.LocationInstances[i].Width = 1;
-                                        subLocationViewModel.LocationInstances[i].Height = 1;
-
-                                        _context.Add(subLocationViewModel.LocationInstances[i]);
-                                        lastParent = subLocationViewModel.LocationInstances[i];
+                                        height = subLocationViewModel.LocationInstances[4].Height;
+                                        width = subLocationViewModel.LocationInstances[4].Height;
                                     }
                                     else
                                     {
-                                        existingRoom.Height = existingRoom.Height++;
-                                        _context.Update(existingRoom);
-                                        lastParent = existingRoom;
+                                        height = subLocationViewModel.LocationInstances[b - 1].Height;
+                                        width = subLocationViewModel.LocationInstances[b - 1].Height;
+                                    }
+                                    int amountOfParentLevels = 1;
+                                    if (!first)
+                                    {
+                                        amountOfParentLevels = placeholderInstanceIds[b - 1].Count;
+                                    }
+                                    for (int w = 0; w < amountOfParentLevels; w++)//until finished with names from the list before
+                                    {
+                                        if (first)
+                                        {
+                                            //if this is the first level - locations with no parents
+                                            parentId = addLocationViewModel.LocationInstance.LocationInstanceID;
+                                            first = false;
+                                        }
+                                        else
+                                        {
+                                            parentId = placeholderInstanceIds[b - 1][w]; //get the first id in the list in the depth before
+                                        }
+                                        lastParent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parentId).FirstOrDefault();
+                                        if (lastParent != null && !lastParent.IsEmptyShelf)
+                                        {
+                                            locationNumber = 1;
+                                            typeNumber = 1; //the number of this depth added to this name
+                                                            //RESET THE HEIGHTS ANDS WIDTHS TO ACCOUNT FOR FIRSTS BEFORE RUNNIN OR ITLL CRASHs
+                                            int sublocationHeight = subLocationViewModel.LocationInstances[b].Height;
+
+                                            for (int x = 0; x < sublocationHeight; x++)
+                                            {
+                                                int unicode = x + 65;
+                                                char character = (char)unicode;
+                                                int sublocationWidth = subLocationViewModel.LocationInstances[b].Width;
+                                                if (b == 4)
+                                                {
+                                                    sublocationWidth = sublocationHeight;
+                                                    typeName = character.ToString();
+                                                    typeNumber = 1;
+                                                }
+                                                else if (sublocationWidth == 0)
+                                                {
+                                                    sublocationWidth = 1;
+                                                }
+                                                for (int y = 0; y < sublocationWidth; y++)
+                                                {
+                                                    currentAbbrev = typeName + (typeNumber).ToString();
+                                                    typeNumber++; //increment this
+
+                                                    LocationInstance newSublocationInstance = new LocationInstance()
+                                                    {
+                                                        LocationInstanceAbbrev = currentAbbrev,
+                                                        LocationInstanceName = lastParent.LocationInstanceName + currentAbbrev,
+                                                        LocationInstanceParentID = parentId,
+                                                        Height = height,
+                                                        Width = width,
+                                                        LocationNumber = locationNumber,
+                                                        LocationTypeID = typeId
+                                                    };
+                                                    locationNumber++;
+                                                    if (b == 0) //Testing Shelves
+                                                    {
+                                                        if (subLocationViewModel.EmptyShelves80?.ContainsKey(x) == true && subLocationViewModel.EmptyShelves80[x])
+                                                        {
+                                                            newSublocationInstance.IsEmptyShelf = true;
+                                                        }
+                                                    }
+                                                    _context.Add(newSublocationInstance);
+                                                    waitingLocations.Add(newSublocationInstance);
+                                                }
+                                            }
+                                        }
                                     }
                                     await _context.SaveChangesAsync();
-
+                                    foreach (var location in waitingLocations)
+                                    {
+                                        placeholderInstanceIds[b].Add(location.LocationInstanceID);
+                                    }
                                 }
-                                else if (i == 1)
+                                break;
+                            case 300:
+                            case 400: //for now the same as 300
+                                addLocationViewModel.LocationInstance.Height = subLocationViewModel.LocationInstances[0].Height;
+                                addLocationViewModel.LocationInstance.Width = 1;
+                                addLocationViewModel.LocationInstance.LocationTypeID = subLocationViewModel.LocationTypeParentID;
+                                addLocationViewModel.LocationInstance.LocationRoomInstanceID = subLocationViewModel.LocationInstances[0].LocationRoomInstanceID;
+
+                                _context.Add(addLocationViewModel.LocationInstance);
+                                await _context.SaveChangesAsync();
+
+                                typeName = _context.LocationTypes.Where(x => x.LocationTypeID == subLocationViewModel.LocationInstances[0].LocationTypeID)
+                                        .FirstOrDefault().LocationTypeName.Substring(0, 1);
+                                typeId = subLocationViewModel.LocationInstances[0].LocationTypeID;
+                                typeNumber = 1;
+
+                                parentId = 0;
+                                parentId = addLocationViewModel.LocationInstance.LocationInstanceID;
+                                lastParent = addLocationViewModel.LocationInstance;
+
+                                int sublocationHeight1 = subLocationViewModel.LocationInstances[0].Height;
+
+                                for (int x = 0; x < sublocationHeight1; x++)
                                 {
-                                    subLocationViewModel.LocationInstances[i].LocationInstanceParentID = lastParent.LocationInstanceID;
+                                    waitingLocations.Clear();
+                                    int sublocationWidth1 = subLocationViewModel.LocationInstances[0].Width;
+                                    if (sublocationWidth1 == 0) { sublocationWidth1 = 1; }
+                                    for (int y = 0; y < sublocationWidth1; y++)
+                                    {
+                                        currentAbbrev = typeName + (typeNumber).ToString();
+                                        typeNumber++; //increment this
+                                        LocationInstance newSublocationInstance = new LocationInstance()
+                                        {
+                                            LocationInstanceAbbrev = currentAbbrev,
+                                            LocationInstanceName = lastParent.LocationInstanceName + currentAbbrev,
+                                            LocationInstanceParentID = parentId,
+                                            LocationTypeID = typeId,
+                                            IsEmptyShelf = true
+                                        };
+                                        _context.Add(newSublocationInstance);
+                                        waitingLocations.Add(newSublocationInstance);
+                                    }
+                                }
+                                await _context.SaveChangesAsync();
+                                break;
+                            case 500:
+                                for (int i = 0; i < subLocationViewModel.LocationInstances.Count(); i++)
+                                {
+                                    var childHeight = subLocationViewModel.LocationInstances[i].Height;
 
-                                    subLocationViewModel.LocationInstances[i].Width = 1;
-                                    var labPart = await _context.LabParts.Where(lp => lp.LabPartID == subLocationViewModel.LocationInstances[i].LabPartID).FirstOrDefaultAsync();
+                                    if (i == 0)
+                                    {
+                                        var existingRoom = await _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationTypeID == 500 && li.LocationRoomInstanceID == subLocationViewModel.LocationInstances[i].LocationRoomInstanceID).FirstOrDefaultAsync();
+                                        if (existingRoom == null)
+                                        {
+                                            var room = await _context.LocationRoomInstances.Where(lp => lp.LocationRoomInstanceID == subLocationViewModel.LocationInstances[i].LocationRoomInstanceID).FirstOrDefaultAsync();
+                                            subLocationViewModel.LocationInstances[i].LocationInstanceName = room.LocationRoomInstanceAbbrev;
+                                            subLocationViewModel.LocationInstances[i].LocationInstanceAbbrev = room.LocationRoomInstanceAbbrev;
+                                            subLocationViewModel.LocationInstances[i].LocationTypeID = 500;
+                                            subLocationViewModel.LocationInstances[i].Width = 1;
+                                            subLocationViewModel.LocationInstances[i].Height = 1;
 
-                                    var labPartByTypeCount = _context.LocationInstances.OfType<LocationInstance>().Where(l => l.LabPartID == subLocationViewModel.LocationInstances[i].LabPartID && l.LocationInstanceParentID == subLocationViewModel.LocationInstances[i].LocationInstanceParentID).Count();
+                                            _context.Add(subLocationViewModel.LocationInstances[i]);
+                                            lastParent = subLocationViewModel.LocationInstances[i];
+                                        }
+                                        else
+                                        {
+                                            existingRoom.Height = existingRoom.Height++;
+                                            _context.Update(existingRoom);
+                                            lastParent = existingRoom;
+                                        }
+                                        await _context.SaveChangesAsync();
 
-                                    var labPartNameAbrev = labPart.LabPartNameAbbrev;
-                                    labPartNameAbrev += (labPartByTypeCount + 1);
+                                    }
+                                    else if (i == 1)
+                                    {
+                                        subLocationViewModel.LocationInstances[i].LocationInstanceParentID = lastParent.LocationInstanceID;
 
-                                    subLocationViewModel.LocationInstances[i].LocationInstanceName = lastParent.LocationInstanceName + labPartNameAbrev;
-                                    subLocationViewModel.LocationInstances[i].LocationInstanceAbbrev = labPartNameAbrev;
-                                    subLocationViewModel.LocationInstances[i].LocationNumber = labPartByTypeCount + 1;
+                                        subLocationViewModel.LocationInstances[i].Width = 1;
+                                        var labPart = await _context.LabParts.Where(lp => lp.LabPartID == subLocationViewModel.LocationInstances[i].LabPartID).FirstOrDefaultAsync();
+
+                                        var labPartByTypeCount = _context.LocationInstances.OfType<LocationInstance>().Where(l => l.LabPartID == subLocationViewModel.LocationInstances[i].LabPartID && l.LocationInstanceParentID == subLocationViewModel.LocationInstances[i].LocationInstanceParentID).Count();
+
+                                        var labPartNameAbrev = labPart.LabPartNameAbbrev;
+                                        labPartNameAbrev += (labPartByTypeCount + 1);
+
+                                        subLocationViewModel.LocationInstances[i].LocationInstanceName = lastParent.LocationInstanceName + labPartNameAbrev;
+                                        subLocationViewModel.LocationInstances[i].LocationInstanceAbbrev = labPartNameAbrev;
+                                        subLocationViewModel.LocationInstances[i].LocationNumber = labPartByTypeCount + 1;
 
                                   
                                     if (!labPart.HasShelves)
@@ -652,112 +679,120 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     var childLocationType = _context.LocationTypes.Where(lt => lt.LocationTypeID == subLocationViewModel.LocationInstances[i].LocationTypeID).FirstOrDefault();
 
-                                    for (int y = 0; y < childHeight; y++)
-                                    {
-                                        currentAbbrev = childLocationType.LocationTypeNameAbbre + (y + 1);
-                                        _context.Add(new LocationInstance()
+                                        for (int y = 0; y < childHeight; y++)
                                         {
-                                            LocationInstanceParentID = lastParent.LocationInstanceID,
-                                            LocationTypeID = subLocationViewModel.LocationInstances[i].LocationTypeID,
-                                            Height = subLocationViewModel.LocationInstances[i].Height = 1,
-                                            Width = subLocationViewModel.LocationInstances[i].Width = 1,
-                                            LocationInstanceAbbrev = currentAbbrev,
-                                            LocationInstanceName = lastParent.LocationInstanceName + currentAbbrev,
-                                            IsEmptyShelf = true,
-                                            LocationNumber = locationNumber
-                                        });
-                                        locationNumber++;
-                                    }
-                                    await _context.SaveChangesAsync();
-                                }
-                            }
-                            break;
-                        default:
-                            //add reference to parent
-                            //filling up the heights and widths with the ones put in for the location below them
-                            addLocationViewModel.LocationInstance.Height = subLocationViewModel.LocationInstances[0].Height;
-                            addLocationViewModel.LocationInstance.Width = subLocationViewModel.LocationInstances[0].Width;
-                            addLocationViewModel.LocationInstance.LocationTypeID = subLocationViewModel.LocationTypeParentID;
-                            _context.Add(addLocationViewModel.LocationInstance);
-                            await _context.SaveChangesAsync();
-
-                            string nameAbbreviation = addLocationViewModel.LocationInstance.LocationInstanceName;
-
-                            int prevHeight = addLocationViewModel.LocationInstance.Height;
-                            int prevWidth = addLocationViewModel.LocationInstance.Width;
-                            for (int z = 0; z < subLocationViewModel.LocationInstances.Count; z++)/*var locationInstance in subLocationViewModel.LocationInstances*/ //for each level in the sublevels
-                            {
-                                //initiate new lists of placeholders otherwise will get an error when you try to insert them
-                                placeholderInstanceIds.Add(new List<int>());
-                                //namesPlaceholder[z] = new List<string>();
-                                //placeholderInstanceIds[z] = new List<int>();
-
-                                typeName = _context.LocationTypes.Where(x => x.LocationTypeID == subLocationViewModel.LocationInstances[z].LocationTypeID)
-                                    .FirstOrDefault().LocationTypeName.Substring(0, 1);
-                                typeId = subLocationViewModel.LocationInstances[z].LocationTypeID;
-                                parentId = 0;
-                                int height = 0;
-                                int width = 0;
-                                if (z < subLocationViewModel.LocationInstances.Count - 1)
-                                {
-
-                                    height = subLocationViewModel.LocationInstances[z + 1].Height;
-                                    width = subLocationViewModel.LocationInstances[z + 1].Width;
-                                }
-                                string attachedName = "";
-                                int amountOfParentLevels = 1;
-                                if (!first)
-                                {
-                                    amountOfParentLevels = placeholderInstanceIds[z - 1].Count;
-                                }
-                                for (int w = 0; w < amountOfParentLevels; w++)//until finished with names from the list before
-                                {
-                                    if (first)
-                                    {
-                                        //if this is the first level - locations with no parents
-                                        parentId = addLocationViewModel.LocationInstance.LocationInstanceID;
-                                        attachedName = typeName;
-                                        first = false;
-                                    }
-                                    else
-                                    {
-                                        parentId = placeholderInstanceIds[z - 1][w]; //get the first id in the list in the depth before
-                                        attachedName = typeName; //NEEDS TO BE DONE BETTER
-                                    }
-                                    typeNumber = 1; //the number of this depth added to this name
-                                                    //RESET THE HEIGHTS ANDS WIDTHS TO ACCOUNT FOR FIRSTS BEFORE RUNNIN OR ITLL CRASHs
-                                    for (int x = 0; x < subLocationViewModel.LocationInstances[z].Height; x++)
-                                    {
-                                        //add letter to place
-                                        int unicode = x + 65;
-                                        char character = (char)unicode;
-                                        for (int y = 0; y < subLocationViewModel.LocationInstances[z].Width; y++)
-                                        {
-                                            //add number to place
-                                            string currentName = attachedName + (typeNumber).ToString(); //add number to the type x + y is the current number but is zero based so add one
-                                            typeNumber++; //increment this
-                                            LocationInstance newSublocationInstance = new LocationInstance()
+                                            currentAbbrev = childLocationType.LocationTypeNameAbbre + (y + 1);
+                                            _context.Add(new LocationInstance()
                                             {
-                                                LocationInstanceName = currentName,
-                                                LocationInstanceParentID = parentId,
-                                                Height = height,
-                                                Width = width,
-                                                LocationTypeID = typeId
-                                            };
-                                            _context.Add(newSublocationInstance);
-                                            await _context.SaveChangesAsync();
-                                            placeholderInstanceIds[z].Add(newSublocationInstance.LocationInstanceID);
+                                                LocationInstanceParentID = lastParent.LocationInstanceID,
+                                                LocationTypeID = subLocationViewModel.LocationInstances[i].LocationTypeID,
+                                                Height = subLocationViewModel.LocationInstances[i].Height = 1,
+                                                Width = subLocationViewModel.LocationInstances[i].Width = 1,
+                                                LocationInstanceAbbrev = currentAbbrev,
+                                                LocationInstanceName = lastParent.LocationInstanceName + currentAbbrev,
+                                                IsEmptyShelf = true,
+                                                LocationNumber = locationNumber
+                                            });
+                                            locationNumber++;
+                                        }
+                                        await _context.SaveChangesAsync();
+                                    }
+                                }
+                                break;
+                            default:
+                                //add reference to parent
+                                //filling up the heights and widths with the ones put in for the location below them
+                                addLocationViewModel.LocationInstance.Height = subLocationViewModel.LocationInstances[0].Height;
+                                addLocationViewModel.LocationInstance.Width = subLocationViewModel.LocationInstances[0].Width;
+                                addLocationViewModel.LocationInstance.LocationTypeID = subLocationViewModel.LocationTypeParentID;
+                                _context.Add(addLocationViewModel.LocationInstance);
+                                await _context.SaveChangesAsync();
+
+                                string nameAbbreviation = addLocationViewModel.LocationInstance.LocationInstanceName;
+
+                                int prevHeight = addLocationViewModel.LocationInstance.Height;
+                                int prevWidth = addLocationViewModel.LocationInstance.Width;
+                                for (int z = 0; z < subLocationViewModel.LocationInstances.Count; z++)/*var locationInstance in subLocationViewModel.LocationInstances*/ //for each level in the sublevels
+                                {
+                                    //initiate new lists of placeholders otherwise will get an error when you try to insert them
+                                    placeholderInstanceIds.Add(new List<int>());
+                                    //namesPlaceholder[z] = new List<string>();
+                                    //placeholderInstanceIds[z] = new List<int>();
+
+                                    typeName = _context.LocationTypes.Where(x => x.LocationTypeID == subLocationViewModel.LocationInstances[z].LocationTypeID)
+                                        .FirstOrDefault().LocationTypeName.Substring(0, 1);
+                                    typeId = subLocationViewModel.LocationInstances[z].LocationTypeID;
+                                    parentId = 0;
+                                    int height = 0;
+                                    int width = 0;
+                                    if (z < subLocationViewModel.LocationInstances.Count - 1)
+                                    {
+
+                                        height = subLocationViewModel.LocationInstances[z + 1].Height;
+                                        width = subLocationViewModel.LocationInstances[z + 1].Width;
+                                    }
+                                    string attachedName = "";
+                                    int amountOfParentLevels = 1;
+                                    if (!first)
+                                    {
+                                        amountOfParentLevels = placeholderInstanceIds[z - 1].Count;
+                                    }
+                                    for (int w = 0; w < amountOfParentLevels; w++)//until finished with names from the list before
+                                    {
+                                        if (first)
+                                        {
+                                            //if this is the first level - locations with no parents
+                                            parentId = addLocationViewModel.LocationInstance.LocationInstanceID;
+                                            attachedName = typeName;
+                                            first = false;
+                                        }
+                                        else
+                                        {
+                                            parentId = placeholderInstanceIds[z - 1][w]; //get the first id in the list in the depth before
+                                            attachedName = typeName; //NEEDS TO BE DONE BETTER
+                                        }
+                                        typeNumber = 1; //the number of this depth added to this name
+                                                        //RESET THE HEIGHTS ANDS WIDTHS TO ACCOUNT FOR FIRSTS BEFORE RUNNIN OR ITLL CRASHs
+                                        for (int x = 0; x < subLocationViewModel.LocationInstances[z].Height; x++)
+                                        {
+                                            //add letter to place
+                                            int unicode = x + 65;
+                                            char character = (char)unicode;
+                                            for (int y = 0; y < subLocationViewModel.LocationInstances[z].Width; y++)
+                                            {
+                                                //add number to place
+                                                string currentName = attachedName + (typeNumber).ToString(); //add number to the type x + y is the current number but is zero based so add one
+                                                typeNumber++; //increment this
+                                                LocationInstance newSublocationInstance = new LocationInstance()
+                                                {
+                                                    LocationInstanceName = currentName,
+                                                    LocationInstanceParentID = parentId,
+                                                    Height = height,
+                                                    Width = width,
+                                                    LocationTypeID = typeId
+                                                };
+                                                _context.Add(newSublocationInstance);
+                                                await _context.SaveChangesAsync();
+                                                placeholderInstanceIds[z].Add(newSublocationInstance.LocationInstanceID);
+                                            }
                                         }
                                     }
-                                }
 
-                            }
-                            break;
+                                }
+                                break;
+                        }
+                        //throw new Exception();
+                        await transaction.CommitAsync();
                     }
-                    await transaction.CommitAsync();
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        addLocationViewModel.ErrorMessage += "Error adding location. Please try again. ";
+                        addLocationViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
+                    }
                 }
             }
-            return RedirectToAction("Index", "Locations", new { SectionType = AppUtility.MenuItems.LabManagement });
+            return RedirectToAction("Index", "Locations", new { SectionType = AppUtility.MenuItems.LabManagement, ErrorMessage = addLocationViewModel.ErrorMessage });
         }
 
         //private int GetLocationNumber(int typeID, bool isPart, bool isRoom)
@@ -770,6 +805,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> HasShelfBlock(int id, int roomID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             var part = await _context.LabParts.Where(lp => lp.LabPartID == id).FirstOrDefaultAsync();
             var locationOfTypeCount = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LabPartID == id && roomID == li.LocationInstanceParent.LocationRoomInstanceID).Count();
             var viewModel = new HasShelfViewModel() { HasShelves = part.HasShelves, LocationNameAbrev = part.LabPartNameAbbrev + (locationOfTypeCount + 1), LocationName = part.LabPartName};

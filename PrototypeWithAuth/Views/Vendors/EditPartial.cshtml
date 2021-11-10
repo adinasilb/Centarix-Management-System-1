@@ -15,16 +15,16 @@
         case 1:
             showDetails = " active show ";
             break;
-        case 2:
+@*        case 2:
             showCategories = " active show ";
-            break;
-        case 3:
+            break;*@
+        case 2:
             showPayment = " active show ";
             break;
-        case 4:
+        case 3:
             showComments = " active show ";
             break;
-        case 5:
+        case 4:
             showContact = " active show ";
             break;
 
@@ -109,9 +109,21 @@
             <div class="row">
                 <div class="col-3">
                     <div class="form-group">
-                        <label asp-for="Vendor.VendorCountry" class="control-label"></label>
-                        <input asp-for="Vendor.VendorCountry" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                        <span asp-validation-for="Vendor.VendorCountry" class="text-danger-centarix"></span>
+                        <label asp-for="Vendor.CountryID" class="control-label">Country</label>
+                        @Html.DropDownListFor(
+                            vm => vm.Vendor.CountryID,
+                            Model.Countries,
+                            "Select Country",
+                            htmlAttributes: new
+                            {
+                                @class = " mdb-select custom select-dropdown form-control-plaintext  mark-readonly",
+                                @id = "VendorCountries",
+                                @size = 1,
+                                @data_stop_refresh = "true",
+                                @searchable = "default value",
+                            }
+                        )
+                        <span asp-validation-for="Vendor.CountryID" class="text-danger-centarix"></span>
                     </div>
                 </div>
                 <div class="col-3">
@@ -183,7 +195,7 @@
                 </div>
             </div>
         </div>
-        <div id="categories" class="tab-pane fade @showCategories">
+        @*<div id="categories" class="tab-pane fade @showCategories">
             <div class="row modal-tab-name">
                 <span class="heading-1 col-12 modal-tab-name">Categories</span>
             </div>
@@ -219,7 +231,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>*@
         <div id="payment" class="tab-pane fade @showPayment">
             <div class="row modal-tab-name">
                 <span class="heading-1 col-12 modal-tab-name">Payment</span>

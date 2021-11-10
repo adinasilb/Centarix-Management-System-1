@@ -87,6 +87,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> _Details()
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             EmployeeDetailsViewModel employeeDetailsViewModel = GetWorkersDetailsViewModel();
 
             return PartialView(employeeDetailsViewModel);
@@ -126,6 +130,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> _Hours(YearlyMonthlyEnum yearlyMonthlyEnum = YearlyMonthlyEnum.Monthly, int month = 0, int year = 0, int amountInYear = 0)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             WorkersHoursViewModel viewModel = await hoursPagePopulate(yearlyMonthlyEnum, month, year, amountInYear);
             return PartialView(viewModel);
         }
@@ -274,6 +282,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> _AwaitingApproval(string? ErrorMessage = null)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = GetAwaitingApprovalModel();
             if (awaitingApproval.Count > 0)
             {
@@ -498,6 +510,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> DenyApprovalRequestModal(int ehaaID)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             var ehaa = _context.EmployeeHoursAwaitingApprovals
                 .Include(ehaa => ehaa.EmployeeHours)
                 .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ehaaID).FirstOrDefault();

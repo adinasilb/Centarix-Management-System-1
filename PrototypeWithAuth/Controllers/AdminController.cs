@@ -71,6 +71,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public IActionResult _Index()
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             UserIndexViewModel userIndexViewModel = GetUserIndexViewModel();
             return PartialView(userIndexViewModel);
         }
@@ -653,6 +657,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> EditUser(string id)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             return await editUserFunction(id);
         }
 
@@ -930,6 +938,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> EditUserPartial(string id, int? Tab)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             return await editUserFunction(id, Tab);
         }
         private void FillViewDropdowns(RegisterUserViewModel registerUserViewModel)
@@ -1012,6 +1024,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> UserImageModal()
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             return PartialView();
         }
 
@@ -1026,6 +1042,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public IActionResult SuspendUserModal(string Id)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             ApplicationUser user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
             return PartialView(user);
         }
@@ -1074,6 +1094,10 @@ namespace PrototypeWithAuth.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> TwoFactorSessionModal()
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
@@ -1457,9 +1481,13 @@ namespace PrototypeWithAuth.Controllers
                     {
                         userImageViewModel.FileToSave.CopyTo(FileStream);
                         SavedUserImagePath = AppUtility.GetLastFiles(filePath, 2);
+                        //throw new Exception();
                     }
                     catch (Exception e)
                     {
+                        Response.StatusCode = 500;
+                        //Response.WriteAsync(AppUtility.GetExceptionMessage(e)); both do same thing - which is better?
+                        return AppUtility.GetExceptionMessage(e);
                     }
                 }
             }

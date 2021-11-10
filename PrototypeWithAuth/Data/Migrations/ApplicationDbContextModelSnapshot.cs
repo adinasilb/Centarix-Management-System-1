@@ -718,6 +718,273 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.Country", b =>
+                {
+                    b.Property<int>("CountryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CountryName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CountryID");
+
+                    b.ToTable("Countries");
+
+                    b.HasData(
+                        new
+                        {
+                            CountryID = 1,
+                            CountryName = "Armenia"
+                        },
+                        new
+                        {
+                            CountryID = 2,
+                            CountryName = "Australia"
+                        },
+                        new
+                        {
+                            CountryID = 3,
+                            CountryName = "Austria"
+                        },
+                        new
+                        {
+                            CountryID = 4,
+                            CountryName = "Belgium"
+                        },
+                        new
+                        {
+                            CountryID = 5,
+                            CountryName = "Bosnia and Herzegovina"
+                        },
+                        new
+                        {
+                            CountryID = 6,
+                            CountryName = "Bulgaria"
+                        },
+                        new
+                        {
+                            CountryID = 7,
+                            CountryName = "Canada"
+                        },
+                        new
+                        {
+                            CountryID = 8,
+                            CountryName = "Chile"
+                        },
+                        new
+                        {
+                            CountryID = 9,
+                            CountryName = "Costa Rica"
+                        },
+                        new
+                        {
+                            CountryID = 10,
+                            CountryName = "Cyprus"
+                        },
+                        new
+                        {
+                            CountryID = 11,
+                            CountryName = "Czech Republic"
+                        },
+                        new
+                        {
+                            CountryID = 12,
+                            CountryName = "Denmark"
+                        },
+                        new
+                        {
+                            CountryID = 13,
+                            CountryName = "Estonia"
+                        },
+                        new
+                        {
+                            CountryID = 14,
+                            CountryName = "Finland"
+                        },
+                        new
+                        {
+                            CountryID = 15,
+                            CountryName = "France"
+                        },
+                        new
+                        {
+                            CountryID = 16,
+                            CountryName = "Georgia"
+                        },
+                        new
+                        {
+                            CountryID = 17,
+                            CountryName = "Germany"
+                        },
+                        new
+                        {
+                            CountryID = 18,
+                            CountryName = "Greece"
+                        },
+                        new
+                        {
+                            CountryID = 19,
+                            CountryName = "Hungary"
+                        },
+                        new
+                        {
+                            CountryID = 20,
+                            CountryName = "Iceland"
+                        },
+                        new
+                        {
+                            CountryID = 21,
+                            CountryName = "India"
+                        },
+                        new
+                        {
+                            CountryID = 22,
+                            CountryName = "Ireland"
+                        },
+                        new
+                        {
+                            CountryID = 23,
+                            CountryName = "Israel"
+                        },
+                        new
+                        {
+                            CountryID = 24,
+                            CountryName = "Italy"
+                        },
+                        new
+                        {
+                            CountryID = 25,
+                            CountryName = "Japan"
+                        },
+                        new
+                        {
+                            CountryID = 26,
+                            CountryName = "Latvia"
+                        },
+                        new
+                        {
+                            CountryID = 27,
+                            CountryName = "Lithuania"
+                        },
+                        new
+                        {
+                            CountryID = 28,
+                            CountryName = "Luxembourg"
+                        },
+                        new
+                        {
+                            CountryID = 29,
+                            CountryName = "Malaysia"
+                        },
+                        new
+                        {
+                            CountryID = 30,
+                            CountryName = "Mauritius"
+                        },
+                        new
+                        {
+                            CountryID = 31,
+                            CountryName = "Moldova"
+                        },
+                        new
+                        {
+                            CountryID = 32,
+                            CountryName = "Netherlands"
+                        },
+                        new
+                        {
+                            CountryID = 33,
+                            CountryName = "New Zealand"
+                        },
+                        new
+                        {
+                            CountryID = 34,
+                            CountryName = "North Macedonia"
+                        },
+                        new
+                        {
+                            CountryID = 35,
+                            CountryName = "Norway"
+                        },
+                        new
+                        {
+                            CountryID = 36,
+                            CountryName = "Poland"
+                        },
+                        new
+                        {
+                            CountryID = 37,
+                            CountryName = "Portugal"
+                        },
+                        new
+                        {
+                            CountryID = 38,
+                            CountryName = "Romania"
+                        },
+                        new
+                        {
+                            CountryID = 39,
+                            CountryName = "Russia"
+                        },
+                        new
+                        {
+                            CountryID = 40,
+                            CountryName = "Singapore"
+                        },
+                        new
+                        {
+                            CountryID = 41,
+                            CountryName = "Slovakia"
+                        },
+                        new
+                        {
+                            CountryID = 42,
+                            CountryName = "Slovenia"
+                        },
+                        new
+                        {
+                            CountryID = 43,
+                            CountryName = "South Africa"
+                        },
+                        new
+                        {
+                            CountryID = 44,
+                            CountryName = "South Korea"
+                        },
+                        new
+                        {
+                            CountryID = 45,
+                            CountryName = "Spain"
+                        },
+                        new
+                        {
+                            CountryID = 46,
+                            CountryName = "Sweden"
+                        },
+                        new
+                        {
+                            CountryID = 47,
+                            CountryName = "Switzerland"
+                        },
+                        new
+                        {
+                            CountryID = 48,
+                            CountryName = "United Kingdom"
+                        },
+                        new
+                        {
+                            CountryID = 49,
+                            CountryName = "United States"
+                        },
+                        new
+                        {
+                            CountryID = 50,
+                            CountryName = "Uruguay"
+                        });
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.CreditCard", b =>
                 {
                     b.Property<int>("CreditCardID")
@@ -1086,6 +1353,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AmountOfVisits")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -1112,6 +1382,60 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("Experiments");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.ExperimentEntry", b =>
+                {
+                    b.Property<int>("ExperimentEntryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ParticipantID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SiteID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VisitNumber")
+                        .HasColumnType("int");
+
+                    b.HasKey("ExperimentEntryID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("SiteID");
+
+                    b.HasIndex("ParticipantID", "VisitNumber")
+                        .IsUnique();
+
+                    b.ToTable("ExperimentEntries");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ExperimentTest", b =>
+                {
+                    b.Property<int>("ExperimentID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TestID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ExperimentID", "TestID");
+
+                    b.HasIndex("TestID");
+
+                    b.ToTable("ExperimentTest");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteProtocol", b =>
                 {
                     b.Property<int>("FavoriteID")
@@ -1122,16 +1446,38 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("ApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ProtocolID")
+                    b.Property<int?>("ProtocolVersionID")
                         .HasColumnType("int");
 
                     b.HasKey("FavoriteID");
 
                     b.HasIndex("ApplicationUserID");
 
-                    b.HasIndex("ProtocolID");
+                    b.HasIndex("ProtocolVersionID");
 
                     b.ToTable("FavoriteProtocols");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteReport", b =>
+                {
+                    b.Property<int>("FavoriteID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("ReportID")
+                        .HasColumnType("int");
+
+                    b.HasKey("FavoriteID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("ReportID");
+
+                    b.ToTable("FavoriteReports");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteRequest", b =>
@@ -1217,7 +1563,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("ProductID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProtocolID")
+                    b.Property<int?>("ProtocolVersionID")
                         .HasColumnType("int");
 
                     b.Property<TimeSpan>("Timer")
@@ -1231,7 +1577,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.HasIndex("ProtocolID");
+                    b.HasIndex("ProtocolVersionID");
 
                     b.ToTable("FunctionLines");
                 });
@@ -1260,6 +1606,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("FunctionTypeID")
                         .HasColumnType("int");
 
@@ -1272,11 +1621,14 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("ProductID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProtocolID")
+                    b.Property<int?>("ProtocolVersionID")
                         .HasColumnType("int");
 
                     b.Property<int>("ReportID")
                         .HasColumnType("int");
+
+                    b.Property<TimeSpan>("Timer")
+                        .HasColumnType("time");
 
                     b.HasKey("ID");
 
@@ -1284,11 +1636,55 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.HasIndex("ProtocolID");
+                    b.HasIndex("ProtocolVersionID");
 
                     b.HasIndex("ReportID");
 
                     b.ToTable("FunctionReports");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.FunctionResult", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FunctionTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsTemporary")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTemporaryDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ProductID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProtocolInstanceID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProtocolVersionID")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("Timer")
+                        .HasColumnType("time");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("FunctionTypeID");
+
+                    b.HasIndex("ProductID");
+
+                    b.HasIndex("ProtocolInstanceID");
+
+                    b.HasIndex("ProtocolVersionID");
+
+                    b.ToTable("FunctionResults");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FunctionType", b =>
@@ -2014,7 +2410,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("ParentLineID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProtocolID")
+                    b.Property<int>("ProtocolVersionID")
                         .HasColumnType("int");
 
                     b.HasKey("LineID");
@@ -2023,7 +2419,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ParentLineID");
 
-                    b.HasIndex("ProtocolID");
+                    b.HasIndex("ProtocolVersionID");
 
                     b.ToTable("Lines");
                 });
@@ -2102,7 +2498,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("LinkDescription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProtocolID")
+                    b.Property<int?>("ProtocolVersionID")
                         .HasColumnType("int");
 
                     b.Property<string>("Url")
@@ -2110,7 +2506,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasKey("LinkID");
 
-                    b.HasIndex("ProtocolID");
+                    b.HasIndex("ProtocolVersionID");
 
                     b.ToTable("Links");
                 });
@@ -2283,6 +2679,13 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationRoomInstanceAbbrev = "LN1",
                             LocationRoomInstanceName = "Liquid Nitrogen Room 1",
                             LocationRoomTypeID = 7
+                        },
+                        new
+                        {
+                            LocationRoomInstanceID = 13,
+                            LocationRoomInstanceAbbrev = "BL5",
+                            LocationRoomInstanceName = "Biomarker Lab 5",
+                            LocationRoomTypeID = 1
                         });
                 });
 
@@ -2621,7 +3024,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("ProductID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProtocolID")
+                    b.Property<int>("ProtocolVersionID")
                         .HasColumnType("int");
 
                     b.HasKey("MaterialID");
@@ -2630,7 +3033,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.HasIndex("ProtocolID");
+                    b.HasIndex("ProtocolVersionID");
 
                     b.ToTable("Materials");
                 });
@@ -2739,6 +3142,24 @@ namespace PrototypeWithAuth.Data.Migrations
                             OffDayTypeID = 5,
                             Description = "Unpaid Leave"
                         });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.OldVendorCountry", b =>
+                {
+                    b.Property<int>("OldVendorCountryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("OldVendorCountryName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("VendorID")
+                        .HasColumnType("int");
+
+                    b.HasKey("OldVendorCountryID");
+
+                    b.ToTable("OldVendorCountries");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
@@ -2954,10 +3375,15 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CentarixID")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<int>("ExperimentID")
                         .HasColumnType("int");
@@ -2975,6 +3401,10 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("GenderID");
 
                     b.HasIndex("ParticipantStatusID");
+
+                    b.HasIndex("ParticipantID", "CentarixID")
+                        .IsUnique()
+                        .HasFilter("[CentarixID] IS NOT NULL");
 
                     b.ToTable("Participants");
                 });
@@ -4144,12 +4574,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserCreatorID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -4168,12 +4592,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("UniqueCode")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("VersionNumber")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("ProtocolID");
-
-                    b.HasIndex("ApplicationUserCreatorID");
 
                     b.HasIndex("ProtocolSubCategoryID");
 
@@ -4263,7 +4682,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsFinished")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ProtocolID")
+                    b.Property<int>("ProtocolVersionID")
                         .HasColumnType("int");
 
                     b.Property<string>("ResultDescription")
@@ -4284,7 +4703,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("CurrentLineID");
 
-                    b.HasIndex("ProtocolID");
+                    b.HasIndex("ProtocolVersionID");
 
                     b.ToTable("ProtocolInstances");
                 });
@@ -4392,6 +4811,41 @@ namespace PrototypeWithAuth.Data.Migrations
                             ProtocolTypeID = 6,
                             ProtocolTypeDescription = "Maintenance"
                         });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolVersion", b =>
+                {
+                    b.Property<int>("ProtocolVersionID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserCreatorID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProtocolID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ShortDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Theory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("VersionNumber")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProtocolVersionID");
+
+                    b.HasIndex("ApplicationUserCreatorID");
+
+                    b.HasIndex("ProtocolID", "VersionNumber")
+                        .IsUnique();
+
+                    b.ToTable("ProtocolVersions");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.QuoteStatus", b =>
@@ -4542,6 +4996,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("DevelopersBoolean")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("Discount")
                         .HasColumnType("decimal(18,2)");
 
@@ -4576,9 +5033,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("NoteForClarifyDelivery")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NoteForPartialDelivery")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NoteToSupplier")
@@ -5068,11 +5522,13 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("FromApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ProtocolID")
+                    b.Property<int?>("ProtocolVersionID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("ToApplicationUserID")
                         .HasColumnType("nvarchar(450)");
@@ -5081,7 +5537,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("FromApplicationUserID");
 
-                    b.HasIndex("ProtocolID");
+                    b.HasIndex("ProtocolVersionID");
 
                     b.HasIndex("ToApplicationUserID");
 
@@ -5102,7 +5558,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("ToApplicationUserID")
                         .HasColumnType("nvarchar(450)");
@@ -5132,7 +5590,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("ToApplicationUserID")
                         .HasColumnType("nvarchar(450)");
@@ -5155,10 +5615,27 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Line1Address")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PrimaryContactID")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("SiteID");
+
+                    b.HasIndex("PrimaryContactID");
 
                     b.ToTable("Sites");
                 });
@@ -5312,6 +5789,20 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("TempLinesJsons");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.TempReportJson", b =>
+                {
+                    b.Property<Guid>("TempReportJsonID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Json")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TempReportJsonID");
+
+                    b.ToTable("TempReportJsons");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.TempRequestJson", b =>
                 {
                     b.Property<int>("TempRequestJsonID")
@@ -5344,6 +5835,20 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("TempRequestJsons");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.TempResultsJson", b =>
+                {
+                    b.Property<Guid>("TempResultsJsonID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Json")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TempResultsJsonID");
+
+                    b.ToTable("TempResultsJsons");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.Test", b =>
                 {
                     b.Property<int>("TestID")
@@ -5351,18 +5856,18 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ExperimentID")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TestCategoryID")
+                    b.Property<int>("SiteID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TestCategoryID")
                         .HasColumnType("int");
 
                     b.HasKey("TestID");
 
-                    b.HasIndex("ExperimentID");
+                    b.HasIndex("SiteID");
 
                     b.HasIndex("TestCategoryID");
 
@@ -5389,30 +5894,119 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("TestCategories");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.TestFieldHeader", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.TestGroup", b =>
                 {
-                    b.Property<int>("TestFieldHeaderID")
+                    b.Property<int>("TestGroupID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("FieldList")
+                    b.Property<bool>("IsNone")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FieldNames")
+                    b.Property<int>("SequencePosition")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TestOuterGroupID")
+                        .HasColumnType("int");
+
+                    b.HasKey("TestGroupID");
+
+                    b.HasIndex("TestOuterGroupID");
+
+                    b.ToTable("TestGroups");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TestHeader", b =>
+                {
+                    b.Property<int>("TestHeaderID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Calculation")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FieldTypes")
+                    b.Property<bool>("IsSkip")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("List")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SequencePosition")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TestGroupID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TestHeaderID");
+
+                    b.HasIndex("TestGroupID");
+
+                    b.HasIndex("SequencePosition", "TestGroupID")
+                        .IsUnique();
+
+                    b.ToTable("TestHeaders");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TestOuterGroup", b =>
+                {
+                    b.Property<int>("TestOuterGroupID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsNone")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SequencePosition")
+                        .HasColumnType("int");
 
                     b.Property<int>("TestID")
                         .HasColumnType("int");
 
-                    b.HasKey("TestFieldHeaderID");
+                    b.HasKey("TestOuterGroupID");
 
                     b.HasIndex("TestID");
 
-                    b.ToTable("TestFieldHeaders");
+                    b.ToTable("TestOuterGroups");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TestValue", b =>
+                {
+                    b.Property<int>("TestValueID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ExperimentEntryID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TestHeaderID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TestValueID");
+
+                    b.HasIndex("ExperimentEntryID");
+
+                    b.HasIndex("TestHeaderID");
+
+                    b.ToTable("TestValues");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.TimekeeperNotification", b =>
@@ -6057,6 +6651,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("CountryID")
+                        .HasColumnType("int");
+
                     b.Property<string>("InfoEmail")
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
@@ -6082,17 +6679,12 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("VendorBuisnessID")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("VendorCellPhone")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VendorCity")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("VendorCountry")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
@@ -6134,6 +6726,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("VendorID");
+
+                    b.HasIndex("CountryID", "VendorBuisnessID")
+                        .IsUnique();
 
                     b.ToTable("Vendors");
                 });
@@ -6588,6 +7183,41 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.ExperimentEntry", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Participant", "Participant")
+                        .WithMany("ExperimentEntries")
+                        .HasForeignKey("ParticipantID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Site", "Site")
+                        .WithMany("ExperimentEntries")
+                        .HasForeignKey("SiteID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ExperimentTest", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Experiment", "Experiment")
+                        .WithMany("ExperimentTests")
+                        .HasForeignKey("ExperimentID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Test", "Test")
+                        .WithMany("ExperimentTests")
+                        .HasForeignKey("TestID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteProtocol", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
@@ -6595,11 +7225,23 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
+                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
                         .WithMany()
-                        .HasForeignKey("ProtocolID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("ProtocolVersionID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteReport", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Report", "Report")
+                        .WithMany()
+                        .HasForeignKey("ReportID")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteRequest", b =>
@@ -6647,7 +7289,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.Line", "Line")
-                        .WithMany()
+                        .WithMany("FunctionLines")
                         .HasForeignKey("LineID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -6657,9 +7299,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
+                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
                         .WithMany()
-                        .HasForeignKey("ProtocolID")
+                        .HasForeignKey("ProtocolVersionID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -6676,9 +7318,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
+                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
                         .WithMany()
-                        .HasForeignKey("ProtocolID")
+                        .HasForeignKey("ProtocolVersionID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Report", "Report")
@@ -6686,6 +7328,31 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ReportID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.FunctionResult", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.FunctionType", "FunctionType")
+                        .WithMany()
+                        .HasForeignKey("FunctionTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.ProtocolInstance", "ProtocolInstance")
+                        .WithMany()
+                        .HasForeignKey("ProtocolInstanceID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
+                        .WithMany()
+                        .HasForeignKey("ProtocolVersionID")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.JobSubcategoryType", b =>
@@ -6710,9 +7377,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ParentLineID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
+                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
                         .WithMany("Lines")
-                        .HasForeignKey("ProtocolID")
+                        .HasForeignKey("ProtocolVersionID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -6747,11 +7414,10 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Link", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
+                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
                         .WithMany("Urls")
-                        .HasForeignKey("ProtocolID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("ProtocolVersionID")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
@@ -6813,9 +7479,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
+                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
                         .WithMany("Materials")
-                        .HasForeignKey("ProtocolID")
+                        .HasForeignKey("ProtocolVersionID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -6948,11 +7614,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Protocol", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserCreator")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserCreatorID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("PrototypeWithAuth.Models.ProtocolSubCategory", "ProtocolSubCategory")
                         .WithMany()
                         .HasForeignKey("ProtocolSubCategoryID")
@@ -6987,9 +7648,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
+                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
                         .WithMany("ProtocolInstances")
-                        .HasForeignKey("ProtocolID")
+                        .HasForeignKey("ProtocolVersionID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -6999,6 +7660,20 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.ProtocolCategory", "ProtocolCategoryType")
                         .WithMany()
                         .HasForeignKey("ProtocolCategoryTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolVersion", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserCreator")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserCreatorID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
+                        .WithMany()
+                        .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -7166,11 +7841,10 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("FromApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
+                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
                         .WithMany()
-                        .HasForeignKey("ProtocolID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("ProtocolVersionID")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
                         .WithMany()
@@ -7216,6 +7890,14 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.Site", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "PrimaryContact")
+                        .WithMany()
+                        .HasForeignKey("PrimaryContactID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.SubProject", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.Project", "Project")
@@ -7228,7 +7910,7 @@ namespace PrototypeWithAuth.Data.Migrations
             modelBuilder.Entity("PrototypeWithAuth.Models.TagProtocol", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany("TagProtocols")
+                        .WithMany()
                         .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -7250,17 +7932,16 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Test", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Models.Experiment", "Experiment")
-                        .WithMany()
-                        .HasForeignKey("ExperimentID")
+                    b.HasOne("PrototypeWithAuth.Models.Site", "Site")
+                        .WithMany("Tests")
+                        .HasForeignKey("SiteID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Models.TestCategory", "TestCategory")
+                    b.HasOne("PrototypeWithAuth.Models.TestCategory", null)
                         .WithMany("Tests")
                         .HasForeignKey("TestCategoryID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.TestCategory", b =>
@@ -7272,11 +7953,44 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.TestFieldHeader", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.TestGroup", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.TestOuterGroup", "TestOuterGroup")
+                        .WithMany("TestGroups")
+                        .HasForeignKey("TestOuterGroupID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TestHeader", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.TestGroup", "TestGroup")
+                        .WithMany("TestHeaders")
+                        .HasForeignKey("TestGroupID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TestOuterGroup", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.Test", "Test")
-                        .WithMany()
+                        .WithMany("TestOuterGroups")
                         .HasForeignKey("TestID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TestValue", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.ExperimentEntry", "ExperimentEntry")
+                        .WithMany()
+                        .HasForeignKey("ExperimentEntryID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.TestHeader", "TestHeader")
+                        .WithMany()
+                        .HasForeignKey("TestHeaderID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -7330,6 +8044,15 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.UnitType", "UnitType")
                         .WithMany("UnitTypeParentCategory")
                         .HasForeignKey("UnitTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Vendor", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Country", "Country")
+                        .WithMany("Vendors")
+                        .HasForeignKey("CountryID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

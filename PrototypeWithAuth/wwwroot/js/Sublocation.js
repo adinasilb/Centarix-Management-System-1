@@ -48,7 +48,7 @@ $(".modal").off("change", "#labPartDDL").on("change", "#labPartDDL", function ()
 	$("#LocationInstances_2__Height").rules('add', "required");
 	if($(this).val()!="")
 	{
-	$.ajax({
+		$.ajax({
             async: true,
             type: 'GET',
             cache: false,
@@ -59,8 +59,8 @@ $(".modal").off("change", "#labPartDDL").on("change", "#labPartDDL", function ()
 				console.log($(".Drawer").rules())
 				$(".Drawer").rules('remove', "required");
             }
-    });
-		}
+		});
+	}
 	
 });
 

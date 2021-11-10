@@ -1,9 +1,11 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
 @using PrototypeWithAuth.AppData
+<div class="error-message">
+    @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage);}
+</div>
 @if (Model.RequestsByVendor.Count() > 0)
 {
     <input type="hidden" class="activeVendor" value="" />
-    
 
     <table class="table table-headerspaced table-noheaderlines table-hover ">
         <thead>

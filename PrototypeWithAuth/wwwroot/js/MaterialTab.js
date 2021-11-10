@@ -1,6 +1,6 @@
 ﻿
 $(".addMaterial").click(function(){
-	 var url="/Protocols/AddMaterialModal?materialTypeID="+$(this).val()+"&ProtocolID="+$(".createProtocolMasterProtocolID").val();
+	 var url="/Protocols/AddMaterialModal?materialTypeID="+$(this).val()+"&ProtocolVersionID="+$(".createProtocolMasterProtocolVersionID").val()+"&ModalType="+$(".modalType").val() ;
 	 $.fn.CallPageRequest(url, "addMaterial");
 });
 $(".open-material-info").click(function(e){

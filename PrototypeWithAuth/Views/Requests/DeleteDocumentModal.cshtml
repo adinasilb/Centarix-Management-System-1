@@ -19,6 +19,10 @@
     {
         bcColor = "lab-man-background-color";
     }
+    else if (Model.SectionType == AppUtility.MenuItems.Biomarkers)
+    {
+        bcColor = "biomarkers-background-color";
+    }
 }
 <script src="~/js/DeleteDocModal.js"></script>
 <div class="modal modal-document-delete fader " id="DeleteDocumentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9999">
@@ -46,9 +50,19 @@
                                     <div class="card-body responsive-iframe-container">
                                         @{var iframeFilestring = Model.FileName;
                                             var ext = iframeFilestring.Split(".").Last();
-                                            if (ext == "pptx" || ext == "ppt")
+                                            switch (ext)
                                             {
-                                                iframeFilestring = "/images/powerpoint.png";
+                                                case "pptx":
+                                                case "ppt":
+                                                    iframeFilestring = "images/powerpoint.png";
+                                                    break;
+                                                case "doc":
+                                                case "docx":
+                                                    iframeFilestring = "images/wordicon.png";
+                                                    break;
+                                                case "xlsx":
+                                                    iframeFilestring = "images/excel.png";
+                                                    break;
                                             }
                                        }
                                         <iframe src="/@iframeFilestring" title="View" class="responsive-iframe" scrolling="no"></iframe>

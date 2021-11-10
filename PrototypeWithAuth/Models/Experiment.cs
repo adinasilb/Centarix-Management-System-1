@@ -17,7 +17,9 @@ namespace PrototypeWithAuth.Models
         public int NumberOfParticipants { get; set; }
         public int MinimumAge { get; set; }
         public int MaximumAge { get; set; }
+        public int AmountOfVisits { get; set; }
         public IEnumerable<Timepoint> Timepoints { get; set; }
         public IEnumerable<Participant> Participants { get; set; }
+        public IEnumerable<ExperimentTest> ExperimentTests { get; set; }
     }
 }

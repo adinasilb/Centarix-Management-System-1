@@ -285,7 +285,7 @@ namespace PrototypeWithAuth.AppData
                     //    });
                     break;
                 case AppUtility.MenuItems.Protocols:
-                    //ActiveClasses = " text-dark protocols-filter";
+                    ActiveClasses = " text-dark protocols-filter";
                     //if (pageType == AppUtility.PageTypeEnum.ProtocolsWorkflow) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     //MainMenuItems.Add(new MenuItems()
                     //{
@@ -769,19 +769,19 @@ namespace PrototypeWithAuth.AppData
                 IconName = "icon-add_circle_outline-24px1",
                 Classes = Classes
             });
-            //if (SidebarTitle == AppUtility.SidebarEnum.Search) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
-            //SidebarMenuItems.Add(new MenuItems()
-            //{
-            //    Description = "Search",
-            //    Controller = "Vendors",
-            //    Action = "Search",
-            //    RouteValues = new RouteValueDictionary()
-            //    {
-            //        {"SectionType", AppUtility.MenuItems.LabManagement }
-            //    },
-            //    IconName = "icon-zoom_in-24px-01",
-            //    Classes = Classes
-            //});
+            if (SidebarTitle == AppUtility.SidebarEnum.Search) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Search",
+                Controller = "Vendors",
+                Action = "Search",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.LabManagement }
+                },
+                IconName = "icon-zoom_in-24px-01",
+                Classes = Classes
+            });
 
             return SidebarMenuItems;
         }
@@ -1111,19 +1111,19 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 IconName = "icon-add_circle_outline-24px1"
             });
-            //if (SidebarTitle == AppUtility.SidebarEnum.Search) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            //SidebarMenuItems.Add(new MenuItems()
-            //{
-            //    Description = "Search",
-            //    Controller = "Vendors",
-            //    Action = "Search",
-            //    RouteValues = new RouteValueDictionary()
-            //    {
-            //        {"SectionType", AppUtility.MenuItems.Accounting }
-            //    },
-            //    Classes = CurrentClasses,
-            //    IconName = "icon-zoom_in-24px-01"
-            //});
+            if (SidebarTitle == AppUtility.SidebarEnum.Search) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Search",
+                Controller = "Vendors",
+                Action = "Search",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.Accounting }
+                },
+                Classes = CurrentClasses,
+                IconName = "icon-zoom_in-24px-01"
+            });
 
             return SidebarMenuItems;
         }
@@ -1783,16 +1783,16 @@ namespace PrototypeWithAuth.AppData
             //    Classes = CurrentClasses,
             //    IconName = "icon-monetization_on-24px"
             //});
-            //if (SidebarTitle == AppUtility.SidebarEnum.Favorites) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            //SidebarMenuItems.Add(new MenuItems()
-            //{
-            //    Description = "Favorites",
-            //    Controller = "Protocols",
-            //    Action = "ReportsFavorites",
-            //    RouteValues = new RouteValueDictionary(),
-            //    Classes = CurrentClasses,
-            //    IconName = "icon-favorite_border-24px"
-            //});
+            if (SidebarTitle == AppUtility.SidebarEnum.Favorites) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Favorites",
+                Controller = "Protocols",
+                Action = "IndexFavoriteReports",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-favorite_border-24px"
+            });
             //if (SidebarTitle == AppUtility.SidebarEnum.SharedWithMe) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             //SidebarMenuItems.Add(new MenuItems()
             //{
@@ -1803,7 +1803,7 @@ namespace PrototypeWithAuth.AppData
             //    Classes = CurrentClasses,
             //    IconName = "icon-notification_shared-24px"
             //});
-            
+
             return SidebarMenuItems;
 
         }

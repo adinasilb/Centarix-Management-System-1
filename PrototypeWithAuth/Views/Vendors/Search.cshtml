@@ -20,7 +20,7 @@
         form = "accounting-form";
 
     }
-    <form asp-action="Search" method="post" class="container-fluid @form " enctype="multipart/form-data">
+    <form asp-action="Search" method="post" class="container-fluid @form scroll-page" enctype="multipart/form-data">
 
         <div class="card-body border-0 m-auto " style="max-width:60%;">
 
@@ -43,31 +43,34 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label asp-for=" VendorEnName" class="control-label"></label>
+                                            <input asp-for=" VendorEnName" class="form-control-plaintext border-bottom" />
+                                            <span asp-validation-for=" VendorEnName" class="text-danger"></span>
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label asp-for=" VendorEnName" class="control-label"></label>
-                                        <input asp-for=" VendorEnName" class="form-control-plaintext border-bottom" />
-                                        <span asp-validation-for=" VendorEnName" class="text-danger"></span>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label asp-for=" VendorHeName" class="control-label"></label>
-                                        <input asp-for=" VendorHeName" class="form-control-plaintext border-bottom" />
-                                        <span asp-validation-for=" VendorHeName" class="text-danger"></span>
+                                        <div class="form-group col-md-6">
+                                            <label asp-for=" VendorHeName" class="control-label"></label>
+                                            <input asp-for=" VendorHeName" class="form-control-plaintext border-bottom" />
+                                            <span asp-validation-for=" VendorHeName" class="text-danger"></span>
+                                        </div>
                                     </div>
                                     <div class=" row">
                                         <div class="form-group col-md-6">
-
-                                            <label asp-for="ParentCategories.FirstOrDefault().ParentCategoryDescription" class="control-label">Category</label>
-                                            @Html.DropDownListFor(model => model.SelectedParentCategoryID, new SelectList(
-                                                                                                        Model.ParentCategories,
-                                                dataValueField: "ParentCategoryID",
-                                                dataTextField: "ParentCategoryDescription"),
-                                                htmlAttributes: new
+                                            <label class="control-label">Category Type</label>
+                                            <select class="mdb-select custom select-dropdown form-control-plaintext" asp-for="VendorCategoryTypes" multiple id="VendorCategoryTypes">
+                                                <option disabled selected class="d-none" value="">Select Category</option>
+                                                @foreach (var categoryType in Model.CategoryTypes)
                                                 {
-                                                    @class = "mdb-select custom select-dropdown form-control-plaintext",
-                                                    @searchable = "Please select a category"
-                                                })
+                                                    <option value="@categoryType.CategoryTypeID">
+                                                        @categoryType.CategoryTypeDescription
+                                                    </option>
+
+                                                }
+
+                                            </select>
+                                            <span asp-validation-for="VendorCategoryTypes" class="text-danger-centarix "></span>
                                         </div>
 
                                         <div class="form-group col-md-6">
@@ -80,6 +83,17 @@
 
                                     <div class=" row">
                                         <div class="form-group col-md-4">
+                                            <label asp-for="CountryID" class="control-label"></label>
+                                            <select class="mdb-select custom select-dropdown form-control-plaintext" asp-for="CountryID" id="VendorCountries" searchable="Select Country">
+                                                <option selected class="d-none" value="">Select Country</option>
+                                                @foreach (var country in Model.Countries)
+                                                {
+                                                    <option value="@country.CountryID">@Html.DisplayFor(e=> country.CountryName)</option>
+                                                }
+                                            </select>
+                                            <span asp-validation-for="CountryID" class="text-danger-centarix"></span>
+                                        </div>
+                                        <div class="form-group col-md-4">
                                             <label asp-for=" VendorCity" class="control-label"></label>
                                             <input asp-for=" VendorCity" class="form-control-plaintext border-bottom" />
                                             <span asp-validation-for=" VendorCity" class="text-danger"></span>
@@ -90,16 +104,16 @@
                                             <input asp-for=" VendorStreet" class="form-control-plaintext border-bottom" />
                                             <span asp-validation-for=" VendorStreet" class="text-danger"></span>
                                         </div>
+                                        
+
+                                    </div>
+
+                                    <div class=" row">
                                         <div class="form-group col-md-4">
                                             <label asp-for=" VendorZip" class="control-label"></label>
                                             <input asp-for=" VendorZip" class="form-control-plaintext border-bottom" />
                                             <span asp-validation-for=" VendorZip" class="text-danger"></span>
                                         </div>
-
-                                    </div>
-
-                                    <div class=" row">
-
                                         <div class="form-group col-md-4">
                                             <label asp-for=" VendorTelephone" class="control-label"></label>
                                             <input asp-for=" VendorTelephone" class="form-control-plaintext border-bottom" />
@@ -113,15 +127,15 @@
                                             <span asp-validation-for=" VendorCellPhone" class="text-danger"></span>
                                         </div>
 
+
+                                    </div>
+
+                                    <div class=" row">
                                         <div class="form-group col-md-4">
                                             <label asp-for=" VendorFax" class="control-label"></label>
                                             <input asp-for=" VendorFax" class="form-control-plaintext border-bottom" />
                                             <span asp-validation-for=" VendorFax" class="text-danger"></span>
                                         </div>
-
-                                    </div>
-
-                                    <div class=" row">
 
                                         <div class="form-group col-md-4">
                                             <label asp-for=" OrdersEmail" class="control-label"></label>
@@ -135,15 +149,15 @@
                                             <span asp-validation-for=" InfoEmail" class="text-danger"></span>
                                         </div>
 
+
+                                    </div>
+
+                                    <div class=" row">
                                         <div class="form-group col-md-4">
                                             <label asp-for=" VendorWebsite" class="control-label"></label>
                                             <input asp-for=" VendorWebsite" class="form-control-plaintext border-bottom" />
                                             <span asp-validation-for=" VendorWebsite" class="text-danger"></span>
                                         </div>
-
-                                    </div>
-
-                                    <div class=" row">
                                         <div class="form-group col-md-4">
                                             <label asp-for=" VendorBank" class="control-label"></label>
                                             <input asp-for=" VendorBank" class="form-control-plaintext border-bottom" />
@@ -155,14 +169,14 @@
                                             <span asp-validation-for=" VendorBankBranch" class="text-danger"></span>
                                         </div>
 
+
+                                    </div>
+                                    <div class=" row">
                                         <div class="form-group col-md-4">
                                             <label asp-for=" VendorAccountNum" class="control-label"></label>
                                             <input asp-for=" VendorAccountNum" class="form-control-plaintext border-bottom" />
                                             <span asp-validation-for=" VendorAccountNum" class="text-danger"></span>
                                         </div>
-
-                                    </div>
-                                    <div class=" row">
                                         <div class="form-group col-md-4 ">
                                             <label asp-for=" VendorSwift" class="control-label"></label>
                                             <input asp-for=" VendorSwift" class="form-control-plaintext border-bottom" />
@@ -174,13 +188,13 @@
                                             <span asp-validation-for=" VendorBIC" class="text-danger"></span>
                                         </div>
 
+                                    </div>
+                                    <div class="row">
                                         <div class="form-group col-md-4">
                                             <label asp-for=" VendorGoldAccount" class="control-label"></label>
                                             <input asp-for=" VendorGoldAccount" class="form-control-plaintext border-bottom" />
                                             <span asp-validation-for=" VendorGoldAccount" class="text-danger"></span>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="form-group col-md-4">
                                             <label asp-for=" VendorRoutingNum" class="control-label"></label>
                                             <input asp-for=" VendorRoutingNum" class="form-control-plaintext border-bottom" />

@@ -293,7 +293,7 @@ $(function () {
 		//});
 	});
 
-	$(".open-document-modal").off('click').on("click", function (e) {
+	$("body, .modal").off("click", ".open-document-modal").on("click", ".open-document-modal", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 		console.log("clicked open doc modal 2");
@@ -309,12 +309,15 @@ $(function () {
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
 		var showSwitch = $(".active-document-modal").attr("showSwitch");
+		console.log("showSwitch: " + showSwitch);
 		var parentFolder = $(".active-document-modal").attr("parentfolder");
 		console.log('parentfolder' + parentFolder)
 		var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
 		console.log(dontAllowMultipleFiles)
+		var $CustomMainObjectID = $("#CustomMainObjectID").val();
+		console.log("CustomMainObjectID " + $("#CustomMainObjectID").val());
 		//alert("before open doc modal");
-		$.fn.OpenDocumentsModal(false, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles);
+		$.fn.OpenDocumentsModal(false, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
 		return true;
 	});
 
@@ -608,6 +611,8 @@ $(function () {
 
 
 		$.ajax({
+			processData: false,
+			contentType: false,
 			url: url,
 			method: 'POST',
 			data: formData,
@@ -638,8 +643,6 @@ $(function () {
 
 				//return false;
 			},
-			processData: false,
-			contentType: false
 		});
 
 
@@ -1060,9 +1063,11 @@ $(function () {
 	});
 	$("#entry").off('click').click(function (e) {
 		e.preventDefault();
+		console.log('preventing default')
 	});
 	$("#exit").off('click').click(function (e) {
 		e.preventDefault();
+		console.log('preventing default')
 	});
 	$('.monthsHours .select-dropdown').off('change').change(function (e) {
 		console.log(".monthsHours chnage")
@@ -1309,19 +1314,18 @@ $(function () {
 				//	alert("else")
 					$(".render-body").html(data);
 				}
+				$(this).prop('disabled', false)
 			}
-
 		});
 	}
-
-
 
 	$("#saveOffDay").off('click').click(function (e) {
 		e.preventDefault();
 
 		var pageType = $('#masterPageType').val()
-
+		$(this).prop('disabled', true)
 		$.fn.SaveOffDays("OffDayModal", pageType, "");
+		console.log('got here')
 	});
 
 
@@ -1445,14 +1449,17 @@ $(function () {
 		else if ($(this).hasClass('locations')) {
 			console.log("has locations");
 			url = "/Requests/ReceivedModalVisual";
-			section = $(".turn-edit-on-off").attr("section-type"); //"Requests";
+			section = $(".turn-edit-on-off").attr("section-type");
 			console.log("section: " + section);
         }
 		if ($(this).hasClass('orders') && $(this).hasClass('equipment')) {
 			url = "/Requests/EditModalView";
 			section = "LabManagement";
 		}
-
+		if ($(this).hasClass('protocols')) {
+		//url = "/Protocols/EditModalView";
+		section = "Protocols";
+		}
 		if (type == 'edit') {
 			$("#loading").show();
 			console.log("in if edit");
@@ -1636,6 +1643,10 @@ $(function () {
 		$.fn.CallPageRequest($itemurl, "delete");
     })
 
+	$('.close-document-modal').off("click").click(function (e) {
+		console.log("click 1")
+		$.fn.CloseModal("documents");
+	})
 });
 
 

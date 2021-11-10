@@ -13,7 +13,6 @@
 			console.log("not valid data");
 			return false;
 		}
-
 		var url = '';
 		if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
 			console.log("has class suppliers or accounting");
@@ -41,11 +40,16 @@
 				//console.log("has class locations in requests");
 				url = "/Requests/ReceivedModalVisual";
 				visualDiv = $(".visualView");
-            //}
+            //} 
 		}
 		else if($('.turn-edit-on-off').hasClass('protocols')){
-			console.log("has class users");
-			url = "/Protocols/CreateProtocol";
+			formData.set("ModalType", "Summary")
+			var tab = $(".protocol-tab.active");
+			var selectedTab = tab.parent().index() + 1;
+			formData.set("Tab", selectedTab)
+				console.log(selectedTab);
+				$(".selectedTab").val(selectedTab);
+			url = "/Protocols/CreateProtocol?IncludeSaveLines=true";
 		}
 		else {
 		}
@@ -64,10 +68,12 @@
 				if ($('.turn-edit-on-off').hasClass('locations')) {
 					//alert("got data for locations");
 					//console.log(data)
-					if ($('.turn-edit-on-off').attr("section-type") == "LabManagement") {
-						//alert('reload location ')
-						//Reload visual of labmanagement
-						/*var visualContainerId = $(".hasVisual").attr("parent-id");
+					var pageType = $('#masterPageType').val();
+					console.log(pageType)
+					if (pageType == "LabManagementLocations" || pageType == 'RequestLocation') {
+						console.log('reload location ')
+						//Reload visual of locations box
+						var visualContainerId = $(".hasVisual").attr("parent-id");
 						var urlLocations = "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId;
 						$.ajax({
 							async: true,
@@ -78,7 +84,7 @@
 								$(".hasVisual").html(d);
 								$("#loading").hide();
 							}
-						});*/
+						});
 					}
 					else if ($('.turn-edit-on-off').attr("section-type") == "Requests") {
 						console.log("reloading ajax partial view...");
@@ -137,32 +143,11 @@
 						$.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass + "/", "." + viewClass, "GET");
 					}
 					else if ($('.turn-edit-on-off').hasClass('protocols')) {
-						var tab= $(".protocol-tab.active.show");
-						var selectedTab = tab.parent().index() +1;
-          
-						console.log(selectedTab);
-						$(".selectedTab").val(selectedTab);
-						var formData = new FormData($(".createProtocolForm")[0]);
-						$.ajax({
-							url: "/Protocols/CreateProtocol",
-							traditional: true,
-							data: formData,
-							contentType: false,
-							processData: false,
-							type: "POST",
-							success: function (data) {
-								$("._IndexTable").html(data)					
-								var modalType = $(".modalType").val();
-								$("."+modalType).removeClass("d-none")
-								$.fn.ProtocolsMarkReadonly("_IndexTable");   
-							},
-							error: function (jqxhr) {
-								if (jqxhr.status == 500) {
-									$("._CreateProtocol").html(jqxhr.responseText);						}
-								$(".mdb-select").materialSelect();
-								return true;
-							}
-						});
+						$("._IndexTable").html(data)					
+						$.fn.ProtocolsMarkReadonly("_IndexTable");
+						var modalType = $(".modalType").val();
+						$("."+modalType).removeClass("d-none")
+						
 					}
 				}
 				
@@ -177,6 +162,10 @@
 				if ($('.turn-edit-on-off').hasClass('operations') || $('.turn-edit-on-off').hasClass('orders')) {
 					$.fn.LoadEditModalDetails();
 				}
+				if ($('.turn-edit-on-off').hasClass('protocols')) {
+						$("._CreateProtocol").html(jqxhr.responseText);						
+						$(".mdb-select").materialSelect();
+					}
 				else {
 					$.fn.OnOpenModal();
                 }
@@ -298,6 +287,7 @@
 		}
 		if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
 			$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
+			$.fn.EnableMaterialSelect('#VendorCountries', 'select-options-VendorCountries');
 		}
 		if ($(this).hasClass('users')) {
 			$.fn.EnableMaterialSelect('#NewEmployee_JobSubcategoryType_JobCategoryTypeID', 'select-options-NewEmployee_JobSubcategoryType_JobCategoryTypeID');

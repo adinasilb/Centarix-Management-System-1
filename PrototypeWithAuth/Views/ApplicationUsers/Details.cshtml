@@ -9,6 +9,6 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 <input type="hidden" id="PageType" value="@TempData[AppUtility.TempDataTypes.PageType.ToString()]"/>
-<div class="container-fluid" id="usersTable">
+<div class="container-fluid scroll-page" id="usersTable">
     @{ await Html.RenderPartialAsync("_Details", Model);}
 </div>

@@ -10,5 +10,8 @@ namespace PrototypeWithAuth.ViewModels
     {
         public Participant Participant { get; set; }
         public List<Gender> Genders { get; set; }
+        public List<ParticipantStatus> ParticipantStatuses { get; set; }
+        public bool DisableFields { get; set; }
+        public bool IsTestPage { get; set; }
     }
 }

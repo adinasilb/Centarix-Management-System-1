@@ -13,10 +13,10 @@
     @*<link rel="stylesheet" href="~/lib/bootstrap/originalDist/css/bootstrap.min.css" />*@
 
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/jquery/dist/popper.min.js"></script>
-        <script src="~/lib/jquery/dist/popper.min.js"></script>
-        <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
-        <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
+    <script src="~/lib/jquery/dist/popper.min.js"></script>
+    <script src="~/lib/jquery/dist/popper.min.js"></script>
+    <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
+    <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Master.css" asp-append-version="true" />
@@ -353,7 +353,7 @@
             return false;
         });
 
-        $(".order-late").on("click", function (e) {
+    $(".order-late").on("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
         $("#loading").show();
@@ -412,6 +412,8 @@
             $('.mark-edditable').data("val", true);
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
+            $('.location-icon').removeClass('d-none');
+            
 
             //turn off document modals
             if ($(element).hasClass('operations') || $(element).hasClass('orders')) {
@@ -450,6 +452,7 @@
             }
             if ($(element).hasClass('suppliers') || $(element).hasClass('accounting')) {
                 $.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
+                $.fn.EnableMaterialSelect('#VendorCountries', 'select-options-VendorCountries');
             }
             if ($(element).hasClass('users')) {
                 $.fn.EnableMaterialSelect('#job-subcategory', 'select-options-job-subcategory');
@@ -475,8 +478,19 @@
                 $("[modaltype = " + modalType + "]").attr("modaltype", "Edit");
                 $(".modalType").val("Edit");
                 modalType = $(".modalType").val();
-                $("." + modalType).removeClass("d-none")
-
+                if ($(".next-tab.active").hasClass("lines-tab")) {
+                    $("." + modalType + ".only-protocol-tab.li-function-bar").removeClass("d-none");
+                }
+                else {
+                    $("." + modalType + ".only-protocol-tab").addClass("d-none");
+                }
+                if ($(".next-tab.active").hasClass("results-tab")) {
+                    $("." + modalType + ".only-results-tab.li-function-bar").removeClass("d-none");
+                }
+                else {
+                    $("." + modalType + ".only-results-tab").addClass("d-none");
+                }
+                $("." + modalType + ":not(.only-protocol-tab):not(.only-results-tab)").removeClass("d-none");
             }
         }
 
@@ -488,6 +502,8 @@
             $(".location-icon").removeClass("d-none");
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
+            $('.open-archive-modal').removeClass('disabled-background-color');
+            $('.open-archive-modal').addClass('order-inv-background-color');
         }
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
@@ -527,6 +543,11 @@
                             //$.fn.OnOpenModalView();
                             $.fn.OpenModal('modal', 'edits', modal)
                             $.fn.LoadSummaryModal('edits');
+                            $('.modal-content a:first').tab('show');
+                            break;
+                        case "summaryProtocolsParital":    
+                            $("._ProtocolsDetailsFloatModal").html(data);
+                            $.fn.LoadSummaryModal('_ProtocolsDetailsFloatModal');
                             $('.modal-content a:first').tab('show');
                             break;
                         case "create":
@@ -573,6 +594,10 @@
                             $.fn.OpenModal('modal', 'protocol-details', modal)
                             $.fn.ProtocolsMarkReadonly("protocol-details")
                             break
+                        case "protocolFloatModalPartial":
+                            $("._ProtocolsDetailsFloatModal").html(data);
+                            $.fn.ProtocolsMarkReadonly("protocol-details")
+                            break
                         case "addChange":
                             $.fn.OpenModal('modal', 'add-change-div', modal)
                             break;
@@ -614,6 +639,8 @@
             $("." + modalClass + ' .turn-edit-on-off').attr('name', 'details')
             $("." + modalClass + ' .open-document-modal').attr("data-val", false);
             $("." + modalClass + ' .location-icon').addClass('d-none');
+            $("." + modalClass + ' .open-archive-modal').addClass('disabled-background-color');
+            $("." + modalClass + ' .open-archive-modal').removeClass('order-inv-background-color');
 
             //console.log('locations edot mode off');
             //$("." + modalClass +".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
@@ -638,6 +665,22 @@
             }
         }
 
+        $.fn.AddSaveItemClass = function(){
+            $(".top-menu").addClass("save-item");
+            $(".side-menu").addClass("save-item");
+            $(".module-button ").addClass("save-item");
+            $(".notificationDiv").addClass("save-item");
+            $(".home-nav-item").addClass("save-item");
+        }
+
+
+        $.fn.RemoveSaveItemClass = function () {
+            $(".top-menu").removeClass("save-item");
+            $(".side-menu").removeClass("save-item");
+            $(".module-button ").removeClass("save-item");
+            $(".notificationDiv").removeClass("save-item");
+            $(".home-nav-item").removeClass("save-item");
+        }
 
         $.fn.LoadSummaryModal = function (modalClass) {
             $("#cost").trigger('change');
@@ -703,6 +746,10 @@
                     var modalType=$(".modalType").val();
                     $.fn.ProtocolsMarkReadonly("_IndexTable");
                     $("."+modalType).removeClass("d-none");
+                    if(tab == 4)
+                    {
+                        $(".only-results-tab").removeClass("d-none");
+                    }
                     return false;
                 }
             });
@@ -1136,14 +1183,14 @@
             if (status === undefined) {
                 requestStatusId = $(".request-status-id").val();
             }
-            var searchText = $('.search-requests').val();
+            var searchText = $('.search-by-name').val();
             console.log(searchText);
             //console.log('searchtext length before if' + searchText.length)
             if (searchText == undefined || !searchText.length) {
-                searchText = $('.popover .search-requests-in-filter').val();
+                searchText = $('.popover .search-by-name-in-filter').val();
                 console.log(searchText)
                 if (searchText == undefined || !searchText.length) {
-                    searchText = $('.search-requests-in-filter').val();
+                    searchText = $('.search-by-name-in-filter').val();
                     if (searchText == undefined || !searchText.length) {
                         searchText = "";
                     }
@@ -1171,21 +1218,24 @@
 
 
 
-        $.fn.OpenDocumentsModal = function (isReopen, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles) {
+        $.fn.OpenDocumentsModal = function (isReopen, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID) {
             $('#loading').show();
             //alert("in documents modal in document modal js")
             //$(".modal-backdrop").first().removeClass();
             //alert(parentFolder)
             var urlbeginning = "/Requests/"
-            if(section === "Protocols") {
-                urlbeginning ="/Protocols/"
+            if (section === "Protocols") {
+                urlbeginning = "/Protocols/"
+            }
+            else if (section == "Biomarkers") {
+                urlbeginning = "/Biomarkers/"
             }
             if (isReopen) {
                 urltogo = urlbeginning + "_DocumentsModalData?id=" + requestId + "&Guid=" + guid + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
-                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
+                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles + "&CustomMainObjectID=" + $CustomMainObjectID;
             } else {
                 urltogo = urlbeginning + "DocumentsModal?id=" + requestId + "&Guid=" + guid + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable +
-                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
+                    "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles + "&CustomMainObjectID=" + $CustomMainObjectID;
             }
 
             console.log(urltogo);
@@ -1200,6 +1250,13 @@
 
                     if(isReopen)
                     {
+                        console.log("before fx");
+                        //if ($("._testvalues").length > 0) {
+
+                        //    if (!$("._testvalues").hasClass("changed")) {
+                        //        $("._testvalues").addClass("changed");
+                        //    }
+                        //}
                         //alert("._DocumentsModalData")
                         $("._DocumentsModalData").html(data);
                     }
@@ -1301,6 +1358,7 @@
                 $('.modal-backdrop').remove();
                 $('.body').removeClass('modal-open');
             }
+            $("body, .modal").bind("click");
         }
 
         $.fn.AddTempRequestHiddenFors = function (guid, sequence, selector) {
@@ -1328,14 +1386,37 @@
             return error;
         };
 
+        $.fn.SearchColumns = function (searchText, colName) {
+            if (searchText == "") {
+                $('.popover ' + colName + ' .not-selected button').removeClass("d-none");
+            }
+            else {
+                $('.popover ' + colName + ' .not-selected button').each(function (i, e) {
+                    if ($(e).attr("labelName").toString().toLowerCase().indexOf(searchText) < 0) {
+                        $(e).addClass("d-none")
+                    }
+                    else {
+                        $(e).removeClass("d-none")
+                    }
+                });
+            }
+
+        }
+
         $.fn.BindSelectedFilters = function (className) {
             console.log('in bind selected filters');
             var selectedVendor = $(className + " .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedOwner = $(className + " .owner-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedLocation = $(className + " .location-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedCategory = $(className + " .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedType = $(className + " .type-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedSubCategory = $(className + " .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
             console.log(selectedVendor);
+            var catalogNumber = $(className + ' .search-by-catalog-number').val()
+            if (catalogNumber == undefined) {
+                catalogNumber = "";
+            }
+            console.log(catalogNumber)
             var archived = $('.archive-check').val();
             if (archived == undefined) {
                 archived = false;
@@ -1347,22 +1428,173 @@
             console.log(catalogNumber)
             return {
                 SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation,
-                SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived, CatalogNumber: catalogNumber
+                SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived, CatalogNumber: catalogNumber,
+                SelectedTypesIDs: selectedType
             }
         }
 
+ 
 
-        $.fn.ClearFilter = function (sectionType, isProprietary) {
-            //alert(sectionType);
-            console.log('clearing filter');
+        $.fn.ButtonFilterClick =function(id , col, parent)
+        {
+            var data = $.fn.BindSelectedFilters('.popover');
+       
+            var arr;
+            if (col.hasClass('vendor-col')) {
+                arr = data.SelectedVendorsIDs;
+            } else if (col.hasClass('owner-col')) {
+                arr = data.SelectedOwnersIDs;
+            } else if (col.hasClass('location-col')) {
+                arr = data.SelectedLocationsIDs;
+            } else if (col.hasClass('category-col')) {
+                arr = data.SelectedCategoriesIDs;
+            } else if (col.hasClass('type-col')) {
+                arr = data.SelectedTypesIDs;
+            } else if (col.hasClass('subcategory-col')) {
+                arr = data.SelectedSubCategoriesIDs;
+            }
+            var numFilters;
+            if ($(parent).hasClass('not-selected')) {
+                arr.push(id);
+                numFilters = Number($('.numFilters').attr("value")) + 1;
+            } else {
+                arr.splice($.inArray(id, arr), 1);
+                numFilters = Number($('.numFilters').attr("value")) - 1;
+            }
+            //console.log('archived ' + archived);
+            $.fn.ReloadFilterDiv(numFilters, data);
+        }
+
+    
+        $.fn.ApplyFilterClick = function()
+        {
+            console.log('clicked!')
+            var sectionType = $('#masterSectionType').val();
+            var data = $.fn.BindSelectedFilters('.popover');
+            var searchText = $('.popover .search-by-name-in-filter').val();
+            console.log('search text here' + searchText)
+            var popoverID = "";
+            var url = "";
+
+            if (searchText != undefined && searchText.length) {
+                //clear other search box
+                $('.search-by-name').val("");
+            }
+            var numFilters = $('.numFilters').attr("value");
+            console.log('search text ' + searchText);
+            var catalogNumber = $('.popover .search-by-catalog-number').val()
+            //reset page number
+            $('.page-number').val(1);
+
+            var reloadDiv = '_IndexTableData';
+            if ($('.' + reloadDiv).length == 0) { //if it's showing the nothing is here page. not just using indextable when don't have to, so don't lose price and category filters
+                reloadDiv = '_IndexTable';
+            }
+
+            if (sectionType == "Protocols") {
+                url = "/Protocols/" + reloadDiv + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
+                    popoverID = "protocolFilterPopover";
+            }
+            else {
+                url = "/Requests/" + reloadDiv + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
+                    popoverID = "invFilterPopover";
+            }
+            //console.log(data);
             $.ajax({
-                async: false, //so it finishes clearing before the page is loaded. otherwise, the requests will be filtered.
-                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType + "&isProprietary=" + isProprietary,
+                //    processData: false,
+                //    contentType: false,
+                data: data,
+                async: true,
+                traditional: true,
+                url: url,
+                type: 'POST',
+                cache: false,
+                success: function (data) {
+                    $('.' + reloadDiv).html(data);
+                    $('[data-toggle="popover"]').popover('dispose');
+                    console.log($.type(searchText))
+                    $('.search-by-name-in-filter').attr('value', searchText);
+                    $('.search-by-catalog-number').attr('value', catalogNumber);
+                    $('body').removeClass('popover-open');
+                    $('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
+                    $('#invFilterPopover').addClass('custom-order-inv');
+                    $('#protocolFilterPopover').removeClass('protocols-background-color custom-button-font');
+                    $('#protocolFilterPopover').addClass('custom-protocols');
+                }
+            });
+        }
+
+        $.fn.ReloadFilterDiv = function (numFilters, data) {
+            console.log('in reload filter function');
+            var sectionType = $('#masterSectionType').val();
+            var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
+            console.log('status ' + $(".request-status-id").attr("value"));
+            var searchText = $('.popover .search-by-name-in-filter').val();
+            var catalogNumber = $('.popover .search-by-catalog-number').val();
+            console.log('search: ' + searchText);
+            var catalogNumber = $('.popover .search-by-catalog-number').val();
+            /*	var searchText2 = $('.popover .search-requests-in-filter').attr('value');
+                console.log('search 2: ' + searchText2);*/
+            var contentID = "";
+            var contentDivID = "";
+            var url = "";
+            if (sectionType == "Protocols") {
+                url = "/Protocols/_ProtocolFilterResults?numFilters=" + numFilters + "&sectionType=" + sectionType;
+                contentID = "protocolFilterContent";
+                contentDivID = "protocolFilterContentDiv";
+            }
+            else {
+                url = "/Requests/_InventoryFilterResults?numFilters=" + numFilters + "&sectionType=" + sectionType + "&isProprietary=" + isProprietary,
+                contentID = "inventoryFilterContent";
+                contentDivID = "inventoryFilterContentDiv";
+            }
+            $.ajax({
+                //processData: false,
+                //contentType: false,
+                data: data,
+                traditional: true,
+                async: true,
+                url: url,
                 type: 'POST',
                 cache: false,
                 success: function (newData) {
-                    $('#inventoryFilterContent').html(newData);
-                    $('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
+                    $('#' + contentID).html(newData);
+                    $('.search-by-name-in-filter').attr('value', searchText);
+                    //$('.search-requests-in-filter').val(searchText);
+                    $('.search-by-catalog-number').attr('value', catalogNumber);
+                    $('#' + contentDivID + ' .popover-body').html($('#' + contentID).html());
+                },
+                error: function (jqxhr) {
+                    $('#' + contentID + ' .error-message').html(jqxhr.responseText);
+                    $('#' + contentDivID + ' .popover-body').html($('#' + contentID).html());
+                }
+            });
+        }
+
+        $.fn.ClearFilter = function (sectionType, isProprietary) {
+            //alert(sectionType);
+            var contentID ="";
+            var contentDivID ="";
+            var url = "";
+            if(sectionType == "Protocols")
+            {
+                url = "/Protocols/_ProtocolFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType   
+                contentID = "protocolFilterContent";
+                contentDivID ="protocolFilterContentDiv";
+            }
+            else {
+                url = "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType + "&isProprietary=" + isProprietary;
+                contentID = "inventoryFilterContent";
+                contentDivID = "inventoryFilterContentDiv";
+            }
+            $.ajax({
+                async: false, //so it finishes clearing before the page is loaded. otherwise, the requests will be filtered.
+                url:url,
+                type: 'POST',
+                cache: false,
+                success: function (newData) {
+                    $('#'+contentID).html(newData);
+                    $('#'+contentDivID+ ' .popover-body').html($('#'+contentID).html());
                 }
             });
         }
@@ -1382,6 +1614,33 @@
                     $.fn.CloseModal(modalClass);
                 }
             })
+        }
+        $.fn.CancelTest = function (selectedTest) {
+            var url = "/Biomarkers/CancelTestChanges?CurrentGuid=" + $(".hidden-guid").attr("value") + "&TestID=" + selectedTest.attr("testid") + "&ListNumber=0&SiteID=" + /*$(this).attr("listnumber")*/ + $("#ExperimentEntry_SiteID").val() + "&ExperimentID=" + $("#ExperimentEntry_Participant_ExperimentID").val() + "&ExperimentEntryID=" + $("#ExperimentEntry_ExperimentEntryID").val();
+            //alert("url: " + url);
+            $.fn.FinishChangeTest(url, selectedTest);
+        }
+        $.fn.ChangeTest = function (selectedTest) {
+            var url = "/Biomarkers/_TestValues?TestID=" + selectedTest.attr("testid") + "&ListNumber=0&SiteID=" + /*$(this).attr("listnumber")*/ + $("#ExperimentEntry_SiteID").val() + "&ExperimentID=" + $("#ExperimentEntry_Participant_ExperimentID").val() + "&ExperimentEntryID=" + $("#ExperimentEntry_ExperimentEntryID").val();
+            $.fn.FinishChangeTest(url, selectedTest);
+        };
+        $.fn.FinishChangeTest = function(url, selectedTest){
+            $.ajax({
+                async: true,
+                url: url,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $(".testvalues").html(data);
+                    if ($(".edit-mode-input").hasClass("off")) {
+                        $('._testvalues input').attr("disabled", true);
+                        $('._testvalues input').addClass("disabled");
+                        $(".open-document-modal").attr("data-val", "false")
+                    }
+                }
+            });
+            $(".biomarkers-test-name").removeClass("selected");
+            selectedTest.addClass("selected");
         }
     </script>
 

@@ -90,7 +90,7 @@ $(".link-product-dropdown").change(function(){
 	    });
 
 });
-$(".link-protocol-dropdown").change(function(){
+$(".link-protocol-dropdown").off("change").change(function(){
     var protocolSelector = $("select.protocol");
     var subCategorySelector = $("select.protocolSubCategory");
     var parentCategoryID = $("select.protocolParentCategory").val();

@@ -6,9 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.Data;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Abp.Domain.Entities;
 using System.Threading.Tasks;
+using System.Transactions;
+using System.Threading;
 
 namespace PrototypeWithAuth.Data
 {
@@ -20,9 +21,21 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+
+        public DbSet<OldVendorCountry> OldVendorCountries { get; set; }
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<ExperimentEntry> ExperimentEntries { get; set; }
+        public DbSet<TestValue> TestValues { get; set; }
+        public DbSet<TestHeader> TestHeaders { get; set; }
+        public DbSet<TestOuterGroup> TestOuterGroups { get; set; }
+        public DbSet<TestGroup> TestGroups { get; set; }
+        public DbSet<FavoriteReport> FavoriteReports { get; set; }
+        public DbSet<TempResultsJson> TempResultsJsons { get; set; }
+        public DbSet<TempReportJson> TempReportJsons { get; set; }
+        public DbSet<ProtocolVersion> ProtocolVersions { get; set; }
+        public DbSet<FunctionResult> FunctionResults { get; set; }
         public DbSet<TempLineID> TempLineIDs { get; set; }
         public DbSet<FunctionLineID> FunctionLineIDs { get; set; }
-        public DbSet<TestFieldHeader> TestFieldHeaders { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<TestCategory> TestCategories { get; set; }
         public DbSet<Division> Divisions { get; set; }
@@ -151,6 +164,19 @@ namespace PrototypeWithAuth.Data
                 .HasOne(rrc => rrc.Resource)
                 .WithMany(r => r.ResourceResourceCategories)
                 .HasForeignKey(rrc => rrc.ResourceID);
+
+            modelBuilder.Entity<ExperimentTest>()
+                .HasKey(et => new { et.ExperimentID, et.TestID });
+
+            modelBuilder.Entity<ExperimentTest>()
+                .HasOne(et => et.Experiment)
+                .WithMany(e => e.ExperimentTests)
+                .HasForeignKey(et => et.ExperimentID);
+
+            modelBuilder.Entity<ExperimentTest>()
+                .HasOne(et => et.Test)
+                .WithMany(t => t.ExperimentTests)
+                .HasForeignKey(et => et.TestID);
 
             modelBuilder.Entity<RequestLocationInstance>()
                 .HasKey(rl => new { rl.RequestID, rl.LocationInstanceID });
@@ -331,7 +357,7 @@ namespace PrototypeWithAuth.Data
            .HasQueryFilter(item => !item.IsOldSubCategory);
 
             modelBuilder.Entity<LocationType>()
-           .HasQueryFilter(item => item.LocationTypeID !=600);
+           .HasQueryFilter(item => item.LocationTypeID != 600);
 
             modelBuilder.Entity<LocationInstance>()
         .HasQueryFilter(item => item.LocationTypeID != 600);
@@ -368,6 +394,15 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ParentRequest>().HasIndex(p => p.QuartzyOrderNumber).IsUnique();
             modelBuilder.Entity<Product>().HasIndex(p => p.SerialNumber).IsUnique();
             modelBuilder.Entity<Product>().HasIndex(p => new { p.SerialNumber, p.VendorID }).IsUnique();
+            modelBuilder.Entity<ShareRequest>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<ShareProtocol>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<ShareResource>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<TestHeader>().HasIndex(th => new { th.SequencePosition, th.TestGroupID }).IsUnique();
+            modelBuilder.Entity<ExperimentEntry>().HasIndex(ee => new { ee.ParticipantID, ee.VisitNumber }).IsUnique();
+            modelBuilder.Entity<Participant>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<ExperimentEntry>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<Vendor>().HasIndex(v => new { v.CountryID, v.VendorBuisnessID }).IsUnique();
+            modelBuilder.Entity<Participant>().HasIndex(p => new { p.ParticipantID, p.CentarixID }).IsUnique();
             /*PROTOCOLS*/
             ///set up composite keys
 
@@ -399,8 +434,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ProtocolInstance>().Property(r => r.ResultDescription).HasColumnType("ntext");
             modelBuilder.Entity<TempRequestJson>().Property(t => t.Json).HasColumnType("ntext");
             modelBuilder.Entity<TempLinesJson>().Property(t => t.Json).HasColumnType("ntext");
-            modelBuilder.Entity<Protocol>().HasIndex(p => p.UniqueCode).IsUnique();
-            //modelBuilder.Entity<TempLine>().HasIndex(r => r.PermanentLineID).IsUnique();
+            modelBuilder.Entity<Protocol>().HasIndex(p => new { p.UniqueCode }).IsUnique();
+            modelBuilder.Entity<ProtocolVersion>().HasIndex(p => new { p.ProtocolID, p.VersionNumber }).IsUnique();
+            modelBuilder.Entity<ProtocolVersion>().Ignore(p => p.Name);
             modelBuilder.Seed();
 
             //foreach loop ensures that deletion is resticted - no cascade delete

@@ -71,7 +71,7 @@ $(function () {
     return false;
 });
     });
-    $('._IndexTableData [data-toggle = "tooltip"]').off('click').on("click", function (e) {
+    $('._IndexTableData [data-toggle = "tooltip"], ._IndexTableDataByVendor [data-toggle = "tooltip"]' ).off('click').on("click", function (e) {
         e.preventDefault();
         console.log('prevent default')
     });
@@ -131,7 +131,7 @@ $(function () {
     });
 
 
-    $("body").off("click").on("click", ".load-order-details", function (e) {
+    $("body").off("click", ".load-order-details").on("click", ".load-order-details", function (e) {
         //alert('in function')
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -230,8 +230,7 @@ $(function () {
             })
         }
         else {
-            console.log("request status id: " + $(".request-status-id").val());
-            $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/Approve/?id=" + val, "._IndexTableWithCounts", "GET");
+            alert("error- shouldn't get here!");
         }
         return false;
     });
@@ -475,6 +474,9 @@ $(function () {
                     $(id).attr("checked", "checked");
                 }
                 return true;
+            },
+            error: function (jqxhr) {
+                $('.error-message').html(jqxhr.responseText);
             }
         });
 

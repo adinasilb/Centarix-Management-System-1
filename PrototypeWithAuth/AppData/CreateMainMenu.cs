@@ -33,10 +33,17 @@ namespace PrototypeWithAuth.AppData
                 new Menu()
                 {
                     menuID = 2,
-                    MenuDescription = AppUtility.MenuItems.Protocols.ToString(),
-                    MenuViewName = "Protocols",
-                    ControllerName = "Protocols",
-                    ActionName = "ReportsCategories",
+                     MenuDescription = AppUtility.MenuItems.Protocols.ToString(),
+                     MenuViewName = "Protocols",
+                    //ControllerName = "Protocols",
+                    //ActionName = "CurrentProtocols",
+                     ControllerName = "Protocols",
+                     ActionName = "ReportsCategories",
+                     RouteValues = new Microsoft.AspNetCore.Routing.RouteValueDictionary()
+                     {
+                         {"PageType", AppUtility.PageTypeEnum.ProtocolsReports },
+                         {"SidebarType", AppUtility.SidebarEnum.WeeklyReports }
+                     },
                     MenuImageURL = "/images/css/main_menu_icons/protocols.png",
                     SmallMenuImageURL = "/images/css/main_menu_small_icons/protocols_menu_button.png"
                 },
@@ -62,8 +69,8 @@ namespace PrototypeWithAuth.AppData
                     menuID = 4,
                     MenuDescription = AppUtility.MenuItems.Biomarkers.ToString(),
                     MenuViewName = "Biomarkers",
-                    ControllerName = "",
-                    ActionName = "",
+                    ControllerName = "Biomarkers",
+                    ActionName = "HumanTrialsList",
                     MenuImageURL = "/images/css/main_menu_icons/biomarkers.png",
                     SmallMenuImageURL = "/images/css/main_menu_small_icons/biomarkers_menu_button.png"
                 },

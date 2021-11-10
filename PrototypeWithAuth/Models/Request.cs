@@ -90,7 +90,6 @@ namespace PrototypeWithAuth.Models
         [ForeignKey("PaymentStatusID")]
         public PaymentStatus PaymentStatus { get; set; }
         public bool IsPartial { get; set; }
-        public string NoteForPartialDelivery { get; set; }
         public bool IsClarify { get; set; }
         public string NoteForClarifyDelivery { get; set; }
         
@@ -189,5 +188,6 @@ namespace PrototypeWithAuth.Models
         [ForeignKey("QuoteStatusID")]
         public QuoteStatus QuoteStatus { get; set; }
         public bool IsInInventory { get; set; }
+        public bool DevelopersBoolean { get; set; }
     }
 }
