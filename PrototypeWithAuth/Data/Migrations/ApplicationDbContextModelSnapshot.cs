@@ -4996,6 +4996,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("DevelopersBoolean")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("Discount")
                         .HasColumnType("decimal(18,2)");
 

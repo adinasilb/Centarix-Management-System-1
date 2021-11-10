@@ -469,10 +469,16 @@
     <Compile Remove="Data\Migrations\20211025060156_123.Designer.cs" />
     <Compile Remove="Data\Migrations\20211025070731_addedOldVendorCountry.cs" />
     <Compile Remove="Data\Migrations\20211025070731_addedOldVendorCountry.Designer.cs" />
-    <Compile Remove="Data\Migrations\20210812103343_Test.cs" />
-    <Compile Remove="Data\Migrations\20210812103343_Test.Designer.cs" />
-    <Compile Remove="Data\Migrations\20210812105534_Test.cs" />
-    <Compile Remove="Data\Migrations\20210812105534_Test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211104123454_addedParticipantIDUniqueValidation.cs" />
+    <Compile Remove="Data\Migrations\20211104123454_addedParticipantIDUniqueValidation.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211104125503_addedParticipantIDUniqueValidation.cs" />
+    <Compile Remove="Data\Migrations\20211104125503_addedParticipantIDUniqueValidation.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211104125823_TestBranch2.cs" />
+    <Compile Remove="Data\Migrations\20211104125823_TestBranch2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211104130114_addedParticipantIDUniqueValidation.cs" />
+    <Compile Remove="Data\Migrations\20211104130114_addedParticipantIDUniqueValidation.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211109121737_Test.cs" />
+    <Compile Remove="Data\Migrations\20211109121737_Test.Designer.cs" />
   </ItemGroup>
 
 

@@ -212,7 +212,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     viewModelByVendor.RequestsByVendor = accountingNotificationsList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
                     (AppUtility.IndexTableTypes.AccountingNotifications, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString, _context.Requests.Where(pr=>pr.ParentRequestID == pr.ParentRequestID &&r.ProductID == pr.ProductID && r.RequestStatusID==2).FirstOrDefault())
+                        r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString, _context.Requests.Where(pr => pr.ParentRequestID == pr.ParentRequestID && r.ProductID == pr.ProductID && r.RequestStatusID == 2).FirstOrDefault())
                     {
                         ButtonClasses = " invoice-add-all accounting-background-color ",
                         ButtonText = buttonText
@@ -574,7 +574,7 @@ namespace PrototypeWithAuth.Controllers
                 var vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Requests.FirstOrDefault().Product.VendorID);
                 var exchangeRate = requestItemViewModel.Requests.FirstOrDefault().ExchangeRate;
                 var currency = requestItemViewModel.Requests.FirstOrDefault().Currency;
-                
+
                 //in case we need to return to the modal view
                 //requestItemViewModel.ParentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryID).FirstOrDefaultAsync();
 
@@ -771,7 +771,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (place.Placed)
                 {
-                    
+
                     //adding the requestlocationinstance
                     var rli = new RequestLocationInstance()
                     {
@@ -1100,7 +1100,7 @@ namespace PrototypeWithAuth.Controllers
                     newRequest.Unit = 1;
                     newRequest.Product.UnitTypeID = 5;
                     newRequest.Product.SerialNumber = GetSerialNumber(false);
-                    if(newRequest.CreationDate == DateTime.Today) //if it's today, add seconds to be now so it shows up on top
+                    if (newRequest.CreationDate == DateTime.Today) //if it's today, add seconds to be now so it shows up on top
                     {
                         newRequest.CreationDate = DateTime.Now;
                     }
@@ -1427,9 +1427,12 @@ namespace PrototypeWithAuth.Controllers
             var termsList = new List<SelectListItem>() { };
             await _context.PaymentStatuses.ForEachAsync(ps =>
             {
-                    var selected = false;
-                    if (ps.PaymentStatusID == 2) { selected = true; }
+                var selected = false;
+                if (ps.PaymentStatusID == 2) { selected = true; }
+                if (ps.PaymentStatusID != 4 && ps.PaymentStatusID != 7)
+                {
                     termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription, Selected = selected });
+                }
             });
             TermsViewModel termsViewModel = new TermsViewModel()
             {
@@ -1531,7 +1534,7 @@ namespace PrototypeWithAuth.Controllers
                             if (!SaveUsingTempRequest)
                             {
                                 var isOperations = false;
-                                if(tempRequest.Request.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString())
+                                if (tempRequest.Request.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString())
                                 {
                                     isOperations = true;
                                 }
@@ -1550,12 +1553,12 @@ namespace PrototypeWithAuth.Controllers
                                     ShippingPaidHere = hasShippingOnPayment ? false : true
                                 };
                                 hasShippingOnPayment = true;
-                                if (tempRequest.Request.PaymentStatusID == 5 )
+                                if (tempRequest.Request.PaymentStatusID == 5)
                                 {
                                     payment.PaymentDate = termsViewModel.InstallmentDate.AddMonths(i);
                                     payment.Sum = ((tempRequest.Request.Cost ?? 0) / (tempRequest.Request.Installments ?? 0));
                                 }
-                                else if( tempRequest.Request.PaymentStatusID == 7)
+                                else if (tempRequest.Request.PaymentStatusID == 7)
                                 {
                                     payment.PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddMonths(1);
                                     payment.Sum = tempRequest.Request.Cost ?? 0;
@@ -2517,11 +2520,11 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     //save the new comment
                                     comment.RequestID = request.RequestID;
-                                    if(comment.CommentID == 0)
+                                    if (comment.CommentID == 0)
                                     {
                                         comment.CommentTimeStamp = DateTime.Now;
                                         _context.Entry(comment).State = EntityState.Added;
-                                    } 
+                                    }
                                     else
                                     {
                                         _context.Entry(comment).State = EntityState.Modified;
@@ -2682,7 +2685,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReOrderFloatModalView( RequestItemViewModel requestItemViewModel, TempRequestListViewModel tempRequestListViewModel,  AppUtility.OrderTypeEnum OrderTypeEnum/*, bool isCancel = false*/)
+        public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, TempRequestListViewModel tempRequestListViewModel, AppUtility.OrderTypeEnum OrderTypeEnum/*, bool isCancel = false*/)
         {
             /*if (isCancel)
             {
@@ -2752,11 +2755,11 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
                 }
-                else if(tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
+                else if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                 {
                     tempRequestListViewModel.RequestIndexObject.RequestStatusID = 6; //redirect to requests instead of received
                 }
-                else if(tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
+                else if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                 {
                     tempRequestListViewModel.RequestIndexObject.RequestStatusID = 6; //redirect to requests instead of received
                 }
@@ -2764,15 +2767,15 @@ namespace PrototypeWithAuth.Controllers
                 /*//uncurrent the one we're on
                 await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);*/
 
-                
+
                 var action = "UploadQuoteModal"; //for order now and add to cart
-                if(OrderTypeEnum == AppUtility.OrderTypeEnum.AlreadyPurchased)
+                if (OrderTypeEnum == AppUtility.OrderTypeEnum.AlreadyPurchased)
                 {
                     action = "UploadOrderModal";
                 }
-                else if(OrderTypeEnum == AppUtility.OrderTypeEnum.RequestPriceQuote)
+                else if (OrderTypeEnum == AppUtility.OrderTypeEnum.RequestPriceQuote)
                 {
-                    switch(tempRequestListViewModel.RequestIndexObject.PageType)
+                    switch (tempRequestListViewModel.RequestIndexObject.PageType)
                     {
                         case AppUtility.PageTypeEnum.RequestRequest:
                             action = "Index";
@@ -2811,7 +2814,7 @@ namespace PrototypeWithAuth.Controllers
                 oldRequest.IsInInventory = false;
                 _context.Update(oldRequest);
                 await _context.SaveChangesAsync();
-            }       
+            }
         }
 
 
@@ -2855,7 +2858,7 @@ namespace PrototypeWithAuth.Controllers
                     pr.OrderNumber = lastParentRequestOrderNum + 1;
                     pr.OrderDate = DateTime.Now;
                 }
-                 request.ParentRequest = pr;
+                request.ParentRequest = pr;
                 if (request.Product == null)
                 {
                     request.Product = _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor)
@@ -2878,7 +2881,7 @@ namespace PrototypeWithAuth.Controllers
                 newTRLVM.GUID = updatedTempRequestJson.GuidID;
                 newTRLVM.SequencePosition = updatedTempRequestJson.SequencePosition;
                 var payments = _context.Payments.Where(p => p.RequestID == id);
-             
+
                 allRequests.Add(request);
             }
             else
@@ -2929,7 +2932,7 @@ namespace PrototypeWithAuth.Controllers
 
             string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
             string path2 = Path.Combine(path1, requestIndexObject.GUID.ToString());
-            if(!Directory.Exists(path2))
+            if (!Directory.Exists(path2))
             {
                 Directory.CreateDirectory(path2);
             }
@@ -2998,7 +3001,7 @@ namespace PrototypeWithAuth.Controllers
                 //    }
                 //    emailNum++;
                 //}
-                
+
                 string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
                 string folder2 = Path.Combine(uploadFolder, tempRequestListViewModel.GUID.ToString());
                 string fileName = Path.Combine(folder2, "Order.txt");
@@ -3231,7 +3234,7 @@ namespace PrototypeWithAuth.Controllers
                                     MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID == null ? 0 : Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, false, tempRequestListViewModel.GUID);
                                 }
                                 bool moveOrderDoc = false;
-                                if(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID == 0)
+                                if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID == 0)
                                 {
                                     _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Added;
                                     moveOrderDoc = true;
@@ -3241,10 +3244,10 @@ namespace PrototypeWithAuth.Controllers
                                     _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Modified;
                                 }
                                 await _context.SaveChangesAsync();
-                                if(moveOrderDoc)
+                                if (moveOrderDoc)
                                 {
-                                   MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID,
-                                        AppUtility.ParentFolderName.ParentRequest, false, tempRequestListViewModel.GUID);     //make sure has an id here.
+                                    MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID,
+                                         AppUtility.ParentFolderName.ParentRequest, false, tempRequestListViewModel.GUID);     //make sure has an id here.
                                 }
                                 //throw new Exception();
                                 await transaction.CommitAsync();
@@ -3264,7 +3267,7 @@ namespace PrototypeWithAuth.Controllers
 
                 }
                 tempRequestListViewModel.RequestIndexObject.RequestStatusID = 2;
-                if(tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestLocation) 
+                if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestLocation)
                 {
                     //TODO change to ajax call, return new empty result and close modals in success of ajax
                     return RedirectToAction("Index", "Locations", new { SectionType = AppUtility.MenuItems.Requests });
@@ -3274,7 +3277,7 @@ namespace PrototypeWithAuth.Controllers
             catch (Exception ex)
             {
                 await RollbackCurrentTempAsync(tempRequestListViewModel.GUID);
-                tempRequestListViewModel.RequestIndexObject.ErrorMessage += AppUtility.GetExceptionMessage(ex); 
+                tempRequestListViewModel.RequestIndexObject.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
                 {
@@ -3290,8 +3293,11 @@ namespace PrototypeWithAuth.Controllers
                 }
                 else if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestLocation)
                 {
-                    return RedirectToAction("Index", "Locations", new { SectionType = AppUtility.MenuItems.Requests, 
-                            ErrorMessage = tempRequestListViewModel.RequestIndexObject.ErrorMessage });
+                    return RedirectToAction("Index", "Locations", new
+                    {
+                        SectionType = AppUtility.MenuItems.Requests,
+                        ErrorMessage = tempRequestListViewModel.RequestIndexObject.ErrorMessage
+                    });
                 }
                 else
                 {
@@ -3439,7 +3445,7 @@ namespace PrototypeWithAuth.Controllers
                     //return RedirectToAction("Error");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var errMessage = AppUtility.GetExceptionMessage(ex);
                 return RedirectToAction("LabManageQuotes", new { errorMessage = errMessage });
@@ -3757,7 +3763,7 @@ namespace PrototypeWithAuth.Controllers
             //    _context.Update(li);
             //}
             //_context.SaveChanges();
-            var request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r=>r.Product.UnitType)
+            var request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.UnitType)
                     .FirstOrDefault();
 
             ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
@@ -3791,12 +3797,12 @@ namespace PrototypeWithAuth.Controllers
             };
             bool finished = false;
             int locationTypeIDLoop = LocationTypeID;
-            if (LocationTypeID == 500 )
+            if (LocationTypeID == 500)
             {
                 receivedModalSublocationsViewModel.LabPartTypes = _context.LabParts;
             }
             while (!finished)
-            {              
+            {
                 //need to get the whole thing b/c need both the name and the child id so it's instead of looping through the list twice
                 var nextType = _context.LocationTypes.Where(lt => lt.LocationTypeID == locationTypeIDLoop).FirstOrDefault();
                 string nextTYpeName = nextType.LocationTypeName;
@@ -3910,7 +3916,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)                
+                    var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
                     decimal pricePerUnit = 0;
                     if (receivedLocationViewModel.IsPartial)
@@ -3924,23 +3930,11 @@ namespace PrototypeWithAuth.Controllers
                         await _context.SaveChangesAsync();
                         MoveDocumentsOutOfTempFolder(requestReceived.RequestID, AppUtility.ParentFolderName.Requests, receivedLocationViewModel.Request.RequestID, true);
 
-                        var comments = _context.Comments.Where(c => c.RequestID == receivedLocationViewModel.Request.RequestID).AsNoTracking();
-                        foreach(var c in comments)
-                        {
-                            c.CommentID = 0;
-                            c.RequestID = requestReceived.RequestID;
-                            _context.Entry(c).State = EntityState.Added;
-                        }
-                        var payments = _context.Payments.Where(p => p.RequestID == receivedLocationViewModel.Request.RequestID).AsNoTracking();
-                        foreach (var p in payments)
-                        {
-                            p.PaymentID = 0;
-                            p.RequestID = requestReceived.RequestID;
-                            _context.Entry(p).State = EntityState.Added;
-                        }
-                        await _context.SaveChangesAsync();
+                        await CopyCommentsAsync(receivedLocationViewModel.Request.RequestID, requestReceived.RequestID);
+                        await CopyPaymentsAsync(receivedLocationViewModel.Request.RequestID, requestReceived.RequestID);
+
                         requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
-             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
+.Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
                         pricePerUnit = requestReceived.PricePerUnit;
                         requestReceived.Unit = (uint)receivedLocationViewModel.AmountArrived;
                         requestReceived.Cost = pricePerUnit * requestReceived.Unit;
@@ -3975,10 +3969,10 @@ namespace PrototypeWithAuth.Controllers
                             await SaveLocations(receivedModalVisualViewModel, requestReceived, false);
                         }
                     }
-                    
+
                     requestReceived.RequestStatusID = 3;
-                    
-                    if(receivedLocationViewModel.Request.ArrivalDate == DateTime.Today)
+
+                    if (receivedLocationViewModel.Request.ArrivalDate == DateTime.Today)
                     {
                         requestReceived.ArrivalDate = DateTime.Now;
                     }
@@ -3988,7 +3982,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     requestReceived.ApplicationUserReceiverID = receivedLocationViewModel.Request.ApplicationUserReceiverID;
                     requestReceived.ApplicationUserReceiver = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault();
-                   
+
                     requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
                     requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
                     requestReceived.IsInInventory = true;
@@ -4001,17 +3995,17 @@ namespace PrototypeWithAuth.Controllers
                     {
                         requestReceived.PaymentStatusID = 3;
                     }
-          
 
-                        _context.Update(requestReceived);
-                        await _context.SaveChangesAsync();
 
-         
+                    _context.Update(requestReceived);
+                    await _context.SaveChangesAsync();
+
+
 
                     //need to do this function before save changes because if new request it should not have an id yet
-           
+
                     await RemoveOldRequestFromInventory(requestReceived.RequestID);
-               
+
                     RequestNotification requestNotification = new RequestNotification();
                     requestNotification.RequestID = requestReceived.RequestID;
                     requestNotification.IsRead = false;
@@ -4055,6 +4049,88 @@ namespace PrototypeWithAuth.Controllers
 
             return await RedirectRequestsToShared("_IndexTableWithCounts", receivedLocationViewModel.RequestIndexObject);
 
+        }
+
+        public async Task CopyCommentsAsync(int OldRequestID, int NewRequestID)
+        {
+            var comments = _context.Comments.Where(c => c.RequestID == OldRequestID).AsNoTracking();
+            foreach (var c in comments)
+            {
+                c.CommentID = 0;
+                c.RequestID = NewRequestID;
+                _context.Entry(c).State = EntityState.Added;
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CopyPaymentsAsync(int OldRequestID, int NewRequestID)
+        {
+            var payments = _context.Payments.Where(p => p.RequestID == OldRequestID).AsNoTracking();
+            foreach (var p in payments)
+            {
+                p.PaymentID = 0;
+                p.RequestID = NewRequestID;
+                _context.Entry(p).State = EntityState.Added;
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task SplitPartialsAsync()
+        {
+            var RequestsOriginal = _context.Requests.Where(r => r.IsPartial && r.RequestStatusID == 3).ToList();
+            var RequestsCopy = _context.Requests.Where(r => r.IsPartial && r.RequestStatusID == 3)
+                .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                .AsNoTracking().ToList();
+            foreach (var rc in RequestsCopy)
+            {
+                var OldRequestID = rc.RequestID;
+                rc.RequestID = 0;
+                rc.RequestStatusID = 2;
+                rc.IsClarify = false;
+                rc.ApplicationUserReceiverID = null;
+                rc.ArrivalDate = new DateTime();
+                rc.IsInInventory = false;
+                rc.NoteForClarifyDelivery = null;
+                rc.DevelopersBoolean = true;
+                if (rc.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString())
+                {
+                    rc.Batch = null;
+                    rc.BatchExpiration = null;
+                }
+                _context.Entry(rc).State = EntityState.Added;
+                await _context.SaveChangesAsync();
+                await CopyCommentsAsync(OldRequestID, rc.RequestID);
+                await CopyPaymentsAsync(OldRequestID, rc.RequestID);
+                MoveDocumentsOutOfTempFolder(rc.RequestID, AppUtility.ParentFolderName.Requests, OldRequestID, true);
+                //Didn't arrive notification may not have moved over;
+            }
+            foreach (var ro in RequestsOriginal)
+            {
+                ro.IsPartial = false;
+                ro.DevelopersBoolean = true;
+                _context.Entry(ro).State = EntityState.Modified;
+            }
+            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
+        }
+
+        public async Task SplitCostsAsync()
+        {
+            var OriginalRequests = _context.Requests.Where(r => (r.DevelopersBoolean && !r.IsPartial)).ToList();
+            var SplitRequests = _context.Requests.Where(r => (r.DevelopersBoolean && r.IsPartial)).ToList();
+            foreach (var or in OriginalRequests)
+            {
+                var sr = SplitRequests.Where(sp => sp.ParentRequestID == or.ParentRequestID && sp.ProductID == or.ProductID).FirstOrDefault();
+                uint FullAmount = sr.Unit + or.Unit;
+                decimal PricePerUnit = (or.Cost ?? 0) / (FullAmount == 0 ? 1 : FullAmount);
+                or.Cost = or.Unit * PricePerUnit;
+                sr.Cost = sr.Unit * PricePerUnit;
+                or.DevelopersBoolean = false;
+                sr.DevelopersBoolean = false;
+                _context.Entry(or).State = EntityState.Modified;
+                _context.Entry(sr).State = EntityState.Modified;
+            }
+            await _context.SaveChangesAsync();
         }
 
         [HttpPost]
@@ -4265,7 +4341,7 @@ namespace PrototypeWithAuth.Controllers
         public JsonResult GetSublocationInstancesList(int locationInstanceParentId, int labPartID)
         {
             List<LocationInstance> locationInstanceList = new List<LocationInstance>();
-            if (labPartID!=0)
+            if (labPartID != 0)
             {
                 locationInstanceList = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == locationInstanceParentId && li.LabPartID == labPartID).Include(li => li.LabPart).OrderBy(li => li.LocationNumber).ToList();
 
@@ -4772,7 +4848,7 @@ namespace PrototypeWithAuth.Controllers
                     requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
                     break;
                 case AppUtility.SidebarEnum.PartialDelivery:
-                    requestsList = requestsList.Where(r => r.RequestStatusID ==2 && r.IsPartial);
+                    requestsList = requestsList.Where(r => r.RequestStatusID == 2 && r.IsPartial);
                     break;
                 case AppUtility.SidebarEnum.ForClarification:
                     requestsList = requestsList.Where(r => r.IsClarify);
@@ -4967,7 +5043,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
-                    
+
                 }
                 catch (Exception ex)
                 {
@@ -5039,7 +5115,7 @@ namespace PrototypeWithAuth.Controllers
                         var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
 
                         payment.Sum = request.Payments.FirstOrDefault().Sum;
-                  
+
                         //else
                         //{
                         //    payment.Sum = request.Cost ?? 0;
@@ -5154,9 +5230,9 @@ namespace PrototypeWithAuth.Controllers
                     _context.Add(addInvoiceViewModel.Invoice);
                     await _context.SaveChangesAsync();
 
-/*                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-                    string uploadFolderFrom = Path.Combine(uploadFolder, addInvoiceViewModel.Guid.ToString());
-                    string uplaodFolderPathFrom = Path.Combine(uploadFolderFrom, AppUtility.FolderNamesEnum.Invoices.ToString());*/
+                    /*                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+                                        string uploadFolderFrom = Path.Combine(uploadFolder, addInvoiceViewModel.Guid.ToString());
+                                        string uplaodFolderPathFrom = Path.Combine(uploadFolderFrom, AppUtility.FolderNamesEnum.Invoices.ToString());*/
 
                     foreach (var request in addInvoiceViewModel.Requests)
                     {
@@ -5347,7 +5423,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         catch (Exception ex)
                         {
-                       
+
                             throw ex;
                         }
                     }
@@ -5559,7 +5635,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel, TempRequestListViewModel tempRequestListViewModel, bool isCancel = false)
         {
-            
+
             if (isCancel)
             {
                 DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
@@ -5567,7 +5643,7 @@ namespace PrototypeWithAuth.Controllers
                 await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
                 return new EmptyResult();
             }
-            
+
             var r = await SaveTermsModalAsync(termsViewModel, tempRequestListViewModel);
             if (r.RedirectToActionResult.ActionName == "" && r.RedirectToActionResult.ControllerName == "")
             {
@@ -5609,7 +5685,7 @@ namespace PrototypeWithAuth.Controllers
                 //throw new Exception();
                 return PartialView(inventoryFilterViewModel);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Response.StatusCode = 500;
                 return PartialView("_ErrorMessage", AppUtility.GetExceptionMessage(ex));
@@ -5669,7 +5745,7 @@ namespace PrototypeWithAuth.Controllers
                 Response.StatusCode = 500;
                 return PartialView("_ErrorMessage", AppUtility.GetExceptionMessage(ex));
             }
-            
+
         }
         [Authorize(Roles = "Requests")]
         [HttpGet]
@@ -6048,7 +6124,7 @@ namespace PrototypeWithAuth.Controllers
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
             string uploadFolderPathTo = Path.Combine(requestFolderTo, AppUtility.FolderNamesEnum.Invoices.ToString());
-           
+
             try
             {
                 if (!Directory.Exists(requestFolderTo))
@@ -6063,8 +6139,8 @@ namespace PrototypeWithAuth.Controllers
                         Directory.CreateDirectory(uploadFolderPathTo);
                     }
                 }
-                System.IO.File.Copy(sourceFile, uploadFolderPathTo+ @"\"+invoiceRow.DocumentNumber + ".pdf", true);
-                WriteErrorToFile("file was addeded for request id:"+ request.RequestID);
+                System.IO.File.Copy(sourceFile, uploadFolderPathTo + @"\" + invoiceRow.DocumentNumber + ".pdf", true);
+                WriteErrorToFile("file was addeded for request id:" + request.RequestID);
             }
             catch (IOException iox)
             {
