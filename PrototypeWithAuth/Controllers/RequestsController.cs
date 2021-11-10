@@ -4077,8 +4077,8 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task SplitPartialsAsync()
         {
-            var RequestsOriginal = _context.Requests.Where(r => r.IsPartial).ToList();
-            var RequestsCopy = _context.Requests.Where(r => r.IsPartial)
+            var RequestsOriginal = _context.Requests.Where(r => r.IsPartial && r.RequestStatusID == 3).ToList();
+            var RequestsCopy = _context.Requests.Where(r => r.IsPartial && r.RequestStatusID == 3)
                 .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
                 .AsNoTracking().ToList();
             foreach (var rc in RequestsCopy)
@@ -4125,6 +4125,8 @@ namespace PrototypeWithAuth.Controllers
                 decimal PricePerUnit = (or.Cost ?? 0) / (FullAmount == 0 ? 1 : FullAmount);
                 or.Cost = or.Unit * PricePerUnit;
                 sr.Cost = sr.Unit * PricePerUnit;
+                or.DevelopersBoolean = false;
+                sr.DevelopersBoolean = false;
                 _context.Entry(or).State = EntityState.Modified;
                 _context.Entry(sr).State = EntityState.Modified;
             }
