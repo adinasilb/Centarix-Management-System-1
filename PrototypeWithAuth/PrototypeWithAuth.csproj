@@ -477,6 +477,8 @@
     <Compile Remove="Data\Migrations\20211104125823_TestBranch2.Designer.cs" />
     <Compile Remove="Data\Migrations\20211104130114_addedParticipantIDUniqueValidation.cs" />
     <Compile Remove="Data\Migrations\20211104130114_addedParticipantIDUniqueValidation.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211109121737_Test.cs" />
+    <Compile Remove="Data\Migrations\20211109121737_Test.Designer.cs" />
   </ItemGroup>
 
 

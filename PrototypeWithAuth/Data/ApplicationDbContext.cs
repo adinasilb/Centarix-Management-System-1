@@ -357,7 +357,7 @@ namespace PrototypeWithAuth.Data
            .HasQueryFilter(item => !item.IsOldSubCategory);
 
             modelBuilder.Entity<LocationType>()
-           .HasQueryFilter(item => item.LocationTypeID !=600);
+           .HasQueryFilter(item => item.LocationTypeID != 600);
 
             modelBuilder.Entity<LocationInstance>()
         .HasQueryFilter(item => item.LocationTypeID != 600);
@@ -435,7 +435,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<TempRequestJson>().Property(t => t.Json).HasColumnType("ntext");
             modelBuilder.Entity<TempLinesJson>().Property(t => t.Json).HasColumnType("ntext");
             modelBuilder.Entity<Protocol>().HasIndex(p => new { p.UniqueCode }).IsUnique();
-            modelBuilder.Entity<ProtocolVersion>().HasIndex(p => new {p.ProtocolID, p.VersionNumber }).IsUnique();
+            modelBuilder.Entity<ProtocolVersion>().HasIndex(p => new { p.ProtocolID, p.VersionNumber }).IsUnique();
             modelBuilder.Entity<ProtocolVersion>().Ignore(p => p.Name);
             modelBuilder.Seed();
 
