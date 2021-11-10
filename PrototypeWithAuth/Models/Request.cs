@@ -188,5 +188,6 @@ namespace PrototypeWithAuth.Models
         [ForeignKey("QuoteStatusID")]
         public QuoteStatus QuoteStatus { get; set; }
         public bool IsInInventory { get; set; }
+        public bool DevelopersBoolean { get; set; }
     }
 }
