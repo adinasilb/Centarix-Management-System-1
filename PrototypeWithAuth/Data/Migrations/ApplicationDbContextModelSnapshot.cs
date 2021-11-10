@@ -2766,6 +2766,13 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationRoomInstanceAbbrev = "LN1",
                             LocationRoomInstanceName = "Liquid Nitrogen Room 1",
                             LocationRoomTypeID = 7
+                        },
+                        new
+                        {
+                            LocationRoomInstanceID = 13,
+                            LocationRoomInstanceAbbrev = "BL5",
+                            LocationRoomInstanceName = "Biomarker Lab 5",
+                            LocationRoomTypeID = 1
                         });
                 });
 
@@ -5078,6 +5085,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("DevelopersBoolean")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("Discount")
                         .HasColumnType("decimal(18,2)");

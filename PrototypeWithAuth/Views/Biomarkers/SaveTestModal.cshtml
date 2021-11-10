@@ -1,4 +1,4 @@
-﻿@model String
+﻿@model PrototypeWithAuth.ViewModels.SaveTestViewModel;
 <div class="modal modal-view save-test-modal" id="myModal" data-backdrop="false" style="z-index: 9100">
     <div class="elixir-modal-sm modal-dialog-centered mx-auto" style="width:27rem;">
         <div class="modal-content d-inline-block modal-box-shadow ">
@@ -9,7 +9,8 @@
                 </button>
             </div>
             <form action="" class="small-modal-padding">
-                <input type="hidden" value="@Model" id="BioTestString" />
+                <input type="hidden" value="@Model.ID" id="BioTestString" />
+                @*<input type="hidden" value="@Model.Guid" class="hidden-guid" />*@
                 <div class="row under-row-margin">
                     <div class="col-12 text-center">
                         Would you like to save changes?
@@ -32,7 +33,7 @@
         e.preventDefault();
         if ($("#BioTestString").val() != "none") {
             var selected = $("#" + $("#BioTestString").val());
-            $.fn.ChangeTest(selected);
+            $.fn.CancelTest(selected);
         }
         else {
             $(".edit-mode-input").prop("checked", false);
@@ -48,7 +49,7 @@
             $('._testvalues input').addClass("disabled");
             $('.open-document-modal').attr("showSwitch", "false")
             var selected = $(".biomarkers-test-name.selected");
-            $.fn.ChangeTest(selected);
+            $.fn.CancelTest(selected);
         }
 
         $.fn.CloseModal('save-bio-test-modal');

@@ -64,9 +64,9 @@
                     </div>
                 </div>
                 @*<div class="col-1 text-center">
-                <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
-                <label asp-for="Arrival">Arrival</label>
-            </div>*@
+            <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
+            <label asp-for="Arrival">Arrival</label>
+        </div>*@
                 <div class="col-2 text-center">
                     <br />
                     <div class="form-check">
@@ -77,19 +77,23 @@
 
                     </div>
                 </div>
-                <div class="col-2 text-center">
-                    <br />
-                    <div class="form-check">
-                        <button href="#" id="partialPopover" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow">
-                        </button>
-                        <input type="checkbox" class="form-check-input filled-in partial-checkbox" asp-for="IsPartial" />
-                        <label class="form-check-label " asp-for="IsPartial">Partial</label>
+                @if (Model.Request.PaymentStatusID != 5 && Model.Request.PaymentStatusID != 7 && Model.Request.PaymentStatusID != 4 && Model.Request.PaymentStatusID != 3)
+                {
+                    <div class="col-2 text-center">
+                        <br />
+                        <div class="form-check">
+                            <button href="#" id="partialPopover" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow">
+                            </button>
+                            <input type="checkbox" class="form-check-input filled-in partial-checkbox" asp-for="IsPartial" />
+                            <label class="form-check-label " asp-for="IsPartial">Partial</label>
+                        </div>
                     </div>
-                </div>
+                }
+
                 @*<div class="col-1 text-center">
-                <input type="checkbox" id="test-chkbx" class="new-chckbx" />
-                <label for="test-chkbx">Trial</label>
-            </div>*@
+            <input type="checkbox" id="test-chkbx" class="new-chckbx" />
+            <label for="test-chkbx">Trial</label>
+        </div>*@
             </div>
             <div class="clarify-popover m-5" style="display:none">
                 <label asp-for="Request.NoteForClarifyDelivery" class="control-label">Clarify Note</label>
