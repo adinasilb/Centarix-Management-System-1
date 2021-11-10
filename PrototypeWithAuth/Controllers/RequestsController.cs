@@ -3919,6 +3919,32 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
+
+
+        private async Task CopyCommentsAsync(int OldRequestID, int NewRequestID)
+        {
+            var comments = _context.Comments.Where(c => c.RequestID == OldRequestID).AsNoTracking();
+            foreach (var c in comments)
+            {
+                c.CommentID = 0;
+                c.RequestID = NewRequestID;
+                _context.Entry(c).State = EntityState.Added;
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task CopyPaymentsAsync(int OldRequestID, int NewRequestID)
+        {
+            var payments = _context.Payments.Where(p => p.RequestID == OldRequestID).AsNoTracking();
+            foreach (var p in payments)
+            {
+                p.PaymentID = 0;
+                p.RequestID = NewRequestID;
+                _context.Entry(p).State = EntityState.Added;
+            }
+            await _context.SaveChangesAsync();
+        }
+
         [HttpPost]
         [RequestFormLimits(ValueCountLimit = int.MaxValue)]
         [Authorize(Roles = "Requests")]
