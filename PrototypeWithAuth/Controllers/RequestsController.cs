@@ -3971,7 +3971,7 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                     requestReceived.RequestStatusID = 3;
-
+                    requestReceived.IsPartial = false;
                     if (receivedLocationViewModel.Request.ArrivalDate == DateTime.Today)
                     {
                         requestReceived.ArrivalDate = DateTime.Now;
