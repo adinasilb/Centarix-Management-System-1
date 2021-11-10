@@ -912,7 +912,7 @@ namespace PrototypeWithAuth.AppData
         public static String ConvertIntToString(decimal number)
         {
             var returnString = "";
-            if(number != 0)
+            if (number != 0)
             {
                 returnString = number.ToString();
             }
