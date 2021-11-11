@@ -547,7 +547,8 @@ namespace PrototypeWithAuth.ViewModels
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetCartColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = checkboxString, Bool = false } }, AjaxID = r.RequestID };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = checkboxString, Bool = false } }, AjaxID = r.RequestID, AjaxLink="currencyEnum"+r.Currency+" "
+            };
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = GetImageURL() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, ValueWithError = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, ValueWithError = GetVendorName(), ShowTooltip = true };
