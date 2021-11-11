@@ -5023,6 +5023,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddInvoiceModal(int? vendorid, int? requestid, int[] requestIds)
         {
             List<Request> Requests = new List<Request>();
+            StringWithBool Error = new StringWithBool();
             var queryableRequests = _context.Requests
                 .Include(r => r.ParentRequest)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
@@ -5033,6 +5034,10 @@ namespace PrototypeWithAuth.Controllers
                 Requests = queryableRequests
                     .Where(r => r.Payments.FirstOrDefault().HasInvoice == false)
                     .Where(r => r.Product.VendorID == vendorid).ToList();
+                if (queryableRequests.Select(r => r.Currency).Distinct().Count() > 1)
+                {
+                    Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
+                }
             }
             else if (requestid != null)
             {
@@ -5040,9 +5045,30 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (requestIds != null)
             {
+                AppUtility.CurrencyEnum CurrencyUsed = AppUtility.CurrencyEnum.None;
+                int? VendorID = null;
+                bool FirstTime = true;
                 foreach (int rId in requestIds)
                 {
-                    Requests.Add(queryableRequests.Where(r => r.RequestID == rId).FirstOrDefault());
+                    var request = queryableRequests.Where(r => r.RequestID == rId).Include(r => r.Product).FirstOrDefault();
+                    Requests.Add(request);
+                    if (FirstTime)
+                    {
+                        Enum.TryParse(queryableRequests.FirstOrDefault().Currency, out CurrencyUsed);
+                        VendorID = request.Product.VendorID;
+                        FirstTime = false;
+                    }
+                    else
+                    {
+                        if (request.Currency != CurrencyUsed.ToString())
+                        {
+                            Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
+                        }
+                        if (request.Product.VendorID != VendorID)
+                        {
+                            Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
+                        }
+                    }
                 }
             }
             AddInvoiceViewModel addInvoiceViewModel = new AddInvoiceViewModel()
@@ -5052,7 +5078,8 @@ namespace PrototypeWithAuth.Controllers
                 {
                     InvoiceDate = DateTime.Today
                 },
-                Guid = Guid.NewGuid()
+                Guid = Guid.NewGuid(),
+                Error = Error
             };
             return PartialView(addInvoiceViewModel);
         }
