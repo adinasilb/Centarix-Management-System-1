@@ -360,7 +360,7 @@ namespace PrototypeWithAuth.Controllers
                     EmployeeHoursAwaitingApproval employeeHoursBeingApproved = await _context.EmployeeHoursAwaitingApprovals
                         .Include(ehaa => ehaa.EmployeeHours)
                         .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == id).AsNoTracking().FirstOrDefaultAsync();
-                    employeeHours = await _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == employeeHoursBeingApproved.EmployeeHoursID).FirstOrDefaultAsync();
+                    employeeHours = await _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == employeeHoursBeingApproved.EmployeeHoursID).AsNoTracking().FirstOrDefaultAsync();
                     var user = await _context.Employees.Include(e => e.SalariedEmployee).Where(e => e.Id == employeeHoursBeingApproved.EmployeeID).FirstOrDefaultAsync();
                     if (employeeHoursBeingApproved.OffDayTypeID != null)
                     {
@@ -439,9 +439,9 @@ namespace PrototypeWithAuth.Controllers
 
                     try
                     {
-                        _context.Update(employeeHours);
+                        _context.Entry(employeeHours).State = EntityState.Modified;
                         await _context.SaveChangesAsync();
-                        _context.Remove(employeeHoursBeingApproved);
+                        _context.Entry(employeeHoursBeingApproved).State = EntityState.Deleted;
                         await _context.SaveChangesAsync();
                     }
                     catch (Exception ex)
