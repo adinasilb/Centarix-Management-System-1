@@ -3,11 +3,11 @@
 
 @{
     var bcColor = "order-inv-background-color";
-    if (Model.TempRequestListViewModel.RequestIndexObject?.SectionType == AppUtility.MenuItems.Operations)
+    if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
         bcColor = "oper-background-color";
     }
-    else if (Model.TempRequestListViewModel.RequestIndexObject?.SectionType == AppUtility.MenuItems.LabManagement)
+    else if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.LabManagement)
     {
         bcColor = "lab-man-background-color";
     }

@@ -1453,13 +1453,11 @@ namespace PrototypeWithAuth.Controllers
                 {
                     if (req.Currency != CurrencyUsed.ToString())
                     {
-                        Error.Bool = true;
-                        Error.String = "Cannot complete this action. The items selected have different currency types.";
+                        Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
                     }
                     if (req.Product.VendorID != vendorID)
                     {
-                        Error.Bool = true;
-                        Error.String = "Cannot complete this action. The items selected have different Vendors.";
+                        Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
                     }
                     tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = req });
                 }
@@ -1481,13 +1479,11 @@ namespace PrototypeWithAuth.Controllers
                 {
                     if (request.Currency != CurrencyUsed.ToString())
                     {
-                        Error.Bool = true;
-                        Error.String = "Cannot complete this action. The items selected have different currency types.";
+                        Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
                     }
                     if (request.Product.VendorID != VendorID)
                     {
-                        Error.Bool = true;
-                        Error.String = "Cannot complete this action. The items selected have different Vendors.";
+                        Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
                     }
                     tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
                 }
