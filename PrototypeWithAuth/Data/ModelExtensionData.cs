@@ -2033,6 +2033,13 @@ namespace PrototypeWithAuth.Data
                             LocationRoomInstanceName = "Liquid Nitrogen Room 1",
                             LocationRoomInstanceAbbrev = "LN1"
 
+                        },
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID =13,
+                            LocationRoomTypeID = 1,
+                            LocationRoomInstanceName = "Biomarker Lab 5",
+                            LocationRoomInstanceAbbrev = "BL5",
                         }
                         );
             modelBuilder.Entity<TemporaryLocationInstance>().HasData(
@@ -3146,6 +3153,10 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Country>().HasData(
                 
                 SeededData.CountryData.GetCountries()
+                );
+
+            modelBuilder.Entity<Currency>().HasData(
+                SeededData.CurrencyData.GetCurrencies()
                 );
 
         }

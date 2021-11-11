@@ -11,6 +11,8 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int CountryID { get; set; }
         public string CountryName { get; set; }
+        public int CurrencyID { get; set; }
+        public Currency Currency { get; set; }
         public IEnumerable<Vendor> Vendors { get; set; }
     }
 }

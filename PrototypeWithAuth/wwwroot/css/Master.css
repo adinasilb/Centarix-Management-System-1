@@ -66,6 +66,11 @@
     --timekeeper-alt-color: #009688;
     --disabled-filter: invert(69%) sepia(13%) saturate(0%) hue-rotate(166deg) brightness(100%) contrast(94%);
     --light-gray: #E5E5E5;
+    --warning-color: #EED202;
+}
+
+.warning-color {
+    color: var(--warning-color);
 }
 
 .success-color {
@@ -346,17 +351,20 @@ table.visual-locations td .content {
 
 
 body {
-    overflow: hidden;
+  /*  overflow: hidden;*/
     color: var(--black-87);
     text-transform: capitalize;
     font-weight: var(--bold-regular)
 }
 
-/*fonts*/
-.heading-1 {
-    font-size: 1.75rem !important;
-    font-weight: var(--bold-medium) !important;
-}
+    body < ._IndexTableWithCounts{
+        overflow:hidden;
+    }
+    /*fonts*/
+    .heading-1 {
+        font-size: 1.75rem !important;
+        font-weight: var(--bold-medium) !important;
+    }
 
 .tabs-font {
     font-size: 1.25rem;

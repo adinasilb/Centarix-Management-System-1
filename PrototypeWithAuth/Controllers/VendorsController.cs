@@ -135,19 +135,19 @@ namespace PrototypeWithAuth.Controllers
 
         {
             IQueryable<Vendor> filteredVendors = _context.Vendors.Include(v => v.VendorCategoryTypes).AsQueryable();
-            List<int> orderedVendorCategoryTypes = null;
+            List<int> orderedVendorCategoryTypes = new List<int>();
             if (vendorSearchViewModel.VendorCategoryTypes != null)
             {
                 orderedVendorCategoryTypes = vendorSearchViewModel.VendorCategoryTypes.OrderBy(e => e).ToList();
             }
             var listfilteredVendors = filteredVendors
-                .Where(fv => (String.IsNullOrEmpty(vendorSearchViewModel.VendorEnName) || fv.VendorEnName.ToLower().Contains(vendorSearchViewModel.VendorEnName.ToLower()))
-                 &&
+            .Where(fv => (String.IsNullOrEmpty(vendorSearchViewModel.VendorEnName) || fv.VendorEnName.ToLower().Contains(vendorSearchViewModel.VendorEnName.ToLower()))
+                &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorHeName) || fv.VendorHeName.ToLower().Contains(vendorSearchViewModel.VendorHeName.ToLower()))
              &&
              (String.IsNullOrEmpty(vendorSearchViewModel.VendorBuisnessID) || fv.VendorBuisnessID.ToLower().Contains(vendorSearchViewModel.VendorBuisnessID.ToLower()))
              &&
-             (String.IsNullOrEmpty(vendorSearchViewModel.CountryID.ToString()) || fv.CountryID.ToString().ToLower().Equals(vendorSearchViewModel.CountryID.ToLower()))
+             (vendorSearchViewModel.CountryID==null || fv.CountryID.ToString().ToLower().Equals(vendorSearchViewModel.CountryID.ToLower()))
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorCity) || fv.VendorCity.ToLower().Contains(vendorSearchViewModel.VendorCity.ToLower()))
              &&
@@ -341,6 +341,11 @@ namespace PrototypeWithAuth.Controllers
                     createSupplierViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
                     createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
+                    createSupplierViewModel.Countries = new List<SelectListItem>();
+                    foreach (var country in _context.Countries)
+                    {
+                        createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
+                    }
                     return View("Create", createSupplierViewModel);
                 }
             }
@@ -628,6 +633,11 @@ namespace PrototypeWithAuth.Controllers
                 return false;
             }
             return true;
+        }
+
+        public string GetVendorCountryCurrencyID(int VendorID)
+        {
+            return _context.Vendors.Include(v => v.Country).Where(v => v.VendorID == VendorID).Select(v => v.Country.CurrencyID).FirstOrDefault().ToString();
         }
     }
 

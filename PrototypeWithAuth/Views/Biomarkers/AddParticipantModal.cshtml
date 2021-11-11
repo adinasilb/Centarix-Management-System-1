@@ -2,6 +2,7 @@
 @{
 }
 <script src="~/js/Validation/addnewparticipant.js"></script>
+<script src="~/js/validate.js"></script>
 
 <div class="modal modal-view add-participant-modal" id="myModal" data-backdrop="false" style="z-index: 9100">
     <div class="elixir-modal-sm modal-dialog-centered mx-auto" style="width:27rem;">
@@ -25,8 +26,8 @@
                         <input type="submit" class="submit-add custom-button custom-button-font biomarkers-background-color" value="Save" />
                     </div>
                 </div>
-             </form>
-</div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -41,6 +42,7 @@
         $('.addparticipantform').data("validator").settings.ignore = "";
         var ExperimentID = $("#Participant_ExperimentID").val();
         var valid = $('.addparticipantform').valid();
+        console.log(valid)
         if (valid) {
             $("#loading").show();
             $.ajax({
@@ -75,6 +77,9 @@
                     return true;
                 }
             });
+        }
+        else {
+            $(this).removeAttr("disabled");
         }
     });
 </script>

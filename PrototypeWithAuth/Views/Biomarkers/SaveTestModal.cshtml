@@ -1,4 +1,4 @@
-﻿@model String
+﻿@model PrototypeWithAuth.ViewModels.SaveTestViewModel;
 <div class="modal modal-view save-test-modal" id="myModal" data-backdrop="false" style="z-index: 9100">
     <div class="elixir-modal-sm modal-dialog-centered mx-auto" style="width:27rem;">
         <div class="modal-content d-inline-block modal-box-shadow ">
@@ -9,7 +9,8 @@
                 </button>
             </div>
             <form action="" class="small-modal-padding">
-                <input type="hidden" value="@Model" id="BioTestString" />
+                <input type="hidden" value="@Model.ID" id="BioTestString" />
+                @*<input type="hidden" value="@Model.Guid" class="hidden-guid" />*@
                 <div class="row under-row-margin">
                     <div class="col-12 text-center">
                         Would you like to save changes?
@@ -30,11 +31,28 @@
 <script>
     $(".cancel-save").on("click", function (e) {
         e.preventDefault();
-        if ($("#String").val() != "none") {
+        if ($("#BioTestString").val() != "none") {
             var selected = $("#" + $("#BioTestString").val());
-            $.fn.ChangeTest(selected);
-            $.fn.CloseModal('save-bio-test-modal');
+            $.fn.CancelTest(selected);
         }
+        else {
+            $(".edit-mode-input").prop("checked", false);
+            var editLabel = $(".edit-mode-label");
+            editLabel.text("Edit Mode Off");
+            editLabel.removeClass("on");
+            editLabel.addClass("off")
+            var editModeInput = $(".edit-mode-input");
+            editModeInput.addClass("off");
+            editModeInput.removeClass("on");
+            $('.open-document-modal').attr("data-val", false);
+            $('._testvalues input').attr("disabled", true);
+            $('._testvalues input').addClass("disabled");
+            $('.open-document-modal').attr("showSwitch", "false")
+            var selected = $(".biomarkers-test-name.selected");
+            $.fn.CancelTest(selected);
+        }
+
+        $.fn.CloseModal('save-bio-test-modal');
     });
 
     $(".submit-save").on("click", function (e) {
@@ -46,7 +64,7 @@
             processData: false,
             async: true,
             url: "/Biomarkers/SaveTests",
-            data: new FormData($("#BioTestForm")[0]),
+            data: new FormData($(".bio-form")[0]),
             traditional: true,
             type: "POST",
             cache: false,

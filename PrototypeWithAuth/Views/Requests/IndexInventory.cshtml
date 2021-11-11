@@ -14,15 +14,6 @@
         Layout = null;
     }
 
-    bool search = false;
-    if (TempData["Search"] != null)
-    {
-        if (TempData["Search"].ToString() == "True")
-        {
-            search = true;
-        }
-    }
-
 }
 @if (Model.ErrorMessage != null)
 {

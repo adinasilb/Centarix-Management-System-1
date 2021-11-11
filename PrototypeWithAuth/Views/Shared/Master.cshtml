@@ -1183,19 +1183,7 @@
             if (status === undefined) {
                 requestStatusId = $(".request-status-id").val();
             }
-            var searchText = $('.search-by-name').val();
-            console.log(searchText);
-            //console.log('searchtext length before if' + searchText.length)
-            if (searchText == undefined || !searchText.length) {
-                searchText = $('.popover .search-by-name-in-filter').val();
-                console.log(searchText)
-                if (searchText == undefined || !searchText.length) {
-                    searchText = $('.search-by-name-in-filter').val();
-                    if (searchText == undefined || !searchText.length) {
-                        searchText = "";
-                    }
-                }
-            }
+     
             var queryString =
                 "PageNumber=" + $('.page-number').val() +
                 "&RequestStatusID=" + requestStatusId +
@@ -1206,7 +1194,7 @@
                 "&SidebarFilterID=" + $('.sideBarFilterID').val() +
                 "&CategorySelected=" + $('#categorySortContent .select-category').is(":checked") +
                 "&SubCategorySelected=" + $('#categorySortContent .select-subcategory').is(":checked") +
-                "&searchText=" + searchText;
+                "&ListID="+$("#ListID").val();
             queryString += selectedPriceSort;
             console.log(queryString)
             return queryString;
@@ -1386,14 +1374,58 @@
             });
             return error;
         };
+        $.fn.AddObjectToFormdata = function (formdata, object) {
 
+            console.log('in add object to formdata')
+            /*console.log(arrayOfObjects)
+            var newFormData = formdata;
+            for (var obj of arrayOfObjects) {
+                Object.assign(newFormData, obj);
+                console.log('obj ' + obj)
+            } */
+            if (formdata == undefined) {
+                var formdata = new FormData();
+            }
+            for (var key in object) {
+
+                if (Array.isArray(object[key])) {
+                    for (const val of object[key].values()) {
+                        formdata.append(key, val);
+                        console.log('key' + key);
+                        console.log('val' + val)
+                    }
+                }
+                else {
+                    formdata.append(key, object[key]);
+                    console.log('key ' + key);
+                    console.log('value ' + object[key])
+                }
+            }
+            console.log(...formdata);
+            return formdata;
+        }
+        $.fn.CombineTwoFormDatas = function (formdata1, formdata2) {
+            if (formdata1 == undefined) {
+                var formdata1 = new FormData();
+            }
+            if (formdata2 != undefined) {
+                for (var pair of formdata2.entries()) {
+                    formdata1.append(pair[0], pair[1]);
+                    console.log('key ' + pair[0]);
+                    console.log('value ' + pair[1])
+
+                }
+            }
+            console.log(...formdata1);
+            return formdata1;
+        }
         $.fn.SearchColumns = function (searchText, colName) {
             if (searchText == "") {
                 $('.popover ' + colName + ' .not-selected button').removeClass("d-none");
             }
             else {
                 $('.popover ' + colName + ' .not-selected button').each(function (i, e) {
-                    if ($(e).attr("labelName").toString().toLowerCase().indexOf(searchText) < 0) {
+                    if ($(e).attr("labelName").toString().toLowerCase().indexOf(searchText.toLowerCase()) < 0) {
                         $(e).addClass("d-none")
                     }
                     else {
@@ -1427,10 +1459,23 @@
                 catalogNumber = "";
             }
             console.log(catalogNumber)
+            var searchText = $('.search-by-name').val();
+            console.log(searchText);
+            //console.log('searchtext length before if' + searchText.length)
+            if (searchText == undefined || !searchText.length) {
+                searchText = $('.popover .search-by-name-in-filter').val();
+                console.log(searchText)
+                if (searchText == undefined || !searchText.length) {
+                    searchText = $('.search-by-name-in-filter').val();
+                    if (searchText == undefined || !searchText.length) {
+                        searchText = "";
+                    }
+                }
+            }
             return {
                 SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation,
                 SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived, CatalogNumber: catalogNumber,
-                SelectedTypesIDs: selectedType
+                SelectedTypesIDs: selectedType, NumFilters: $("#NumFilters").val(), "SearchText" :searchText
             }
         }
 
@@ -1462,6 +1507,7 @@
                 arr.splice($.inArray(id, arr), 1);
                 numFilters = Number($('.numFilters').attr("value")) - 1;
             }
+            data.NumFilters = numFilters;
             //console.log('archived ' + archived);
             $.fn.ReloadFilterDiv(numFilters, data);
         }
@@ -1482,6 +1528,7 @@
                 $('.search-by-name').val("");
             }
             var numFilters = $('.numFilters').attr("value");
+            data.NumFilters = numFilters;
             console.log('search text ' + searchText);
             var catalogNumber = $('.popover .search-by-catalog-number').val()
             //reset page number
@@ -1616,8 +1663,16 @@
                 }
             })
         }
+        $.fn.CancelTest = function (selectedTest) {
+            var url = "/Biomarkers/CancelTestChanges?CurrentGuid=" + $(".hidden-guid").attr("value") + "&TestID=" + selectedTest.attr("testid") + "&ListNumber=0&SiteID=" + /*$(this).attr("listnumber")*/ + $("#ExperimentEntry_SiteID").val() + "&ExperimentID=" + $("#ExperimentEntry_Participant_ExperimentID").val() + "&ExperimentEntryID=" + $("#ExperimentEntry_ExperimentEntryID").val();
+            //alert("url: " + url);
+            $.fn.FinishChangeTest(url, selectedTest);
+        }
         $.fn.ChangeTest = function (selectedTest) {
             var url = "/Biomarkers/_TestValues?TestID=" + selectedTest.attr("testid") + "&ListNumber=0&SiteID=" + /*$(this).attr("listnumber")*/ + $("#ExperimentEntry_SiteID").val() + "&ExperimentID=" + $("#ExperimentEntry_Participant_ExperimentID").val() + "&ExperimentEntryID=" + $("#ExperimentEntry_ExperimentEntryID").val();
+            $.fn.FinishChangeTest(url, selectedTest);
+        };
+        $.fn.FinishChangeTest = function(url, selectedTest){
             $.ajax({
                 async: true,
                 url: url,
@@ -1635,6 +1690,40 @@
             $(".biomarkers-test-name").removeClass("selected");
             selectedTest.addClass("selected");
         };
+
+
+        $.fn.CheckForVendorCurrencyWarning = function (vendorCurrencyID, currencySelected) {
+            console.log("vendorcurrencyid: " + vendorCurrencyID);
+            console.log("currencySelected: " + currencySelected);
+            var changeWarnings = false;
+            priceWarning = $("#price-warning");
+            vendorPriceWarning = $("#vendor-price-warning");
+            priceWarningText = "Warning: Default Currency For Selected Vendor is ";
+            vendorWarningText = "Warning: Selected Currency is "
+            if (currencySelected == "USD" && vendorCurrencyID == "2") {
+                console.log("if (currencySelected == ");
+                priceWarningText += "Shekel";
+                vendorWarningText += "Dollars";
+                changeWarnings = true;
+            }
+            else if (currencySelected == "NIS" && vendorCurrencyID == "1") {
+                console.log("else if (currencySelected == ");
+                priceWarningText += "Dollars";
+                vendorWarningText += "Shekel";
+                changeWarnings = true;
+            }
+            else {
+                console.log("else");
+                priceWarning.html("");
+                vendorPriceWarning.html("");
+            }
+            if (changeWarnings) {
+                console.log("changewarnings is true")
+                priceWarning.html(priceWarningText);
+                vendorPriceWarning.html(vendorWarningText);
+            }
+        }
+
     </script>
 
     @if (IsSectionDefined("requestNavScript"))

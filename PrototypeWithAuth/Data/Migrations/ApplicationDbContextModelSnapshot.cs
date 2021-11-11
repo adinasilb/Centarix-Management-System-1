@@ -728,7 +728,12 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("CountryName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CurrencyID")
+                        .HasColumnType("int");
+
                     b.HasKey("CountryID");
+
+                    b.HasIndex("CurrencyID");
 
                     b.ToTable("Countries");
 
@@ -736,252 +741,302 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             CountryID = 1,
-                            CountryName = "Armenia"
+                            CountryName = "Armenia",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 2,
-                            CountryName = "Australia"
+                            CountryName = "Australia",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 3,
-                            CountryName = "Austria"
+                            CountryName = "Austria",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 4,
-                            CountryName = "Belgium"
+                            CountryName = "Belgium",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 5,
-                            CountryName = "Bosnia and Herzegovina"
+                            CountryName = "Bosnia and Herzegovina",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 6,
-                            CountryName = "Bulgaria"
+                            CountryName = "Bulgaria",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 7,
-                            CountryName = "Canada"
+                            CountryName = "Canada",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 8,
-                            CountryName = "Chile"
+                            CountryName = "Chile",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 9,
-                            CountryName = "Costa Rica"
+                            CountryName = "Costa Rica",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 10,
-                            CountryName = "Cyprus"
+                            CountryName = "Cyprus",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 11,
-                            CountryName = "Czech Republic"
+                            CountryName = "Czech Republic",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 12,
-                            CountryName = "Denmark"
+                            CountryName = "Denmark",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 13,
-                            CountryName = "Estonia"
+                            CountryName = "Estonia",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 14,
-                            CountryName = "Finland"
+                            CountryName = "Finland",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 15,
-                            CountryName = "France"
+                            CountryName = "France",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 16,
-                            CountryName = "Georgia"
+                            CountryName = "Georgia",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 17,
-                            CountryName = "Germany"
+                            CountryName = "Germany",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 18,
-                            CountryName = "Greece"
+                            CountryName = "Greece",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 19,
-                            CountryName = "Hungary"
+                            CountryName = "Hungary",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 20,
-                            CountryName = "Iceland"
+                            CountryName = "Iceland",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 21,
-                            CountryName = "India"
+                            CountryName = "India",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 22,
-                            CountryName = "Ireland"
+                            CountryName = "Ireland",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 23,
-                            CountryName = "Israel"
+                            CountryName = "Israel",
+                            CurrencyID = 2
                         },
                         new
                         {
                             CountryID = 24,
-                            CountryName = "Italy"
+                            CountryName = "Italy",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 25,
-                            CountryName = "Japan"
+                            CountryName = "Japan",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 26,
-                            CountryName = "Latvia"
+                            CountryName = "Latvia",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 27,
-                            CountryName = "Lithuania"
+                            CountryName = "Lithuania",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 28,
-                            CountryName = "Luxembourg"
+                            CountryName = "Luxembourg",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 29,
-                            CountryName = "Malaysia"
+                            CountryName = "Malaysia",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 30,
-                            CountryName = "Mauritius"
+                            CountryName = "Mauritius",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 31,
-                            CountryName = "Moldova"
+                            CountryName = "Moldova",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 32,
-                            CountryName = "Netherlands"
+                            CountryName = "Netherlands",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 33,
-                            CountryName = "New Zealand"
+                            CountryName = "New Zealand",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 34,
-                            CountryName = "North Macedonia"
+                            CountryName = "North Macedonia",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 35,
-                            CountryName = "Norway"
+                            CountryName = "Norway",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 36,
-                            CountryName = "Poland"
+                            CountryName = "Poland",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 37,
-                            CountryName = "Portugal"
+                            CountryName = "Portugal",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 38,
-                            CountryName = "Romania"
+                            CountryName = "Romania",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 39,
-                            CountryName = "Russia"
+                            CountryName = "Russia",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 40,
-                            CountryName = "Singapore"
+                            CountryName = "Singapore",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 41,
-                            CountryName = "Slovakia"
+                            CountryName = "Slovakia",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 42,
-                            CountryName = "Slovenia"
+                            CountryName = "Slovenia",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 43,
-                            CountryName = "South Africa"
+                            CountryName = "South Africa",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 44,
-                            CountryName = "South Korea"
+                            CountryName = "South Korea",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 45,
-                            CountryName = "Spain"
+                            CountryName = "Spain",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 46,
-                            CountryName = "Sweden"
+                            CountryName = "Sweden",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 47,
-                            CountryName = "Switzerland"
+                            CountryName = "Switzerland",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 48,
-                            CountryName = "United Kingdom"
+                            CountryName = "United Kingdom",
+                            CurrencyID = -1
                         },
                         new
                         {
                             CountryID = 49,
-                            CountryName = "United States"
+                            CountryName = "United States",
+                            CurrencyID = 1
                         },
                         new
                         {
                             CountryID = 50,
-                            CountryName = "Uruguay"
+                            CountryName = "Uruguay",
+                            CurrencyID = -1
                         });
                 });
 
@@ -1053,6 +1108,38 @@ namespace PrototypeWithAuth.Data.Migrations
                             CreditCardID = 8,
                             CardNumber = "7972",
                             CompanyAccountID = 3
+                        });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Currency", b =>
+                {
+                    b.Property<int>("CurrencyID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CurrencyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CurrencyID");
+
+                    b.ToTable("Currencies");
+
+                    b.HasData(
+                        new
+                        {
+                            CurrencyID = -1,
+                            CurrencyName = "None"
+                        },
+                        new
+                        {
+                            CurrencyID = 1,
+                            CurrencyName = "USD"
+                        },
+                        new
+                        {
+                            CurrencyID = 2,
+                            CurrencyName = "NIS"
                         });
                 });
 
@@ -1391,6 +1478,11 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("ApplicationUserID")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
@@ -2674,6 +2766,13 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationRoomInstanceAbbrev = "LN1",
                             LocationRoomInstanceName = "Liquid Nitrogen Room 1",
                             LocationRoomTypeID = 7
+                        },
+                        new
+                        {
+                            LocationRoomInstanceID = 13,
+                            LocationRoomInstanceAbbrev = "BL5",
+                            LocationRoomInstanceName = "Biomarker Lab 5",
+                            LocationRoomTypeID = 1
                         });
                 });
 
@@ -3322,6 +3421,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsShippingPaid")
                         .HasColumnType("bit");
 
+                    b.Property<string>("NoteToSupplier")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
@@ -3363,10 +3465,15 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CentarixID")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<int>("ExperimentID")
                         .HasColumnType("int");
@@ -3384,6 +3491,10 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("GenderID");
 
                     b.HasIndex("ParticipantStatusID");
+
+                    b.HasIndex("ParticipantID", "CentarixID")
+                        .IsUnique()
+                        .HasFilter("[CentarixID] IS NOT NULL");
 
                     b.ToTable("Participants");
                 });
@@ -4975,6 +5086,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("DevelopersBoolean")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("Discount")
                         .HasColumnType("decimal(18,2)");
 
@@ -5009,9 +5123,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("NoteForClarifyDelivery")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NoteToSupplier")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrderType")
@@ -5076,6 +5187,50 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("SubProjectID");
 
                     b.ToTable("Requests");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.RequestList", b =>
+                {
+                    b.Property<int>("ListID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserOwnerID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ListID");
+
+                    b.HasIndex("ApplicationUserOwnerID");
+
+                    b.ToTable("RequestLists");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.RequestListRequest", b =>
+                {
+                    b.Property<int>("ListID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ListID", "RequestID");
+
+                    b.HasIndex("RequestID");
+
+                    b.ToTable("RequestListRequests");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestLocationInstance", b =>
@@ -7083,6 +7238,15 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.Country", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Currency", "Currency")
+                        .WithMany("Countries")
+                        .HasForeignKey("CurrencyID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.CreditCard", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.CompanyAccount", "CompanyAccount")
@@ -7722,6 +7886,29 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("Requests")
                         .HasForeignKey("SubProjectID")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.RequestList", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUserOwner")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserOwnerID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.RequestListRequest", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.RequestList", "List")
+                        .WithMany("RequestListRequests")
+                        .HasForeignKey("ListID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
+                        .WithMany("RequestListRequests")
+                        .HasForeignKey("RequestID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestLocationInstance", b =>

@@ -75,7 +75,6 @@ namespace PrototypeWithAuth.Models
         public ParentQuote ParentQuote { get; set; }
 
 
-        public string? NoteToSupplier { get; set; }
         public IEnumerable<RequestNotification> RequestNotifications { get; set; }
         public string OrderType { get; set; }
 
@@ -188,5 +187,7 @@ namespace PrototypeWithAuth.Models
         [ForeignKey("QuoteStatusID")]
         public QuoteStatus QuoteStatus { get; set; }
         public bool IsInInventory { get; set; }
+        public bool DevelopersBoolean { get; set; }
+        public IEnumerable<RequestListRequest> RequestListRequests { get; set; }
     }
 }

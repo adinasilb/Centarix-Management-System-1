@@ -22,6 +22,7 @@ namespace PrototypeWithAuth.Data
 
         }
 
+        public DbSet<Currency> Currencies { get; set; }
         public DbSet<OldVendorCountry> OldVendorCountries { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<ExperimentEntry> ExperimentEntries { get; set; }
@@ -56,6 +57,8 @@ namespace PrototypeWithAuth.Data
         public DbSet<ResourceCategory> ResourceCategories { get; set; }
         public DbSet<FavoriteRequest> FavoriteRequests { get; set; }
         public DbSet<ShareRequest> ShareRequests { get; set; }
+        public DbSet<RequestList> RequestLists { get; set; }
+        public DbSet<RequestListRequest> RequestListRequests { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<AuthorProtocol> AuthorProtocols { get; set; }
         public DbSet<ProtocolType> ProtocolTypes { get; set; }
@@ -145,6 +148,8 @@ namespace PrototypeWithAuth.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<RequestListRequest>()
+                .HasKey(v => new { v.ListID, v.RequestID });
 
             modelBuilder.Entity<VendorCategoryType>()
                 .HasKey(v => new { v.VendorID, v.CategoryTypeID });
@@ -357,7 +362,7 @@ namespace PrototypeWithAuth.Data
            .HasQueryFilter(item => !item.IsOldSubCategory);
 
             modelBuilder.Entity<LocationType>()
-           .HasQueryFilter(item => item.LocationTypeID !=600);
+           .HasQueryFilter(item => item.LocationTypeID != 600);
 
             modelBuilder.Entity<LocationInstance>()
         .HasQueryFilter(item => item.LocationTypeID != 600);
@@ -399,7 +404,10 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ShareResource>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<TestHeader>().HasIndex(th => new { th.SequencePosition, th.TestGroupID }).IsUnique();
             modelBuilder.Entity<ExperimentEntry>().HasIndex(ee => new { ee.ParticipantID, ee.VisitNumber }).IsUnique();
+            modelBuilder.Entity<Participant>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<ExperimentEntry>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<Vendor>().HasIndex(v => new { v.CountryID, v.VendorBuisnessID }).IsUnique();
+            modelBuilder.Entity<Participant>().HasIndex(p => new { p.ParticipantID, p.CentarixID }).IsUnique();
             /*PROTOCOLS*/
             ///set up composite keys
 
@@ -432,7 +440,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<TempRequestJson>().Property(t => t.Json).HasColumnType("ntext");
             modelBuilder.Entity<TempLinesJson>().Property(t => t.Json).HasColumnType("ntext");
             modelBuilder.Entity<Protocol>().HasIndex(p => new { p.UniqueCode }).IsUnique();
-            modelBuilder.Entity<ProtocolVersion>().HasIndex(p => new {p.ProtocolID, p.VersionNumber }).IsUnique();
+            modelBuilder.Entity<ProtocolVersion>().HasIndex(p => new { p.ProtocolID, p.VersionNumber }).IsUnique();
             modelBuilder.Entity<ProtocolVersion>().Ignore(p => p.Name);
             modelBuilder.Seed();
 

@@ -2884,6 +2884,19 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     align-items: center;
 }
 
+.list-name {
+    padding-top: .7rem;
+    padding-bottom: .7rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
+    border-radius: 15px !important;
+    border: 0 !important;
+}
+
+.list-name.selected {
+    background-color: var(--order-inv-25);
+}
+
 /*
     MULTIPLE EMAIL CSS
 */
@@ -3110,23 +3123,23 @@ body.modal-open .popover {
 .addFunctionModal .doc-card-outer-div {
     min-width: 100% !important;
 }
-
-.scroll-body {
-    overflow: auto;
-    height: 750px;
+/*
+._IndexTableData.scroll-body {
+    overflow: scroll;
+    max-height:750px;
     display: block;
-}
+}*/
 
 .datacalculation {
     border-radius: .5rem;
     border: 2px solid var(--biomarkers-color);
 }
-.scroll-page {
+/*.scroll-page {
     overflow: auto;
     height: 900px;
     display: block;
 }
-
+*/
 .add-item-box {
     width: 50% !important;
     position: absolute !important;
