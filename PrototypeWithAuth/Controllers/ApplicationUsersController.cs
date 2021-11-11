@@ -194,7 +194,7 @@ namespace PrototypeWithAuth.Controllers
 
                 if (employee.Employee.EmployeeStatusID == 1)
                 {
-                    var awaitingApprovalCount = employee.EmployeeHoursAwaitingApproval.Where(ehaa=> !workingDaysDates.Contains(ehaa.Date.Date)).Count();
+                    var awaitingApprovalCount = employee.EmployeeHoursAwaitingApproval.Where(ehaa => !workingDaysDates.Contains(ehaa.Date.Date)).Count();
 
                     missingDays = employee.EmployeeHours.Where(eh => (eh.Entry1 == null && eh.OffDayTypeID == null && eh.TotalHours == null && eh.CompanyDayOffID == null)
                     || (eh.Entry1 != null && eh.Exit1 == null)).Count() - awaitingApprovalCount;
@@ -357,7 +357,9 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     EmployeeHours employeeHours = new EmployeeHours();
-                    EmployeeHoursAwaitingApproval employeeHoursBeingApproved = await _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == id).FirstOrDefaultAsync();
+                    EmployeeHoursAwaitingApproval employeeHoursBeingApproved = await _context.EmployeeHoursAwaitingApprovals
+                        .Include(ehaa => ehaa.EmployeeHours)
+                        .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == id).AsNoTracking().FirstOrDefaultAsync();
                     employeeHours = await _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == employeeHoursBeingApproved.EmployeeHoursID).FirstOrDefaultAsync();
                     var user = await _context.Employees.Include(e => e.SalariedEmployee).Where(e => e.Id == employeeHoursBeingApproved.EmployeeID).FirstOrDefaultAsync();
                     if (employeeHoursBeingApproved.OffDayTypeID != null)
@@ -376,13 +378,12 @@ namespace PrototypeWithAuth.Controllers
 
                         }
 
-                        if (employeeHoursBeingApproved.OffDayTypeID == 4)
-                        {
-                            user.SpecialDays += 1;
-                        }
-
                         employeeHoursBeingApproved.OffDayTypeID = null;
                         _context.Update(user);
+                    }
+                    else if (employeeHoursBeingApproved.EmployeeHours.OffDayTypeID == 4)
+                    {
+                        user.SpecialDays += 1;
                     }
                     if (employeeHours?.PartialOffDayTypeID != null)
                     {
@@ -525,14 +526,14 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> DenyApprovalRequestModal(EmployeeHoursAwaitingApproval employeeHoursAwaitingApproval)
         {
             EmployeeHoursAwaitingApproval employeeHoursBeingApproved = await _context.EmployeeHoursAwaitingApprovals
+                .Include(ehaa => ehaa.EmployeeHours).Include(ehaa => ehaa.Employee)
                 .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == employeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID)
-                .FirstOrDefaultAsync();
+                .AsNoTracking().FirstOrDefaultAsync();
 
             employeeHoursBeingApproved.IsDenied = true;
-
             try
             {
-                _context.Update(employeeHoursBeingApproved);
+                _context.Entry(employeeHoursBeingApproved).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 TimekeeperNotification notification = new TimekeeperNotification()

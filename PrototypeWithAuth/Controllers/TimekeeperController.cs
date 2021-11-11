@@ -537,10 +537,10 @@ namespace PrototypeWithAuth.Controllers
                                 ehaa.IsBonus = true;
                                 ehaa.OffDayTypeID = eh.OffDayTypeID;
                             }
-                            if(eh.OffDayTypeID ==4)
-                            {
-                                ehaa.OffDayTypeID = eh.OffDayTypeID;
-                            }
+                            //if(eh.OffDayTypeID ==4)
+                            //{
+                            //    ehaa.OffDayTypeID = eh.OffDayTypeID;
+                            //}
                             if (eh.OffDayTypeID == null)
                             {
                                 ehaa.EmployeeHoursStatusEntry1ID = 3;
