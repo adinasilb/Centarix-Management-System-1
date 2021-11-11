@@ -9,5 +9,11 @@ namespace PrototypeWithAuth.AppData.UtilityModels
     {
         public bool Bool { get; set; }
         public string String { get; set; }
+
+        public void SetStringAndBool(bool Bool, string String)
+        {
+            this.Bool = Bool;
+            this.String = String;
+        }
     }
 }
