@@ -59,8 +59,8 @@
 
             <tbody class="@sectionClass">
                 @{ var requests = vendor.Select(r => r).ToList();}
-                <tr class="border-0 d-none currency-warning"><td colspan="5"><span class="text-danger-centarix">you can only order items with the same currency</span></td></tr>
-                <tr class="border-0 d-none vendor-warning"><td colspan="5"><span class="text-danger-centarix">you can only order items from the same vendor</span></td></tr>
+                <tr class="border-0 d-none currency-warning"><td colspan="5"><span class="text-danger-centarix">you can only select items with the same currency</span></td></tr>
+                <tr class="border-0 d-none vendor-warning"><td colspan="5"><span class="text-danger-centarix">you can only select items from the same vendor</span></td></tr>
 
                 @foreach (var row in requests)
                 {
