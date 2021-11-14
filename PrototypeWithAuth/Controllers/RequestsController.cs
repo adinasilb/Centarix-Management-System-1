@@ -1453,7 +1453,10 @@ namespace PrototypeWithAuth.Controllers
                 {
                     if (req.Currency != CurrencyUsed.ToString())
                     {
-                        Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
+                        if (Error.Bool != true)
+                        {
+                            Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
+                        }
                     }
                     if (req.Product.VendorID != vendorID)
                     {
@@ -4771,7 +4774,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
                 }
-                requestsToPay = vendorReqList; 
+                requestsToPay = vendorReqList;
             }
             else if (requestid != null)
             {
