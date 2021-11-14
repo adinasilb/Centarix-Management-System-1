@@ -4308,6 +4308,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "LabManagement")]
         public IActionResult EditQuoteDetails(int id, int[] requestIds = null)
         {
+            StringWithBool Error = new StringWithBool();
             if (!AppUtility.IsAjaxRequest(Request))
             {
                 return PartialView("InvalidLinkPage");
@@ -4321,15 +4322,23 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.ParentQuote)
                     .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType).ToList();
                 var exchangeRate = GetExchangeRate();
+
+                var VendorID = requests.FirstOrDefault().Product.VendorID;
+
                 foreach (var request in requests)
                 {
                     request.ExchangeRate = exchangeRate;
                     request.IncludeVAT = true;
+                    if (request.Product.VendorID != VendorID)
+                    {
+                        Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
+                    }
                 }
                 EditQuoteDetailsViewModel editQuoteDetailsViewModel = new EditQuoteDetailsViewModel()
                 {
                     Requests = requests,
-                    QuoteDate = DateTime.Now
+                    QuoteDate = DateTime.Now,
+                    Error = Error
                     //ParentQuoteID = requests.FirstOrDefault().ParentQuoteID
                 };
 
