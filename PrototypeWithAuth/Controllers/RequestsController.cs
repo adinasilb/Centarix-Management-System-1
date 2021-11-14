@@ -4783,6 +4783,7 @@ namespace PrototypeWithAuth.Controllers
                 foreach (int rId in requestIds)
                 {
                     var request = requestsList.Where(r => r.RequestID == rId).FirstOrDefault();
+                    requestsToPay.Add(request);
                     if (FirstTime)
                     {
                         Enum.TryParse(request.Currency, out CurrencyUsed);
@@ -4799,7 +4800,6 @@ namespace PrototypeWithAuth.Controllers
                         {
                             Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
                         }
-                        requestsToPay.Add(request);
                     }
                 }
             }
