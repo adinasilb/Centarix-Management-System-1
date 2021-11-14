@@ -17,7 +17,50 @@
 		var selectedButton = $(this).closest("tbody").find(".button-for-selected-items");
 
 		if ($(".form-check.accounting-select .form-check-input:checked").length) {
-			if ($(".activeVendor").val() != $(this).attr("vendorid")) {
+			var currentCurrency="";
+			var differentCurrency = false;
+			$(".form-check.accounting-select .form-check-input:checked").each(function(index){
+					var classes =$(this).attr("class");
+					console.log(classes)
+					var classArray = classes.split(" ");
+				for (var i = 0; i < classArray.length; i++) {
+					console.log("class: "+classArray[i])
+					if(classArray[i].indexOf("currencyEnum")==0)
+					{							
+						if(currentCurrency=="")
+						{
+							currentCurrency = classArray[i];
+							return;
+						}
+						else if(currentCurrency != classArray[i])
+						{
+							differentCurrency = true;
+							return;
+						}
+
+					}
+				}
+			});
+
+			if (($(".activeVendor").val() != $(this).attr("vendorid")) ||differentCurrency) {
+				var currentVendor =$(".activeVendor").val();
+				var currentVendorDiv =".supplierName[value='"+currentVendor+"']";
+				if($(".activeVendor").val() != $(this).attr("vendorid"))
+				{ 
+					$(currentVendorDiv).attr("id","vendorWarning" )
+					window.location.href ="#vendorWarning"
+					$(currentVendorDiv).removeAttr("id");
+					$(currentVendorDiv).closest("table").next().find("tr.vendor-warning").removeClass("d-none");
+					setTimeout(function(){ $(currentVendorDiv).closest("table").next().find("tr.vendor-warning").addClass("d-none"); }, 7000);
+				}
+				else if(differentCurrency){
+				
+					$(currentVendorDiv).attr("id","currencyWarning" )
+					window.location.href ="#currencyWarning"
+					$(currentVendorDiv).removeAttr("id");
+					 $(currentVendorDiv).closest("table").next().find("tr.currency-warning").removeClass("d-none");
+					setTimeout(function(){  $(currentVendorDiv).closest("table").next().find("tr.currency-warning").addClass("d-none"); }, 7000);
+				}
 				//	alert("active vendors are not equal - not doing anything")
 				$(this).removeAttr("checked");
 				$(this).prop("checked", false);

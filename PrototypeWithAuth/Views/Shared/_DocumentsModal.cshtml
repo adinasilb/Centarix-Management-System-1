@@ -182,6 +182,10 @@
                                 {
                                     saveButtonText = "Add";
                                 }
+                                else if(Model.ParentFolderName == AppUtility.ParentFolderName.ExperimentEntries)
+                                {
+                                    saveButtonText = "Close";
+                                }
                                 <button type="button" class="custom-button custom-button-font @bcColorToUse @saveClass document-modal-save document-modal-buttons " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('documents');">
                                     @saveButtonText
                                 </button>
