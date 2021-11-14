@@ -8,5 +8,6 @@ namespace PrototypeWithAuth.AppData.UtilityModels
     public class ViewModelBase
     {
         public string ErrorMessage { get; set; }
+        public StringWithBool Error { get; set; }
     }
 }

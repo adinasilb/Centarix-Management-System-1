@@ -124,7 +124,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Requests, LabManagement, Operations")]
-        private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject, NotificationFilterViewModel notificationFilterViewModel=null)
+        private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject, NotificationFilterViewModel notificationFilterViewModel = null)
         {
             RequestIndexPartialViewModelByVendor viewModelByVendor = new RequestIndexPartialViewModelByVendor();
             if (!requestIndexObject.CategorySelected && !requestIndexObject.SubcategorySelected)
@@ -193,17 +193,17 @@ namespace PrototypeWithAuth.Controllers
                     }
                     break;
                 case AppUtility.PageTypeEnum.AccountingNotifications:
-                   
+
                     var accountingNotificationsList = GetPaymentNotificationRequests(requestIndexObject.SidebarType);
                     if (notificationFilterViewModel == null)
                     {
-                        notificationFilterViewModel = new NotificationFilterViewModel() { Vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(v => v.CategoryTypeID).Contains(1)).ToList()};
+                        notificationFilterViewModel = new NotificationFilterViewModel() { Vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(v => v.CategoryTypeID).Contains(1)).ToList() };
                     }
                     else
                     {
                         accountingNotificationsList = accountingNotificationsList.Where(r => (notificationFilterViewModel.SelectedVendor == null || r.Product.VendorID == notificationFilterViewModel.SelectedVendor)
                         && (notificationFilterViewModel.CentarixOrderNumber == null || r.ParentRequest.OrderNumber == notificationFilterViewModel.CentarixOrderNumber)
-                        && (notificationFilterViewModel.ProductName == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.ProductName.ToLower()))) ;
+                        && (notificationFilterViewModel.ProductName == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.ProductName.ToLower())));
                     }
                     iconList.Add(popoverPartialClarifyIcon);
                     switch (requestIndexObject.SidebarType)
@@ -481,6 +481,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, Operations")] //redo this later
         public async Task<IActionResult> _IndexTableWithCounts(RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters = null, int numFilters = 0)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, selectedFilters: selectedFilters, numFilters: numFilters, requestsSearchViewModel: requestsSearchViewModel);
             //SetViewModelCounts(requestIndexObject, viewModel, selectedFilters);
             return PartialView(viewModel);
@@ -492,6 +496,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _IndexTable(RequestIndexObject requestIndexObject, List<int> months, List<int> years, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters = null, int numFilters = 0)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters, numFilters, requestsSearchViewModel);
             return PartialView(viewModel);
         }
@@ -502,6 +510,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _IndexTableWithProprietaryTabs(RequestIndexObject requestIndexObject, List<int> months, List<int> years, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters = null, int numFilters = 0)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters, numFilters, requestsSearchViewModel: requestsSearchViewModel);
             //SetViewModelProprietaryCounts(requestIndexObject, viewModel, selectedFilters);
             return PartialView(viewModel);
@@ -513,6 +525,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _IndexTableData(RequestIndexObject requestIndexObject, List<int> months, List<int> years, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters = null)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters, requestsSearchViewModel: requestsSearchViewModel);
 
             return PartialView(viewModel);
@@ -557,6 +573,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _IndexSharedTable()
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             RequestIndexPartialViewModel viewModel = await GetSharedRequestIndexObjectAsync();
             return PartialView(viewModel);
         }
@@ -603,7 +623,7 @@ namespace PrototypeWithAuth.Controllers
                 catch
                 { }
             }
-            if(requestIndexObject.ListID == 0)
+            if (requestIndexObject.ListID == 0)
             {
                 requestIndexObject.ListID = userLists.Where(l => l.IsDefault).FirstOrDefault().ListID;
             }
@@ -1410,6 +1430,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, Operations")]
         public async Task<TermsViewModel> GetTermsViewModelAsync(int vendorID, List<int> requestIds, TempRequestListViewModel tempRequestListViewModel)
         {
+            StringWithBool Error = new StringWithBool();
             //var requ = _httpContextAccessor.HttpContext.Session.GetObject<Request>("Request1");
             //List<Request> requests = new List<Request>();
 
@@ -1444,8 +1465,23 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
                 }
                 tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>();
+
+                AppUtility.CurrencyEnum CurrencyUsed = AppUtility.CurrencyEnum.None;
+                Enum.TryParse(reqsFromDB.FirstOrDefault().Currency, out CurrencyUsed);
+                var VendorID = reqsFromDB.FirstOrDefault().Product.VendorID;
                 foreach (var req in reqsFromDB)
                 {
+                    if (req.Currency != CurrencyUsed.ToString())
+                    {
+                        if (Error.Bool != true)
+                        {
+                            Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
+                        }
+                    }
+                    if (req.Product.VendorID != vendorID)
+                    {
+                        Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
+                    }
                     tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = req });
                 }
                 var updatedTempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID, 0);
@@ -1459,8 +1495,19 @@ namespace PrototypeWithAuth.Controllers
                 tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>();
                 var requests = _context.Requests.Where(r => requestIds.Contains(r.RequestID)).Include(r => r.Product).ThenInclude(p => p.Vendor)
                     .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
+                AppUtility.CurrencyEnum CurrencyUsed = AppUtility.CurrencyEnum.None;
+                Enum.TryParse(requests.FirstOrDefault().Currency, out CurrencyUsed);
+                var VendorID = requests.FirstOrDefault().Product.VendorID;
                 foreach (var request in requests)
                 {
+                    if (request.Currency != CurrencyUsed.ToString())
+                    {
+                        Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
+                    }
+                    if (request.Product.VendorID != VendorID)
+                    {
+                        Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
+                    }
                     tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
                 }
                 var updatedTempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID, 0);
@@ -1489,7 +1536,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 ParentRequest = new ParentRequest(),
                 TermsList = termsList,
-                InstallmentDate = DateTime.Now
+                InstallmentDate = DateTime.Now,
+                Error = Error
             };
             tempRequestListViewModel.RequestIndexObject.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum),
                 tempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Currency);
@@ -1819,6 +1867,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _IndexTableWithListTabs(RequestIndexObject requestIndexObject)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             RequestListIndexViewModel viewModel = await GetRequestListIndexObjectAsync(requestIndexObject);
             return PartialView(viewModel);
         }
@@ -1895,7 +1947,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters, int numFilters =0 )
+        public async Task<IActionResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters, int numFilters = 0)
         {
             try
             {
@@ -2021,9 +2073,9 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.SidebarEnum.Quotes:
                 case AppUtility.SidebarEnum.Orders:
                 case AppUtility.SidebarEnum.Cart:
-                   return PartialView("_IndexTableDataByVendor", await GetIndexViewModel(deleteRequestViewModel.RequestIndexObject, selectedFilters: selectedFilters, numFilters: numFilters, requestsSearchViewModel: requestsSearchViewModel));
-                   default:
-                   return PartialView("_IndexTableData", await GetIndexViewModel(deleteRequestViewModel.RequestIndexObject, selectedFilters: selectedFilters, numFilters: numFilters, requestsSearchViewModel: requestsSearchViewModel));
+                    return PartialView("_IndexTableDataByVendor", await GetIndexViewModel(deleteRequestViewModel.RequestIndexObject, selectedFilters: selectedFilters, numFilters: numFilters, requestsSearchViewModel: requestsSearchViewModel));
+                default:
+                    return PartialView("_IndexTableData", await GetIndexViewModel(deleteRequestViewModel.RequestIndexObject, selectedFilters: selectedFilters, numFilters: numFilters, requestsSearchViewModel: requestsSearchViewModel));
 
             }
         }
@@ -2851,9 +2903,9 @@ namespace PrototypeWithAuth.Controllers
                 {
                     action = "UploadOrderModal";
                 }
-                else if(OrderTypeEnum == AppUtility.OrderTypeEnum.RequestPriceQuote)
-                {                    
-                     return new EmptyResult();
+                else if (OrderTypeEnum == AppUtility.OrderTypeEnum.RequestPriceQuote)
+                {
+                    return new EmptyResult();
                 }
                 tempRequestListViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
                 tempRequestListViewModel.RequestIndexObject.IsReorder = true;
@@ -3040,7 +3092,7 @@ namespace PrototypeWithAuth.Controllers
                 //var pr = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest; //eventually(when ready to test all cases) put this in instead of next line and put it in for loop below
                 deserializedTempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest);
 
-           
+
                 //var isEmail = true;
                 //var emailNum = 1;
                 //var emails = new List<string>();
@@ -3559,6 +3611,10 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         public async Task<IActionResult> _IndexTableDataByVendor(RequestIndexObject requestIndexObject, NotificationFilterViewModel notificationFilterViewModel)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             return PartialView(await GetIndexViewModelByVendor(requestIndexObject, notificationFilterViewModel));
         }
 
@@ -3566,6 +3622,10 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         public async Task<IActionResult> _IndexTableByVendor(RequestIndexObject requestIndexObject, NotificationFilterViewModel notificationFilterViewModel)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             return PartialView(await GetIndexViewModelByVendor(requestIndexObject, notificationFilterViewModel));
         }
 
@@ -3579,12 +3639,12 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
-            var categoryID = new List<int>{ 1 };
-            if(SectionType == AppUtility.MenuItems.Operations)
+            var categoryID = new List<int> { 1 };
+            if (SectionType == AppUtility.MenuItems.Operations)
             {
                 categoryID = new List<int> { 2 };
             }
-            else if(SectionType == AppUtility.MenuItems.Accounting)
+            else if (SectionType == AppUtility.MenuItems.Accounting)
             {
                 categoryID = new List<int> { 1, 2 };
             }
@@ -3594,8 +3654,8 @@ namespace PrototypeWithAuth.Controllers
             requestsSearchViewModel.Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => categoryID.Contains(vc.CategoryTypeID)).Count() > 0).ToListAsync();
             requestsSearchViewModel.ApplicationUsers = await _context.Users.ToListAsync();
             requestsSearchViewModel.SectionType = SectionType;
-            
-            return View( requestsSearchViewModel);
+
+            return View(requestsSearchViewModel);
         }
         [HttpPost]
         [Authorize(Roles = "Requests, LabManagement, Operations, Accounting")]
@@ -3610,7 +3670,7 @@ namespace PrototypeWithAuth.Controllers
             viewModel.SidebarFilterName = AppUtility.SidebarEnum.Search.ToString();
             return PartialView("SearchResults", viewModel);
         }
-     
+
 
         /*
          * START RECEIVED MODAL
@@ -3777,7 +3837,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [RequestFormLimits(ValueCountLimit = int.MaxValue)]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel, RequestsSearchViewModel requestsSearchViewModel = null, SelectedRequestFilters selectedFilters=null, int numFilters =0)
+        public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel, RequestsSearchViewModel requestsSearchViewModel = null, SelectedRequestFilters selectedFilters = null, int numFilters = 0)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -4016,6 +4076,10 @@ namespace PrototypeWithAuth.Controllers
         public ActionResult _DocumentsModalData(string id, Guid Guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
           AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests)
         {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
                 FolderName = RequestFolderNameEnum,
@@ -4244,6 +4308,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "LabManagement")]
         public IActionResult EditQuoteDetails(int id, int[] requestIds = null)
         {
+            StringWithBool Error = new StringWithBool();
             if (!AppUtility.IsAjaxRequest(Request))
             {
                 return PartialView("InvalidLinkPage");
@@ -4257,15 +4322,23 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.ParentQuote)
                     .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType).ToList();
                 var exchangeRate = GetExchangeRate();
+
+                var VendorID = requests.FirstOrDefault().Product.VendorID;
+
                 foreach (var request in requests)
                 {
                     request.ExchangeRate = exchangeRate;
                     request.IncludeVAT = true;
+                    if (request.Product.VendorID != VendorID)
+                    {
+                        Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
+                    }
                 }
                 EditQuoteDetailsViewModel editQuoteDetailsViewModel = new EditQuoteDetailsViewModel()
                 {
                     Requests = requests,
-                    QuoteDate = DateTime.Now
+                    QuoteDate = DateTime.Now,
+                    Error = Error
                     //ParentQuoteID = requests.FirstOrDefault().ParentQuoteID
                 };
 
@@ -4716,7 +4789,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Accounting")]
-        public async Task<IActionResult> AccountingNotifications(AppUtility.SidebarEnum accountingNotificationsEnum = AppUtility.SidebarEnum.NoInvoice )
+        public async Task<IActionResult> AccountingNotifications(AppUtility.SidebarEnum accountingNotificationsEnum = AppUtility.SidebarEnum.NoInvoice)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingNotifications;
@@ -4734,12 +4807,19 @@ namespace PrototypeWithAuth.Controllers
                 return PartialView("InvalidLinkPage");
             }
             List<Request> requestsToPay = new List<Request>();
+            StringWithBool Error = new StringWithBool();
             var requestsList = new List<Request>();
             GetPaymentRequests(accountingPaymentsEnum).Result.ForEach(rp => requestsList.Add(rp.Request));
-
+            AppUtility.CurrencyEnum CurrencyUsed = AppUtility.CurrencyEnum.None;
+            int? VendorID = 0;
             if (vendorid != null)
             {
-                requestsToPay = await requestsList.Where(r => r.Product.VendorID == vendorid).ToListAsync();
+                var vendorReqList = await requestsList.Where(r => r.Product.VendorID == vendorid).ToListAsync();
+                if (vendorReqList.Select(r => r.Currency).Distinct().Count() > 1)
+                {
+                    Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
+                }
+                requestsToPay = vendorReqList;
             }
             else if (requestid != null)
             {
@@ -4747,9 +4827,28 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (requestIds != null)
             {
+                bool FirstTime = true;
                 foreach (int rId in requestIds)
                 {
-                    requestsToPay.Add(requestsList.Where(r => r.RequestID == rId).FirstOrDefault());
+                    var request = requestsList.Where(r => r.RequestID == rId).FirstOrDefault();
+                    requestsToPay.Add(request);
+                    if (FirstTime)
+                    {
+                        Enum.TryParse(request.Currency, out CurrencyUsed);
+                        VendorID = request.Product.VendorID;
+                        FirstTime = false;
+                    }
+                    else
+                    {
+                        if (request.Currency != CurrencyUsed.ToString())
+                        {
+                            Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
+                        }
+                        if (request.Product.VendorID != VendorID)
+                        {
+                            Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
+                        }
+                    }
                 }
             }
 
@@ -4760,7 +4859,8 @@ namespace PrototypeWithAuth.Controllers
                 Payment = new Payment(),
                 PaymentTypes = _context.PaymentTypes.Select(pt => pt).ToList(),
                 CompanyAccounts = _context.CompanyAccounts.Select(ca => ca).ToList(),
-                ShippingToPay = await GetShippingsToPay(requestsToPay)
+                ShippingToPay = await GetShippingsToPay(requestsToPay),
+                Error = Error
             };
 
             //check if payment status type is installments to show the installments in the view model
@@ -4998,6 +5098,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddInvoiceModal(int? vendorid, int? requestid, int[] requestIds)
         {
             List<Request> Requests = new List<Request>();
+            StringWithBool Error = new StringWithBool();
             var queryableRequests = _context.Requests
                 .Include(r => r.ParentRequest)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
@@ -5008,6 +5109,10 @@ namespace PrototypeWithAuth.Controllers
                 Requests = queryableRequests
                     .Where(r => r.Payments.FirstOrDefault().HasInvoice == false)
                     .Where(r => r.Product.VendorID == vendorid).ToList();
+                if (queryableRequests.Select(r => r.Currency).Distinct().Count() > 1)
+                {
+                    Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
+                }
             }
             else if (requestid != null)
             {
@@ -5015,9 +5120,30 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (requestIds != null)
             {
+                AppUtility.CurrencyEnum CurrencyUsed = AppUtility.CurrencyEnum.None;
+                int? VendorID = null;
+                bool FirstTime = true;
                 foreach (int rId in requestIds)
                 {
-                    Requests.Add(queryableRequests.Where(r => r.RequestID == rId).FirstOrDefault());
+                    var request = queryableRequests.Where(r => r.RequestID == rId).Include(r => r.Product).FirstOrDefault();
+                    Requests.Add(request);
+                    if (FirstTime)
+                    {
+                        Enum.TryParse(queryableRequests.FirstOrDefault().Currency, out CurrencyUsed);
+                        VendorID = request.Product.VendorID;
+                        FirstTime = false;
+                    }
+                    else
+                    {
+                        if (request.Currency != CurrencyUsed.ToString())
+                        {
+                            Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
+                        }
+                        if (request.Product.VendorID != VendorID)
+                        {
+                            Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
+                        }
+                    }
                 }
             }
             AddInvoiceViewModel addInvoiceViewModel = new AddInvoiceViewModel()
@@ -5027,7 +5153,8 @@ namespace PrototypeWithAuth.Controllers
                 {
                     InvoiceDate = DateTime.Today
                 },
-                Guid = Guid.NewGuid()
+                Guid = Guid.NewGuid(),
+                Error = Error
             };
             return PartialView(addInvoiceViewModel);
         }
@@ -5174,7 +5301,7 @@ namespace PrototypeWithAuth.Controllers
                         try
                         {
                             foreach (var tempRequestViewModel in deserializedTempRequestListViewModel.TempRequestViewModels)
-                            {                          
+                            {
                                 _context.Entry(tempRequestViewModel.Request.ParentQuote).State = EntityState.Added;
                                 if (tempRequestViewModel.Request.Product.ProductID == 0)
                                 {
@@ -5611,7 +5738,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    throw new Exception(AppUtility.GetExceptionMessage(ex)); 
+                    throw new Exception(AppUtility.GetExceptionMessage(ex));
                 }
             }
             return RedirectToAction("_LocationTab", new { id = requestId });
@@ -5619,12 +5746,12 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> MoveToListModal(int requestID, int prevListID=0)
+        public async Task<IActionResult> MoveToListModal(int requestID, int prevListID = 0)
         {
             var pageType = AppUtility.PageTypeEnum.RequestCart;
             var userLists = _context.RequestLists.Where(rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User))
                .OrderBy(rl => rl.DateCreated).ToList();
-            if(userLists.Count == 0)
+            if (userLists.Count == 0)
             {
                 RequestList requestList = new RequestList
                 {
@@ -5643,7 +5770,7 @@ namespace PrototypeWithAuth.Controllers
                         userLists.Add(requestList);
                         await transaction.CommitAsync();
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         await transaction.RollbackAsync();
                         throw new Exception(AppUtility.GetExceptionMessage(ex));
@@ -5657,17 +5784,17 @@ namespace PrototypeWithAuth.Controllers
             }
             MoveListViewModel viewModel = new MoveListViewModel
             {
-                Request = _context.Requests.Where(r => r.RequestID == requestID).Include(r=> r.Product).FirstOrDefault(),
+                Request = _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault(),
                 PreviousListID = prevListID,
                 RequestLists = userLists,
-                PageType= pageType
+                PageType = pageType
             };
             return PartialView(viewModel);
         }
 
         public async void MoveLists(int requestToMoveId, int newListID, int prevListID = 0)
         {
-            
+
             var existingListRequest = _context.RequestListRequests.Where(l => l.RequestID == requestToMoveId && l.ListID == newListID).FirstOrDefault();
             if (existingListRequest != null)
             {
@@ -5690,7 +5817,7 @@ namespace PrototypeWithAuth.Controllers
                     .Where(rlr => rlr.RequestID == requestToMoveId && rlr.ListID == prevListID).FirstOrDefault();
                 _context.Remove(oldRequestListRequest);
             }
-                    
+
         }
 
         [HttpPost]
@@ -5730,7 +5857,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> NewListModal(int requestToAddId = 0, int requestPreviousListID =0)
+        public async Task<IActionResult> NewListModal(int requestToAddId = 0, int requestPreviousListID = 0)
         {
             NewListViewModel viewModel = new NewListViewModel
             {
@@ -5751,13 +5878,13 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     newList.ApplicationUserOwnerID = newListViewModel.OwnerID;
-                     newList.Title = newListViewModel.ListTitle;
-                     newList.DateCreated = DateTime.Now;
+                    newList.Title = newListViewModel.ListTitle;
+                    newList.DateCreated = DateTime.Now;
                     _context.Entry(newList).State = EntityState.Added;
 
                     await _context.SaveChangesAsync();
 
-                    if(newListViewModel.RequestToAddID != 0)
+                    if (newListViewModel.RequestToAddID != 0)
                     {
                         MoveLists(newListViewModel.RequestToAddID, newList.ListID, newListViewModel.RequestPreviousListID);
 
@@ -5787,7 +5914,7 @@ namespace PrototypeWithAuth.Controllers
             DeleteListRequestViewModel viewModel = new DeleteListRequestViewModel
             {
                 Request = _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault(),
-                List = _context.RequestLists.Where(l => l.ListID == listID).FirstOrDefault()            
+                List = _context.RequestLists.Where(l => l.ListID == listID).FirstOrDefault()
             };
             return PartialView(viewModel);
         }
@@ -5825,7 +5952,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ListSettingsModal(int selectedListID=0)
+        public async Task<IActionResult> ListSettingsModal(int selectedListID = 0)
         {
             var userLists = _context.RequestLists.Where(rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User)).OrderBy(rl => rl.DateCreated).ToList();
 
@@ -5855,7 +5982,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _ListSettings(int listID)
-        { 
+        {
             var list = _context.RequestLists.Where(rl => rl.ListID == listID).FirstOrDefault();
 
             return PartialView(list);
