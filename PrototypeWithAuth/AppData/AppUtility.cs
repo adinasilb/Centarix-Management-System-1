@@ -101,14 +101,16 @@ namespace PrototypeWithAuth.AppData
         public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote, ExperimentEntries, ParentRequest, FunctionResults }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum ModalType { None, Terms, UploadOrder, UploadQuote, ConfirmEmail, Reorder }
-        public enum VendorCountries { 
-            Israel, 
+        public enum VendorCountries
+        {
+            Israel,
             [Display(Name = "North America")]
             NorthAmerica,
             [Display(Name = "South America")]
-            SouthAmerica, 
-            Europe, 
-            Asia }
+            SouthAmerica,
+            Europe,
+            Asia
+        }
         public static string AspDateFormatString = "{0:d MMM yyyy}";
         public static List<StringWithName> RequestRoleEnums()
         {
@@ -159,7 +161,7 @@ namespace PrototypeWithAuth.AppData
         public enum CategoryTypeEnum { Operations, Lab }
         public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusable, Equipment, Operation, Biological, Safety, General, Clinical }
         public enum RequestModalType { Create, Edit, Summary }
-        public enum ProtocolModalType {None, Create, CheckListMode, Summary, Edit, SummaryFloat, CreateNewVersion }
+        public enum ProtocolModalType { None, Create, CheckListMode, Summary, Edit, SummaryFloat, CreateNewVersion }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
         public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveList, DeleteFromList }
@@ -521,7 +523,7 @@ namespace PrototypeWithAuth.AppData
                     switch (Enum.Parse(typeof(PriceSortEnum), p))
                     {
                         case PriceSortEnum.Unit:
-                            priceColumn.Add( new StringWithBool { String = "U: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", pricePerUnit), Bool = false });
+                            priceColumn.Add(new StringWithBool { String = "U: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", pricePerUnit), Bool = false });
                             break;
                         case PriceSortEnum.Total:
                             priceColumn.Add(new StringWithBool { String = "T: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", cost), Bool = false });
@@ -536,10 +538,10 @@ namespace PrototypeWithAuth.AppData
                 }
                 return priceColumn;
             }
-            
-            catch(Exception ex)
+
+            catch (Exception ex)
             {
-                return new List<StringWithBool>() { new StringWithBool { String = "price has an error", Bool = true }};
+                return new List<StringWithBool>() { new StringWithBool { String = "price has an error", Bool = true } };
             }
         }
 
@@ -553,11 +555,11 @@ namespace PrototypeWithAuth.AppData
                 var subcategory = p.ProductSubcategory.ProductSubcategoryDescription;
                 if (categorySelected)
                 {
-                    categoryColumn.Add( new StringWithBool { String = category, Bool = false });
+                    categoryColumn.Add(new StringWithBool { String = category, Bool = false });
                 }
                 if (subcategorySelected)
                 {
-                    categoryColumn.Add( new StringWithBool { String = subcategory, Bool = false });
+                    categoryColumn.Add(new StringWithBool { String = subcategory, Bool = false });
                 }
                 return categoryColumn;
             }
@@ -588,10 +590,10 @@ namespace PrototypeWithAuth.AppData
                 List<StringWithBool> amountColumn = new List<StringWithBool>();
                 if (request.Unit != null)
                 {
-                    amountColumn.Add( new StringWithBool { String = TrimZeros(request.Unit) + " " + request.Product.UnitType.UnitTypeDescription, Bool = false });
+                    amountColumn.Add(new StringWithBool { String = TrimZeros(request.Unit) + " " + request.Product.UnitType.UnitTypeDescription, Bool = false });
                     if (request.Product.SubUnit != null)
                     {
-                        amountColumn.Add(new StringWithBool { String = TrimZeros(request.Product.SubUnit??0) + " " + request.Product.SubUnitType.UnitTypeDescription, Bool = false });
+                        amountColumn.Add(new StringWithBool { String = TrimZeros(request.Product.SubUnit ?? 0) + " " + request.Product.SubUnitType.UnitTypeDescription, Bool = false });
                         if (request.Product.SubSubUnit != null)
                         {
                             amountColumn.Add(new StringWithBool { String = TrimZeros(request.Product.SubSubUnit ?? 0) + " " + request.Product.SubSubUnitType.UnitTypeDescription, Bool = false });
@@ -642,7 +644,7 @@ namespace PrototypeWithAuth.AppData
             {
                 return "Error retrieving receival details";
             }
-         
+
         }
 
         public static string GetDocumentIcon(FolderNamesEnum folderName)
@@ -748,7 +750,7 @@ namespace PrototypeWithAuth.AppData
                 exception = exception.InnerException;
             }
             return exception.Message;
-            
+
         }
 
         public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
@@ -823,7 +825,7 @@ namespace PrototypeWithAuth.AppData
 
         public static DateTime? GetJustDateOnNullableDateTime(this DateTime? date)
         {
-            return date?.Date?? null;
+            return date?.Date ?? null;
         }
         public static string GetElixirDateFormat(this DateTime date)
         {
@@ -863,21 +865,24 @@ namespace PrototypeWithAuth.AppData
         public static String GetUrlFromUserData(String UserUrl)
         {
             var returnUrl = "";
-            if (UserUrl.StartsWith("http://"))
+            if (!UserUrl.IsNullOrEmpty())
             {
-                returnUrl = UserUrl;
-            }
-            else if (UserUrl.StartsWith("://"))
-            {
-                returnUrl = "http" + UserUrl;
-            }
-            else if (UserUrl.StartsWith("//"))
-            {
-                returnUrl = "http:" + UserUrl;
-            }
-            else
-            {
-                returnUrl = "http://" + UserUrl;
+                if (UserUrl.StartsWith("http://"))
+                {
+                    returnUrl = UserUrl;
+                }
+                else if (UserUrl.StartsWith("://"))
+                {
+                    returnUrl = "http" + UserUrl;
+                }
+                else if (UserUrl.StartsWith("//"))
+                {
+                    returnUrl = "http:" + UserUrl;
+                }
+                else
+                {
+                    returnUrl = "http://" + UserUrl;
+                }
             }
             return returnUrl;
         }
@@ -906,11 +911,11 @@ namespace PrototypeWithAuth.AppData
 
         public static StringWithBool GetDateOrderedString(ParentRequest parentRequest)
         {
-            try 
-            { 
+            try
+            {
                 return new StringWithBool { String = parentRequest.OrderDate.GetElixirDateFormat() };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new StringWithBool { String = "order date has an error", Bool = true };
             }
@@ -919,7 +924,7 @@ namespace PrototypeWithAuth.AppData
         public static decimal TrimZeros(decimal number)
         {
             var returnNum = number;
-            if((number % 1) == 0)
+            if ((number % 1) == 0)
             {
                 returnNum = Math.Round(returnNum, 0);
             }
