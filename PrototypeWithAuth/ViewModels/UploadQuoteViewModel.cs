@@ -20,6 +20,7 @@ namespace PrototypeWithAuth.ViewModels
         [Display(Name = "Expected Supply Days")]
         [Range(0, 2147483647, ErrorMessage = "Field must be a positive number")]
         public byte? ExpectedSupplyDays { get; set; }
+        public decimal Discount { get; set; }
         //public bool IsReorder { get; set; }
     }
 }

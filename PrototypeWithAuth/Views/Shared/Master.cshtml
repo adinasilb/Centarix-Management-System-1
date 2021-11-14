@@ -1193,7 +1193,8 @@
                 "&SelectedCurrency=" + $('#tempCurrency').val() +
                 "&SidebarFilterID=" + $('.sideBarFilterID').val() +
                 "&CategorySelected=" + $('#categorySortContent .select-category').is(":checked") +
-                "&SubCategorySelected=" + $('#categorySortContent .select-subcategory').is(":checked");
+                "&SubCategorySelected=" + $('#categorySortContent .select-subcategory').is(":checked") +
+                "&ListID="+$("#ListID").val();
             queryString += selectedPriceSort;
             console.log(queryString)
             return queryString;
@@ -1662,8 +1663,16 @@
                 }
             })
         }
+        $.fn.CancelTest = function (selectedTest) {
+            var url = "/Biomarkers/CancelTestChanges?CurrentGuid=" + $(".hidden-guid").attr("value") + "&TestID=" + selectedTest.attr("testid") + "&ListNumber=0&SiteID=" + /*$(this).attr("listnumber")*/ + $("#ExperimentEntry_SiteID").val() + "&ExperimentID=" + $("#ExperimentEntry_Participant_ExperimentID").val() + "&ExperimentEntryID=" + $("#ExperimentEntry_ExperimentEntryID").val();
+            //alert("url: " + url);
+            $.fn.FinishChangeTest(url, selectedTest);
+        }
         $.fn.ChangeTest = function (selectedTest) {
             var url = "/Biomarkers/_TestValues?TestID=" + selectedTest.attr("testid") + "&ListNumber=0&SiteID=" + /*$(this).attr("listnumber")*/ + $("#ExperimentEntry_SiteID").val() + "&ExperimentID=" + $("#ExperimentEntry_Participant_ExperimentID").val() + "&ExperimentEntryID=" + $("#ExperimentEntry_ExperimentEntryID").val();
+            $.fn.FinishChangeTest(url, selectedTest);
+        };
+        $.fn.FinishChangeTest = function(url, selectedTest){
             $.ajax({
                 async: true,
                 url: url,

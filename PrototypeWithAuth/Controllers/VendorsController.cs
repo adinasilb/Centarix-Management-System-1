@@ -341,6 +341,11 @@ namespace PrototypeWithAuth.Controllers
                     createSupplierViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
                     createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
+                    createSupplierViewModel.Countries = new List<SelectListItem>();
+                    foreach (var country in _context.Countries)
+                    {
+                        createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
+                    }
                     return View("Create", createSupplierViewModel);
                 }
             }
