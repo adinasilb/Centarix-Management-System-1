@@ -16,6 +16,7 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.SidebarEnum AccountingEnum { get; set; }
         public List<PaymentType> PaymentTypes { get; set; }
         public List<CheckboxViewModel> ShippingToPay { get; set; }
+        public StringWithBool Error { get; set; }
 
     }
 }
