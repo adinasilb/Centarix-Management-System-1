@@ -4759,12 +4759,19 @@ namespace PrototypeWithAuth.Controllers
                 return PartialView("InvalidLinkPage");
             }
             List<Request> requestsToPay = new List<Request>();
+            StringWithBool Error = new StringWithBool();
             var requestsList = new List<Request>();
             GetPaymentRequests(accountingPaymentsEnum).Result.ForEach(rp => requestsList.Add(rp.Request));
-
+            AppUtility.CurrencyEnum CurrencyUsed = AppUtility.CurrencyEnum.None;
+            int? VendorID = 0;
             if (vendorid != null)
             {
-                requestsToPay = await requestsList.Where(r => r.Product.VendorID == vendorid).ToListAsync();
+                var vendorReqList = await requestsList.Where(r => r.Product.VendorID == vendorid).ToListAsync();
+                if (vendorReqList.Select(r => r.Currency).Distinct().Count() > 1)
+                {
+                    Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
+                }
+                requestsToPay = vendorReqList; 
             }
             else if (requestid != null)
             {
@@ -4772,9 +4779,28 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (requestIds != null)
             {
+                bool FirstTime = true;
                 foreach (int rId in requestIds)
                 {
-                    requestsToPay.Add(requestsList.Where(r => r.RequestID == rId).FirstOrDefault());
+                    var request = requestsList.Where(r => r.RequestID == rId).FirstOrDefault();
+                    if (FirstTime)
+                    {
+                        Enum.TryParse(request.Currency, out CurrencyUsed);
+                        VendorID = request.Product.VendorID;
+                        FirstTime = false;
+                    }
+                    else
+                    {
+                        if (request.Currency != CurrencyUsed.ToString())
+                        {
+                            Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
+                        }
+                        if (request.Product.VendorID != VendorID)
+                        {
+                            Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
+                        }
+                        requestsToPay.Add(request);
+                    }
                 }
             }
 
@@ -4785,7 +4811,8 @@ namespace PrototypeWithAuth.Controllers
                 Payment = new Payment(),
                 PaymentTypes = _context.PaymentTypes.Select(pt => pt).ToList(),
                 CompanyAccounts = _context.CompanyAccounts.Select(ca => ca).ToList(),
-                ShippingToPay = await GetShippingsToPay(requestsToPay)
+                ShippingToPay = await GetShippingsToPay(requestsToPay),
+                Error = Error
             };
 
             //check if payment status type is installments to show the installments in the view model
