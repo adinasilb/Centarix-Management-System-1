@@ -1,4 +1,55 @@
-﻿$(function () {
+﻿
+var MaxFileSizeMB = 1;
+var BufferChunkSize = MaxFileSizeMB * (1024 *1024);
+
+function UploadFile(TargetFile, formdata)
+{
+    // create array to store the buffer chunks
+    var FileChunk = [];
+    // the file object itself that we will work with
+    var file = TargetFile;
+    // set up other initial vars
+
+    var ReadBuffer_Size = 1024;
+    var FileStreamPos = 0;
+    // set the initial chunk length
+    var EndPos = BufferChunkSize;
+    var Size = file.size;
+
+    // add to the FileChunk array until we get to the end of the file
+    while (FileStreamPos < Size)
+    {
+        // "slice" the file from the starting position/offset, to  the required length
+        FileChunk.push(file.slice(FileStreamPos, EndPos));
+        FileStreamPos = EndPos; // jump by the amount read
+        EndPos = FileStreamPos + BufferChunkSize; // set next chunk length
+    }
+    // get total number of "files" we will be sending
+    var TotalParts = FileChunk.length;
+    var PartCount = 0;
+    // loop through, pulling the first item from the array each time and sending it
+    while (chunk = FileChunk.shift())
+    {
+        PartCount++;
+        // file name convention
+        var FilePartName = file.name + ".part_" + PartCount + "." + TotalParts;
+        // send the file
+        UploadFileChunk(chunk, FilePartName, formdata);
+    }
+}
+
+function UploadFileChunk(Chunk, FileName, formdata)
+{
+    formdata.append('FilesToSave', Chunk, FileName);
+    //$.ajax({
+    //    type: "POST",
+    //    url: '/Shared/UploadFile/',
+    //    contentType: false,
+    //    processData: false,
+    //    data: FD
+    //});
+}
+$(function () {
 
     $(".upload-file").on("click", function (e) {
         e.preventDefault();
@@ -44,24 +95,11 @@
 		console.log("url : " + url);
         var formData = new FormData($(".documentModalForm")[0]);
         var $CustomMainObjectID = $("#CustomMainObjectID").val();
-		//for(var i=0; i< $(this).get(0).files.length; i++)
-		//{
-		//	formData.append("FilesToSave", $(this).get(0).files[i])
-		//}
-		//var files = [];
-		//var fileInput =		formData.get("FilesToSave");
-		// $.each(e.target.files, function(i, file) {
-		//	 console.log(file)
-		//	files.push(file);
-		// });
-
-		//var zip = new JSZip();
-		//	function addFileToZip(n) {
-		//		if(n >= files.length) {
-		//			zip.generateAsync({type:"blob", compression:"DEFLATE", compressionOptions: { level: 9    },}).then(function(content) {
-		//					formData.set("FilesToSave", content)
-		//	console.log(...formData)
-
+	  
+        var targetFile = formData.get("FilesToSave")
+        console.log(targetFile)
+        UploadFile(targetFile, formData);
+        console.log(...formData)
 			$.ajax({
 				url: url,
 				method: 'POST',
@@ -266,3 +304,4 @@
     //};
 
 });
+

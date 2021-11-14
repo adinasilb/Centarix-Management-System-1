@@ -4117,7 +4117,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpPost]
-        [RequestFormLimits(ValueCountLimit = int.MaxValue)]
+        [RequestSizeLimit(100_000_000)]
         public void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
         {
             base.DocumentsModal(documentsModalViewModel);
