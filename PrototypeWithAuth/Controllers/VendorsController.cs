@@ -341,6 +341,11 @@ namespace PrototypeWithAuth.Controllers
                     createSupplierViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
                     createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
+                    createSupplierViewModel.Countries = new List<SelectListItem>();
+                    foreach (var country in _context.Countries)
+                    {
+                        createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
+                    }
                     return View("Create", createSupplierViewModel);
                 }
             }
@@ -628,6 +633,11 @@ namespace PrototypeWithAuth.Controllers
                 return false;
             }
             return true;
+        }
+
+        public string GetVendorCountryCurrencyID(int VendorID)
+        {
+            return _context.Vendors.Include(v => v.Country).Where(v => v.VendorID == VendorID).Select(v => v.Country.CurrencyID).FirstOrDefault().ToString();
         }
     }
 

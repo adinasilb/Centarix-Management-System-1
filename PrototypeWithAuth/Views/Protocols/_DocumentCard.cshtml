@@ -21,6 +21,10 @@
                     iframeFilestring = "images/excel.png";
                     break;
             }
+            if (ext == "doc" || ext == "docx")
+            {
+                iframeFilestring = "images/wordicon.png";
+            }
             var url = Url.Action("DeleteReportDocumentModal", "Protocols", new { FunctionReportID = Model.ObjectID });
             if (Model.ParentFolderName != AppUtility.ParentFolderName.Reports)
             {

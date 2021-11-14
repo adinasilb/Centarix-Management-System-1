@@ -2884,6 +2884,19 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     align-items: center;
 }
 
+.list-name {
+    padding-top: .7rem;
+    padding-bottom: .7rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
+    border-radius: 15px !important;
+    border: 0 !important;
+}
+
+.list-name.selected {
+    background-color: var(--order-inv-25);
+}
+
 /*
     MULTIPLE EMAIL CSS
 */

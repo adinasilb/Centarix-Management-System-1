@@ -1,0 +1,19 @@
+﻿@model PrototypeWithAuth.Models.RequestList;
+<div class="row">
+    <div class="col">
+        @if (!Model.IsDefault)
+        {
+            <a class="btn-link text no-hover requests delete-my-list float-right" value="@Model.ListID">
+                <i class="icon-delete-24px danger-text" style="font-size:20px;"></i>
+                @*<label class="danger-text">Delete List</label>*@
+            </a>
+        }
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <label asp-for="Title" class="control-label">Rename List (up to 20 characters)</label>
+        <input asp-for="Title" name="SelectedList.Title" class="form-control-plaintext border-bottom" />
+    </div>
+</div>
+<script src="~/js/RequestLists.js"></script>

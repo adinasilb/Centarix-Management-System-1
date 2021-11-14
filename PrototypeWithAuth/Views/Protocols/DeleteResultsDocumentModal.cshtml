@@ -45,6 +45,10 @@
                                                 iframeFilestring = "images/excel.png";
                                                 break;
                                         }
+                                        if (ext == "doc" || ext == "docx")
+                                        {
+                                            iframeFilestring = "images/wordicon.png";
+                                        }
                                     }
                                     <div class="card-body responsive-iframe-container p-0">
                                         <iframe src="@rootPath\/@iframeFilestring" title="View" class="responsive-iframe" marginheight="0" frameborder="0" marginwidth="0"

@@ -8,8 +8,6 @@
 		"VendorCategoryTypes": { selectRequired: true },
 		"Vendor.VendorBuisnessID": {
 			required: true,
-			number: true,
-			min: 1,
 			remote: {
 				url: '/Vendors/CheckUniqueCompanyIDAndCountry',
 				type: 'POST',

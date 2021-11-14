@@ -32,7 +32,7 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
             }
         });
     }
-    else if ($("#masterSidebarType").val() == "Favorites" || $("#masterSidebarType").val() == "SharedRequests")
+    else if ($("#masterSidebarType").val() == "Favorites" || $("#masterSidebarType").val() == "SharedRequests" || $("#masterSidebarType").val() == "MyLists")
     {
         $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "POST");
     }

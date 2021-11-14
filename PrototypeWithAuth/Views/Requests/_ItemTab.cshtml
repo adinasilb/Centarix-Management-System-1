@@ -14,6 +14,7 @@
     var markReadOnlyClass = "";
     var hiddenSummaryClass = "";
     var disabled = "";
+    var vendorcurrencyid = "";
     if (modalType != AppUtility.RequestModalType.Create)
     {
         markReadOnlyClass = "mark-readonly";
@@ -21,6 +22,10 @@
         if (modalType == AppUtility.RequestModalType.Summary)
         {
             hiddenSummaryClass = "hidden";
+        }
+        if (Model.Requests[0].Product.Vendor?.Country.CurrencyID != null)
+        {
+            vendorcurrencyid = Model.Requests[0].Product.Vendor.Country.CurrencyID.ToString();
         }
     }
     var projectCategories = AppUtility.ParentCategoryEnum.Consumables
@@ -193,11 +198,18 @@
                         dataTextField: "VendorEnName"),
                         //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
                         "Select a Vendor",
-                        htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext " + vendorCategories + " " + markReadOnlyClass, 
-                            @id = "vendorList", @size = 1, @searchable = "Select A Vendor", @data_stop_refresh = "true" }
+                        htmlAttributes: new
+                             {
+                                 @class = " vendorList mdb-select custom select-dropdown form-control-plaintext " + vendorCategories + " " + markReadOnlyClass,
+                            @id = "vendorList",
+                                 @size = 1,
+                                 @searchable = "Select A Vendor",
+                                 @data_stop_refresh = "true"
+                             }
                         )
                 <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
             </div>
+            <input type="hidden" id="VendorCurrencyID" value="@vendorcurrencyid" />
         </div>
         <input class="@vendorCategories" type="hidden" value="" id="vendor-primary-email" />
         <div class="col-md-6 @companyIDCategories">
@@ -208,6 +220,7 @@
                 @*don't need a validation here because you it's not saving*@
             </div>
         </div>
+        <div class="col-12"><span class="vendor-price-warning small-text" style="color: #EED202;" id="vendor-price-warning"></span></div>
     </div>
 
     <div class="row">

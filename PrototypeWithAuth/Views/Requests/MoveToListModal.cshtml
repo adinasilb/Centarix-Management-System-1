@@ -1,0 +1,87 @@
+﻿@model PrototypeWithAuth.ViewModels.MoveListViewModel;
+
+<div class="modal modal-view moveListItemModal on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9100">
+    <div class="modal-dialog-centered elixir-modal-xs mx-auto order-inv-form" role="document">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+            <button type="button" class="close modal-close-padding modal-close-style " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('move-list');">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="moveListItemForm">
+                <input type="hidden" asp-for="Request.RequestID" class="request-to-move" />
+                <input type="hidden" asp-for="PreviousListID" />
+                <input type="hidden" asp-for="PageType" />
+                <input type="hidden" asp-for="NewListID" />
+                <div class="modal-padding">
+                    <div class="row error-message">
+                        @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
+                    </div>
+                    <div class="modal-header pt-0" style="border-bottom: 0;">
+
+
+                        <div class="row top-menu">
+                            <div class="col text-center">Move&nbsp;<span class="font-weight-bold">@Model.Request.Product.ProductName</span>&nbsp;To List</div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col " style="overflow:scroll; max-height:15rem;">
+                                <ul class="list-group">
+                                    @{ var origClasses = "list-name moveListItem list-group-item mb-2";
+                                        var classes = origClasses + " selected";}
+                                    @for (int t = 0; t < Model.RequestLists.Count; t++)
+                                    {
+                                        var id = "List" + Model.RequestLists[t].ListID;
+                                        @Html.HiddenFor(m => m.RequestLists[t].ListID);
+                                        <li class="@classes" listId="@Model.RequestLists[t].ListID" id="@id">
+                                            <a class="d-block bold-hover-effects">
+                                                @Model.RequestLists[t].Title
+                                            </a>
+                                        </li>
+                                        classes = origClasses;
+                                    }
+                                </ul>
+                                @*@Html.DropDownListFor(vm => vm.NewListID,
+                    new SelectList(
+                    Model.RequestLists,
+                    "ListID",
+                    "Title", Model.PreviousListID
+                    ), "Select List",
+                    new
+                         {
+                             @class = "mdb-select custom-select-dropdown form-control-plaintext",
+                             @data_stop_refresh = "true"
+                         })*@
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                @{
+                                    var newListFilter = "order-inv-filter";
+                                    if (Model.RequestLists.Count == 5 || (Model.PreviousListID != 0 && Model.RequestLists.Count == 4))
+                                    {
+                                        newListFilter = "disabled disabled-filter";
+                                    }
+                                }
+                                <a class="btn-link text no-hover requests add-new-list fill-list text-center @newListFilter">
+                                    <i class="icon-add_circle_outline-24px1 " style="font-size: 24px;"></i>
+                                    <label class="new-button-text">New List</label>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="modal-footer border-0 p-0">
+            <div class="mx-auto">
+                <button type="submit" class="custom-button custom-button-font mr-3 moveListItem order-inv-background-color">Move</button>
+                <button type="button" class="custom-button custom-cancel close-move-modal" onclick="$.fn.CloseModal('move-list');">Cancel</button>
+            </div>
+        </div>*@
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<script src="~/js/Validation/ListsValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<script src="~/js/RequestLists.js"></script>
