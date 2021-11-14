@@ -305,26 +305,19 @@
         }
         <div class="col-md-4 @websiteCategories">
             <label asp-for="Requests[0].URL" class="control-label"></label>
-            <div class="table-icon-div w-100">
-                <ul class="list-unstyled p-0 m-0">
-                    <li>
-                        @*<a type="hidden" id="url-click" href="@AppUtility.GetUrlFromUserData(Model.Requests[0].URL)" target="_blank" />*@
-                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow popover-url" value="RequestsURL">
-                            <input asp-for="Requests[0].URL" type="button" class="form-control-plaintext border-bottom @websiteCategories @markReadOnlyClass url-shown" />
-                        </button>
-                        @*<input asp-for="Requests[0].URL" href="#" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" value="@Model.Requests[0].URL"*@
-                        @*class="form-control-plaintext border-bottom @websiteCategories @markReadOnlyClass url-shown" />*@
-                    </li>
-                    <li>
-                        <div style="display:none;" id="RequestsURL">
-                            <div class="row px-3 accounting-popover">
-                                <a href="@AppUtility.GetUrlFromUserData(Model.Requests[0].URL)" target="_blank" class="btn-link text no-hover">
-                                    <label class="m-2 text-transform-none">@Model.Requests[0].URL</label>
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+            @*<a type="hidden" id="url-click" href="@AppUtility.GetUrlFromUserData(Model.Requests[0].URL)" target="_blank" />*@
+            <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="click" class="form-control-plaintext border-bottom popover-url" value="RequestsURL">
+                <input asp-for="Requests[0].URL" class="border-0 bg-transparent black-87 @websiteCategories @markReadOnlyClass url-shown" />
+            </button>
+            @*<input asp-for="Requests[0].URL" href="#" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" value="@Model.Requests[0].URL"*@
+            @*class="form-control-plaintext border-bottom @websiteCategories @markReadOnlyClass url-shown" />*@
+
+            <div style="display:none;" id="RequestsURL">
+                <div class="row px-3 accounting-popover">
+                    <a href="@AppUtility.GetUrlFromUserData(Model.Requests[0].URL)" target="_blank" class="btn-link text no-hover">
+                        <label class="m-2 text-transform-none">@Model.Requests[0].URL</label>
+                    </a>
+                </div>
             </div>
             <span asp-validation-for="Requests[0].URL" class="text-danger-centarix"></span>
         </div>
@@ -442,4 +435,29 @@ else //isProprietary
         });
         $(this).popover('toggle');
     });
+
+    $("#Requests_0__URL").on("focusout", function (e) {
+        var inputText = $(this).val();
+        $.ajax({
+            async: true,
+            url: "/Requests/GetUrlFromUserData?inputtedUrl=" + inputText,
+            traditional: true,
+            type: "GET",
+            cache: false,
+            success: function (data) {
+                $("#RequestsURL a").attr("href", data);
+                $("#RequestsURL a label").html(inputText);
+                return false;
+            }
+        });
+    });
+
+    //$("#Requests_0__URL").on("blur", function (e) {
+    //    var inputText = $(this).val();
+    //    $.fn.ChangeUrlLink(inputText);
+    //});
+
+    $.fn.ChangeUrlLink = new function(inputText){
+        
+    }
 </script>
