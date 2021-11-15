@@ -28,14 +28,17 @@ function UploadFile(TargetFile, formData)
     var TotalParts = FileChunk.length;
     var PartCount = 0;
     // loop through, pulling the first item from the array each time and sending it
+    var FilePartName = file.name;
     while (chunk = FileChunk.shift())
     {
-
+        if (PartCount == 0) {
+            formData.set("IsFirstPart", true);
+        }
+        else {
+            formData.set("IsFirstPart", false);
+        }
         PartCount++;
-        // file name convention
-        var FilePartName = file.name; /*+ ".part_" + PartCount + "." + TotalParts;*/
-        // send the file
-        UploadFileChunk(chunk, FilePartName, formData);
+        FilePartName = UploadFileChunk(chunk, FilePartName, formData);
     }
 
 }
@@ -43,6 +46,7 @@ function UploadFile(TargetFile, formData)
 function UploadFileChunk(Chunk, FileName,  formData)
 {
     formData.set('FilesToSave', Chunk, FileName);
+    var fileName = FileName;
     $.ajax({
         type: "POST",
         url: '/Shared/UploadFile/',
@@ -50,8 +54,13 @@ function UploadFileChunk(Chunk, FileName,  formData)
         contentType: false,
         processData: false,
         data: formData,
-        success: function () { console.log("here")}
+        success: function (data) { 
+            console.log(data);
+            fileName = data;
+        }
     });
+
+    return fileName;
 }
 $(function () {
 

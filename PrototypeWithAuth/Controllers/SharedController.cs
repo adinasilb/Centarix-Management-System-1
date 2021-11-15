@@ -278,10 +278,11 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        public void UploadFile(DocumentsModalViewModel documentsModalViewModel)
+        public string UploadFile(DocumentsModalViewModel documentsModalViewModel)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
             var MiddleFolderName = "";
+            var fileName = "";
             if (documentsModalViewModel.FolderName == AppUtility.FolderNamesEnum.Custom && documentsModalViewModel.ParentFolderName == AppUtility.ParentFolderName.ExperimentEntries)
             {
                 MiddleFolderName = documentsModalViewModel.Guid.ToString();
@@ -294,6 +295,7 @@ namespace PrototypeWithAuth.Controllers
             Directory.CreateDirectory(folder);
             if (documentsModalViewModel.FilesToSave != null)
             {
+                fileName = documentsModalViewModel.FilesToSave[0].FileName;
                 var folderName = documentsModalViewModel.FolderName.ToString();
                 if (documentsModalViewModel.FolderName == AppUtility.FolderNamesEnum.Custom && documentsModalViewModel.ParentFolderName == AppUtility.ParentFolderName.ExperimentEntries)
                 {
@@ -301,32 +303,41 @@ namespace PrototypeWithAuth.Controllers
                 }
                 string folderPath = Path.Combine(folder, folderName);
                 Directory.CreateDirectory(folderPath);
-                var uniqueFilePathOld = Path.Combine(folderPath, AppUtility.FolderNamesEnum._Part.ToString()+ documentsModalViewModel.FilesToSave[0].FileName);
-                var uniqueFilePath = Path.Combine(folderPath, AppUtility.FolderNamesEnum._Part.ToString()+2+ documentsModalViewModel.FilesToSave[0].FileName);
+                var uniqueFilePath = Path.Combine(folderPath, "_Part2"+ fileName);
+                var uniqueFilePathOld =Path.Combine(folderPath, fileName);
 
                 var files = Directory.GetFiles(folderPath).Where(f => f==uniqueFilePathOld).ToList();
-                foreach (var file in files)
+               if(!documentsModalViewModel.IsFirstPart)
                 {
-                    FileStream fileStreamOld = new FileStream(file, FileMode.Append);
-                    FileStream fileStream = new FileStream(uniqueFilePath, FileMode.OpenOrCreate);
-                    documentsModalViewModel.FilesToSave[0].CopyTo(fileStream);
-                    fileStream.Close();
-                    var fileBytes=System.IO.File.ReadAllBytes(uniqueFilePath);
-                    fileStreamOld.Write(fileBytes);
-                    fileStreamOld.Close();
-                  
-                    System.IO.File.Delete(uniqueFilePath);
-               
-                }
+                    foreach (var file in files)
+                    {
+                        FileStream fileStreamOld = new FileStream(file, FileMode.Append);
+                        FileStream fileStream = new FileStream(uniqueFilePath, FileMode.OpenOrCreate);
+                        documentsModalViewModel.FilesToSave[0].CopyTo(fileStream);
+                        fileStream.Close();
+                        var fileBytes = System.IO.File.ReadAllBytes(uniqueFilePath);
+                        fileStreamOld.Write(fileBytes);
+                        fileStreamOld.Close();
 
-                if (files==null || files.Count()==0)
+                        System.IO.File.Delete(uniqueFilePath);
+
+                    }
+
+                }
+                else
                 {
-                    var filePath = Path.Combine(folderPath, uniqueFilePathOld);
-                    FileStream filestream = new FileStream(filePath, FileMode.Create);
+                    if(files.Count>0)
+                    {
+                        fileName=(files.Count+1)+ fileName;
+                    }
+                    uniqueFilePathOld =Path.Combine(folderPath, fileName);
+                    FileStream filestream = new FileStream(uniqueFilePathOld, FileMode.Create);
                     documentsModalViewModel.FilesToSave[0].CopyTo(filestream);
                     filestream.Close();
                 }
+
             }
+            return fileName;
         }
 
         protected void DeleteTemporaryDocuments(AppUtility.ParentFolderName parentFolderName, Guid? guid = null, int ObjectID = 0)
