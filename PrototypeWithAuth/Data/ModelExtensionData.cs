@@ -35,11 +35,11 @@ namespace PrototypeWithAuth.Data
                     PaymentStatusID = 5,
                     PaymentStatusDescription = "Installments"
                 },
-                 new PaymentStatus
-                 {
-                     PaymentStatusID = 7,
-                     PaymentStatusDescription = "Standing Order"
-                 },
+                new PaymentStatus
+                {
+                    PaymentStatusID = 7,
+                    PaymentStatusDescription = "Standing Order"
+                },
                 new PaymentStatus
                 {
                     PaymentStatusID = 8,
@@ -2275,12 +2275,12 @@ namespace PrototypeWithAuth.Data
                     JobCategoryTypeID = 2,
                     Description = "Bioinformatician"
                 },
-                                new JobSubcategoryType
-                                {
-                                    JobSubcategoryTypeID = 301,
-                                    JobCategoryTypeID = 3,
-                                    Description = "Senior Scientist"
-                                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 301,
+                    JobCategoryTypeID = 3,
+                    Description = "Senior Scientist"
+                },
                 new JobSubcategoryType
                 {
                     JobSubcategoryTypeID = 302,
@@ -2335,12 +2335,12 @@ namespace PrototypeWithAuth.Data
                     JobCategoryTypeID = 3,
                     Description = "Bioinformatician"
                 },
-                                new JobSubcategoryType
-                                {
-                                    JobSubcategoryTypeID = 401,
-                                    JobCategoryTypeID = 4,
-                                    Description = "Senior Scientist"
-                                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 401,
+                    JobCategoryTypeID = 4,
+                    Description = "Senior Scientist"
+                },
                 new JobSubcategoryType
                 {
                     JobSubcategoryTypeID = 402,
