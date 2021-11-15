@@ -64,7 +64,8 @@ namespace PrototypeWithAuth
             }).AddDefaultTokenProviders()
     .AddTokenProvider<CustomEmailConfirmationTokenProvider<ApplicationUser>>(ConfirmEmailProvider)
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddEntityFrameworkStores<SecondaryDbContext>();
 
 
             //services.AddDbContext<ApplicationDbContext>(options =>
@@ -74,8 +75,12 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DevelopersDB"));
+                    Configuration.GetConnectionString("DefaultConnection"));
                 options.EnableSensitiveDataLogging(true);   
+            })
+                .AddDbContext<SecondaryDbContext>(options => {
+                options.UseSqlServer(Configuration.GetConnectionString("SecondaryConnection"));
+                options.EnableSensitiveDataLogging(true);
             });
 
             services.AddControllersWithViews();

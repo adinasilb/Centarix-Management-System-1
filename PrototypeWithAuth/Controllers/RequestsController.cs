@@ -49,17 +49,19 @@ namespace PrototypeWithAuth.Controllers
     public class RequestsController : SharedController
     {
         private readonly ApplicationDbContext _context;
+        private readonly SecondaryDbContext _secondaryContext;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IHostingEnvironment _hostingEnvironment;
         private ISession _session;
         private ICompositeViewEngine _viewEngine;
 
-        public RequestsController(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+        public RequestsController(ApplicationDbContext context, SecondaryDbContext secondaryDbContext, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
             //_Context = Context;
             _context = context;
+            _secondaryContext = secondaryDbContext;
             _userManager = userManager;
             _signInManager = signInManager;
             //use the hosting environment for the file uploads
@@ -73,7 +75,6 @@ namespace PrototypeWithAuth.Controllers
         // GET: Requests
         public async Task<IActionResult> Index(RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel)
         {
-
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
