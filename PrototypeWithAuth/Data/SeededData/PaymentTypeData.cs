@@ -8,23 +8,24 @@ namespace PrototypeWithAuth.Data.SeededData
 {
     public static class PaymentTypeData
     {
-        public static List<ProtocolType> Get()
+        public static List<PaymentType> Get()
         {
-            List<ProtocolCategory> list = new List<ProtocolCategory>();
-            list.Add(new ProtocolCategory
+            List<PaymentType> list = new List<PaymentType>();
+            list.Add(new PaymentType
             {
-                ProtocolCategoryTypeID = 1,
-                ProtocolCategoryDescription = "Rejuvenation"
+                PaymentTypeID = 1,
+                PaymentTypeDescription = "Credit Card"
+
             });
-            list.Add(new ProtocolCategory
+            list.Add(new PaymentType
             {
-                ProtocolCategoryTypeID = 2,
-                ProtocolCategoryDescription = "Biomarkers"
+                PaymentTypeID = 2,
+                PaymentTypeDescription = "Check"
             });
-            list.Add(new ProtocolCategory
+            list.Add(new PaymentType
             {
-                ProtocolCategoryTypeID = 3,
-                ProtocolCategoryDescription = "Delivery Systems"
+                PaymentTypeID = 3,
+                PaymentTypeDescription = "Wire"
             });
 
             return list;
