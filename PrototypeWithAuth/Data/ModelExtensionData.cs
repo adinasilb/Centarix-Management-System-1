@@ -2342,12 +2342,12 @@ namespace PrototypeWithAuth.Data
                     JobCategoryTypeID = 3,
                     Description = "Bioinformatician"
                 },
-                                new JobSubcategoryType
-                                {
-                                    JobSubcategoryTypeID = 401,
-                                    JobCategoryTypeID = 4,
-                                    Description = "Senior Scientist"
-                                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 401,
+                    JobCategoryTypeID = 4,
+                    Description = "Senior Scientist"
+                },
                 new JobSubcategoryType
                 {
                     JobSubcategoryTypeID = 402,
