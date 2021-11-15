@@ -16,6 +16,7 @@ namespace PrototypeWithAuth.Models
         
         [Required, MaxLength(50)]
         [Display(Name = "Supplier name [EN]")]
+        [Encrypted]
         public string VendorEnName { get; set; }
         
         [Required, MaxLength (50)]

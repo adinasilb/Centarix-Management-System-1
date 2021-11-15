@@ -40,6 +40,7 @@ using System.Drawing;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Text;
 using LinqToExcel;
+using Microsoft.EntityFrameworkCore.DataEncryption.Providers;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -73,7 +74,6 @@ namespace PrototypeWithAuth.Controllers
         // GET: Requests
         public async Task<IActionResult> Index(RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel)
         {
-
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;

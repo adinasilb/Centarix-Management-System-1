@@ -10,16 +10,21 @@ using Abp.Domain.Entities;
 using System.Threading.Tasks;
 using System.Transactions;
 using System.Threading;
+using Microsoft.EntityFrameworkCore.DataEncryption.Providers;
+using Microsoft.EntityFrameworkCore.DataEncryption;
 
 namespace PrototypeWithAuth.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         internal readonly object AspNetUsers;
+        private readonly byte[] _encryptionKey = AesProvider.GenerateKey(AesKeySize.AES128Bits).Key;
+        private readonly byte[] _encryptionIV = AesProvider.GenerateKey(AesKeySize.AES128Bits).IV;
+        private readonly IEncryptionProvider _provider;
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-
+            this._provider = new AesProvider(this._encryptionKey, this._encryptionIV);
         }
 
         public DbSet<Currency> Currencies { get; set; }
@@ -147,6 +152,8 @@ namespace PrototypeWithAuth.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.UseEncryption(this._provider);
 
             modelBuilder.Entity<RequestListRequest>()
                 .HasKey(v => new { v.ListID, v.RequestID });
