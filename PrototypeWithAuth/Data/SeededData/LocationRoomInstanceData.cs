@@ -102,6 +102,13 @@ namespace PrototypeWithAuth.Data.SeededData
                 LocationRoomInstanceAbbrev = "LN1"
 
             });
+            list.Add(new LocationRoomInstance
+            {
+                LocationRoomInstanceID =13,
+                LocationRoomTypeID = 1,
+                LocationRoomInstanceName = "Biomarker Lab 5",
+                LocationRoomInstanceAbbrev = "BL5",
+            });
             return list;
         }
     }
