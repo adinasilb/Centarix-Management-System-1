@@ -1,7 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.ListSettingsViewModel;
 
 <div class="modal modal-view listSettingsModal on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9100">
-    <div class="modal-dialog-centered elixir-modal-md mx-auto order-inv-form" role="document">
+    <div class="modal-dialog-centered elixir-modal-lg mx-auto order-inv-form" role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style close-settings" @*data-dismiss="modal"*@ aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -9,6 +9,7 @@
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="listSettingsForm">
                 <input type="hidden" asp-for="ReloadModal" />
                 <input type="hidden" asp-for="SelectedList.ListID" />
+                <input type="hidden" class="setupdropdowns" value="true" />
                 <div class="modal-padding">
                     <div class="row error-message">
                         @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
@@ -23,7 +24,7 @@
                     <div class="modal-body">
                         <div class="card border">
                             <div class="row">
-                                <div class="col-4 border-right p-4">
+                                <div class="col-3 border-right p-4">
                                     <ul class="list-group">
                                         @{ var origClasses = "list-name request-list-name list-group-item mb-2";
                                             var classes = origClasses + " selected";}
@@ -36,9 +37,9 @@
                                         }
                                     </ul>
                                 </div>
-                                <div class="col-6 small-modal-padding listInfo">
+                                <div class="col-7 small-modal-padding listInfo">
                                     @{
-                                        await Html.RenderPartialAsync("_ListSettings", Model.SelectedList);
+                                        await Html.RenderPartialAsync("_ListSettings", Model);
                                     }
                                 </div>
                             </div>
@@ -47,7 +48,7 @@
                     <div class="modal-footer border-0 p-0">
                         <div class="mx-auto">
                             <button type="submit" class="custom-button custom-button-font mr-3 save-list order-inv-background-color">Save</button>
-                            <button type="button" class="custom-button custom-cancel close-settings" >Close</button>
+                            <button type="button" class="custom-button custom-cancel close-settings">Close</button>
                         </div>
                     </div>
                 </div>

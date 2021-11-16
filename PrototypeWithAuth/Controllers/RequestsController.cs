@@ -617,6 +617,22 @@ namespace PrototypeWithAuth.Controllers
             return viewModel;
         }
 
+        [Authorize(Roles = "Requests")]
+        public async Task<RequestListIndexViewModel> GetSharedRequestListIndexObjectAsync(RequestIndexObject requestIndexObject)
+        {
+            var userLists = _context.ShareRequestLists.Where(l => l.ToApplicationUserID == _userManager.GetUserId(User)).Include(l => l.RequestList).Select(l => l.RequestList).OrderBy(l => l.DateCreated).ToList();
+            var listID = userLists.FirstOrDefault().ListID;
+            RequestIndexPartialViewModel requestIndexViewModel = await base.GetIndexViewModel(requestIndexObject);
+            RequestListIndexViewModel viewModel = new RequestListIndexViewModel
+            {
+                RequestIndexPartialViewModel = requestIndexViewModel,
+                ListID = requestIndexObject.ListID,
+                Lists = userLists
+            };
+
+            return viewModel;
+        }
+
         [Authorize(Roles = "Requests,Operations")]
         public async Task<RedirectToActionResult> SaveAddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
@@ -1815,6 +1831,22 @@ namespace PrototypeWithAuth.Controllers
             return View(viewModel);
         }
         [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> IndexSharedLists()
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SharedLists;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+            RequestIndexObject requestIndexObject = new RequestIndexObject()
+            {
+                PageType = AppUtility.PageTypeEnum.RequestCart,
+                SidebarType = AppUtility.SidebarEnum.SharedLists
+            };
+
+            RequestListIndexViewModel viewModel = await GetRequestListIndexObjectAsync(requestIndexObject);
+            return View(viewModel);
+        }
+        [HttpGet]
         [HttpPost]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _IndexTableWithListTabs(RequestIndexObject requestIndexObject)
@@ -2360,6 +2392,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 case AppUtility.ModelsEnum.Request:
                     shareViewModel.ObjectDescription = _context.Requests.Where(r => r.RequestID == ID).Include(r => r.Product).FirstOrDefault().Product.ProductName;
+                    break;
+                case AppUtility.ModelsEnum.RequestLists:
+                    shareViewModel.ObjectDescription = _context.RequestLists.Where(rl => rl.ListID == ID).FirstOrDefault().Title;
                     break;
             }
 
@@ -5655,7 +5690,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 pageType = AppUtility.PageTypeEnum.RequestInventory;
             }
-            MoveListViewModel viewModel = new MoveListViewModel
+            MoveListViewModel viewModel = new MoveListViewModel()
             {
                 Request = _context.Requests.Where(r => r.RequestID == requestID).Include(r=> r.Product).FirstOrDefault(),
                 PreviousListID = prevListID,
@@ -5676,7 +5711,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                RequestListRequest requestListRequest = new RequestListRequest
+                RequestListRequest requestListRequest = new RequestListRequest()
                 {
                     RequestID = requestToMoveId,
                     ListID = newListID,
@@ -5714,7 +5749,7 @@ namespace PrototypeWithAuth.Controllers
             }
             if (moveListViewModel.PageType == AppUtility.PageTypeEnum.RequestCart)
             {
-                RequestIndexObject indexObject = new RequestIndexObject
+                RequestIndexObject indexObject = new RequestIndexObject()
                 {
                     PageType = AppUtility.PageTypeEnum.RequestCart,
                     SidebarType = AppUtility.SidebarEnum.MyLists,
@@ -5732,7 +5767,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> NewListModal(int requestToAddId = 0, int requestPreviousListID =0)
         {
-            NewListViewModel viewModel = new NewListViewModel
+            NewListViewModel viewModel = new NewListViewModel()
             {
                 OwnerID = _userManager.GetUserId(User),
                 RequestToAddID = requestToAddId,
@@ -5771,7 +5806,7 @@ namespace PrototypeWithAuth.Controllers
                     throw new Exception(AppUtility.GetExceptionMessage(ex));
                 }
             }
-            RequestIndexObject indexObject = new RequestIndexObject
+            RequestIndexObject indexObject = new RequestIndexObject()
             {
                 PageType = AppUtility.PageTypeEnum.RequestCart,
                 SidebarType = AppUtility.SidebarEnum.MyLists,
@@ -5784,7 +5819,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> DeleteListRequestModal(int requestID, int listID)
         {
-            DeleteListRequestViewModel viewModel = new DeleteListRequestViewModel
+            DeleteListRequestViewModel viewModel = new DeleteListRequestViewModel()
             {
                 Request = _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault(),
                 List = _context.RequestLists.Where(l => l.ListID == listID).FirstOrDefault()            
@@ -5813,7 +5848,7 @@ namespace PrototypeWithAuth.Controllers
                     throw new Exception(AppUtility.GetExceptionMessage(ex));
                 }
             }
-            RequestIndexObject indexObject = new RequestIndexObject
+            RequestIndexObject indexObject = new RequestIndexObject()
             {
                 PageType = AppUtility.PageTypeEnum.RequestCart,
                 SidebarType = AppUtility.SidebarEnum.MyLists,
@@ -5827,23 +5862,27 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ListSettingsModal(int selectedListID=0)
         {
-            var userLists = _context.RequestLists.Where(rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User)).OrderBy(rl => rl.DateCreated).ToList();
+            //var sharedList = new ShareRequestList()
+            //{
+            //    RequestListID = 27,
+            //    FromApplicationUserID = "b96445c0-f6ef-42eb-8638-9a65ab094445",
+            //    ToApplicationUserID = "f61f584c-7d1d-4692-801a-82a3069acad5"
+            //};
+            //_context.Update(sharedList);
+            //await _context.SaveChangesAsync();
 
-            ListSettingsViewModel viewModel = new ListSettingsViewModel
-            {
-                RequestLists = userLists,
-                SelectedList = selectedListID == 0 ? userLists.Where(l => l.IsDefault).FirstOrDefault() : userLists.Where(l => l.ListID == selectedListID).FirstOrDefault()
-            };
-            return PartialView(viewModel);
+            var listSettings = GetListSettingsInfo(selectedListID);
+
+            return PartialView(listSettings);
         }
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ListSettingsModal(ListSettingsViewModel listSettings, int selectedIndexListID)
         {
-            await UpdateListDetails(listSettings.SelectedList);
+            await UpdateListDetails(listSettings);
 
-            RequestIndexObject indexObject = new RequestIndexObject
+            RequestIndexObject indexObject = new RequestIndexObject()
             {
                 PageType = AppUtility.PageTypeEnum.RequestCart,
                 SidebarType = AppUtility.SidebarEnum.MyLists,
@@ -5855,22 +5894,52 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _ListSettings(int listID)
-        { 
-            var list = _context.RequestLists.Where(rl => rl.ListID == listID).FirstOrDefault();
+        {
+            var listSettings = GetListSettingsInfo(listID);
 
-            return PartialView(list);
+            return PartialView(listSettings);
         }
 
+        //[HttpGet]
+        //[Authorize(Roles = "Requests")]
+        //public async Task<IActionResult> _ListUsers(List<ShareRequestList> listUsers, int newUserID)
+        //{
+
+        //    return PartialView(listUsers);
+        //}
+
         [Authorize(Roles = "Requests")]
-        public async Task<bool> UpdateListDetails(RequestList newList)
+        public async Task<bool> UpdateListDetails(ListSettingsViewModel listSettings)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    var list = _context.RequestLists.Where(rl => rl.ListID == newList.ListID).FirstOrDefault();
-                    list.Title = newList.Title;
+                    var list = _context.RequestLists.Where(rl => rl.ListID == listSettings.SelectedList.ListID).FirstOrDefault();
+                    list.Title = listSettings.SelectedList.Title;
                     _context.Update(list);
+                    foreach(var user in listSettings.SharedUsers)
+                    {
+                        if (!user.IsRemoved)
+                        {
+                            if (user.ShareRequestList.ShareID == 0)
+                            {
+                                user.ShareRequestList.RequestListID = listSettings.SelectedList.ListID;
+                                user.ShareRequestList.FromApplicationUserID = _userManager.GetUserId(User);
+                                user.ShareRequestList.ToApplicationUser = null;
+                                _context.Add(user.ShareRequestList);
+                            }
+                        }
+                        else
+                        {
+                            if (user.ShareRequestList.ShareID != 0)
+                            {
+                                _context.Remove(user.ShareRequestList);
+                            }
+                        }
+                        
+                    }
+
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
@@ -5881,6 +5950,99 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
             return true;
+        }
+
+        [Authorize(Roles = "Requests")]
+        public ListSettingsViewModel GetListSettingsInfo(int selectedListID)
+        {
+            var userLists = _context.RequestLists.Where(rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User)).OrderBy(rl => rl.DateCreated).ToList();
+
+            ListSettingsViewModel viewModel = new ListSettingsViewModel()
+            {
+                RequestLists = userLists,
+                SelectedList = selectedListID == 0 ? userLists.Where(l => l.IsDefault).FirstOrDefault() : userLists.Where(l => l.ListID == selectedListID).FirstOrDefault()
+            };
+            viewModel.SharedUsers = _context.ShareRequestLists.Where(l => l.RequestListID == viewModel.SelectedList.ListID).Include(l => l.ToApplicationUser).Select(
+                l => new ShareRequestListViewModel
+                {
+                    ShareRequestList = l
+                }).ToList();
+            viewModel.ApplicationUsers = _context.Users
+                              .Where(u => u.Id != _userManager.GetUserId(User) && !viewModel.SharedUsers.Select(su => su.ShareRequestList.ToApplicationUserID).Contains(u.Id))
+                              .Select(
+                                  u => new SelectListItem
+                                  {
+                                      Text = u.FirstName + " " + u.LastName,
+                                      Value = u.Id
+                                  }
+                              ).ToList();
+            foreach(var user in viewModel.ApplicationUsers)
+            {
+                user.Selected = viewModel.SharedUsers.Any(su => su.ShareRequestList.ToApplicationUserID == user.Value);
+            }
+            viewModel.ApplicationUsers.Insert(0, new SelectListItem() { Selected = true, Disabled = true, Text = "Select User" });
+            return viewModel;
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> _ListUsers(ListSettingsViewModel listSettings)
+        {
+            var sharedUsersToRemove = new List<ShareRequestListViewModel>();
+            foreach (var user in listSettings.SharedUsers)
+            {
+                if (user.IsRemoved && user.ShareRequestList.ShareID == 0)
+                {
+                    sharedUsersToRemove.Add(user);
+                }
+            }
+            sharedUsersToRemove.ForEach(u => listSettings.SharedUsers.Remove(u));
+            if (listSettings.ApplicationUserIDs != null)
+            {
+                foreach (var id in listSettings.ApplicationUserIDs)
+                {
+                    if (listSettings.SharedUsers.Select(su => su.ShareRequestList.ToApplicationUserID).Contains(id))
+                    {
+                        listSettings.SharedUsers.Where(su => su.ShareRequestList.ToApplicationUserID == id).FirstOrDefault().IsRemoved = false;
+                    }
+                    else
+                    {
+                        listSettings.SharedUsers.Add(
+                            new ShareRequestListViewModel()
+                            {
+                                ShareRequestList = new ShareRequestList()
+                                {
+                                    ToApplicationUserID = id,
+                                    ToApplicationUser = _context.Employees.Where(e => e.Id == id).FirstOrDefault(),
+                                    ViewOnly = true
+                                }
+                            }
+                        );
+                    }
+                }
+            }
+
+            listSettings.ApplicationUsers = _context.Users
+                              .Where(u => u.Id != _userManager.GetUserId(User) && (!listSettings.SharedUsers.Select(su => su.ShareRequestList.ToApplicationUserID).Contains(u.Id)))
+                              .Select(
+                                  u => new SelectListItem
+                                  {
+                                      Text = u.FirstName + " " + u.LastName,
+                                      Value = u.Id
+                                  }
+                              ).ToList();
+            listSettings.SharedUsers.Where(su => su.IsRemoved).ToList().ForEach(su =>
+           {
+               listSettings.ApplicationUsers.Add(new SelectListItem
+               {
+                   Text = su.ShareRequestList.ToApplicationUser.FirstName + " " + su.ShareRequestList.ToApplicationUser.LastName,
+                   Value = su.ShareRequestList.ToApplicationUserID
+               }
+               );
+           });
+            listSettings.ApplicationUsers.Insert(0, new SelectListItem() { Selected = true, Disabled = true, Text = "Select User" });
+
+            return PartialView(listSettings);
         }
 
         [HttpGet]
@@ -5906,6 +6068,11 @@ namespace PrototypeWithAuth.Controllers
                     {
                         _context.Remove(rlr);
                     }
+                    var shareRequestLists = _context.ShareRequestLists.Where(srl => srl.RequestListID == deleteList.ListID).ToList();
+                    foreach(var srl in shareRequestLists)
+                    {
+                        _context.Remove(srl);
+                    }
                     _context.Remove(list);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
@@ -5929,9 +6096,9 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> SaveListModal(RequestList SelectedList)
+        public async Task<IActionResult> SaveListModal(ListSettingsViewModel listSettings)
         {
-            await UpdateListDetails(SelectedList);
+            await UpdateListDetails(listSettings);
 
             return new EmptyResult();
         }

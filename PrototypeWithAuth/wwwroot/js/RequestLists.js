@@ -1,6 +1,6 @@
 ﻿$(function () {
 
-    $("#listSettings").click(function (e) {
+    $("#listSettings").off("click").on("click", function (e) {
         $.ajax({
             async: true,
             url: "/Requests/ListSettingsModal",
@@ -9,6 +9,7 @@
             cache: false,
             success: function (data) {
                 $.fn.OpenModal("listSettingsModal", "list-settings", data)
+                $.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs');
                 return true;
             },
             error: function (jqxhr) {
@@ -185,8 +186,6 @@
                     processData: false,
                     contentType: false
                 })
-                
-                
             },
             error: function (jqxhr) {
                 $('.listSettingsForms .error-message').html(jqxhr.responseText);
@@ -233,4 +232,44 @@
         $.fn.ajaxPartialIndexTable(-1, "/Requests/DeleteListRequestModal", viewClass, "POST", formData, "delete-list-request");
         return false;
     });
+
+    $(".share-list-users").off('focusout').on('focusout',function (e) {
+        var formData = new FormData($(".listSettingsForm")[0])
+        $.ajax({
+            url: "/Requests/_ListUsers",
+            method: 'POST',
+            data: formData,
+            success: function (data) {
+                $(".list-users").html(data)
+                $.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs');
+                return true;
+            },
+            error: function (jqxhr) {
+                $('.deleteListForm .error-message').html(jqxhr.responseText);
+            },
+            processData: false,
+            contentType: false
+        })
+    })
+    $(".list-permissions-radio").off("click").on("click", function (e) {
+        console.log("radio click")
+        var index = $(this).attr("data-id");
+        var permissionsClass = ".permissions" + index;
+        var ViewOnlyId = "ViewOnly_" + index;
+        console.log(ViewOnlyId)
+        if ($(this).attr("id") == ViewOnlyId) {
+            $(permissionsClass).val("true");
+        }
+        else {
+            $(permissionsClass).val("false");
+        }
+    })
+
+    $(".delete-share-list").off("click").on("click", function (e) {
+        
+        var index = $(this).attr("value");
+        console.log("delete share "+ index)
+        $(".removeShare" + index).val(true)
+        $(this).closest(".share-permissions").remove();
+    })
 })

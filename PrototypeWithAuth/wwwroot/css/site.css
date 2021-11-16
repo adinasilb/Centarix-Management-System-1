@@ -2590,6 +2590,10 @@ span.caret {
     width: 93.31rem;
 }
 
+.elixir-modal-lg{
+    width: 70rem;
+}
+
 .elixir-modal-md {
     width: 60rem;
 }
