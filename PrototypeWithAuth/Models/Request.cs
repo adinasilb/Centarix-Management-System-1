@@ -188,6 +188,7 @@ namespace PrototypeWithAuth.Models
         public QuoteStatus QuoteStatus { get; set; }
         public bool IsInInventory { get; set; }
         public bool DevelopersBoolean { get; set; }
+        public int SerialNumber { get; set; }
         public IEnumerable<RequestListRequest> RequestListRequests { get; set; }
     }
 }
