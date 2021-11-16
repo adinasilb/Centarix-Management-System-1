@@ -2817,7 +2817,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, TempRequestListViewModel tempRequestListViewModel, AppUtility.OrderTypeEnum OrderTypeEnum/*, bool isCancel = false*/)
         {
-            /*if (isCancel)
+         /*if (isCancel)
             {
                 DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
                 DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
@@ -2829,13 +2829,17 @@ namespace PrototypeWithAuth.Controllers
                 //  ReorderViewModel reorderViewModel = JsonConvert.DeserializeObject<ReorderViewModel>(json);
                 //get the old request that we are reordering
                 var oldRequest = _context.Requests.Where(r => r.RequestID == requestItemViewModel.Requests.FirstOrDefault().RequestID)
-                    .Include(r => r.Product)
-                    .ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor).AsNoTracking().FirstOrDefault();
+                    .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                    .Include(r => r.Comments).Include(r => r.Product.Vendor).AsNoTracking().FirstOrDefault();
 
+                if (oldRequest.Comments.Any())
+                {
+
+                }
 
                 var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
                 //need to include product to check if in budget
-                //   reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
+                //reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
                 requestItemViewModel.Requests.FirstOrDefault().RequestID = 0;
                 requestItemViewModel.Requests.FirstOrDefault().ApplicationUserCreatorID = currentUser.Id;
                 requestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;

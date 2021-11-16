@@ -189,5 +189,6 @@ namespace PrototypeWithAuth.Models
         public bool IsInInventory { get; set; }
         public bool DevelopersBoolean { get; set; }
         public IEnumerable<RequestListRequest> RequestListRequests { get; set; }
+        public IEnumerable<Comment> Comments { get; set; }
     }
 }
