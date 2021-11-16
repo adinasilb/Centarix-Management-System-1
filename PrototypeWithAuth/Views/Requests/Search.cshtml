@@ -59,7 +59,7 @@
                                         <input asp-for="ItemName" data-val="false" class="form-control-plaintext border-bottom" />
                                     </div>
                                 </div>
-                                @if(Model.SectionType == AppUtility.MenuItems.Operations)
+                                @if (Model.SectionType == AppUtility.MenuItems.Operations)
                                 {
                                     <div class="col">
                                         <div class="form-group">
@@ -111,7 +111,7 @@
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label asp-for="ApplicationUserOwnerID" class="control-label">Owner</label>
-                                        <select  asp-for="ApplicationUserOwnerID" class="mdb-select custom select-dropdown form-control-plaintext" data-val="false" searchable="Please select a user"  id="ownerList" data-stop-refresh="true">
+                                        <select asp-for="ApplicationUserOwnerID" class="mdb-select custom select-dropdown form-control-plaintext" data-val="false" searchable="Please select a user" id="ownerList" data-stop-refresh="true">
                                             <option value="">Select User</option>
                                             @foreach (var user in Model.ApplicationUsers)
                                             {
@@ -123,7 +123,7 @@
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label asp-for="ApplicationUserReceiverID" class="control-label">Received By</label>
-                                        <select  asp-for="ApplicationUserReceiverID" class=" mdb-select custom select-dropdown form-control-plaintext" data-val="false" searchable="Please select a user" id="receiverList" data-stop-refresh="true">
+                                        <select asp-for="ApplicationUserReceiverID" class=" mdb-select custom select-dropdown form-control-plaintext" data-val="false" searchable="Please select a user" id="receiverList" data-stop-refresh="true">
                                             <option value="">Select User</option>
                                             @foreach (var user in Model.ApplicationUsers)
                                             {
@@ -147,19 +147,19 @@
                                 <div class="col-4 ">
                                     <div class="form-group">
                                         <label asp-for="CreationDate" class="control-label"></label>
-                                        <input asp-for="CreationDate" type="text" class="form-control-plaintext border-bottom datepicker"  asp-format="@AppUtility.AspDateFormatString" />
+                                        <input asp-for="CreationDate" type="text" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label asp-for="OrderDate" class="control-label"></label>
-                                        <input asp-for="OrderDate" type="text" class="form-control-plaintext border-bottom datepicker"  asp-format="@AppUtility.AspDateFormatString"/>
+                                        <input asp-for="OrderDate" type="text" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label asp-for="ArrivalDate" class="control-label"></label>
-                                        <input asp-for="ArrivalDate" type="text" class="form-control-plaintext border-bottom datepicker"  asp-format="@AppUtility.AspDateFormatString" />
+                                        <input asp-for="ArrivalDate" type="text" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
                                     </div>
                                 </div>
                             </div>
@@ -173,7 +173,7 @@
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label asp-for="ExpirationDate" class="control-label"></label>
-                                        <input asp-for="ExpirationDate" type="text" class="form-control-plaintext border-bottom datepicker"  asp-format="@AppUtility.AspDateFormatString"/>
+                                        <input asp-for="ExpirationDate" type="text" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
                                     </div>
                                 </div>
                                 <div class="col-4 ">
@@ -219,10 +219,65 @@
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label asp-for="InvoiceDate" class="control-label"></label>
-                                        <input asp-for="InvoiceDate" type="text" class="form-control-plaintext border-bottom datepicker"  asp-format="@AppUtility.AspDateFormatString" />
+                                        <input asp-for="InvoiceDate" type="text" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
                                     </div>
                                 </div>
                             </div>
+                            @if (Model.PageType == AppUtility.PageTypeEnum.AccountingGeneral)
+                            {
+                                <div class="row ">
+                                    <div class="col-3">
+                                        <div class="payment-type form-group">
+                                            <label class="control-label">Bank Name</label>
+                                            @Html.DropDownListFor(vm => vm.Payment.CompanyAccountID,
+                                                new SelectList(
+                                                Model.CompanyAccounts,
+                                                "CompanyAccountID",
+                                                "CompanyBankName"
+                                                ), "Select Bank Name",
+                                                new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext", @id = "bankName" })
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="payment-type form-group">
+                                            <label class="control-label">Payment Type</label>
+                                            @Html.DropDownListFor(vm => vm.Payment.PaymentTypeID,
+                                                new SelectList(
+                                                Model.PaymentTypes,
+                                                "PaymentTypeID",
+                                                "PaymentTypeDescription"
+                                                ), "Select Payment Type",
+                                                new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext paymentType" })
+                                        </div>
+                                    </div>
+                                    <div class="col-3 credit-card d-none">
+                                        <div class="form-group ">
+                                            <label class="control-label credit-card d-none">Card #</label>
+                                            <select class="mdb-select custom select-dropdown form-control-plaintext cardNum mdb-select-sublist " disabled asp-for="Payment.CreditCardID"></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-group payment-date d-none">
+                                            <label class="control-label wire d-none">Transfer Date</label>
+                                            <label class="control-label credit-card">Reference Date</label>
+                                            <label class="control-label bank-check d-none">Cash Out Date</label>
+                                            <input class="form-control-plaintext border-bottom datepicker" type="text" asp-for="Payment.PaymentReferenceDate" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="col-3 wire d-none">
+                                        <div class="form-group ">
+                                            <label class="control-label">Payment Reference</label>
+                                            <input class="form-control-plaintext border-bottom reference-1" type="text" disabled asp-for="Payment.Reference" />
+                                        </div>
+                                    </div>
+                                    <div class="col-3 bank-check d-none">
+                                        <div class="form-group ">
+                                            <label class="control-label">Check Number</label>
+                                            <input class="form-control-plaintext border-bottom" type="text" disabled asp-for="Payment.CheckNumber" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -231,6 +286,7 @@
     </div>
 </form>
 <script src="~/js/InitializeDatePicker.js"></script>
+<script src="~/js/TermsModal.js"></script>
 <script>
     $('.search-for-request').off('click').on('click', function (e) {
         e.stopPropagation();

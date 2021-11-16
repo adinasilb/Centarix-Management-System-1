@@ -3654,6 +3654,14 @@ namespace PrototypeWithAuth.Controllers
             requestsSearchViewModel.Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => categoryID.Contains(vc.CategoryTypeID)).Count() > 0).ToListAsync();
             requestsSearchViewModel.ApplicationUsers = await _context.Users.ToListAsync();
             requestsSearchViewModel.SectionType = SectionType;
+            requestsSearchViewModel.PageType = PageType;
+            requestsSearchViewModel.SidebarEnum = AppUtility.SidebarEnum.Search;
+            requestsSearchViewModel.Payment = new Payment();
+            if(PageType == AppUtility.PageTypeEnum.AccountingGeneral)
+            {
+                requestsSearchViewModel.PaymentTypes = _context.PaymentTypes;
+                requestsSearchViewModel.CompanyAccounts = _context.CompanyAccounts;
+            }
 
             return View(requestsSearchViewModel);
         }
