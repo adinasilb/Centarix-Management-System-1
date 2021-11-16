@@ -888,7 +888,11 @@ namespace PrototypeWithAuth.Controllers
             //if ((requestsSearchViewModel.PageType != AppUtility.PageTypeEnum.AccountingGeneral && 
             //    requestsSearchViewModel.SidebarEnum != AppUtility.SidebarEnum.Search)
             //    && (Request.Method == "GET" && !AppUtility.IsAjaxRequest(Request)))
-            if (requestsSearchViewModel.Payment == null)
+            if (requestsSearchViewModel == null)
+            {
+                requestsSearchViewModel = new RequestsSearchViewModel();
+            }
+            if( requestsSearchViewModel.Payment == null)
             {
                 requestsSearchViewModel.Payment = new Payment();
             }
