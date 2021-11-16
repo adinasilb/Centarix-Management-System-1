@@ -198,12 +198,18 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
+        [HttpGet]
+        [Authorize(Roles = "Accounting, LabManagement")]
+        public async Task<IActionResult> SearchByVendorNameAndCompanyID(string vendorName, string companyID)
 
-        //string? enName, string? heName, string? bizID, string? contactPerson, string? contactEmail,
-        //string? orderEmail, string? phoneNum1, string? phoneNum2, string? faxNum, string? city, string? street, string? zip,
-        //string? website, string? bank, string? bankBranch, string? bankAccount, string? swift, string? BIC, string? goldAccount string? routingNum
-
-
+        {
+            IQueryable<Vendor> filteredVendors = _context.Vendors.AsQueryable();
+            var listfilteredVendors = await filteredVendors
+            .Where(fv => (String.IsNullOrEmpty(vendorName) || fv.VendorEnName.ToLower().Contains(vendorName.ToLower()))
+                &&
+             (String.IsNullOrEmpty(companyID) || fv.VendorBuisnessID.ToLower().Contains(companyID.ToLower()))).ToListAsync();
+            return PartialView("_IndexForPayment", listfilteredVendors);
+        }
 
 
         // GET: Vendors/Create
