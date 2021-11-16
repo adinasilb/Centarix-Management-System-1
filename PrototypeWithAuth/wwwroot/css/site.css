@@ -803,6 +803,11 @@ input.select-dropdown {
         filter: brightness(0) saturate(100%) var(--lab-man-filter);
         text-decoration: none !important;
     }
+ .supplier-form  .link-clr:hover {
+        font-weight: bold;
+        filter: brightness(0) saturate(100%) var(--lab-man-filter);
+        text-decoration: none !important;
+    }
 
     .lab-man-link-clr:active {
         font-weight: bold;
@@ -816,6 +821,13 @@ input.select-dropdown {
 }
 
     .acc-link-clr:hover {
+        font-weight: bold;
+        filter: var(--acc-filter);
+        text-decoration: none;
+    }
+
+
+  .accounting-form  .link-clr:hover {
         font-weight: bold;
         filter: var(--acc-filter);
         text-decoration: none;
