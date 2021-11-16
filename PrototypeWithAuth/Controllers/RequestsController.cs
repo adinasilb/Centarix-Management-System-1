@@ -2817,13 +2817,14 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, TempRequestListViewModel tempRequestListViewModel, AppUtility.OrderTypeEnum OrderTypeEnum/*, bool isCancel = false*/)
         {
-         /*if (isCancel)
-            {
-                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
-                DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
-                await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
-                return new EmptyResult();
-            }*/
+            /*if (isCancel)
+               {
+                   DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.GUID);
+                   DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.GUID);
+                   await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
+                   return new EmptyResult();
+               }*/
+            bool HasWarnings = false;
             try
             {
                 //  ReorderViewModel reorderViewModel = JsonConvert.DeserializeObject<ReorderViewModel>(json);
@@ -2832,9 +2833,9 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
                     .Include(r => r.Comments).Include(r => r.Product.Vendor).AsNoTracking().FirstOrDefault();
 
-                if (oldRequest.Comments.Any())
+                if (oldRequest.Comments.Where(c => c.CommentType == AppUtility.CommentTypeEnum.Warning.ToString()).Any())
                 {
-
+                    HasWarnings = true;
                 }
 
                 var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
@@ -2903,7 +2904,11 @@ namespace PrototypeWithAuth.Controllers
 
 
                 var action = "UploadQuoteModal"; //for order now and add to cart
-                if (OrderTypeEnum == AppUtility.OrderTypeEnum.AlreadyPurchased)
+                if (HasWarnings)
+                {
+                    return RedirectToAction("SendToWarningModal");
+                }
+                else if (OrderTypeEnum == AppUtility.OrderTypeEnum.AlreadyPurchased)
                 {
                     action = "UploadOrderModal";
                 }
@@ -2926,6 +2931,17 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");*/
                 return PartialView("_ErrorMessage", requestItemViewModel.ErrorMessage);
             }
+        }
+
+        public String SendToWarningModal()
+        {
+            return "Warnings";
+        }
+
+        public async Task<IActionResult> WarningsModal()
+        {
+            WarningsModalViewModel warningsModal = new WarningsModalViewModel();
+            return View(warningsModal);
         }
 
         private async Task RemoveOldRequestFromInventory(int requestId)
@@ -5113,6 +5129,9 @@ namespace PrototypeWithAuth.Controllers
                 Requests = queryableRequests
                     .Where(r => r.Payments.FirstOrDefault().HasInvoice == false)
                     .Where(r => r.Product.VendorID == vendorid).ToList();
+
+
+
                 if (queryableRequests.Select(r => r.Currency).Distinct().Count() > 1)
                 {
                     Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);

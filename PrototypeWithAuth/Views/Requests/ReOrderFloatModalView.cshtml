@@ -187,6 +187,19 @@
             $.ajax({
                 contentType: false,
                 processData: false,
+                async: false,
+                url: "/Requests/WarningsModal",
+                data: formData,
+                type: "POST",
+                traditional: true,
+                cache: false,
+                success: function (data) {
+                    $.fn.OpenModal('warningsModal', 'warnings', data)
+                }
+            });
+            $.ajax({
+                contentType: false,
+                processData: false,
                 async: true,
                 url: "/Requests/ReOrderFloatModalView?OrderTypeEnum=" + orderType,
                 data: formData,
@@ -195,7 +208,7 @@
                 cache: false,
                 success: function (data) {
                     $("#loading").hide();
-
+                    alert("after open warnings");
                     if (orderType == 'RequestPriceQuote') {
                         $('.submitOrder').prop('disabled', false)
                         //this if is not necessary right now because everythin is always _indextabledata
@@ -240,5 +253,5 @@
 
         //return false;
     });
-    
+
 </script>

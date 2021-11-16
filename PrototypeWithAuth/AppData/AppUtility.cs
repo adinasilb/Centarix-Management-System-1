@@ -100,7 +100,7 @@ namespace PrototypeWithAuth.AppData
         public enum FolderNamesEnum { Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details, Custom } //Listed in the site.js (if you change here must change there)
         public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote, ExperimentEntries, ParentRequest, FunctionResults }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
-        public enum ModalType { None, Terms, UploadOrder, UploadQuote, ConfirmEmail, Reorder }
+        public enum ModalType { None, Terms, UploadOrder, UploadQuote, ConfirmEmail, Reorder, Warnings }
         public enum VendorCountries
         {
             Israel,
