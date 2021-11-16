@@ -13,8 +13,8 @@ $('.addInvoiceForm').validate({
 		},
 		"Invoice.InvoiceNumber": {
 			required: true,
-			number: true,
-			min: 1,
+			//number: true,
+			//min: 1,
 
 		},
 		"Invoice.InvoiceDate": {
