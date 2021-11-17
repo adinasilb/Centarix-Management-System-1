@@ -3,7 +3,7 @@
     $("#listSettings").off("click").on("click", function (e) {
         $.ajax({
             async: true,
-            url: "/Requests/ListSettingsModal",
+            url: "/Requests/ListSettingsModal/?SidebarType="+$("#masterSidebarType").val(),
             traditional: true,
             type: "GET",
             cache: false,
@@ -73,6 +73,8 @@
                 url = url + "/?listID=" + $(this).attr("listId");
                 
             }
+            url = url + "&SidebarType=" + $("#masterSidebarType").val()
+            console.log(url)
             $.ajax({
                 url: url,
                 method: 'GET',
@@ -85,6 +87,7 @@
                         newList.addClass("selected")
                         $("#SelectedList_ListID").val(newList.attr("listId"))
                         $(".listInfo").html(data)
+                        $.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs');
                     }
                 },
                 error: function (jqxhr) {
@@ -113,7 +116,7 @@
         })
     })
 
-    $("#Title").on('input', function (e) {
+    $(".title").on('input', function (e) {
         if (!$(".request-list-name").hasClass("changed")) {
             $(".request-list-name").addClass("changed")
         }
@@ -139,6 +142,7 @@
     })
 
     $(".close-settings").off("click").on("click", function (e) {
+        console.log("close settings")
         var viewClass = "._IndexTableListTabs"
         var url = "/Requests/_IndexTableWithListTabs/?"+ $.fn.getRequestIndexString()
         $.fn.ajaxPartialIndexTable(-1, url, viewClass, "GET", null, "list-settings");
@@ -153,19 +157,19 @@
         e.preventDefault();
         $(".request-list-name").removeClass("changed")
         var formData = new FormData($(".listSettingsForm")[0]);
-        var listFormData = new FormData();
-        for (var pair of formData.entries()) {
-            if (pair[0].startsWith("SelectedList")) {
-                listFormData.append(pair[0], pair[1])
-            }
-        }
-        console.log(...listFormData)
+        //var listFormData = new FormData();
+        //for (var pair of formData.entries()) {
+        //    if (pair[0].startsWith("SelectedList")) {
+        //        listFormData.append(pair[0], pair[1])
+        //    }
+        //}
+        //console.log(...listFormData)
         $.ajax({
             contentType: false,
             processData: false,
             async: true,
             url: "/Requests/SaveListModal",
-            data: listFormData,
+            data: formData,
             traditional: true,
             type: "POST",
             cache: false,
@@ -179,6 +183,7 @@
                         $.fn.OpenModal("listSettingsModal", "list-settings", data)
                         $(".request-list-name.selected").removeClass("selected");
                         $("#List" + $("#SelectedList_ListID").val()).addClass("selected")
+                        $.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs');
                     },
                     error: function (jqxhr) {
                         $('.listSettingsForms .error-message').html(jqxhr.responseText);
@@ -233,7 +238,10 @@
         return false;
     });
 
-    $(".share-list-users").off('focusout').on('focusout',function (e) {
+    $(".share-list-users").off('focusout').on('focusout', function (e) {
+        if (!$(".request-list-name").hasClass("changed")) {
+            $(".request-list-name").addClass("changed")
+        }
         var formData = new FormData($(".listSettingsForm")[0])
         $.ajax({
             url: "/Requests/_ListUsers",
@@ -253,6 +261,9 @@
     })
     $(".list-permissions-radio").off("click").on("click", function (e) {
         console.log("radio click")
+        if (!$(".request-list-name").hasClass("changed")) {
+            $(".request-list-name").addClass("changed")
+        }
         var index = $(this).attr("data-id");
         var permissionsClass = ".permissions" + index;
         var ViewOnlyId = "ViewOnly_" + index;

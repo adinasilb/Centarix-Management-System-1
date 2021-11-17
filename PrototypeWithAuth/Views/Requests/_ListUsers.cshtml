@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col">
 
-        @*<label class="control-label">Share List</label>*@
+        <label class="control-label">Share List</label>
         <div>
             @Html.DropDownListFor(vm => vm.ApplicationUserIDs, Model.ApplicationUsers,
  htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext float-right share-list-users", @multiple = "multiple", @onload = "ChangeCheckboxesToFilledIn()" })

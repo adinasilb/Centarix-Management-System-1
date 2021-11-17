@@ -7,56 +7,71 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="listSettingsForm">
-                <input type="hidden" asp-for="ReloadModal" />
-                <input type="hidden" asp-for="SelectedList.ListID" />
-                <input type="hidden" class="setupdropdowns" value="true" />
-                <div class="modal-padding">
-                    <div class="row error-message">
-                        @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
-                    </div>
-                    <div class="modal-header pt-0" style="border-bottom: 0;">
-                        <div class="row top-menu">
-                            <div class="col-12">
-                                <label class="float-left">List Settings</label>
+                @if (Model.SelectedList == null)
+                {
+                    await Html.RenderPartialAsync("_EmptyPagePartial");
+                }
+                else
+                {
+                    <input type="hidden" asp-for="ReloadModal" />
+                    <input type="hidden" asp-for="SelectedList.ListID" />
+                    <input type="hidden" asp-for="SidebarType" />
+                    <input type="hidden" class="setupdropdowns" value="true" />
+                    <div class="modal-padding">
+                        <div class="row error-message">
+                            @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
+                        </div>
+                        <div class="modal-header pt-0" style="border-bottom: 0;">
+                            <div class="row top-menu">
+                                <div class="col-12">
+                                    <label class="float-left">List Settings</label>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-body">
-                        <div class="card border">
-                            <div class="row">
-                                <div class="col-3 border-right p-4">
-                                    <ul class="list-group">
-                                        @{ var origClasses = "list-name request-list-name list-group-item mb-2";
-                                            var classes = origClasses + " selected";}
-                                        @for (int t = 0; t < Model.RequestLists.Count; t++)
-                                        {
-                                            var id = "List" + Model.RequestLists[t].ListID;
-                                            @Html.HiddenFor(m => m.RequestLists[t].ListID);
-                                            <li class=" @classes" listId="@Model.RequestLists[t].ListID" id="@id">@Model.RequestLists[t].Title</li>
-                                            classes = origClasses;
+                        <div class="modal-body">
+                            <div class="card border">
+                                <div class="row">
+                                    <div class="col-3 border-right p-4">
+                                        <ul class="list-group">
+                                            @{ var origClasses = "list-name request-list-name list-group-item mb-2";
+                                                var classes = origClasses + " selected";}
+                                            @for (int t = 0; t < Model.RequestLists.Count; t++)
+                                            {
+                                                var id = "List" + Model.RequestLists[t].ListID;
+                                                @Html.HiddenFor(m => m.RequestLists[t].ListID);
+                                                <li class=" @classes" listId="@Model.RequestLists[t].ListID" id="@id">@Model.RequestLists[t].Title</li>
+                                                classes = origClasses;
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div class="col-7 small-modal-padding listInfo">
+                                        @{
+                                            await Html.RenderPartialAsync("_ListSettings", Model);
                                         }
-                                    </ul>
-                                </div>
-                                <div class="col-7 small-modal-padding listInfo">
-                                    @{
-                                        await Html.RenderPartialAsync("_ListSettings", Model);
-                                    }
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer border-0 p-0">
-                        <div class="mx-auto">
-                            <button type="submit" class="custom-button custom-button-font mr-3 save-list order-inv-background-color">Save</button>
-                            <button type="button" class="custom-button custom-cancel close-settings">Close</button>
+                        <div class="modal-footer border-0 p-0">
+                            <div class="mx-auto">
+                                <button type="submit" class="custom-button custom-button-font mr-3 save-list order-inv-background-color">Save</button>
+                                <button type="button" class="custom-button custom-cancel close-settings">Close</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-
+                }
             </form>
         </div>
     </div>
 </div>
-
+<script>
+    $(".close-settings").off("click").on("click", function (e) {
+        e.preventDefault();
+        console.log("close settings")
+        var viewClass = "._IndexTableListTabs"
+        var url = "/Requests/_IndexTableWithListTabs/?" + $.fn.getRequestIndexString()
+        $.fn.ajaxPartialIndexTable(-1, url, viewClass, "GET", null, "list-settings");
+    })
+</script>
 <script src="~/js/Validation/ListsValidation.js"></script>
 <script src="~/js/validate.js"></script>

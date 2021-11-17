@@ -19,5 +19,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<SelectListItem> ApplicationUsers { get; set; }
         public List<String> ApplicationUserIDs { get; set; }
         public List<ShareRequestListViewModel> SharedUsers { get; set; }
+        public AppUtility.SidebarEnum SidebarType { get; set; }
     }
 }
