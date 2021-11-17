@@ -622,7 +622,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<RequestListIndexViewModel> GetSharedRequestListIndexObjectAsync(RequestIndexObject requestIndexObject)
         {
             var userLists = _context.ShareRequestLists.Where(l => l.ToApplicationUserID == _userManager.GetUserId(User)).Include(l => l.RequestList).Select(l => l.RequestList).OrderBy(l => l.DateCreated).ToList();
-            if (requestIndexObject.ListID == 0)
+            if (userLists.Count > 0 && requestIndexObject.ListID == 0)
             {
                 requestIndexObject.ListID = userLists.FirstOrDefault().ListID;
             }
