@@ -15,7 +15,7 @@
         case 1:
             showDetails = " active show ";
             break;
-@*        case 2:
+        @*        case 2:
             showCategories = " active show ";
             break;*@
         case 2:
@@ -172,21 +172,28 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-4">
+                <div class="col-3">
                     <div class="form-group">
                         <label asp-for="Vendor.OrdersEmail" class="control-label"></label>
                         <input asp-for="Vendor.OrdersEmail" class="form-control-plaintext border-bottom mark-readonly" disabled />
                         <span asp-validation-for="Vendor.OrdersEmail" class="text-danger-centarix"></span>
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="Vendor.QuotesEmail" class="control-label"></label>
+                        <input asp-for="Vendor.QuotesEmail" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.QuotesEmail" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="col-3">
                     <div class="form-group">
                         <label asp-for="Vendor.InfoEmail" class="control-label"></label>
                         <input asp-for="Vendor.InfoEmail" class="form-control-plaintext border-bottom mark-readonly" disabled />
                         <span asp-validation-for="Vendor.InfoEmail" class="text-danger-centarix"></span>
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-3">
                     <div class="form-group">
                         <label asp-for="Vendor.VendorWebsite" class="control-label"></label>
                         <input asp-for="Vendor.VendorWebsite" class="form-control-plaintext border-bottom mark-readonly" disabled />
@@ -196,42 +203,42 @@
             </div>
         </div>
         @*<div id="categories" class="tab-pane fade @showCategories">
-            <div class="row modal-tab-name">
-                <span class="heading-1 col-12 modal-tab-name">Categories</span>
-            </div>
-            <div class="row">
-                <div class="col-2">
-                    <div class="form-group">
-                        <label class="control-label">Sub category 1</label>
-                        <input class="form-control-plaintext border-bottom mark-readonly" disabled />
+                <div class="row modal-tab-name">
+                    <span class="heading-1 col-12 modal-tab-name">Categories</span>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        <div class="form-group">
+                            <label class="control-label">Sub category 1</label>
+                            <input class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            <label class="control-label">Sub category 2</label>
+                            <input class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            <label class="control-label">Sub category 3</label>
+                            <input class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            <label class="control-label">Sub category 4</label>
+                            <input class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            <label class="control-label">Sub category 5</label>
+                            <input class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        </div>
                     </div>
                 </div>
-                <div class="col-2">
-                    <div class="form-group">
-                        <label class="control-label">Sub category 2</label>
-                        <input class="form-control-plaintext border-bottom mark-readonly" disabled />
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="form-group">
-                        <label class="control-label">Sub category 3</label>
-                        <input class="form-control-plaintext border-bottom mark-readonly" disabled />
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="form-group">
-                        <label class="control-label">Sub category 4</label>
-                        <input class="form-control-plaintext border-bottom mark-readonly" disabled />
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="form-group">
-                        <label class="control-label">Sub category 5</label>
-                        <input class="form-control-plaintext border-bottom mark-readonly" disabled />
-                    </div>
-                </div>
-            </div>
-        </div>*@
+            </div>*@
         <div id="payment" class="tab-pane fade @showPayment">
             <div class="row modal-tab-name">
                 <span class="heading-1 col-12 modal-tab-name">Payment</span>
@@ -344,11 +351,11 @@
                 <input type="hidden" value="@Model.VendorContacts.Count" id="contact-index" />
                 @for (int x = 0; x < Model.VendorContacts.Count(); x++)
                 @*@{var x = 0; }
-                @foreach(var vendorContact in Model.VendorContacts)*@
+                    @foreach(var vendorContact in Model.VendorContacts)*@
                 {
 
                     await Html.RenderPartialAsync("ContactInfoPartial", new AddContactViewModel { VendorContact = Model.VendorContacts[x].VendorContact, Index = x, IsEdit = true });
-                    
+
                 }
             </div>
             <div class="text-center">
