@@ -3471,14 +3471,14 @@ namespace PrototypeWithAuth.Controllers
                     string ownerEmail = currentUser.Email;
                     string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
                     string ownerPassword = currentUser.SecureAppPass;
-                    string vendorEmail = requests.FirstOrDefault().Product.Vendor.OrdersEmail;
+                    string vendorQuotesEmail = requests.FirstOrDefault().Product.Vendor.QuotesEmail;
                     string vendorName = requests.FirstOrDefault().Product.Vendor.VendorEnName;
 
                     //add a "From" Email
                     message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
 
                     // add a "To" Email
-                    message.To.Add(new MailboxAddress(vendorName, vendorEmail));
+                    message.To.Add(new MailboxAddress(vendorName, vendorQuotesEmail));
 
                     //subject
                     message.Subject = "Request for a Price Quote from Centarix to " + vendorName;
