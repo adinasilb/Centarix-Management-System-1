@@ -57,13 +57,13 @@ Model.TempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.Side
             </div>
         </div>
         <div class="col-6 offset-2">
-            <div class="note-message p-4 pl-5">                   
-                    @if (Model.Requests[0]?.ParentRequest?.NoteToSupplier != null)
-                    {
-                       <span class="heading-1">Please Note:</span><br>
-                      <span class="text">@Model.Requests[0].ParentRequest.NoteToSupplier</span>
-                        
-                    }
+            <div class="note-message p-4 pl-5">
+                @if (Model.Requests[0]?.ParentRequest?.NoteToSupplier != null)
+                {
+                    <span class="heading-1">Please Note:</span><br>
+                    <span class="text">@Model.Requests[0].ParentRequest.NoteToSupplier</span>
+
+                }
             </div>
         </div>
     </div>
@@ -81,14 +81,14 @@ Model.TempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.Side
                         <th style="width:15%;">SKU</th>
                         <th style="width:8%;">Units</th>
                         if (showPrice == "")
-        {
+                        {
                             <th style="width:16%;">Price</th>
                             <th style="width:15%;">Discount</th>
                             <th style="width:16%;">Total</th>
                         }
-    }
+                    }
                     else
-    {
+                    {
                         <th>Items</th>
                         <th>SKU</th>
                         <th>Total</th>
@@ -98,54 +98,57 @@ Model.TempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.Side
             </thead>
             <tbody>
 
-                @{ decimal total = 0;
-        foreach (var request in Model.Requests)
-        {
-            var cost = request.Cost;
+                @{
+                    decimal total = 0;
+                    for (int m = 0; m < Model.Requests.Count; m++)
+                    //foreach (var request in Model.Requests)
+                    {
+                        @Html.HiddenFor(v => v.Requests[m].RequestID);
+                        var cost = Model.Requests[m].Cost;
 
-            if (request.Currency == AppUtility.CurrencyEnum.USD.ToString())
-            {
-                cost = cost / request.ExchangeRate;
-                total = total + ((request.Cost ?? 0) / request.ExchangeRate);
-                vat += request.VAT / request.ExchangeRate;
-            }
-            else
-            {
-                total = total + (request.Cost ?? 0);
-                vat += request.VAT;
-            }
+                        if (Model.Requests[m].Currency == AppUtility.CurrencyEnum.USD.ToString())
+                        {
+                            cost = cost / Model.Requests[m].ExchangeRate;
+                            total = total + ((Model.Requests[m].Cost ?? 0) / Model.Requests[m].ExchangeRate);
+                            vat += Model.Requests[m].VAT / Model.Requests[m].ExchangeRate;
+                        }
+                        else
+                        {
+                            total = total + (Model.Requests[m].Cost ?? 0);
+                            vat += Model.Requests[m].VAT;
+                        }
                         <tr>
-                            <td style="font-weight: 500;">@request.Product.ProductName</td>
-                            <td>@request.Product.CatalogNumber</td>
-                            @if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                            <td style="font-weight: 500;">@Model.Requests[m].Product.ProductName</td>
+                            <td>@Model.Requests[m].Product.CatalogNumber</td>
+                            @if (Model.Requests[m].Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                             {
-                                <td>@request.Unit</td>
-                                decimal unitPrice = (cost ?? 0) / request.Unit;
+                                <td>@Model.Requests[m].Unit</td>
+                                decimal unitPrice = (cost ?? 0) / Model.Requests[m].Unit;
                                 <td class="@showPrice">@currency @unitPrice.ToString("N2")</td>
                             }
-                            <td class="@showPrice">@request.Discount%</td>
+                            <td class="@showPrice">@Model.Requests[m].Discount%</td>
                             <td class="@showPrice">@currency @cost?.ToString("N2")</td>
                         </tr>
                     }
                     var shipping = Model.Requests[0].ParentRequest?.Shipping ?? 0;
-    total = total + (decimal)shipping;
-    if(vat != 0)
-    {
-        vat += (decimal)shipping * .17m;
-    }
-    decimal totalWithVat = total + vat;
+                    total = total + (decimal)shipping;
+                    if (vat != 0)
+                    {
+                        vat += (decimal)shipping * .17m;
+                    }
+                    decimal totalWithVat = total + vat;
                 }
 
 
-            <tr>
-                <td colspan="@colspan" rowspan="4" class="borderless-cell">
-                    <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">
-                </td>
-                @if (shipping != 0)
-                {
-                    <td>Shipping</td>
-                    <td>@currency @shipping.ToString("N2")</td>
-                }
+                <tr>
+                    <td colspan="@colspan" rowspan="4" class="borderless-cell">
+                        <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">
+                    </td>
+                    @if (shipping != 0)
+                    {
+                        <td>Shipping</td>
+                        <td>@currency @shipping.ToString("N2")</td>
+                    }
                 </tr>
                 <tr class="@showPrice">
                     <td>Total</td>
