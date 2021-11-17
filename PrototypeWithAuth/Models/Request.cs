@@ -190,5 +190,8 @@ namespace PrototypeWithAuth.Models
         public bool DevelopersBoolean { get; set; }
         public int SerialNumber { get; set; }
         public IEnumerable<RequestListRequest> RequestListRequests { get; set; }
+        private const string SerialNumberPefix = "IL";
+
+        public string SerialNumberString { get { return SerialNumberPefix+SerialNumber; } }
     }
 }
