@@ -409,7 +409,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ExperimentEntry>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<Vendor>().HasIndex(v => new { v.CountryID, v.VendorBuisnessID }).IsUnique();
             modelBuilder.Entity<Participant>().HasIndex(p => new { p.ParticipantID, p.CentarixID }).IsUnique();
-            modelBuilder.Entity<Request>().Property(r => r.SerialNumber).UseSqlServerIdentityColumn();
+            modelBuilder.HasSequence<int>("SerialNumberHelper", schema: "dbo").StartsAt(1).IncrementsBy(1);
+            modelBuilder.Entity<Request>().Property(r => r.SerialNumber).HasDefaultValueSql("NEXT VALUE FOR dbo.SerialNumberHelper");
+      
             /*PROTOCOLS*/
             ///set up composite keys
 
