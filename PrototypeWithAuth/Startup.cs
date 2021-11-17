@@ -74,7 +74,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DevelopersDB"));
+                    Configuration.GetConnectionString("AdinaLocal"));
                 options.EnableSensitiveDataLogging(true);   
             });
 
@@ -174,10 +174,13 @@ namespace PrototypeWithAuth
             });
 
 
-            
+
             //ChangePassword(serviceProvider).Wait();
 
-            //CreateRoles(serviceProvider).Wait();
+            CreateRoles(serviceProvider).Wait();
+            //CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer");
+
+
             //AddRoles(serviceProvider).Wait();
 
             //app.UseApplicationInsightsRequestTelemetry();
@@ -261,28 +264,7 @@ namespace PrototypeWithAuth
 
             //await UserManager.AddToRoleAsync(poweruser, "Admin");
 
-            //var adminuser = new Employee()
-            //{
-            //    UserName = "adinasilberberg@gmail.com",
-            //    Email = "adinasilberberg@gmail.com",
-            //    FirstName = "Adina",
-            //    LastName = "Gayer",
-            //    EmailConfirmed = true,
-            //    TwoFactorEnabled = true,
-            //    EmployeeStatusID = 4,
-            //    LockoutEnabled = true,
-            //    LockoutEnd = new DateTime(2999, 01, 01),
-            //    NeedsToResetPassword = true,
-            //    UserNum = 1,
-            //    IsUser = true,
-            //};
-            //var createAdminUser = await UserManager.CreateAsync(adminuser, "ElixirSA29873$*");
-            //adminuser.EmailConfirmed = true;
-            //var result = await UserManager.UpdateAsync(adminuser);
-            //if (createAdminUser.Succeeded)
-            //{
-            //    await UserManager.AddToRoleAsync(adminuser, "Users");
-            //}
+            
 
             //var poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
             ////{
@@ -299,6 +281,33 @@ namespace PrototypeWithAuth
             //        await UserManager.AddToRoleAsync(poweruser, "Admin");
             //    }
             //}
+        }
+
+        private async Task CreateAdminUser(IServiceProvider serviceProvider, String email, String password, String FirstName, String LastName)
+        {
+            var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var adminuser = new Employee()
+            {
+                UserName = email,
+                Email = email,
+                FirstName = "Adina",
+                LastName = "Gayer",
+                EmailConfirmed = true,
+                TwoFactorEnabled = true,
+                EmployeeStatusID = 4,
+                LockoutEnabled = true,
+                LockoutEnd = new DateTime(2999, 01, 01),
+                NeedsToResetPassword = true,
+                UserNum = 1,
+                IsUser = true,
+            };
+            var createAdminUser = await UserManager.CreateAsync(adminuser, password);
+            adminuser.EmailConfirmed = true;
+            var result = await UserManager.UpdateAsync(adminuser);
+            if (createAdminUser.Succeeded)
+            {
+                await UserManager.AddToRoleAsync(adminuser, "Users");
+            }
         }
 
         //
