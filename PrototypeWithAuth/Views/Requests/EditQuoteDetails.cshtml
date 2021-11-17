@@ -161,14 +161,15 @@
                                                 @Model.Requests[i].Product.ProductName
                                             </td>
                                             <td width="15% text-transform: none">
-                                                @Model.Requests[i].Unit &nbsp;@Model.Requests[i].Product.UnitType.UnitTypeDescription
+                                                @(Model.Requests[i].Unit+" ")@Model.Requests[i].Product.UnitType.UnitTypeDescription
                                                 @if (Model.Requests[i].Product.SubUnitType != null)
                                                 {
                                                     <br />
-                                                    @Model.Requests[i].Product.SubUnit @Model.Requests[i].Product.SubUnitType.UnitTypeDescription
+                                                    @(Model.Requests[i].Product.SubUnit==0 ? "" : AppUtility.TrimZeros(Model.Requests[i].Product.SubUnit??0).ToString()+" ") 
+                                                    @Model.Requests[i].Product.SubUnitType.UnitTypeDescription
                                                     @if (Model.Requests[i].Product.SubSubUnitType != null)
                                                     {
-                                                        <br />@Model.Requests[i].Product.SubSubUnit @Model.Requests[i].Product.SubSubUnitType.UnitTypeDescription
+                                                        <br />@(Model.Requests[i].Product.SubSubUnit==0? "" : AppUtility.TrimZeros(Model.Requests[i].Product.SubSubUnit??0).ToString()+" ")@Model.Requests[i].Product.SubSubUnitType.UnitTypeDescription
                                                     }
                                                 }
                                             </td>
