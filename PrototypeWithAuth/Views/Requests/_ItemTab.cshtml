@@ -423,18 +423,23 @@ else //isProprietary
 <script>
 
     $(".popover-url").off('click').click(function () {
-        var val = $(this).val();
-        console.log("url popover")
-        $('[data-toggle="popover"]').popover('dispose');
-        $(this).popover({
-            sanitize: false,
-            placement: 'bottom',
-            html: true,
-            content: function () {
-                return $('#' + val).html();
-            }
-        });
-        $(this).popover('toggle');
+        if ($("#RequestsURL .accounting-popover a").attr("href") == "") {
+            $(this).popover('hide');
+        }
+        else {
+            var val = $(this).val();
+            console.log("url popover")
+            $('[data-toggle="popover"]').popover('dispose');
+            $(this).popover({
+                sanitize: false,
+                placement: 'bottom',
+                html: true,
+                content: function () {
+                    return $('#' + val).html();
+                }
+            });
+            $(this).popover('toggle');
+        }
     });
 
     $("#Requests_0__URL").on("focusout", function (e) {
@@ -460,7 +465,7 @@ else //isProprietary
     //    $.fn.ChangeUrlLink(inputText);
     //});
 
-    $.fn.ChangeUrlLink = new function(inputText){
-        
+    $.fn.ChangeUrlLink = new function (inputText) {
+
     }
 </script>
