@@ -306,7 +306,7 @@
         <div class="col-md-4 @websiteCategories">
             <label asp-for="Requests[0].URL" class="control-label"></label>
             @*<a type="hidden" id="url-click" href="@AppUtility.GetUrlFromUserData(Model.Requests[0].URL)" target="_blank" />*@
-            <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="click" class="form-control-plaintext border-bottom popover-url" value="RequestsURL">
+            <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="form-control-plaintext border-bottom popover-url align-wi" value="RequestsURL">
                 <input asp-for="Requests[0].URL" class="border-0 bg-transparent black-87 @websiteCategories @markReadOnlyClass url-shown" />
             </button>
             @*<input asp-for="Requests[0].URL" href="#" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" value="@Model.Requests[0].URL"*@
@@ -424,6 +424,7 @@ else //isProprietary
 
     $(".popover-url").off('click').click(function () {
         var val = $(this).val();
+        console.log("url popover")
         $('[data-toggle="popover"]').popover('dispose');
         $(this).popover({
             sanitize: false,
@@ -452,6 +453,7 @@ else //isProprietary
         });
         $(".popover-url").popover('hide');
     });
+
 
     //$("#Requests_0__URL").on("blur", function (e) {
     //    var inputText = $(this).val();
