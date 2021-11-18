@@ -5979,7 +5979,7 @@ namespace PrototypeWithAuth.Controllers
         public ListSettingsViewModel GetListSettingsInfo(int selectedListID, AppUtility.SidebarEnum SidebarType)
         {
             var userLists = new List<RequestList>();
-            var defaultList = _context.ShareRequestLists.Where(srl => srl.RequestListID == selectedListID).Include(srl => srl.RequestList).Select(srl => srl.RequestList).FirstOrDefault();
+            var defaultList = _context.RequestLists.Where(rl=> rl.ListID == selectedListID).FirstOrDefault();
             if (SidebarType == AppUtility.SidebarEnum.SharedLists)
             {
                 userLists = _context.ShareRequestLists.Where(srl => srl.ToApplicationUserID == _userManager.GetUserId(User) && !srl.ViewOnly).Include(srl => srl.RequestList).OrderBy(srl => srl.TimeStamp).Select(srl => srl.RequestList).ToList();

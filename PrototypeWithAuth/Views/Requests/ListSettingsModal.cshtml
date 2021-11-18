@@ -33,14 +33,18 @@
                                 <div class="row">
                                     <div class="col-3 border-right p-4">
                                         <ul class="list-group">
-                                            @{ var origClasses = "list-name request-list-name list-group-item mb-2";
-                                                var classes = origClasses + " selected";}
+                                            @{ 
+                                                }
                                             @for (int t = 0; t < Model.RequestLists.Count; t++)
                                             {
+                                                var classes = "list-name request-list-name list-group-item mb-2";
+                                                if (Model.RequestLists[t].ListID == Model.SelectedList.ListID)
+                                                {
+                                                    classes = classes + " selected";
+                                                }
                                                 var id = "List" + Model.RequestLists[t].ListID;
                                                 @Html.HiddenFor(m => m.RequestLists[t].ListID);
                                                 <li class=" @classes" listId="@Model.RequestLists[t].ListID" id="@id">@Model.RequestLists[t].Title</li>
-                                                classes = origClasses;
                                             }
                                         </ul>
                                     </div>

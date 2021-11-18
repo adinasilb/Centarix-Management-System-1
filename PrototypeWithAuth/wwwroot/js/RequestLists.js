@@ -1,9 +1,10 @@
 ﻿$(function () {
 
     $("#listSettings").off("click").on("click", function (e) {
+        var listID = $("#ListID").val();
         $.ajax({
             async: true,
-            url: "/Requests/ListSettingsModal/?SidebarType="+$("#masterSidebarType").val(),
+            url: "/Requests/ListSettingsModal/?SidebarType=" + $("#masterSidebarType").val() + "&selectedListID=" + listID,
             traditional: true,
             type: "GET",
             cache: false,
