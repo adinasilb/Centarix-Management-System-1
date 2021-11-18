@@ -165,7 +165,17 @@
                                         </div>
                                         <div class="col-3">
                                             <label asp-for="Vendor.VendorWebsite" class="control-label"></label>
-                                            <input asp-for="Vendor.VendorWebsite" class="form-control-plaintext border-bottom" />
+                                            <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="form-control-plaintext border-bottom popover-url align-wi" value="VendorWebsite">
+                                                <input asp-for="Vendor.VendorWebsite" class="border-0 bg-transparent black-87 url-shown" />
+                                            </button>
+                                            <div style="display:none;" id="VendorWebsite">
+                                                <div class="row px-3 accounting-popover">
+                                                    <a href="" target="_blank" class="btn-link text no-hover">
+                                                        <label class="m-2 text-transform-none"></label>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            @*<input asp-for="Vendor.VendorWebsite" class="form-control-plaintext border-bottom" />*@
                                             <span asp-validation-for="Vendor.VendorWebsite" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
@@ -324,3 +334,38 @@
     <script src="~/js/Validation/CreateVendorFormValidation.js"></script>
     <script src="~/js/validate.js"></script>
 }
+
+<script>
+
+    $(".popover-url").off('click').click(function () {
+        var val = $(this).val();
+        console.log("url popover")
+        $('[data-toggle="popover"]').popover('dispose');
+        $(this).popover({
+            sanitize: false,
+            placement: 'bottom',
+            html: true,
+            content: function () {
+                return $('#' + val).html();
+            }
+        });
+        $(this).popover('toggle');
+    });
+
+    $("#Vendor_VendorWebsite").on("focusout", function (e) {
+        var inputText = $(this).val();
+        $.ajax({
+            async: true,
+            url: "/Requests/GetUrlFromUserData?inputtedUrl=" + inputText,
+            traditional: true,
+            type: "GET",
+            cache: false,
+            success: function (data) {
+                $("#VendorWebsite a").attr("href", data);
+                $("#VendorWebsite a label").html(inputText);
+                return false;
+            }
+        });
+        $(".popover-url").popover('hide');
+    });
+</script>
