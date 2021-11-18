@@ -5672,7 +5672,9 @@ namespace PrototypeWithAuth.Controllers
             var pageType = AppUtility.PageTypeEnum.RequestCart;
             var userLists = _context.RequestLists.Where(rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User))
                .OrderBy(rl => rl.DateCreated).ToList();
-            if(userLists.Count == 0)
+            var sharedLists =  _context.ShareRequestLists.Where(srl => srl.ToApplicationUserID == _userManager.GetUserId(User) && !srl.ViewOnly).Include(srl => srl.RequestList).OrderBy(srl => srl.TimeStamp).Select(srl => srl.RequestList).ToList();
+            sharedLists.ForEach(sl => userLists.Add(sl));
+            if (userLists.Count == 0)
             {
                 RequestList requestList = new RequestList
                 {
@@ -5977,16 +5979,22 @@ namespace PrototypeWithAuth.Controllers
         public ListSettingsViewModel GetListSettingsInfo(int selectedListID, AppUtility.SidebarEnum SidebarType)
         {
             var userLists = new List<RequestList>();
-            var defaultList = new RequestList();
+            var defaultList = _context.ShareRequestLists.Where(srl => srl.RequestListID == selectedListID).Include(srl => srl.RequestList).Select(srl => srl.RequestList).FirstOrDefault();
             if (SidebarType == AppUtility.SidebarEnum.SharedLists)
             {
                 userLists = _context.ShareRequestLists.Where(srl => srl.ToApplicationUserID == _userManager.GetUserId(User) && !srl.ViewOnly).Include(srl => srl.RequestList).OrderBy(srl => srl.TimeStamp).Select(srl => srl.RequestList).ToList();
-                defaultList = userLists.FirstOrDefault();
+                if (selectedListID == 0)
+                {
+                    defaultList = userLists.FirstOrDefault();
+                }
             }
             else
             {
                 userLists = _context.RequestLists.Where(rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User)).OrderBy(rl => rl.DateCreated).ToList();
-                defaultList = userLists.Where(l => l.IsDefault).FirstOrDefault();
+                if (selectedListID == 0)
+                {
+                    defaultList = userLists.Where(l => l.IsDefault).FirstOrDefault();
+                }
             }
             if(defaultList == null)
             {
