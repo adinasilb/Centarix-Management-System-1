@@ -6465,5 +6465,10 @@ namespace PrototypeWithAuth.Controllers
             }
             await _context.SaveChangesAsync();
         }
+
+        public async Task<String> GetUrlFromUserData(String inputtedUrl)
+        {
+            return AppUtility.GetUrlFromUserData(inputtedUrl);
+        }
     }
 }
