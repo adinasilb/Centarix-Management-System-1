@@ -4,7 +4,7 @@
 @Html.HiddenFor(m => m.SelectedSharedList.RequestList.ListID)
 <div class="row">
     <div class="col">
-        <label>Shared By: @Model.SelectedSharedList.FromApplicationUser.FirstName @Model.SelectedSharedList.FromApplicationUser.LastName</label>
+        <label class="order-inv-color">Shared By: @Model.SelectedSharedList.FromApplicationUser.FirstName @Model.SelectedSharedList.FromApplicationUser.LastName</label>
     </div>
     <div class="col">
         @{ 
@@ -16,7 +16,7 @@
                 permissionsText = "View Only";
             }
         }
-            <label class="disabled-text">
+            <label class="disabled-text float-right">
                 <i class="@iconClass"></i>
                 @permissionsText
             </label>

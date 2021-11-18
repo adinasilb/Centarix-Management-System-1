@@ -69,14 +69,6 @@
         </div>
     </div>
 </div>
-<script>
-    $(".close-settings").off("click").on("click", function (e) {
-        e.preventDefault();
-        console.log("close settings")
-        var viewClass = "._IndexTableListTabs"
-        var url = "/Requests/_IndexTableWithListTabs/?" + $.fn.getRequestIndexString()
-        $.fn.ajaxPartialIndexTable(-1, url, viewClass, "GET", null, "list-settings");
-    })
-</script>
+<script src="~/js/RequestLists.js"></script>
 <script src="~/js/Validation/ListsValidation.js"></script>
 <script src="~/js/validate.js"></script>

@@ -284,4 +284,12 @@
         $(".removeShare" + index).val(true)
         $(this).closest(".share-permissions").remove();
     })
+
+    $(".close-settings").off("click").on("click", function (e) {
+        e.preventDefault();
+        console.log("close settings")
+        var viewClass = "._IndexTableListTabs"
+        var url = "/Requests/_IndexTableWithListTabs/?" + $.fn.getRequestIndexString()
+        $.fn.ajaxPartialIndexTable(-1, url, viewClass, "GET", null, "list-settings");
+    })
 })
