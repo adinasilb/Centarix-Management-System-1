@@ -162,7 +162,7 @@ namespace PrototypeWithAuth.AppData
         public enum ProtocolModalType {None, Create, CheckListMode, Summary, Edit, SummaryFloat, CreateNewVersion }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
-        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveList, DeleteFromList }
+        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveToList, DeleteFromList }
         public enum PopoverEnum { None }
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
