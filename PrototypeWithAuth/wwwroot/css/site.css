@@ -226,6 +226,11 @@ i .fas {
     -webkit-box-shadow: 0 1px 0 0 var(--order-inv-color);
     box-shadow: 0 1px 0 0 var(--order-inv-color);
 }
+.md-form input[type="text"]:not(.url-shown) {
+    border-bottom: 1px solid var(--order-inv-color);
+    -webkit-box-shadow: 0 1px 0 0 var(--order-inv-color);
+    box-shadow: 0 1px 0 0 var(--order-inv-color);
+}
 
 
 [type=checkbox]:checked + label:before {
@@ -2015,17 +2020,20 @@ td .btn {
     color: var(--order-inv-color) !important;
 }
 /*HOVER FOR EACH SECTION*/
-.order-inv-form .form-control-plaintext:not(.danger-box-shadow):focus, .order-inv-form input[type="text"]:not(.danger-box-shadow):focus {
+.order-inv-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus,
+.order-inv-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
+.order-inv-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
 }
 
-.order-inv-form .form-control-plaintext.danger-box-shadow:focus {
-    outline-width: 0px !important;
-    outline-color: none !important;
-    box-shadow: 0 2px 0 0 var(--danger-color) !important;
-}
+
+    .order-inv-form .form-control-plaintext.danger-box-shadow:focus {
+        outline-width: 0px !important;
+        outline-color: none !important;
+        box-shadow: 0 2px 0 0 var(--danger-color) !important;
+    }
 
 .order-inv-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;

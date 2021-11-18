@@ -20,7 +20,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" id="myForm" enctype="multipart/form-data" style="height: 100%;" class="modal-padding editQuoteDetails">
-                @{ 
+                @{
                     var vendorcurrencyid = "";
                     if (Model.Requests.FirstOrDefault().Product.Vendor?.Country.CurrencyID != null)
                     {
@@ -29,8 +29,8 @@
                 }
                 <input type="hidden" id="VendorCurrencyID" value="@vendorcurrencyid" />
                 @*
-        NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
-            they need the hiddenfors that are right underneath it
+                    NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
+                        they need the hiddenfors that are right underneath it
                 *@
                 @{
                     var hideDollar = "d-none";
@@ -71,12 +71,12 @@
                             </div>
 
                             @*<div class="col-3">
-                    <div class="form-group d-inline-flex">
-                        <label asp-for="@Model.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                        <input asp-for="@Model.QuoteDate" class="form-control-plaintext border-bottom for-supply-date-calc align-with-select m-0 ml-2 p-0" min="1" readonly />
-                        <span asp-validation-for="@Model.QuoteDate" class="text-danger-centarix"></span>
-                    </div>
-                </div>*@
+                                    <div class="form-group d-inline-flex">
+                                        <label asp-for="@Model.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                        <input asp-for="@Model.QuoteDate" class="form-control-plaintext border-bottom for-supply-date-calc align-with-select m-0 ml-2 p-0" min="1" readonly />
+                                        <span asp-validation-for="@Model.QuoteDate" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>*@
 
                         </div>
                         <div class="container p-0">
@@ -160,15 +160,15 @@
                                         <td width="15%">
                                             @Model.Requests[i].Product.ProductName
                                         </td>
-                                        <td width="15% text-transform: none">
+                                        <td width="15%" class="text-transform-none">
                                             @Model.Requests[i].Unit &nbsp;@Model.Requests[i].Product.UnitType.UnitTypeDescription
                                             @if (Model.Requests[i].Product.SubUnitType != null)
                                             {
                                                 <br />
-                                                @Model.Requests[i].Product.SubUnit @Model.Requests[i].Product.SubUnitType.UnitTypeDescription
+                                                @Model.Requests[i].Product.SubUnit <span>&nbsp;</span> @Model.Requests[i].Product.SubUnitType.UnitTypeDescription
                                                 @if (Model.Requests[i].Product.SubSubUnitType != null)
                                                 {
-                                                    <br />@Model.Requests[i].Product.SubSubUnit @Model.Requests[i].Product.SubSubUnitType.UnitTypeDescription
+                                                    <br />@Model.Requests[i].Product.SubSubUnit <span>&nbsp;</span> @Model.Requests[i].Product.SubSubUnitType.UnitTypeDescription
                                                 }
                                             }
                                         </td>
@@ -226,33 +226,33 @@
                                             </div>
                                         </td>
                                     </tr>
-                                }
-                                <tr class="border-0  no-hover ">
-                                    <td colspan="5" class="p-0">
-                                        <input type="file" asp-for="@Model.QuoteFileUpload" class="  form-control-file-lab pt-1  modal-footer-mt">
-                                    </td>
-                                    <td colspan="2" class="p-0 ">
-                                        <div class="form-group text-center modal-footer-mt">
-                                            <input type="submit" @*asp-action="EditQuoteDetails" name="OrderType"*@ value="Save" class="custom-button between-button-margin custom-button-font lab-man-background-color save-quote-details" />
-                                            <button type="button" class="custom-cancel custom-button px-5" @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('edit-quote');">Cancel</button>
-                                        </div>
-                                    </td>
+                                    }
+                                    <tr class="border-0  no-hover ">
+                                        <td colspan="5" class="p-0">
+                                            <input type="file" asp-for="@Model.QuoteFileUpload" class="  form-control-file-lab pt-1  modal-footer-mt">
+                                        </td>
+                                        <td colspan="2" class="p-0 ">
+                                            <div class="form-group text-center modal-footer-mt">
+                                                <input type="submit" @*asp-action="EditQuoteDetails" name="OrderType"*@ value="Save" class="custom-button between-button-margin custom-button-font lab-man-background-color save-quote-details" />
+                                                <button type="button" class="custom-cancel custom-button px-5" @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('edit-quote');">Cancel</button>
+                                            </div>
+                                        </td>
 
-                                </tr>
+                                    </tr>
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
 
-@*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
-@*This will work for the EDIT (putting in the already loaded product subcategory)*@
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
+    @*This will work for the EDIT (putting in the already loaded product subcategory)*@
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     }
