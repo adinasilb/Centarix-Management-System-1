@@ -15,6 +15,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public List<RequestList> RequestLists { get; set; }
         public RequestList SelectedList { get; set; }
+        public ShareRequestList SelectedSharedList { get; set; }        
         public bool ReloadModal { get; set; }
         public List<SelectListItem> ApplicationUsers { get; set; }
         public List<String> ApplicationUserIDs { get; set; }

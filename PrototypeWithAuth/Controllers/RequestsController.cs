@@ -5931,8 +5931,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    var list = _context.RequestLists.Where(rl => rl.ListID == listSettings.SelectedList.ListID).FirstOrDefault();
-                    list.Title = listSettings.SelectedList.Title;
+                    var viewModelList = listSettings.SelectedList ?? listSettings.SelectedSharedList.RequestList;
+                    var list = _context.RequestLists.Where(rl => rl.ListID == viewModelList.ListID).FirstOrDefault();
+                    list.Title = viewModelList.Title;
                     _context.Update(list);
                     if (listSettings.SharedUsers != null)
                     {
@@ -5940,16 +5941,19 @@ namespace PrototypeWithAuth.Controllers
                         {
                             if (!user.IsRemoved)
                             {
-                                user.ShareRequestList.ToApplicationUser = null;
-                                user.ShareRequestList.RequestListID = listSettings.SelectedList.ListID;
-                                user.ShareRequestList.FromApplicationUserID = _userManager.GetUserId(User);
                                 if (user.ShareRequestList.ShareID == 0)
                                 {
+                                    user.ShareRequestList.ToApplicationUser = null;
+                                    user.ShareRequestList.RequestListID = listSettings.SelectedList.ListID;
+                                    user.ShareRequestList.FromApplicationUserID = _userManager.GetUserId(User);
+                                    user.ShareRequestList.FromApplicationUserID = _userManager.GetUserId(User);
                                     _context.Add(user.ShareRequestList);
                                 }
                                 else
                                 {
-                                    _context.Update(user.ShareRequestList);
+                                    var sharelist = _context.ShareRequestLists.Where(srl => srl.ShareID == user.ShareRequestList.ShareID).FirstOrDefault();
+                                    sharelist.ViewOnly = user.ShareRequestList.ViewOnly;
+                                    _context.Update(sharelist);
                                 }
                             }
                             else
@@ -5976,37 +5980,25 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests")]
-        public ListSettingsViewModel GetListSettingsInfo(int selectedListID, AppUtility.SidebarEnum SidebarType)
+        private ListSettingsViewModel GetListSettingsInfo(int selectedListID, AppUtility.SidebarEnum sidebarType)
         {
-            var userLists = new List<RequestList>();
-            var defaultList = _context.RequestLists.Where(rl=> rl.ListID == selectedListID).FirstOrDefault();
-            if (SidebarType == AppUtility.SidebarEnum.SharedLists)
+
+            var viewModel = new ListSettingsViewModel();
+            if(sidebarType == AppUtility.SidebarEnum.SharedLists)
             {
-                userLists = _context.ShareRequestLists.Where(srl => srl.ToApplicationUserID == _userManager.GetUserId(User) && !srl.ViewOnly).Include(srl => srl.RequestList).OrderBy(srl => srl.TimeStamp).Select(srl => srl.RequestList).ToList();
-                if (selectedListID == 0)
-                {
-                    defaultList = userLists.FirstOrDefault();
-                }
+                viewModel = GetSharedListSettings(selectedListID);
             }
             else
             {
-                userLists = _context.RequestLists.Where(rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User)).OrderBy(rl => rl.DateCreated).ToList();
-                if (selectedListID == 0)
-                {
-                    defaultList = userLists.Where(l => l.IsDefault).FirstOrDefault();
-                }
+                viewModel = GetMyListSettings(selectedListID);
             }
-            if(defaultList == null)
+
+            if(viewModel.SelectedList == null && viewModel.SelectedSharedList == null)
             {
                 return new ListSettingsViewModel();
             }
-            ListSettingsViewModel viewModel = new ListSettingsViewModel()
-            {
-                RequestLists = userLists,
-                SelectedList = selectedListID == 0 ? defaultList : userLists.Where(l => l.ListID == selectedListID).FirstOrDefault(),
-                SidebarType = SidebarType
-            };
-            viewModel.SharedUsers = _context.ShareRequestLists.Where(l => l.RequestListID == viewModel.SelectedList.ListID).Include(l => l.ToApplicationUser).Select(
+            
+            viewModel.SharedUsers = _context.ShareRequestLists.Where(l => l.RequestListID == selectedListID).Include(l => l.ToApplicationUser).Select(
                 l => new ShareRequestListViewModel
                 {
                     ShareRequestList = l
@@ -6020,11 +6012,45 @@ namespace PrototypeWithAuth.Controllers
                                       Value = u.Id
                                   }
                               ).ToList();
-            foreach(var user in viewModel.ApplicationUsers)
+            foreach (var user in viewModel.ApplicationUsers)
             {
                 user.Selected = viewModel.SharedUsers.Any(su => su.ShareRequestList.ToApplicationUserID == user.Value);
             }
             viewModel.ApplicationUsers.Insert(0, new SelectListItem() { Selected = true, Disabled = true, Text = "Select User" });
+            return viewModel;
+        }
+
+        [Authorize(Roles = "Requests")]
+        private ListSettingsViewModel GetSharedListSettings(int selectedListID)
+        {
+            var userLists = new List<RequestList>();
+            var defaultList = _context.ShareRequestLists.Where(srl => srl.RequestListID == selectedListID && srl.ToApplicationUserID == _userManager.GetUserId(User)).Include(srl => srl.RequestList).FirstOrDefault();
+            userLists = _context.ShareRequestLists.Where(srl => srl.ToApplicationUserID == _userManager.GetUserId(User)).Include(srl => srl.RequestList).OrderBy(srl => srl.TimeStamp).Select(srl => srl.RequestList).ToList();
+            ListSettingsViewModel viewModel = new ListSettingsViewModel()
+            {
+                RequestLists = userLists,
+                SelectedSharedList = defaultList,
+                SidebarType = AppUtility.SidebarEnum.SharedLists
+            };
+            return viewModel;
+        }
+
+        [Authorize(Roles = "Requests")]
+        private ListSettingsViewModel GetMyListSettings(int selectedListID)
+        {
+            var userLists = new List<RequestList>();
+            var defaultList = _context.RequestLists.Where(rl => rl.ListID == selectedListID).FirstOrDefault();
+            userLists = _context.RequestLists.Where(rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User)).OrderBy(rl => rl.DateCreated).ToList();
+            if (selectedListID == 0)
+            {
+                defaultList = userLists.Where(l => l.IsDefault).FirstOrDefault();
+            }
+            ListSettingsViewModel viewModel = new ListSettingsViewModel()
+            {
+                RequestLists = userLists,
+                SelectedList = defaultList,
+                SidebarType = AppUtility.SidebarEnum.MyLists
+            };
             return viewModel;
         }
 

@@ -7,7 +7,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="listSettingsForm">
-                @if (Model.SelectedList == null)
+                @if (Model.SelectedList == null && Model.SelectedSharedList == null)
                 {
                     await Html.RenderPartialAsync("_EmptyPagePartial");
                 }
@@ -34,11 +34,12 @@
                                     <div class="col-3 border-right p-4">
                                         <ul class="list-group">
                                             @{ 
+                                                var selectedList = Model.SelectedList ?? Model.SelectedSharedList.RequestList;
                                                 }
                                             @for (int t = 0; t < Model.RequestLists.Count; t++)
                                             {
                                                 var classes = "list-name request-list-name list-group-item mb-2";
-                                                if (Model.RequestLists[t].ListID == Model.SelectedList.ListID)
+                                                if (Model.RequestLists[t].ListID == selectedList.ListID)
                                                 {
                                                     classes = classes + " selected";
                                                 }
