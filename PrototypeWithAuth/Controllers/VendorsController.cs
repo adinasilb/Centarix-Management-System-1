@@ -52,6 +52,10 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Vendors;
             TempData["CategoryType"] = categoryType;
+
+            Vendor Vendor = new Vendor();
+            Vendor.Create(_context);
+
             return View(await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryType).Count() > 0).ToListAsync());
         }
 
