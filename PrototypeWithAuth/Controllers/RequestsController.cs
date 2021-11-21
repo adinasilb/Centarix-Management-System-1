@@ -2073,7 +2073,7 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.SidebarEnum.Quotes:
                 case AppUtility.SidebarEnum.Orders:
                 case AppUtility.SidebarEnum.Cart:
-                    return PartialView("_IndexTableDataByVendor", await GetIndexViewModel(deleteRequestViewModel.RequestIndexObject, selectedFilters: selectedFilters, numFilters: numFilters, requestsSearchViewModel: requestsSearchViewModel));
+                    return PartialView("_IndexTableDataByVendor", await GetIndexViewModelByVendor(deleteRequestViewModel.RequestIndexObject));
                 default:
                     return PartialView("_IndexTableData", await GetIndexViewModel(deleteRequestViewModel.RequestIndexObject, selectedFilters: selectedFilters, numFilters: numFilters, requestsSearchViewModel: requestsSearchViewModel));
 
