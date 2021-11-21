@@ -259,7 +259,7 @@
             </div>
             <div class="col-md-6">
                     <label asp-for="Requests[0].ParentQuote.ExpirationDate" class="control-label"></label>
-                    <input asp-for="Requests[0].ParentQuote.ExpirationDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories @markReadOnlyClass" disabled />
+                    <input asp-for="Requests[0].ParentQuote.ExpirationDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories @markReadOnlyClass" disabled value="@Model.Requests[0].ParentQuote.ExpirationDate.GetElixirDateFormat()" />
                     <span asp-validation-for="Requests[0].ParentQuote.ExpirationDate" class="text-danger-centarix quote-date" />
                 </div>
         </div>
