@@ -10,6 +10,8 @@ using Abp.Domain.Entities;
 using System.Threading.Tasks;
 using System.Transactions;
 using System.Threading;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PrototypeWithAuth.Data
 {
@@ -20,6 +22,12 @@ namespace PrototypeWithAuth.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
+        }
+
+        public override EntityEntry<TEntity> Update<TEntity>([NotNull] TEntity entity) where TEntity : class
+        {
+            var x = "1";
+            return base.Update(entity);
         }
 
         public DbSet<Currency> Currencies { get; set; }
@@ -414,7 +422,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Participant>().HasIndex(p => new { p.ParticipantID, p.CentarixID }).IsUnique();
             modelBuilder.HasSequence<int>("SerialNumberHelper", schema: "dbo").StartsAt(1).IncrementsBy(1);
             modelBuilder.Entity<Request>().Property(r => r.SerialNumber).HasDefaultValueSql("NEXT VALUE FOR dbo.SerialNumberHelper");
-      
+
             /*PROTOCOLS*/
             ///set up composite keys
 
@@ -457,8 +465,10 @@ namespace PrototypeWithAuth.Data
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
 
-        }
 
+
+
+        }
 
     }
 }
