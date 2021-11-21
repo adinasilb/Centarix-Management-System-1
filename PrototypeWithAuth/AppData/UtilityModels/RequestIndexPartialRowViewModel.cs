@@ -25,6 +25,7 @@ namespace PrototypeWithAuth.ViewModels
         private ParentRequest parentRequest;
         private List<Payment> payments;
         public Request partialRequest;
+        public bool viewOnly;
         private string currentCurrency ="currencyEnum";
 
         public RequestIndexPartialRowViewModel() { }
@@ -60,7 +61,7 @@ namespace PrototypeWithAuth.ViewModels
             ParentCategory parentCategory, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType, RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList, 
             string defaultImage, ParentRequest parentRequest, String checkboxString, Request partialRequest)
             : this(indexTableTypes, request, product, vendor, productSubcategory, parentCategory, unitType, subUnitType, subSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null,null,null,
-                parentRequest, checkboxString, null, null, partialRequest)
+                parentRequest, checkboxString, null, null, partialRequest, false)
         {
         }
         public RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes indexTableTypes, Request request, Product product, Vendor vendor, ProductSubcategory productSubcategory,
@@ -74,20 +75,20 @@ namespace PrototypeWithAuth.ViewModels
             ParentCategory parentCategory, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType, RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList,
             string defaultImage, ParentRequest parentRequest, String checkboxString, List<Payment> payments)
             : this(indexTableTypes, request, product, vendor, productSubcategory, parentCategory, unitType, subUnitType, subSubUnitType, requestIndexObject, iconList, defaultImage, 
-                null, null, null, null, null, parentRequest, checkboxString, null, payments, null)
+                null, null, null, null, null, parentRequest, checkboxString, null, payments, null, false)
         {
         }
         public RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes indexTableTypes, Request request, Product product, Vendor vendor, ProductSubcategory productSubcategory,
             ParentCategory parentCategory, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType, RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList,
             string defaultImage, String checkboxString, ParentQuote parentQuote)
             : this(indexTableTypes, request, product, vendor, productSubcategory, parentCategory, unitType, subUnitType, subSubUnitType, requestIndexObject, iconList, defaultImage, 
-                null, null, null, null, null, null, checkboxString, parentQuote, null, null)
+                null, null, null, null, null, null, checkboxString, parentQuote, null, null, false)
         {
         }
         public RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes indexTableTypes, Request request, Product product, Vendor vendor, ProductSubcategory productSubcategory, 
             ParentCategory parentCategory, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType, RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList, 
             string defaultImage, FavoriteRequest favoriteRequest, ShareRequest shareRequest, ApplicationUser user, LocationInstance locationInstance, 
-            LocationInstance parentLocationInstance, ParentRequest parentRequest, string checkboxString, ParentQuote parentQuote, List<Payment> payments, Request partialRequest)
+            LocationInstance parentLocationInstance, ParentRequest parentRequest, string checkboxString, ParentQuote parentQuote, List<Payment> payments, Request partialRequest, bool viewOnly)
         {
             r = request;
             r.Product = product;
@@ -116,6 +117,7 @@ namespace PrototypeWithAuth.ViewModels
             this.shareRequest = shareRequest;
             this.checkboxString = checkboxString;
             this.partialRequest = partialRequest;
+            this.viewOnly = viewOnly;
             switch (indexTableTypes)
             {
                 case AppUtility.IndexTableTypes.Approved:
@@ -175,16 +177,20 @@ namespace PrototypeWithAuth.ViewModels
 
 
         public RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes indexTableTypes, Request request, Product product, Vendor vendor, ProductSubcategory productSubcategory, ParentCategory parentCategory, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType, RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList, string defaultImage, FavoriteRequest favoriteRequest, ShareRequest shareRequest, ApplicationUser user, LocationInstance locationInstance, LocationInstance locationInstanceParent, ParentRequest parentRequest)
-            : this(indexTableTypes, request, product, vendor, productSubcategory, parentCategory, unitType, subUnitType, subSubUnitType, requestIndexObject, iconList, defaultImage, favoriteRequest, shareRequest, user, locationInstance, locationInstanceParent, parentRequest, null, null, null, null)
+            : this(indexTableTypes, request, product, vendor, productSubcategory, parentCategory, unitType, subUnitType, subSubUnitType, requestIndexObject, iconList, defaultImage, favoriteRequest, shareRequest, user, locationInstance, locationInstanceParent, parentRequest, null, null, null, null, false)
+        {
+        }
+        public RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes indexTableTypes, Request request, Product product, Vendor vendor, ProductSubcategory productSubcategory, ParentCategory parentCategory, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType, RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList, string defaultImage, FavoriteRequest favoriteRequest, ShareRequest shareRequest, ApplicationUser user, LocationInstance locationInstance, LocationInstance locationInstanceParent, ParentRequest parentRequest, bool viewOnly)
+            : this(indexTableTypes, request, product, vendor, productSubcategory, parentCategory, unitType, subUnitType, subSubUnitType, requestIndexObject, iconList, defaultImage, favoriteRequest, shareRequest, user, locationInstance, locationInstanceParent, parentRequest, null, null, null, null, viewOnly)
         {
         }
         public RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes indexTableTypes, Request request, Product product, Vendor vendor, ProductSubcategory productSubcategory, ParentCategory parentCategory, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType, RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList, string defaultImage, FavoriteRequest favoriteRequest, ApplicationUser user,  ParentRequest parentRequest)
-           : this(indexTableTypes, request, product, vendor, productSubcategory, parentCategory, unitType, subUnitType, subSubUnitType, requestIndexObject, iconList, defaultImage, favoriteRequest, null, user, null, null, parentRequest, null, null, null, null)
+           : this(indexTableTypes, request, product, vendor, productSubcategory, parentCategory, unitType, subUnitType, subSubUnitType, requestIndexObject, iconList, defaultImage, favoriteRequest, null, user, null, null, parentRequest, null, null, null, null, false)
         {
         }
 
         public RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes indexTableTypes, Request request, Product product, Vendor vendor, ProductSubcategory productSubcategory, ParentCategory parentCategory, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType, RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList, string defaultImage, FavoriteRequest favoriteRequest, ApplicationUser user, LocationInstance locationInstance, LocationInstance locationInstanceParent, ParentRequest parentRequest)
-            : this(indexTableTypes, request, product, vendor, productSubcategory, parentCategory, unitType, subUnitType, subSubUnitType, requestIndexObject, iconList, defaultImage, favoriteRequest, null, user, locationInstance, locationInstanceParent, parentRequest, null, null, null, null)
+            : this(indexTableTypes, request, product, vendor, productSubcategory, parentCategory, unitType, subUnitType, subSubUnitType, requestIndexObject, iconList, defaultImage, favoriteRequest, null, user, locationInstance, locationInstanceParent, parentRequest, null, null, null, null, false)
         
         {          
         }
@@ -196,7 +202,7 @@ namespace PrototypeWithAuth.ViewModels
         public decimal ExchangeRate { get; set; }
         public string ButtonClasses { get; set; }
         public string ButtonText { get; set; }
-        private static List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder, FavoriteRequest favoriteRequest = null, Request request = null, ApplicationUser user = null)
+        private static List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder, FavoriteRequest favoriteRequest = null, Request request = null, ApplicationUser user = null, bool viewOnly = false)
         {
             var newIconList = AppUtility.DeepClone<List<IconColumnViewModel>>(iconList);
             //favorite icon
@@ -253,6 +259,13 @@ namespace PrototypeWithAuth.ViewModels
                             newIconList[morePopoverIndex].IconPopovers.RemoveAt(popoverReorder);
                         }
                     }
+                }
+                if (viewOnly)
+                {
+                    var popoverMoveList = newIconList.ElementAt(morePopoverIndex).IconPopovers.FindIndex(ni => ni.Description == AppUtility.PopoverDescription.MoveToList);
+                    newIconList[morePopoverIndex].IconPopovers.RemoveAt(popoverMoveList);
+                    var popoverDeleteFromList = newIconList.ElementAt(morePopoverIndex).IconPopovers.FindIndex(ni => ni.Description == AppUtility.PopoverDescription.DeleteFromList);
+                    newIconList[morePopoverIndex].IconPopovers.RemoveAt(popoverDeleteFromList);
                 }
             }
             return newIconList;
@@ -692,7 +705,7 @@ namespace PrototypeWithAuth.ViewModels
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, r),
+                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, favoriteRequest, r, null, viewOnly),
                 AjaxID = r.RequestID
             };
 

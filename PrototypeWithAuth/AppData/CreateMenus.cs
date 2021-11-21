@@ -749,6 +749,15 @@ namespace PrototypeWithAuth.AppData
                 Controller = "Requests",
                 Action = "IndexLists",
                 Classes = menuClass,
+                IconName = "icon-library_books-24px"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.SharedLists) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Shared Lists",
+                Controller = "Requests",
+                Action = "IndexSharedLists",
+                Classes = menuClass,
                 IconName = "icon-centarix-icons-04"
             });
             return SidebarMenuItems;

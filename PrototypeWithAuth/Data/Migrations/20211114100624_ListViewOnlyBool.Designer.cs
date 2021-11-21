@@ -3,21 +3,22 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211114100624_ListViewOnlyBool")]
+    partial class ListViewOnlyBool
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("Relational:Sequence:dbo.SerialNumberHelper", "'SerialNumberHelper', 'dbo', '1', '1', '', '', 'Int32', 'False'")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -5150,11 +5151,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("RequestStatusID")
                         .HasColumnType("int");
 
-                    b.Property<int>("SerialNumber")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR dbo.SerialNumberHelper");
-
                     b.Property<int?>("SubProjectID")
                         .HasColumnType("int");
 
@@ -5189,9 +5185,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("QuoteStatusID");
 
                     b.HasIndex("RequestStatusID");
-
-                    b.HasIndex("SerialNumber")
-                        .IsUnique();
 
                     b.HasIndex("SubProjectID");
 
@@ -5731,8 +5724,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<DateTime>("TimeStamp")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ToApplicationUserID")
                         .HasColumnType("nvarchar(450)");

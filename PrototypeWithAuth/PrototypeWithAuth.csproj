@@ -505,6 +505,8 @@
     <Compile Remove="Data\Migrations\20211117083259_ItemSerialNumber.Designer.cs" />
     <Compile Remove="Data\Migrations\20211117091838_ItemSerialNumber.cs" />
     <Compile Remove="Data\Migrations\20211117091838_ItemSerialNumber.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211114083811_AddShareRequestLists.cs" />
+    <Compile Remove="Data\Migrations\20211114083811_AddShareRequestLists.Designer.cs" />
   </ItemGroup>
 
 

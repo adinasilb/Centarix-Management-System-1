@@ -52,7 +52,7 @@ namespace PrototypeWithAuth.AppData
         public enum SidebarEnum
         {
             None, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
-            Quotes, List, Calibrate, Location, Cart, Favorites, Notifications, MyLists,
+            Quotes, List, Calibrate, Location, Cart, Favorites, Notifications, MyLists, SharedLists,
             ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences,
             PieCharts, Tables, Graphs, Project, Item, Worker,
             Category, Details, Hours, Salary,
@@ -164,7 +164,7 @@ namespace PrototypeWithAuth.AppData
         public enum ProtocolModalType { None, Create, CheckListMode, Summary, Edit, SummaryFloat, CreateNewVersion }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
-        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveList, DeleteFromList }
+        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveToList, DeleteFromList }
         public enum PopoverEnum { None }
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
@@ -187,7 +187,7 @@ namespace PrototypeWithAuth.AppData
         public enum IconNamesEnum { Share, Favorite, MorePopover, Edit, RemoveShare }
 
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
-        { Request, Resource, Protocols }
+        { Request, Resource, Protocols, RequestLists }
         public enum GlobalInfoType { ExchangeRate, LoginUpdates, LastProtocolLine }
         public enum DataTypeEnum { String, Double, DateTime, Bool, File }
         public enum DataCalculation { None, BMI }

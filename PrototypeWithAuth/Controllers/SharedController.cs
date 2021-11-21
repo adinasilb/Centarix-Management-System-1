@@ -990,7 +990,7 @@ namespace PrototypeWithAuth.Controllers
             var popoverRemoveShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
             var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
             var popoverAddToList = new IconPopoverViewModel("icon-centarix-icons-04", "black", AppUtility.PopoverDescription.AddToList, "MoveToListModal", "Requests", AppUtility.PopoverEnum.None, "move-to-list");
-            var popoverMoveList = new IconPopoverViewModel("icon-entry-24px", "black", AppUtility.PopoverDescription.MoveList, "MoveToListModal", "Requests", AppUtility.PopoverEnum.None, "move-to-list");
+            var popoverMoveList = new IconPopoverViewModel("icon-entry-24px", "black", AppUtility.PopoverDescription.MoveToList, "MoveToListModal", "Requests", AppUtility.PopoverEnum.None, "move-to-list");
             var popoverDeleteFromList = new IconPopoverViewModel("icon-delete-24px", "black", AppUtility.PopoverDescription.DeleteFromList, "DeleteFromListModal", "Requests", AppUtility.PopoverEnum.None, "remove-from-list");
 
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
@@ -1166,9 +1166,10 @@ namespace PrototypeWithAuth.Controllers
                                           r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                             break;
                         case AppUtility.SidebarEnum.MyLists:
+                        case AppUtility.SidebarEnum.SharedLists:
                             iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
-                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverMoveList, popoverDeleteFromList };
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverMoveList, popoverShare, popoverDeleteFromList };
                             iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await _context.RequestListRequests.Where(rlr => rlr.ListID == requestIndexObject.ListID).OrderByDescending(rlr => rlr.TimeStamp)
                                 .Select(rlr => rlr.Request).Select(r =>
@@ -1178,7 +1179,9 @@ namespace PrototypeWithAuth.Controllers
                                           _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(),
                                           _context.ShareRequests
                 .Where(sr => sr.RequestID == r.RequestID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user,
-                                          r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
+                                          r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest,
+                                          _context.ShareRequestLists.Where(srl => srl.RequestListID == requestIndexObject.ListID && srl.ToApplicationUserID == user.Id).FirstOrDefault().ViewOnly
+                                          )).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                             break;
                     }
                     break;
