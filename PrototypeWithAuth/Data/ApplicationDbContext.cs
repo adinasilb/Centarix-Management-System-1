@@ -378,6 +378,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Request>().Ignore(e => e.TotalWithVat);
             modelBuilder.Entity<Request>().Ignore(e => e.Ignore);
             modelBuilder.Entity<Request>().Ignore(e => e.IsReceived);
+            modelBuilder.Entity<ParentQuote>().Ignore(e => e.ExpirationDate_submit);
             modelBuilder.Entity<ParentQuote>().Ignore(e => e.QuoteDate_submit);
             modelBuilder.Entity<ParentRequest>().Ignore(e => e.OrderDate_submit);
             modelBuilder.Entity<Invoice>().Ignore(e => e.InvoiceDate_submit);
@@ -393,6 +394,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
             modelBuilder.Entity<Request>().Property(r => r.ExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Product>().Property(r => r.ProductCreationDate).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<ParentQuote>().Property(r => r.QuoteDate).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<TempLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<FunctionLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<ParentRequest>().HasIndex(p => p.OrderNumber).IsUnique();
