@@ -4337,9 +4337,8 @@ namespace PrototypeWithAuth.Controllers
                 EditQuoteDetailsViewModel editQuoteDetailsViewModel = new EditQuoteDetailsViewModel()
                 {
                     Requests = requests,
-                    QuoteDate = DateTime.Now,
+                    ParentQuote = new ParentQuote() { QuoteDate = DateTime.Now },
                     Error = Error
-                    //ParentQuoteID = requests.FirstOrDefault().ParentQuoteID
                 };
 
                 return PartialView(editQuoteDetailsViewModel);
@@ -4374,32 +4373,19 @@ namespace PrototypeWithAuth.Controllers
                         //var quoteDate = editQuoteDetailsViewModel.QuoteDate;
                         //var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
                         //firstRequest.ParentQuote.QuoteDate = quoteDate;
-                        var parentQuote = new ParentQuote()
-                        {
-                            QuoteNumber = editQuoteDetailsViewModel.QuoteNumber
-                        };
+                        
                         foreach (var quote in editQuoteDetailsViewModel.Requests)
                         {
                             //throw new Exception();
                             var request = requests.Where(r => r.RequestID == quote.RequestID).FirstOrDefault();
-                            request.ParentQuote = parentQuote;
-                            if (request.ParentQuote.ParentQuoteID == 0)
-                            {
-                                _context.Entry(request.ParentQuote).State = EntityState.Added;
-                            }
-                            else
-                            {
-                                _context.Entry(request.ParentQuote).State = EntityState.Unchanged;
-                            }
+                            request.ParentQuote = editQuoteDetailsViewModel.ParentQuote;                      
+                             _context.Entry(request.ParentQuote).State = EntityState.Added;                     
                             request.QuoteStatusID = 4;
-                            //request.ParentQuote.QuoteNumber = quoteNumber.ToString();
-                            //request.ParentQuoteID = parentQuoteId;
                             request.Cost = quote.Cost;
                             request.Currency = editQuoteDetailsViewModel.Requests[0].Currency;
                             request.ExchangeRate = editQuoteDetailsViewModel.Requests[0].ExchangeRate;
                             request.IncludeVAT = editQuoteDetailsViewModel.Requests[0].IncludeVAT;
                             request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
-                            request.Discount = quote.Discount;
                             _context.Update(request);
                             _context.SaveChanges();
                         }
@@ -5223,7 +5209,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var uploadQuoteViewModel = new UploadQuoteViewModel();
+            var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote()};
 
             uploadQuoteViewModel.OrderTypeEnum = requestIndexObject.OrderType;
             uploadQuoteViewModel.TempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
@@ -5233,23 +5219,55 @@ namespace PrototypeWithAuth.Controllers
             //    RequestIndexObject = requestIndexObject,
             //    TempRequestViewModels = oldJson.DeserializeJson<List<TempRequestViewModel>>()
             //};
-
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
-            string uploadFolder2 = Path.Combine(uploadFolder1, requestIndexObject.GUID.ToString());
-            string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
-
-            if (Directory.Exists(uploadFolderQuotes))
+            if(uploadQuoteViewModel.TempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ProductID!=0)
             {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
-                //searching for the partial file name in the directory
-                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                uploadQuoteViewModel.FileStrings = new List<String>();
-                foreach (var orderfile in orderfilesfound)
+                foreach (var tempRequestViewModel in uploadQuoteViewModel.TempRequestListViewModel.TempRequestViewModels)
                 {
-                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
-                    uploadQuoteViewModel.FileStrings.Add(newFileString);
+                    var oldQuote = _context.Requests.Where(r => r.ProductID == tempRequestViewModel.Request.ProductID && r.ParentQuote.ExpirationDate>=DateTime.Now.Date).Select(r => r.ParentQuote).OrderByDescending(r => r.ExpirationDate).FirstOrDefault();
+                    if(oldQuote !=null)
+                    {
+                        string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
+                        string uploadFolder2 = Path.Combine(uploadFolder1, oldQuote.ParentQuoteID.ToString());
+                        string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
+
+                        if (Directory.Exists(uploadFolderQuotes))
+                        {
+                            DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
+                            //searching for the partial file name in the directory
+                            FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
+                            uploadQuoteViewModel.FileStrings = new List<String>();
+                            foreach (var orderfile in orderfilesfound)
+                            {
+                                string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
+                                uploadQuoteViewModel.FileStrings.Add(newFileString);
+                            }
+                        }
+                        uploadQuoteViewModel.ParentQuote = oldQuote;
+                    }
+                   
                 }
+            }         
+
+            return PartialView(uploadQuoteViewModel);
+        }
+
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> _UploadQuoteModal()
+        {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
             }
+            var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() };
+            //uploadQuoteViewModel.TempRequestListViewModel = new TempRequestListViewModel()
+            //{
+            //    GUID = requestIndexObject.GUID,
+            //    RequestIndexObject = requestIndexObject,
+            //    TempRequestViewModels = oldJson.DeserializeJson<List<TempRequestViewModel>>()
+            //};
+            
 
             return PartialView(uploadQuoteViewModel);
         }
@@ -5271,8 +5289,11 @@ namespace PrototypeWithAuth.Controllers
 
                 foreach (var tempRequestViewModel in deserializedTempRequestListViewModel.TempRequestViewModels)
                 {
+
                     tempRequestViewModel.Request.QuoteStatusID = 4;
                     tempRequestViewModel.Request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
+
+              
                     if (uploadQuoteOrderViewModel.ExpectedSupplyDays != null)
                     {
                         tempRequestViewModel.Request.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
@@ -5281,7 +5302,6 @@ namespace PrototypeWithAuth.Controllers
                     {
                         TempData["RequestStatus"] = 1;
                     }
-                    tempRequestViewModel.Request.Discount = uploadQuoteOrderViewModel.Discount;
                 }
 
                 if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderType != AppUtility.OrderTypeEnum.AddToCart.ToString())
@@ -5302,7 +5322,16 @@ namespace PrototypeWithAuth.Controllers
                         {
                             foreach (var tempRequestViewModel in deserializedTempRequestListViewModel.TempRequestViewModels)
                             {
-                                _context.Entry(tempRequestViewModel.Request.ParentQuote).State = EntityState.Added;
+                                if(tempRequestViewModel.Request.ParentQuote.ParentQuoteID ==0)
+                                {
+                                    _context.Entry(tempRequestViewModel.Request.ParentQuote).State = EntityState.Added;
+
+                                }
+                                else
+                                {
+                                    _context.Entry(tempRequestViewModel.Request.ParentQuote).State = EntityState.Unchanged;
+
+                                }
                                 if (tempRequestViewModel.Request.Product.ProductID == 0)
                                 {
                                     tempRequestViewModel.Request.Product.SerialNumber = GetSerialNumber(false);
