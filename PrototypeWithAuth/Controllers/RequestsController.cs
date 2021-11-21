@@ -5923,7 +5923,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    var viewModelList = listSettings.SelectedList ?? listSettings.SelectedSharedList.RequestList;
+                    var viewModelList = listSettings.SidebarType == AppUtility.SidebarEnum.MyLists ? listSettings.SelectedList : listSettings.SelectedSharedList.RequestList;
                     var list = _context.RequestLists.Where(rl => rl.ListID == viewModelList.ListID).FirstOrDefault();
                     list.Title = viewModelList.Title;
                     _context.Update(list);
