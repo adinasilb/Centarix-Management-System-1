@@ -2,12 +2,14 @@
 @model PrototypeWithAuth.ViewModels.ListSettingsViewModel;
 
 @Html.HiddenFor(m => m.SelectedSharedList.RequestList.ListID)
+@Html.HiddenFor(m => m.SelectedSharedList.RequestList.ApplicationUserOwnerID)
+
 <div class="row">
     <div class="col">
         <label class="order-inv-color">Shared By: @Model.SelectedSharedList.FromApplicationUser.FirstName @Model.SelectedSharedList.FromApplicationUser.LastName</label>
     </div>
     <div class="col">
-        @{ 
+        @{
             var iconClass = "icon-create-24px";
             var permissionsText = "View and Edit";
             if (Model.SelectedSharedList.ViewOnly)
@@ -16,18 +18,18 @@
                 permissionsText = "View Only";
             }
         }
-            <label class="disabled-text float-right">
-                <i class="@iconClass"></i>
-                @permissionsText
-            </label>
-        </div>
+        <label class="disabled-text float-right">
+            <i class="@iconClass"></i>
+            @permissionsText
+        </label>
+    </div>
 </div>
 <div class="row">
     <div class="col">
         <label asp-for="SelectedSharedList.RequestList.Title" class="control-label">Rename List (up to 20 characters)</label>
         @if (Model.SelectedSharedList.ViewOnly)
         {
-            <input asp-for="SelectedSharedList.RequestList.Title" class="form-control-plaintext border-bottom title" readonly/>
+            <input asp-for="SelectedSharedList.RequestList.Title" class="form-control-plaintext border-bottom title" readonly />
         }
         else
         {

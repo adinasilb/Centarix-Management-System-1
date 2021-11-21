@@ -5916,14 +5916,6 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(listSettings);
         }
 
-        //[HttpGet]
-        //[Authorize(Roles = "Requests")]
-        //public async Task<IActionResult> _ListUsers(List<ShareRequestList> listUsers, int newUserID)
-        //{
-
-        //    return PartialView(listUsers);
-        //}
-
         [Authorize(Roles = "Requests")]
         public async Task<bool> UpdateListDetails(ListSettingsViewModel listSettings)
         {
@@ -5945,7 +5937,6 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     user.ShareRequestList.ToApplicationUser = null;
                                     user.ShareRequestList.RequestListID = listSettings.SelectedList.ListID;
-                                    user.ShareRequestList.FromApplicationUserID = _userManager.GetUserId(User);
                                     user.ShareRequestList.FromApplicationUserID = _userManager.GetUserId(User);
                                     _context.Add(user.ShareRequestList);
                                 }
@@ -5997,26 +5988,16 @@ namespace PrototypeWithAuth.Controllers
             {
                 return new ListSettingsViewModel();
             }
-            
+
+           
             viewModel.SharedUsers = _context.ShareRequestLists.Where(l => l.RequestListID == selectedListID).Include(l => l.ToApplicationUser).Select(
                 l => new ShareRequestListViewModel
                 {
                     ShareRequestList = l
                 }).ToList();
-            viewModel.ApplicationUsers = _context.Users
-                              .Where(u => u.Id != _userManager.GetUserId(User) && !viewModel.SharedUsers.Select(su => su.ShareRequestList.ToApplicationUserID).Contains(u.Id))
-                              .Select(
-                                  u => new SelectListItem
-                                  {
-                                      Text = u.FirstName + " " + u.LastName,
-                                      Value = u.Id
-                                  }
-                              ).ToList();
-            foreach (var user in viewModel.ApplicationUsers)
-            {
-                user.Selected = viewModel.SharedUsers.Any(su => su.ShareRequestList.ToApplicationUserID == user.Value);
-            }
-            viewModel.ApplicationUsers.Insert(0, new SelectListItem() { Selected = true, Disabled = true, Text = "Select User" });
+
+            viewModel.ApplicationUsers = GetListUsersDropdown(viewModel);
+
             return viewModel;
         }
 
@@ -6052,6 +6033,25 @@ namespace PrototypeWithAuth.Controllers
                 SidebarType = AppUtility.SidebarEnum.MyLists
             };
             return viewModel;
+        }
+
+        [Authorize(Roles = "Requests")]
+        private List<SelectListItem> GetListUsersDropdown(ListSettingsViewModel listSettings)
+        {
+            var selectedList = listSettings.SidebarType==AppUtility.SidebarEnum.MyLists ? listSettings.SelectedList : listSettings.SelectedSharedList.RequestList;
+            listSettings.ApplicationUsers = _context.Users
+                              .Where(u => u.Id != _userManager.GetUserId(User)
+                              && (!listSettings.SharedUsers.Select(su => su.ShareRequestList.ToApplicationUserID).Contains(u.Id))
+                              && u.Id != selectedList.ApplicationUserOwnerID)
+                              .Select(
+                                  u => new SelectListItem
+                                  {
+                                      Text = u.FirstName + " " + u.LastName,
+                                      Value = u.Id
+                                  }
+                              ).ToList();
+            listSettings.ApplicationUsers.Insert(0, new SelectListItem() { Selected = true, Disabled = true, Text = "Select User" });
+            return listSettings.ApplicationUsers;
         }
 
         [HttpPost]
@@ -6098,16 +6098,8 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
             }
-
-            listSettings.ApplicationUsers = _context.Users
-                              .Where(u => u.Id != _userManager.GetUserId(User) && (!listSettings.SharedUsers.Select(su => su.ShareRequestList.ToApplicationUserID).Contains(u.Id)))
-                              .Select(
-                                  u => new SelectListItem
-                                  {
-                                      Text = u.FirstName + " " + u.LastName,
-                                      Value = u.Id
-                                  }
-                              ).ToList();
+            listSettings.ApplicationUsers = GetListUsersDropdown(listSettings);
+            
             listSettings.SharedUsers.Where(su => su.IsRemoved).ToList().ForEach(su =>
            {
                listSettings.ApplicationUsers.Add(new SelectListItem
@@ -6117,7 +6109,6 @@ namespace PrototypeWithAuth.Controllers
                }
                );
            });
-            listSettings.ApplicationUsers.Insert(0, new SelectListItem() { Selected = true, Disabled = true, Text = "Select User" });
 
             return PartialView(listSettings);
         }
