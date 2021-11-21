@@ -14,7 +14,7 @@ $('.editQuoteDetails').validate({
 		//	min: 0,
 		//	integer: true
 		//},
-		"QuoteFileUpload": { required: true, extension: "jpg|jpeg|png|pdf" }
+		"QuoteFileUpload": { required: true, extension: "jpg|jpeg|png|pdf|doc|docx|xls|xlsx|ppt|pptx" }
 	},
 
 });
