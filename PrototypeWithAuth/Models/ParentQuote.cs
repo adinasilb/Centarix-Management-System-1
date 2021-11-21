@@ -30,6 +30,10 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Quote Number")]
 
         public string QuoteNumber { get; set; }
+        public DateTime ExpirationDate { get; set; }
+        public DateTime ExpirationDate_submit { get { return ExpirationDate; } set { ExpirationDate = value; } }
+        public decimal Discount { get; set; }
+
 
     }
 }
