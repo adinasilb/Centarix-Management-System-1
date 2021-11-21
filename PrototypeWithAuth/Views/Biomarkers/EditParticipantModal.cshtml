@@ -17,6 +17,7 @@
 
                 <div class="container-fluid under-row-margin">
                     @Html.HiddenFor(m => m.IsTestPage)
+                    @Html.HiddenFor(m => m.Participant.DateCreated)
                     @{
                         await Html.RenderPartialAsync("_ParticipantFields", Model); }
                     <div class="row">
