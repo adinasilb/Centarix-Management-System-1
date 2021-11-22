@@ -3268,11 +3268,11 @@ namespace PrototypeWithAuth.Controllers
                                         //tempRequest.Request.ParentRequest.OrderDate = DateTime.Now;
                                         if (tempRequest.Request.ParentQuote.ParentQuoteID == 0)
                                         {
-                                            _context.Entry(tempRequest.Request.ParentQuote.ParentQuoteID).State = EntityState.Added;
+                                            _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Added;
                                         }
                                         else
                                         {
-                                            _context.Entry(tempRequest.Request.ParentQuote.ParentQuoteID).State = EntityState.Modified;
+                                            _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Modified;
 
                                         }
                                     }

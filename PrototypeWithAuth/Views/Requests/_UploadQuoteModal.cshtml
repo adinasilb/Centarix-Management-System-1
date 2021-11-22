@@ -98,16 +98,16 @@
                         <div class="input-group">
                             @if (Model.ParentQuote.ParentQuoteID!=0)
                             {
-                                <input asp-for="Discount" class="form-control-plaintext border-bottom requestPriceQuote" value="" readonly />
+                                <input asp-for="ParentQuote.Discount" class="form-control-plaintext border-bottom requestPriceQuote" value="@AppUtility.TrimZeros(Model.ParentQuote.Discount)" readonly />
                             }
                             else
                             {
-                                <input asp-for="Discount" class="form-control-plaintext border-bottom requestPriceQuote" value="" />
+                                <input asp-for="ParentQuote.Discount" class="form-control-plaintext border-bottom requestPriceQuote" value="" />
                             }
 
                             <div class="input-group-text">%</div>
                         </div>
-                        <span asp-validation-for="Discount" />
+                        <span asp-validation-for="ParentQuote.Discount" />
                     </div>
                 </div>
             </div>
