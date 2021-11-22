@@ -3266,7 +3266,15 @@ namespace PrototypeWithAuth.Controllers
                                         //tempRequest.Request.ParentRequest = pr;
                                         _context.Entry(tempRequest.Request).State = EntityState.Added;
                                         //tempRequest.Request.ParentRequest.OrderDate = DateTime.Now;
-                                        _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Added;
+                                        if (tempRequest.Request.ParentQuote.ParentQuoteID == 0)
+                                        {
+                                            _context.Entry(tempRequest.Request.ParentQuote.ParentQuoteID).State = EntityState.Added;
+                                        }
+                                        else
+                                        {
+                                            _context.Entry(tempRequest.Request.ParentQuote.ParentQuoteID).State = EntityState.Modified;
+
+                                        }
                                     }
                                     else
                                     {
@@ -4373,13 +4381,13 @@ namespace PrototypeWithAuth.Controllers
                         //var quoteDate = editQuoteDetailsViewModel.QuoteDate;
                         //var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
                         //firstRequest.ParentQuote.QuoteDate = quoteDate;
-                        
+
                         foreach (var quote in editQuoteDetailsViewModel.Requests)
                         {
                             //throw new Exception();
                             var request = requests.Where(r => r.RequestID == quote.RequestID).FirstOrDefault();
-                            request.ParentQuote = editQuoteDetailsViewModel.ParentQuote;                      
-                             _context.Entry(request.ParentQuote).State = EntityState.Added;                     
+                            request.ParentQuote = editQuoteDetailsViewModel.ParentQuote;
+                            _context.Entry(request.ParentQuote).State = EntityState.Added;
                             request.QuoteStatusID = 4;
                             request.Cost = quote.Cost;
                             request.Currency = editQuoteDetailsViewModel.Requests[0].Currency;
@@ -5209,7 +5217,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now} };
+            var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now } };
 
             uploadQuoteViewModel.OrderTypeEnum = requestIndexObject.OrderType;
             uploadQuoteViewModel.TempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
@@ -5219,12 +5227,12 @@ namespace PrototypeWithAuth.Controllers
             //    RequestIndexObject = requestIndexObject,
             //    TempRequestViewModels = oldJson.DeserializeJson<List<TempRequestViewModel>>()
             //};
-            if(uploadQuoteViewModel.TempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ProductID!=0)
+            if (uploadQuoteViewModel.TempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ProductID != 0)
             {
                 foreach (var tempRequestViewModel in uploadQuoteViewModel.TempRequestListViewModel.TempRequestViewModels)
                 {
-                    var oldQuote = _context.Requests.Where(r => r.ProductID == tempRequestViewModel.Request.ProductID && r.ParentQuote.ExpirationDate>=DateTime.Now.Date).Select(r => r.ParentQuote).OrderByDescending(r => r.QuoteDate).FirstOrDefault();
-                    if(oldQuote !=null)
+                    var oldQuote = _context.Requests.Where(r => r.ProductID == tempRequestViewModel.Request.ProductID && r.ParentQuote.ExpirationDate >= DateTime.Now.Date).Select(r => r.ParentQuote).OrderByDescending(r => r.QuoteDate).FirstOrDefault();
+                    if (oldQuote != null)
                     {
                         string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
                         string uploadFolder2 = Path.Combine(uploadFolder1, oldQuote.ParentQuoteID.ToString());
@@ -5242,18 +5250,18 @@ namespace PrototypeWithAuth.Controllers
                                 uploadQuoteViewModel.FileStrings.Add(newFileString);
                             }
                         }
-            
+
                     }
                     else
                     {
-                        oldQuote= new ParentQuote() {ExpirationDate = DateTime.Now };
+                        oldQuote = new ParentQuote() { ExpirationDate = DateTime.Now };
                     }
                     uploadQuoteViewModel.ParentQuote = oldQuote;
 
 
                 }
-               
-            }         
+
+            }
 
             return PartialView(uploadQuoteViewModel);
         }
@@ -5267,14 +5275,14 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now} };
+            var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now } };
             //uploadQuoteViewModel.TempRequestListViewModel = new TempRequestListViewModel()
             //{
             //    GUID = requestIndexObject.GUID,
             //    RequestIndexObject = requestIndexObject,
             //    TempRequestViewModels = oldJson.DeserializeJson<List<TempRequestViewModel>>()
             //};
-            
+
 
             return PartialView(uploadQuoteViewModel);
         }
@@ -5300,7 +5308,7 @@ namespace PrototypeWithAuth.Controllers
                     tempRequestViewModel.Request.QuoteStatusID = 4;
                     tempRequestViewModel.Request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
 
-              
+
                     if (uploadQuoteOrderViewModel.ExpectedSupplyDays != null)
                     {
                         tempRequestViewModel.Request.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
@@ -5329,7 +5337,7 @@ namespace PrototypeWithAuth.Controllers
                         {
                             foreach (var tempRequestViewModel in deserializedTempRequestListViewModel.TempRequestViewModels)
                             {
-                                if(tempRequestViewModel.Request.ParentQuote.ParentQuoteID ==0)
+                                if (tempRequestViewModel.Request.ParentQuote.ParentQuoteID == 0)
                                 {
                                     _context.Entry(tempRequestViewModel.Request.ParentQuote).State = EntityState.Added;
 
