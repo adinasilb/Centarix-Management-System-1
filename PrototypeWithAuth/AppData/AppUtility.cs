@@ -862,6 +862,30 @@ namespace PrototypeWithAuth.AppData
             return string.Join(" ", data.Select(byt => Convert.ToString(byt, 2).PadLeft(8, '0')));
         }
 
+        public static String GetUrlFromUserData(String UserUrl)
+        {
+            var returnUrl = "";
+            if (!UserUrl.IsNullOrEmpty())
+            {
+                if (UserUrl.StartsWith("http://"))
+                {
+                    returnUrl = UserUrl;
+                }
+                else if (UserUrl.StartsWith("://"))
+                {
+                    returnUrl = "http" + UserUrl;
+                }
+                else if (UserUrl.StartsWith("//"))
+                {
+                    returnUrl = "http:" + UserUrl;
+                }
+                else
+                {
+                    returnUrl = "http://" + UserUrl;
+                }
+            }
+            return returnUrl;
+        }
         public static decimal GetExchangeRateByDate(DateTime date)
         {
             var dateString = date.ToString("yyyy-MM-dd");

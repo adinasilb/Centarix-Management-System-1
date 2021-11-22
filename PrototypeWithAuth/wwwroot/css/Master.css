@@ -68,6 +68,9 @@
     --light-gray: #E5E5E5;
     --warning-color: #EED202;
 }
+.black-87{
+    color: var(--black-87);
+}
 
 .warning-color {
     color: var(--warning-color);

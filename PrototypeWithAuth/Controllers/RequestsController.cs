@@ -3456,10 +3456,17 @@ namespace PrototypeWithAuth.Controllers
                         .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
                         .Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
                 }
-                else
+                else if (confirmQuoteEmail.VendorId != null)
                 {
                     requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
                         .Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.QuoteStatusID == 1).Where(r => r.RequestStatusID == 6)
+                         .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor)
+                         .Include(r => r.ParentQuote).ToList();
+                }
+                else
+                {
+                    requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
+                        .Where(r => confirmQuoteEmail.Requests.Select(rid => rid.RequestID).Contains(r.RequestID) && (r.QuoteStatusID == 1 || r.QuoteStatusID == 2)).Where(r => r.RequestStatusID == 6)
                          .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor)
                          .Include(r => r.ParentQuote).ToList();
                 }
@@ -3516,14 +3523,14 @@ namespace PrototypeWithAuth.Controllers
                     string ownerEmail = currentUser.Email;
                     string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
                     string ownerPassword = currentUser.SecureAppPass;
-                    string vendorEmail = requests.FirstOrDefault().Product.Vendor.OrdersEmail;
+                    string vendorQuotesEmail = requests.FirstOrDefault().Product.Vendor.QuotesEmail;
                     string vendorName = requests.FirstOrDefault().Product.Vendor.VendorEnName;
 
                     //add a "From" Email
                     message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
 
                     // add a "To" Email
-                    message.To.Add(new MailboxAddress(vendorName, vendorEmail));
+                    message.To.Add(new MailboxAddress(vendorName, vendorQuotesEmail));
 
                     //subject
                     message.Subject = "Request for a Price Quote from Centarix to " + vendorName;
@@ -3589,9 +3596,9 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ConfirmQuoteEmailModal(int id, bool isResend = false)
+        public async Task<IActionResult> ConfirmQuoteEmailModal(int? id = null, int[] requestIds = null, bool isResend = false)
         {
-            List<Request> requests;
+            List<Request> requests = new List<Request>();
             if (isResend)
             {
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.RequestID == id)
@@ -3600,9 +3607,23 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == id && r.QuoteStatusID == 1)
-                    .Where(r => r.RequestStatusID == 6).Include(r => r.Product).ThenInclude(p => p.Vendor)
-                    .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).ToList();
+                if (id != null)
+                {
+                    requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == id && r.QuoteStatusID == 1)
+                       .Where(r => r.RequestStatusID == 6).Include(r => r.Product).ThenInclude(p => p.Vendor)
+                       .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).ToList();
+                }
+                else if (requestIds != null)
+                {
+                    foreach (var Rid in requestIds)
+                    {
+                        var request = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.RequestID == Rid && (r.QuoteStatusID == 1 || r.QuoteStatusID == 2))
+                           .Where(r => r.RequestStatusID == 6).Include(r => r.Product).ThenInclude(p => p.Vendor)
+                           .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).FirstOrDefault();
+                        requests.Add(request);
+                    }
+                }
+
             }
             if (requests.Count() == 0)
             {
@@ -6718,6 +6739,11 @@ namespace PrototypeWithAuth.Controllers
                 _context.Update(r);
             }
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<String> GetUrlFromUserData(String inputtedUrl)
+        {
+            return AppUtility.GetUrlFromUserData(inputtedUrl);
         }
     }
 }

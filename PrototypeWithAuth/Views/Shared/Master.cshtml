@@ -773,8 +773,20 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            var $itemurl = "/Requests/ConfirmQuoteEmailModal/?id=" + $(this).val();
-            $.fn.CallPageRequest($itemurl, "confirmemail");
+
+            var itemUrl = "/Requests/ConfirmQuoteEmailModal/";
+            //var modalClass = "confirmemail";
+            var HasChecked = $(".form-check-input:checked").length > 0;
+            if (HasChecked) {
+                console.log("has checked");
+                $.fn.LoadModalForSelectedItems(e, itemUrl, "confirm-email");
+            }
+            else {
+                console.log("does not have checked");
+                var $itemurl = itemUrl + "?id=" + $(this).val();
+                $.fn.CallPageRequest($itemurl, "confirmemail");
+            }
+
             return false;
         });
         $(".confirm-quote-resend").on("click", function (e) {

@@ -36,6 +36,11 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Orders Email")]
         public string OrdersEmail { get; set; }
         [Required]
+        [MaxLength(50)]
+        [EmailAddress]
+        [Display(Name = "Quotes Email")]
+        public string QuotesEmail { get; set; }
+        [Required]
         [Phone]
         [Display(Name = "Telephone")]
         public string VendorTelephone { get; set; }
