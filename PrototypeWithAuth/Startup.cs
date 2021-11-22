@@ -74,7 +74,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("AdinaHome"));
+                    Configuration.GetConnectionString("AdinaLocal"));
                 options.EnableSensitiveDataLogging(true);   
             });
 
