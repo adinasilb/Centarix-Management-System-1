@@ -5209,7 +5209,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote()};
+            var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now} };
 
             uploadQuoteViewModel.OrderTypeEnum = requestIndexObject.OrderType;
             uploadQuoteViewModel.TempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
@@ -5223,7 +5223,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 foreach (var tempRequestViewModel in uploadQuoteViewModel.TempRequestListViewModel.TempRequestViewModels)
                 {
-                    var oldQuote = _context.Requests.Where(r => r.ProductID == tempRequestViewModel.Request.ProductID && r.ParentQuote.ExpirationDate>=DateTime.Now.Date).Select(r => r.ParentQuote).OrderByDescending(r => r.ExpirationDate).FirstOrDefault();
+                    var oldQuote = _context.Requests.Where(r => r.ProductID == tempRequestViewModel.Request.ProductID && r.ParentQuote.QuoteDate>=DateTime.Now.Date).Select(r => r.ParentQuote).OrderByDescending(r => r.QuoteDate).FirstOrDefault();
                     if(oldQuote !=null)
                     {
                         string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
@@ -5242,10 +5242,17 @@ namespace PrototypeWithAuth.Controllers
                                 uploadQuoteViewModel.FileStrings.Add(newFileString);
                             }
                         }
-                        uploadQuoteViewModel.ParentQuote = oldQuote;
+            
                     }
-                   
+                    else
+                    {
+                        oldQuote= new ParentQuote() {ExpirationDate = DateTime.Now };
+                    }
+                    uploadQuoteViewModel.ParentQuote = oldQuote;
+
+
                 }
+               
             }         
 
             return PartialView(uploadQuoteViewModel);
@@ -5260,7 +5267,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() };
+            var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now} };
             //uploadQuoteViewModel.TempRequestListViewModel = new TempRequestListViewModel()
             //{
             //    GUID = requestIndexObject.GUID,
@@ -5329,7 +5336,7 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 else
                                 {
-                                    _context.Entry(tempRequestViewModel.Request.ParentQuote).State = EntityState.Unchanged;
+                                    _context.Entry(tempRequestViewModel.Request.ParentQuote).State = EntityState.Modified;
 
                                 }
                                 if (tempRequestViewModel.Request.Product.ProductID == 0)
