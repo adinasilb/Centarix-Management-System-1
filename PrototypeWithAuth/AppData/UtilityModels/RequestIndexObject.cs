@@ -1,4 +1,5 @@
 ﻿using PrototypeWithAuth.AppData.UtilityModels;
+using PrototypeWithAuth.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,23 +111,10 @@ namespace PrototypeWithAuth.AppData
         public bool IsReorder { get; set; }
         public bool IsArchive { get; set; }
         public Guid GUID { get; set; } //THIS IS ONLY FOR PASSING BETWEEN CONTROLLERS ---> NOT FOR USE IN REMEMBERING DATA/REFERENCING ETC.
-        private string _searchText;
-        public string SearchText {
-            get
-            {
-                if(_searchText == null)
-                {
-                    return "";
-                }
-                else
-                {
-                    return _searchText;
-                }
-            }
-            set { _searchText = value; }
-        }
-        public SelectedRequestFilters SelectedFilters { get; set; }
-                                       //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
+        
+        //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
         public AppUtility.ModalType ModalType { get; set; }
+
+        public int ListID { get; set; }
     }
 }

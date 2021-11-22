@@ -177,7 +177,7 @@ namespace PrototypeWithAuth
 
             //ChangePassword(serviceProvider).Wait();
 
-            //CreateRoles(serviceProvider).Wait();
+            CreateRoles(serviceProvider).Wait();
             //AddRoles(serviceProvider).Wait();
 
             //app.UseApplicationInsightsRequestTelemetry();

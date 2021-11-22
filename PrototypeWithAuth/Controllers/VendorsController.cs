@@ -198,12 +198,18 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
+        [HttpGet]
+        [Authorize(Roles = "Accounting, LabManagement")]
+        public async Task<IActionResult> SearchByVendorNameAndCompanyID(string vendorName, string companyID)
 
-        //string? enName, string? heName, string? bizID, string? contactPerson, string? contactEmail,
-        //string? orderEmail, string? phoneNum1, string? phoneNum2, string? faxNum, string? city, string? street, string? zip,
-        //string? website, string? bank, string? bankBranch, string? bankAccount, string? swift, string? BIC, string? goldAccount string? routingNum
-
-
+        {
+            IQueryable<Vendor> filteredVendors = _context.Vendors.AsQueryable();
+            var listfilteredVendors = await filteredVendors
+            .Where(fv => (String.IsNullOrEmpty(vendorName) || fv.VendorEnName.ToLower().Contains(vendorName.ToLower()))
+                &&
+             (String.IsNullOrEmpty(companyID) || fv.VendorBuisnessID.ToLower().Contains(companyID.ToLower()))).ToListAsync();
+            return PartialView("_IndexForPayment", listfilteredVendors);
+        }
 
 
         // GET: Vendors/Create
@@ -341,6 +347,11 @@ namespace PrototypeWithAuth.Controllers
                     createSupplierViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
                     createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
+                    createSupplierViewModel.Countries = new List<SelectListItem>();
+                    foreach (var country in _context.Countries)
+                    {
+                        createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
+                    }
                     return View("Create", createSupplierViewModel);
                 }
             }
@@ -628,6 +639,11 @@ namespace PrototypeWithAuth.Controllers
                 return false;
             }
             return true;
+        }
+
+        public string GetVendorCountryCurrencyID(int VendorID)
+        {
+            return _context.Vendors.Include(v => v.Country).Where(v => v.VendorID == VendorID).Select(v => v.Country.CurrencyID).FirstOrDefault().ToString();
         }
     }
 

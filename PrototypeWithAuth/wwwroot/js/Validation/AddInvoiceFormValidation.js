@@ -1,4 +1,9 @@
-﻿$('.addInvoiceForm').validate({
+﻿$.validator.addMethod("IsTodayOrEarlier", function (value, element) {
+	return Date.parse($("#Invoice_InvoiceDate").val()) <= new Date();
+}, 'Invoice Must Be Today or Earlier');
+
+
+$('.addInvoiceForm').validate({
 	 normalizer: function( value ) {
 	  return $.trim( value );
 	},
@@ -8,13 +13,13 @@
 		},
 		"Invoice.InvoiceNumber": {
 			required: true,
-			number: true,
-			min: 1,
+			//number: true,
+			//min: 1,
 
 		},
 		"Invoice.InvoiceDate": {
 			required: true,
-			maxDate: new Date()
+			IsTodayOrEarlier: true
         }
 	}
 });

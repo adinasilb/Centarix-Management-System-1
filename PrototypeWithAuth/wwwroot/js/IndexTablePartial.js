@@ -61,15 +61,63 @@ $(function () {
                 }
             });
         });
-        $(".popover .load-confirm-delete").click( function (e) {
-    console.log("in confirm delete");
-    e.preventDefault();
-    e.stopPropagation();
-    $("#loading").show();
-    var $itemurl = "/Requests/DeleteModal/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString();
-    $.fn.CallPageRequest($itemurl, "delete");
-    return false;
-});
+        $(".popover .move-to-list").off("click").on("click", function (e) {
+            e.preventDefault()
+            console.log("move")
+            var requestID = $(this).attr("value")
+            console.log($(this))
+            var prevListID = $("#ListID").val()
+            var url = "/Requests/MoveToListModal/?requestID=" + requestID
+            if (prevListID != null) {
+                url = url + "&prevListID=" + prevListID
+            }
+            $.ajax({
+                async: true,
+                url: url,
+                traditional: true,
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    $.fn.OpenModal("moveListItemModal", "move-list", data)
+                    //$.fn.EnableMaterialSelect('#NewListID', 'select-options-NewListID')
+                    return true;
+                },
+                error: function (jqxhr) {
+                    $('.error-message').html(jqxhr.responseText);
+                }
+            });
+        })
+        $(".popover .remove-from-list").off("click").on("click", function (e) {
+            e.preventDefault()
+            console.log("remove")
+            var requestID = $(this).attr("value")
+            console.log($(this))
+            var listID = $("#ListID").val()
+            var url = "/Requests/DeleteListRequestModal/?requestID=" + requestID + "&listID=" + listID
+            $.ajax({
+                async: true,
+                url: url,
+                traditional: true,
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    $.fn.OpenModal("deleteListRequestModal", "delete-list-request", data)
+                    return true;
+                },
+                error: function (jqxhr) {
+                    $('.error-message').html(jqxhr.responseText);
+                }
+            });
+        })
+        $(".popover .load-confirm-delete").click(function (e) {
+            console.log("in confirm delete");
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "/Requests/DeleteModal/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString();
+            $.fn.CallPageRequest($itemurl, "delete");
+            return false;
+        });
     });
     $('._IndexTableData [data-toggle = "tooltip"], ._IndexTableDataByVendor [data-toggle = "tooltip"]' ).off('click').on("click", function (e) {
         e.preventDefault();
@@ -131,7 +179,7 @@ $(function () {
     });
 
 
-    $("body").off("click", ".load-order-details").on("click", ".load-order-details", function (e) {
+    $("body, .modal").off("click", ".load-order-details").on("click", ".load-order-details", function (e) {
         //alert('in function')
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -382,19 +430,31 @@ $(function () {
     $.fn.ajaxPartialIndexTable = function (status, url, viewClass, type, formdata, modalClass = "", /*months, years, */) {
         console.log("in ajax partial index call " + url);
         //alert('before bind filter')
+        if ($('#searchHiddenForsForm').length) {
+            var moreFormData = new FormData($('#searchHiddenForsForm')[0])
+            console.log(...moreFormData);
+            formdata = $.fn.CombineTwoFormDatas(moreFormData, formdata);
+            console.log(...formdata);
+            
+        }
         if ($("#inventoryFilterContent").length) {
             var selectedFilters = $.fn.BindSelectedFilters("");
             console.log('in if')
         }
         var monthsString = "";
         var yearsString = "";
+        var listString = "";
         var months = $("#Months").val();
         var years = $("#Years").val();
+        var listID = $("#ListID").val();
         if (months != undefined) {
             months.forEach(month => monthsString += "&months=" + month)
         }
         if (years != undefined) {
             years.forEach(year => yearsString += "&years=" + year)
+        }
+        if (listID != undefined) {
+            listString += "&listID=" + listID
         }
 /*        var selectedPriceSort = [];
         $("#priceSortContent1 .priceSort:checked").each(function (e) {
@@ -402,8 +462,17 @@ $(function () {
         })
         var selectedPriceSortObj = { "SelectedPriceSort": selectedPriceSort }
         console.log(selectedPriceSortObj)*/
-		if (formdata == undefined) {
-			console.log("formdata is undefined");
+        if (modalClass != "") {
+
+           var classes = modalClass.split( ",")
+            console.log(modalClass)
+            $.each( classes, function( index){
+                console.log(classes[index])
+            	$.fn.CloseModal($.trim(classes[index]));
+                });
+		
+        } else {
+			console.log("in else");
 			/*formdata = {
 				PageNumber: $('.page-number').val(),
 				RequestStatusID: status,
@@ -428,11 +497,9 @@ $(function () {
             url += $.fn.getRequestIndexString(status);
             url += monthsString;
             url += yearsString;
+            url += listString;
             //formdata = {}; //so won't crash when do object.assign()
             //console.log(formdata)
-		}
-		else {
-			$.fn.CloseModal(modalClass);
         }
         //var objectsToAdd = [];
         //if (selectedFilters != undefined/*should also somehow check if anything is chosen...*/) { objectsToAdd.push(selectedFilters) }
@@ -482,36 +549,7 @@ $(function () {
 
         return false;
     }
-    $.fn.AddObjectToFormdata = function (formdata, object) {
-
-            console.log('in add object to formdata')
-            /*console.log(arrayOfObjects)
-            var newFormData = formdata;
-            for (var obj of arrayOfObjects) {
-                Object.assign(newFormData, obj);
-                console.log('obj ' + obj)
-            } */
-        if (formdata == undefined) {
-            var formdata = new FormData();
-        }
-        for (var key in object) {
-
-            if (Array.isArray(object[key])) {
-                for (const val of object[key].values()) {
-                    formdata.append(key, val);
-                    console.log('key' + key);
-                    console.log('val' + val)
-                }
-            }
-            else {
-                formdata.append(key, object[key]);
-                console.log('key ' + key);
-                console.log('value ' + object[key])
-            }
-        }
-        console.log(...formdata);
     
-        return formdata;
-    }
 
+    
 });

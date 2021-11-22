@@ -5,6 +5,11 @@
     string form = "";
     var buttonSubmitClass = "";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
+    if (AppUtility.IsAjaxRequest(this.Context.Request))
+    {
+        Layout = null;
+    }
+
     if (Model.SectionType == AppUtility.MenuItems.LabManagement)
     {
         buttonSubmitClass = "lab-man-background-color";
@@ -16,6 +21,11 @@
         form = "order-inv-form";
         buttonSubmitClass = "order-inv-background-color";
     }
+    else if (Model.SectionType == AppUtility.MenuItems.Accounting)
+    {
+        form = "accounting-form";
+        buttonSubmitClass = "accounting-background-color";
+    }
     else
     {
         form = "oper-form";
@@ -23,36 +33,11 @@
     }
 }
 
-<form action="" method="post" class="container-fluid ml-6 @form "  enctype="multipart/form-data" id="search-form">
+<form action="" method="post" class="container-fluid ml-6 @form " enctype="multipart/form-data" id="search-form">
     <div class="row">
-        <div class="col-1  mr-5">
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input filled-in" asp-for="Inventory" />
-                <label class="form-check-label" asp-for="Inventory"></label>
-            </div>
-            <br />
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input filled-in" asp-for="Ordered" />
-                <label class="form-check-label " asp-for="Ordered"></label>
-            </div>
-            <br />
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input filled-in" asp-for="ForApproval" />
-                <label class="form-check-label " asp-for="ForApproval"></label>
-            </div>
-
-            @*<span class="text-muted">(another option)</span>
-        <select class="form-control-plaintext border-bottom">
-            <option value="value">Inventory</option>
-            <option value="value">Ordered</option>
-            <option value="value">For Approval</option>
-        </select>*@
-        </div>
-
-        <div class="col-7 create-user  on-form-modal ">
+        <div class="col-7 create-user  on-form-modal">
             <div class="on-form-modal-border pb-4">
-                <input type="hidden" asp-for="SectionType" />
-    
+
                 <div class="new-modal-body ">
                     <div class="container-fluid div-tabs no-box-shadow p-0">
 
@@ -60,27 +45,36 @@
 
                             <div class="row">
                                 <div class="col-md-9">
-                                    <span class="heading-1 modal-tab-name"> Search In Centarix</span>
+                                    <span class="heading-1 modal-tab-name">Search Requests</span>
                                 </div>
 
                                 <div class="col-md-3 text-center">
-                                    <input type="submit" value="Search" asp-action="Search" class="@buttonSubmitClass custom-button custom-button-font" />
+                                    <input type="button" value="Search" @* asp-action="Search"*@ class="@buttonSubmitClass custom-button custom-button-font search-for-request" />
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col">
                                     <div class="form-group">
-                                        <label asp-for="Request.Product.ProductName" class="control-label">Item Name: </label>
-                                        <input asp-for="Request.Product.ProductName" data-val="false" class="form-control-plaintext border-bottom" />
+                                        <label asp-for="ItemName" class="control-label">Item Name: </label>
+                                        <input asp-for="ItemName" data-val="false" class="form-control-plaintext border-bottom" />
                                     </div>
                                 </div>
+                                @if (Model.SectionType == AppUtility.MenuItems.Operations)
+                                {
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label asp-for="ProductHebrewName" class="control-label">Item Hebrew Name: </label>
+                                            <input asp-for="ProductHebrewName" data-val="false" class="form-control-plaintext border-bottom" />
+                                        </div>
+                                    </div>
+                                }
                             </div>
                             <div class="row">
                                 <div class="col-4">
                                     <div class="form-group">
-                                        <label asp-for="Request.Product.ProductSubcategory.ParentCategoryID" class="control-label">Category</label>
-                                        <select searchable="Please select a category" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" id="parentlist" asp-for="Request.Product.ProductSubcategory.ParentCategoryID">
-                                            <option value="0">Select Category</option>
+                                        <label asp-for="ParentCategoryID" class="control-label">Category</label>
+                                        <select searchable="Please select a category" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" data-stop-refresh="true" id="parentlist" asp-for="ParentCategoryID">
+                                            <option value="">Select Category</option>
                                             @foreach (var parentCategory in Model.ParentCategories)
                                             {
                                                 <option value="@parentCategory.ParentCategoryID">@parentCategory.ParentCategoryDescription</option>
@@ -88,11 +82,11 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-4 px-md-4">
+                                <div class="col-4">
                                     <div class="form-group">
-                                        <label asp-for="Request.Product.ProductSubcategoryID" class="control-label">Subcategory</label>
-                                        <select searchable="Please select a subcategory" asp-for="Request.Product.ProductSubcategoryID" class="mdb-select-sublist  mdb-select custom select-dropdown form-control-plaintext" id="sublist" data-val="false">
-                                            <option value="0">Select Subcategory</option>
+                                        <label asp-for="ProductSubcategoryID" class="control-label">Subcategory</label>
+                                        <select searchable="Please select a subcategory" asp-for="ProductSubcategoryID" class="mdb-select-sublist  mdb-select custom select-dropdown form-control-plaintext" id="sublist" data-val="false" data-stop-refresh="true">
+                                            <option value="">Select Subcategory</option>
                                             @foreach (var productSubcategory in Model.ProductSubcategories)
                                             {
                                                 <option value="@productSubcategory.ProductSubcategoryID">@productSubcategory.ProductSubcategoryDescription</option>
@@ -100,42 +94,11 @@
                                         </select>
                                     </div>
                                 </div>
-                                @{var display = "";}
-                                @if (Model.SectionType == AppUtility.MenuItems.Operations)
-                                {
-                                    display = "d-none";
-                                }
-                                <div class="col-4 @display">
-                                    <div class="form-group">
-                                        <label @*asp-for=""*@ class="control-label">Project</label>
-                                        <select searchable="Select a project" @*asp-for="" data-val="false"*@ class="mdb-select custom select-dropdown form-control-plaintext" id="Project">
-                                            <option value="0">Select Project</option>
-                                            @foreach (var project in Model.Projects)
-                                            {
-                                                <option value="@project.ProjectID">@project.ProjectDescription</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4 @display">
-                                    <div class="form-group">
-                                        <label @*asp-for=""*@ class="control-label">Sub Project</label>
-                                        <select searchable="Select a sub project" @*asp-for="" data-val="false"*@ class="mdb-select-subProject mdb-select custom select-dropdown form-control-plaintext" id="SubProject">
-                                            <option value="0">Select Subproject</option>
-                                            @foreach (var subProject in Model.SubProjects)
-                                            {
-                                                <option value="@subProject.SubProjectID">@subProject.SubProjectDescription</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="col-4 ">
                                     <div class="form-group">
-                                        <label asp-for="Request.Product.VendorID" class="control-label">Supplier</label>
-                                        <select searchable="Select A Vendor" asp-for="Request.Product.VendorID" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" id="vendorList">
-                                            <option value="0">Select Vendor</option>
+                                        <label asp-for="VendorID" class="control-label">Supplier</label>
+                                        <select searchable="Select A Vendor" asp-for="VendorID" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" id="vendorList" data-stop-refresh="true">
+                                            <option value="">Select Vendor</option>
                                             @foreach (var vendor in Model.Vendors)
                                             {
                                                 <option value="@vendor.VendorID">@vendor.VendorEnName</option>
@@ -143,123 +106,220 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
                                     <div class="form-group">
-                                        @* IN MIDDLE *@
-                                        <label class="control-label">Supplier ID</label>
-                                        <select searchable="Select A Vendor ID" asp-for="Request.Product.Vendor.VendorBuisnessID" id="vendorBusinessIDList" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext">
-                                            <option value="0">Select Vendor ID</option>
-                                            @foreach (var vendor in Model.Vendors)
+                                        <label asp-for="ApplicationUserOwnerID" class="control-label">Owner</label>
+                                        <select asp-for="ApplicationUserOwnerID" class="mdb-select custom select-dropdown form-control-plaintext" data-val="false" searchable="Please select a user" id="ownerList" data-stop-refresh="true">
+                                            <option value="">Select User</option>
+                                            @foreach (var user in Model.ApplicationUsers)
                                             {
-                                                <option value="@vendor.VendorID">@vendor.VendorBuisnessID</option>
+                                                <option value="@user.Id">@user.FirstName @user.LastName</option>
                                             }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label asp-for="ApplicationUserReceiverID" class="control-label">Received By</label>
+                                        <select asp-for="ApplicationUserReceiverID" class=" mdb-select custom select-dropdown form-control-plaintext" data-val="false" searchable="Please select a user" id="receiverList" data-stop-refresh="true">
+                                            <option value="">Select User</option>
+                                            @foreach (var user in Model.ApplicationUsers)
+                                            {
+                                                <option value="@user.Id">@user.FirstName @user.LastName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Currency</label>
+                                        <select id="currencyList" asp-for="Currency" class="mdb-select custom select-dropdown form-control-plaintext">
+                                            <option value="">Select Currency</option>
+                                            <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
+                                            <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-6 ">
+                                <div class="col-4 ">
                                     <div class="form-group">
-                                        <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" />
+                                        <label asp-for="CreationDate" class="control-label"></label>
+                                        <input asp-for="CreationDate" type="text" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-4">
                                     <div class="form-group">
-                                        <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom" />
+                                        <label asp-for="OrderDate" class="control-label"></label>
+                                        <input asp-for="OrderDate" type="text" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 ">
+                                <div class="col-4">
                                     <div class="form-group">
-                                        <label asp-for="Request.Payments[0].Invoice.InvoiceNumber" class="control-label"></label>
-                                        <input asp-for="Request.Payments[0].Invoice.InvoiceNumber" class="form-control-plaintext border-bottom" />
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label asp-for="Request.Payments[0].Invoice.InvoiceDate" class="control-label"></label>
-                                        <input asp-for="Request.Payments[0].Invoice.InvoiceDate" class="form-control-plaintext border-bottom" />
+                                        <label asp-for="ArrivalDate" class="control-label"></label>
+                                        <input asp-for="ArrivalDate" type="text" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-4 ">
                                     <div class="form-group">
-                                        <label asp-for="Request.Product.CatalogNumber" class="control-label"></label>
-                                        <input asp-for="Request.Product.CatalogNumber" class="form-control-plaintext border-bottom" data-val="false" />
+                                        <label asp-for="Batch" class="control-label"></label>
+                                        <input asp-for="Batch" class="form-control-plaintext border-bottom" />
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label asp-for="Request.Warranty" class="control-label"></label>
-                                    <input asp-for="Request.Warranty" class="form-control-plaintext border-bottom" />
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label asp-for="ExpirationDate" class="control-label"></label>
+                                        <input asp-for="ExpirationDate" type="text" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
+                                    </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="control-label">End Date</label>
-                                    @*@{
-                                    //get this just to return the date (not the time)
-                                    //adding the amount of months of the warranty to the invoice date
-                                    var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
-                                }*@
-                                    <input value="@Model.Request.Payments[0].Invoice.InvoiceDate.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom" disabled="disabled" />
+                                <div class="col-4 ">
+                                    <div class="form-group">
+                                        <label asp-for="OrderNumber" class="control-label"></label>
+                                        <input asp-for="OrderNumber" class="form-control-plaintext border-bottom" />
+                                    </div>
                                 </div>
                             </div>
-
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-4">
                                     <div class="form-group">
-                                        <label asp-for="Request.ExpectedSupplyDays" class="control-label">Expected supply days</label>
-                                        <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom" />
+                                        <label asp-for="SupplierOrderNumber" class="control-label"></label>
+                                        <input asp-for="SupplierOrderNumber" class="form-control-plaintext border-bottom" />
                                     </div>
                                 </div>
-                                <div class="col-md-4 px-md-4">
-                                    @{
-                                        //get this just to return the date (not the time)
-                                        //adding the amount of months of the expected supply days to the invoice date
-                                        var endSupplyDate = Model.Request.Payments[0].Invoice.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays ?? 0);
-                                    }
+                                <div class="col-4">
                                     <div class="form-group">
-                                        <label class="control-label">Expected supply date</label>
-                                        <input value="@endSupplyDate" class="form-control-plaintext border-bottom" disabled="disabled" />
+                                        <label asp-for="CatalogNumber" class="control-label"></label>
+                                        <input asp-for="CatalogNumber" class="form-control-plaintext border-bottom" data-val="false" />
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-4">
                                     <div class="form-group">
-                                        <label asp-for="Request.URL" class="control-label"></label>
-                                        <input asp-for="Request.URL" class="form-control-plaintext border-bottom" />
+                                        <label asp-for="SerialNumber" class="control-label"></label>
+                                        <input asp-for="SerialNumber" class="form-control-plaintext border-bottom" />
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-4 ">
                                     <div class="form-group">
-                                        <label class="control-label">From Date</label>
-                                        <input asp-for="FromDate" type="date" class="form-control-plaintext border-bottom" />
+                                        <label asp-for="InvoiceNumber" class="control-label"></label>
+                                        <input asp-for="InvoiceNumber" class="form-control-plaintext border-bottom" />
                                     </div>
                                 </div>
-                                <div class="col-md-4 px-md-4">
+                                <div class="col-4">
                                     <div class="form-group">
-                                        <label class="control-label">Until Date</label>
-                                        <input asp-for="ToDate" type="date" class="form-control-plaintext border-bottom" />
+                                        <label asp-for="QuoteNumber" class="control-label"></label>
+                                        <input asp-for="QuoteNumber" class="form-control-plaintext border-bottom" />
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-4">
                                     <div class="form-group">
-                                        <label class="control-label">Price</label>
-                                        <input class="form-control-plaintext border-bottom" /> @*need to add "price" field in the RequestSearchViewModel*@
+                                        <label asp-for="InvoiceDate" class="control-label"></label>
+                                        <input asp-for="InvoiceDate" type="text" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
                                     </div>
                                 </div>
                             </div>
-
+                            @if (Model.PageType == AppUtility.PageTypeEnum.AccountingGeneral)
+                            {
+                                <div class="row ">
+                                    <div class="col-3">
+                                        <div class="payment-type form-group">
+                                            <label class="control-label">Bank Name</label>
+                                            @Html.DropDownListFor(vm => vm.Payment.CompanyAccountID,
+                                                new SelectList(
+                                                Model.CompanyAccounts,
+                                                "CompanyAccountID",
+                                                "CompanyBankName"
+                                                ), "Select Bank Name",
+                                                new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext", @id = "bankName" })
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="payment-type form-group">
+                                            <label class="control-label">Payment Type</label>
+                                            @Html.DropDownListFor(vm => vm.Payment.PaymentTypeID,
+                                                new SelectList(
+                                                Model.PaymentTypes,
+                                                "PaymentTypeID",
+                                                "PaymentTypeDescription"
+                                                ), "Select Payment Type",
+                                                new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext paymentType" })
+                                        </div>
+                                    </div>
+                                    <div class="col-3 credit-card d-none">
+                                        <div class="form-group ">
+                                            <label class="control-label credit-card d-none">Card #</label>
+                                            <select class="mdb-select custom select-dropdown form-control-plaintext cardNum mdb-select-sublist " disabled asp-for="Payment.CreditCardID"></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-group payment-date d-none">
+                                            <label class="control-label wire d-none">Transfer Date</label>
+                                            <label class="control-label credit-card">Reference Date</label>
+                                            <label class="control-label bank-check d-none">Cash Out Date</label>
+                                            <input class="form-control-plaintext border-bottom datepicker" type="text" asp-for="Payment.PaymentReferenceDate" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="col-3 wire d-none">
+                                        <div class="form-group ">
+                                            <label class="control-label">Payment Reference</label>
+                                            <input class="form-control-plaintext border-bottom reference-1" type="text" disabled asp-for="Payment.Reference" />
+                                        </div>
+                                    </div>
+                                    <div class="col-3 bank-check d-none">
+                                        <div class="form-group ">
+                                            <label class="control-label">Check Number</label>
+                                            <input class="form-control-plaintext border-bottom" type="text" disabled asp-for="Payment.CheckNumber" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                         </div>
-
                     </div>
                 </div>
-
             </div>
-</div>
         </div>
+    </div>
 </form>
+<script src="~/js/InitializeDatePicker.js"></script>
+<script src="~/js/TermsModal.js"></script>
+<script>
+    $('.search-for-request').off('click').on('click', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        //alert('got here');
+        @*var url = 'Index';
+        switch ($('#masterPageType').val()) {
+            case 'RequestSummary':
+                url = 'IndexInventory';
+            case 'AccountingGeneral':
+                url = 'AccountingGeneral';
+            case 'AccountingPayments':
+
+        }
+        var fullUrl = '/Requests/' + url + '?' + $.fn.getRequestIndexString();
+        console.log(fullUrl);*@
+        var formdata = new FormData($("#search-form")[0]);
+        $.ajax({
+            contentType: false,
+            processData: false,
+            async: true,
+            url: '/Requests/Search?' + $.fn.getRequestIndexString(),
+            data: formdata,
+            traditional: true,
+            type: "POST",
+            cache: false,
+            success: function (data) {
+                $('.render-body').html(data);
+                $.fn.ChangeCheckboxesToFilledIn();
+            },
+            error: function (jqxhr) {
+                $('.error-message').html(jqxhr.responseText);
+            }
+        })
+    })
+</script>

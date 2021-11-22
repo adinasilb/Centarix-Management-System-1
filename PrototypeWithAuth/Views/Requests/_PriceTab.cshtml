@@ -18,11 +18,13 @@
     var shekelReadOnly = "";
     var shekelSelected = "selected";
     var disabledProperty = "";
+    var changed = "false";
     if (modalType == AppUtility.RequestModalType.Edit || modalType == AppUtility.RequestModalType.Summary)
     {
         disabledProperty = "disabled";
         markReadOnlyClass = "mark-readonly";
         shekelReadOnly = "mark-readonly";
+        changed = "true";
         if (Model.Requests[0].Currency.Equals("USD"))
         {
             disableShekel = "disabled-text";
@@ -48,14 +50,15 @@
 
 <div class="row no-mb">
     <div class="col-md-8">
-        <span class="heading-1 modal-tab-name">Price</span>
+        <span class="heading-1 modal-tab-name">Price</span><br />
+        <span  class=" large-text text-danger-centarix font-weight-bold" id="price-warning"></span>
     </div>
     <div class="col-md-4">
         <div class="row @hideNoQuote">
             <div class="col-6">
                 <div class="form-group">
                     <label class="control-label">Currency</label>
-                    <select id="currency" asp-for="Requests[0].Currency" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass">
+                    <select id="currency" asp-for="Requests[0].Currency" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass" changed="@changed">
                             <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
                             <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
                     </select>
@@ -75,17 +78,20 @@
 @* @if (Category != null && !Category.Equals(AppUtility.ParentCategoryEnum.Operation))
 {*@
 <div class="row requestPriceQuote @hideNoQuote">
+    @if (Model.ModalType != AppUtility.RequestModalType.Create)
+    {
     <div class="col-md-2">
         <div class="form-group">
             <label class="control-label">Discount</label>
 
             <div class="input-group">
-                <input asp-for="Requests[0].Discount" class="form-control-plaintext border-bottom requestPriceQuote @markReadOnlyClass" />
+                <input asp-for="Requests[0].Discount" value="@(AppUtility.ConvertIntToString(Model.Requests[0].Discount))" class="form-control-plaintext border-bottom requestPriceQuote @markReadOnlyClass" />
                 <div class="input-group-text">%</div>
             </div>
             <span asp-validation-for="Requests[0].Discount" />
         </div>
     </div>
+    }
     @{
         var includeVatChecked = "checked";
         var noVatChecked = "";

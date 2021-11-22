@@ -803,6 +803,11 @@ input.select-dropdown {
         filter: brightness(0) saturate(100%) var(--lab-man-filter);
         text-decoration: none !important;
     }
+ .supplier-form  .link-clr:hover {
+        font-weight: bold;
+        filter: brightness(0) saturate(100%) var(--lab-man-filter);
+        text-decoration: none !important;
+    }
 
     .lab-man-link-clr:active {
         font-weight: bold;
@@ -816,6 +821,13 @@ input.select-dropdown {
 }
 
     .acc-link-clr:hover {
+        font-weight: bold;
+        filter: var(--acc-filter);
+        text-decoration: none;
+    }
+
+
+  .accounting-form  .link-clr:hover {
         font-weight: bold;
         filter: var(--acc-filter);
         text-decoration: none;
@@ -2882,6 +2894,19 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     display: flex;
     justify-content: left;
     align-items: center;
+}
+
+.list-name {
+    padding-top: .7rem;
+    padding-bottom: .7rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
+    border-radius: 15px !important;
+    border: 0 !important;
+}
+
+.list-name.selected {
+    background-color: var(--order-inv-25);
 }
 
 /*

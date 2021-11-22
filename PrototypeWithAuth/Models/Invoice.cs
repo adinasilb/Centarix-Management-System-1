@@ -11,7 +11,7 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int InvoiceID { get; set; }
 
-        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
+        //[RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
         [Display(Name = "Invoice Number")]
         public string InvoiceNumber { get; set; }
 

@@ -116,7 +116,24 @@
                                         </div>
                                     </div>
                                 </div>
+
                             }
+                        <div>
+                            </div>
+                            <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="control-label">Discount</label>
+
+                                    <div class="input-group">
+                                        <input asp-for="Discount" class="form-control-plaintext border-bottom requestPriceQuote" value="" />
+                                        <div class="input-group-text">%</div>
+                                    </div>
+                                    <span asp-validation-for="Discount" />
+                                </div>
+                            </div>
+                        </div>
+                           
                             @*<div class="row">
                         <div class="form-group ">
                             <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
@@ -194,27 +211,20 @@
                     $('.modal .temprequesthiddenfors').html('');
                     console.log($("#OrderTypeEnum").val())
                     $('.submitQuote').prop('disabled', false);
-                    if ($("#OrderTypeEnum").val() == "AddToCart" || jqxhr.status == "210") {
-                        $.fn.CloseModal("step-1");
-                        $.fn.CloseModal("edits");
-                        $.fn.CloseModal("reorder-item");
-                        console.log('remove save item')
-                        $(".save-item").removeClass("save-item").off('click')
-                        console.log("Index");
-                        /*if ($(".editModal").length > 0) { //will never get in cuz of closemodal('edits')
-                            $(".render-body").html(data)
-                        }
-                        else*/ if ($('#masterPageType').val() == "RequestSummary") {
-                            window.location.href = "/Requests/IndexInventory?" + $.fn.getRequestIndexString();
-                        }
-                        else if ($('#masterPageType').val() == "RequestLocation") {
-                            //just close modals
+                    var sidebarType = $('#masterSidebarType').val();
+                    var viewClass = "_IndexTableData";
+                    if (sidebarType == "Quotes" || sidebarType == "Orders" || sidebarType == "Cart") {
+                        viewClass = "_IndexTableDataByVendor";
+                    }
+                    if (data == "") {
+                        if (sidebarType == "Add") {
+                            window.location.href = "/Requests/?PageType=RequestRequest&SectionType=Requests&SidebarType=List"
                         }
                         else {
-                            window.location.href = "/Requests/Index"
+                            $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "step-1, reorder-item");
                         }
-                        //$('.modal').modal('hide');
-                    }
+                         $(".save-item").removeClass("save-item").off('click')
+                    }                    
                     else {
                         $.fn.OpenModal('termsModal', 'terms', data)
                     }

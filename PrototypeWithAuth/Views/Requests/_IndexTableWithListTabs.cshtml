@@ -1,0 +1,47 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestListIndexViewModel
+@using PrototypeWithAuth.AppData
+
+@{
+    var activeClasses = "";
+    var newListDisabled = "";
+    if (Model.Lists.Count == 5)
+    {
+        newListDisabled = "d-none";
+    }
+}
+<input type="hidden" asp-for="ListID" />
+<div class="">
+    <div class="item-table">
+        <ul class="pl-0">
+            @foreach (var l in Model.Lists)
+            {
+                if (l.ListID == Model.ListID)
+                {
+                    activeClasses = "active";
+                }
+                <li class="list-inline-item">
+                    <a class="change-list new-button  mr-3 pt-4 @activeClasses" value="@l.ListID" href="#"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@l.Title</label> </a>
+                </li>
+                activeClasses = "";
+            }
+            <li class=" list-inline-item active m-0">
+                <a class=" btn-link text no-hover requests add-new-list @newListDisabled ">
+                    <i class="icon-add_circle_outline-24px1 order-inv-color" style="font-size: 24px"></i>
+                    <label class="order-inv-color new-button-text">New List</label>
+                </a>
+            </li>
+            <li class=" list-inline-item float-right active m-0">
+                <button type="button" id="listSettings" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-container="body" class="text custom-button custom-order-inv px-4" value="Filter">
+                    <i class="icon-settings-24px-1 order-inv-color pr-2 " style="font-size: 24px; vertical-align:middle"></i>
+                    Settings
+                </button>
+            </li>
+        </ul>
+
+    </div>
+</div>
+<div class="_IndexTable">
+    @{ await Html.RenderPartialAsync("_IndexTable", Model.RequestIndexPartialViewModel);}
+</div>
+<script src="~/js/IndexTableWithCounts.js"></script>
+<script src="~/js/RequestLists.js"></script>

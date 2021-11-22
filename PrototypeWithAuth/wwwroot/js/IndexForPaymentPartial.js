@@ -7,7 +7,7 @@ $(".load-vendor-edit").on("click", function (e) {
 
     console.log("Vendors/Edit/?id")
     //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-    $itemurl = "/Vendors/Edit/?id=" + $(this).attr('val') + '&SectionType=' + $(this).attr('sectionType');
+    $itemurl = "/Vendors/Edit/?id=" + $(this).attr('val') + '&SectionType=' + $("#masterSectionType").val();
 
     $.fn.CallPageRequest($itemurl, "details");
     return false;
