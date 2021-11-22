@@ -6,7 +6,7 @@ namespace PrototypeWithAuth.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("update ParentQuotes from ParentQuotes pq inner join Requests r on pq.ParentQuoteID = r.ParentQuoteID");
+            migrationBuilder.Sql("update ParentQuotes set parentQuotes.Discount = r.Discount from ParentQuotes pq inner join Requests r on pq.ParentQuoteID = r.ParentQuoteID");
             //migrationBuilder.Sql("UPDATE ParentQuotes SET Discount = (SELECT Discount FROM Requests r where ParentQuotes.ParentQuoteID = r.ParentQuoteID)");
 
         }
