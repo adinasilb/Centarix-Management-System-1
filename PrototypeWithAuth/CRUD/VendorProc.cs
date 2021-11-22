@@ -2,33 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Transactions;
-using Abp.Extensions;
-//using Microsoft.AspNet.Identity;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
-using Microsoft.CodeAnalysis.Host;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Newtonsoft.Json;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.Exceptions;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
-using PrototypeWithAuth.Data.Migrations;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 namespace PrototypeWithAuth.CRUD
 {
-    public class Vendor : ApplicationDbContextProcedure
+    public class VendorProc : ApplicationDbContextProcedure
     {
-        public Vendor(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
+        public VendorProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
         {
         }
 
@@ -163,13 +150,14 @@ namespace PrototypeWithAuth.CRUD
                         await _context.SaveChangesAsync();
                         //throw new Exception();
                         await transaction.CommitAsync();
-                       
+
                         //
                     }
                     else
                     {
                         stringWithBool.Bool = true;
-                        stringWithBool.String = "Model State Exception";
+                        stringWithBool.String = "Model State Invalid";
+                        throw new ModelStateInvalidException();
                     }
                 }
                 catch (Exception ex)
@@ -182,6 +170,102 @@ namespace PrototypeWithAuth.CRUD
                 }
             }
             return stringWithBool;
+        }
+
+        public async Task<StringWithBool> Update(CreateSupplierViewModel createSupplierViewModel, ModelStateDictionary ModelState)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    //ModelState.Remove()
+                    foreach (var ms in ModelState.ToArray())
+                    {
+                        if (ms.Key.StartsWith("VendorContact"))
+                        {
+                            ModelState.Remove(ms.Key);
+                        }
+                    }
+                    if (ModelState.IsValid)
+                    {
+                        _context.Update(createSupplierViewModel.Vendor);
+                        _context.SaveChanges();
+                        var vendor = await
+                            _context.Vendors.Where(v => v.VendorID == createSupplierViewModel.Vendor.VendorID).Include(v => v.VendorCategoryTypes).FirstOrDefaultAsync();
+                        if (vendor.VendorCategoryTypes.Count() > 0)
+                        {
+                            foreach (var type in createSupplierViewModel.Vendor.VendorCategoryTypes)
+                            {
+                                _context.Remove(type);
+                            }
+                        }
+
+                        foreach (var type in createSupplierViewModel.VendorCategoryTypes)
+                        {
+                            _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = type });
+                        }
+                        //delete contacts that need to be deleted
+                        foreach (var vc in createSupplierViewModel.VendorContacts.Where(vc => vc.Delete))
+                        {
+                            if (vc.VendorContact.VendorContactID != 0) //only will delete if it's a previously loaded ones
+                            {
+                                var dvc = _context.VendorContacts.Where(vc => vc.VendorContactID == vc.VendorContactID).FirstOrDefault();
+                                _context.Remove(dvc);
+                                await _context.SaveChangesAsync();
+                            }
+                        }
+
+
+                        //update and add contacts
+                        foreach (var vendorContact in createSupplierViewModel.VendorContacts.Where(vc => !vc.Delete))
+                        {
+                            vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
+                            _context.Update(vendorContact.VendorContact);
+
+                        }
+                        if (createSupplierViewModel.VendorComments != null)
+                        {
+                            foreach (var vendorComment in createSupplierViewModel.VendorComments)
+                            {
+                                if (!String.IsNullOrEmpty(vendorComment.CommentText))
+                                {
+                                    vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
+                                    if (vendorComment.VendorCommentID == 0)
+                                    {
+                                        vendorComment.CommentTimeStamp = DateTime.Now;
+                                    }
+                                    _context.Update(vendorComment);
+                                }
+
+                            }
+                        }
+                        _context.SaveChanges();
+                        await transaction.CommitAsync();
+                        ReturnVal.Bool = true;
+                    }
+                    else
+                    {
+                        ReturnVal.Bool = false;
+                        ReturnVal.String = "Model State Invalid Exception";
+                        throw new ModelStateInvalidException();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ReturnVal.Bool = false;
+                    ReturnVal.String = AppUtility.GetExceptionMessage(ex);
+                    await transaction.RollbackAsync();
+                }
+            }
+            return ReturnVal;
+        }
+
+        public async Task<StringWithBool> Delete(int VendorID)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            if ()
+            return ReturnVal;
         }
     }
 }
