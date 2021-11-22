@@ -18,6 +18,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.Exceptions;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Data.Migrations;
 using PrototypeWithAuth.Models;
@@ -27,12 +28,18 @@ namespace PrototypeWithAuth.Controllers
 {
     public class VendorsController : SharedController
     {
-        private CRUD.Vendor _vendor; 
+        private CRUD.Vendor _vendor;
+        private CRUD.CategoryType _categoryType;
+        private CRUD.Country _country;
+        private CRUD.VendorContact _vendorContact;
         public VendorsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
 
         {
-            _vendor = new CRUD.Vendor(context);
+            _vendor = new CRUD.Vendor(context, userManager);
+            _categoryType = new CRUD.CategoryType(context, userManager);
+            _country = new CRUD.Country(context, userManager);
+            _vendorContact = new CRUD.VendorContact(context, userManager);
         }
         // GET: Vendors
         [Authorize(Roles = "Requests")]
@@ -55,7 +62,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Vendors;
             TempData["CategoryType"] = categoryType;
 
-            var vendors = _vendor.Read(categoryType);
+            var vendors = _vendor.ReadByCategoryTypeID(categoryType);
             return View(vendors);
         }
 
@@ -75,7 +82,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
 
-            return View(await _context.Vendors.ToListAsync());
+            return View(_vendor.Read());
 
         }
         // GET: Vendors
@@ -93,7 +100,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
             }
 
-            return PartialView(await _context.Vendors.ToListAsync());
+            return PartialView(_vendor.Read());
 
         }
 
@@ -107,9 +114,9 @@ namespace PrototypeWithAuth.Controllers
             VendorSearchViewModel vendorSearchViewModel = new VendorSearchViewModel
             {
                 //ParentCategories = _context.ParentCategories.ToList(),
-                CategoryTypes = _context.CategoryTypes.ToList(),
-                Vendors = _context.Vendors.ToList(),
-                Countries = _context.Countries.ToList(),
+                CategoryTypes = _categoryType.Read(),
+                Vendors = _vendor.Read(),
+                Countries = _country.Read(),
                 SectionType = SectionType
             };
 
@@ -138,55 +145,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Search(VendorSearchViewModel vendorSearchViewModel)
 
         {
-            IQueryable<Vendor> filteredVendors = _context.Vendors.Include(v => v.VendorCategoryTypes).AsQueryable();
-            List<int> orderedVendorCategoryTypes = new List<int>();
-            if (vendorSearchViewModel.VendorCategoryTypes != null)
-            {
-                orderedVendorCategoryTypes = vendorSearchViewModel.VendorCategoryTypes.OrderBy(e => e).ToList();
-            }
-            var listfilteredVendors = filteredVendors
-            .Where(fv => (String.IsNullOrEmpty(vendorSearchViewModel.VendorEnName) || fv.VendorEnName.ToLower().Contains(vendorSearchViewModel.VendorEnName.ToLower()))
-                &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorHeName) || fv.VendorHeName.ToLower().Contains(vendorSearchViewModel.VendorHeName.ToLower()))
-             &&
-             (String.IsNullOrEmpty(vendorSearchViewModel.VendorBuisnessID) || fv.VendorBuisnessID.ToLower().Contains(vendorSearchViewModel.VendorBuisnessID.ToLower()))
-             &&
-             (vendorSearchViewModel.CountryID==null || fv.CountryID.ToString().ToLower().Equals(vendorSearchViewModel.CountryID.ToLower()))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorCity) || fv.VendorCity.ToLower().Contains(vendorSearchViewModel.VendorCity.ToLower()))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorStreet) || fv.VendorStreet.ToLower().Contains(vendorSearchViewModel.VendorStreet.ToLower()))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorZip) || fv.VendorZip.ToLower().Contains(vendorSearchViewModel.VendorZip.ToLower()))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorTelephone) || fv.VendorTelephone.Contains(vendorSearchViewModel.VendorTelephone))
-              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorCellPhone) || fv.VendorCellPhone.Contains(vendorSearchViewModel.VendorCellPhone))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorFax) || fv.VendorFax.Contains(vendorSearchViewModel.VendorFax))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.OrdersEmail) || fv.OrdersEmail.ToLower().Contains(vendorSearchViewModel.OrdersEmail.ToLower()))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.InfoEmail) || fv.InfoEmail.ToLower().Contains(vendorSearchViewModel.InfoEmail.ToLower()))
-            &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorWebsite) || fv.VendorWebsite.ToLower().Contains(vendorSearchViewModel.VendorWebsite.ToLower()))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorBank) || fv.VendorBank.ToLower().Contains(vendorSearchViewModel.VendorBank.ToLower()))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorBankBranch) || fv.VendorBankBranch.ToLower().Contains(vendorSearchViewModel.VendorBankBranch.ToLower()))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorAccountNum) || fv.VendorAccountNum.ToLower().Contains(vendorSearchViewModel.VendorAccountNum.ToLower()))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorSwift) || fv.VendorSwift.ToLower().Contains(vendorSearchViewModel.VendorSwift.ToLower()))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorBIC) || fv.VendorBIC.ToLower().Contains(vendorSearchViewModel.VendorBIC.ToLower()))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorGoldAccount) || fv.VendorGoldAccount.ToLower().Contains(vendorSearchViewModel.VendorGoldAccount.ToLower()))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorRoutingNum) || fv.VendorRoutingNum.ToLower().Contains(vendorSearchViewModel.VendorRoutingNum.ToLower()))).ToList();
-
-            //listfilteredVendors = listfilteredVendors.Where(fv => (orderedVendorCategoryTypes == null || orderedVendorCategoryTypes.SequenceEqual(fv.VendorCategoryTypes.OrderBy( ct => ct.CategoryTypeID).Select(ct => ct.CategoryTypeID)))).ToList(); //if choose lab, will not show vendors that have both lab and operations
-            listfilteredVendors = listfilteredVendors.Where(fv => (orderedVendorCategoryTypes == null || orderedVendorCategoryTypes.All(fv.VendorCategoryTypes.Select(ct => ct.CategoryTypeID).Contains))).ToList(); //if choose lab, will include vendors that have both lab and operations
+            var listfilteredVendors = _vendor.Read(vendorSearchViewModel);
 
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = vendorSearchViewModel.SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
@@ -233,14 +192,14 @@ namespace PrototypeWithAuth.Controllers
             //only allowed to have 10 contacts
             //have to hard coded becasuse did not know how to render dynamic partial views
             createSupplierViewModel.Countries = new List<SelectListItem>();
-            foreach (var country in _context.Countries)
+            foreach (var country in _country.Read())
             {
                 createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
             }
             createSupplierViewModel.VendorContacts = vendorContacts;
             createSupplierViewModel.VendorComments = vendorComments;
             createSupplierViewModel.SectionType = SectionType; //TODO: take this out when all the views are combined
-            createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
+            createSupplierViewModel.CategoryTypes = _categoryType.Read();
 
             return View(createSupplierViewModel);
         }
@@ -262,98 +221,34 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting, LabManagement")]
         public async Task<IActionResult> Create(CreateSupplierViewModel createSupplierViewModel)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            var userid = _userManager.GetUserAsync(User).Result.Id;
+            StringWithBool vendorCreated = await _vendor.Create(createSupplierViewModel, ModelState, userid);
+            if (vendorCreated.Bool)
             {
-                try
-                {
-                    foreach (var ms in ModelState.ToArray())
-                    {
-                        if (ms.Key.StartsWith("VendorContact"))
-                        {
-                            ModelState.Remove(ms.Key);
-                        }
-                    }
-                    if (ModelState.IsValid)
-                    {
-                        _context.Add(createSupplierViewModel.Vendor);
-                        _context.SaveChanges();
-                        foreach (var type in createSupplierViewModel.VendorCategoryTypes)
-                        {
-                            _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = type });
-                        }
-                        _context.SaveChanges();
-                        //delete contacts that need to be deleted
-                        foreach (var vc in createSupplierViewModel.VendorContacts.Where(vc => vc.Delete))
-                        {
-                            if (vc.VendorContact.VendorContactID != 0) //only will delete if it's a previously loaded ones
-                            {
-                                var dvc = _context.VendorContacts.Where(vc => vc.VendorContactID == vc.VendorContactID).FirstOrDefault();
-                                _context.Remove(dvc);
-                                await _context.SaveChangesAsync();
-                            }
-                        }
-
-
-                        //update and add contacts
-                        foreach (var vendorContact in createSupplierViewModel.VendorContacts.Where(vc => !vc.Delete))
-                        {
-                            vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
-                            _context.Update(vendorContact.VendorContact);
-
-                        }
-                        await _context.SaveChangesAsync();
-                        var userid = _userManager.GetUserAsync(User).Result.Id;
-                        if (createSupplierViewModel.VendorComments != null)
-                        {
-                            foreach (var vendorComment in createSupplierViewModel.VendorComments)
-                            {
-                                vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
-                                vendorComment.ApplicationUserID = userid;
-                                vendorComment.CommentTimeStamp = DateTime.Now;
-                                _context.Add(vendorComment);
-
-                            }
-                        }
-                        await _context.SaveChangesAsync();
-                        //throw new Exception();
-                        await transaction.CommitAsync();
-                        return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
-
-                    }
-                    else
-                    {
-                        throw new ModelStateInvalidException();
-                    }
-
-
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    TempData[AppUtility.TempDataTypes.MenuType.ToString()] = createSupplierViewModel.SectionType;
-                    //tempdata page type for active tab link
-                    if (createSupplierViewModel.SectionType == AppUtility.MenuItems.LabManagement)
-                    {
-                        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
-
-                    }
-                    else if (createSupplierViewModel.SectionType == AppUtility.MenuItems.Accounting)
-                    {
-                        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
-                    }
-                    TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.NewSupplier;
-                    createSupplierViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
-                    createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
-                    createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
-                    createSupplierViewModel.Countries = new List<SelectListItem>();
-                    foreach (var country in _context.Countries)
-                    {
-                        createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
-                    }
-                    return View("Create", createSupplierViewModel);
-                }
+                return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
             }
+            else
+            {
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = createSupplierViewModel.SectionType;
+                //tempdata page type for active tab link
+                if (createSupplierViewModel.SectionType == AppUtility.MenuItems.LabManagement)
+                {
+                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
 
+                }
+                else if (createSupplierViewModel.SectionType == AppUtility.MenuItems.Accounting)
+                {
+                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
+                }
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.NewSupplier;
+                createSupplierViewModel.ErrorMessage += vendorCreated.String;
+                createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
+                createSupplierViewModel.CategoryTypes = _categoryType.Read();
+                createSupplierViewModel.Countries = _country.ReadAsSelectList();
+
+                return View("Create", createSupplierViewModel);
+
+            }
         }
 
         [Authorize(Roles = "Accounting, LabManagement")]
@@ -373,7 +268,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Accounting, LabManagement")]
-        public async Task<IActionResult> _VendorHeader(int? id, AppUtility.MenuItems SectionType)
+        public async Task<IActionResult> _VendorHeader(int id, AppUtility.MenuItems SectionType)
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
@@ -381,7 +276,7 @@ namespace PrototypeWithAuth.Controllers
             }
             var createSupplierViewModel = new CreateSupplierViewModel()
             {
-                Vendor = await _context.Vendors.Include(v => v.VendorCategoryTypes).Where(v => v.VendorID == id).FirstOrDefaultAsync()
+                Vendor = _vendor.ReadByVendorID(id)
             };
             return PartialView(createSupplierViewModel);
         }
@@ -393,14 +288,10 @@ namespace PrototypeWithAuth.Controllers
             }
 
             CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
-            createSupplierViewModel.Countries = new List<SelectListItem>();
-            foreach (var country in _context.Countries)
-            {
-                createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
-            }
-            createSupplierViewModel.Vendor = await _context.Vendors.Include(v => v.VendorCategoryTypes).Where(v => v.VendorID == id).FirstOrDefaultAsync();
+            createSupplierViewModel.Countries = _country.ReadAsSelectList();
+            createSupplierViewModel.Vendor = _vendor.ReadByVendorID(Convert.ToInt32(id));
             createSupplierViewModel.SectionType = SectionType;
-            createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
+            createSupplierViewModel.CategoryTypes = _categoryType.Read();
             createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();
             createSupplierViewModel.Tab = Tab ?? 0;
             //var count = createSupplierViewModel.Vendor.VendorCategoryTypes.Count();
@@ -414,12 +305,7 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
             createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
-            createSupplierViewModel.VendorContacts = _context.VendorContacts.Where(c => c.VendorID == id).ToList()
-                .Select(vc => new VendorContactWithDeleteViewModel()
-                {
-                    VendorContact = vc,
-                    Delete = false
-                }).ToList();
+            createSupplierViewModel.VendorContacts = _vendorc
             createSupplierViewModel.VendorComments = await _context.VendorComments.Where(c => c.VendorID == id).Include(r => r.ApplicationUser).ToListAsync();
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.AllSuppliers;

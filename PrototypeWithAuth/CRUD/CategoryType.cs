@@ -1,0 +1,22 @@
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using PrototypeWithAuth.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace PrototypeWithAuth.CRUD
+{
+    public class CategoryType : ApplicationDbContextProcedure
+    {
+        public CategoryType(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
+        {
+        }
+
+        public IQueryable<Models.CategoryType> Read()
+        {
+            return _context.CategoryTypes.AsNoTracking().AsQueryable();
+        }
+    }
+}
