@@ -115,7 +115,6 @@ namespace PrototypeWithAuth.Controllers
 
             VendorSearchViewModel vendorSearchViewModel = new VendorSearchViewModel
             {
-                //ParentCategories = _context.ParentCategories.ToList(),
                 CategoryTypes = _categoryType.Read(),
                 Vendors = _vendor.Read(),
                 Countries = _country.Read(),
@@ -357,8 +356,7 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            var vendor = await _context.Vendors
-                .FirstOrDefaultAsync(m => m.VendorID == id);
+            var vendor = _vendor.ReadByVendorID(Convert.ToInt32(id));
             if (vendor == null)
             {
                 return NotFound();
@@ -373,44 +371,45 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting, LabManagement")]
         public IActionResult DeleteConfirmed(int id)
         {
-            var vendor = _context.Vendors.Find(id);
-            var contacts = _context.VendorContacts.Where(x => x.VendorID == id);
-            using (var transaction = new TransactionScope())
-            {
-                foreach (var contact in contacts)
-                {
-                    //don't actually remove set a boolean
-                    _context.Remove(contact);
-                    _context.SaveChanges();
-                }
-                transaction.Complete();
-            }
-            var comments = _context.VendorComments.Where(x => x.VendorID == id);
-            using (var transaction = new TransactionScope())
-            {
-                foreach (var comment in comments)
-                {
-                    _context.Remove(comment);
-                    _context.SaveChanges();
-                }
-                transaction.Complete();
-            }
-            _context.Vendors.Remove(vendor);
-            _context.SaveChanges();
+            _vendor.Delete(id);
+            //var vendor = _context.Vendors.Find(id);
+            //var contacts = _context.VendorContacts.Where(x => x.VendorID == id);
+            //using (var transaction = new TransactionScope())
+            //{
+            //    foreach (var contact in contacts)
+            //    {
+            //        //don't actually remove set a boolean
+            //        _context.Remove(contact);
+            //        _context.SaveChanges();
+            //    }
+            //    transaction.Complete();
+            //}
+            //var comments = _context.VendorComments.Where(x => x.VendorID == id);
+            //using (var transaction = new TransactionScope())
+            //{
+            //    foreach (var comment in comments)
+            //    {
+            //        _context.Remove(comment);
+            //        _context.SaveChanges();
+            //    }
+            //    transaction.Complete();
+            //}
+            //_context.Vendors.Remove(vendor);
+            //_context.SaveChanges();
             return RedirectToAction(nameof(IndexForPayment));
         }
 
         [Authorize(Roles = "Accounting")]
         private bool VendorExists(int id)
         {
-            return _context.Vendors.Any(e => e.VendorID == id);
+            return _vendor.ReadByVendorID(id) != null ? true : false;
         }
 
         //Get the Json of the vendor business id from the vendor id so JS (site.js) can auto load the form-control with the newly requested vendor
         [HttpGet]
         public JsonResult GetVendorBusinessID(int VendorID)
         {
-            Vendor vendor = _context.Vendors.SingleOrDefault(v => v.VendorID == VendorID);
+            Vendor vendor = _vendor.ReadByVendorID(VendorID);
             return Json(vendor);
         }
         [HttpGet]
@@ -445,12 +444,14 @@ namespace PrototypeWithAuth.Controllers
         public bool CheckUniqueCompanyIDAndCountry(string CompanyID, int CountryID, int? VendorID = null)
         {
             //validation for the create
-            if (CompanyID != null && CountryID != null && (VendorID == null && _context.Vendors.Where(v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID.Equals(CountryID)).Any()))
+            if (CompanyID != null && CountryID != null && VendorID == null && 
+                _vendor.ReadByVendorBusinessIDCountryID(CompanyID, CountryID) != null)
             {
                 return false;
             }
             //validation for the edit
-            if (VendorID != null && _context.Vendors.Where(v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID.Equals(CountryID) && v.VendorID != VendorID).Any())
+            if (VendorID != null && 
+                _vendor.ReadByVendorBusinessIDCountryIDVendorID(CompanyID, CountryID, Convert.ToInt32(VendorID)) != null)
             {
                 return false;
             }
@@ -459,7 +460,7 @@ namespace PrototypeWithAuth.Controllers
 
         public string GetVendorCountryCurrencyID(int VendorID)
         {
-            return _context.Vendors.Include(v => v.Country).Where(v => v.VendorID == VendorID).Select(v => v.Country.CurrencyID).FirstOrDefault().ToString();
+            return _vendor.ReadByVendorID(VendorID).Country.CurrencyID.ToString();
         }
     }
 

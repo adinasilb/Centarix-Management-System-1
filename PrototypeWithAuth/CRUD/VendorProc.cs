@@ -36,7 +36,20 @@ namespace PrototypeWithAuth.CRUD
         public Models.Vendor ReadByVendorID(int VendorID)
         {
             return _context.Vendors
-                .Where(v => v.VendorID == VendorID).Include(v => v.VendorCategoryTypes)
+                .Where(v => v.VendorID == VendorID)
+                .Include(v => v.VendorCategoryTypes)
+                .Include(v => v.Country)
+                .AsNoTracking().FirstOrDefault();
+        }
+
+        public Vendor ReadByVendorBusinessIDCountryID(string VendorBusinessID, int CountryID)
+        {
+            return _context.Vendors.Where(v => v.VendorBuisnessID.Equals(VendorBusinessID) && v.CountryID == CountryID)
+                .AsNoTracking().FirstOrDefault();
+        }
+        public Vendor ReadByVendorBusinessIDCountryIDVendorID(string VendorBusinessID, int CountryID, int VendorID)
+        {
+            return _context.Vendors.Where(v => v.VendorBuisnessID.Equals(VendorBusinessID) && v.CountryID == CountryID && v.VendorID == VendorID)
                 .AsNoTracking().FirstOrDefault();
         }
 
@@ -264,7 +277,66 @@ namespace PrototypeWithAuth.CRUD
         public async Task<StringWithBool> Delete(int VendorID)
         {
             StringWithBool ReturnVal = new StringWithBool();
-            if ()
+            if (_context.Products.Where(p => p.VendorID == VendorID).Any())
+            {
+                ReturnVal.Bool = false;
+            }
+            else
+            {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach (var vendorComment in _context.VendorComments.Where(vc => vc.VendorID == VendorID))
+                        {
+                            _context.Remove(vendorComment);
+                        }
+                        await _context.SaveChangesAsync();
+                        try
+                        {
+                            foreach (var vendorContact in _context.VendorContacts.Where(vc => vc.VendorID == VendorID))
+                            {
+                                _context.Remove(vendorContact);
+                            }
+                            await _context.SaveChangesAsync();
+                            try
+                            {
+                                foreach (var vendorCT in _context.Vendors.Where(vc => vc.VendorID == VendorID).Select(v => v.VendorCategoryTypes))
+                                {
+                                    _context.Remove(vendorCT);
+                                }
+                                await _context.SaveChangesAsync();
+                                try
+                                {
+                                    _context.Remove(this.ReadByVendorID(VendorID));
+                                    await _context.SaveChangesAsync();
+                                    await transaction.CommitAsync();
+                                }
+                                catch (Exception ex)
+                                {
+                                    ReturnVal.Bool = false;
+                                    ReturnVal.String = "Could not delete vendor";
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                ReturnVal.Bool = false;
+                                ReturnVal.String = "Could not delete vendor category types";
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            ReturnVal.Bool = false;
+                            ReturnVal.String = "Could not delete vendor contacts";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ReturnVal.Bool = false;
+                        ReturnVal.String = "Could not delete vendor comments";
+                    }
+                }
+            }
             return ReturnVal;
         }
     }
