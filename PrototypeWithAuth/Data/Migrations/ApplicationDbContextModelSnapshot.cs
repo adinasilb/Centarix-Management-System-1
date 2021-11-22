@@ -3383,11 +3383,19 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("ApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("QuoteDate")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("QuoteNumber")
                         .HasColumnType("nvarchar(max)");
@@ -3410,9 +3418,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Credit")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Discount")
                         .HasColumnType("float");
 
                     b.Property<bool>("IsDeleted")
@@ -5088,9 +5093,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<bool>("DevelopersBoolean")
                         .HasColumnType("bit");
-
-                    b.Property<decimal>("Discount")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ExchangeRate")
                         .HasColumnType("decimal(18,3)");
