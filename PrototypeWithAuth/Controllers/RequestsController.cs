@@ -5223,7 +5223,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 foreach (var tempRequestViewModel in uploadQuoteViewModel.TempRequestListViewModel.TempRequestViewModels)
                 {
-                    var oldQuote = _context.Requests.Where(r => r.ProductID == tempRequestViewModel.Request.ProductID && r.ParentQuote.QuoteDate>=DateTime.Now.Date).Select(r => r.ParentQuote).OrderByDescending(r => r.QuoteDate).FirstOrDefault();
+                    var oldQuote = _context.Requests.Where(r => r.ProductID == tempRequestViewModel.Request.ProductID && r.ParentQuote.ExpirationDate>=DateTime.Now.Date).Select(r => r.ParentQuote).OrderByDescending(r => r.QuoteDate).FirstOrDefault();
                     if(oldQuote !=null)
                     {
                         string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
