@@ -27,10 +27,12 @@ namespace PrototypeWithAuth.Controllers
 {
     public class VendorsController : SharedController
     {
+        private CRUD.Vendor _vendor; 
         public VendorsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
 
         {
+            _vendor = new CRUD.Vendor(context);
         }
         // GET: Vendors
         [Authorize(Roles = "Requests")]
@@ -53,10 +55,8 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Vendors;
             TempData["CategoryType"] = categoryType;
 
-            Vendor Vendor = new Vendor();
-            Vendor.Create(_context);
-
-            return View(await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryType).Count() > 0).ToListAsync());
+            var vendors = _vendor.Read(categoryType);
+            return View(vendors);
         }
 
         // GET: Vendors
