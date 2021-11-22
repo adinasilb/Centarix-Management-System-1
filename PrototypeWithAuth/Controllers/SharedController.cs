@@ -31,6 +31,7 @@ namespace PrototypeWithAuth.Controllers
         protected string AccessDeniedPath = "~/Identity/Account/AccessDenied";
         protected ICompositeViewEngine _viewEngine;
         protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
+            
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;

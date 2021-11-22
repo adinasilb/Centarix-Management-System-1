@@ -24,12 +24,6 @@ namespace PrototypeWithAuth.Data
 
         }
 
-        public override EntityEntry<TEntity> Update<TEntity>([NotNull] TEntity entity) where TEntity : class
-        {
-            var x = "1";
-            return base.Update(entity);
-        }
-
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<OldVendorCountry> OldVendorCountries { get; set; }
         public DbSet<Country> Countries { get; set; }
