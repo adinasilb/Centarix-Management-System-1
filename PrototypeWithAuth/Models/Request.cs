@@ -162,9 +162,6 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Exchange Rate")]
         public decimal ExchangeRate { get; set; } // holding the rate of exchange for this specific request
         public int? Terms { get; set; } // if terms is selected, keep decremtnting, when = zero, gets status of pay now
-        public decimal Discount { get; set; }
-
-
 
         /// received fields
         [DataType(DataType.Date)]

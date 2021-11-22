@@ -74,7 +74,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DevelopersDB"));
+                    Configuration.GetConnectionString("DebbieLocal2"));
                 options.EnableSensitiveDataLogging(true);   
             });
 

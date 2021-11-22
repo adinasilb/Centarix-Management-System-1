@@ -257,11 +257,11 @@
                 <input asp-for="Requests[0].ParentQuote.QuoteNumber" readonly class="form-control-plaintext border-bottom @quoteCategories @markReadOnlyClass" disabled />
                 <span asp-validation-for="Requests[0].ParentQuote.QuoteNumber" class="text-danger-centarix" />
             </div>
-            @*<div class="col-md-6">
-                    <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
-                    <input asp-for="Request.ParentQuote.QuoteDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories @markReadOnlyClass" disabled />
-                    <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
-                </div>*@
+            <div class="col-md-6">
+                    <label asp-for="Requests[0].ParentQuote.ExpirationDate" class="control-label"></label>
+                    <input asp-for="Requests[0].ParentQuote.ExpirationDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories @markReadOnlyClass" disabled value="@Model.Requests[0].ParentQuote.ExpirationDate.GetElixirDateFormat()" />
+                    <span asp-validation-for="Requests[0].ParentQuote.ExpirationDate" class="text-danger-centarix quote-date" />
+                </div>
         </div>
     }
     <div class="row">

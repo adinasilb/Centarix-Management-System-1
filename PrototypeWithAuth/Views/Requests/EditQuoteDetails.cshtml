@@ -61,12 +61,12 @@
 
 
                                 <input type="hidden" asp-for="@Model.Requests[0].Product.ProductSubcategoryID" />
-                                <input type="hidden" asp-for="@Model.ParentQuoteID" />
+                                <input type="hidden" asp-for="@Model.ParentQuote.ParentQuoteID" />
                                 <div class="col-3 offset-2">
                                     <div class="form-group d-inline-flex">
-                                        <label asp-for="@Model.QuoteNumber" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                        <input asp-for="@Model.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" />
-                                        <span asp-validation-for="@Model.QuoteNumber" class="text-danger-centarix"></span>
+                                        <label asp-for="@Model.ParentQuote.QuoteNumber" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                        <input asp-for="@Model.ParentQuote.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" />
+                                        <span asp-validation-for="@Model.ParentQuote.QuoteNumber" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
 
@@ -203,9 +203,9 @@
                                             </td>
                                             <td width="15%">
                                                 <div class="input-group">
-                                                    <input asp-for="@Model.Requests[i].Discount" class="form-control-plaintext border-bottom" value="" />
+                                                    <input asp-for="@Model.ParentQuote.Discount" class="form-control-plaintext border-bottom" value="" />
                                                     <div class="input-group-text">%</div>
-                                                    <span asp-validation-for="@Model.Requests[i].Discount" class="text-danger-centarix"></span>
+                                                    <span asp-validation-for="@Model.ParentQuote.Discount" class="text-danger-centarix"></span>
                                                 </div>
                                             </td>
                                             <td width="15%">
