@@ -4169,7 +4169,8 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpPost]
-        [RequestFormLimits(ValueCountLimit = int.MaxValue)]
+        [RequestSizeLimit(100_000_000)]
+        [RequestFormLimits (MultipartBodyLengthLimit = long.MaxValue)]
         public void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
         {
             base.DocumentsModal(documentsModalViewModel);
@@ -6704,7 +6705,7 @@ namespace PrototypeWithAuth.Controllers
             sw.WriteLine("\n" + message);
             sw.Close();
         }
-        public async Task MarkInventory()
+        private async Task MarkInventory()
         {
             //before running this function, run the following in ssms:
             //update requests set IsInInventory = 'false'
@@ -6719,5 +6720,7 @@ namespace PrototypeWithAuth.Controllers
             }
             await _context.SaveChangesAsync();
         }
+
+      
     }
 }
