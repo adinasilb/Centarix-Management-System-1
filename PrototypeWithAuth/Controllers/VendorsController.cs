@@ -226,7 +226,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var userid = _userManager.GetUserAsync(User).Result.Id;
             StringWithBool vendorCreated = await _vendor.Create(createSupplierViewModel, ModelState, userid);
-            if (vendorCreated.Bool)
+            if (!vendorCreated.Bool)
             {
                 return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
             }

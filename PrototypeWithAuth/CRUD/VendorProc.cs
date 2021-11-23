@@ -49,7 +49,7 @@ namespace PrototypeWithAuth.CRUD
         }
         public Vendor ReadByVendorBusinessIDCountryIDVendorID(string VendorBusinessID, int CountryID, int VendorID)
         {
-            return _context.Vendors.Where(v => v.VendorBuisnessID.Equals(VendorBusinessID) && v.CountryID == CountryID && v.VendorID == VendorID)
+            return _context.Vendors.Where(v => v.VendorBuisnessID.Equals(VendorBusinessID) && v.CountryID == CountryID && v.VendorID != VendorID)
                 .AsNoTracking().FirstOrDefault();
         }
 
