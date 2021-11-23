@@ -14,5 +14,6 @@ namespace PrototypeWithAuth.Models
         public string Icon { get; set; }
         public string IconActionClass { get; set; }
         public string DescriptionEnum { get; set; }
+        public string Color { get; set; }
     }
 }

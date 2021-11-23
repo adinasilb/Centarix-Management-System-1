@@ -168,6 +168,10 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Currency>().HasData(
            SeededData.CurrencyData.Get()
            );
+
+            modelBuilder.Entity<CommentType>().HasData(
+                SeededData.CommentTypeData.Get()
+                );
         }
     }
 }

@@ -717,7 +717,7 @@ namespace PrototypeWithAuth.Controllers
                                     //save the new comment
                                     comment.ApplicationUserID = currentUser.Id;
 
-                                    comment.RequestID = request.RequestID;
+                                    comment.ObjectID = request.RequestID;
 
                                     trvm.Comments.Add(comment);
                                 }
@@ -1070,7 +1070,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 foreach (var comment in tempRequestViewModel.Comments)
                 {
-                    comment.RequestID = request.RequestID;
+                    comment.ObjectID = request.RequestID;
                     _context.Add(comment);
                 }
                 await _context.SaveChangesAsync();
@@ -1304,7 +1304,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 foreach (var comment in tempRequest.Comments)
                 {
-                    comment.RequestID = tempRequest.Request.RequestID;
+                    comment.ObjectID = tempRequest.Request.RequestID;
                     _context.Add(comment);
                 }
                 await _context.SaveChangesAsync();
@@ -2054,7 +2054,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Update(locationInstance);
                             await _context.SaveChangesAsync();
                         }
-                        var comments = _context.RequestComments.Where(c => c.RequestID == request.RequestID).ToList();
+                        var comments = _context.RequestComments.Where(c => c.ObjectID == request.RequestID).ToList();
                         foreach (var comment in comments)
                         {
                             comment.IsDeleted = true;
@@ -2693,7 +2693,7 @@ namespace PrototypeWithAuth.Controllers
                                 if (!String.IsNullOrEmpty(comment.CommentText))
                                 {
                                     //save the new comment
-                                    comment.RequestID = request.RequestID;
+                                    comment.ObjectID = request.RequestID;
                                     if (comment.CommentID == 0)
                                     {
                                         comment.CommentTimeStamp = DateTime.Now;
@@ -3349,7 +3349,7 @@ namespace PrototypeWithAuth.Controllers
                                         foreach (var c in tempRequest.Comments)
                                         {
                                             //DO WE NEED THIS NEXT LINE HERE???
-                                            c.RequestID = tempRequest.Request.RequestID;
+                                            c.ObjectID = tempRequest.Request.RequestID;
                                             _context.Add(c);
                                         }
                                         await _context.SaveChangesAsync();
@@ -4056,11 +4056,11 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task CopyCommentsAsync(int OldRequestID, int NewRequestID)
         {
-            var comments = _context.RequestComments.Where(c => c.RequestID == OldRequestID).AsNoTracking();
+            var comments = _context.RequestComments.Where(c => c.ObjectID == OldRequestID).AsNoTracking();
             foreach (var c in comments)
             {
                 c.CommentID = 0;
-                c.RequestID = NewRequestID;
+                c.ObjectID = NewRequestID;
                 _context.Entry(c).State = EntityState.Added;
             }
             await _context.SaveChangesAsync();
@@ -5428,7 +5428,7 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     foreach (var comment in tempRequestViewModel.Comments)
                                     {
-                                        comment.RequestID = tempRequestViewModel.Request.RequestID;
+                                        comment.ObjectID = tempRequestViewModel.Request.RequestID;
                                         _context.Add(comment);
                                     }
                                 }
