@@ -197,6 +197,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
             }
+
+
             createSupplierViewModel.VendorContacts = vendorContacts;
             createSupplierViewModel.VendorComments = vendorComments;
             createSupplierViewModel.SectionType = SectionType; //TODO: take this out when all the views are combined
