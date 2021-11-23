@@ -53,15 +53,15 @@ namespace PrototypeWithAuth.CRUD
                 .AsNoTracking().FirstOrDefault();
         }
 
-        public IQueryable<Models.Vendor> Read(VendorSearchViewModel vendorSearchViewModel)
+        public IEnumerable<Models.Vendor> Read(VendorSearchViewModel vendorSearchViewModel)
         {
-            IQueryable<Models.Vendor> filteredVendors = this.Read();
+            IEnumerable<Models.Vendor> filteredVendors = this.Read();
             List<int> orderedVendorCategoryTypes = new List<int>();
             if (vendorSearchViewModel.VendorCategoryTypes != null)
             {
                 orderedVendorCategoryTypes = vendorSearchViewModel.VendorCategoryTypes.OrderBy(e => e).ToList();
             }
-            IQueryable<Models.Vendor> listfilteredVendors = filteredVendors
+            IEnumerable<Models.Vendor> listfilteredVendors = filteredVendors
             .Where(fv => (String.IsNullOrEmpty(vendorSearchViewModel.VendorEnName) || fv.VendorEnName.ToLower().Contains(vendorSearchViewModel.VendorEnName.ToLower()))
                 &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorHeName) || fv.VendorHeName.ToLower().Contains(vendorSearchViewModel.VendorHeName.ToLower()))
@@ -100,10 +100,10 @@ namespace PrototypeWithAuth.CRUD
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorGoldAccount) || fv.VendorGoldAccount.ToLower().Contains(vendorSearchViewModel.VendorGoldAccount.ToLower()))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.VendorRoutingNum) || fv.VendorRoutingNum.ToLower().Contains(vendorSearchViewModel.VendorRoutingNum.ToLower()))).AsQueryable();
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorRoutingNum) || fv.VendorRoutingNum.ToLower().Contains(vendorSearchViewModel.VendorRoutingNum.ToLower()))).AsEnumerable();
 
             //listfilteredVendors = listfilteredVendors.Where(fv => (orderedVendorCategoryTypes == null || orderedVendorCategoryTypes.SequenceEqual(fv.VendorCategoryTypes.OrderBy( ct => ct.CategoryTypeID).Select(ct => ct.CategoryTypeID)))).ToList(); //if choose lab, will not show vendors that have both lab and operations
-            listfilteredVendors = listfilteredVendors.Where(fv => (orderedVendorCategoryTypes == null || orderedVendorCategoryTypes.All(fv.VendorCategoryTypes.Select(ct => ct.CategoryTypeID).Contains))).AsQueryable(); //if choose lab, will include vendors that have both lab and operations
+            listfilteredVendors = listfilteredVendors.Where(fv => (orderedVendorCategoryTypes == null || orderedVendorCategoryTypes.All(fv.VendorCategoryTypes.Select(ct => ct.CategoryTypeID).Contains))).AsEnumerable(); //if choose lab, will include vendors that have both lab and operations
             return listfilteredVendors;
         }
 
@@ -219,11 +219,11 @@ namespace PrototypeWithAuth.CRUD
                             _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = type });
                         }
                         //delete contacts that need to be deleted
-                        foreach (var vc in createSupplierViewModel.VendorContacts.Where(vc => vc.Delete))
+                        foreach (var vendorContact in createSupplierViewModel.VendorContacts.Where(vc => vc.Delete))
                         {
-                            if (vc.VendorContact.VendorContactID != 0) //only will delete if it's a previously loaded ones
+                            if (vendorContact.VendorContact.VendorContactID != 0) //only will delete if it's a previously loaded ones
                             {
-                                var dvc = _context.VendorContacts.Where(vc => vc.VendorContactID == vc.VendorContactID).FirstOrDefault();
+                                var dvc = _context.VendorContacts.Where(vc => vc.VendorContactID == vendorContact.VendorContact.VendorContactID).FirstOrDefault();
                                 _context.Remove(dvc);
                                 await _context.SaveChangesAsync();
                             }
@@ -233,7 +233,10 @@ namespace PrototypeWithAuth.CRUD
                         //update and add contacts
                         foreach (var vendorContact in createSupplierViewModel.VendorContacts.Where(vc => !vc.Delete))
                         {
-                            vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
+                            //if (vendorContact.VendorContact.VendorID == 0) //in case it was accidentally loaded
+                            //{
+                                vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
+                            //}
                             _context.Update(vendorContact.VendorContact);
 
                         }

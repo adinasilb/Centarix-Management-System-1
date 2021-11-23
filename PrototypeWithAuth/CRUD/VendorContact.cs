@@ -24,6 +24,7 @@ namespace PrototypeWithAuth.CRUD
         public IQueryable<VendorContactWithDeleteViewModel> ReadAsVendorContactWithDeleteByVendorID(int id)
         {
             return _context.VendorContacts
+                .Where(vc => vc.VendorID == id)
                 .Select(vc => new VendorContactWithDeleteViewModel()
                 {
                     VendorContact = vc,
