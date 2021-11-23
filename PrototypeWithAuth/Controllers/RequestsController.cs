@@ -2054,7 +2054,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Update(locationInstance);
                             await _context.SaveChangesAsync();
                         }
-                        var comments = _context.Comments.Where(c => c.RequestID == request.RequestID).ToList();
+                        var comments = _context.RequestComments.Where(c => c.RequestID == request.RequestID).ToList();
                         foreach (var comment in comments)
                         {
                             comment.IsDeleted = true;
@@ -2799,7 +2799,7 @@ namespace PrototypeWithAuth.Controllers
                     string requestId = requestItemViewModel.Requests[0].RequestID.ToString();
                     string parentQuoteId = requestItemViewModel.Requests[0].ParentQuoteID.ToString();
                     FillDocumentsInfo(requestItemViewModel, productSubcategory, requestId, parentQuoteId);
-                    requestItemViewModel.Comments = await _context.Comments.Include(r => r.ApplicationUser).Where(r => r.Request.RequestID == requestItemViewModel.Requests[0].RequestID).ToListAsync();
+                    requestItemViewModel.Comments = await _context.RequestComments.Include(r => r.ApplicationUser).Where(r => r.Request.RequestID == requestItemViewModel.Requests[0].RequestID).ToListAsync();
                     requestItemViewModel.ModalType = AppUtility.RequestModalType.Edit;
                     Response.StatusCode = 50;
                     return PartialView(requestItemViewModel);
@@ -4260,7 +4260,7 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task CopyCommentsAsync(int OldRequestID, int NewRequestID)
         {
-            var comments = _context.Comments.Where(c => c.RequestID == OldRequestID).AsNoTracking();
+            var comments = _context.RequestComments.Where(c => c.RequestID == OldRequestID).AsNoTracking();
             foreach (var c in comments)
             {
                 c.CommentID = 0;
