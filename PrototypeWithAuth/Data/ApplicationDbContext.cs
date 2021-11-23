@@ -21,7 +21,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
-
+        public DbSet<CommentType> CommentTypes { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<OldVendorCountry> OldVendorCountries { get; set; }
         public DbSet<Country> Countries { get; set; }
