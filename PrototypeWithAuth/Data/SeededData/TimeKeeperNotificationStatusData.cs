@@ -8,10 +8,10 @@ namespace PrototypeWithAuth.Data.SeededData
 {
     public class TimeKeeperNotificationStatusData
     {
-        public static List<RequestNotificationStatus> Get()
+        public static List<TimekeeperNotificationStatus> Get()
         {
-            List<RequestNotificationStatus> list = new List<RequestNotificationStatus>();
-            list.Add(new RequestNotificationStatus
+            List<TimekeeperNotificationStatus> list = new List<TimekeeperNotificationStatus>();
+            list.Add(new TimekeeperNotificationStatus
             {
                 NotificationStatusID = 5,
                 Icon = "icon-notification_timekeeper-24px",
