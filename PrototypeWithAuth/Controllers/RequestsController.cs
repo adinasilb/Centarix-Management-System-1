@@ -709,7 +709,7 @@ namespace PrototypeWithAuth.Controllers
                         //var t = trj.DeserializeJson<List<TempRequestViewModel>>();
                         if (requestItemViewModel.Comments != null)
                         {
-                            trvm.Comments = new List<Comment>();
+                            trvm.Comments = new List<RequestComment>();
                             foreach (var comment in requestItemViewModel.Comments)
                             {
                                 if (comment.CommentText != null && comment.CommentText?.Length != 0)
@@ -2301,7 +2301,7 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.IsProprietary = true;
             }
 
-            requestItemViewModel.Comments = new List<Comment>();
+            requestItemViewModel.Comments = new List<RequestComment>();
             requestItemViewModel.EmailAddresses = new List<string>() { "", "", "", "", "" };
             requestItemViewModel.ModalType = AppUtility.RequestModalType.Create;
 
@@ -4814,7 +4814,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            Comment comment = new Comment();
+            RequestComment comment = new RequestComment();
             comment.ApplicationUser = _userManager.GetUserAsync(User).Result;
             comment.ApplicationUserID = comment.ApplicationUser.Id;
             comment.CommentType = type;
