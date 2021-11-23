@@ -3,21 +3,22 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211117210057_requireQuotesEmail")]
+    partial class requireQuotesEmail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("Relational:Sequence:dbo.SerialNumberHelper", "'SerialNumberHelper', 'dbo', '1', '1', '', '', 'Int32', 'False'")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -3384,19 +3385,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("ApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<decimal>("Discount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("QuoteDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("QuoteNumber")
                         .HasColumnType("nvarchar(max)");
@@ -3419,6 +3412,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Credit")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Discount")
                         .HasColumnType("float");
 
                     b.Property<bool>("IsDeleted")
@@ -5095,6 +5091,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("DevelopersBoolean")
                         .HasColumnType("bit");
 
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal>("ExchangeRate")
                         .HasColumnType("decimal(18,3)");
 
@@ -5152,11 +5151,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("RequestStatusID")
                         .HasColumnType("int");
 
-                    b.Property<int>("SerialNumber")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR dbo.SerialNumberHelper");
-
                     b.Property<int?>("SubProjectID")
                         .HasColumnType("int");
 
@@ -5191,9 +5185,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("QuoteStatusID");
 
                     b.HasIndex("RequestStatusID");
-
-                    b.HasIndex("SerialNumber")
-                        .IsUnique();
 
                     b.HasIndex("SubProjectID");
 
@@ -5716,41 +5707,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ToApplicationUserID");
 
                     b.ToTable("ShareRequests");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequestList", b =>
-                {
-                    b.Property<int>("ShareID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("FromApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("RequestListID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<string>("ToApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("ViewOnly")
-                        .HasColumnType("bit");
-
-                    b.HasKey("ShareID");
-
-                    b.HasIndex("FromApplicationUserID");
-
-                    b.HasIndex("RequestListID");
-
-                    b.HasIndex("ToApplicationUserID");
-
-                    b.ToTable("ShareRequestLists");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ShareResource", b =>
@@ -8081,25 +8037,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
                         .WithMany("ShareRequestsReceived")
-                        .HasForeignKey("ToApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequestList", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("FromApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.RequestList", "RequestList")
-                        .WithMany()
-                        .HasForeignKey("RequestListID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
-                        .WithMany()
                         .HasForeignKey("ToApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });

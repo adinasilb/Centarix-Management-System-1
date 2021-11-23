@@ -20,6 +20,9 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" id="myForm" enctype="multipart/form-data" style="height: 100%;" class="modal-padding editQuoteDetails">
+                @{
+                    var vendorcurrencyid = "";
+                }
                 @if (Model.Error.Bool == true)
                 {
                     <span class="text-danger-centarix">@Model.Error.String</span>
@@ -27,13 +30,17 @@
                 else
                 {
 
-                    var vendorcurrencyid = "";
                     if (Model.Requests.FirstOrDefault().Product.Vendor?.Country.CurrencyID != null)
                     {
                         vendorcurrencyid = Model.Requests.FirstOrDefault().Product.Vendor.Country.CurrencyID.ToString();
                     }
-
-                    <input type="hidden" id="VendorCurrencyID" value="@vendorcurrencyid" />
+                }
+                <input type="hidden" id="VendorCurrencyID" value="@vendorcurrencyid" />
+                @*
+                    NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
+                        they need the hiddenfors that are right underneath it
+                *@
+                @{
                     var hideDollar = "d-none";
                     var hideShekel = "";
                     if (Model.Requests[0].Currency == "USD")
@@ -160,7 +167,7 @@
                                             <td width="15%">
                                                 @Model.Requests[i].Product.ProductName
                                             </td>
-                                            <td width="15% text-transform: none">
+                                            <td width="15%" class=" text-transform-none">
                                                 @(Model.Requests[i].Unit+" ")@Model.Requests[i].Product.UnitType.UnitTypeDescription
                                                 @if (Model.Requests[i].Product.SubUnitType != null)
                                                 {
@@ -245,7 +252,6 @@
                             </table>
                         </div>
                     </div>
-
                 }
             </form>
         </div>
