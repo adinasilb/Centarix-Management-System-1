@@ -5276,6 +5276,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("CommentTypeID")
                         .HasColumnType("int");
 
+                    b.Property<int>("CommentTypeFKID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -8084,7 +8087,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasOne("PrototypeWithAuth.Models.Request", "Request")
                         .WithMany()
-                        .HasForeignKey("RequestID")
+                        .HasForeignKey("ObjectID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
