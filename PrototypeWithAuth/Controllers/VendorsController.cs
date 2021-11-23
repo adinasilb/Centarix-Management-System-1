@@ -307,7 +307,7 @@ namespace PrototypeWithAuth.Controllers
             }
             createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
             createSupplierViewModel.VendorContacts = _vendorContact.ReadAsVendorContactWithDeleteByVendorID(Convert.ToInt32(id));
-            createSupplierViewModel.VendorComments = _vendorComment.ReadByVendorID(Convert.ToInt32(id));
+            createSupplierViewModel.VendorComments = await _vendorComment.ReadByVendorID(Convert.ToInt32(id)).ToListAsync();
 
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.AllSuppliers;
@@ -341,7 +341,7 @@ namespace PrototypeWithAuth.Controllers
                 createSupplierViewModel.ErrorMessage += vendorUpdated.String;
                 createSupplierViewModel.CategoryTypes = _categoryType.Read();
                 createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
-                createSupplierViewModel.VendorComments = _vendorComment.ReadByVendorID(createSupplierViewModel.Vendor.VendorID);
+                createSupplierViewModel.VendorComments = await _vendorComment.ReadByVendorID(createSupplierViewModel.Vendor.VendorID).ToListAsync();
                 Response.StatusCode = 550;
                 return PartialView("Edit", createSupplierViewModel);
             }

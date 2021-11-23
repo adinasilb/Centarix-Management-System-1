@@ -328,7 +328,7 @@
             <div id="comment-info">
                 @for (int i = 0; i < Model.VendorComments.Count(); i++)
                 {
-                    <input type="hidden" value="@Model.VendorComments.Count" id="comment-index" />
+                    <input type="hidden" value="@Model.VendorComments.Count()" id="comment-index" />
                     <input type="hidden" asp-for="VendorComments[i].VendorCommentID" />
 
                     await Html.RenderPartialAsync("CommentInfoPartialView", new AddCommentViewModel { VendorComment = Model.VendorComments[i], Index = i, IsEdit = true });
@@ -341,13 +341,13 @@
                 <div class="row modal-tab-name">
                     <span class="heading-1 col-12 modal-tab-name">Contact Info</span>
                 </div>
-                <input type="hidden" value="@Model.VendorContacts.Count" id="contact-index" />
+                <input type="hidden" value="@Model.VendorContacts.Count()" id="contact-index" />
                 @for (int x = 0; x < Model.VendorContacts.Count(); x++)
                 @*@{var x = 0; }
                 @foreach(var vendorContact in Model.VendorContacts)*@
                 {
 
-                    await Html.RenderPartialAsync("ContactInfoPartial", new AddContactViewModel { VendorContact = Model.VendorContacts[x].VendorContact, Index = x, IsEdit = true });
+                    await Html.RenderPartialAsync("ContactInfoPartial", new AddContactViewModel { VendorContact = Model.VendorContacts.ElementAt(x).VendorContact, Index = x, IsEdit = true });
                     
                 }
             </div>
