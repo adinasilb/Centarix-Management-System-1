@@ -413,7 +413,7 @@ namespace PrototypeWithAuth.Controllers
             await FillRequestDropdowns(requestItemViewModel, request.Product.ProductSubcategory, categoryType);
 
             requestItemViewModel.Tab = Tab ?? 0;
-            requestItemViewModel.Comments = await _context.Comments
+            requestItemViewModel.Comments = await _context.RequestComments
                 .Include(r => r.ApplicationUser)
                 .Where(r => r.Request.RequestID == id).ToListAsync();
             requestItemViewModel.SectionType = SectionType;
