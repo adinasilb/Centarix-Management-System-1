@@ -8075,6 +8075,20 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.RequestComment", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
+                        .WithMany()
+                        .HasForeignKey("RequestID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestList", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUserOwner")
