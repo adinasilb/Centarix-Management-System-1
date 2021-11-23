@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211123124642_ProtocolComment")]
+    partial class ProtocolComment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3795,42 +3797,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.ProductComment", b =>
-                {
-                    b.Property<int>("CommentID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CommentText")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CommentTimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CommentTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ObjectID")
-                        .HasColumnType("int");
-
-                    b.HasKey("CommentID");
-
-                    b.HasIndex("ApplicationUserID");
-
-                    b.HasIndex("CommentTypeID");
-
-                    b.HasIndex("ObjectID");
-
-                    b.ToTable("ProductComments");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.ProductSubcategory", b =>
                 {
                     b.Property<int>("ProductSubcategoryID")
@@ -4796,7 +4762,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("CommentTimeStamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CommentTypeID")
+                    b.Property<int>("CommentTypeFKID")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -4809,7 +4775,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ApplicationUserID");
 
-                    b.HasIndex("CommentTypeID");
+                    b.HasIndex("CommentTypeFKID");
 
                     b.HasIndex("ObjectID");
 
@@ -5273,7 +5239,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("CommentTimeStamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CommentTypeID")
+                    b.Property<int>("CommentTypeFKID")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -5286,7 +5252,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ApplicationUserID");
 
-                    b.HasIndex("CommentTypeID");
+                    b.HasIndex("CommentTypeFKID");
 
                     b.HasIndex("ObjectID");
 
@@ -7039,7 +7005,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("CommentTimeStamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CommentTypeID")
+                    b.Property<int>("CommentTypeFKID")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -7052,7 +7018,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ApplicationUserID");
 
-                    b.HasIndex("CommentTypeID");
+                    b.HasIndex("CommentTypeFKID");
 
                     b.HasIndex("ObjectID");
 
@@ -7878,26 +7844,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.ProductComment", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentType")
-                        .WithMany()
-                        .HasForeignKey("CommentTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ObjectID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.ProductSubcategory", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.ParentCategory", "ParentCategory")
@@ -7929,9 +7875,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentType")
+                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentTypeFK")
                         .WithMany()
-                        .HasForeignKey("CommentTypeID")
+                        .HasForeignKey("CommentTypeFKID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -8062,9 +8008,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentType")
+                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentTypeFK")
                         .WithMany()
-                        .HasForeignKey("CommentTypeID")
+                        .HasForeignKey("CommentTypeFKID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -8448,9 +8394,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentType")
+                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentTypeFK")
                         .WithMany()
-                        .HasForeignKey("CommentTypeID")
+                        .HasForeignKey("CommentTypeFKID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
