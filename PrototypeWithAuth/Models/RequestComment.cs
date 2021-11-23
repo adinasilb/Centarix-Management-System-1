@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Comment
+    public class RequestComment
     {
         private DateTime _CommentTimeStamp;
         [Key]
