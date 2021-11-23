@@ -128,7 +128,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<CompanyAccount> CompanyAccounts { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }
-        public DbSet<Comment> RequestComments { get; set; }
+        public DbSet<RequestComment> RequestComments { get; set; }
         public DbSet<RequestStatus> RequestStatuses { get; set; }
         public DbSet<Request> Requests { get; set; }
         public DbSet<ParentRequest> ParentRequests { get; set; }
@@ -350,7 +350,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Payment>()
                 .HasQueryFilter(item => !item.IsDeleted);
 
-            modelBuilder.Entity<Comment>()
+            modelBuilder.Entity<RequestComment>()
                 .HasQueryFilter(item => !item.IsDeleted);
 
             //modelBuilder.Entity<LocationInstance>()
