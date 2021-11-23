@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211122130628_EmployeeInfoNotifications")]
+    partial class EmployeeInfoNotifications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7152,15 +7154,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasBaseType("PrototypeWithAuth.Models.NotificationStatus");
 
                     b.HasDiscriminator().HasValue("EmployeeInfoNotificationStatus");
-
-                    b.HasData(
-                        new
-                        {
-                            NotificationStatusID = 6,
-                            Color = "black",
-                            Description = "Happy Birthday",
-                            Icon = "icon-notification_birthday-24px"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestNotificationStatus", b =>

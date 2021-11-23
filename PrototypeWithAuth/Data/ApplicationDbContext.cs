@@ -111,10 +111,12 @@ namespace PrototypeWithAuth.Data
         public DbSet<Employee> Employees { get; set; }
         public DbSet<TimekeeperNotificationStatus> TimekeeperNotificationStatuses { get; set; }
         public DbSet<RequestNotificationStatus> RequestNotificationStatuses { get; set; }
+        public DbSet<EmployeeInfoNotificationStatus> EmployeeInfoNotificationStatuses { get; set; }
         public DbSet<NotificationStatus> NotificationStatuses { get; set; }
         public DbSet<RequestNotification> RequestNotifications { get; set; }
         public DbSet<TimekeeperNotification> TimekeeperNotifications { get; set; }
         //public DbSet<Notification<NotificationStatus>> Notifications { get; set; }
+        public DbSet<EmployeeInfoNotification> EmployeeInfoNotifications { get; set; }
         public DbSet<PaymentStatus> PaymentStatuses { get; set; }
         public DbSet<ParentQuote> ParentQuotes { get; set; }
         public DbSet<QuoteStatus> QuoteStatuses { get; set; }

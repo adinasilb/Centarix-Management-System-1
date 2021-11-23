@@ -87,6 +87,10 @@ namespace PrototypeWithAuth.Data
               SeededData.TimeKeeperNotificationStatusData.Get()
           );
 
+            modelBuilder.Entity<EmployeeInfoNotificationStatus>().HasData(
+              SeededData.EmployeeInfoNotificationStatusData.Get()
+          );
+
             modelBuilder.Entity<LocationType>().HasData(
               SeededData.LocationTypeData.Get()
             );
