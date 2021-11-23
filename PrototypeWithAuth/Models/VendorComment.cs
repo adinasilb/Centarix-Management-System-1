@@ -9,29 +9,11 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class VendorComment
+    public class VendorComment : CommentBase
     {
-        [Key]
-        public int VendorCommentID { get; set; }
-
-        public int VendorID { get; set; }
+        
+        [ForeignKey("ObjectID")]
         public Vendor Vendor { get; set; }
 
-        public string ApplicationUserID { get; set; } //this is the owner of the request - do we have every received request have its own reciever?
-
-        [ForeignKey("ApplicationUserID")]
-        public ApplicationUser ApplicationUser { get; set; }
-
-        public string? CommentText { get; set; }
-        public string CommentType { get; set; }
-
-
-        private DateTime _CommentTimeStamp;
-        [DataType(DataType.Date)]
-        public DateTime CommentTimeStamp
-        {
-            get => _CommentTimeStamp == new DateTime() ? DateTime.Now : _CommentTimeStamp;
-            set { _CommentTimeStamp = value; }
-        }
     }
 }
