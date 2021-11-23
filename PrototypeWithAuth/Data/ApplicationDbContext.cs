@@ -128,7 +128,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<CompanyAccount> CompanyAccounts { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }
-        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Comment> RequestComments { get; set; }
         public DbSet<RequestStatus> RequestStatuses { get; set; }
         public DbSet<Request> Requests { get; set; }
         public DbSet<ParentRequest> ParentRequests { get; set; }
