@@ -26,8 +26,8 @@ namespace PrototypeWithAuth.Models
             set { _CommentTimeStamp = value; }
         }
 
-        public int CommentTypeFKID { get; set; }
-        public CommentType CommentTypeFK { get; set; }
+        public int CommentTypeID { get; set; }
+        public CommentType CommentType { get; set; }
         public bool IsDeleted { get; set; }
         public int ObjectID { get; set; }
     }
