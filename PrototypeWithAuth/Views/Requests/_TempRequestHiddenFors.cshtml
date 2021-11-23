@@ -82,7 +82,7 @@
 
                 for (var commentID = 0; commentID < Model.TempRequestViewModels[trID].Comments?.Count; commentID++)
                 {
-                    @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].RequestID)
+                    @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].ObjectID)
                     @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].CommentTimeStamp)
                     @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].CommentText)
                     @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].ApplicationUserID)
