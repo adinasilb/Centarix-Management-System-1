@@ -69,6 +69,7 @@
                 <input type="hidden" asp-for="Requests[0].Payments.FirstOrDefault().InvoiceID" />
                 <input type="hidden" asp-for="Requests[0].OrderType" />
                 <input type="hidden" asp-for="Requests[0].ArrivalDate" />
+                <input type="hidden" asp-for="Requests[0].SerialNumber" />
                 <input type="hidden" value="@Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum" id="categoryDescription" />
 
                 <input type="hidden" asp-for="Requests[0].IsInInventory" />
