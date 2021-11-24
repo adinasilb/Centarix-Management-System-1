@@ -1028,20 +1028,7 @@ $(function () {
         });
     }
 
-    $.fn.addRequestComment = function (type) {
-        console.log(type);
-        var index = $('#index').val();
-        $.ajax({
-            async: false,
-            url: '/Requests/CommentInfoPartialView?type=' + type + '&index=' + index,
-            type: 'GET',
-            cache: false,
-            success: function (data) {
-                $("#comment-info").append(data);
-                $('#index').val(++index);
-            }
-        });
-    }
+   
 
     $.fn.OpenUserImageModal = function (url) {
         console.log("in call modal2, url: " + url);
@@ -1589,21 +1576,6 @@ $(function () {
         $.fn.ChangeCheckboxesToFilledInWithoutMDB();
         $('.open-document-modal').attr("data-val", true);
     }
-    $("#addSupplierComment").click(function () {
-        $('[data-toggle="popover"]').popover('dispose');
-        $('#addSupplierComment').popover({
-            sanitize: false,
-            placement: 'bottom',
-            html: true,
-            content: function () {
-                return $('#popover-content').html();
-            }
-        });
-        $('#addSupplierComment').popover('toggle');
-
-    });
-
-
 
     $("#home-btn").off('click').on('click', function () {
         $('[data-toggle="popover"]').popover('dispose');

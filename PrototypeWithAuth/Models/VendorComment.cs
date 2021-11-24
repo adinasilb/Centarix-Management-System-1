@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Data;
+﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,6 +15,9 @@ namespace PrototypeWithAuth.Models
         
         [ForeignKey("ObjectID")]
         public Vendor Vendor { get; set; }
-
+        public override AppUtility.CommentModelTypeEnum ModelType
+        {
+            get { return AppUtility.CommentModelTypeEnum.Vendor; }
+        }
     }
 }

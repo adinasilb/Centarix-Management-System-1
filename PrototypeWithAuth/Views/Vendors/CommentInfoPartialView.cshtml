@@ -18,8 +18,8 @@
             var dynamicName = "VendorComments[" + Model.Index + "].";
         }
 
-        <input type="hidden" id="@(dynamicID)VendorCommentID" name="@(dynamicName)VendorCommentID" value="@Model.VendorComment.VendorCommentID" class="comment-type" />
-        <input type="hidden" id="@(dynamicID)CommentType" name="@(dynamicName)CommentType" value="@Model.VendorComment.CommentType" class="comment-type" />
+        <input type="hidden" id="@(dynamicID)CommentID" name="@(dynamicName)CommentID" value="@Model.VendorComment.CommentID" class="comment-type" />
+        @*<input type="hidden" id="@(dynamicID)CommentType" name="@(dynamicName)CommentType" value="@Model.VendorComment.CommentType" class="comment-type" />*@
         <input type="hidden" id="@(dynamicID)ApplicationUserID" name="@(dynamicName)ApplicationUserID" value="@Model.VendorComment.ApplicationUserID" class="comment-type" />
         <input type="hidden" id="@(dynamicID)CommentTimeStamp" name="@(dynamicName)CommentTimeStamp" value="@Model.VendorComment.CommentTimeStamp" class="comment-type" />
 
@@ -50,14 +50,14 @@
 
             </div>
             <div class=" col-2 ">
-                @if (Model.VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Comment.ToString()))
+                @*@if (Model.VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Comment.ToString()))
                 {
                     <i class="icon-comment-24px float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: #30BCC9;"></i>
                 }
                 else if (Model.VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Warning.ToString()))
                 {
                     <i class="icon-report_problem-24px float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: var(--danger-color);"></i>
-                }
+                }*@
             </div>
 
         </div>

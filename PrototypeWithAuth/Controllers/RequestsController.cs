@@ -2799,7 +2799,7 @@ namespace PrototypeWithAuth.Controllers
                     string requestId = requestItemViewModel.Requests[0].RequestID.ToString();
                     string parentQuoteId = requestItemViewModel.Requests[0].ParentQuoteID.ToString();
                     FillDocumentsInfo(requestItemViewModel, productSubcategory, requestId, parentQuoteId);
-                    requestItemViewModel.Comments = await _context.RequestComments.Include(r => r.ApplicationUser).Where(r => r.Request.RequestID == requestItemViewModel.Requests[0].RequestID).ToListAsync();
+                    requestItemViewModel.Comments = await _context.RequestComments.Include(r => r.ApplicationUser).Include(r => r.CommentType).Where(r => r.Request.RequestID == requestItemViewModel.Requests[0].RequestID).ToListAsync();
                     requestItemViewModel.ModalType = AppUtility.RequestModalType.Edit;
                     Response.StatusCode = 50;
                     return PartialView(requestItemViewModel);
@@ -4597,23 +4597,6 @@ namespace PrototypeWithAuth.Controllers
             {
                 return new EmptyResult();
             }
-        }
-
-
-        [HttpGet]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> CommentInfoPartialView(String type, int index)
-        {
-            if (!AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView("InvalidLinkPage");
-            }
-            RequestComment comment = new RequestComment();
-            comment.ApplicationUser = _userManager.GetUserAsync(User).Result;
-            comment.ApplicationUserID = comment.ApplicationUser.Id;
-            comment.CommentType = type;
-            CommentsInfoViewModel commentsInfoViewModel = new CommentsInfoViewModel { Comment = comment, Index = index };
-            return PartialView(commentsInfoViewModel);
         }
 
         [HttpGet]
@@ -6745,5 +6728,17 @@ namespace PrototypeWithAuth.Controllers
         {
             return AppUtility.GetUrlFromUserData(inputtedUrl);
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> _CommentInfoPartialView(int typeID, int index, AppUtility.CommentModelTypeEnum modelType)
+        {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
+            return await base._CommentInfoPartialView(typeID, index, modelType);
+        }
+
     }
 }

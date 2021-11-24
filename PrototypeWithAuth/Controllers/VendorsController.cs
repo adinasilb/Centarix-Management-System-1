@@ -223,7 +223,7 @@ namespace PrototypeWithAuth.Controllers
             }
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.NewSupplier;
             CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
-            createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
+            createSupplierViewModel.CommentTypes = _context.CommentTypes;
             List<VendorContactWithDeleteViewModel> vendorContacts = new List<VendorContactWithDeleteViewModel>();
             List<VendorComment> vendorComments = new List<VendorComment>();
             //only allowed to have 10 contacts
@@ -234,13 +234,24 @@ namespace PrototypeWithAuth.Controllers
                 createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
             }
             createSupplierViewModel.VendorContacts = vendorContacts;
-            createSupplierViewModel.VendorComments = vendorComments;
+            createSupplierViewModel.Comments = vendorComments;
             createSupplierViewModel.SectionType = SectionType; //TODO: take this out when all the views are combined
             createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
 
             return View(createSupplierViewModel);
         }
 
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> _CommentInfoPartialView(int typeID, int index, AppUtility.CommentModelTypeEnum modelType)
+        {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
+            return await base._CommentInfoPartialView(typeID, index, modelType);
+        }
         //[HttpGet]
         //public IActionResult AddContact()
         //{
@@ -299,11 +310,11 @@ namespace PrototypeWithAuth.Controllers
                         }
                         await _context.SaveChangesAsync();
                         var userid = _userManager.GetUserAsync(User).Result.Id;
-                        if (createSupplierViewModel.VendorComments != null)
+                        if (createSupplierViewModel.Comments != null)
                         {
-                            foreach (var vendorComment in createSupplierViewModel.VendorComments)
+                            foreach (var vendorComment in createSupplierViewModel.Comments)
                             {
-                                vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
+                                vendorComment.ObjectID = createSupplierViewModel.Vendor.VendorID;
                                 vendorComment.ApplicationUserID = userid;
                                 vendorComment.CommentTimeStamp = DateTime.Now;
                                 _context.Add(vendorComment);
@@ -339,7 +350,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.NewSupplier;
                     createSupplierViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
-                    createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
+                    createSupplierViewModel.CommentTypes = _context.CommentTypes;
                     createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
                     createSupplierViewModel.Countries = new List<SelectListItem>();
                     foreach (var country in _context.Countries)
@@ -409,14 +420,14 @@ namespace PrototypeWithAuth.Controllers
             {
                 return NotFound();
             }
-            createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
+            createSupplierViewModel.CommentTypes = _context.CommentTypes;
             createSupplierViewModel.VendorContacts = _context.VendorContacts.Where(c => c.VendorID == id).ToList()
                 .Select(vc => new VendorContactWithDeleteViewModel()
                 {
                     VendorContact = vc,
                     Delete = false
                 }).ToList();
-            createSupplierViewModel.VendorComments = await _context.VendorComments.Where(c => c.VendorID == id).Include(r => r.ApplicationUser).ToListAsync();
+            createSupplierViewModel.Comments = await _context.VendorComments.Include(c => c.ApplicationUser).Include(c => c.CommentType).Where(c => c.ObjectID == id).ToListAsync();
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.AllSuppliers;
             //tempdata page type for active tab link
@@ -487,14 +498,14 @@ namespace PrototypeWithAuth.Controllers
                             _context.Update(vendorContact.VendorContact);
 
                         }
-                        if (createSupplierViewModel.VendorComments != null)
+                        if (createSupplierViewModel.Comments != null)
                         {
-                            foreach (var vendorComment in createSupplierViewModel.VendorComments)
+                            foreach (var vendorComment in createSupplierViewModel.Comments)
                             {
                                 if (!String.IsNullOrEmpty(vendorComment.CommentText))
                                 {
-                                    vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
-                                    if (vendorComment.VendorCommentID == 0)
+                                    vendorComment.ObjectID = createSupplierViewModel.Vendor.VendorID;
+                                    if (vendorComment.CommentID == 0)
                                     {
                                         vendorComment.CommentTimeStamp = DateTime.Now;
                                     }
@@ -517,8 +528,8 @@ namespace PrototypeWithAuth.Controllers
                     await transaction.RollbackAsync();
                     createSupplierViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
-                    createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
-                    createSupplierViewModel.VendorComments = await _context.VendorComments.Where(c => c.VendorID == createSupplierViewModel.Vendor.VendorID).ToListAsync();
+                    createSupplierViewModel.CommentTypes = _context.CommentTypes;
+                    createSupplierViewModel.Comments = await _context.VendorComments.Where(c => c.ObjectID == createSupplierViewModel.Vendor.VendorID).Include(c=>c.CommentType).Include(c => c.ApplicationUser).ToListAsync();
                     Response.StatusCode = 550;
                     return PartialView("Edit", createSupplierViewModel);
 
@@ -563,7 +574,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 transaction.Complete();
             }
-            var comments = _context.VendorComments.Where(x => x.VendorID == id);
+            var comments = _context.VendorComments.Where(x => x.ObjectID == id);
             using (var transaction = new TransactionScope())
             {
                 foreach (var comment in comments)
@@ -591,21 +602,7 @@ namespace PrototypeWithAuth.Controllers
             Vendor vendor = _context.Vendors.SingleOrDefault(v => v.VendorID == VendorID);
             return Json(vendor);
         }
-        [HttpGet]
-        [Authorize(Roles = "LabManagement")]
-        public async Task<IActionResult> CommentInfoPartialView(String type, int index)
-        {
-            if (!AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView("InvalidLinkPage");
-            }
-            VendorComment comment = new VendorComment();
-            comment.CommentType = type;
-            comment.ApplicationUser = _userManager.GetUserAsync(User).Result;
-            comment.ApplicationUserID = comment.ApplicationUser.Id;
-            AddCommentViewModel addCommentViewModel = new AddCommentViewModel { VendorComment = comment, Index = index };
-            return PartialView(addCommentViewModel);
-        }
+      
         [HttpGet]
         [Authorize(Roles = "LabManagement")]
         public async Task<IActionResult> ContactInfoPartial(int index)
