@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using PrototypeWithAuth.Data;
 using System.ComponentModel.DataAnnotations.Schema;
+using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.Models
 {
@@ -13,5 +14,7 @@ namespace PrototypeWithAuth.Models
 
         [ForeignKey("ObjectID")]
         public Protocol Protocol { get; set; }
+
+        public override AppUtility.CommentModelTypeEnum ModelType { get { return AppUtility.CommentModelTypeEnum.Protocol; } }
     }
 }

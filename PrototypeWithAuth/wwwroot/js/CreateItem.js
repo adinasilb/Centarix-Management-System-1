@@ -263,6 +263,22 @@
                 return $('#popover-content').html();
             }
         });
+
+        $(".add-comment").off("click").click(function () {
+            var type = $(this).attr("data-val")
+            var index = $('#index').val();
+            $.ajax({
+                async: false,
+                url: '/Requests/_CommentInfoPartialView?typeID=' + type + '&index=' + index,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $("#comment-info").append(data);
+                    $('#index').val(++index);
+                }
+            });
+        });
+
         $('#addRequestComment').popover('toggle');
 
     });

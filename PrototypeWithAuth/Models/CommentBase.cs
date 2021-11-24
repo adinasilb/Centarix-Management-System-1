@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Data;
+﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -30,5 +31,6 @@ namespace PrototypeWithAuth.Models
         public CommentType CommentType { get; set; }
         public bool IsDeleted { get; set; }
         public int ObjectID { get; set; }
+        public abstract AppUtility.CommentModelTypeEnum ModelType { get; }
     }
 }

@@ -10,7 +10,7 @@ namespace PrototypeWithAuth.ViewModels
     public class CommentsInfoViewModel : ViewModelBase
     {
         public int Index { get; set; }
-        public RequestComment Comment { get; set; }
+        public CommentBase Comment { get; set; }
         public bool IsEdit { get; set; }
     }
 }
