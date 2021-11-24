@@ -13,9 +13,9 @@ using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 namespace PrototypeWithAuth.CRUD
 {
-    public class VendorProc : ApplicationDbContextProcedure
+    public class VendorsProc : ApplicationDbContextProcedure
     {
-        public VendorProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
+        public VendorsProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
         {
         }
 
@@ -127,7 +127,7 @@ namespace PrototypeWithAuth.CRUD
                         _context.SaveChanges();
                         foreach (var type in createSupplierViewModel.VendorCategoryTypes)
                         {
-                            _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = type });
+                            _vendorCategoryTypesProc.CreateWithoutSaving(createSupplierViewModel.Vendor.VendorID, type);
                         }
                         _context.SaveChanges();
                         //delete contacts that need to be deleted
@@ -135,7 +135,7 @@ namespace PrototypeWithAuth.CRUD
                         {
                             if (vc.VendorContact.VendorContactID != 0) //only will delete if it's a previously loaded ones
                             {
-                                var dvc = _context.VendorContacts.Where(vc => vc.VendorContactID == vc.VendorContactID).FirstOrDefault();
+                                var dvc = _vendorContactsProc.ReadOneByPK(vc.VendorContact.VendorContactID);
                                 _context.Remove(dvc);
                                 await _context.SaveChangesAsync();
                             }

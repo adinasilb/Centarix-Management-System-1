@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class CountryProc : ApplicationDbContextProcedure
+    public class CountriesProc : ApplicationDbContextProcedure
     {
-        public CountryProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
+        public CountriesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
         {
         }
 

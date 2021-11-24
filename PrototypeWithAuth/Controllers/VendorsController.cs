@@ -28,20 +28,20 @@ namespace PrototypeWithAuth.Controllers
 {
     public class VendorsController : SharedController
     {
-        private CRUD.VendorProc _vendor;
-        private CRUD.CategoryTypeProc _categoryType;
-        private CRUD.CountryProc _country;
-        private CRUD.VendorContact _vendorContact;
-        private CRUD.VendorCommentProc _vendorComment;
+        private CRUD.VendorsProc _vendor;
+        private CRUD.CategoryTypesProc _categoryType;
+        private CRUD.CountriesProc _country;
+        private CRUD.VendorContactsProc _vendorContact;
+        private CRUD.VendorCommentsProc _vendorComment;
         public VendorsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
 
         {
-            _vendor = new CRUD.VendorProc(context, userManager);
-            _categoryType = new CRUD.CategoryTypeProc(context, userManager);
-            _country = new CRUD.CountryProc(context, userManager);
-            _vendorContact = new CRUD.VendorContact(context, userManager);
-            _vendorComment = new CRUD.VendorCommentProc(context, userManager);
+            _vendor = new CRUD.VendorsProc(context, userManager);
+            _categoryType = new CRUD.CategoryTypesProc(context, userManager);
+            _country = new CRUD.CountriesProc(context, userManager);
+            _vendorContact = new CRUD.VendorContactsProc(context, userManager);
+            _vendorComment = new CRUD.VendorCommentsProc(context, userManager);
         }
         // GET: Vendors
         [Authorize(Roles = "Requests")]

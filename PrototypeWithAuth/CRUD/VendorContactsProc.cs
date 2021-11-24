@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Data;
+using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class VendorContact : ApplicationDbContextProcedure
+    public class VendorContactsProc : ApplicationDbContextProcedure
     {
-        public VendorContact(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
+        public VendorContactsProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
         {
 
         }
@@ -19,6 +20,11 @@ namespace PrototypeWithAuth.CRUD
         public IQueryable<Models.VendorContact> Read()
         {
             return _context.VendorContacts.AsNoTracking().AsQueryable();
+        }
+
+        public VendorContact ReadOneByPK(int VendorContactID)
+        {
+            return _context.VendorContacts.Where(vc => vc.VendorContactID == VendorContactID).AsNoTracking().FirstOrDefault();
         }
 
         public IQueryable<VendorContactWithDeleteViewModel> ReadAsVendorContactWithDeleteByVendorID(int id)

@@ -63,7 +63,7 @@ namespace PrototypeWithAuth.Controllers
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
             }
             var notifications = _timekeeperNotificationsProc.ReadByUserID(userid).OrderByDescending(n => n.EmployeeHours.Date).Take(20).ToList();
-           
+
             entryExitViewModel.TimekeeperNotifications = notifications;
             if (errorMessage != null)
             {
@@ -83,70 +83,17 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ReportHours;
             var currentClickButton = entryExitViewModel.EntryExitEnum;
 
-            using (var transaction = _context.Database.BeginTransaction())
+            var updateEmployeeHours = await _employeeHoursProc.ReportHours(entryExitViewModel, _userManager.GetUserId(User));
+
+            if (updateEmployeeHours.Bool)
             {
-                try
-                {
-                   
-
-                    if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Entry1)
-                    {
-                        if (todaysEntry == null)
-                        {
-                            EmployeeHours todaysHours = new EmployeeHours { EmployeeID = userid, Entry1 = DateTime.Now, Date = DateTime.Now };
-                            todaysEntry = todaysHours;
-                        }
-                        else
-                        {
-                            todaysEntry.Entry1 = DateTime.Now;
-
-                        }
-                        _context.EmployeeHours.Update(todaysEntry);
-                        await _context.SaveChangesAsync();
-                        //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit1;
-                        //entryExitViewModel.Entry = todaysEntry.Entry1;
-                    }
-                    else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Exit1)
-                    {
-                        todaysEntry.Exit1 = DateTime.Now;
-                        _context.EmployeeHours.Update(todaysEntry);
-                        await _context.SaveChangesAsync();
-                        //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Entry2;
-                    }
-                    else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Entry2)
-                    {
-                            todaysEntry.Entry2 = DateTime.Now;
-                            _context.EmployeeHours.Update(todaysEntry);
-                            await _context.SaveChangesAsync();
-                            //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit2;
-                            //entryExitViewModel.Entry = todaysEntry.Entry2;
-                        
-                    }
-                    else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Exit2)
-                    {
-                        todaysEntry.Exit2 = DateTime.Now;
-                        _context.EmployeeHours.Update(todaysEntry);
-                        await _context.SaveChangesAsync();
-                        //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
-                    }
-                    else
-                    {
-                        //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
-                    }
-                    // throw new Exception();
-                    //var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(20).ToList();
-                    //entryExitViewModel.TimekeeperNotifications = notifications;
-                    await transaction.CommitAsync();
-                    return RedirectToAction();
-                    //return PartialView(entryExitViewModel);
-                }
-                catch(Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    return RedirectToAction("ReportHours", new { errorMessage = AppUtility.GetExceptionMessage(ex) });
-
-                }
+                return RedirectToAction();
             }
+            else
+            {
+                return RedirectToAction("ReportHours", new { errorMessage = updateEmployeeHours.String });
+            }
+
         }
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
@@ -179,7 +126,7 @@ namespace PrototypeWithAuth.Controllers
                 return PartialView("InvalidLinkPage");
             }
             var userid = _userManager.GetUserId(User);
-            var user = _context.Employees.Where(u => u.Id == userid).Include(u=>u.SalariedEmployee).FirstOrDefault();
+            var user = _context.Employees.Where(u => u.Id == userid).Include(u => u.SalariedEmployee).FirstOrDefault();
             if (user != null)
             {
                 ReportDaysViewModel reportDaysViewModel = GetSummaryDaysOffModel(userid, user, year);
@@ -207,7 +154,7 @@ namespace PrototypeWithAuth.Controllers
             return daysOffViewModel;
         }
 
-        private DaysOffViewModel getYearsVacationSickDays (Employee user, int year, DaysOffViewModel pastYearViewModel)
+        private DaysOffViewModel getYearsVacationSickDays(Employee user, int year, DaysOffViewModel pastYearViewModel)
         {
             double vacationDays = 0;
             double sickDays = 0;
@@ -314,7 +261,7 @@ namespace PrototypeWithAuth.Controllers
             var user = _context.Employees.Where(u => u.Id == userid).Include(e => e.SalariedEmployee).FirstOrDefault();
             //int month = Month?.Month ?? DateTime.Now.Month;
             return PartialView(base.SummaryHoursFunction(month, year, user, errorMessage));
-        }     
+        }
 
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
@@ -354,7 +301,7 @@ namespace PrototypeWithAuth.Controllers
         private SummaryOfDaysOffViewModel ReportDaysOffFunction(string errorMessage = "")
         {
             var userid = _userManager.GetUserId(User);
-            var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).Include(u=>u.SalariedEmployee).FirstOrDefault(); //TODO: make sure this is only employees
+            var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).Include(u => u.SalariedEmployee).FirstOrDefault(); //TODO: make sure this is only employees
 
 
             if (user != null)
@@ -381,9 +328,9 @@ namespace PrototypeWithAuth.Controllers
                     daysOffByYear.Add(summaryOfDaysOff);
                     year = year + 1;
                     pastYearViewModel = summaryOfDaysOff;
-                  
+
                 }
-                summaryOfDaysOffViewModel.DaysOffs = daysOffByYear.OrderByDescending(d=>d.Year);
+                summaryOfDaysOffViewModel.DaysOffs = daysOffByYear.OrderByDescending(d => d.Year);
                 summaryOfDaysOffViewModel.TotalVacationDaysPerYear = user.VacationDays;
                 summaryOfDaysOffViewModel.TotalSickDaysPerYear = user.SickDays;
                 summaryOfDaysOffViewModel.BonusSickDays = user.BonusSickDays;
@@ -399,7 +346,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
-        public async Task<IActionResult> UpdateHours(DateTime chosenDate, String PageType, bool isWorkFromHome=false)
+        public async Task<IActionResult> UpdateHours(DateTime chosenDate, String PageType, bool isWorkFromHome = false)
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
@@ -411,7 +358,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> _UpdateHours(DateTime chosenDate, String PageType, bool isWorkFromHome = false)
-        {            
+        {
             return PartialView(await GetUpdateHoursViewModel(chosenDate, PageType, isWorkFromHome));
         }
 
@@ -431,7 +378,7 @@ namespace PrototypeWithAuth.Controllers
             employeeHour.EmployeeHoursStatusEntry1 = _context.EmployeeHoursStatuses.Where(ehs => ehs.EmployeeHoursStatusID == employeeHour.EmployeeHoursStatusEntry1ID).FirstOrDefault();
             employeeHour.EmployeeHoursStatusEntry2 = _context.EmployeeHoursStatuses.Where(ehs => ehs.EmployeeHoursStatusID == employeeHour.EmployeeHoursStatusEntry2ID).FirstOrDefault();
             UpdateHoursViewModel updateHoursViewModel = new UpdateHoursViewModel() { EmployeeHour = employeeHour, PageType = PageType };
-            if (employeeHour.Entry1 == null && employeeHour.TotalHours == null  && !isWorkFromHome)
+            if (employeeHour.Entry1 == null && employeeHour.TotalHours == null && !isWorkFromHome)
             {
                 updateHoursViewModel.IsForgotToReport = true;
             }
@@ -509,7 +456,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         var employeeTime = _context.Employees.Include(e => e.SalariedEmployee).Where(e => e.Id == updateHoursViewModel.EmployeeHour.EmployeeID).FirstOrDefault().SalariedEmployee.HoursPerDay;
                         var offDayHours = TimeSpan.FromHours(employeeTime) - updateHoursViewModel.EmployeeHour.TotalHours;
-                        if(offDayHours > TimeSpan.Zero)
+                        if (offDayHours > TimeSpan.Zero)
                         {
                             ehaa.PartialOffDayHours = offDayHours;
                         }
@@ -542,7 +489,7 @@ namespace PrototypeWithAuth.Controllers
                                 ehaa.EmployeeHoursStatusEntry1ID = 3;
                             }
                         }
-                   }
+                    }
                     if (eh == null)
                     {
                         updateHoursViewModel.EmployeeHour = new EmployeeHours() { Date = updateHoursViewModel.EmployeeHour.Date, EmployeeID = updateHoursViewModel.EmployeeHour.EmployeeID };
@@ -558,19 +505,19 @@ namespace PrototypeWithAuth.Controllers
                     await _context.SaveChangesAsync();
 
                     var notifications = _context.TimekeeperNotifications.Where(n => n.EmployeeHoursID == updateHoursViewModel.EmployeeHour.EmployeeHoursID).ToList();
-                    foreach(var notification in notifications)
+                    foreach (var notification in notifications)
                     {
                         _context.Remove(notification);
                         await _context.SaveChangesAsync();
                     }
-                    
+
                     //throw new Exception();
                     await transaction.CommitAsync();
-                    if(updateHoursViewModel.PageType == null || updateHoursViewModel.PageType == "ReportHours")
+                    if (updateHoursViewModel.PageType == null || updateHoursViewModel.PageType == "ReportHours")
                     {
                         return RedirectToAction("ReportHours");
                     }
-                    return RedirectToAction("SummaryHours", new { Month = Month, Year = Year});
+                    return RedirectToAction("SummaryHours", new { Month = Month, Year = Year });
                 }
                 catch (Exception ex)
                 {
@@ -589,7 +536,7 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
 
-            
+
         }
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
@@ -616,10 +563,10 @@ namespace PrototypeWithAuth.Controllers
                 await SaveOffDay(offDayViewModel.FromDate, offDayViewModel.ToDate, offDayViewModel.OffDayType);
                 //throw new Exception();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 errorMessage = AppUtility.GetExceptionMessage(ex);
-            }            
+            }
             return RedirectToAction("_ReportDaysOff", new { errorMessage });
         }
         [HttpGet]
@@ -686,12 +633,12 @@ namespace PrototypeWithAuth.Controllers
                 await SaveOffDay(offDayViewModel.FromDate, new DateTime(), offDayViewModel.OffDayType);
                 //throw new Exception();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 offDayViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
             }
-           
-            return RedirectToAction("SummaryHours", new { Month = offDayViewModel.Month, Year = offDayViewModel.FromDate.Year, errorMessage = offDayViewModel.ErrorMessage});
+
+            return RedirectToAction("SummaryHours", new { Month = offDayViewModel.Month, Year = offDayViewModel.FromDate.Year, errorMessage = offDayViewModel.ErrorMessage });
         }
 
         private async Task SaveOffDay(DateTime dateFrom, DateTime dateTo, AppUtility.OffDayTypeEnum offDayType)
@@ -712,7 +659,7 @@ namespace PrototypeWithAuth.Controllers
                         if (dateFrom.DayOfWeek != DayOfWeek.Friday && dateFrom.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(dateFrom.Date))
                         {
                             var ehaa = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == userID && eh.Date.Date == dateFrom).FirstOrDefault();
-                       
+
                             employeeHour = _context.EmployeeHours.Where(eh => eh.Date.Date == dateFrom.Date && eh.EmployeeID == userID).FirstOrDefault();
                             if (offDayTypeID == 4 && employeeHour?.OffDayTypeID != 4)
                             {
@@ -720,7 +667,7 @@ namespace PrototypeWithAuth.Controllers
                                 //employeeHour.Employee.SpecialDays -= 1;
                                 user.SpecialDays -= 1;
                             }
-                            else if(employeeHour?.OffDayTypeID == 4 && offDayTypeID != 4)
+                            else if (employeeHour?.OffDayTypeID == 4 && offDayTypeID != 4)
                             {
                                 user.SpecialDays += 1;
                             }
@@ -749,13 +696,13 @@ namespace PrototypeWithAuth.Controllers
                                     RemoveNotifications(employeeHour.EmployeeHoursID);
                                 }
                                 employeeHour.OffDayTypeID = offDayTypeID;
-                                
+
                                 employeeHour.IsBonus = false;
                                 employeeHour.OffDayType = _context.OffDayTypes.Where(odt => odt.OffDayTypeID == offDayTypeID).FirstOrDefault();
                             }
                             if (!alreadyOffDay)
                             {
-                                if(user.BonusSickDays>=1 || user.BonusVacationDays>=1)
+                                if (user.BonusSickDays >= 1 || user.BonusVacationDays >= 1)
                                 {
                                     var vacationLeftCount = base.GetUsersOffDaysLeft(user, offDayTypeID, dateFrom.Year);
                                     if (dateFrom.Year != dateTo.Year && dateTo.Year != 1)
@@ -780,11 +727,11 @@ namespace PrototypeWithAuth.Controllers
                                     _context.SaveChanges();
 
                                 }
-                              
+
                             }
                         }
                         //throw new Exception();
-                        await transaction.CommitAsync();              
+                        await transaction.CommitAsync();
                     }
                     else
                     {
@@ -792,9 +739,9 @@ namespace PrototypeWithAuth.Controllers
                         companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date >= dateFrom && d.Date <= dateTo).ToList();
                         while (dateFrom <= dateTo)
                         {
-                           if (dateFrom.DayOfWeek != DayOfWeek.Friday && dateFrom.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(dateFrom.Date))
+                            if (dateFrom.DayOfWeek != DayOfWeek.Friday && dateFrom.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(dateFrom.Date))
                             {
-                               var ehaa = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == userID && eh.Date.Date == dateFrom).FirstOrDefault();
+                                var ehaa = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == userID && eh.Date.Date == dateFrom).FirstOrDefault();
                                 if (employeeHours.Count() > 0)
                                 {
                                     employeeHour = employeeHours.Where(eh => eh.Date == dateFrom).FirstOrDefault();
@@ -844,10 +791,10 @@ namespace PrototypeWithAuth.Controllers
                                         Date = dateFrom
                                     };
                                 }
-                                
+
                                 if (!alreadyOffDay)
                                 {
-                                    if(user.BonusSickDays >=1 || user.BonusVacationDays>=1)
+                                    if (user.BonusSickDays >= 1 || user.BonusVacationDays >= 1)
                                     {
                                         var vacationLeftCount = base.GetUsersOffDaysLeft(user, offDayTypeID, dateFrom.Year);
                                         if (dateFrom.Year != dateTo.Year && dateTo.Year != 1)
@@ -869,7 +816,7 @@ namespace PrototypeWithAuth.Controllers
                                         _context.Update(employeeHour);
                                         _context.SaveChanges();
                                     }
-                                    
+
                                 }
                             }
                             dateFrom = dateFrom.AddDays(1);
@@ -902,7 +849,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 user.BonusVacationDays += 1;
             }
-            else if(employeeHour.IsBonus)
+            else if (employeeHour.IsBonus)
             {
                 user.BonusSickDays += 1;
             }
@@ -974,28 +921,29 @@ namespace PrototypeWithAuth.Controllers
                 using (var transaction = _context.Database.BeginTransaction())
                 {
                     try
-                    { 
-                        if (anotherEmployeeHourWithSameDate == null ) {
+                    {
+                        if (anotherEmployeeHourWithSameDate == null)
+                        {
                             if (employeeHour.OffDayTypeID == 4)
                             {
                                 var employee = _context.Employees.Where(e => e.Id == employeeHour.EmployeeID).FirstOrDefault();
                                 employee.SpecialDays += 1;
                                 _context.Update(employee);
                             }
-                            
+
                             newEmployeeHour = new EmployeeHours()
                             {
                                 EmployeeHoursID = employeeHoursID,
                                 Date = deleteHourViewModel.EmployeeHour.Date,
                                 EmployeeID = deleteHourViewModel.EmployeeHour.EmployeeID,
                                 CompanyDayOffID = dayoff?.CompanyDayOffID
-                                                       
+
                             };
 
                             _context.Entry(newEmployeeHour).State = EntityState.Modified;
                             await _context.SaveChangesAsync();
 
-                            if(notifications.Count() == 0) //might need to change this if if notifications starts working differently
+                            if (notifications.Count() == 0) //might need to change this if if notifications starts working differently
                             {
                                 TimekeeperNotification newNotification = new TimekeeperNotification()
                                 {
@@ -1022,7 +970,7 @@ namespace PrototypeWithAuth.Controllers
 
                             _context.Remove(employeeHour);
                             await _context.SaveChangesAsync();
-                                                        
+
                         }
                         var ehaa = _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursID == employeeHoursID).FirstOrDefault();
                         if (ehaa != null)
@@ -1030,9 +978,9 @@ namespace PrototypeWithAuth.Controllers
                             _context.Remove(ehaa);
                             await _context.SaveChangesAsync();
                         }
-                        
-                            //throw new Exception();
-                            await transaction.CommitAsync();
+
+                        //throw new Exception();
+                        await transaction.CommitAsync();
                     }
                     catch (Exception e)
                     {
@@ -1040,16 +988,20 @@ namespace PrototypeWithAuth.Controllers
                         throw e;
                     }
                 }
-                return RedirectToAction("SummaryHours", 
+                return RedirectToAction("SummaryHours",
                     new { Month = deleteHourViewModel.EmployeeHour.Date.Month, Year = deleteHourViewModel.EmployeeHour.Date.Year });
             }
             catch (Exception ex)
             {
                 //deleteHourViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
-                return RedirectToAction("SummaryHours", 
-                    new { Month = deleteHourViewModel.EmployeeHour.Date.Month, 
-                        Year = deleteHourViewModel.EmployeeHour.Date.Year, errorMessage = AppUtility.GetExceptionMessage(ex) });
+                return RedirectToAction("SummaryHours",
+                    new
+                    {
+                        Month = deleteHourViewModel.EmployeeHour.Date.Month,
+                        Year = deleteHourViewModel.EmployeeHour.Date.Year,
+                        errorMessage = AppUtility.GetExceptionMessage(ex)
+                    });
             }
         }
         [HttpPost]
@@ -1079,7 +1031,7 @@ namespace PrototypeWithAuth.Controllers
                     return PartialView("_ErrorMessage", AppUtility.GetExceptionMessage(ex));
                 }
             }
-            
+
         }
     }
 }
