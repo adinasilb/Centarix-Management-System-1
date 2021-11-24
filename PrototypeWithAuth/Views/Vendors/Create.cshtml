@@ -260,7 +260,7 @@
                                         <div class="col-2 container text-right">
                                             <ul class="list-unstyled">
                                                 <li>
-                                                    <button href="#" id="addSupplierComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 ">
+                                                    <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 addComment">
                                                         <i class="lab-man-color icon-add_circle-24px" style="
     font-size: 3rem;
 "></i>
@@ -268,23 +268,14 @@
                                                 </li>
 
                                                 <div style="display:none;" id="popover-content">
-
                                                     @foreach (var item in Model.CommentTypes)
-                                                    {<div class="row px-3 comment-btn">
-                                                            @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
-                                                            {
-                                                                <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
-                                                            }
-                                                            else
-                                                            {
-                                                                <i class="icon-report_problem-24px" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
-                                                            }
-                                                            <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark" style="font-size:1rem; font-weight:400;" onclick="$.fn.addSupplierComment('@item')">@item</button><hr class="m-0" />
-
+                                                    {
+                                                        <div class="row px-3 comment-btn">
+                                                            <i class="@item.Icon" style="color: @item.Color; padding-top: .55rem; font-size: 1.25rem;"></i>
+                                                            <button type="button" data-val="@item.TypeID" model-type="@AppUtility.CommentModelTypeEnum.Vendor" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark add-comment" style="font-size:1rem; font-weight:400;">@item.Description</button><hr class="m-0" />
                                                         </div>
                                                     }
                                                 </div>
-
                                             </ul>
                                         </div>
                                     </div>
@@ -355,7 +346,7 @@
             });
             $(this).popover('toggle');
         }
-        
+
     });
 
     $("#Vendor_VendorWebsite").on("focusout", function (e) {
@@ -375,3 +366,4 @@
         $(".popover-url").popover('hide');
     });
 </script>
+<script src="~/js/commentPopover.js"></script>

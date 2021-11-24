@@ -1509,8 +1509,7 @@ namespace PrototypeWithAuth.Controllers
             var unittypeslookup = unittypes.ToLookup(u => u.UnitParentType);
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
-            List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
-
+          
             requestItemViewModel.ParentCategories = parentcategories;
             requestItemViewModel.ProductSubcategories = productsubcategories;
             requestItemViewModel.Vendors = vendors;
@@ -1519,7 +1518,7 @@ namespace PrototypeWithAuth.Controllers
 
             requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
             requestItemViewModel.UnitTypes = unittypeslookup;
-            requestItemViewModel.CommentTypes = commentTypes;
+            requestItemViewModel.CommentTypes = _context.CommentTypes;
             requestItemViewModel.PaymentTypes = paymenttypes;
             requestItemViewModel.CompanyAccounts = companyaccounts;
             return requestItemViewModel;
@@ -1570,6 +1569,41 @@ namespace PrototypeWithAuth.Controllers
             return serialLetter + (lastSerialNumberInt + 1);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        protected async Task<IActionResult> _CommentInfoPartialView(int typeID, int index, AppUtility.CommentModelTypeEnum modelType)
+        {
+
+            CommentsInfoViewModel commentsInfoViewModel = GetCommentInfoViewModel(typeID, index, modelType);
+            return PartialView(commentsInfoViewModel);
+        }
+
+        private CommentsInfoViewModel GetCommentInfoViewModel(int typeID, int index, AppUtility.CommentModelTypeEnum modelType)
+        {
+            CommentBase comment = null;
+            switch (modelType)
+            {
+                case AppUtility.CommentModelTypeEnum.Product:
+                    comment = new ProductComment();
+                    break;
+                case AppUtility.CommentModelTypeEnum.Protocol:
+                    comment = new ProtocolComment();
+                    break;
+                case AppUtility.CommentModelTypeEnum.Vendor:
+                    comment = new VendorComment();
+                    break;
+                case AppUtility.CommentModelTypeEnum.Request:
+                    comment = new RequestComment();
+                    break;
+            }
+
+            comment.ApplicationUser = _userManager.GetUserAsync(User).Result;
+            comment.ApplicationUserID = comment.ApplicationUser.Id;
+            comment.CommentTypeID = typeID;
+            comment.CommentType = _context.CommentTypes.Where(ct => ct.TypeID ==typeID).FirstOrDefault();
+            CommentsInfoViewModel commentsInfoViewModel = new CommentsInfoViewModel { Comment = comment, Index = index };
+            return commentsInfoViewModel;
+        }
 
         //[HttpPost]
         //[Authorize(Roles = "Requests")]

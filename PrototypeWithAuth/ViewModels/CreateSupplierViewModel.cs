@@ -13,8 +13,8 @@ namespace PrototypeWithAuth.ViewModels
     {
         public Vendor Vendor { get; set; }
         public List<VendorContactWithDeleteViewModel> VendorContacts { get; set; }
-        public List<VendorComment> VendorComments { get; set; }
-        public List<PrototypeWithAuth.AppData.AppUtility.CommentTypeEnum> CommentTypes { get; set; }
+        public List<VendorComment> Comments { get; set; }
+        public IEnumerable<CommentType> CommentTypes { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
         public List<CategoryType> CategoryTypes { get; set; }
         public List<int> VendorCategoryTypes { get; set; }
