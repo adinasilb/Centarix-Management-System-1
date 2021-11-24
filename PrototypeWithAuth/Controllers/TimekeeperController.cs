@@ -945,23 +945,16 @@ namespace PrototypeWithAuth.Controllers
                 ViewBag.ErrorMessage = "Timekeeper Notification not found (no id). Unable to delete.";
                 return NotFound();
             }
-            using (var transaction = _context.Database.BeginTransaction())
+
+            var success = await _timekeeperNotificationsProc.DeleteByPK(id);
+            if (success.Bool)
             {
-                try
-                {
-                    var notification = _context.TimekeeperNotifications.Where(tn => tn.NotificationID == id).FirstOrDefault();
-                    _context.Remove(notification);
-                    await _context.SaveChangesAsync();
-                    //throw new Exception();
-                    await transaction.CommitAsync();
-                    return RedirectToAction("ReportHours");
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    Response.StatusCode = 500;
-                    return PartialView("_ErrorMessage", AppUtility.GetExceptionMessage(ex));
-                }
+                return RedirectToAction("ReportHours");
+            }
+            else
+            {
+                Response.StatusCode = 500;
+                return PartialView("_ErrorMessage", success.String);
             }
 
         }

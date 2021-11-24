@@ -45,6 +45,11 @@ namespace PrototypeWithAuth.CRUD
             return _context.TimekeeperNotifications.Where(n => n.EmployeeHoursID == EHID).AsNoTracking().AsQueryable();
         }
 
+        public TimekeeperNotification ReadByPK(int? ID)
+        {
+            return _context.TimekeeperNotifications.Where(tn => tn.NotificationID == ID).FirstOrDefault();
+        }
+
         public async Task<StringWithBool> DeleteByEHID(int EHID)
         {
             StringWithBool ReturnVal = new StringWithBool();
@@ -53,6 +58,27 @@ namespace PrototypeWithAuth.CRUD
                 try
                 {
                     var notifications = this.ReadByEHID(EHID);
+                    this.DeleteWithoutSaving(notifications);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    ReturnVal.Bool = false;
+                    ReturnVal.String = AppUtility.GetExceptionMessage(ex);
+                }
+            }
+            return ReturnVal;
+        }
+
+        public async Task<StringWithBool> DeleteByPK(int? ID)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var notifications = new List<TimekeeperNotification>() { this.ReadByPK(ID) };
                     this.DeleteWithoutSaving(notifications);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
