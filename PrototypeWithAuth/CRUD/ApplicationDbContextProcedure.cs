@@ -23,6 +23,9 @@ namespace PrototypeWithAuth.CRUD
         protected readonly VendorContactsProc _vendorContactsProc;
         protected readonly VendorsProc _vendorsProc;
         protected readonly VendorCategoryTypesProc _vendorCategoryTypesProc;
+        protected readonly EmployeeHoursAwaitingApprovalProc _employeeHoursAwaitingApprovalProc;
+        protected readonly EmployeeHoursStatuesProc _employeeHoursStatuesProc;
+        protected readonly CompanyDaysOffProc _companyDaysOffProc;
         public ApplicationDbContextProcedure(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
@@ -38,6 +41,9 @@ namespace PrototypeWithAuth.CRUD
             _vendorContactsProc = new VendorContactsProc(context, userManager);
             _vendorsProc = new VendorsProc(context, userManager);
             _vendorCategoryTypesProc = new VendorCategoryTypesProc(context, userManager);
+            _employeeHoursAwaitingApprovalProc = new EmployeeHoursAwaitingApprovalProc(context, userManager);
+            _employeeHoursStatuesProc = new EmployeeHoursStatuesProc(context, userManager);
+            _companyDaysOffProc = new CompanyDaysOffProc(context, userManager);
         }
     }
 }

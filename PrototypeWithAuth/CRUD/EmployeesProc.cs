@@ -6,6 +6,8 @@ using PrototypeWithAuth.Models;
 using PrototypeWithAuth.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PrototypeWithAuth.AppData.UtilityModels;
+using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.CRUD
 {
@@ -29,6 +31,22 @@ namespace PrototypeWithAuth.CRUD
         public IQueryable<Employee> GetUsersLoggedInToday()
         {
             return _context.Employees.Where(u => u.LastLogin.Date == DateTime.Today.Date).AsNoTracking().AsQueryable();
+        }
+
+        public async Task<StringWithBool> Update(Employee employee)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                _context.Update(employee);
+                await _context.SaveChangesAsync();
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
         }
     }
 }
