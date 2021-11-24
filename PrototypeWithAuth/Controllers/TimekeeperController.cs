@@ -18,10 +18,13 @@ namespace PrototypeWithAuth.Controllers
 {
     public class TimekeeperController : SharedController
     {
-
+        private CRUD.EmployeeHoursProc _employeeHoursProc;
+        private CRUD.TimekeeperNotificationsProc _timekeeperNotificationsProc;
         public TimekeeperController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
+            _employeeHoursProc = new CRUD.EmployeeHoursProc(context, userManager);
+            _timekeeperNotificationsProc = new CRUD.TimekeeperNotificationsProc(context, userManager);
         }
         public IActionResult Index()
         {
@@ -35,7 +38,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimeKeeperReport;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ReportHours;
             var userid = _userManager.GetUserId(User);
-            var todaysEntry = _context.EmployeeHours.Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
+            var todaysEntry = _employeeHoursProc.ReadOneByDateAndUserID(DateTime.Today, userid);
             EntryExitViewModel entryExitViewModel = new EntryExitViewModel();
             if (todaysEntry == null || todaysEntry.Entry1 == null)
             {
@@ -59,7 +62,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
             }
-            var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n=> n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(20).ToList();
+            var notifications = _timekeeperNotificationsProc.ReadByUserID(userid).OrderByDescending(n => n.EmployeeHours.Date).Take(20).ToList();
+           
             entryExitViewModel.TimekeeperNotifications = notifications;
             if (errorMessage != null)
             {
@@ -83,15 +87,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    var userid = _userManager.GetUserId(User);
-                    var todaysEntry = _context.EmployeeHours
-                        .Include(eh => eh.OffDayType)
-                        .Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
-                    if (todaysEntry != null && todaysEntry.OffDayTypeID != null)
-                    {
-                        todaysEntry.OffDayTypeID = null;
-                        //entryExitViewModel.OffDayRemoved = todaysEntry.OffDayType.Description;
-                    }
+                   
 
                     if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Entry1)
                     {
