@@ -15,8 +15,8 @@
 
 <div class="table comment-info border p-2 mb-3">
     @{
-        var commentTypeID = "Comments_" + Model.Index + "__CommentType";
-        var commentTypeName = "Comments[" + Model.Index + "].CommentType";
+        var commentTypeID = "Comments_" + Model.Index + "__CommentTypeID";
+        var commentTypeName = "Comments[" + Model.Index + "].CommentTypeID";
         var commentIDID = "Comments_" + Model.Index + "__CommentID";
         var commentIDName = "Comments[" + Model.Index + "].CommentID";
         var commentUserID = "Comments_" + Model.Index + "__ApplicationUserID";
@@ -26,7 +26,7 @@
     }
 
     <input type="hidden" id="@commentIDID" name="@commentIDName" value="@Model.Comment.CommentID" class="comment-type" />
-    <input type="hidden" id="@commentTypeID" name="@commentTypeName" value="@Model.Comment.CommentType" class="comment-type" />
+    <input type="hidden" id="@commentTypeID" name="@commentTypeName" value="@Model.Comment.CommentTypeID" class="comment-type" />
     <input type="hidden" id="@commentUserID" name="@commentUserName" value="@Model.Comment.ApplicationUserID" class="comment-type" />
     <input type="hidden" id="@commentTimeStampID" name="@commentTimeStampName" value="@Model.Comment.CommentTimeStamp" class="comment-type" />
 
@@ -59,14 +59,7 @@
 
         </div>
         <div class=" col-2 ">
-            @if (Model.Comment.CommentType.Equals(AppUtility.CommentTypeEnum.Comment.ToString()))
-            {
-                <i class="icon-comment-24px float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: #30BCC9;"></i>
-            }
-            else if (Model.Comment.CommentType.Equals(AppUtility.CommentTypeEnum.Warning.ToString()))
-            {
-                <i class="icon-report_problem-24px float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: var(--danger-color);"></i>
-            }
+            <i class="@Model.Comment.CommentType.Icon float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color:@Model.Comment.CommentType.Color;"></i>
         </div>
 
     </div>
