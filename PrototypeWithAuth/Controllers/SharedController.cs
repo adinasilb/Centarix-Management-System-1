@@ -476,9 +476,9 @@ namespace PrototypeWithAuth.Controllers
             await FillRequestDropdowns(requestItemViewModel, request.Product.ProductSubcategory, categoryType);
 
             requestItemViewModel.Tab = Tab ?? 0;
-            requestItemViewModel.Comments = await _context.RequestComments
-                .Include(r => r.ApplicationUser)
-                .Where(r => r.Request.RequestID == id).ToListAsync();
+            var requestComments = _context.RequestComments.Include(r => r.ApplicationUser).Include(r => r.CommentType).Where(r => r.ObjectID == request.RequestID).ToList();
+            var productComments = _context.ProductComments.Include(r => r.ApplicationUser).Include(r => r.CommentType).Where(r => r.ObjectID == request.ProductID).ToList();
+            requestItemViewModel.Comments = requestComments.Concat<CommentBase>(productComments).OrderByDescending(rc=>rc.CommentTimeStamp).ToList();
             requestItemViewModel.SectionType = SectionType;
             requestItemViewModel.RequestsByProduct = requestsByProduct;
             requestItemViewModel.Requests = new List<Request>();
@@ -1571,32 +1571,16 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        protected async Task<IActionResult> _CommentInfoPartialView(int typeID, int index, AppUtility.CommentModelTypeEnum modelType)
+        protected async Task<IActionResult> _CommentInfoPartialView(int typeID, int index)
         {
 
-            CommentsInfoViewModel commentsInfoViewModel = GetCommentInfoViewModel(typeID, index, modelType);
+            CommentsInfoViewModel commentsInfoViewModel = GetCommentInfoViewModel(typeID, index);
             return PartialView(commentsInfoViewModel);
         }
 
-        private CommentsInfoViewModel GetCommentInfoViewModel(int typeID, int index, AppUtility.CommentModelTypeEnum modelType)
+        private CommentsInfoViewModel GetCommentInfoViewModel(int typeID, int index)
         {
-            CommentBase comment = null;
-            switch (modelType)
-            {
-                case AppUtility.CommentModelTypeEnum.Product:
-                    comment = new ProductComment();
-                    break;
-                case AppUtility.CommentModelTypeEnum.Protocol:
-                    comment = new ProtocolComment();
-                    break;
-                case AppUtility.CommentModelTypeEnum.Vendor:
-                    comment = new VendorComment();
-                    break;
-                case AppUtility.CommentModelTypeEnum.Request:
-                    comment = new RequestComment();
-                    break;
-            }
-
+            CommentBase comment = new CommentBase();
             comment.ApplicationUser = _userManager.GetUserAsync(User).Result;
             comment.ApplicationUserID = comment.ApplicationUser.Id;
             comment.CommentTypeID = typeID;

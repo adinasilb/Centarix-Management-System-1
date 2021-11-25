@@ -709,15 +709,21 @@ namespace PrototypeWithAuth.Controllers
                         //var t = trj.DeserializeJson<List<TempRequestViewModel>>();
                         if (requestItemViewModel.Comments != null)
                         {
-                            trvm.Comments = new List<RequestComment>();
+                            trvm.Comments = new List<CommentBase>();
                             foreach (var comment in requestItemViewModel.Comments)
                             {
                                 if (comment.CommentText != null && comment.CommentText?.Length != 0)
                                 {
                                     //save the new comment
                                     comment.ApplicationUserID = currentUser.Id;
-
-                                    comment.ObjectID = request.RequestID;
+                                    if(comment.CommentTypeID==1)
+                                    {
+                                        comment.ObjectID = request.RequestID;
+                                    }
+                                    else
+                                    {
+                                        comment.ObjectID = request.ProductID;
+                                    }
 
                                     trvm.Comments.Add(comment);
                                 }
@@ -738,7 +744,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 additionalRequests = false;
                             }
-                            await SaveCommentFromTempRequestListViewModelAsync(request, trvm);
+                            await SaveRequestProductCommentsFunctionAsync(trvm.Comments, request);
                             MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, trlvm.GUID);
                             if (request.ParentQuoteID != null)
                             {
@@ -1064,20 +1070,6 @@ namespace PrototypeWithAuth.Controllers
             return tempRequestListViewModel.TempRequestViewModels.FirstOrDefault();
         }
 
-        private async Task SaveCommentFromTempRequestListViewModelAsync(Request request, TempRequestViewModel tempRequestViewModel)
-        {
-            if (tempRequestViewModel.Comments != null)
-            {
-                foreach (var comment in tempRequestViewModel.Comments)
-                {
-                    comment.ObjectID = request.RequestID;
-                    _context.Add(comment);
-                }
-                await _context.SaveChangesAsync();
-            }
-
-        }
-
         private async Task<TempRequestViewModel> AlreadyPurchased(Request request, TempRequestListViewModel tempRequestListViewModel)
         {
             /*using (var transaction = _context.Database.BeginTransaction())
@@ -1300,14 +1292,9 @@ namespace PrototypeWithAuth.Controllers
 
             await _context.SaveChangesAsync();
 
-            if (tempRequest.Comments != null && tempRequest.Comments.Any()) //do we need this check?
+            if (tempRequest.Comments != null && tempRequest.Comments.Any())
             {
-                foreach (var comment in tempRequest.Comments)
-                {
-                    comment.ObjectID = tempRequest.Request.RequestID;
-                    _context.Add(comment);
-                }
-                await _context.SaveChangesAsync();
+                await SaveRequestProductCommentsFunctionAsync(tempRequest.Comments, tempRequest.Request);
             }
         }
 
@@ -2301,7 +2288,7 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.IsProprietary = true;
             }
 
-            requestItemViewModel.Comments = new List<RequestComment>();
+            requestItemViewModel.Comments = new List<CommentBase>();
             requestItemViewModel.EmailAddresses = new List<string>() { "", "", "", "", "" };
             requestItemViewModel.ModalType = AppUtility.RequestModalType.Create;
 
@@ -2688,25 +2675,7 @@ namespace PrototypeWithAuth.Controllers
                         if (requestItemViewModel.Comments != null)
                         {
 
-                            foreach (var comment in requestItemViewModel.Comments)
-                            {
-                                if (!String.IsNullOrEmpty(comment.CommentText))
-                                {
-                                    //save the new comment
-                                    comment.ObjectID = request.RequestID;
-                                    if (comment.CommentID == 0)
-                                    {
-                                        comment.CommentTimeStamp = DateTime.Now;
-                                        _context.Entry(comment).State = EntityState.Added;
-                                    }
-                                    else
-                                    {
-                                        _context.Entry(comment).State = EntityState.Modified;
-                                    }
-                                    //_context.Update(comment);
-                                }
-                            }
-                            await _context.SaveChangesAsync();
+                           await SaveRequestProductCommentsFunctionAsync(requestItemViewModel.Comments, request);
                         }
 
                         if (receivedModalVisualViewModel.LocationInstancePlaces != null)
@@ -2799,12 +2768,57 @@ namespace PrototypeWithAuth.Controllers
                     string requestId = requestItemViewModel.Requests[0].RequestID.ToString();
                     string parentQuoteId = requestItemViewModel.Requests[0].ParentQuoteID.ToString();
                     FillDocumentsInfo(requestItemViewModel, productSubcategory, requestId, parentQuoteId);
-                    requestItemViewModel.Comments = await _context.RequestComments.Include(r => r.ApplicationUser).Include(r => r.CommentType).Where(r => r.Request.RequestID == requestItemViewModel.Requests[0].RequestID).ToListAsync();
+                    var requestComments = await _context.RequestComments.Include(r => r.ApplicationUser).Include(r => r.CommentType).Where(r => r.ObjectID == requestItemViewModel.Requests[0].RequestID).ToListAsync();
+                    var productComments = await _context.ProductComments.Include(r => r.ApplicationUser).Include(r => r.CommentType).Where(r => r.ObjectID == requestItemViewModel.Requests[0].ProductID).ToListAsync();
+                    requestItemViewModel.Comments = requestComments.Concat<CommentBase>(productComments).ToList();
                     requestItemViewModel.ModalType = AppUtility.RequestModalType.Edit;
                     Response.StatusCode = 50;
                     return PartialView(requestItemViewModel);
                 }
             }
+        }
+
+        private async Task SaveRequestProductCommentsFunctionAsync(List<CommentBase> comments, Request request)
+        {
+            foreach (var comment in comments)
+            {
+                if (!String.IsNullOrEmpty(comment.CommentText))
+                {
+                    //save the new comment
+                    if (comment.CommentTypeID ==1)
+                    {
+                        comment.ObjectID = request.RequestID;
+                       
+                        if (comment.CommentID == 0)
+                        {
+                            comment.CommentTimeStamp = DateTime.Now;
+                            _context.Entry(AppData.Json.Deserialize<RequestComment>(AppData.Json.Serialize(comment))).State = EntityState.Added;
+                        }
+                        else
+                        {
+                            _context.Update(AppData.Json.Deserialize<RequestComment>(AppData.Json.Serialize(comment)));
+                        }
+                    }
+                    else
+                    {
+                        comment.ObjectID = request.ProductID;
+                        if (comment.CommentID == 0)
+                        {
+                            comment.CommentTimeStamp = DateTime.Now;
+                            _context.Entry(AppData.Json.Deserialize<ProductComment>(AppData.Json.Serialize(comment))).State = EntityState.Added;
+
+                        }
+                        else
+                        {
+                            _context.Update(AppData.Json.Deserialize<ProductComment>(AppData.Json.Serialize(comment)));
+
+                        }
+                    }
+                   
+                }
+            }
+            var changeTracker = _context.ChangeTracker.Entries();
+            await _context.SaveChangesAsync();
         }
 
         [Authorize(Roles = "Requests")]
@@ -3346,13 +3360,7 @@ namespace PrototypeWithAuth.Controllers
                                     await _context.SaveChangesAsync();
                                     if (tempRequest.Comments != null)
                                     {
-                                        foreach (var c in tempRequest.Comments)
-                                        {
-                                            //DO WE NEED THIS NEXT LINE HERE???
-                                            c.ObjectID = tempRequest.Request.RequestID;
-                                            _context.Add(c);
-                                        }
-                                        await _context.SaveChangesAsync();
+                                        await SaveRequestProductCommentsFunctionAsync(tempRequest.Comments, tempRequest.Request);
                                     }
 
                                     if (tempRequest.Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
@@ -4066,8 +4074,6 @@ namespace PrototypeWithAuth.Controllers
 
 
         }
-
-
 
         private async Task CopyCommentsAsync(int OldRequestID, int NewRequestID)
         {
@@ -5425,11 +5431,7 @@ namespace PrototypeWithAuth.Controllers
 
                                 if (tempRequestViewModel.Comments != null)
                                 {
-                                    foreach (var comment in tempRequestViewModel.Comments)
-                                    {
-                                        comment.ObjectID = tempRequestViewModel.Request.RequestID;
-                                        _context.Add(comment);
-                                    }
+                                    await SaveRequestProductCommentsFunctionAsync(tempRequestViewModel.Comments, tempRequestViewModel.Request);
                                 }
                                 //await SaveCommentsFromSession(request);
                                 MoveDocumentsOutOfTempFolder(tempRequestViewModel.Request.RequestID, AppUtility.ParentFolderName.Requests, false, tempRequestListViewModel.GUID);
@@ -6747,13 +6749,13 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _CommentInfoPartialView(int typeID, int index, AppUtility.CommentModelTypeEnum modelType)
+        public async Task<IActionResult> _CommentInfoPartialView(int typeID, int index)
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
                 return PartialView("InvalidLinkPage");
             }
-            return await base._CommentInfoPartialView(typeID, index, modelType);
+            return await base._CommentInfoPartialView(typeID, index);
         }
 
     }

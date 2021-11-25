@@ -11,10 +11,6 @@ namespace PrototypeWithAuth.Models
     {
         [ForeignKey("ObjectID")]
         public Product Product { get; set; }
-        public override AppUtility.CommentModelTypeEnum ModelType
-        {
-            get { return AppUtility.CommentModelTypeEnum.Product; }
 
-        }
     }
 }
