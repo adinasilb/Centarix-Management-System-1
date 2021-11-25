@@ -15,7 +15,7 @@ namespace PrototypeWithAuth.Data.SeededData
             {
                 NotificationStatusID = 6,
                 Icon = "icon-notification_birthday-24px",
-                Color = "black",
+                Color = "--black-87",
                 Description = "Happy Birthday"
             });
             return list;
