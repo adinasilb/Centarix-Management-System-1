@@ -64,14 +64,15 @@
                 <input type="hidden" asp-for="Requests[0].ProductID" />
                 <input type="hidden" asp-for="Requests[0].Payments.FirstOrDefault().HasInvoice" />
                 <input type="hidden" asp-for="Requests[0].NoteForClarifyDelivery" />
-     
+
                 <input type="hidden" asp-for="Requests[0].ParentRequest.NoteToSupplier" />
                 <input type="hidden" asp-for="Requests[0].Payments.FirstOrDefault().InvoiceID" />
                 <input type="hidden" asp-for="Requests[0].OrderType" />
                 <input type="hidden" asp-for="Requests[0].ArrivalDate" />
                 <input type="hidden" value="@Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum" id="categoryDescription" />
-                
-                <input type="hidden" asp-for="Requests[0].IsInInventory"/>
+
+                <input type="hidden" asp-for="Requests[0].IsInInventory" />
+                <input type="hidden" asp-for="Requests[0].SerialNumber" />
 
                 <!-- Modal Header -->
                 <div class="new-modal-header modal-line-1-header-with-back modal-sides">
@@ -99,17 +100,17 @@
                         </div>
                         <div class="form-group">
                             @if ((Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].RequestStatusID == 2) && Model.SectionType == AppUtility.MenuItems.Requests
-                              && Model.Requests[0].Product.UnitTypeID != -1 && !Model.Requests[0].Product.ProductSubcategory.IsOldSubCategory && !Model.IsHistory)
+                             && Model.Requests[0].Product.UnitTypeID != -1 && !Model.Requests[0].Product.ProductSubcategory.IsOldSubCategory && !Model.IsHistory)
                             {
                                 <div class="d-flex align-items-center">
                                     <button type="button" value="@Model.Requests[0].RequestID" class="load-order-details custom-button custom-button-font @color m-auto">Request</button>
                                 </div>
                             }
                             <div class="row pt-2 d-flex justify-content-center">
-                               Product Serial: @Model.Requests[0].Product.SerialNumber
+                                Product Serial: @Model.Requests[0].Product.SerialNumber
                             </div>
                             <div class="row pt-2 d-flex justify-content-center">
-                               Item Serial: @Model.Requests[0].SerialNumberString
+                                Item Serial: @Model.Requests[0].SerialNumberString
                             </div>
                         </div>
 

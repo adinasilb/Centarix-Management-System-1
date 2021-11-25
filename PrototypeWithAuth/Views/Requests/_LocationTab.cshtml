@@ -56,7 +56,7 @@
         }
     }
 
-        <input type="hidden" class="location-error mark-readonly" id="locationTypeSelected" name="locationTypeSelected" data-val="@locationTypeSelected" />
+    <input type="hidden" class="location-error mark-readonly" id="locationTypeSelected" name="locationTypeSelected" data-val="@locationTypeSelected" />
 
 </div>
 <div class="row choose-locations">
@@ -104,10 +104,11 @@
                         var id = "locationInstancesSelected[" + i + "]";
                         var depth = Model.ReceivedModalSublocationsViewModel.locationInstancesSelected.Count;
                         name = "";
-                        <div class="form-group col-3 ">
-                            <label class="control-label">@Model.ReceivedModalSublocationsViewModel.locationTypeNames[i]</label>
-                            @if (i == 0)
-                            {
+
+                        @if (i == 0)
+                        {
+                            <div class="form-group col-3 ">
+                                <label class="control-label">@Model.ReceivedModalSublocationsViewModel.locationTypeNames[i]</label>
                                 <div class="">
                                     <div class=" form-control-plaintext border-bottom p-0">
                                         <span class="choose p-0"></span>
@@ -120,7 +121,7 @@
                                                 {
                                                     name = Model.ReceivedModalSublocationsViewModel.locationInstancesSelected[depth - 1 - ((i + (count - (count - depth))) - depth)].LocationInstanceName;
                                                 }
-                                                <span class="overflow-hidden">@name</span>
+                                                <span class="overflow-hidden" parentID="@Model.ReceivedModalSublocationsViewModel.locationInstancesSelected[depth - 1 - ((i + (count - (count - depth))) - depth)].LocationInstanceID">@name</span>
 
                                             </div>
 
@@ -141,11 +142,34 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            @if (Model.ReceivedModalSublocationsViewModel.LabPartTypes != null)
+                            {
+                                <div class=" col-3 parent-group ">
+
+                                    <label class="control-label">Part Type</label>
+                                    <div>
+                                        @Html.DropDownList(
+                                          "Select Part Type",
+                                         Model.ReceivedModalSublocationsViewModel.LabPartTypes.Select(x =>
+                                                         new SelectListItem
+                                                         {
+                                                             Text = x.LabPartName,
+                                                             Value = x.LabPartID + "",
+                                                             Selected = Model.ReceivedModalSublocationsViewModel.locationInstancesSelected[0].LabPartID == x.LabPartID
+                                                         }),
+                                          htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext part-type py-1" }
+                                          )
+                                    </div>
+                                </div>
 
                             }
+                        }
 
-                            else
-                            {
+                        else
+                        {
+                            <div class="form-group col-3 ">
+                                <label class="control-label">@Model.ReceivedModalSublocationsViewModel.locationTypeNames[i]</label>
                                 <div class="">
                                     <div class=" form-control-plaintext border-bottom p-0">
                                         <span class="choose p-0"></span>
@@ -156,7 +180,16 @@
                                                 </span>
                                                 @if (i < depth)
                                                 {
-                                                    name = Model.ReceivedModalSublocationsViewModel.locationInstancesSelected[depth - 1 - ((i + (count - (count - depth))) - depth)].LocationInstanceAbbrev;
+                                                    if (Model.ReceivedModalSublocationsViewModel.locationInstancesSelected.Last().LocationTypeID == 500)
+                                                    {
+                                                        name = Model.ReceivedModalSublocationsViewModel.locationInstancesSelected[depth - 1 - ((i + (count - (count - depth))) - depth)].LabPart.LabPartName +
+                                                            " "+Model.ReceivedModalSublocationsViewModel.locationInstancesSelected[depth - 1 - ((i + (count - (count - depth))) - depth)].LocationNumber;
+
+                                                    }
+                                                    else
+                                                    {
+                                                        name = Model.ReceivedModalSublocationsViewModel.locationInstancesSelected[depth - 1 - ((i + (count - (count - depth))) - depth)].LocationInstanceAbbrev;
+                                                    }
                                                 }
                                                 <span class="overflow-hidden ">@name</span>
 
@@ -165,16 +198,29 @@
                                             <ul class="p-0 locationinstance dropdown-menu ">
                                                 @if (i < depth)
                                                 {
-                                                    @foreach (var location in Model.ChildrenLocationInstances[depth - 1 - ((i + (count - (count - depth))) - depth)])
+                                                    if (Model.ReceivedModalSublocationsViewModel.locationInstancesSelected.Last().LocationTypeID == 500)
                                                     {
-                                                        var description = location.LocationInstanceAbbrev;
-                                                        if (location.LocationInstanceParent == null)
+                                                        foreach (var location in Model.ChildrenLocationInstances[depth - 1 - ((i + (count - (count - depth))) - depth)])
                                                         {
-                                                            description = location.LocationInstanceAbbrev;
+                                                            var description = location.LabPart.LabPartName + location.LocationNumber;
+                                                            <li id="@location.LocationInstanceID" class="SLI-click" data-string="@description" value="@location.LocationInstanceID">
+                                                                @description
+                                                            </li>
                                                         }
-                                                        <li id="@location.LocationInstanceID" class="SLI-click" data-string="@description" value="@location.LocationInstanceID">
-                                                            @location.LocationInstanceAbbrev
-                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        foreach (var location in Model.ChildrenLocationInstances[depth - 1 - ((i + (count - (count - depth))) - depth)])
+                                                        {
+                                                            var description = location.LocationInstanceAbbrev;
+                                                            if (location.LocationInstanceParent == null)
+                                                            {
+                                                                description = location.LocationInstanceAbbrev;
+                                                            }
+                                                            <li id="@location.LocationInstanceID" class="SLI-click" data-string="@description" value="@location.LocationInstanceID">
+                                                                @location.LocationInstanceAbbrev
+                                                            </li>
+                                                        }
                                                     }
                                                 }
                                             </ul>
@@ -182,8 +228,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            }
-                        </div>
+                            </div>
+                        }
                     }
                 </div>
             }
@@ -208,16 +254,16 @@
             <input type="hidden" class="location-error mark-readonly" id="subLocationSelected" name="subLocationSelected" data-val="true" />
 
             @*@if (Model.ReceivedModalVisualViewModel.ParentLocationInstance.Width == 9 || Model.ReceivedModalVisualViewModel.ParentLocationInstance.Width == 12)
-            {
-                <div class="row">
-                    <div class="col-12">
-                        <button class="btn visual-locations-zoom
-                    float-lg-right mr-4" style="text-decoration:none; font-size:1.3rem;" value="@Model.ReceivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID">
-                            <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In
-                        </button>
+                {
+                    <div class="row">
+                        <div class="col-12">
+                            <button class="btn visual-locations-zoom
+                        float-lg-right mr-4" style="text-decoration:none; font-size:1.3rem;" value="@Model.ReceivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID">
+                                <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In
+                            </button>
+                        </div>
                     </div>
-                </div>
-            }*@
+                }*@
             <div>
                 @{ await Html.RenderPartialAsync("ReceivedModalVisual", Model.ReceivedModalVisualViewModel); }
             </div>

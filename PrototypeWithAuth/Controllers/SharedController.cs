@@ -585,11 +585,24 @@ namespace PrototypeWithAuth.Controllers
                         receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
                         requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
                         requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).OrderBy(l => l.LocationNumber).ToList());
+                        
                         while (parent.LocationInstanceParentID != null)
                         {
                             parent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parent.LocationInstanceParentID).FirstOrDefault();
                             requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).OrderBy(l => l.LocationNumber).ToList());
                             receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
+                        }
+                        if(parent.LocationTypeID == 500)
+                        {
+
+                            if (parentLocationInstance.LocationTypeID == 500)
+                            {
+                                receivedModalSublocationsViewModel.locationInstancesSelected.Insert(0,requestLocationInstances[0].LocationInstance);
+                                requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
+                                requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceID).Include(l => l.LabPart).OrderBy(l => l.LocationNumber).ToList());
+                            }
+                            receivedModalSublocationsViewModel.locationInstancesSelected.First().LabPart = _context.LabParts.Where(lp => lp.LabPartID == receivedModalSublocationsViewModel.locationInstancesSelected.First().LabPartID).FirstOrDefault();
+                            receivedModalSublocationsViewModel.LabPartTypes = _context.LabParts;
                         }
                         while (!finished)
                         {
@@ -632,13 +645,27 @@ namespace PrototypeWithAuth.Controllers
                                 }).OrderBy(m => m.LocationInstance.LocationNumber).ToList();
 
                             List<LocationInstancePlace> liPlaces = new List<LocationInstancePlace>();
-                            foreach (var cli in receivedModalVisualViewModel.RequestChildrenLocationInstances)
+                            var emptyshelf25 = receivedModalVisualViewModel.RequestChildrenLocationInstances.Where(rcli => rcli.IsThisRequest && rcli.LocationInstance.IsEmptyShelf).FirstOrDefault();
+                            if (parentLocationInstance.LocationTypeID == 500
+                                && emptyshelf25 != null)
                             {
                                 liPlaces.Add(new LocationInstancePlace()
                                 {
-                                    LocationInstanceId = cli.LocationInstance.LocationInstanceID,
-                                    Placed = cli.IsThisRequest
+                                    LocationInstanceId = emptyshelf25.LocationInstance.LocationInstanceID,
+                                    Placed = true
                                 });
+                                receivedModalVisualViewModel.RequestChildrenLocationInstances= new List<RequestChildrenLocationInstances>() { emptyshelf25};
+                            }
+                            else
+                            {
+                                foreach (var cli in receivedModalVisualViewModel.RequestChildrenLocationInstances)
+                                {
+                                    liPlaces.Add(new LocationInstancePlace()
+                                    {
+                                        LocationInstanceId = cli.LocationInstance.LocationInstanceID,
+                                        Placed = cli.IsThisRequest
+                                    });
+                                }
                             }
                             receivedModalVisualViewModel.LocationInstancePlaces = liPlaces;
                             //return NotFound();

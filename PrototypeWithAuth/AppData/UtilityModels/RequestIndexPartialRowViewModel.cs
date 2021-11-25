@@ -306,6 +306,10 @@ namespace PrototypeWithAuth.ViewModels
                 {
                     newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName;
                 }
+                else if(r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationTypeID == 500)
+                {
+                    newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName;
+                }
                 else
                 {
                     newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationInstanceName;
