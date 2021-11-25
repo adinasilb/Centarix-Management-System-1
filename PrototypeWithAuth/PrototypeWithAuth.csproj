@@ -509,6 +509,8 @@
     <Compile Remove="Data\Migrations\20211114083811_AddShareRequestLists.Designer.cs" />
     <Compile Remove="Data\Migrations\20211125115311_BirthdayNotificationColorBlack.cs" />
     <Compile Remove="Data\Migrations\20211125115311_BirthdayNotificationColorBlack.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211125115311_BirthdayNotificationColorBlack.cs" />
+    <Compile Remove="Data\Migrations\20211125115311_BirthdayNotificationColorBlack.Designer.cs" />
     <Compile Remove="Data\Migrations\20211123075054_RenameRequestComments.cs" />
     <Compile Remove="Data\Migrations\20211123075054_RenameRequestComments.Designer.cs" />
     <Compile Remove="Data\Migrations\20211123084231_RequestCommentInheritsBase.cs" />
