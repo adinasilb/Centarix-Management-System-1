@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class EmployeeHoursStatuesProc : ApplicationDbContextProcedure
+    public class EmployeeHoursStatuesProc : ApplicationDbContextProc
     {
         public EmployeeHoursStatuesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base (context, userManager)
         {

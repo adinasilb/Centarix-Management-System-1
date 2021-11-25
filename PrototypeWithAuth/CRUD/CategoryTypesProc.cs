@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class CategoryTypesProc : ApplicationDbContextProcedure
+    public class CategoryTypesProc : ApplicationDbContextProc
     {
         public CategoryTypesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
         {

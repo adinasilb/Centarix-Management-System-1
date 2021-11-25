@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class CompanyDaysOffProc : ApplicationDbContextProcedure
+    public class CompanyDaysOffProc : ApplicationDbContextProc
     {
         public CompanyDaysOffProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base (context, userManager)
         {
@@ -19,5 +19,16 @@ namespace PrototypeWithAuth.CRUD
         {
             return _context.CompanyDayOffs.Where(cdo => cdo.Date.Date == date).FirstOrDefault();
         }
+
+        public IQueryable<CompanyDayOff> ReadByDateSpan(DateTime DateFrom, DateTime DateTo)
+        {
+            return _context.CompanyDayOffs.Where(d => d.Date >= DateFrom && d.Date <= DateTo).AsQueryable();
+        }
+
+        public IQueryable<CompanyDayOff> ReadByDate(DateTime date)
+        {
+            return _context.CompanyDayOffs.Where(cdo => cdo.Date.Date == date).AsQueryable();
+        }
+
     }
 }

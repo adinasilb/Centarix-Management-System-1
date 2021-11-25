@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class ApplicationDbContextProcedure
+    public class ApplicationDbContextProc
     {
         protected readonly ApplicationDbContext _context;
         protected readonly UserManager<ApplicationUser> _userManager;
@@ -26,7 +26,8 @@ namespace PrototypeWithAuth.CRUD
         protected readonly EmployeeHoursAwaitingApprovalProc _employeeHoursAwaitingApprovalProc;
         protected readonly EmployeeHoursStatuesProc _employeeHoursStatuesProc;
         protected readonly CompanyDaysOffProc _companyDaysOffProc;
-        public ApplicationDbContextProcedure(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        protected readonly OffDayTypesProc _offDayTypesProc;
+        public ApplicationDbContextProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -44,6 +45,7 @@ namespace PrototypeWithAuth.CRUD
             _employeeHoursAwaitingApprovalProc = new EmployeeHoursAwaitingApprovalProc(context, userManager);
             _employeeHoursStatuesProc = new EmployeeHoursStatuesProc(context, userManager);
             _companyDaysOffProc = new CompanyDaysOffProc(context, userManager);
+            _offDayTypesProc = new OffDayTypesProc(context, userManager);
         }
     }
 }

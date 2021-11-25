@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class ApplicationUsersProc : ApplicationDbContextProcedure
+    public class ApplicationUsersProc : ApplicationDbContextProc
     {
         public ApplicationUsersProc (ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base (context, userManager)
         {

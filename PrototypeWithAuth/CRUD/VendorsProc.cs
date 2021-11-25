@@ -13,7 +13,7 @@ using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 namespace PrototypeWithAuth.CRUD
 {
-    public class VendorsProc : ApplicationDbContextProcedure
+    public class VendorsProc : ApplicationDbContextProc
     {
         public VendorsProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
         {

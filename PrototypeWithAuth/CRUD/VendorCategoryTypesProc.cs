@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class VendorCategoryTypesProc : ApplicationDbContextProcedure
+    public class VendorCategoryTypesProc : ApplicationDbContextProc
     {
         public VendorCategoryTypesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
         {

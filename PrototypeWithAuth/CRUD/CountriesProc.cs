@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class CountriesProc : ApplicationDbContextProcedure
+    public class CountriesProc : ApplicationDbContextProc
     {
         public CountriesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
         {

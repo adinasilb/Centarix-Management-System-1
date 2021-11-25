@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class EmployeeHoursProc : ApplicationDbContextProcedure
+    public class EmployeeHoursProc : ApplicationDbContextProc
     {
         public EmployeeHoursProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
         {
@@ -39,6 +39,23 @@ namespace PrototypeWithAuth.CRUD
         {
             return _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userId)
                 .Where(eh => eh.OffDayTypeID == offDayTypeID && eh.Date <= DateTime.Now.Date && eh.IsBonus == false);
+        }
+        public IQueryable<EmployeeHours> ReadPartialOffDaysByYearOffDayTypeIDAndUserID(int year, int partialOffDayTypeID, string userId)
+        {
+            return _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userId)
+                .Where(eh => eh.OffDayTypeID == partialOffDayTypeID && eh.Date <= DateTime.Now.Date && eh.IsBonus == false);
+        }
+
+        public double ReadPartialOffDayHours(int year, int partialOffDayTypeID, string UserID)
+        {
+            var offdays = ReadPartialOffDaysByYearOffDayTypeIDAndUserID(year, partialOffDayTypeID, UserID);
+            return offdays.Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours)
+                        .ToList().Sum(p => p);
+        }
+
+        public IQueryable<EmployeeHours> ReadByDateSpanAndUserID(DateTime DateTo, DateTime DateFrom, string UserID)
+        {
+            return _context.EmployeeHours.Where(eh => (eh.Date.Date >= DateFrom.Date && eh.Date.Date <= DateTo.Date) && eh.EmployeeID == UserID);
         }
 
         public async Task<StringWithBool> ReportHours(EntryExitViewModel entryExitViewModel, string userid)
@@ -188,6 +205,200 @@ namespace PrototypeWithAuth.CRUD
                 }
                 return ReturnVal;
             }
+        }
+
+        public async Task<StringWithBool> SaveOffDay(DateTime DateFrom, DateTime DateTo, int OffDayTypeID, string UserID)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var companyDaysOff = new List<DateTime>();
+                    bool alreadyOffDay = false;
+                    EmployeeHours employeeHour = null;
+                    var user = _employeesProc.ReadOneByUserID(UserID);
+
+                    if (DateTo == new DateTime()) //just one date
+                    {
+                         companyDaysOff.Add(_companyDaysOffProc.ReadOneByDate(DateFrom).Date);
+                        if (DateFrom.DayOfWeek != DayOfWeek.Friday && DateFrom.DayOfWeek != DayOfWeek.Saturday && !(companyDaysOff == null))
+                        {
+                            var ehaa = _employeeHoursAwaitingApprovalProc.ReadOneByUserIDAndDate(UserID, DateFrom);
+                            employeeHour = this.ReadOneByDateAndUserID(DateFrom, UserID);
+                            if (OffDayTypeID == 4 && employeeHour?.OffDayTypeID != 4)
+                            {
+                                //employeeHour.Employee = user;
+                                //employeeHour.Employee.SpecialDays -= 1;
+                                user.SpecialDays -= 1;
+                            }
+                            else if (employeeHour?.OffDayTypeID == 4 && OffDayTypeID != 4)
+                            {
+                                user.SpecialDays += 1;
+                            }
+                            if (employeeHour == null)
+                            {
+                                employeeHour = new EmployeeHours
+                                {
+                                    EmployeeID = UserID,
+                                    Date = DateFrom,
+                                    OffDayTypeID = OffDayTypeID,
+                                    OffDayType = _offDayTypesProc.ReadOneByPK(OffDayTypeID)
+                                };
+                            }
+                            else if (employeeHour.Entry1 == null && employeeHour.Entry2 == null && employeeHour.TotalHours == null)
+                            {
+                                if (employeeHour.OffDayTypeID == OffDayTypeID)
+                                {
+                                    alreadyOffDay = true;
+                                }
+                                else if (employeeHour.OffDayTypeID != null)
+                                {
+                                    await _employeesProc.RemoveEmployeeBonusDay(employeeHour, user);
+                                }
+                                else
+                                {
+                                    await _timekeeperNotificationsProc.DeleteByEHID(employeeHour.EmployeeHoursID);
+                                    //RemoveNotifications(employeeHour.EmployeeHoursID);
+                                }
+                                employeeHour.OffDayTypeID = OffDayTypeID;
+
+                                employeeHour.IsBonus = false;
+                                employeeHour.OffDayType = _offDayTypesProc.ReadOneByPK(OffDayTypeID);
+                            }
+                            if (!alreadyOffDay)
+                            {
+                                if (user.BonusSickDays >= 1 || user.BonusVacationDays >= 1)
+                                {
+                                    var vacationLeftCount = _employeesProc.GetDaysOffCountByUserOffTypeIDYear(user, OffDayTypeID, DateFrom.Year);
+                                    if (DateFrom.Year != DateTo.Year && DateTo.Year != 1)
+                                    {
+                                        vacationLeftCount += _employeesProc.GetDaysOffCountByUserOffTypeIDYear(user, OffDayTypeID, DateFrom.Year);
+                                    }
+                                    if (vacationLeftCount < 1)
+                                    {
+                                        _employeesProc.TakeBonusDay(user, OffDayTypeID, employeeHour);   
+                                    }
+                                    _context.Update(employeeHour);
+                                    _context.SaveChanges();
+                                    if (ehaa != null)
+                                    {
+                                        _context.Remove(ehaa);
+                                        _context.SaveChanges();
+                                    }
+                                }
+                                else
+                                {
+                                    _context.Update(employeeHour);
+                                    _context.SaveChanges();
+                                }
+                            }
+                        }
+                        await transaction.CommitAsync();
+                    }
+                    else
+                    {
+                        var employeeHours = this.ReadByDateSpanAndUserID(DateTo, DateFrom, UserID);
+                        companyDaysOff = _companyDaysOffProc.ReadByDateSpan(DateFrom, DateTo).Select(cdf => cdf.Date).ToList();
+
+
+                        while (DateFrom <= DateTo)
+                        {
+                            if (DateFrom.DayOfWeek != DayOfWeek.Friday && DateFrom.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(DateFrom.Date))
+                            {
+                                var ehaa = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == UserID && eh.Date.Date == DateFrom).FirstOrDefault();
+                                if (employeeHours.Count() > 0)
+                                {
+                                    employeeHour = employeeHours.Where(eh => eh.Date == DateFrom).FirstOrDefault();
+                                    if (OffDayTypeID == 4 && employeeHour?.OffDayTypeID != 4)
+                                    {
+                                        //employeeHour.Employee = user;
+                                        //employeeHour.Employee.SpecialDays -= 1;
+                                        user.SpecialDays -= 1;
+                                    }
+                                    else if (employeeHour?.OffDayTypeID == 4 && OffDayTypeID != 4)
+                                    {
+                                        user.SpecialDays += 1;
+                                    }
+                                    if (employeeHour == null)
+                                    {
+                                        employeeHour = new EmployeeHours
+                                        {
+                                            EmployeeID = UserID,
+                                            Date = DateFrom,
+                                            OffDayTypeID = OffDayTypeID
+                                        };
+                                    }
+                                    else if (employeeHour.Entry1 == null && employeeHour.Entry2 == null && employeeHour.TotalHours == null)
+                                    {
+                                        if (employeeHour.OffDayTypeID == OffDayTypeID)
+                                        {
+                                            alreadyOffDay = true;
+                                        }
+                                        else if (employeeHour.OffDayTypeID != null)
+                                        {
+                                            await _employeesProc.RemoveEmployeeBonusDay(employeeHour, user);
+                                        }
+                                        else
+                                        {
+                                            await _timekeeperNotificationsProc.DeleteByEHID(employeeHour.EmployeeHoursID);
+                                        }
+                                        employeeHour.OffDayTypeID = OffDayTypeID;
+                                        employeeHour.IsBonus = false;
+                                    }
+                                }
+                                else
+                                {
+                                    employeeHour = new EmployeeHours
+                                    {
+                                        EmployeeID = UserID,
+                                        OffDayTypeID = OffDayTypeID,
+                                        Date = DateFrom
+                                    };
+                                }
+
+                                if (!alreadyOffDay)
+                                {
+                                    if (user.BonusSickDays >= 1 || user.BonusVacationDays >= 1)
+                                    {
+                                        var vacationLeftCount = _employeesProc.GetDaysOffCountByUserOffTypeIDYear(user, OffDayTypeID, DateFrom.Year);
+                                        if (DateFrom.Year != DateTo.Year && DateTo.Year != 1)
+                                        {
+                                            vacationLeftCount += _employeesProc.GetDaysOffCountByUserOffTypeIDYear(user, OffDayTypeID, DateTo.Year);
+                                        }
+                                        if (vacationLeftCount < 1)
+                                        {
+                                            await _employeesProc.TakeBonusDay(user, OffDayTypeID, employeeHour);
+                                        }
+                                        _context.Update(employeeHour);
+                                        if (ehaa != null)
+                                        {
+                                            _context.Remove(ehaa);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        _context.Update(employeeHour);
+                                        _context.SaveChanges();
+                                    }
+
+                                }
+                            }
+                            DateFrom = DateFrom.AddDays(1);
+                            _context.SaveChanges();
+                        }
+                        //throw new Exception();
+                        await transaction.CommitAsync();
+                    }
+
+                    ReturnVal.SetStringAndBool(true, null);
+                }
+                catch (Exception ex)
+                {
+                    ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                }
+            }
+            return ReturnVal;
         }
     }
 }

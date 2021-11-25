@@ -11,7 +11,7 @@ using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class TimekeeperNotificationsProc : ApplicationDbContextProcedure
+    public class TimekeeperNotificationsProc : ApplicationDbContextProc
     {
         public TimekeeperNotificationsProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
         {
