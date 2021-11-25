@@ -31,6 +31,5 @@ namespace PrototypeWithAuth.Models
         public CommentType CommentType { get; set; }
         public bool IsDeleted { get; set; }
         public int ObjectID { get; set; }
-        public abstract AppUtility.CommentModelTypeEnum ModelType { get; }
     }
 }
