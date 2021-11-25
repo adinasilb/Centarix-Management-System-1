@@ -417,10 +417,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Participant>().HasIndex(p => new { p.ParticipantID, p.CentarixID }).IsUnique();
             modelBuilder.HasSequence<int>("SerialNumberHelper", schema: "dbo").StartsAt(1).IncrementsBy(1);
             modelBuilder.Entity<Request>().Property(r => r.SerialNumber).HasDefaultValueSql("NEXT VALUE FOR dbo.SerialNumberHelper");
-            modelBuilder.Entity<ProductComment>().Ignore(p => p.ModelType);
-            modelBuilder.Entity<VendorComment>().Ignore(p => p.ModelType);
-            modelBuilder.Entity<ProtocolComment>().Ignore(p => p.ModelType);
-            modelBuilder.Entity<RequestComment>().Ignore(p => p.ModelType);
+
             /*PROTOCOLS*/
             ///set up composite keys
 
