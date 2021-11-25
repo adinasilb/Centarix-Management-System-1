@@ -568,6 +568,7 @@
     <Folder Include="wwwroot\Protocols\" />
     <Folder Include="wwwroot\Reports\" />
     <Folder Include="wwwroot\Requests\" />
+    <Folder Include="wwwroot\Requests\17\Info\" />
   </ItemGroup>
 
 

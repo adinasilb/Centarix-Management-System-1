@@ -3844,14 +3844,14 @@ namespace PrototypeWithAuth.Controllers
                 secondChildLi = _context.LocationInstances.Where(li => li.LocationInstanceParentID == firstChildLI.LocationInstanceID).FirstOrDefault(); //second child is to ensure it doesn't have any box units
             }
 
-            if (secondChildLi != null)
+            if (secondChildLi != null || parentLocationInstance.LocationTypeID==500)//case for 25
             {
                 receivedModalVisualViewModel.DeleteTable = true;
             }
             else
             {
                 //if it's an empty shelf- reset the location to the parent location instance id:
-                if (/*parentLocationInstance.LocationTypeID == 201 &&*/ parentLocationInstance.IsEmptyShelf)
+                if (/*parentLocationInstance.LocationTypeID == 201 &&*/ parentLocationInstance.IsEmptyShelf && parentLocationInstance.LabPartID == null)
                 {
                     parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
                     LocationInstanceID = parentLocationInstance.LocationInstanceID;
@@ -3863,11 +3863,18 @@ namespace PrototypeWithAuth.Controllers
                 {
                     var request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).FirstOrDefault();
 
-
-
-                    receivedModalVisualViewModel.ChildrenLocationInstances =
+                    if (receivedModalVisualViewModel.ParentLocationInstance.IsEmptyShelf && receivedModalVisualViewModel.ParentLocationInstance.LabPartID != null)
+                    {
+                        receivedModalVisualViewModel.ChildrenLocationInstances =
+                        _context.LocationInstances.Where(m => m.LocationInstanceID == LocationInstanceID)
+                        .Include(m => m.RequestLocationInstances).OrderBy(m => m.LocationNumber).ToList();
+                    }
+                    else
+                    {
+                        receivedModalVisualViewModel.ChildrenLocationInstances =
                         _context.LocationInstances.Where(m => m.LocationInstanceParentID == LocationInstanceID)
                         .Include(m => m.RequestLocationInstances).OrderBy(m => m.LocationNumber).ToList();
+                    }
 
                     List<LocationInstancePlace> liPlaces = new List<LocationInstancePlace>();
                     if (request != null)

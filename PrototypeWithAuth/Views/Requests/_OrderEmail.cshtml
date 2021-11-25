@@ -126,7 +126,7 @@ Model.TempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.Side
                                 decimal unitPrice = (cost ?? 0) / Model.Requests[m].Unit;
                                 <td class="@showPrice">@currency @unitPrice.ToString("N2")</td>
                             }
-                            <td class="@showPrice">@AppUtility.TrimZeros(request?.ParentQuote?.Discount ??0)%</td>
+                            <td class="@showPrice">@AppUtility.TrimZeros(Model.Requests[m]?.ParentQuote?.Discount ??0)%</td>
                             <td class="@showPrice">@currency @cost?.ToString("N2")</td>
                         </tr>
                     }
