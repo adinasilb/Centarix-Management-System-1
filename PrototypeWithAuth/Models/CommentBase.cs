@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public abstract class CommentBase
+    public  class CommentBase
     {
         private DateTime _CommentTimeStamp;
         [Key]
@@ -31,6 +31,5 @@ namespace PrototypeWithAuth.Models
         public CommentType CommentType { get; set; }
         public bool IsDeleted { get; set; }
         public int ObjectID { get; set; }
-        public abstract AppUtility.CommentModelTypeEnum ModelType { get; }
     }
 }
