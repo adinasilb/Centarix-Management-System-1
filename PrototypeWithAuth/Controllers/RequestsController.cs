@@ -6940,5 +6940,16 @@ namespace PrototypeWithAuth.Controllers
             return await base._CommentInfoPartialView(typeID, index, modelType);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ProductsWarningModal(int productID)
+        {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
+            var viewModel = _context.ProductComments.Where(p => p.ObjectID==productID).ToList();
+            return PartialView(viewModel);
+        }
     }
 }
