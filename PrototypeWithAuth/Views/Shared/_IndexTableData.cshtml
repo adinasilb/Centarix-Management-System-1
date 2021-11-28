@@ -58,10 +58,10 @@
                                                     <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
                                                     <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
                                                 </a>*@
-                                                                <a class="btn-link text no-hover requests @iconpopover.AjaxCall" value="@col.AjaxID" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation" data-share-resource-id="@col.AjaxID"
+                                                                <a class="btn-link popover-text no-hover requests @iconpopover.AjaxCall" value="@col.AjaxID" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation" data-share-resource-id="@col.AjaxID"
                                                                    data-route-request="@col.AjaxID" data-route-newStatus="@iconpopover.Description">
                                                                     <i class="@iconpopover.Icon @iconpopover.AjaxCall" style="color: @iconpopover.Color"></i>
-                                                                    <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
+                                                                    <label class="m-2 ">@(AppUtility.GetDisplayNameOfEnumValue(iconpopover.Description.ToString()))</label>
                                                                 </a>
                                                             </div>
                                                         }
@@ -141,7 +141,7 @@
 
 <div class="row">
     <div class="col-12 justify-content-center d-flex">
-        @Html.PagedListPager(Model.PagedList, page => Url.Action(" "), new PagedListRenderOptions { LiElementClasses = new string[] { "page-item pr-4" }, DisplayLinkToNextPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToPreviousPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToLastPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToFirstPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, MaximumPageNumbersToDisplay = 10, DisplayEllipsesWhenNotShowingAllPageNumbers = true })
+        @Html.PagedListPager(Model.PagedList, page => Url.Action(" "), new PagedListRenderOptions { LiElementClasses = new string[] { "page-item pr-4 page-num-size" }, DisplayLinkToNextPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToPreviousPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToLastPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToFirstPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, MaximumPageNumbersToDisplay = 10, DisplayEllipsesWhenNotShowingAllPageNumbers = true })
     </div>
 </div>
 <script src="~/js/IndexTablePartial.js"></script>

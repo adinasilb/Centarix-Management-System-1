@@ -1,19 +1,22 @@
-﻿@model PrototypeWithAuth.Models.RequestList;
-<div class="row">
-    <div class="col">
-        @if (!Model.IsDefault)
+﻿@using PrototypeWithAuth.AppData;
+@model PrototypeWithAuth.ViewModels.ListSettingsViewModel;
+
+@{
+    if(Model.SidebarType == AppUtility.SidebarEnum.MyLists)
+    {
+        await Html.RenderPartialAsync("_MyListSettings", Model);
+    }
+    else
+    {
+        await Html.RenderPartialAsync("_SharedListSettings", Model);
+    }
+}
+
+<div class="list-users">
+    @{
+        if (Model.SelectedList!= null || !Model.SelectedSharedList.ViewOnly)
         {
-            <a class="btn-link text no-hover requests delete-my-list float-right" value="@Model.ListID">
-                <i class="icon-delete-24px danger-text" style="font-size:20px;"></i>
-                @*<label class="danger-text">Delete List</label>*@
-            </a>
+            await Html.RenderPartialAsync("_ListUsers", Model);
         }
-    </div>
+    }
 </div>
-<div class="row">
-    <div class="col">
-        <label asp-for="Title" class="control-label">Rename List (up to 20 characters)</label>
-        <input asp-for="Title" name="SelectedList.Title" class="form-control-plaintext border-bottom" />
-    </div>
-</div>
-<script src="~/js/RequestLists.js"></script>

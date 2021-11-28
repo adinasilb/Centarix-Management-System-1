@@ -31,7 +31,7 @@ namespace PrototypeWithAuth.Controllers
         protected readonly IHttpContextAccessor _httpContextAccessor;
         protected string AccessDeniedPath = "~/Identity/Account/AccessDenied";
         protected ICompositeViewEngine _viewEngine;
-        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
+        public SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
@@ -253,7 +253,6 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
-
             }
             var folder = Path.Combine(uploadFolder, MiddleFolderName);
             Directory.CreateDirectory(folder);
@@ -279,6 +278,69 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
         }
+
+        public string UploadFile(DocumentsModalViewModel documentsModalViewModel)
+        {
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
+            var MiddleFolderName = "";
+            var fileName = "";
+            if (documentsModalViewModel.FolderName == AppUtility.FolderNamesEnum.Custom && documentsModalViewModel.ParentFolderName == AppUtility.ParentFolderName.ExperimentEntries)
+            {
+                MiddleFolderName = documentsModalViewModel.Guid.ToString();
+            }
+            else
+            {
+                MiddleFolderName = documentsModalViewModel.ObjectID == "0" ? documentsModalViewModel.Guid.ToString() : documentsModalViewModel.ObjectID;
+            }
+            var folder = Path.Combine(uploadFolder, MiddleFolderName);
+            Directory.CreateDirectory(folder);
+            if (documentsModalViewModel.FilesToSave != null)
+            {
+                fileName = documentsModalViewModel.FilesToSave[0].FileName;
+                var folderName = documentsModalViewModel.FolderName.ToString();
+                if (documentsModalViewModel.FolderName == AppUtility.FolderNamesEnum.Custom && documentsModalViewModel.ParentFolderName == AppUtility.ParentFolderName.ExperimentEntries)
+                {
+                    folderName = documentsModalViewModel.ObjectID.ToString();
+                }
+                string folderPath = Path.Combine(folder, folderName);
+                Directory.CreateDirectory(folderPath);
+                var uniqueFilePath = Path.Combine(folderPath, "_Part2"+ fileName);
+                var uniqueFilePathOld =Path.Combine(folderPath, fileName);
+
+                var files = Directory.GetFiles(folderPath).Where(f => f==uniqueFilePathOld).ToList();
+               if(!documentsModalViewModel.IsFirstPart)
+                {
+                    foreach (var file in files)
+                    {
+                        FileStream fileStreamOld = new FileStream(file, FileMode.Append);
+                        FileStream fileStream = new FileStream(uniqueFilePath, FileMode.OpenOrCreate);
+                        documentsModalViewModel.FilesToSave[0].CopyTo(fileStream);
+                        fileStream.Close();
+                        var fileBytes = System.IO.File.ReadAllBytes(uniqueFilePath);
+                        fileStreamOld.Write(fileBytes);
+                        fileStreamOld.Close();
+
+                        System.IO.File.Delete(uniqueFilePath);
+
+                    }
+
+                }
+                else
+                {
+                    if(files.Count>0)
+                    {
+                        fileName=(files.Count+1)+ fileName;
+                    }
+                    uniqueFilePathOld =Path.Combine(folderPath, fileName);
+                    FileStream filestream = new FileStream(uniqueFilePathOld, FileMode.Create);
+                    documentsModalViewModel.FilesToSave[0].CopyTo(filestream);
+                    filestream.Close();
+                }
+
+            }
+            return fileName;
+        }
+
         protected void DeleteTemporaryDocuments(AppUtility.ParentFolderName parentFolderName, Guid? guid = null, int ObjectID = 0)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
@@ -524,11 +586,24 @@ namespace PrototypeWithAuth.Controllers
                         receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
                         requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
                         requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).OrderBy(l => l.LocationNumber).ToList());
+                        
                         while (parent.LocationInstanceParentID != null)
                         {
                             parent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parent.LocationInstanceParentID).FirstOrDefault();
                             requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).OrderBy(l => l.LocationNumber).ToList());
                             receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
+                        }
+                        if(parent.LocationTypeID == 500)
+                        {
+
+                            if (parentLocationInstance.LocationTypeID == 500)
+                            {
+                                receivedModalSublocationsViewModel.locationInstancesSelected.Insert(0,requestLocationInstances[0].LocationInstance);
+                                requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
+                                requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceID).Include(l => l.LabPart).OrderBy(l => l.LocationNumber).ToList());
+                            }
+                            receivedModalSublocationsViewModel.locationInstancesSelected.First().LabPart = _context.LabParts.Where(lp => lp.LabPartID == receivedModalSublocationsViewModel.locationInstancesSelected.First().LabPartID).FirstOrDefault();
+                            receivedModalSublocationsViewModel.LabPartTypes = _context.LabParts;
                         }
                         while (!finished)
                         {
@@ -571,13 +646,27 @@ namespace PrototypeWithAuth.Controllers
                                 }).OrderBy(m => m.LocationInstance.LocationNumber).ToList();
 
                             List<LocationInstancePlace> liPlaces = new List<LocationInstancePlace>();
-                            foreach (var cli in receivedModalVisualViewModel.RequestChildrenLocationInstances)
+                            var emptyshelf25 = receivedModalVisualViewModel.RequestChildrenLocationInstances.Where(rcli => rcli.IsThisRequest && rcli.LocationInstance.IsEmptyShelf).FirstOrDefault();
+                            if (parentLocationInstance.LocationTypeID == 500
+                                && emptyshelf25 != null)
                             {
                                 liPlaces.Add(new LocationInstancePlace()
                                 {
-                                    LocationInstanceId = cli.LocationInstance.LocationInstanceID,
-                                    Placed = cli.IsThisRequest
+                                    LocationInstanceId = emptyshelf25.LocationInstance.LocationInstanceID,
+                                    Placed = true
                                 });
+                                receivedModalVisualViewModel.RequestChildrenLocationInstances= new List<RequestChildrenLocationInstances>() { emptyshelf25};
+                            }
+                            else
+                            {
+                                foreach (var cli in receivedModalVisualViewModel.RequestChildrenLocationInstances)
+                                {
+                                    liPlaces.Add(new LocationInstancePlace()
+                                    {
+                                        LocationInstanceId = cli.LocationInstance.LocationInstanceID,
+                                        Placed = cli.IsThisRequest
+                                    });
+                                }
                             }
                             receivedModalVisualViewModel.LocationInstancePlaces = liPlaces;
                             //return NotFound();
@@ -674,7 +763,7 @@ namespace PrototypeWithAuth.Controllers
             else if (requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID == 2)
             {
 
-                if (requestItemViewModel.Requests.FirstOrDefault().ParentRequestID != null)
+                if (requestItemViewModel.Requests.FirstOrDefault().ParentRequestID !=null)
                 {
                     GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, AppUtility.ParentFolderName.ParentRequest, ordersFolder, requestItemViewModel.Requests.FirstOrDefault().ParentRequestID.ToString());
                 }
@@ -1007,7 +1096,7 @@ namespace PrototypeWithAuth.Controllers
             var popoverRemoveShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
             var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
             var popoverAddToList = new IconPopoverViewModel("icon-centarix-icons-04", "black", AppUtility.PopoverDescription.AddToList, "MoveToListModal", "Requests", AppUtility.PopoverEnum.None, "move-to-list");
-            var popoverMoveList = new IconPopoverViewModel("icon-entry-24px", "black", AppUtility.PopoverDescription.MoveList, "MoveToListModal", "Requests", AppUtility.PopoverEnum.None, "move-to-list");
+            var popoverMoveList = new IconPopoverViewModel("icon-entry-24px", "black", AppUtility.PopoverDescription.MoveToList, "MoveToListModal", "Requests", AppUtility.PopoverEnum.None, "move-to-list");
             var popoverDeleteFromList = new IconPopoverViewModel("icon-delete-24px", "black", AppUtility.PopoverDescription.DeleteFromList, "DeleteFromListModal", "Requests", AppUtility.PopoverEnum.None, "remove-from-list");
 
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
@@ -1183,9 +1272,10 @@ namespace PrototypeWithAuth.Controllers
                                           r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                             break;
                         case AppUtility.SidebarEnum.MyLists:
+                        case AppUtility.SidebarEnum.SharedLists:
                             iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
-                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverMoveList, popoverDeleteFromList };
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverMoveList, popoverShare, popoverDeleteFromList };
                             iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await _context.RequestListRequests.Where(rlr => rlr.ListID == requestIndexObject.ListID).OrderByDescending(rlr => rlr.TimeStamp)
                                 .Select(rlr => rlr.Request).Select(r =>
@@ -1195,7 +1285,9 @@ namespace PrototypeWithAuth.Controllers
                                           _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(),
                                           _context.ShareRequests
                 .Where(sr => sr.RequestID == r.RequestID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user,
-                                          r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
+                                          r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest,
+                                          _context.ShareRequestLists.Where(srl => srl.RequestListID == requestIndexObject.ListID && srl.ToApplicationUserID == user.Id).FirstOrDefault().ViewOnly
+                                          )).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                             break;
                     }
                     break;
@@ -1485,5 +1577,117 @@ namespace PrototypeWithAuth.Controllers
         //{
         //    return new EmptyResult();
         //}
+
+
+        //[HttpPost]
+        //public IActionResult UploadFile(List<IFormFile> files)
+        //{
+        //    foreach (string file in files)
+        //    {
+        //        var FileDataContent = file;
+        //        if (FileDataContent != null && FileDataContent.Length > 0)
+        //        {
+        //            // take the input stream, and save it to a temp folder using
+        //            // the original file.part name posted
+        //            var stream = FileDataContent.InputStream;
+        //            var fileName = Path.GetFileName(FileDataContent.FileName);
+        //            var UploadPath = Server.MapPath("~/App_Data/uploads");
+        //            Directory.CreateDirectory(UploadPath);
+        //            string path = Path.Combine(UploadPath, fileName);
+        //            try
+        //            {
+        //                if (System.IO.File.Exists(path))
+        //                    System.IO.File.Delete(path);
+        //                using (var fileStream = System.IO.File.Create(path))
+        //                {
+        //                    stream.CopyTo(fileStream);
+        //                }
+        //                // Once the file part is saved, see if we have enough to merge it
+        //                Shared.Utils UT = new Shared.Utils();
+        //                UT.MergeFile(path);
+        //            }
+        //            catch (IOException ex)
+        //            {
+        //                // handle
+        //            }
+        //        }
+        //    }
+        //    return new HttpResponseMessage()
+        //    {
+        //        StatusCode = System.Net.HttpStatusCode.OK,
+        //        Content = new StringContent("File uploaded.")
+        //    };
+        //}
+
+
+        //private bool MergeFile(string FileName)
+        //{
+        //    bool rslt = false;
+        //    // parse out the different tokens from the filename according to the convention
+        //    string partToken = ".part_";
+        //    string baseFileName = FileName.Substring(0, FileName.IndexOf(partToken));
+        //    string trailingTokens = FileName.Substring(FileName.IndexOf(partToken) + partToken.Length);
+        //    int FileIndex = 0;
+        //    int FileCount = 0;
+        //    int.TryParse(trailingTokens.Substring(0, trailingTokens.IndexOf(".")), out FileIndex);
+        //    int.TryParse(trailingTokens.Substring(trailingTokens.IndexOf(".") + 1), out FileCount);
+        //    // get a list of all file parts in the temp folder
+        //    string Searchpattern = Path.GetFileName(baseFileName) + partToken + "*";
+        //    string[] FilesList = Directory.GetFiles(Path.GetDirectoryName(FileName), Searchpattern);
+        //    //  merge .. improvement would be to confirm individual parts are there / correctly in
+        //    // sequence, a security check would also be important
+        //    // only proceed if we have received all the file chunks
+        //    if (FilesList.Count() == FileCount)
+        //    {
+        //        // use a singleton to stop overlapping processes
+        //        if (!MergeFileManager.Instance.InUse(baseFileName))
+        //        {
+        //            MergeFileManager.Instance.AddFile(baseFileName);
+        //            if (File.Exists(baseFileName))
+        //                File.Delete(baseFileName);
+        //            // add each file located to a list so we can get them into
+        //            // the correct order for rebuilding the file
+        //            List<SortedFile> MergeList = new List<SortedFile>();
+        //            foreach (string File in FilesList)
+        //            {
+        //                SortedFile sFile = new SortedFile();
+        //                sFile.FileName = File;
+        //                baseFileName = File.Substring(0, File.IndexOf(partToken));
+        //                trailingTokens = File.Substring(File.IndexOf(partToken) + partToken.Length);
+        //                int.TryParse(trailingTokens.
+        //                   Substring(0, trailingTokens.IndexOf(".")), out FileIndex);
+        //                sFile.FileOrder = FileIndex;
+        //                MergeList.Add(sFile);
+        //            }
+        //            // sort by the file-part number to ensure we merge back in the correct order
+        //            var MergeOrder = MergeList.OrderBy(s => s.FileOrder).ToList();
+        //            using (FileStream FS = new FileStream(baseFileName, FileMode.Create))
+        //            {
+        //                // merge each file chunk back into one contiguous file stream
+        //                foreach (var chunk in MergeOrder)
+        //                {
+        //                    try
+        //                    {
+        //                        using (FileStream fileChunk =
+        //                           new FileStream(chunk.FileName, FileMode.Open))
+        //                        {
+        //                            fileChunk.CopyTo(FS);
+        //                        }
+        //                    }
+        //                    catch (IOException ex)
+        //                    {
+        //                        // handle
+        //                    }
+        //                }
+        //            }
+        //            rslt = true;
+        //            // unlock the file from singleton
+        //            MergeFileManager.Instance.RemoveFile(baseFileName);
+        //        }
+        //    }
+        //    return rslt;
+        //}
+
+
     }
 }

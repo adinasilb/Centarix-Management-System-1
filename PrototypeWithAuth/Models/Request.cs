@@ -162,9 +162,6 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Exchange Rate")]
         public decimal ExchangeRate { get; set; } // holding the rate of exchange for this specific request
         public int? Terms { get; set; } // if terms is selected, keep decremtnting, when = zero, gets status of pay now
-        public decimal Discount { get; set; }
-
-
 
         /// received fields
         [DataType(DataType.Date)]
@@ -188,6 +185,10 @@ namespace PrototypeWithAuth.Models
         public QuoteStatus QuoteStatus { get; set; }
         public bool IsInInventory { get; set; }
         public bool DevelopersBoolean { get; set; }
+        public int SerialNumber { get; set; }
         public IEnumerable<RequestListRequest> RequestListRequests { get; set; }
+        private const string SerialNumberPefix = "IL";
+
+        public string SerialNumberString { get { return SerialNumberPefix+SerialNumber; } }
     }
 }
