@@ -86,5 +86,7 @@ namespace PrototypeWithAuth.ViewModels
         public PricePopoverViewModel PricePopoverViewModel { get; set; }
         public TempRequestListViewModel TempRequestListViewModel { get; set; }
         public List<string> LastUrls { get; set; }
+        public bool HasQuote { get; set; }
+        public bool HasWarnings { get; set; }
     }
 }
