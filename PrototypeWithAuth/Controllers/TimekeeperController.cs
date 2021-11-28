@@ -574,8 +574,10 @@ namespace PrototypeWithAuth.Controllers
             string errorMessage = "";
             var userId = _userManager.GetUserId(User);
             var offDayTypeID = _offDayTypesProc.ReadOneByOffDayTypeEnum(offDayViewModel.OffDayType).OffDayTypeID;
-            var success = _employeeHoursProc.SaveOffDay(offDayViewModel.FromDate, offDayViewModel.ToDate, offDayTypeID, userId);
-            if (!success) { offda}
+            var success = await _employeeHoursProc.SaveOffDay(offDayViewModel.FromDate, offDayViewModel.ToDate, offDayTypeID, userId);
+            if (!success.Bool) {
+                errorMessage = success.String;
+            }
             return RedirectToAction("_ReportDaysOff", new { errorMessage });
         }
         [HttpGet]
@@ -637,9 +639,11 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> OffDayConfirmModal(OffDayViewModel offDayViewModel)
         {
+            var success = _employeeHoursProc.SaveOffDay(offDayViewModel.FromDate, offDayViewModel.ToDate, offDayViewModel.)
             try
             {
-                await SaveOffDay(offDayViewModel.FromDate, new DateTime(), offDayViewModel.OffDayType);
+
+                //await SaveOffDay(offDayViewModel.FromDate, new DateTime(), offDayViewModel.OffDayType);
                 //throw new Exception();
             }
             catch (Exception ex)
