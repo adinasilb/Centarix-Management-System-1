@@ -4,11 +4,15 @@ $('.editQuoteDetails').validate({
     return $.trim( value );
   },
 	rules: {
-		"QuoteNumber": {
+		"ParentQuote.QuoteNumber": {
 			required: true,
 			//number: true,
 			//min: 1
 		},
+		"ParentQuote.ExpirationDate": {
+			required: true,
+			mindate: new Date()
+        },
 		//"Request.ExpectedSupplyDays": {
 		//	required: true,
 		//	min: 0,

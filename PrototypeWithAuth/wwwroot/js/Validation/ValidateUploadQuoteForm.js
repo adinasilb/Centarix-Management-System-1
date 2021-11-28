@@ -10,7 +10,11 @@
 			required: true,
 			maxDate: new Date()
 		},
-		QuotesInput :{
+		"ParentQuote.ExpirationDate": {
+			required: true,
+			mindate: new Date()
+		},
+		"QuotesInput" :{
 			fileRequired : true			
 		},
 		"ParentRequest.SupplierOrderNumber": {
