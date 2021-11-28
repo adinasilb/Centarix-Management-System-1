@@ -2864,6 +2864,8 @@ namespace PrototypeWithAuth.Controllers
             };
             requestItemViewModel.Requests = new List<Request>() { request };
             requestItemViewModel.IsReorder = true;
+            requestItemViewModel.HasWarnings = _context.ProductComments.Where(pc => pc.ObjectID==request.ProductID && pc.CommentTypeID==2).Count()>0;
+            requestItemViewModel.HasQuote =_context.Requests.Where(r => r.ProductID == request.ProductID && r.ParentQuote.ExpirationDate >= DateTime.Now.Date).Select(r => r.ParentQuote).OrderByDescending(r => r.QuoteDate).Count()>0;
             //var reorderViewModel = new ReorderViewModel() { RequestItemViewModel = requestItemViewModel };
 
             await SetTempRequestAsync(tempRequestJson, trlvm, requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
@@ -6766,7 +6768,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var viewModel = _context.ProductComments.Where(p => p.ObjectID==productID).ToList();
+            // requestItemViewModel.HasQuote =_context.Requests.Where(r => r.ProductID == request.ProductID && r.ParentQuote.ExpirationDate >= DateTime.Now.Date).Select(r => r.ParentQuote).OrderByDescending(r => r.QuoteDate).Count()>0;
+
+            var viewModel = _context.ProductComments.Include(p=>p.ApplicationUser).Include(p=>p.CommentType).Where(p => p.ObjectID==productID && p.CommentTypeID==2).ToList();
             return PartialView(viewModel);
         }
     }
