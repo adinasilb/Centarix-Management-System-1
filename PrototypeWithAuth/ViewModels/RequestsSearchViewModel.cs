@@ -13,6 +13,8 @@ namespace PrototypeWithAuth.ViewModels
     public class RequestsSearchViewModel : ViewModelBase
     {
         public AppUtility.MenuItems SectionType { get; set; }
+        public AppUtility.PageTypeEnum PageType { get; set; }
+        public AppUtility.SidebarEnum SidebarEnum { get; set; }
         public IEnumerable<ParentCategory> ParentCategories { get; set; }
         public int? ParentCategoryID { get; set; }
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
@@ -52,5 +54,8 @@ namespace PrototypeWithAuth.ViewModels
         [Display(Name = "Supplier Order Number")]
         public string SupplierOrderNumber { get; set; }
         public string ApplicationUserOwnerID { get; set; }
+        public Payment Payment { get; set; }
+        public IEnumerable<PaymentType> PaymentTypes { get; set; }
+        public IEnumerable<CompanyAccount> CompanyAccounts { get; set; }
     }
 }
