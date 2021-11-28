@@ -1,6 +1,6 @@
-﻿@model List<PrototypeWithAuth.Models.CommentBase>
+﻿@model List<PrototypeWithAuth.Models.ProductComment>
 @using PrototypeWithAuth.ViewModels
-    <div class="modal modal-view newListModal on-form-modal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9100">
+    <div class="modal modal-view productsWarningModal on-form-modal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9100">
         <div class="modal-dialog-centered elixir-modal-sm mx-auto order-inv-form" role="document">
             <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
                 <button type="button" class="close modal-close-padding modal-close-style " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('products-warning-modal');">
@@ -19,13 +19,13 @@
                             @{int index = 0;}
                             @foreach (var c in Model)
                             {
-                                await Html.RenderPartialAsync("_CommentInfoPartial", new CommentsInfoViewModel { IsEdit = false, Index = index++, Comment =c });
+                                await Html.RenderPartialAsync("_CommentInfoPartialView", new CommentsInfoViewModel { IsEdit = false, Index = index++, Comment =c });
                             }
                         </div>
                         <div class="modal-footer border-0 p-0">
                             <div class="mx-auto modal-footer-mt">
-                                <button type="submit" class="custom-button custom-button-font between-button-margin order-inv-background-color ">Save</button>
-                                <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('products-warning-modal');">Cancel</button>
+                                @*<button type="submit" class="custom-button custom-button-font between-button-margin order-inv-background-color ">Save</button>*@
+                                <button type="button" class="custom-button custom-button-font  order-inv-background-color" onclick="$.fn.CloseModal('products-warning-modal');">OK</button>
                             </div>
                         </div>
                     </div>
