@@ -33,6 +33,12 @@
     <input type="hidden" asp-for="RequestsSearchViewModel.OrderNumber" />
     <input type="hidden" asp-for="RequestsSearchViewModel.SupplierOrderNumber" />
     <input type="hidden" asp-for="RequestsSearchViewModel.ApplicationUserOwnerID" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.Payment.CompanyAccountID" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.Payment.PaymentTypeID" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.Payment.PaymentReferenceDate" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.Payment.CheckNumber" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.Payment.CreditCardID" />
+    <input type="hidden" asp-for="RequestsSearchViewModel.Payment.Reference" />
 </form>
 @{
     string view = "";

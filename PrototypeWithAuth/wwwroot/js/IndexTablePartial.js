@@ -432,7 +432,10 @@ $(function () {
         //alert('before bind filter')
         if ($('#searchHiddenForsForm').length) {
             var moreFormData = new FormData($('#searchHiddenForsForm')[0])
+            console.log(...moreFormData);
             formdata = $.fn.CombineTwoFormDatas(moreFormData, formdata);
+            console.log(...formdata);
+            
         }
         if ($("#inventoryFilterContent").length) {
             var selectedFilters = $.fn.BindSelectedFilters("");
