@@ -123,14 +123,14 @@
                             </div>
                             <div class="col-4">
                                 <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.OrderNow"
-                                        class="p-0 custom-order-inv custom-button create-modal-submit  @submitOrderClass">
+                                        class="p-0 custom-order-inv custom-button create-modal-submit  @submitOrderClass  @hasWarningClass">
                                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.OrderNow.ToString())
                                 </button>
 
                             </div>
                             <div class="col-4">
                                 <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart"
-                                        class="p-0 custom-order-inv custom-button  create-modal-submit @submitOrderClass">
+                                        class="p-0 custom-order-inv custom-button  create-modal-submit @submitOrderClass  @hasWarningClass">
                                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
                                 </button>
 
@@ -150,7 +150,7 @@
                         <div class="row">
                             <div class="col-4">
                                 <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AlreadyPurchased"
-                                        class="p-0 custom-order-inv custom-button create-modal-submit  @submitOrderClass ">
+                                        class="p-0 custom-order-inv custom-button create-modal-submit  @submitOrderClass  @hasWarningClass">
                                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AlreadyPurchased.ToString())
                                 </button>
 
