@@ -14,7 +14,7 @@ namespace PrototypeWithAuth.Data.SeededData
             list.Add(new EmployeeInfoNotificationStatus
             {
                 NotificationStatusID = 6,
-                Icon = "icon-notification_birthday-24px",
+                Icon = "icon-centarix-icons-10",
                 Color = "--black-87",
                 Description = "Happy Birthday"
             });
