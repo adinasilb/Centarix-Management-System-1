@@ -29,10 +29,7 @@
         hideVat = "d-none";
     }
 
-    if(Model.HasQuote)
-    {
-
-    }
+  
     if (Model.HasWarnings)
     {
         submitOrderClass="";
@@ -115,6 +112,14 @@
                     <div class="form-group mx-auto text-center mb-4">
                         <div class="row">
                             <div class="col-4">
+                                @if (Model.HasQuote)
+                                {
+                                    <span class="text text-danger-centarix d-block">This product already has a quote</span>
+                                }
+                                else
+                                {
+                                    <span class="text d-block">&ensp;</span>
+                                }
                                 <button type="submit" name="OrderType" @*asp-action="ReOrderFloatModalView"*@ value="@AppUtility.OrderTypeEnum.RequestPriceQuote"
                                         class="p-0 custom-order-inv custom-button create-modal-submit @submitOrderClass @hasWarningClass" productID="@Model.Requests[0].ProductID">
                                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
@@ -122,15 +127,19 @@
 
                             </div>
                             <div class="col-4">
+                                <span class="text d-block">&ensp;</span>
                                 <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.OrderNow"
-                                        class="p-0 custom-order-inv custom-button create-modal-submit  @submitOrderClass  @hasWarningClass">
+                                        class="p-0 custom-order-inv custom-button create-modal-submit  @submitOrderClass  @hasWarningClass"
+                                        productID="@Model.Requests[0].ProductID">
                                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.OrderNow.ToString())
                                 </button>
 
                             </div>
                             <div class="col-4">
+                                <span class="text d-block">&ensp;</span>
                                 <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart"
-                                        class="p-0 custom-order-inv custom-button  create-modal-submit @submitOrderClass  @hasWarningClass">
+                                        class="p-0 custom-order-inv custom-button  create-modal-submit @submitOrderClass  @hasWarningClass"
+                                        productID="@Model.Requests[0].ProductID">
                                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
                                 </button>
 
@@ -139,6 +148,7 @@
                         <div class="row">
                             <div class="col-4">
                                 <span class="small-text">Ask the secretary to get a price quote</span>
+                              
                             </div>
                             <div class="col-4">
                                 <span class="small-text">If you want to process a single order imediately</span>
@@ -150,7 +160,8 @@
                         <div class="row">
                             <div class="col-4">
                                 <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AlreadyPurchased"
-                                        class="p-0 custom-order-inv custom-button create-modal-submit  @submitOrderClass  @hasWarningClass">
+                                        class="p-0 custom-order-inv custom-button create-modal-submit  @submitOrderClass  @hasWarningClass"
+                                        productID="@Model.Requests[0].ProductID">
                                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AlreadyPurchased.ToString())
                                 </button>
 
@@ -179,6 +190,13 @@
 <script>
     $(".submitOrder").off('click').on("click", function (e) {
         e.preventDefault();
+        var orderType = $(this).val();
+        $.fn.SumitOrderFunction(orderType);
+        //return false;
+    });
+
+    $.fn.SumitOrderFunction = function (orderType)
+    {
         console.log("submit reorder");
         //alert("validate form");
         $(".reorderForm").data("validator").settings.ignore = "";
@@ -195,8 +213,7 @@
             $("#loading").show();
             var formData = new FormData($(".reorderForm")[0]);
             console.log(...formData)
-            var orderType = $(this).val();
-            $.ajax({
+             $.ajax({
                 contentType: false,
                 processData: false,
                 async: true,
@@ -250,9 +267,7 @@
         }
         $(".reorderForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';
 
-        //return false;
-    });
-
+    }
 
     $(".open-product-warnings").off('click').on("click", function (e) {
             e.preventDefault();        
@@ -269,7 +284,12 @@
                     $(".open-product-warnings").addClass("submitOrder");
                     $(".open-product-warnings").off("click");
                     $(".submitOrder").removeClass("open-product-warnings");
-                    $(".submitOrder").bind("click");
+                    $(".submitOrder").click(function (e) {
+                        e.preventDefault();
+                        
+                        $.fn.SumitOrderFunction($(this).val());
+                      
+                    });
                     return true;
                 },
                 error: function (jqxhr) {
