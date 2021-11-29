@@ -63,11 +63,8 @@ namespace PrototypeWithAuth.Controllers
                                 await fillInTimekeeperMissingDays(employee, lastUpdateToNotifications.Date);
                                 fillInTimekeeperNotifications(employee, lastUpdateToNotifications.Date);
                             }
-                            var existingBirthdays = _context.Employees.Where(r => r.DOB.AddYears(DateTime.Today.Year-r.DOB.Year) == DateTime.Today).ToList();
-                            if (existingBirthdays.Count > 0)
-                            {
-                                fillInBirthdayNotifications(employee, existingBirthdays);
-                            }
+                            
+                            fillInBirthdayNotifications(employee, lastUpdateToNotifications.Date);
                         }
                         lastUpdateToNotifications.Date = DateTime.Now;
                         _context.Update(lastUpdateToNotifications);
@@ -357,20 +354,30 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        private void fillInBirthdayNotifications(Employee user, List<Employee> birthdays)
+        private void fillInBirthdayNotifications(Employee user, DateTime lastUpdate)
         {
-            foreach (var e in birthdays)
+            DateTime nextDay = lastUpdate.AddDays(1);
+            var existingBirthdays = new List<Employee>();
+            while (nextDay.Date <= DateTime.Today)
             {
-                    EmployeeInfoNotification BirthdayNotification = new EmployeeInfoNotification();
-                    BirthdayNotification.IsRead = false;
-                    BirthdayNotification.ApplicationUserID = user.Id;
-                    BirthdayNotification.EmployeeID = e.Id;
-                    BirthdayNotification.Description = "Happy Birthday to " + e.FirstName + " " + e.LastName;
-                    BirthdayNotification.NotificationStatusID = 6;
-                    BirthdayNotification.TimeStamp = DateTime.Now;
-                    BirthdayNotification.Controller = "";
-                    BirthdayNotification.Action = "";
-                    _context.Update(BirthdayNotification);
+                existingBirthdays = _context.Employees.Where(r => r.DOB.AddYears(nextDay.Year-r.DOB.Year) == nextDay.Date).ToList();
+                if (existingBirthdays.Count > 0)
+                {
+                    foreach (var e in existingBirthdays)
+                    {
+                        EmployeeInfoNotification BirthdayNotification = new EmployeeInfoNotification();
+                        BirthdayNotification.IsRead = false;
+                        BirthdayNotification.ApplicationUserID = user.Id;
+                        BirthdayNotification.EmployeeID = e.Id;
+                        BirthdayNotification.Description = "Happy Birthday to " + e.FirstName + " " + e.LastName;
+                        BirthdayNotification.NotificationStatusID = 6;
+                        BirthdayNotification.TimeStamp = nextDay;
+                        BirthdayNotification.Controller = "";
+                        BirthdayNotification.Action = "";
+                        _context.Update(BirthdayNotification);
+                    }
+                }
+                nextDay = nextDay.AddDays(1);
             }
             _context.SaveChanges();
 
