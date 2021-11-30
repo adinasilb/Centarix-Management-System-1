@@ -117,7 +117,7 @@
     </tbody>
 </table>
 <script>
-    $("body, .modal").off('click', ".open-price-popover").on('click', ".open-price-popover", function () {
+    $(".modal").off('click', ".modal .open-price-popover").on('click', ".open-price-popover", function () {
         console.log('price popover from modal');
         $('[data-toggle="popover"]').popover('dispose');
         $(this).addClass("activePopover");
@@ -136,7 +136,7 @@
         });
         $('.modal .open-price-popover').popover('toggle');
 
-        $(".popover").off("click").on("click", ".priceFilterDiv", function (e) {
+        $(".popover").off("click", ".priceFilterDiv").on("click", ".priceFilterDiv", function (e) {
             var id = '#priceSortContent2 ' + "#" + $(this).children(".priceSort").prop("id")
             console.log(id);
             $(id).attr("checked", !$(id).prop("checked"));
