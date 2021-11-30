@@ -70,14 +70,14 @@
                         @if (item.Product?.SubUnit != null)
                         {
                             <li>
-                                @(item.Product?.SubUnit == 0? "Subunit Number has an error" : Html.DisplayFor(modelItem => item.Product.SubUnit).ToString())
-                                @(item.Product?.SubUnitType?.UnitTypeDescription == null ? "subunit type has an error" : Html.DisplayFor(modelItem => item.Product.SubUnitType.UnitTypeDescription).ToString())
+                                @(item.Product?.SubUnit == 0? "Subunit Number has an error" : item.Product.SubUnit.ToString())
+                                @(item.Product?.SubUnitType?.UnitTypeDescription == null ? "subunit type has an error" : item.Product.SubUnitType.UnitTypeDescription)
                             </li>
                             @if (item.Product?.SubSubUnit != null)
                             {
                                 <li>
-                                    @(item.Product?.SubSubUnit == 0? "Subsubunit Number has an error" : Html.DisplayFor(modelItem => item.Product.SubSubUnit).ToString())
-                                    @(item.Product?.SubSubUnitType?.UnitTypeDescription == null ? "subsubunit type has an error" : Html.DisplayFor(modelItem => item.Product.SubSubUnitType.UnitTypeDescription).ToString())
+                                    @(item.Product?.SubSubUnit == 0? "Subsubunit Number has an error" : item.Product.SubSubUnit.ToString())
+                                    @(item.Product?.SubSubUnitType?.UnitTypeDescription == null ? "subsubunit type has an error" : item.Product.SubSubUnitType.UnitTypeDescription)
                                 </li>
                             }
                         }
