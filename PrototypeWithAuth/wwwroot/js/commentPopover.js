@@ -24,7 +24,7 @@
             type: 'GET',
             cache: false,
             success: function (data) {
-                $("#comment-info").append(data);
+                $(".comment-info-div").append(data);
                 $('#comment-index').val(++index);
             }
         });
@@ -33,4 +33,10 @@
 
 });
 
+$(".comment-info-div").off("click", ".delete-comment").on("click", ".delete-comment", function (e) {
 
+    var index = $(this).attr("value");
+    console.log("delete share " + index)
+    $(".removeComment" + index).val(true)
+    $(this).closest(".comment-info").remove();
+})

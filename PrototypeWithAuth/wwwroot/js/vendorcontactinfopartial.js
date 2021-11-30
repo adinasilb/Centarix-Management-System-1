@@ -25,7 +25,7 @@
 			var deletedid = "VendorContacts_" + contactcard + "__Delete";
 			console.log("vendor contact deleted hidden id: " + deletedid);
 			$("#" + deletedid).val("true");
-		//$("#VendorContacts_" + contactcard + "__VendorContactID").remove();
+			//$("#VendorContacts_" + contactcard + "__VendorContactID").remove();
 		}
 	});
 });

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -320,10 +321,13 @@ namespace PrototypeWithAuth.Controllers
                         {
                             foreach (var vendorComment in createSupplierViewModel.Comments)
                             {
-                                vendorComment.ObjectID = createSupplierViewModel.Vendor.VendorID;
-                                vendorComment.ApplicationUserID = userid;
-                                vendorComment.CommentTimeStamp = DateTime.Now;
-                                _context.Add(vendorComment);
+                                if(!vendorComment.IsDeleted)
+                                {
+                                    vendorComment.ObjectID = createSupplierViewModel.Vendor.VendorID;
+                                    vendorComment.ApplicationUserID = userid;
+                                    vendorComment.CommentTimeStamp = DateTime.Now;
+                                    _context.Add(vendorComment);
+                                }                            
 
                             }
                         }
@@ -468,7 +472,10 @@ namespace PrototypeWithAuth.Controllers
                             ModelState.Remove(ms.Key);
                         }
                     }
-                    if (ModelState.IsValid)
+                    var context = new ValidationContext(createSupplierViewModel.Vendor, null, null);
+                    var results = new List<ValidationResult>();
+
+                    if (Validator.TryValidateObject(createSupplierViewModel.Vendor, context, results, true))
                     {
                         _context.Update(createSupplierViewModel.Vendor);
                         _context.SaveChanges();
@@ -508,19 +515,33 @@ namespace PrototypeWithAuth.Controllers
                         {
                             foreach (var vendorComment in createSupplierViewModel.Comments)
                             {
-                                if (!String.IsNullOrEmpty(vendorComment.CommentText))
+                                if (!vendorComment.IsDeleted)
                                 {
                                     vendorComment.ObjectID = createSupplierViewModel.Vendor.VendorID;
                                     if (vendorComment.CommentID == 0)
                                     {
                                         vendorComment.CommentTimeStamp = DateTime.Now;
+                                        _context.Entry(vendorComment).State = EntityState.Added;
                                     }
-                                    _context.Update(vendorComment);
+                                    else
+                                    {
+                                        _context.Entry(vendorComment).State = EntityState.Modified;
+                                    }
+                                    
+                                }
+                                else
+                                {
+                                    var vendorCommentDB = _context.VendorComments.Where(c => c.CommentID == vendorComment.CommentID).FirstOrDefault();
+                                    if (vendorCommentDB !=null)
+                                    {
+                                        vendorCommentDB.IsDeleted=true;
+                                        _context.Entry(vendorCommentDB).State = EntityState.Modified;
+                                    }
                                 }
 
                             }
                         }
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
                         await transaction.CommitAsync();
                         return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
                     }

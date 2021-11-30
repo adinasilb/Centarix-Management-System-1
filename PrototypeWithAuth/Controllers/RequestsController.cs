@@ -2807,6 +2807,70 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+        private async Task SaveRequestProductCommentsFunctionAsync(List<CommentBase> comments, Request request)
+        {
+            foreach (var comment in comments)
+            {
+                if (!comment.IsDeleted)
+                {
+                    //save the new comment
+                    if (comment.CommentTypeID ==1)
+                    {
+                        comment.ObjectID = request.RequestID;
+                       
+                        if (comment.CommentID == 0)
+                        {
+                            comment.CommentTimeStamp = DateTime.Now;
+                            _context.Entry(AppData.Json.Deserialize<RequestComment>(AppData.Json.Serialize(comment))).State = EntityState.Added;
+                        }
+                        else
+                        {
+                            _context.Update(AppData.Json.Deserialize<RequestComment>(AppData.Json.Serialize(comment)));
+                        }
+                    }
+                    else
+                    {
+                        comment.ObjectID = request.ProductID;
+                        if (comment.CommentID == 0)
+                        {
+                            comment.CommentTimeStamp = DateTime.Now;
+                            _context.Entry(AppData.Json.Deserialize<ProductComment>(AppData.Json.Serialize(comment))).State = EntityState.Added;
+
+                        }
+                        else
+                        {
+                            _context.Update(AppData.Json.Deserialize<ProductComment>(AppData.Json.Serialize(comment)));
+
+                        }
+                    }
+                   
+                }
+                else if(comment.IsDeleted)
+                {                    
+                    if(comment.CommentTypeID ==1)
+                    {
+                        var requestComment = _context.RequestComments.Where(c => c.CommentID == comment.CommentID).FirstOrDefault();
+                        if (requestComment !=null)
+                        {
+                            requestComment.IsDeleted=true;
+                            _context.Entry(requestComment).State = EntityState.Modified;
+                        }
+                    }
+                    else
+                    {
+                        var productComment = _context.ProductComments.Where(c => c.CommentID == comment.CommentID).FirstOrDefault();
+                        if (productComment !=null)
+                        {
+                            productComment.IsDeleted=true;
+                            _context.Entry(productComment).State = EntityState.Modified;
+                        }
+                    }
+                }
+            }
+            var changeTracker = _context.ChangeTracker.Entries();
+            await _context.SaveChangesAsync();
+        }
+
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReOrderFloatModalView(RequestIndexObject requestIndexObject, int? id, String SectionType = "")
         {
