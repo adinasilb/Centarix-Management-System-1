@@ -55,6 +55,13 @@ namespace PrototypeWithAuth.Controllers
                     }
                     else if (lastUpdateToNotifications.Date.Date < DateTime.Today)
                     {
+                        DateTime nextDay = lastUpdateToNotifications.Date.AddDays(1);
+                        var existingBirthdays = new List<Employee>();
+                        while (nextDay.Date <= DateTime.Today)
+                        {
+                            await _context.Employees.Where(r => r.DOB.AddYears(nextDay.Year - r.DOB.Year) == nextDay.Date).ForEachAsync(e => existingBirthdays.Add(e));
+                            nextDay = nextDay.AddDays(1);
+                        }
                         foreach (Employee employee in users)
                         {
                             var userRoles = await _userManager.GetRolesAsync(employee);
@@ -63,8 +70,10 @@ namespace PrototypeWithAuth.Controllers
                                 await fillInTimekeeperMissingDays(employee, lastUpdateToNotifications.Date);
                                 fillInTimekeeperNotifications(employee, lastUpdateToNotifications.Date);
                             }
-                            
-                            fillInBirthdayNotifications(employee, lastUpdateToNotifications.Date);
+                            if (existingBirthdays.Count > 0)
+                            {
+                                fillInBirthdayNotifications(employee, existingBirthdays);
+                            }
                         }
                         lastUpdateToNotifications.Date = DateTime.Now;
                         _context.Update(lastUpdateToNotifications);
@@ -185,7 +194,7 @@ namespace PrototypeWithAuth.Controllers
              .Select(n => new
              {
                  id = n.NotificationID,
-                 timeStamp = n.TimeStamp,
+                 date = n.NotificationDate,
                  description = n.Description,
                  requestName = n.RequestName,
                  icon = n.NotificationStatus.Icon,
@@ -201,7 +210,7 @@ namespace PrototypeWithAuth.Controllers
             .Select(n => new
             {
                 id = n.NotificationID,
-                timeStamp = n.TimeStamp,
+                date = n.NotificationDate,
                 description = n.Description,
                 requestName = "",
                 icon = n.NotificationStatus.Icon,
@@ -227,7 +236,7 @@ namespace PrototypeWithAuth.Controllers
                     action = n.Action,
                     isRead = n.IsRead
                 });*/
-            var notificationsCombined = enotification.Concat(rnotification).OrderByDescending(n => n.timeStamp).ToList();
+            var notificationsCombined = rnotification.Concat(enotification).OrderByDescending(n => n.date).ToList().Take(4);
             //return Json(tnotification.Concat(rnotification).OrderByDescending(n => n.timeStamp).ToList().Take(4));
             return Json(notificationsCombined);
         }
@@ -320,7 +329,7 @@ namespace PrototypeWithAuth.Controllers
                     requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
                     requestNotification.Description = "should have arrived " + request.ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).GetElixirDateFormat();
                     requestNotification.NotificationStatusID = 1;
-                    requestNotification.TimeStamp = DateTime.Now;
+                    requestNotification.NotificationDate = DateTime.Now;
                     requestNotification.Controller = "Requests";
                     requestNotification.Action = "NotificationsView";
                     requestNotification.OrderDate = request.ParentRequest.OrderDate;
@@ -345,7 +354,7 @@ namespace PrototypeWithAuth.Controllers
                     timekeeperNotification.ApplicationUserID = e.EmployeeID;
                     timekeeperNotification.Description = "no hours reported for " + e.Date.GetElixirDateFormat();
                     timekeeperNotification.NotificationStatusID = 5;
-                    timekeeperNotification.TimeStamp = DateTime.Now;
+                    timekeeperNotification.NotificationDate = DateTime.Now;
                     timekeeperNotification.Controller = "Timekeeper";
                     timekeeperNotification.Action = "SummaryHours";
                     _context.Update(timekeeperNotification);
@@ -354,33 +363,22 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        private void fillInBirthdayNotifications(Employee user, DateTime lastUpdate)
+        private void fillInBirthdayNotifications(Employee user, List<Employee> userBirthdays)
         {
-            DateTime nextDay = lastUpdate.AddDays(1);
-            var existingBirthdays = new List<Employee>();
-            while (nextDay.Date <= DateTime.Today)
+            foreach (var e in userBirthdays)
             {
-                existingBirthdays = _context.Employees.Where(r => r.DOB.AddYears(nextDay.Year-r.DOB.Year) == nextDay.Date).ToList();
-                if (existingBirthdays.Count > 0)
-                {
-                    foreach (var e in existingBirthdays)
-                    {
-                        EmployeeInfoNotification BirthdayNotification = new EmployeeInfoNotification();
-                        BirthdayNotification.IsRead = false;
-                        BirthdayNotification.ApplicationUserID = user.Id;
-                        BirthdayNotification.EmployeeID = e.Id;
-                        BirthdayNotification.Description = "Happy Birthday to " + e.FirstName + " " + e.LastName;
-                        BirthdayNotification.NotificationStatusID = 6;
-                        BirthdayNotification.TimeStamp = nextDay;
-                        BirthdayNotification.Controller = "";
-                        BirthdayNotification.Action = "";
-                        _context.Update(BirthdayNotification);
-                    }
-                }
-                nextDay = nextDay.AddDays(1);
+                EmployeeInfoNotification BirthdayNotification = new EmployeeInfoNotification();
+                BirthdayNotification.IsRead = false;
+                BirthdayNotification.ApplicationUserID = user.Id;
+                BirthdayNotification.EmployeeID = e.Id;
+                BirthdayNotification.Description = "Happy Birthday to " + e.FirstName + " " + e.LastName;
+                BirthdayNotification.NotificationStatusID = 6;
+                BirthdayNotification.NotificationDate = new DateTime(DateTime.Today.Year, e.DOB.Month, e.DOB.Day);
+                BirthdayNotification.Controller = "";
+                BirthdayNotification.Action = "";
+                _context.Update(BirthdayNotification);
             }
             _context.SaveChanges();
-
         }
 
 
