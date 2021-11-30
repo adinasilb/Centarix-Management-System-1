@@ -1208,7 +1208,7 @@ namespace PrototypeWithAuth.Controllers
                     requestNotification.ApplicationUserID = newRequest.ApplicationUserCreatorID;
                     requestNotification.Description = "item created";
                     requestNotification.NotificationStatusID = 2;
-                    requestNotification.TimeStamp = DateTime.Now;
+                    requestNotification.NotificationDate = DateTime.Now;
                     requestNotification.Controller = "Requests";
                     requestNotification.Action = "NotificationsView";
                     requestNotification.OrderDate = DateTime.Now;
@@ -1724,7 +1724,7 @@ namespace PrototypeWithAuth.Controllers
                                     requestNotification.ApplicationUserID = newTRLVM.TempRequestViewModels[n].Request.ApplicationUserCreatorID;
                                     requestNotification.Description = "item ordered";
                                     requestNotification.NotificationStatusID = 2;
-                                    requestNotification.TimeStamp = DateTime.Now;
+                                    requestNotification.NotificationDate = DateTime.Now;
                                     requestNotification.Controller = "Requests";
                                     requestNotification.Action = "NotificationsView";
                                     requestNotification.OrderDate = DateTime.Now;
@@ -4284,7 +4284,7 @@ namespace PrototypeWithAuth.Controllers
                     requestNotification.NotificationStatusID = 4;
                     var FName = _context.Users.Where(u => u.Id == requestReceived.ApplicationUserReceiverID).FirstOrDefault().FirstName;
                     requestNotification.Description = "received by " + FName;
-                    requestNotification.TimeStamp = DateTime.Now;
+                    requestNotification.NotificationDate = DateTime.Now;
                     requestNotification.Controller = "Requests";
                     requestNotification.Action = "NotificationsView";
                     requestNotification.Vendor = requestReceived.Product.Vendor.VendorEnName;
@@ -4616,7 +4616,7 @@ namespace PrototypeWithAuth.Controllers
                                 requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
                                 requestNotification.Description = "item approved";
                                 requestNotification.NotificationStatusID = 3;
-                                requestNotification.TimeStamp = DateTime.Now;
+                                requestNotification.NotificationDate = DateTime.Now;
                                 requestNotification.Controller = "Requests";
                                 requestNotification.Action = "NotificationsView";
                                 requestNotification.Vendor = request.Product.Vendor.VendorEnName;

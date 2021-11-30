@@ -420,6 +420,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Request>().HasIndex(r => r.SerialNumber).IsUnique();
             modelBuilder.Entity<Participant>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<ExperimentEntry>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<TimekeeperNotification>().Property(tn => tn.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<RequestNotification>().Property(rn => rn.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<EmployeeInfoNotification>().Property(en => en.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<Vendor>().HasIndex(v => new { v.CountryID, v.VendorBuisnessID }).IsUnique();
             modelBuilder.Entity<Participant>().HasIndex(p => new { p.ParticipantID, p.CentarixID }).IsUnique();
             modelBuilder.HasSequence<int>("SerialNumberHelper", schema: "dbo").StartsAt(1).IncrementsBy(1);

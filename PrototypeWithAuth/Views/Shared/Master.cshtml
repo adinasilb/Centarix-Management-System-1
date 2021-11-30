@@ -1073,7 +1073,7 @@
             //delete existing modals
             $.getJSON("/Home/GetLatestNotifications", function (data) {
                 $.each(data, function (i, notification) {
-                    var timestamp = new Date(notification.timeStamp)
+                    var date = new Date(notification.date)
                     
                     var isOrderLate = false;
                     var link = '/-1/-2?requestID=-3&didntArrive=-4';
@@ -1102,7 +1102,7 @@
                         '<i class="' + notification.icon + ' rounded-circle p-1" style="font-size: 1.75rem; color:var(' + notification.color + '); border: .125rem solid var(' + notification.color + ');"></i>' +
                         '</div>' +
                         '<div class=" col-10">' +
-                        '<label class="m-0 mr-5" id="notificationTimestamp">' + timestamp.getDate() + '/' + (timestamp.getMonth()+1) + '/' + timestamp.getFullYear() +  ' </label>' +
+                        '<label class="m-0 mr-5" id="notificationTimestamp">' + date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear() +  ' </label>' +
                         '<label class="m-0 " id="notificationDescription" style="color:var('+notification.color+');">' + notification.description + '</label> </br>' +
                         '<label class="m-0" id="requestName" >' + notification.requestName + '</label>' +
                         '</div>' +
