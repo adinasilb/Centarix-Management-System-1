@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'icomoon';
-    src: url('fonts/icomoon.eot?naicu9');
-    src: url('fonts/icomoon.eot?naicu9#iefix') format('embedded-opentype'), url('fonts/icomoon.ttf?naicu9') format('truetype'), url('fonts/icomoon.woff?naicu9') format('woff'), url('fonts/icomoon.svg?naicu9#icomoon') format('svg');
+    src: url('fonts/icomoon.eot?bexhyl');
+    src: url('fonts/icomoon.eot?bexhyl#iefix') format('embedded-opentype'), url('fonts/icomoon.ttf?bexhyl') format('truetype'), url('fonts/icomoon.woff?bexhyl') format('woff'), url('fonts/icomoon.svg?bexhyl#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -21,15 +21,12 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-notification_birthday-24px .path1:before {
+.icon-cake_black_24dp:before {
     content: "\e9aa";
-    color: rgb(29, 29, 27);
 }
 
-.icon-notification_birthday-24px .path2:before {
+.icon-notification_birthday-24px:before {
     content: "\e9ab";
-    margin-left: -1em;
-    color: rgb(0, 0, 0);
 }
 
 .icon-edit_list_black_24dp:before {
