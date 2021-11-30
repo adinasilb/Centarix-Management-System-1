@@ -277,13 +277,12 @@
         }
     })
 
-    $(".delete-share-list").off("click").on("click", function (e) {
-        
+    $(".delete-comment").off("click").on("click", function (e) {
         var index = $(this).attr("value");
-        console.log("delete share "+ index)
+        console.log("delete share " + index)
         $(".removeShare" + index).val(true)
-        $(this).closest(".share-permissions").remove();
-    })
+        $(this).closest(".comment-info").remove();
+    });
 
     $(".close-settings").off("click").on("click", function (e) {
         e.preventDefault();

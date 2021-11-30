@@ -2782,7 +2782,7 @@ namespace PrototypeWithAuth.Controllers
         {
             foreach (var comment in comments)
             {
-                if (!String.IsNullOrEmpty(comment.CommentText))
+                if (!comment.IsDeleted)
                 {
                     //save the new comment
                     if (comment.CommentTypeID ==1)
@@ -2815,6 +2815,27 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
                    
+                }
+                else if(comment.IsDeleted)
+                {                    
+                    if(comment.CommentTypeID ==1)
+                    {
+                        var requestComment = _context.RequestComments.Where(c => c.CommentID == comment.CommentID).FirstOrDefault();
+                        if (requestComment !=null)
+                        {
+                            requestComment.IsDeleted=true;
+                            _context.Entry(requestComment).State = EntityState.Modified;
+                        }
+                    }
+                    else
+                    {
+                        var productComment = _context.ProductComments.Where(c => c.CommentID == comment.CommentID).FirstOrDefault();
+                        if (productComment !=null)
+                        {
+                            productComment.IsDeleted=true;
+                            _context.Entry(productComment).State = EntityState.Modified;
+                        }
+                    }
                 }
             }
             var changeTracker = _context.ChangeTracker.Entries();

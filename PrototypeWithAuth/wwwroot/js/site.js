@@ -1022,7 +1022,7 @@ $(function () {
             type: 'GET',
             cache: false,
             success: function (data) {
-                $("#comment-info").append(data);
+                $(".comment-info-div").append(data);
                 $('#comment-index').val(++index);
             }
         });

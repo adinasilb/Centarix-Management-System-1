@@ -354,6 +354,11 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<RequestComment>()
                 .HasQueryFilter(item => !item.IsDeleted);
 
+            modelBuilder.Entity<ProductComment>()
+                .HasQueryFilter(item => !item.IsDeleted);
+
+            modelBuilder.Entity<VendorComment>()
+                .HasQueryFilter(item => !item.IsDeleted);
             //modelBuilder.Entity<LocationInstance>()
             //    .HasQueryFilter(item => !(item is TemporaryLocationInstance));
 
