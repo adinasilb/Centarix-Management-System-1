@@ -287,7 +287,10 @@ namespace PrototypeWithAuth.Controllers
                             ModelState.Remove(ms.Key);
                         }
                     }
-                    if (ModelState.IsValid)
+                    var context = new ValidationContext(createSupplierViewModel.Vendor, null, null);
+                    var results = new List<ValidationResult>();
+
+                    if (Validator.TryValidateObject(createSupplierViewModel.Vendor, context, results, true))
                     {
                         _context.Add(createSupplierViewModel.Vendor);
                         _context.SaveChanges();
