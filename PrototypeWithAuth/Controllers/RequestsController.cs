@@ -4791,7 +4791,7 @@ namespace PrototypeWithAuth.Controllers
             }
             if (requestID != 0)
             {
-                var notification = requestNotifications.Where(rn => rn.NotificationID == requestID).FirstOrDefault();
+                var notification = _context.RequestNotifications.Where(rn => rn.NotificationID == requestID).FirstOrDefault();
                 notification.IsRead = true;
                 _context.Update(notification);
                 await _context.SaveChangesAsync();
