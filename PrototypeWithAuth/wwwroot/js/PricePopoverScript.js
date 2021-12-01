@@ -3,10 +3,14 @@
 
 $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
     $('.open-price-popover').popover('hide');
-    //$('input[name=SelectedCurrency]').attr("checked", false)
-    //$('input[name=SelectedCurrency]').prop("checked", false)
-    //$("."+$(this).attr("id")).attr("checked", true);
-    //$("."+$(this).attr("id")).prop("checked", true);
+    var popoverId = "priceSortContent1";
+    if ($(".modal").hasClass('editModal')) {
+        popoverId = "priceSortContent2";
+    }
+    $('#' + popoverId + ' input[name=SelectedCurrency]').attr("checked", false)
+    $('#' + popoverId + ' input[name=SelectedCurrency]').prop("checked", false)
+    $('#' + popoverId + ' .'+$(this).attr("id")).attr("checked", true);
+    $('#' + popoverId + ' .'+$(this).attr("id")).prop("checked", true);
     console.log(this);
     $('#tempCurrency').val($(this).val())
     console.log($('#masterSidebarType').val())
