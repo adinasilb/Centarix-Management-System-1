@@ -112,10 +112,12 @@ namespace PrototypeWithAuth.Data
         public DbSet<Employee> Employees { get; set; }
         public DbSet<TimekeeperNotificationStatus> TimekeeperNotificationStatuses { get; set; }
         public DbSet<RequestNotificationStatus> RequestNotificationStatuses { get; set; }
+        public DbSet<EmployeeInfoNotificationStatus> EmployeeInfoNotificationStatuses { get; set; }
         public DbSet<NotificationStatus> NotificationStatuses { get; set; }
         public DbSet<RequestNotification> RequestNotifications { get; set; }
         public DbSet<TimekeeperNotification> TimekeeperNotifications { get; set; }
         //public DbSet<Notification<NotificationStatus>> Notifications { get; set; }
+        public DbSet<EmployeeInfoNotification> EmployeeInfoNotifications { get; set; }
         public DbSet<PaymentStatus> PaymentStatuses { get; set; }
         public DbSet<ParentQuote> ParentQuotes { get; set; }
         public DbSet<QuoteStatus> QuoteStatuses { get; set; }
@@ -418,6 +420,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Request>().HasIndex(r => r.SerialNumber).IsUnique();
             modelBuilder.Entity<Participant>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<ExperimentEntry>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<TimekeeperNotification>().Property(tn => tn.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<RequestNotification>().Property(rn => rn.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<EmployeeInfoNotification>().Property(en => en.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<Vendor>().HasIndex(v => new { v.CountryID, v.VendorBuisnessID }).IsUnique();
             modelBuilder.Entity<Participant>().HasIndex(p => new { p.ParticipantID, p.CentarixID }).IsUnique();
             modelBuilder.HasSequence<int>("SerialNumberHelper", schema: "dbo").StartsAt(1).IncrementsBy(1);

@@ -517,6 +517,8 @@
     <Compile Remove="Data\Migrations\20211123085459_RenameRequestIDToObjectID.Designer.cs" />
     <Compile Remove="Data\Migrations\20211123094009_RequestCommentInheritsBase.cs" />
     <Compile Remove="Data\Migrations\20211123094009_RequestCommentInheritsBase.Designer.cs" />
+	  <Compile Remove="Data\Migrations\20211125115311_BirthdayNotificationColorBlack.cs" />
+	  <Compile Remove="Data\Migrations\20211125115311_BirthdayNotificationColorBlack.Designer.cs" />
   </ItemGroup>
 
 
@@ -527,6 +529,9 @@
     <PackageReference Include="Chart.Mvc.Core" Version="1.1.0" />
     <PackageReference Include="EmguCV" Version="3.1.0.1" />
     <PackageReference Include="GoogleAuthenticator" Version="2.0.1" />
+    <PackageReference Include="Hangfire" Version="1.7.27" />
+    <PackageReference Include="Hangfire.Core" Version="1.7.27" />
+    <PackageReference Include="Hangfire.SqlServer" Version="1.7.27" />
     <PackageReference Include="jQuery.Fullcalendar" Version="3.9.0" />
     <PackageReference Include="jQuery.Validation" Version="1.19.2" />
     <PackageReference Include="JSZip" Version="3.1.5" />

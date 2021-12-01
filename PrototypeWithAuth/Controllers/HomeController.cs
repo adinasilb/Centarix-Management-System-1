@@ -6,6 +6,8 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -38,30 +40,43 @@ namespace PrototypeWithAuth.Controllers
             var usersLoggedIn = _context.Employees.Where(u => u.LastLogin.Date == DateTime.Today.Date).Count();
             var users = _context.Employees.ToList();
             HomePageViewModel viewModel = new HomePageViewModel();
+
+            //RecurringJob.AddOrUpdate("DailyNotifications", () => DailyNotificationUpdate(users), Cron.Daily);
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    var lastUpdateToTimekeeper = _context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.LoginUpdates.ToString()).FirstOrDefault();
-                    if (lastUpdateToTimekeeper == null)
+                    var lastUpdateToNotifications = _context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.LoginUpdates.ToString()).FirstOrDefault();
+                    if (lastUpdateToNotifications == null)
                     {
-                        lastUpdateToTimekeeper = new GlobalInfo { GlobalInfoType = AppUtility.GlobalInfoType.LoginUpdates.ToString(), Date = DateTime.Now.AddDays(-1) };
-                        _context.Update(lastUpdateToTimekeeper);
+                        lastUpdateToNotifications = new GlobalInfo { GlobalInfoType = AppUtility.GlobalInfoType.LoginUpdates.ToString(), Date = DateTime.Now.AddDays(-1) };
+                        _context.Update(lastUpdateToNotifications);
                         await _context.SaveChangesAsync();
                     }
-                    else if (lastUpdateToTimekeeper.Date.Date < DateTime.Today)
+                    else if (lastUpdateToNotifications.Date.Date < DateTime.Today)
                     {
+                        DateTime nextDay = lastUpdateToNotifications.Date.AddDays(1);
+                        var existingBirthdays = new List<Employee>();
+                        while (nextDay.Date <= DateTime.Today)
+                        {
+                            await _context.Employees.Where(r => r.DOB.AddYears(nextDay.Year - r.DOB.Year) == nextDay.Date).ForEachAsync(e => existingBirthdays.Add(e));
+                            nextDay = nextDay.AddDays(1);
+                        }
                         foreach (Employee employee in users)
                         {
                             var userRoles = await _userManager.GetRolesAsync(employee);
                             if (userRoles.Contains("TimeKeeper") && employee.EmployeeStatusID != 4) //if employee statuses updated, function needs to be changed
                             {
-                                await fillInTimekeeperMissingDays(employee, lastUpdateToTimekeeper.Date);
-                                fillInTimekeeperNotifications(employee, lastUpdateToTimekeeper.Date);
+                                await fillInTimekeeperMissingDays(employee, lastUpdateToNotifications.Date);
+                                fillInTimekeeperNotifications(employee, lastUpdateToNotifications.Date);
+                            }
+                            if (existingBirthdays.Count > 0)
+                            {
+                                fillInBirthdayNotifications(employee, existingBirthdays);
                             }
                         }
-                        lastUpdateToTimekeeper.Date = DateTime.Now;
-                        _context.Update(lastUpdateToTimekeeper);
+                        lastUpdateToNotifications.Date = DateTime.Now;
+                        _context.Update(lastUpdateToNotifications);
                         await _context.SaveChangesAsync();
                     }
                     await transaction.CommitAsync();
@@ -69,7 +84,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    viewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
+                    //viewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                 }
             }
             using (var transaction2 = _context.Database.BeginTransaction())
@@ -125,6 +140,10 @@ namespace PrototypeWithAuth.Controllers
             }
             return View(viewModel);
         }
+        public async Task DailyNotificationUpdate(List<Employee> users)
+        {
+
+        }
         public async Task<IActionResult> _MenuButtons()
         {
             var user = await _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefaultAsync();
@@ -175,7 +194,7 @@ namespace PrototypeWithAuth.Controllers
              .Select(n => new
              {
                  id = n.NotificationID,
-                 timeStamp = n.TimeStamp,
+                 date = n.NotificationDate,
                  description = n.Description,
                  requestName = n.RequestName,
                  icon = n.NotificationStatus.Icon,
@@ -185,6 +204,22 @@ namespace PrototypeWithAuth.Controllers
                  action = n.Action,
                  isRead = n.IsRead
              });
+
+            var enotification = _context.EmployeeInfoNotifications.Include(n => n.NotificationStatus).Where(n => n.ApplicationUserID == currentUser.Id)
+
+            .Select(n => new
+            {
+                id = n.NotificationID,
+                date = n.NotificationDate,
+                description = n.Description,
+                requestName = "",
+                icon = n.NotificationStatus.Icon,
+                color = n.NotificationStatus.Color,
+                status = n.NotificationStatusID,
+                controller = n.Controller,
+                action = n.Action,
+                isRead = n.IsRead
+            });
             //todo: figure out how to filter out - maybe only select those that are from less then 10 days ago
             /* var tnotification = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == currentUser.Id).Include(n => n.NotificationStatus)
 
@@ -201,9 +236,9 @@ namespace PrototypeWithAuth.Controllers
                     action = n.Action,
                     isRead = n.IsRead
                 });*/
-            //var notificationsCombined = notification.Concat(rnotification).OrderByDescending(n=>n.timeStamp).ToList();
+            var notificationsCombined = rnotification.Concat(enotification).OrderByDescending(n => n.date).ToList().Take(4);
             //return Json(tnotification.Concat(rnotification).OrderByDescending(n => n.timeStamp).ToList().Take(4));
-            return Json(rnotification.OrderByDescending(n => n.timeStamp).ToList().Take(4));
+            return Json(notificationsCombined);
         }
         [HttpPost]
         public bool UpdateLastReadNotifications()
@@ -294,7 +329,7 @@ namespace PrototypeWithAuth.Controllers
                     requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
                     requestNotification.Description = "should have arrived " + request.ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).GetElixirDateFormat();
                     requestNotification.NotificationStatusID = 1;
-                    requestNotification.TimeStamp = DateTime.Now;
+                    requestNotification.NotificationDate = DateTime.Now;
                     requestNotification.Controller = "Requests";
                     requestNotification.Action = "NotificationsView";
                     requestNotification.OrderDate = request.ParentRequest.OrderDate;
@@ -319,13 +354,31 @@ namespace PrototypeWithAuth.Controllers
                     timekeeperNotification.ApplicationUserID = e.EmployeeID;
                     timekeeperNotification.Description = "no hours reported for " + e.Date.GetElixirDateFormat();
                     timekeeperNotification.NotificationStatusID = 5;
-                    timekeeperNotification.TimeStamp = DateTime.Now;
+                    timekeeperNotification.NotificationDate = DateTime.Now;
                     timekeeperNotification.Controller = "Timekeeper";
                     timekeeperNotification.Action = "SummaryHours";
                     _context.Update(timekeeperNotification);
                 }
                 _context.SaveChanges();
 
+        }
+
+        private void fillInBirthdayNotifications(Employee user, List<Employee> userBirthdays)
+        {
+            foreach (var e in userBirthdays)
+            {
+                EmployeeInfoNotification BirthdayNotification = new EmployeeInfoNotification();
+                BirthdayNotification.IsRead = false;
+                BirthdayNotification.ApplicationUserID = user.Id;
+                BirthdayNotification.EmployeeID = e.Id;
+                BirthdayNotification.Description = "Happy Birthday to " + e.FirstName + " " + e.LastName;
+                BirthdayNotification.NotificationStatusID = 6;
+                BirthdayNotification.NotificationDate = new DateTime(DateTime.Today.Year, e.DOB.Month, e.DOB.Day);
+                BirthdayNotification.Controller = "";
+                BirthdayNotification.Action = "";
+                _context.Update(BirthdayNotification);
+            }
+            _context.SaveChanges();
         }
 
 
