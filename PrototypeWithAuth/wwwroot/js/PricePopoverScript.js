@@ -3,10 +3,10 @@
 
 $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
     $('.open-price-popover').popover('hide');
-    $('input[name=SelectedCurrency]').attr("checked", false)
-    $('input[name=SelectedCurrency]').prop("checked", false)
-    $("."+$(this).attr("id")).attr("checked", true);
-    $("."+$(this).attr("id")).prop("checked", true);
+    //$('input[name=SelectedCurrency]').attr("checked", false)
+    //$('input[name=SelectedCurrency]').prop("checked", false)
+    //$("."+$(this).attr("id")).attr("checked", true);
+    //$("."+$(this).attr("id")).prop("checked", true);
     console.log(this);
     $('#tempCurrency').val($(this).val())
     console.log($('#masterSidebarType').val())

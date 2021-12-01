@@ -153,7 +153,7 @@
                 url: '/Requests/_HistoryTab',
                 data: { id: requestID, selectedPriceSort: selectedPriceSort, selectedCurrency: $('#tempCurrency').val() },
                 type: 'Post',
-                cache: false,
+                cache: true,
                 success: function (data) {
                     $('#history').html(data);
                 }
