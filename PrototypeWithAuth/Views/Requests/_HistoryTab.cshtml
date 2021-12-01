@@ -70,14 +70,14 @@
                         @if (item.Product?.SubUnit != null)
                         {
                             <li>
-                                @(item.Product?.SubUnit == 0? "Subunit Number has an error" : Html.DisplayFor(modelItem => item.Product.SubUnit).ToString())
-                                @(item.Product?.SubUnitType?.UnitTypeDescription == null ? "subunit type has an error" : Html.DisplayFor(modelItem => item.Product.SubUnitType.UnitTypeDescription).ToString())
+                                @(item.Product?.SubUnit == 0? "Subunit Number has an error" : item.Product.SubUnit.ToString())
+                                @(item.Product?.SubUnitType?.UnitTypeDescription == null ? "subunit type has an error" : item.Product.SubUnitType.UnitTypeDescription)
                             </li>
                             @if (item.Product?.SubSubUnit != null)
                             {
                                 <li>
-                                    @(item.Product?.SubSubUnit == 0? "Subsubunit Number has an error" : Html.DisplayFor(modelItem => item.Product.SubSubUnit).ToString())
-                                    @(item.Product?.SubSubUnitType?.UnitTypeDescription == null ? "subsubunit type has an error" : Html.DisplayFor(modelItem => item.Product.SubSubUnitType.UnitTypeDescription).ToString())
+                                    @(item.Product?.SubSubUnit == 0? "Subsubunit Number has an error" : item.Product.SubSubUnit.ToString())
+                                    @(item.Product?.SubSubUnitType?.UnitTypeDescription == null ? "subsubunit type has an error" : item.Product.SubSubUnitType.UnitTypeDescription)
                                 </li>
                             }
                         }
@@ -117,7 +117,7 @@
     </tbody>
 </table>
 <script>
-    $("body, .modal").off('click', ".open-price-popover").on('click', ".open-price-popover", function () {
+    $(".modal").off('click', ".modal .open-price-popover").on('click', ".open-price-popover", function () {
         console.log('price popover from modal');
         $('[data-toggle="popover"]').popover('dispose');
         $(this).addClass("activePopover");
@@ -136,7 +136,7 @@
         });
         $('.modal .open-price-popover').popover('toggle');
 
-        $(".popover").off("click").on("click", ".priceFilterDiv", function (e) {
+        $(".popover").off("click", ".priceFilterDiv").on("click", ".priceFilterDiv", function (e) {
             var id = '#priceSortContent2 ' + "#" + $(this).children(".priceSort").prop("id")
             console.log(id);
             $(id).attr("checked", !$(id).prop("checked"));
@@ -153,7 +153,7 @@
                 url: '/Requests/_HistoryTab',
                 data: { id: requestID, selectedPriceSort: selectedPriceSort, selectedCurrency: $('#tempCurrency').val() },
                 type: 'Post',
-                cache: false,
+                cache: true,
                 success: function (data) {
                     $('#history').html(data);
                 }

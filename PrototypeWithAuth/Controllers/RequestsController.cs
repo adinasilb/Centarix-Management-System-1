@@ -3150,6 +3150,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpPost]
+        [RequestFormLimits(ValueLengthLimit =int.MaxValue)]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmailViewModel, TempRequestListViewModel tempRequestListViewModel)
         {
@@ -5291,8 +5292,11 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<TempRequestListViewModel> LoadTempListFromRequestIndexObjectAsync(RequestIndexObject requestIndexObject)
         {
-            var oldJson = _context.TempRequestJsons.Where(trj => trj.GuidID == requestIndexObject.GUID)
-                .OrderByDescending(trj => trj.SequencePosition).FirstOrDefault();
+            var oldJsonSequenceNumber = _context.TempRequestJsons.Where(trj => trj.GuidID == requestIndexObject.GUID).Select(trj => trj.SequencePosition)
+                .OrderByDescending(p => p).FirstOrDefault();
+            var oldJson = _context.TempRequestJsons.Where(trj => trj.GuidID == requestIndexObject.GUID && trj.SequencePosition==oldJsonSequenceNumber).FirstOrDefault();
+           
+            var deSerializedJson = oldJson.DeserializeJson<FullRequestJson>().TempRequestViewModels;
             return new TempRequestListViewModel()
             {
                 GUID = requestIndexObject.GUID,
@@ -5702,6 +5706,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
+        [RequestFormLimits(ValueCountLimit = int.MaxValue)]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel, TempRequestListViewModel tempRequestListViewModel, bool isCancel = false)
         {

@@ -525,7 +525,7 @@ $(function () {
             data: formdata,
             traditional: true,
             type: type,
-            cache: false,
+            cache: true,
             success: function (data) {
                 $(viewClass).html(data);
                 $(".tooltip").remove();
