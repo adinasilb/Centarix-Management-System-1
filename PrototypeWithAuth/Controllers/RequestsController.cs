@@ -6803,14 +6803,14 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> VendorFloatDetails(int vendorID, AppUtility.MenuItems MenuItem = AppUtility.MenuItems.Requests)
+        public async Task<IActionResult> VendorFloatDetails(int vendorID, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
                 return PartialView("InvalidLinkPage");
             }
 
-            return await editVendorFunction(vendorID, MenuItem, 1);
+            return await editVendorFunction(vendorID, SectionType, 1);
         }
     }
 }
