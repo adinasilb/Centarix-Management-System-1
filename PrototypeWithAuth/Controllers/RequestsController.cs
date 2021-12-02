@@ -4317,7 +4317,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var boolCheck = true;
             //validation for the create
-            if (VendorID != null && CatalogNumber != null && (ProductID == null && _context.Requests.Where(r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID).Any()))
+            if (VendorID != 0 && CatalogNumber != null && (ProductID == null && _context.Requests.Where(r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID).Any()))
             {
                 return false;
             }
@@ -4327,6 +4327,18 @@ namespace PrototypeWithAuth.Controllers
             {
                 return false;
             }
+            return boolCheck;
+        }
+
+        public bool CheckUniqueVendorAndInvoiceNumber(int VendorID, string InvoiceNumber)
+        {
+            var boolCheck = true;
+            var existingVendorInvoiceNumbers = _context.Payments.Where(p => p.Request.Product.VendorID == VendorID && p.Invoice!= null).Select(p => p.Invoice.InvoiceNumber).ToList();
+            if (existingVendorInvoiceNumbers.Contains(InvoiceNumber))
+            {
+                boolCheck = false;
+            }
+
             return boolCheck;
         }
 
@@ -5186,9 +5198,10 @@ namespace PrototypeWithAuth.Controllers
         {
             List<Request> Requests = new List<Request>();
             StringWithBool Error = new StringWithBool();
+            var vendor = new Vendor();
             var queryableRequests = _context.Requests
                 .Include(r => r.ParentRequest)
-                    .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.Product).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType).Include(r => r.Payments)
                     .Where(r => r.IsDeleted == false && r.Payments.FirstOrDefault().HasInvoice == false && ((r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3))).Where(r => r.RequestStatusID != 7);
             if (vendorid != null)
@@ -5196,14 +5209,16 @@ namespace PrototypeWithAuth.Controllers
                 Requests = queryableRequests
                     .Where(r => r.Payments.FirstOrDefault().HasInvoice == false)
                     .Where(r => r.Product.VendorID == vendorid).ToList();
-                if (queryableRequests.Select(r => r.Currency).Distinct().Count() > 1)
+                if (Requests.Select(r => r.Currency).Distinct().Count() > 1)
                 {
                     Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
                 }
+                vendor = _context.Vendors.Where(v => v.VendorID == vendorid).FirstOrDefault();
             }
             else if (requestid != null)
             {
                 Requests = queryableRequests.Where(r => r.RequestID == requestid).ToList();
+                vendor = _context.Vendors.Where(v => v.VendorID == Requests.FirstOrDefault().Product.VendorID).FirstOrDefault();
             }
             else if (requestIds != null)
             {
@@ -5216,7 +5231,7 @@ namespace PrototypeWithAuth.Controllers
                     Requests.Add(request);
                     if (FirstTime)
                     {
-                        Enum.TryParse(queryableRequests.FirstOrDefault().Currency, out CurrencyUsed);
+                        Enum.TryParse(Requests.FirstOrDefault().Currency, out CurrencyUsed);
                         VendorID = request.Product.VendorID;
                         FirstTime = false;
                     }
@@ -5232,6 +5247,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
                 }
+                vendor = _context.Vendors.Where(v => v.VendorID == VendorID).FirstOrDefault();
             }
             AddInvoiceViewModel addInvoiceViewModel = new AddInvoiceViewModel()
             {
@@ -5241,7 +5257,8 @@ namespace PrototypeWithAuth.Controllers
                     InvoiceDate = DateTime.Today
                 },
                 Guid = Guid.NewGuid(),
-                Error = Error
+                Error = Error,
+                Vendor = vendor
             };
             return PartialView(addInvoiceViewModel);
         }
@@ -5254,10 +5271,17 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
+                    var validInvoiceNum = CheckUniqueVendorAndInvoiceNumber(addInvoiceViewModel.Vendor.VendorID, addInvoiceViewModel.Invoice.InvoiceNumber);
+                    if (!validInvoiceNum)
+                    {
+                        addInvoiceViewModel.ErrorMessage = ElixirStrings.ServerExistingInvoiceNumberVendorErrorMessage;
+                        Response.StatusCode = 500;
+                        return PartialView("_ErrorMessage", addInvoiceViewModel.ErrorMessage);
+                    }
                     _context.Add(addInvoiceViewModel.Invoice);
                     await _context.SaveChangesAsync();
 
-                    /*                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+                    /* string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
                                         string uploadFolderFrom = Path.Combine(uploadFolder, addInvoiceViewModel.Guid.ToString());
                                         string uplaodFolderPathFrom = Path.Combine(uploadFolderFrom, AppUtility.FolderNamesEnum.Invoices.ToString());*/
 
@@ -5268,6 +5292,14 @@ namespace PrototypeWithAuth.Controllers
                         RequestToSave.Payments.FirstOrDefault().InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
                         RequestToSave.Payments.FirstOrDefault().HasInvoice = true;
                         _context.Update(RequestToSave);
+                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString(),
+                            addInvoiceViewModel.Guid.ToString(), AppUtility.FolderNamesEnum.Invoices.ToString());
+                        if(!Directory.Exists(uploadFolder) || Directory.GetFiles(uploadFolder).Length == 0)
+                        {
+                            addInvoiceViewModel.ErrorMessage = ElixirStrings.ServerMissingFile;
+                            Response.StatusCode = 500;
+                            return PartialView("_ErrorMessage", addInvoiceViewModel.ErrorMessage);
+                        }
 
                         MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, AppUtility.FolderNamesEnum.Invoices, true, addInvoiceViewModel.Guid);
 
@@ -5281,12 +5313,11 @@ namespace PrototypeWithAuth.Controllers
                 {
                     await transaction.RollbackAsync();
                     addInvoiceViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
-                    Response.StatusCode = 500;
                     return PartialView("AddInvoiceModal", addInvoiceViewModel);
                 }
             }
-
-            return RedirectToAction("AccountingNotifications");
+            var indexViewModel = await GetIndexViewModelByVendor(new RequestIndexObject { PageType = AppUtility.PageTypeEnum.AccountingNotifications, SectionType = AppUtility.MenuItems.Accounting, SidebarType = AppUtility.SidebarEnum.NoInvoice });
+            return PartialView("_IndexTableDataByVendor", indexViewModel);
         }
 
         public async Task<TempRequestListViewModel> LoadTempListFromRequestIndexObjectAsync(RequestIndexObject requestIndexObject)
