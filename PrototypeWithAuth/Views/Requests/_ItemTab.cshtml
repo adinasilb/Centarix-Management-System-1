@@ -233,7 +233,9 @@
     </div>
     <div class="col-md-2 @vendorCategories">
         <div class="form-group h-100 d-flex" style="flex-direction: column;text-align: center;justify-content: center;">
-            <span class="open-vendor-float-details" value="@Model.Requests[0].Product.VendorID"><i class="icon-account_box-24px1 heading-1" ></i></span>
+            <a href="#"  class="open-vendor-float-details btn-link text no-hover" value="@Model.Requests[0].Product.VendorID">
+                <i class="icon-account_box-24px1 heading-1"></i>
+            </a>
         </div>
     </div>
 
@@ -467,6 +469,7 @@ else //isProprietary
     });
 
     $(".open-vendor-float-details").on("click", function (e) {
+        e.preventDefault();
         var vendorID = $(this).attr("value");
         $.ajax({
             async: true,
