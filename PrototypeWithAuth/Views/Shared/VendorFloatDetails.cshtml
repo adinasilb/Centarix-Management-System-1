@@ -1,15 +1,15 @@
-﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+﻿@model PrototypeWithAuth.ViewModels.CreateSupplierViewModel
 @using PrototypeWithAuth.AppData
-<div class="modal modal-view fader on-form-modal add-resource-modal protocol-form" id="myModal" data-backdrop="false">
+<div class="modal modal-view fader on-form-modal vendorFloatModal order-inv-form" id="myModal" data-backdrop="false">
     <div class=" modal-dialog-centered mx-auto" style="width:52%">
-        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow my-5 ">
 
             <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('vendor-float-modal')">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <div class="_ProtocolsProductDetails">
+            <div class="__VendorFloatDetails p-4">
               
-                @{ await Html.RenderPartialAsync("_ProtocolsProductDetails", Model);}
+                @{ await Html.RenderPartialAsync("_VendorFloatDetails", Model);}
             </div>
         </div>
     </div>

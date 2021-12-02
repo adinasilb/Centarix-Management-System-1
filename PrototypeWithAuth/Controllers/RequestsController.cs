@@ -6799,5 +6799,18 @@ namespace PrototypeWithAuth.Controllers
             var viewModel = _context.ProductComments.Include(p=>p.ApplicationUser).Include(p=>p.CommentType).Where(p => p.ObjectID==productID && p.CommentTypeID==2).ToList();
             return PartialView(viewModel);
         }
+
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> VendorFloatDetails(int vendorID, AppUtility.MenuItems MenuItem = AppUtility.MenuItems.Requests)
+        {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
+
+            return await editVendorFunction(vendorID, MenuItem, 1);
+        }
     }
 }

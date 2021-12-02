@@ -185,53 +185,60 @@
 
 @if (!Model.Requests[0].Product.ProductSubcategory.ParentCategory.IsProprietary)
 {
-    <div class="row">
-        <!--<div class="col-md-4 @subProjectCategories">
-                                <div class="form-group SubProject">
-                                    <label class="control-label">Sub Project:</label>
-                                    @Html.DropDownListFor(vm => vm.Requests[0].SubProjectID,
-        Enumerable.Empty<SelectListItem>(), "Select Sub Project",
-        new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext " + subProjectCategories + " " + markReadOnlyClass, @id = "SubProject", @searchable = "Select Sub Project", @data_stop_refresh = "true" })-->
-        @*<select asp-for="Request.SubProjectID" id="SubProject" class="mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext" searchable="Select Sub Project">
-            </select>*@
-        <!--<span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
-            </div>
-        </div>-->
-        <div class="col-md-6 @vendorCategories">
-            <div class="form-group">
-                <label asp-for="Requests[0].Product.Vendor" class="control-label"></label>
-                @Html.DropDownListFor(
-                        vm => vm.Requests[0].Product.VendorID,
-                        new SelectList(
-                        Model.Vendors,
-                        dataValueField: "VendorID",
-                        dataTextField: "VendorEnName"),
-                        //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
-                        "Select a Vendor",
-                        htmlAttributes: new
-                             {
-                                 @class = " vendorList mdb-select custom select-dropdown form-control-plaintext " + vendorCategories + " " + markReadOnlyClass,
-                            @id = "vendorList",
-                                 @size = 1,
-                                 @searchable = "Select A Vendor",
-                                 @data_stop_refresh = "true"
-                             }
-                        )
-                <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
-            </div>
-            <input type="hidden" id="VendorCurrencyID" value="@vendorcurrencyid" />
+<div class="row">
+    <!--<div class="col-md-4 @subProjectCategories">
+                            <div class="form-group SubProject">
+                                <label class="control-label">Sub Project:</label>
+                                @Html.DropDownListFor(vm => vm.Requests[0].SubProjectID,
+    Enumerable.Empty<SelectListItem>(), "Select Sub Project",
+    new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext " + subProjectCategories + " " + markReadOnlyClass, @id = "SubProject", @searchable = "Select Sub Project", @data_stop_refresh = "true" })-->
+    @*<select asp-for="Request.SubProjectID" id="SubProject" class="mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext" searchable="Select Sub Project">
+        </select>*@
+    <!--<span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
         </div>
-        <input class="@vendorCategories" type="hidden" value="" id="vendor-primary-email" />
-        <div class="col-md-6 @companyIDCategories">
-            <div class="form-group">
-                @* IN MIDDLE *@
-                <label asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="control-label"></label>
-                <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " disabled />
-                @*don't need a validation here because you it's not saving*@
-            </div>
+    </div>-->
+    <div class="col-md-6 @vendorCategories">
+        <div class="form-group">
+            <label asp-for="Requests[0].Product.Vendor" class="control-label"></label>
+            @Html.DropDownListFor(
+                    vm => vm.Requests[0].Product.VendorID,
+                    new SelectList(
+                    Model.Vendors,
+                    dataValueField: "VendorID",
+                    dataTextField: "VendorEnName"),
+                    //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
+                    "Select a Vendor",
+                    htmlAttributes: new
+                         {
+                             @class = " vendorList mdb-select custom select-dropdown form-control-plaintext " + vendorCategories + " " + markReadOnlyClass,
+                        @id = "vendorList",
+                             @size = 1,
+                             @searchable = "Select A Vendor",
+                             @data_stop_refresh = "true"
+                         }
+                    )
+
+            <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
         </div>
-        <div class="col-12"><span class="vendor-price-warning large-text text-danger-centarix font-weight-bold" style="color: #EED202;" id="vendor-price-warning"></span></div>
+        <input type="hidden" id="VendorCurrencyID" value="@vendorcurrencyid" />
     </div>
+    <input class="@vendorCategories" type="hidden" value="" id="vendor-primary-email" />
+    <div class="col-md-4 @companyIDCategories">
+        <div class="form-group">
+            @* IN MIDDLE *@
+            <label asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="control-label"></label>
+            <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " disabled />
+            @*don't need a validation here because you it's not saving*@
+        </div>
+    </div>
+    <div class="col-md-2 @vendorCategories">
+        <div class="form-group h-100 d-flex" style="flex-direction: column;text-align: center;justify-content: center;">
+            <span class="open-vendor-float-details" value="@Model.Requests[0].Product.VendorID"><i class="icon-account_box-24px1 heading-1" ></i></span>
+        </div>
+    </div>
+
+    <div class="col-12"><span class="vendor-price-warning large-text text-danger-centarix font-weight-bold" style="color: #EED202;" id="vendor-price-warning"></span></div>
+</div>
 
     <div class="row">
         <div class="col-md-6 @catalogCategories">
@@ -459,6 +466,21 @@ else //isProprietary
         $(".popover-url").popover('hide');
     });
 
+    $(".open-vendor-float-details").on("click", function (e) {
+        var vendorID = $(this).attr("value");
+        $.ajax({
+            async: true,
+            url: "/Requests/VendorFloatDetails?vendorID=" + vendorID,
+            type: "GET",
+            cache: true,
+            success: function (data) {
+                $.fn.OpenModal("vendorFloatModal", "vendor-float-modal", data);
+                $(".vendorFloatModal .mdb-select").materialSelect();
+                return false;
+            }
+        });
+        $(".popover-url").popover('hide');
+    });
 
     //$("#Requests_0__URL").on("blur", function (e) {
     //    var inputText = $(this).val();
