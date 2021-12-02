@@ -18,53 +18,60 @@
         @*        case 2:
             showCategories = " active show ";
             break;*@
-        case 2:
-            showPayment = " active show ";
-            break;
-        case 3:
-            showComments = " active show ";
-            break;
-        case 4:
-            showContact = " active show ";
-            break;
+    case 2:
+        showPayment = " active show ";
+        break;
+    case 3:
+        showComments = " active show ";
+        break;
+    case 4:
+        showContact = " active show ";
+        break;
 
     }
 
-    string backgroundColor = "";
-    string switchClass = "";
-    if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
-    {
-        backgroundColor = "var(--lab-man-color)";
-        switchClass = "suppliers";
-    }
-    else
-    {
-        backgroundColor = " var(--acc-color)";
-        switchClass = "accounting";
-    }
+string backgroundColor = "";
+string switchClass = "";
+if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
+{
+    backgroundColor = "var(--lab-man-color)";
+    switchClass = "suppliers";
 }
+else if (Model.SectionType.Equals(AppUtility.MenuItems.Requests))
+{
+    backgroundColor = "var(--order-inv-color)";
+    switchClass = "suppliers";
+}
+else
+{
+    backgroundColor = " var(--acc-color)";
+    switchClass = "accounting";
+}
+
 <script src="~/js/site.js" asp-append-version="true"></script>
 
 <script src="~/js/Validation/CreateVendorFormValidation.js"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
 
 <input type="hidden" class="old-name" value="@Model.Vendor.VendorEnName" />
-<div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; border: 2px solid #EAEAEB;">
+<div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; ">
     <input type="hidden" class="setupdropdowns" value="true" />
     @for (int ct = 0; ct < Model.VendorCategoryTypes.Count; ct++)
     {
         <input type="hidden" asp-for="VendorCategoryTypes[0]" class="vendor-cat-types" />
     }
-    <div class=" row text-right mb-0">
-        <div class="switch col-12 switch-margin">
-            <label>
-                <label class="edit-mode-switch-description">Edit Mode Off</label>
-                <input type="checkbox" class="turn-edit-on-off @switchClass" name="details" value="@Model.Vendor.VendorID">
-                <span class="lever"></span>
-            </label>
-        </div>
-    </div>
+    @if (Model.SectionType != AppUtility.MenuItems.Requests)
 
+    {    <div class=" row text-right mb-0">
+            <div class="switch col-12 switch-margin">
+                <label>
+                    <label class="edit-mode-switch-description">Edit Mode Off</label>
+                    <input type="checkbox" class="turn-edit-on-off @switchClass" name="details" value="@Model.Vendor.VendorID">
+                    <span class="lever"></span>
+                </label>
+            </div>
+        </div>
+    }
     <div class="tab-content">
         <div id="details" class="tab-pane fade  @showDetails">
             <div class="row modal-tab-name">
@@ -84,8 +91,8 @@
                     <div class="form-group">
                         <label class="control-label">Category Type</label>
                         @Html.ListBoxFor(m => m.VendorCategoryTypes,
-    new SelectList(Model.CategoryTypes, "CategoryTypeID", "CategoryTypeDescription"),
-     new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-readonly", @multiple = "multiple", @disabled = "disabled" })
+new SelectList(Model.CategoryTypes, "CategoryTypeID", "CategoryTypeDescription"),
+new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-readonly", @multiple = "multiple", @disabled = "disabled" })
                         @*<select class=" mdb-select custom select-dropdown form-control-plaintext mark-readonly" asp-for="VendorCategoryTypes" multiple disabled>
                                 @foreach (var categoryType in Model.CategoryTypes)
                                 {
@@ -111,18 +118,18 @@
                     <div class="form-group">
                         <label asp-for="Vendor.CountryID" class="control-label">Country</label>
                         @Html.DropDownListFor(
-                            vm => vm.Vendor.CountryID,
-                            Model.Countries,
-                            "Select Country",
-                            htmlAttributes: new
-                            {
-                                @class = " mdb-select custom select-dropdown form-control-plaintext  mark-readonly",
-                                @id = "VendorCountries",
-                                @size = 1,
-                                @data_stop_refresh = "true",
-                                @searchable = "default value",
-                            }
-                        )
+                 vm => vm.Vendor.CountryID,
+                 Model.Countries,
+                 "Select Country",
+                 htmlAttributes: new
+                 {
+                     @class = " mdb-select custom select-dropdown form-control-plaintext  mark-readonly",
+                     @id = "VendorCountries",
+                     @size = 1,
+                     @data_stop_refresh = "true",
+                     @searchable = "default value",
+                 }
+             )
                         <span asp-validation-for="Vendor.CountryID" class="text-danger-centarix"></span>
                     </div>
                 </div>
@@ -304,7 +311,7 @@
             </div>
         </div>
 
-        <div id="comments" class="tab-pane fade @showComments">
+        <div id="vendorComments" class="tab-pane fade @showComments">
             <div class="row modal-tab-name">
 
             </div>
@@ -314,9 +321,9 @@
 
                     <ul class="list-unstyled m-0">
                         <li>
-                            <button href="#"  type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus"  class="no-box-shadow btn p-0 m-0 addComment mark-readonly" disabled>
-                                <i class="lab-man-color icon-add_circle-24px" style="
-    font-size: 3rem;
+                            <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 addComment mark-readonly" disabled>
+                                <i class=" icon-add_circle-24px" style="
+    font-size: 3rem; color:@backgroundColor;
 "></i>
                             </button>
 
@@ -327,8 +334,8 @@
                             @foreach (var item in Model.CommentTypes)
                             {
                                 <div class="row px-3 comment-btn">
-                                    <i class="@item.Icon"  style="color: @item.Color; padding-top: .55rem; font-size: 1.25rem;"></i>
-                                    <button type="button" data-val="@item.TypeID"  class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark add-comment" style="font-size:1rem; font-weight:400;">@item.Description</button><hr class="m-0" />
+                                    <i class="@item.Icon" style="color: @item.Color; padding-top: .55rem; font-size: 1.25rem;"></i>
+                                    <button type="button" data-val="@item.TypeID" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark add-comment" style="font-size:1rem; font-weight:400;">@item.Description</button><hr class="m-0" />
                                 </div>
                             }
                         </div>
@@ -370,7 +377,8 @@
         </div>
     </div>
 </div>
-@if (Model.Tab != 0)
+    }
+@if (Model.Tab != 0 && Model.SectionType!=AppUtility.MenuItems.Requests)
 {
     <script>
         $.fn.ChangeCheckboxesToFilledIn();
