@@ -179,10 +179,8 @@ namespace PrototypeWithAuth.Controllers
             var currentUserID = _userManager.GetUserId(User);
             DateTime lastReadNotfication = _context.Users.FirstOrDefault(u => u.Id == currentUserID).DateLastReadNotifications;
             int count1 = _context.RequestNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID).Count();
-            /*var tk = _context.TimekeeperNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID);
-            int count2 = tk.Count();
-            return count1 + count2;*/
-            return count1;
+            int count2 = _context.EmployeeInfoNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID).Count();
+            return count1 + count2;
         }
         [HttpGet]
         public JsonResult GetLatestNotifications()
@@ -202,7 +200,8 @@ namespace PrototypeWithAuth.Controllers
                  status = n.NotificationStatusID,
                  controller = n.Controller,
                  action = n.Action,
-                 isRead = n.IsRead
+                 isRead = n.IsRead,
+                 timestamp = n.TimeStamp
              });
 
             var enotification = _context.EmployeeInfoNotifications.Include(n => n.NotificationStatus).Where(n => n.ApplicationUserID == currentUser.Id)
@@ -218,7 +217,8 @@ namespace PrototypeWithAuth.Controllers
                 status = n.NotificationStatusID,
                 controller = n.Controller,
                 action = n.Action,
-                isRead = n.IsRead
+                isRead = n.IsRead,
+                timestamp = n.TimeStamp
             });
             //todo: figure out how to filter out - maybe only select those that are from less then 10 days ago
             /* var tnotification = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == currentUser.Id).Include(n => n.NotificationStatus)
@@ -236,7 +236,7 @@ namespace PrototypeWithAuth.Controllers
                     action = n.Action,
                     isRead = n.IsRead
                 });*/
-            var notificationsCombined = rnotification.Concat(enotification).OrderByDescending(n => n.date).ToList().Take(4);
+            var notificationsCombined = rnotification.Concat(enotification).OrderByDescending(n => n.timestamp).ToList().Take(4);
             //return Json(tnotification.Concat(rnotification).OrderByDescending(n => n.timeStamp).ToList().Take(4));
             return Json(notificationsCombined);
         }

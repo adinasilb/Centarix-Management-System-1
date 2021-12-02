@@ -12,18 +12,22 @@ namespace PrototypeWithAuth.Data.Migrations
                 table: "TimekeeperNotifications",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+            migrationBuilder.Sql("UPDATE TimekeeperNotifications SET NotificationDate = Timestamp");
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "NotificationDate",
                 table: "RequestNotifications",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+            migrationBuilder.Sql("UPDATE RequestNotifications SET NotificationDate = Timestamp");
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "NotificationDate",
                 table: "EmployeeInfoNotifications",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+           
+            
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
