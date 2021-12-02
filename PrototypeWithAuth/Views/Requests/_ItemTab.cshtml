@@ -470,7 +470,7 @@ else //isProprietary
         var vendorID = $(this).attr("value");
         $.ajax({
             async: true,
-            url: "/Requests/VendorFloatDetails?vendorID=" + vendorID,
+            url: "/Requests/VendorFloatDetails?vendorID=" + vendorID+"&SectionType="+$("#masterSectionType").val(),
             type: "GET",
             cache: true,
             success: function (data) {
