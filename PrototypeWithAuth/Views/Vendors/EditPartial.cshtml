@@ -123,7 +123,7 @@ new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-re
                  "Select Country",
                  htmlAttributes: new
                  {
-                     @class = " mdb-select custom select-dropdown form-control-plaintext  mark-readonly",
+                     @class = " mdb-select custom select-dropdown form-control-plaintext  mark-readonly disabled",
                      @id = "VendorCountries",
                      @size = 1,
                      @data_stop_refresh = "true",
@@ -204,7 +204,7 @@ new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-re
                     <div class="form-group">
                         <label asp-for="Vendor.VendorWebsite" class="control-label"></label>
                         <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="form-control-plaintext border-bottom popover-url align-wi" value="VendorWebsite">
-                            <input asp-for="Vendor.VendorWebsite" class="border-0 bg-transparent black-87 url-shown" />
+                            <input asp-for="Vendor.VendorWebsite" class="border-0 bg-transparent black-87 url-shown mark-readonly" disabled />
                         </button>
                         <div style="display:none;" id="VendorWebsite">
                             <div class="row px-3 accounting-popover">
@@ -286,17 +286,17 @@ new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-re
             <div class="row">
                 <div class="col-4">
                     <label asp-for="Vendor.VendorSwift" class="control-label"></label>
-                    <input asp-for="Vendor.VendorSwift" class="form-control-plaintext border-bottom" />
+                    <input asp-for="Vendor.VendorSwift" class="form-control-plaintext border-bottom mark-readonly" disabled />
                     <span asp-validation-for="Vendor.VendorSwift" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-4">
                     <label asp-for="Vendor.VendorBIC" class="control-label"></label>
-                    <input asp-for="Vendor.VendorBIC" class="form-control-plaintext border-bottom" />
+                    <input asp-for="Vendor.VendorBIC" class="form-control-plaintext border-bottom mark-readonly" disabled />
                     <span asp-validation-for="Vendor.VendorBIC" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-4">
-                    <label asp-for="Vendor.VendorRoutingNum" class="control-label"></label>
-                    <input asp-for="Vendor.VendorRoutingNum" class="form-control-plaintext border-bottom" />
+                    <label asp-for="Vendor.VendorRoutingNum" class="control-label "></label>
+                    <input asp-for="Vendor.VendorRoutingNum" class="form-control-plaintext border-bottom mark-readonly" disabled  />
                     <span asp-validation-for="Vendor.VendorRoutingNum" class="text-danger-centarix"></span>
                 </div>
             </div>
