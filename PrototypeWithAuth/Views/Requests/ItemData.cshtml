@@ -39,7 +39,7 @@
     }
     var requestCategoryType = Model.Requests[0].Product?.ProductSubcategory.ParentCategory.CategoryTypeID;
 }
-
+<input type="hidden" value="@Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum" id="categoryDescription" />
 <div class="container-fluid div-tabs no-box-shadow p-0">
     <input type="hidden" value="@Model.ModalType" id="modalType" />
 
@@ -49,6 +49,7 @@
             <div class="switch col-12 switch-margin">
                 <label>
                     <label class="edit-mode-switch-description">Edit Mode Off</label>
+
                     <input type="checkbox" class="turn-edit-on-off  orders has-location-tab" value="@Model.Requests.FirstOrDefault().RequestID" productID="@Model.Requests.FirstOrDefault().ProductID" name="details">
                     <span class="lever"></span>
                 </label>
@@ -69,7 +70,7 @@
             </div>
         }
         @if ((Model.Requests[0].RequestStatusID == 3 && Model.SectionType != AppUtility.MenuItems.Protocols && Model.Requests[0].OrderType != AppUtility.OrderTypeEnum.SaveOperations.ToString())
-            || Model.IsProprietary)
+           || Model.IsProprietary)
         {
             <div id="location" class="tab-pane fade @showLocation" value="2">
                 @{await Html.RenderPartialAsync("~/Views/Requests/_LocationTab.cshtml", Model); }
