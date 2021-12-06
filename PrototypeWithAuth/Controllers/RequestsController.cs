@@ -5350,21 +5350,15 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _UploadQuoteModal()
+        public async Task<IActionResult> _UploadQuoteModal(Guid guid)
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
                 return PartialView("InvalidLinkPage");
             }
-            var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now } };
-            //uploadQuoteViewModel.TempRequestListViewModel = new TempRequestListViewModel()
-            //{
-            //    GUID = requestIndexObject.GUID,
-            //    RequestIndexObject = requestIndexObject,
-            //    TempRequestViewModels = oldJson.DeserializeJson<List<TempRequestViewModel>>()
-            //};
-
-
+            var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now } , TempRequestListViewModel = new TempRequestListViewModel()};
+            uploadQuoteViewModel.TempRequestListViewModel.GUID = guid;
+            DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, guid);
             return PartialView(uploadQuoteViewModel);
         }
 
