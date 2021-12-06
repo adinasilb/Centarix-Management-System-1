@@ -639,26 +639,21 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> OffDayConfirmModal(OffDayViewModel offDayViewModel)
         {
-            var success = _employeeHoursProc.SaveOffDay(offDayViewModel.FromDate, offDayViewModel.ToDate, offDayViewModel.)
-            try
+            int offdayid = _offDayTypesProc.ReadOneByOffDayTypeEnum(offDayViewModel.OffDayType).OffDayTypeID;
+            string userid = _userManager.GetUserId(User);
+            var success = await _employeeHoursProc.SaveOffDay(offDayViewModel.FromDate, offDayViewModel.ToDate, offdayid, userid);
+            if (!success.Bool)
             {
-
-                //await SaveOffDay(offDayViewModel.FromDate, new DateTime(), offDayViewModel.OffDayType);
-                //throw new Exception();
+                offDayViewModel.ErrorMessage += success.String;
             }
-            catch (Exception ex)
-            {
-                offDayViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
-            }
-
             return RedirectToAction("SummaryHours", new { Month = offDayViewModel.Month, Year = offDayViewModel.FromDate.Year, errorMessage = offDayViewModel.ErrorMessage });
         }
 
-        private async Task SaveOffDay(DateTime dateFrom, DateTime dateTo, AppUtility.OffDayTypeEnum offDayType)
-        {
-            var
-            var success = _employeeHoursProc.SaveOffDay(dateFrom, dateTo, )
-        }
+        //private async Task SaveOffDay(DateTime dateFrom, DateTime dateTo, AppUtility.OffDayTypeEnum offDayType)
+        //{
+        //    var
+        //    var success = _employeeHoursProc.SaveOffDay(dateFrom, dateTo, )
+        //}
 
         //private async Task RemoveNotifications(int employeeHoursID)
         //{

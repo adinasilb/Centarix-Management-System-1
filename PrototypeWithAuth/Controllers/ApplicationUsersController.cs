@@ -25,9 +25,13 @@ namespace PrototypeWithAuth.Controllers
     public class ApplicationUsersController : SharedController
     {
 
+        private CRUD.OffDayTypesProc _offDayTypesProc;
+        private CRUD.EmployeesProc _employeesProc;
         public ApplicationUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
             : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
+            _offDayTypesProc = new CRUD.OffDayTypesProc(context, userManager);
+            _employeesProc = new CRUD.EmployeesProc(context, userManager);
         }
         // GET: /<controller>/
         [HttpGet]
@@ -393,7 +397,9 @@ namespace PrototypeWithAuth.Controllers
                     {
                         var partialHours = employeeHours.PartialOffDayHours?.TotalHours ?? 0;
                         var days = Math.Round(partialHours / user.SalariedEmployee.HoursPerDay, 2);
-                        var vacationLeftCount = base.GetUsersOffDaysLeft(user, employeeHoursBeingApproved.PartialOffDayTypeID ?? 2, employeeHoursBeingApproved.Date.Year);
+                        var vacationLeftCount = _employeesProc.GetDaysOffCountByUserOffTypeIDYear(user, employeeHoursBeingApproved.PartialOffDayTypeID ?? 2, employeeHoursBeingApproved.Date.Year);
+                            //base.GetUsersOffDaysLeft(user, employeeHoursBeingApproved.PartialOffDayTypeID ?? 2, 
+                            //employeeHoursBeingApproved.Date.Year);
                         /*if (vacationLeftCount < days)
                         {
                             TakePartialBonusDay(user, employeeHoursBeingApproved.PartialOffDayTypeID ?? 2, employeeHoursBeingApproved, days);

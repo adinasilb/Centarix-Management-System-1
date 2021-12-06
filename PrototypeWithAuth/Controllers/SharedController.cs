@@ -149,11 +149,11 @@ namespace PrototypeWithAuth.Controllers
             }
             return summaryHoursViewModel;
         }
-        protected double GetUsersOffDaysLeft(Employee user, int offDayTypeID, int thisYear)
-        {
+        //protected double GetUsersOffDaysLeft(Employee user, int offDayTypeID, int thisYear)
+        //{
             
-            return offDaysLeft;
-        }
+        //    return offDaysLeft;
+        //}
 
         protected decimal GetExchangeRate()
         {
