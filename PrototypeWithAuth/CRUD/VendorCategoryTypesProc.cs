@@ -12,9 +12,12 @@ namespace PrototypeWithAuth.CRUD
 {
     public class VendorCategoryTypesProc : ApplicationDbContextProc
     {
-        public VendorCategoryTypesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
+        public VendorCategoryTypesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
         {
-
+            if (!FromBase)
+            {
+                base.InstantiateProcs();
+            }
         }
 
         public async Task<StringWithBool> CreateWithoutSaving(int VendorID, int CategoryTypeID)

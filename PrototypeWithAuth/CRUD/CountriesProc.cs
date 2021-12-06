@@ -11,9 +11,13 @@ namespace PrototypeWithAuth.CRUD
 {
     public class CountriesProc : ApplicationDbContextProc
     {
-        public CountriesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
+        public CountriesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
         {
-        }
+            if (!FromBase)
+            {
+                base.InstantiateProcs();
+            }
+         }
 
         public IQueryable<Models.Country> Read()
         {

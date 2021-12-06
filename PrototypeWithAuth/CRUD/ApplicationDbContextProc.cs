@@ -13,39 +13,44 @@ namespace PrototypeWithAuth.CRUD
         protected readonly ApplicationDbContext _context;
         protected readonly UserManager<ApplicationUser> _userManager;
 
-        protected readonly ApplicationUsersProc _applicationUsersProc;
-        protected readonly CategoryTypesProc _categoryTypesProc;
-        protected readonly CountriesProc _countriesProc;
-        protected readonly EmployeeHoursProc _employeeHoursProc;
-        protected readonly EmployeesProc _employeesProc;
-        protected readonly TimekeeperNotificationsProc _timekeeperNotificationsProc;
-        protected readonly VendorCommentsProc _vendorCommentsProc;
-        protected readonly VendorContactsProc _vendorContactsProc;
-        protected readonly VendorsProc _vendorsProc;
-        protected readonly VendorCategoryTypesProc _vendorCategoryTypesProc;
-        protected readonly EmployeeHoursAwaitingApprovalProc _employeeHoursAwaitingApprovalProc;
-        protected readonly EmployeeHoursStatuesProc _employeeHoursStatuesProc;
-        protected readonly CompanyDaysOffProc _companyDaysOffProc;
-        protected readonly OffDayTypesProc _offDayTypesProc;
+        protected ApplicationUsersProc _applicationUsersProc;
+        protected CategoryTypesProc _categoryTypesProc;
+        protected CountriesProc _countriesProc;
+        protected EmployeeHoursProc _employeeHoursProc;
+        protected EmployeesProc _employeesProc;
+        protected TimekeeperNotificationsProc _timekeeperNotificationsProc;
+        protected VendorCommentsProc _vendorCommentsProc;
+        protected VendorContactsProc _vendorContactsProc;
+        protected VendorsProc _vendorsProc;
+        protected VendorCategoryTypesProc _vendorCategoryTypesProc;
+        protected EmployeeHoursAwaitingApprovalProc _employeeHoursAwaitingApprovalProc;
+        protected EmployeeHoursStatuesProc _employeeHoursStatuesProc;
+        protected CompanyDaysOffProc _companyDaysOffProc;
+        protected OffDayTypesProc _offDayTypesProc;
+
         public ApplicationDbContextProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
 
-            _applicationUsersProc = new ApplicationUsersProc(context, userManager);
-            _categoryTypesProc = new CategoryTypesProc(context, userManager);
-            _countriesProc = new CountriesProc(context, userManager);
-            _employeeHoursProc = new EmployeeHoursProc(context, userManager);
-            _employeesProc = new EmployeesProc(context, userManager);
-            _timekeeperNotificationsProc = new TimekeeperNotificationsProc(context, userManager);
-            _vendorCommentsProc = new VendorCommentsProc(context, userManager);
-            _vendorContactsProc = new VendorContactsProc(context, userManager);
-            _vendorsProc = new VendorsProc(context, userManager);
-            _vendorCategoryTypesProc = new VendorCategoryTypesProc(context, userManager);
-            _employeeHoursAwaitingApprovalProc = new EmployeeHoursAwaitingApprovalProc(context, userManager);
-            _employeeHoursStatuesProc = new EmployeeHoursStatuesProc(context, userManager);
-            _companyDaysOffProc = new CompanyDaysOffProc(context, userManager);
-            _offDayTypesProc = new OffDayTypesProc(context, userManager);
+        }
+
+        public void InstantiateProcs()
+        {
+            _applicationUsersProc = new ApplicationUsersProc(_context, _userManager, true);
+            _categoryTypesProc = new CategoryTypesProc(_context, _userManager, true);
+            _countriesProc = new CountriesProc(_context, _userManager, true);
+            _employeeHoursProc = new EmployeeHoursProc(_context, _userManager, true);
+            _employeesProc = new EmployeesProc(_context, _userManager, true);
+            _timekeeperNotificationsProc = new TimekeeperNotificationsProc(_context, _userManager, true); 
+            _vendorCommentsProc = new VendorCommentsProc(_context, _userManager, true); 
+            _vendorContactsProc = new VendorContactsProc(_context, _userManager, true); 
+            _vendorsProc = new VendorsProc(_context, _userManager, true);
+            _vendorCategoryTypesProc = new VendorCategoryTypesProc(_context, _userManager, true); 
+            _employeeHoursAwaitingApprovalProc = new EmployeeHoursAwaitingApprovalProc(_context, _userManager, true); 
+            _employeeHoursStatuesProc = new EmployeeHoursStatuesProc(_context, _userManager, true); 
+            _companyDaysOffProc = new CompanyDaysOffProc(_context, _userManager, true); 
+            _offDayTypesProc = new OffDayTypesProc(_context, _userManager, true); 
         }
     }
 }

@@ -12,10 +12,13 @@ namespace PrototypeWithAuth.CRUD
 {
     public class VendorContactsProc : ApplicationDbContextProc
     {
-        public VendorContactsProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
+        public VendorContactsProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
         {
-
-        }
+            if (!FromBase)
+            {
+                base.InstantiateProcs();
+            }
+         }
 
         public IQueryable<Models.VendorContact> Read()
         {

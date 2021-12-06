@@ -13,9 +13,9 @@ namespace PrototypeWithAuth.CRUD
 {
     public class ApplicationUsersProc : ApplicationDbContextProc
     {
-        public ApplicationUsersProc (ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base (context, userManager)
+        public ApplicationUsersProc (ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base (context, userManager)
         {
-
+            if (!FromBase) { this.InstantiateProcs(); }
         }
 
         public async Task<Employee> ReadEmployeeByID(string UserID)

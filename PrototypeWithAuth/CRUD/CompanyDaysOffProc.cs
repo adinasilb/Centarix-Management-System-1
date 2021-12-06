@@ -10,9 +10,9 @@ namespace PrototypeWithAuth.CRUD
 {
     public class CompanyDaysOffProc : ApplicationDbContextProc
     {
-        public CompanyDaysOffProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base (context, userManager)
+        public CompanyDaysOffProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base (context, userManager)
         {
-
+            if (!FromBase) { base.InstantiateProcs(); }
         }
 
         public CompanyDayOff ReadOneByDate(DateTime date)

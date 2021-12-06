@@ -14,9 +14,12 @@ namespace PrototypeWithAuth.CRUD
 {
     public class EmployeeHoursProc : ApplicationDbContextProc
     {
-        public EmployeeHoursProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
+        public EmployeeHoursProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
         {
-
+            if (!FromBase)
+            {
+                base.InstantiateProcs();
+            }
         }
         public async Task<EmployeeHours> ReadOneByPK(int? EHID)
         {

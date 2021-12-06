@@ -10,8 +10,9 @@ namespace PrototypeWithAuth.CRUD
 {
     public class CategoryTypesProc : ApplicationDbContextProc
     {
-        public CategoryTypesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
+        public CategoryTypesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
         {
+            if (!FromBase) { this.InstantiateProcs(); }
         }
 
         public IQueryable<Models.CategoryType> Read()

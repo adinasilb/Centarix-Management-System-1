@@ -13,9 +13,12 @@ namespace PrototypeWithAuth.CRUD
 {
     public class EmployeeHoursAwaitingApprovalProc : ApplicationDbContextProc
     {
-        public EmployeeHoursAwaitingApprovalProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
+        public EmployeeHoursAwaitingApprovalProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
         {
-
+            if (!FromBase)
+            {
+                base.InstantiateProcs();
+            }
         }
 
         public async Task<EmployeeHoursAwaitingApproval> ReadByPK(int? ID)

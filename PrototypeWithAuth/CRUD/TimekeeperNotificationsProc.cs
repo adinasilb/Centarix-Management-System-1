@@ -13,9 +13,12 @@ namespace PrototypeWithAuth.CRUD
 {
     public class TimekeeperNotificationsProc : ApplicationDbContextProc
     {
-        public TimekeeperNotificationsProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
+        public TimekeeperNotificationsProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
         {
-
+            if (!FromBase)
+            {
+                base.InstantiateProcs();
+            }
         }
 
         public async Task<StringWithBool> Create(TimekeeperNotification timekeeperNotification)

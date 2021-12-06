@@ -11,9 +11,12 @@ namespace PrototypeWithAuth.CRUD
 {
     public class EmployeeHoursStatuesProc : ApplicationDbContextProc
     {
-        public EmployeeHoursStatuesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base (context, userManager)
+        public EmployeeHoursStatuesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base (context, userManager)
         {
-
+            if (!FromBase)
+            {
+                base.InstantiateProcs();
+            }
         }
 
         public EmployeeHoursStatus ReadOneByPK(int? ID)
