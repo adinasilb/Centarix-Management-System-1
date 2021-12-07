@@ -24,7 +24,7 @@ namespace PrototypeWithAuth.CRUD
         public IQueryable<EmployeeHoursAwaitingApproval> ReadByPK(int? ID)
         {
             return  _context.EmployeeHoursAwaitingApprovals                
-                .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ID).AsNoTracking().Take(1);
+                .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ID).Take(1);
         }
 
         public IQueryable<EmployeeHoursAwaitingApproval> ReadOneByUserIDAndDate(string UserID, DateTime date)

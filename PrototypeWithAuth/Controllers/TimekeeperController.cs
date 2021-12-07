@@ -287,7 +287,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadByPK(ehaaID).Include(ehaa => ehaa.EmployeeHours).Include(ehaa => ehaa.PartialOffDayType).FirstOrDefaultAsync();
+            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadByPK(ehaaID).Include(ehaa => ehaa.EmployeeHours).Include(ehaa => ehaa.PartialOffDayType).AsNoTracking().FirstOrDefaultAsync();
 
             return PartialView(ehaa);
         }
@@ -694,7 +694,7 @@ namespace PrototypeWithAuth.Controllers
                 ViewBag.ErrorMessage = "Employee Hour not found. Unable to delete";
                 return NotFound();
             }
-            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadByPK(id).Include(ehaa => ehaa.EmployeeHours).Include(ehaa => ehaa.PartialOffDayType).FirstOrDefaultAsync();
+            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadByPK(id).Include(ehaa => ehaa.EmployeeHours).Include(ehaa => ehaa.PartialOffDayType).AsNoTracking().FirstOrDefaultAsync();
             DeleteHourViewModel deleteHourViewModel = new DeleteHourViewModel()
             {
                 EmployeeHour = employeeHour,
