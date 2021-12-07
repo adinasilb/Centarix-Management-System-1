@@ -287,8 +287,10 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadByPK(ehaaID).Include(ehaa => ehaa.EmployeeHours).Include(ehaa => ehaa.PartialOffDayType).AsNoTracking().FirstOrDefaultAsync();
-
+            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadByPK(ehaaID).Include(ehaa => ehaa.EmployeeHours)
+                .Include(ehaa => ehaa.PartialOffDayType).AsNoTracking().FirstOrDefaultAsync();
+            //var includes = new List<string>() { new Employee().GetType().Name, new Employee().GetType().Name + "." + new EmployeeStatus().GetType().Name};
+            //var ehaa2 = _employeeHoursProc.ReadByIncludable(ehaaID, includes);
             return PartialView(ehaa);
         }
 
@@ -688,7 +690,8 @@ namespace PrototypeWithAuth.Controllers
                 ViewBag.ErrorMessage = "Employee Hour not found (no id). Unable to delete.";
                 return NotFound();
             }
-            var employeeHour = await _employeeHoursProc.ReadOneByPK(id);
+            //CHANGETHIS
+            var employeeHour = _employeeHoursProc.ReadOneByPK(id).FirstOrDefault();
             if (employeeHour == null)
             {
                 ViewBag.ErrorMessage = "Employee Hour not found. Unable to delete";

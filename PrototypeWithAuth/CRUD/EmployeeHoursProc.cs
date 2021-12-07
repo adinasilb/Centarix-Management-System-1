@@ -8,6 +8,7 @@ using PrototypeWithAuth.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
@@ -21,10 +22,20 @@ namespace PrototypeWithAuth.CRUD
                 base.InstantiateProcs();
             }
         }
-        public async Task<EmployeeHours> ReadOneByPK(int? EHID)
+
+        //public IQueryable<EmployeeHours> ReadByIncludable(int? EHID, List<String> Strings)
+        //{
+        //    var ehs = this.ReadOneByPK(EHID);
+        //    foreach (var Type in Strings)
+        //    {
+        //        ehs = (from A in ehs.Include(Type) select A);
+        //    }
+        //    return ehs;
+        //}
+        public IQueryable<EmployeeHours> ReadOneByPK(int? EHID)
         {
-            return await _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == EHID)
-                .Include(eh => eh.OffDayType).FirstOrDefaultAsync();
+            return _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == EHID)
+                .Include(eh => eh.OffDayType).Take(1).AsQueryable();
         }
 
         public IQueryable<EmployeeHours> ReadOneByDateAndUserID(DateTime dateTime, string UserID)
@@ -141,7 +152,8 @@ namespace PrototypeWithAuth.CRUD
             var notifications = _timekeeperNotificationsProc.ReadByEHID(employeeHoursID);
             var dayoff = _companyDaysOffProc.ReadOneByDate(deleteHourViewModel.EmployeeHour.Date);
             var anotherEmployeeHourWithSameDate = this.ReadDoubled(deleteHourViewModel.EmployeeHour.Date, deleteHourViewModel.EmployeeHour.EmployeeID, deleteHourViewModel.EmployeeHour.EmployeeHoursID);
-            var employeeHour = await this.ReadOneByPK(deleteHourViewModel.EmployeeHour.EmployeeHoursID);
+            //CHANGETHIS
+            var employeeHour =  this.ReadOneByPK(deleteHourViewModel.EmployeeHour.EmployeeHoursID).FirstOrDefault();
 
             EmployeeHours newEmployeeHour = null;
             using (var transaction = _context.Database.BeginTransaction())
