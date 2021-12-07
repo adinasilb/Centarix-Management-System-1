@@ -224,7 +224,8 @@ namespace PrototypeWithAuth.CRUD
 
                     if (DateTo == new DateTime()) //just one date
                     {
-                         companyDaysOff.Add(_companyDaysOffProc.ReadOneByDate(DateFrom).Date);
+                        var newone = _companyDaysOffProc.ReadOneByDate(DateFrom).Date;
+                        companyDaysOff.Add(newone);
                         if (DateFrom.DayOfWeek != DayOfWeek.Friday && DateFrom.DayOfWeek != DayOfWeek.Saturday && !(companyDaysOff == null))
                         {
                             var ehaa = _employeeHoursAwaitingApprovalProc.ReadOneByUserIDAndDate(UserID, DateFrom);
@@ -280,7 +281,7 @@ namespace PrototypeWithAuth.CRUD
                                     }
                                     if (vacationLeftCount < 1)
                                     {
-                                        _employeesProc.TakeBonusDay(user, OffDayTypeID, employeeHour);   
+                                        _employeesProc.TakeBonusDay(user, OffDayTypeID, employeeHour);
                                     }
                                     _context.Update(employeeHour);
                                     _context.SaveChanges();
