@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -23,27 +24,40 @@ namespace PrototypeWithAuth.CRUD
             }
          }
 
-        public IQueryable<Models.Vendor> Read()
+        public IQueryable<Vendor> Read(List<Expression<Func<Vendor, object>>> includes = null)
         {
-            return _context.Vendors
-                .Include(v => v.VendorCategoryTypes)
-                .AsNoTracking().AsQueryable();
+            var vendors = _context.Vendors.AsQueryable();
+            if (includes != null)
+            {
+                foreach (var t in includes)
+                {
+                    vendors = vendors.Include(t);
+                }
+            }
+            return vendors.AsNoTracking().AsQueryable();
         }
 
-        public IQueryable<Models.Vendor> ReadByCategoryTypeID(int CategoryTypeID)
+        public IQueryable<Vendor> ReadByCategoryTypeID(int CategoryTypeID)
         {
             return _context.Vendors
                 .Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == CategoryTypeID).Count() > 0)
                 .AsNoTracking().AsQueryable();
         }
 
-        public Models.Vendor ReadByVendorID(int VendorID)
+        public async Task<Vendor> ReadByVendorIDAsync(int VendorID, List<Expression<Func<Vendor, object>>> includes = null)
         {
-            return _context.Vendors
-                .Where(v => v.VendorID == VendorID)
-                .Include(v => v.VendorCategoryTypes)
-                .Include(v => v.Country)
-                .AsNoTracking().FirstOrDefault();
+            var vendors = _context.Vendors
+                .Where(v => v.VendorID == VendorID);
+            if (includes != null)
+            {
+                foreach (var t in includes)
+                {
+                    vendors = vendors.Include(t);
+                }
+            }
+            return await _context.Vendors
+                .Where(v => v.VendorID == VendorID)              
+                .AsNoTracking().FirstOrDefaultAsync();
         }
 
         public Vendor ReadByVendorBusinessIDCountryID(string VendorBusinessID, int CountryID)
@@ -57,15 +71,15 @@ namespace PrototypeWithAuth.CRUD
                 .AsNoTracking().FirstOrDefault();
         }
 
-        public IEnumerable<Models.Vendor> Read(VendorSearchViewModel vendorSearchViewModel)
+        public IEnumerable<Vendor> Read(VendorSearchViewModel vendorSearchViewModel)
         {
-            IEnumerable<Models.Vendor> filteredVendors = this.Read();
+            IEnumerable<Models.Vendor> filteredVendors = Read(new List<Expression<Func<Vendor, object>>> { v=>v.VendorCategoryTypes});
             List<int> orderedVendorCategoryTypes = new List<int>();
             if (vendorSearchViewModel.VendorCategoryTypes != null)
             {
                 orderedVendorCategoryTypes = vendorSearchViewModel.VendorCategoryTypes.OrderBy(e => e).ToList();
             }
-            IEnumerable<Models.Vendor> listfilteredVendors = filteredVendors
+            IEnumerable<Vendor> listfilteredVendors = filteredVendors
             .Where(fv => (String.IsNullOrEmpty(vendorSearchViewModel.VendorEnName) || fv.VendorEnName.ToLower().Contains(vendorSearchViewModel.VendorEnName.ToLower()))
                 &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorHeName) || fv.VendorHeName.ToLower().Contains(vendorSearchViewModel.VendorHeName.ToLower()))
@@ -111,7 +125,7 @@ namespace PrototypeWithAuth.CRUD
             return listfilteredVendors;
         }
 
-        public async Task<StringWithBool> Create(CreateSupplierViewModel createSupplierViewModel, ModelStateDictionary ModelState, string UserID)
+        public async Task<StringWithBool> CreateAsync(CreateSupplierViewModel createSupplierViewModel, ModelStateDictionary ModelState, string UserID)
         {
             StringWithBool stringWithBool = new StringWithBool();
             using (var transaction = _context.Database.BeginTransaction())
@@ -128,18 +142,18 @@ namespace PrototypeWithAuth.CRUD
                     if (ModelState.IsValid)
                     {
                         _context.Add(createSupplierViewModel.Vendor);
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
                         foreach (var type in createSupplierViewModel.VendorCategoryTypes)
                         {
-                            _vendorCategoryTypesProc.CreateWithoutSaving(createSupplierViewModel.Vendor.VendorID, type);
+                            await _vendorCategoryTypesProc.CreateWithoutSavingAsync(createSupplierViewModel.Vendor.VendorID, type);
                         }
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
                         //delete contacts that need to be deleted
                         foreach (var vc in createSupplierViewModel.VendorContacts.Where(vc => vc.Delete))
                         {
                             if (vc.VendorContact.VendorContactID != 0) //only will delete if it's a previously loaded ones
                             {
-                                var dvc = _vendorContactsProc.ReadOneByPK(vc.VendorContact.VendorContactID);
+                                var dvc =  await _vendorContactsProc.ReadOneByPKAsync(vc.VendorContact.VendorContactID);
                                 _context.Remove(dvc);
                                 await _context.SaveChangesAsync();
                             }
@@ -315,7 +329,8 @@ namespace PrototypeWithAuth.CRUD
                                 await _context.SaveChangesAsync();
                                 try
                                 {
-                                    _context.Remove(this.ReadByVendorID(VendorID));
+                                    var vendor = await ReadByVendorIDAsync(VendorID);
+                                    _context.Remove(vendor);
                                     await _context.SaveChangesAsync();
                                     await transaction.CommitAsync();
                                 }

@@ -25,15 +25,15 @@ namespace PrototypeWithAuth.CRUD
             return _context.OffDayTypes.Where(od => PKs.Contains(od.OffDayTypeID));
         }
 
-        public OffDayType ReadOneByOffDayTypeEnum(AppUtility.OffDayTypeEnum OffDayTypeEnum)
+        public async Task<OffDayType> ReadOneByOffDayTypeEnumAsync(AppUtility.OffDayTypeEnum OffDayTypeEnum)
         {
-            return _context.OffDayTypes.Where(odt => odt.Description == AppUtility.GetDisplayNameOfEnumValue(OffDayTypeEnum.ToString()))
-                .AsNoTracking().FirstOrDefault();
+            return await _context.OffDayTypes.Where(odt => odt.Description == AppUtility.GetDisplayNameOfEnumValue(OffDayTypeEnum.ToString()))
+                .AsNoTracking().FirstOrDefaultAsync();
         }
 
-        public OffDayType ReadOneByPK(int ID)
+        public async Task<OffDayType> ReadOneByPKAsync(int ID)
         {
-            return _context.OffDayTypes.Where(odt => odt.OffDayTypeID == ID).AsNoTracking().FirstOrDefault();
+            return await _context.OffDayTypes.Where(odt => odt.OffDayTypeID == ID).AsNoTracking().FirstOrDefaultAsync();
         }
     }
 }

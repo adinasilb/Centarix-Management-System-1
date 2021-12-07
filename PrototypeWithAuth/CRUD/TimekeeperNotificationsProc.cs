@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.AppData;
+using System.Linq.Expressions;
 
 namespace PrototypeWithAuth.CRUD
 {
@@ -37,10 +38,18 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        public IQueryable<TimekeeperNotification> ReadByUserID(string UserID)
+        public IQueryable<TimekeeperNotification> ReadByUserID(string UserID, List<Expression<Func<TimekeeperNotification, object>>> includes = null)
         {
-            return _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == UserID)
-                .Include(n => n.EmployeeHours).AsNoTracking().AsQueryable();
+            var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == UserID);
+            if (includes != null)
+            {
+                foreach (var t in includes)
+                {
+                    notifications = notifications.Include(t);
+                }
+            }
+            return notifications.AsNoTracking().AsQueryable();
+ 
         }
 
         public IQueryable<TimekeeperNotification> ReadByEHID(int EHID)
@@ -48,12 +57,12 @@ namespace PrototypeWithAuth.CRUD
             return _context.TimekeeperNotifications.Where(n => n.EmployeeHoursID == EHID).AsNoTracking().AsQueryable();
         }
 
-        public TimekeeperNotification ReadByPK(int? ID)
+        public async Task<TimekeeperNotification> ReadByPKAsync(int? ID)
         {
-            return _context.TimekeeperNotifications.Where(tn => tn.NotificationID == ID).FirstOrDefault();
+            return await _context.TimekeeperNotifications.Where(tn => tn.NotificationID == ID).FirstOrDefaultAsync();
         }
 
-        public async Task<StringWithBool> DeleteByEHID(int EHID)
+        public async Task<StringWithBool> DeleteByEHIDAsync(int EHID)
         {
             StringWithBool ReturnVal = new StringWithBool();
             using (var transaction = _context.Database.BeginTransaction())
@@ -61,7 +70,7 @@ namespace PrototypeWithAuth.CRUD
                 try
                 {
                     var notifications = this.ReadByEHID(EHID);
-                    this.DeleteWithoutSaving(notifications);
+                    DeleteWithoutSaving(notifications);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
@@ -74,15 +83,15 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        public async Task<StringWithBool> DeleteByPK(int? ID)
+        public async Task<StringWithBool> DeleteByPKAsync(int? ID)
         {
             StringWithBool ReturnVal = new StringWithBool();
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    var notifications = new List<TimekeeperNotification>() { this.ReadByPK(ID) };
-                    this.DeleteWithoutSaving(notifications);
+                    var notifications = new List<TimekeeperNotification>() {  await ReadByPKAsync(ID) };
+                    DeleteWithoutSaving(notifications);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }

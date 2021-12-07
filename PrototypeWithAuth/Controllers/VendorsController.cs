@@ -225,7 +225,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Create(CreateSupplierViewModel createSupplierViewModel)
         {
             var userid = _userManager.GetUserAsync(User).Result.Id;
-            StringWithBool vendorCreated = await _vendor.Create(createSupplierViewModel, ModelState, userid);
+            StringWithBool vendorCreated = await _vendor.CreateAsync(createSupplierViewModel, ModelState, userid);
             if (!vendorCreated.Bool)
             {
                 return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
@@ -279,7 +279,7 @@ namespace PrototypeWithAuth.Controllers
             }
             var createSupplierViewModel = new CreateSupplierViewModel()
             {
-                Vendor = _vendor.ReadByVendorID(id)
+                Vendor = await _vendor.ReadByVendorIDAsync(id)
             };
             return PartialView(createSupplierViewModel);
         }
@@ -292,7 +292,7 @@ namespace PrototypeWithAuth.Controllers
 
             CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
             createSupplierViewModel.Countries = _country.ReadAsSelectList();
-            createSupplierViewModel.Vendor = _vendor.ReadByVendorID(Convert.ToInt32(id));
+            createSupplierViewModel.Vendor = await _vendor.ReadByVendorIDAsync(Convert.ToInt32(id), new List<System.Linq.Expressions.Expression<Func<Vendor, object>>> { v=>v.VendorCategoryTypes});
             createSupplierViewModel.SectionType = SectionType;
             createSupplierViewModel.CategoryTypes = _categoryType.Read();
             createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();
@@ -309,7 +309,7 @@ namespace PrototypeWithAuth.Controllers
             }
             createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
             createSupplierViewModel.VendorContacts = _vendorContact.ReadAsVendorContactWithDeleteByVendorID(Convert.ToInt32(id));
-            createSupplierViewModel.VendorComments = await _vendorComment.ReadByVendorID(Convert.ToInt32(id)).ToListAsync();
+            createSupplierViewModel.VendorComments = await _vendorComment.ReadByVendorID(Convert.ToInt32(id), new List<System.Linq.Expressions.Expression<Func<VendorComment, object>>> { c=>c.ApplicationUser}).ToListAsync();
 
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.AllSuppliers;
@@ -343,7 +343,7 @@ namespace PrototypeWithAuth.Controllers
                 createSupplierViewModel.ErrorMessage += vendorUpdated.String;
                 createSupplierViewModel.CategoryTypes = _categoryType.Read();
                 createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
-                createSupplierViewModel.VendorComments = await _vendorComment.ReadByVendorID(createSupplierViewModel.Vendor.VendorID).ToListAsync();
+                createSupplierViewModel.VendorComments = await _vendorComment.ReadByVendorID(createSupplierViewModel.Vendor.VendorID, new List<System.Linq.Expressions.Expression<Func<VendorComment, object>>> { c=>c.ApplicationUser }).ToListAsync();
                 Response.StatusCode = 550;
                 return PartialView("Edit", createSupplierViewModel);
             }
@@ -358,7 +358,7 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            var vendor = _vendor.ReadByVendorID(Convert.ToInt32(id));
+            var vendor = _vendor.ReadByVendorIDAsync(Convert.ToInt32(id));
             if (vendor == null)
             {
                 return NotFound();
@@ -402,16 +402,16 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Accounting")]
-        private bool VendorExists(int id)
+        private async Task<bool> VendorExists(int id)
         {
-            return _vendor.ReadByVendorID(id) != null ? true : false;
+            return await _vendor.ReadByVendorIDAsync(id) != null ? true : false;
         }
 
         //Get the Json of the vendor business id from the vendor id so JS (site.js) can auto load the form-control with the newly requested vendor
         [HttpGet]
-        public JsonResult GetVendorBusinessID(int VendorID)
+        public async  Task<JsonResult> GetVendorBusinessID(int VendorID)
         {
-            Vendor vendor = _vendor.ReadByVendorID(VendorID);
+            Vendor vendor = await  _vendor.ReadByVendorIDAsync(VendorID);
             return Json(vendor);
         }
         [HttpGet]
@@ -460,9 +460,10 @@ namespace PrototypeWithAuth.Controllers
             return true;
         }
 
-        public string GetVendorCountryCurrencyID(int VendorID)
+        public async Task<string> GetVendorCountryCurrencyIDAsync(int VendorID)
         {
-            return _vendor.ReadByVendorID(VendorID).Country.CurrencyID.ToString();
+            var vendor = await _vendor.ReadByVendorIDAsync(VendorID, new List<System.Linq.Expressions.Expression<Func<Vendor, object>>> { v => v.Country });
+            return vendor.Country.CurrencyID.ToString();
         }
     }
 

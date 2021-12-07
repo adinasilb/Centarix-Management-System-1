@@ -172,7 +172,7 @@ namespace PrototypeWithAuth.CRUD
 
             var employeeHoursID = deleteHourViewModel.EmployeeHour.EmployeeHoursID;
             var notifications = _timekeeperNotificationsProc.ReadByEHID(employeeHoursID);
-            var dayoff = _companyDaysOffProc.ReadOneByDate(deleteHourViewModel.EmployeeHour.Date);
+            var dayoff = await _companyDaysOffProc.ReadOneByDateAsync(deleteHourViewModel.EmployeeHour.Date);
             var anotherEmployeeHourWithSameDate = await ReadDoubledAsync(deleteHourViewModel.EmployeeHour.Date, deleteHourViewModel.EmployeeHour.EmployeeID, deleteHourViewModel.EmployeeHour.EmployeeHoursID);
             var employeeHour = await ReadOneByPKAsync(deleteHourViewModel.EmployeeHour.EmployeeHoursID, new List<Expression<Func<EmployeeHours, object>>> { eh => eh.OffDayType });
             EmployeeHours newEmployeeHour = null;
@@ -256,7 +256,7 @@ namespace PrototypeWithAuth.CRUD
 
                     if (DateTo == new DateTime()) //just one date
                     {
-                        var newone = _companyDaysOffProc.ReadOneByDate(DateFrom);
+                        var newone = await _companyDaysOffProc.ReadOneByDateAsync(DateFrom);
                         if (newone != null) { companyDaysOff.Add(newone.Date); }
                         if (DateFrom.DayOfWeek != DayOfWeek.Friday && DateFrom.DayOfWeek != DayOfWeek.Saturday && !(companyDaysOff == null))
                         {
@@ -279,7 +279,7 @@ namespace PrototypeWithAuth.CRUD
                                     EmployeeID = UserID,
                                     Date = DateFrom,
                                     OffDayTypeID = OffDayTypeID,
-                                    OffDayType = _offDayTypesProc.ReadOneByPK(OffDayTypeID)
+                                    OffDayType = await _offDayTypesProc.ReadOneByPKAsync(OffDayTypeID)
                                 };
                             }
                             else if (employeeHour.Entry1 == null && employeeHour.Entry2 == null && employeeHour.TotalHours == null)
@@ -294,14 +294,14 @@ namespace PrototypeWithAuth.CRUD
                                 }
                                 else
                                 {
-                                    _timekeeperNotificationsProc.DeleteWithoutSaving(new List<TimekeeperNotification>() { _timekeeperNotificationsProc.ReadByPK(employeeHour.EmployeeHoursID) });
+                                    _timekeeperNotificationsProc.DeleteWithoutSaving(new List<TimekeeperNotification>() {await _timekeeperNotificationsProc.ReadByPKAsync(employeeHour.EmployeeHoursID) });
                                     _context.SaveChanges();
                                     //RemoveNotifications(employeeHour.EmployeeHoursID);
                                 }
                                 employeeHour.OffDayTypeID = OffDayTypeID;
 
                                 employeeHour.IsBonus = false;
-                                employeeHour.OffDayType = _offDayTypesProc.ReadOneByPK(OffDayTypeID);
+                                employeeHour.OffDayType = await _offDayTypesProc.ReadOneByPKAsync(OffDayTypeID);
                             }
                             if (!alreadyOffDay)
                             {
@@ -314,7 +314,7 @@ namespace PrototypeWithAuth.CRUD
                                     }
                                     if (vacationLeftCount < 1)
                                     {
-                                        _employeesProc.TakeBonusDay(user, OffDayTypeID, employeeHour);
+                                       await _employeesProc.TakeBonusDay(user, OffDayTypeID, employeeHour);
                                     }
                                     _context.Update(employeeHour);
                                     _context.SaveChanges();
@@ -379,7 +379,7 @@ namespace PrototypeWithAuth.CRUD
                                         }
                                         else
                                         {
-                                            _timekeeperNotificationsProc.DeleteWithoutSaving(new List<TimekeeperNotification>() { _timekeeperNotificationsProc.ReadByPK(employeeHour.EmployeeHoursID) });
+                                            _timekeeperNotificationsProc.DeleteWithoutSaving(new List<TimekeeperNotification>() { await _timekeeperNotificationsProc.ReadByPKAsync(employeeHour.EmployeeHoursID) });
                                             _context.SaveChanges();
                                             //_timekeeperNotificationsProc.DeleteByEHID(employeeHour.EmployeeHoursID);
                                         }
@@ -442,7 +442,7 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        public async Task<StringWithBool> UpdateHours(UpdateHoursViewModel updateHoursViewModel)
+        public async Task<StringWithBool> UpdateHoursAsync(UpdateHoursViewModel updateHoursViewModel)
         {
             StringWithBool ReturnVal = new StringWithBool();
             using (var transaction = _context.Database.BeginTransaction())
@@ -452,7 +452,7 @@ namespace PrototypeWithAuth.CRUD
                     var ehaa = await _employeeHoursAwaitingApprovalProc.ReadOneByUserIDAndDateAsync(updateHoursViewModel.EmployeeHour.EmployeeID, updateHoursViewModel.EmployeeHour.Date.Date);
 
 
-                    var eh = await this.ReadOneByDateAndUserIDAsync(updateHoursViewModel.EmployeeHour.Date.Date, updateHoursViewModel.EmployeeHour.EmployeeID);
+                    var eh = await ReadOneByDateAndUserIDAsync(updateHoursViewModel.EmployeeHour.Date.Date, updateHoursViewModel.EmployeeHour.EmployeeID);
 
 
                     var updateHoursDate = updateHoursViewModel.EmployeeHour.Date;

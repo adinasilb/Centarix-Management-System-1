@@ -74,7 +74,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
             }
-            var notifications = _timekeeperNotificationsProc.ReadByUserID(userid).OrderByDescending(n => n.EmployeeHours.Date).Take(20).ToList();
+            var notifications = _timekeeperNotificationsProc.ReadByUserID(userid, new List<Expression<Func<TimekeeperNotification, object>>> { n=>n.EmployeeHours}).OrderByDescending(n => n.EmployeeHours.Date).Take(20).ToList();
 
             entryExitViewModel.TimekeeperNotifications = notifications;
             if (errorMessage != null)
@@ -410,7 +410,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> UpdateHours(UpdateHoursViewModel updateHoursViewModel)
         {
-            var success = await _employeeHoursProc.UpdateHours(updateHoursViewModel);
+            var success = await _employeeHoursProc.UpdateHoursAsync(updateHoursViewModel);
             if (success.Bool)
             {
                 if (updateHoursViewModel.PageType == null || updateHoursViewModel.PageType == "ReportHours")
@@ -447,7 +447,8 @@ namespace PrototypeWithAuth.Controllers
         {
             string errorMessage = "";
             var userId = _userManager.GetUserId(User);
-            var offDayTypeID = _offDayTypesProc.ReadOneByOffDayTypeEnum(offDayViewModel.OffDayType).OffDayTypeID;
+            var offDayType = await _offDayTypesProc.ReadOneByOffDayTypeEnumAsync(offDayViewModel.OffDayType);
+            var offDayTypeID = offDayType.OffDayTypeID;
             var success = await _employeeHoursProc.SaveOffDayAsync(offDayViewModel.FromDate, offDayViewModel.ToDate, offDayTypeID, userId);
             if (!success.Bool)
             {
@@ -508,7 +509,8 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> OffDayConfirmModal(OffDayViewModel offDayViewModel)
         {
-            int offdayid = _offDayTypesProc.ReadOneByOffDayTypeEnum(offDayViewModel.OffDayType).OffDayTypeID;
+            var offday = await _offDayTypesProc.ReadOneByOffDayTypeEnumAsync(offDayViewModel.OffDayType);
+            int offdayid = offday.OffDayTypeID;
             string userid = _userManager.GetUserId(User);
             var success = await _employeeHoursProc.SaveOffDayAsync(offDayViewModel.FromDate, offDayViewModel.ToDate, offdayid, userid);
             if (!success.Bool)
@@ -607,7 +609,7 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            var success = await _timekeeperNotificationsProc.DeleteByPK(id);
+            var success = await _timekeeperNotificationsProc.DeleteByPKAsync(id);
             if (success.Bool)
             {
                 return RedirectToAction("ReportHours");

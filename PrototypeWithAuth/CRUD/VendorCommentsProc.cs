@@ -5,6 +5,7 @@ using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
@@ -24,10 +25,18 @@ namespace PrototypeWithAuth.CRUD
             return _context.VendorComments.AsNoTracking().AsQueryable();
         }
 
-        public IQueryable<VendorComment> ReadByVendorID(int VendorID)
+        public IQueryable<VendorComment> ReadByVendorID(int VendorID, List<Expression<Func<VendorComment, object>>> includes = null)
         {
-            return _context.VendorComments.Include(vc => vc.ApplicationUser)
-                .Where(vc => vc.VendorID == VendorID).AsNoTracking().AsQueryable();
+            var comments = _context.VendorComments
+                .Where(vc => vc.VendorID == VendorID);
+            if (includes != null)
+            {
+                foreach (var t in includes)
+                {
+                    comments = comments.Include(t);
+                }
+            }
+            return comments.AsNoTracking().AsQueryable();
         }
     }
 }

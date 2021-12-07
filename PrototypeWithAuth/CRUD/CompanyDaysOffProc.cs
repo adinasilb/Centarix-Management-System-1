@@ -16,9 +16,9 @@ namespace PrototypeWithAuth.CRUD
             if (!FromBase) { base.InstantiateProcs(); }
         }
 
-        public CompanyDayOff ReadOneByDate(DateTime date)
+        public async Task<CompanyDayOff> ReadOneByDateAsync(DateTime date)
         {
-            return _context.CompanyDayOffs.Where(cdo => cdo.Date.Date == date).AsNoTracking().FirstOrDefault();
+            return await _context.CompanyDayOffs.Where(cdo => cdo.Date.Date == date).AsNoTracking().FirstOrDefaultAsync();
         }
 
         public IQueryable<CompanyDayOff> ReadByDateSpan(DateTime DateFrom, DateTime DateTo)
