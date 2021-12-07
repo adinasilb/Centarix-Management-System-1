@@ -25,13 +25,13 @@ namespace PrototypeWithAuth.CRUD
         public async Task<EmployeeHours> ReadOneByPKAsync(int? EHID, List<Expression<Func<EmployeeHours, object>>> includes = null)
         {
             var employeehours = _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == EHID).Take(1);
-            if (includes !=null)
+            if (includes != null)
             {
                 foreach (var t in includes)
                 {
                     employeehours = employeehours.Include(t);
                 }
-            }          
+            }
             return await employeehours.AsNoTracking().FirstOrDefaultAsync();
         }
 
@@ -59,7 +59,7 @@ namespace PrototypeWithAuth.CRUD
             {
                 foreach (var t in includes)
                 {
-                    employeehours =employeehours.Include(t);
+                    employeehours = employeehours.Include(t);
                 }
             }
             return await employeehours.AsNoTracking().FirstOrDefaultAsync();
@@ -379,7 +379,7 @@ namespace PrototypeWithAuth.CRUD
                                         }
                                         else
                                         {
-                                            _timekeeperNotificationsProc.DeleteWithoutSaving(new List<TimekeeperNotification>() { _timekeeperNotificationsProc.ReadByPK(employeeHour.EmployeeHoursID) }) ;
+                                            _timekeeperNotificationsProc.DeleteWithoutSaving(new List<TimekeeperNotification>() { _timekeeperNotificationsProc.ReadByPK(employeeHour.EmployeeHoursID) });
                                             _context.SaveChanges();
                                             //_timekeeperNotificationsProc.DeleteByEHID(employeeHour.EmployeeHoursID);
                                         }
@@ -503,10 +503,10 @@ namespace PrototypeWithAuth.CRUD
                     ehaa.PartialOffDayTypeID = updateHoursViewModel.EmployeeHour.PartialOffDayTypeID;
                     if (updateHoursViewModel.EmployeeHour.PartialOffDayTypeID != null && updateHoursViewModel.EmployeeHour.PartialOffDayHours == null)
                     {
-                        var employeeTime = _employeesProc.ReadOneByUserID(updateHoursViewModel.EmployeeHour.EmployeeID).
-                            _context.Employees.Include(e => e.SalariedEmployee)
-                            .Where(e => e.Id == updateHoursViewModel.EmployeeHour.EmployeeID).FirstOrDefault()
-                            .SalariedEmployee.HoursPerDay;
+                        var employee = await _employeesProc.ReadEmployeeByIDAsync(updateHoursViewModel.EmployeeHour.EmployeeID,
+                            new List<Expression<Func<Employee, object>>> { eh => eh.SalariedEmployee });
+                        var employeeTime = employee.SalariedEmployee.HoursPerDay;
+
                         var offDayHours = TimeSpan.FromHours(employeeTime) - updateHoursViewModel.EmployeeHour.TotalHours;
                         if (offDayHours > TimeSpan.Zero)
                         {
@@ -556,7 +556,8 @@ namespace PrototypeWithAuth.CRUD
                     _context.Update(ehaa);
                     await _context.SaveChangesAsync();
 
-                    var notifications = _context.TimekeeperNotifications.Where(n => n.EmployeeHoursID == updateHoursViewModel.EmployeeHour.EmployeeHoursID).ToList();
+                    var notifications = _timekeeperNotificationsProc.ReadByEHID(updateHoursViewModel.EmployeeHour.EmployeeHoursID);
+
                     foreach (var notification in notifications)
                     {
                         _context.Remove(notification);
@@ -571,14 +572,7 @@ namespace PrototypeWithAuth.CRUD
                 {
                     await transaction.RollbackAsync();
                     ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-                    /*updateHoursViewModel.PartialOffDayTypes = _context.OffDayTypes.Where(od => od.OffDayTypeID == 1 *//*Sick Day*//* || od.OffDayTypeID == 2 *//*Vacation Day*//*);
-                    var userID = _userManager.GetUserId(User);
-                    var user = await _context.Employees.Where(u => u.Id == userID).FirstOrDefaultAsync();
-                    updateHoursViewModel.EmployeeHour.Employee = user;
-                    var offDayType = await _context.OffDayTypes.Where(odt => odt.OffDayTypeID == updateHoursViewModel.EmployeeHour.OffDayTypeID).FirstOrDefaultAsync();
-                    updateHoursViewModel.EmployeeHour.OffDayType = offDayType;
-                  */
-                    
+
 
                 }
             }
