@@ -175,7 +175,7 @@ namespace PrototypeWithAuth.CRUD
             {
                 user.BonusSickDays += 1;
             }
-            var success = await _applicationUsersProc.UpdateEmployee(user);
+            var success = await UpdateAsync(user);
             return success;
         }
     }
