@@ -27,9 +27,9 @@ namespace PrototypeWithAuth.CRUD
                 .Include(eh => eh.OffDayType).FirstOrDefaultAsync();
         }
 
-        public EmployeeHours ReadOneByDateAndUserID(DateTime dateTime, string UserID)
+        public IQueryable<EmployeeHours> ReadOneByDateAndUserID(DateTime dateTime, string UserID)
         {
-            return _context.EmployeeHours.Where(eh => eh.Date.Date == dateTime.Date && eh.EmployeeID == UserID).AsNoTracking().FirstOrDefault();
+            return _context.EmployeeHours.Where(eh => eh.Date.Date == dateTime.Date && eh.EmployeeID == UserID).AsNoTracking().Take(1);
         }
 
         public EmployeeHours ReadDoubled(DateTime dateTime, string UserID, int EHID)
@@ -229,7 +229,7 @@ namespace PrototypeWithAuth.CRUD
                         if (DateFrom.DayOfWeek != DayOfWeek.Friday && DateFrom.DayOfWeek != DayOfWeek.Saturday && !(companyDaysOff == null))
                         {
                             var ehaa = _employeeHoursAwaitingApprovalProc.ReadOneByUserIDAndDate(UserID, DateFrom);
-                            employeeHour = this.ReadOneByDateAndUserID(DateFrom, UserID);
+                            employeeHour = this.ReadOneByDateAndUserID(DateFrom, UserID).FirstOrDefault();
                             if (OffDayTypeID == 4 && employeeHour?.OffDayTypeID != 4)
                             {
                                 //employeeHour.Employee = user;
