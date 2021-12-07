@@ -2,18 +2,15 @@
 @using PrototypeWithAuth.AppData
 @{
     string hoverClass = "";
-    string controller = "";
     ViewData["Title"] = "IndexForPayment";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
     if ((AppUtility.MenuItems)TempData[AppUtility.TempDataTypes.MenuType.ToString()]==AppUtility.MenuItems.Operations)
     {
         hoverClass = "oper-link-clr";
-        controller = "Operations";
     }
     else
     {
         hoverClass = "inv-link-clr";
-        controller = "Requests";
     }
 }
 

@@ -1,7 +1,13 @@
 ﻿@model PrototypeWithAuth.ViewModels.CreateSupplierViewModel;
 @using PrototypeWithAuth.AppData
 
-
+@{ 
+    var markReadOnlyClass = "";
+    if (Model.ModalType == AppUtility.VendorModalType.Edit || Model.ModalType == AppUtility.VendorModalType.SummaryFloat)
+    {
+        markReadOnlyClass = "mark-readonly";
+    }
+}
     <div class="row modal-tab-name">
         <span class="heading-1 col-12 modal-tab-name">Payment</span>
     </div>
@@ -9,21 +15,21 @@
         <div class="col-4">
             <div class="form-group">
                 <label asp-for="Vendor.VendorBank" class="control-label"></label>
-                <input asp-for="Vendor.VendorBank" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                <input asp-for="Vendor.VendorBank" class="form-control-plaintext border-bottom @markReadOnlyClass"/>
                 <span asp-validation-for="Vendor.VendorBank" class="text-danger-centarix"></span>
             </div>
         </div>
         <div class="col-4">
             <div class="form-group">
                 <label asp-for="Vendor.VendorBankBranch" class="control-label"></label>
-                <input asp-for="Vendor.VendorBankBranch" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                <input asp-for="Vendor.VendorBankBranch" class="form-control-plaintext border-bottom @markReadOnlyClass"/>
                 <span asp-validation-for="Vendor.VendorBankBranch" class="text-danger-centarix"></span>
             </div>
         </div>
         <div class="col-4">
             <div class="form-group">
                 <label asp-for="Vendor.VendorAccountNum" class="control-label"></label>
-                <input asp-for="Vendor.VendorAccountNum" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                <input asp-for="Vendor.VendorAccountNum" class="form-control-plaintext border-bottom @markReadOnlyClass" />
                 <span asp-validation-for="Vendor.VendorAccountNum" class="text-danger-centarix"></span>
             </div>
         </div>
@@ -31,17 +37,17 @@
     <div class="row">
         <div class="col-4">
             <label asp-for="Vendor.VendorSwift" class="control-label"></label>
-            <input asp-for="Vendor.VendorSwift" class="form-control-plaintext border-bottom mark-readonly" disabled />
+            <input asp-for="Vendor.VendorSwift" class="form-control-plaintext border-bottom @markReadOnlyClass"/>
             <span asp-validation-for="Vendor.VendorSwift" class="text-danger-centarix"></span>
         </div>
         <div class="col-4">
             <label asp-for="Vendor.VendorBIC" class="control-label"></label>
-            <input asp-for="Vendor.VendorBIC" class="form-control-plaintext border-bottom mark-readonly" disabled />
+            <input asp-for="Vendor.VendorBIC" class="form-control-plaintext border-bottom @markReadOnlyClass" />
             <span asp-validation-for="Vendor.VendorBIC" class="text-danger-centarix"></span>
         </div>
         <div class="col-4">
             <label asp-for="Vendor.VendorRoutingNum" class="control-label "></label>
-            <input asp-for="Vendor.VendorRoutingNum" class="form-control-plaintext border-bottom mark-readonly" disabled />
+            <input asp-for="Vendor.VendorRoutingNum" class="form-control-plaintext border-bottom @markReadOnlyClass"/>
             <span asp-validation-for="Vendor.VendorRoutingNum" class="text-danger-centarix"></span>
         </div>
     </div>
@@ -49,7 +55,7 @@
         <div class="col-12">
             <div class="form-group">
                 <label asp-for="Vendor.VendorGoldAccount" class="control-label"></label>
-                <input asp-for="Vendor.VendorGoldAccount" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                <input asp-for="Vendor.VendorGoldAccount" class="form-control-plaintext border-bottom @markReadOnlyClass" />
                 <span asp-validation-for="Vendor.VendorGoldAccount" class="text-danger-centarix"></span>
             </div>
         </div>

@@ -7,49 +7,29 @@
     ViewData["Title"] = "Edit";
     Layout = null;
 }
-@{ string buttonClass = "";
-    string navLinkClass = "";
-    string backgroundColor = "";
+@{ 
     string form = "";
-    string switchClass = "";
     if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
-
     {
-        buttonClass = "lab-man-background-color";
-        navLinkClass = "lab-man-nav-link";
-        backgroundColor = "var(--lab-man-color)";
         form = "supplier-form";
-        switchClass = "suppliers";
     }
     else
     {
-        buttonClass = "accounting-background-color";
-        navLinkClass = "supplier-nav-link";
-        backgroundColor = " var(--acc-color)";
         form = "accounting-form";
-        switchClass = "accounting";
     }
 
     <div class="modal modal-view right fader @form on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
         <div class="modal-dialog modal-lg" role="document" style="max-height:100%; width: 50%; max-width: 100%">
-            @*style needed here to override bootstraps modal width limitations*@
 
             <div class="modal-content d-inline-block">
 
                 <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="createVendorForm">
 
-                    @Html.HiddenFor(c => c.SectionType)
-                  
-                         @{await Html.RenderPartialAsync("_EditVendorTabs"); }
-
+                    @{ await Html.RenderPartialAsync("~/Views/Vendors/_VendorTabs.cshtml", Model);}
                 </form>
             </div>
         </div>
 
     </div>
 }
-
-@*@section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}     HAVE TO CORRECT THIS IN HERE AND IN CREATE
-    }*@

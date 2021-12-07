@@ -6840,8 +6840,10 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
+            CreateSupplierViewModel viewModel = await GetCreateSupplierViewModel(SectionType, vendorID);
+            viewModel.ModalType = AppUtility.VendorModalType.SummaryFloat;
 
-            return await editVendorFunction(vendorID, SectionType, 1);
+            return PartialView(viewModel);
         }
     }
 }
