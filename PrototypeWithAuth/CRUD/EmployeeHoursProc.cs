@@ -22,49 +22,55 @@ namespace PrototypeWithAuth.CRUD
                 base.InstantiateProcs();
             }
         }
-
-        //public IQueryable<EmployeeHours> ReadByIncludable(int? EHID, List<String> Strings)
-        //{
-        //    var ehs = this.ReadOneByPK(EHID);
-        //    foreach (var Type in Strings)
-        //    {
-        //        ehs = (from A in ehs.Include(Type) select A);
-        //    }
-        //    return ehs;
-        //}
-        public IQueryable<EmployeeHours> ReadOneByPK(int? EHID)
+        public async Task<EmployeeHours> ReadOneByPKAsync(int? EHID, List<Expression<Func<EmployeeHours, object>>> includes = null)
         {
-            return _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == EHID)
-                .Include(eh => eh.OffDayType).Take(1).AsQueryable();
+            var employeehours = _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == EHID).Take(1);
+            if (includes !=null)
+            {
+                foreach (var t in includes)
+                {
+                    employeehours =employeehours.Include(t);
+                }
+            }          
+            return await employeehours.AsNoTracking().FirstOrDefaultAsync();
         }
 
-        public IQueryable<EmployeeHours> ReadOneByDateAndUserID(DateTime dateTime, string UserID)
+        public async Task<EmployeeHours> ReadOneByDateAndUserIDAsync(DateTime dateTime, string UserID, List<Expression<Func<EmployeeHours, object>>> includes = null)
         {
-            return _context.EmployeeHours.Where(eh => eh.Date.Date == dateTime.Date && eh.EmployeeID == UserID).AsNoTracking().Take(1);
+            var employeehours = _context.EmployeeHours.Where(eh => eh.Date.Date == dateTime.Date && eh.EmployeeID == UserID).Take(1);
+
+            if (includes !=null)
+            {
+                foreach (var t in includes)
+                {
+                    employeehours =employeehours.Include(t);
+                }
+            }
+            return await employeehours.AsNoTracking().FirstOrDefaultAsync();
         }
 
-        public EmployeeHours ReadDoubled(DateTime dateTime, string UserID, int EHID)
+        public async  Task<EmployeeHours> ReadDoubledAsync(DateTime dateTime, string UserID, int EHID)
         {
-            return _context.EmployeeHours.Where(eh => eh.Date.Date == dateTime.Date && eh.EmployeeID == UserID
-                    && eh.EmployeeHoursID != EHID).FirstOrDefault();
+            return await _context.EmployeeHours.Where(eh => eh.Date.Date == dateTime.Date && eh.EmployeeID == UserID
+                    && eh.EmployeeHoursID != EHID).AsNoTracking().FirstOrDefaultAsync();
         }
 
         public IQueryable<EmployeeHours> ReadOffDaysByYearOffDayTypeIDAndUserID(int year, int offDayTypeID, string userId)
         {
             return _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userId)
-                .Where(eh => eh.OffDayTypeID == offDayTypeID && eh.Date <= DateTime.Now.Date && eh.IsBonus == false);
+                .Where(eh => eh.OffDayTypeID == offDayTypeID && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).AsNoTracking();
         }
         public IQueryable<EmployeeHours> ReadPartialOffDaysByYearOffDayTypeIDAndUserID(int year, int partialOffDayTypeID, string userId)
         {
             return _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userId)
-                .Where(eh => eh.OffDayTypeID == partialOffDayTypeID && eh.Date <= DateTime.Now.Date && eh.IsBonus == false);
+                .Where(eh => eh.OffDayTypeID == partialOffDayTypeID && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).AsNoTracking();
         }
 
-        public double ReadPartialOffDayHours(int year, int partialOffDayTypeID, string UserID)
+        public async Task<double> ReadPartialOffDayHoursAsync(int year, int partialOffDayTypeID, string UserID)
         {
             var offdays = ReadPartialOffDaysByYearOffDayTypeIDAndUserID(year, partialOffDayTypeID, UserID);
-            return offdays.Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours)
-                        .ToList().Sum(p => p);
+            var list = await offdays.Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToListAsync();
+            return list.Sum(p => p);
         }
 
         public IQueryable<EmployeeHours> ReadByDateSpanAndUserID(DateTime DateTo, DateTime DateFrom, string UserID)
@@ -72,7 +78,7 @@ namespace PrototypeWithAuth.CRUD
             return _context.EmployeeHours.Where(eh => (eh.Date.Date >= DateFrom.Date && eh.Date.Date <= DateTo.Date) && eh.EmployeeID == UserID);
         }
 
-        public async Task<StringWithBool> ReportHours(EntryExitViewModel entryExitViewModel, string userid)
+        public async Task<StringWithBool> ReportHoursAsync(EntryExitViewModel entryExitViewModel, string userid)
         {
             StringWithBool ReturnVal = new StringWithBool();
             using (var transaction = _context.Database.BeginTransaction())
@@ -144,17 +150,15 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        public async Task<StringWithBool> Delete(DeleteHourViewModel deleteHourViewModel)
+        public async Task<StringWithBool> DeleteAsync(DeleteHourViewModel deleteHourViewModel)
         {
             StringWithBool ReturnVal = new StringWithBool();
 
             var employeeHoursID = deleteHourViewModel.EmployeeHour.EmployeeHoursID;
             var notifications = _timekeeperNotificationsProc.ReadByEHID(employeeHoursID);
             var dayoff = _companyDaysOffProc.ReadOneByDate(deleteHourViewModel.EmployeeHour.Date);
-            var anotherEmployeeHourWithSameDate = this.ReadDoubled(deleteHourViewModel.EmployeeHour.Date, deleteHourViewModel.EmployeeHour.EmployeeID, deleteHourViewModel.EmployeeHour.EmployeeHoursID);
-            //CHANGETHIS
-            var employeeHour =  this.ReadOneByPK(deleteHourViewModel.EmployeeHour.EmployeeHoursID).FirstOrDefault();
-
+            var anotherEmployeeHourWithSameDate = await ReadDoubledAsync(deleteHourViewModel.EmployeeHour.Date, deleteHourViewModel.EmployeeHour.EmployeeID, deleteHourViewModel.EmployeeHour.EmployeeHoursID);
+            var employeeHour = await ReadOneByPKAsync(deleteHourViewModel.EmployeeHour.EmployeeHoursID, new List<Expression<Func<EmployeeHours, object>>> { eh => eh.OffDayType });
             EmployeeHours newEmployeeHour = null;
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -222,7 +226,7 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public async Task<StringWithBool> SaveOffDay(DateTime DateFrom, DateTime DateTo, int OffDayTypeID, string UserID)
+        public async Task<StringWithBool> SaveOffDayAsync(DateTime DateFrom, DateTime DateTo, int OffDayTypeID, string UserID)
         {
             StringWithBool ReturnVal = new StringWithBool();
             using (var transaction = _context.Database.BeginTransaction())
@@ -241,7 +245,7 @@ namespace PrototypeWithAuth.CRUD
                         if (DateFrom.DayOfWeek != DayOfWeek.Friday && DateFrom.DayOfWeek != DayOfWeek.Saturday && !(companyDaysOff == null))
                         {
                             var ehaa = _employeeHoursAwaitingApprovalProc.ReadOneByUserIDAndDate(UserID, DateFrom).FirstOrDefault();
-                            employeeHour = this.ReadOneByDateAndUserID(DateFrom, UserID).FirstOrDefault();
+                            employeeHour = await ReadOneByDateAndUserIDAsync(DateFrom, UserID);
                             if (OffDayTypeID == 4 && employeeHour?.OffDayTypeID != 4)
                             {
                                 //employeeHour.Employee = user;
@@ -287,10 +291,10 @@ namespace PrototypeWithAuth.CRUD
                             {
                                 if (user.BonusSickDays >= 1 || user.BonusVacationDays >= 1)
                                 {
-                                    var vacationLeftCount = _employeesProc.GetDaysOffCountByUserOffTypeIDYear(user, OffDayTypeID, DateFrom.Year);
+                                    var vacationLeftCount = await _employeesProc.GetDaysOffCountByUserOffTypeIDYearAsync(user, OffDayTypeID, DateFrom.Year);
                                     if (DateFrom.Year != DateTo.Year && DateTo.Year != 1)
                                     {
-                                        vacationLeftCount += _employeesProc.GetDaysOffCountByUserOffTypeIDYear(user, OffDayTypeID, DateFrom.Year);
+                                        vacationLeftCount += await _employeesProc.GetDaysOffCountByUserOffTypeIDYearAsync(user, OffDayTypeID, DateFrom.Year);
                                     }
                                     if (vacationLeftCount < 1)
                                     {
@@ -381,10 +385,10 @@ namespace PrototypeWithAuth.CRUD
                                 {
                                     if (user.BonusSickDays >= 1 || user.BonusVacationDays >= 1)
                                     {
-                                        var vacationLeftCount = _employeesProc.GetDaysOffCountByUserOffTypeIDYear(user, OffDayTypeID, DateFrom.Year);
+                                        var vacationLeftCount = await _employeesProc.GetDaysOffCountByUserOffTypeIDYearAsync(user, OffDayTypeID, DateFrom.Year);
                                         if (DateFrom.Year != DateTo.Year && DateTo.Year != 1)
                                         {
-                                            vacationLeftCount += _employeesProc.GetDaysOffCountByUserOffTypeIDYear(user, OffDayTypeID, DateTo.Year);
+                                            vacationLeftCount += await _employeesProc.GetDaysOffCountByUserOffTypeIDYearAsync(user, OffDayTypeID, DateTo.Year);
                                         }
                                         if (vacationLeftCount < 1)
                                         {
