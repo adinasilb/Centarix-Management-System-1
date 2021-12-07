@@ -49,7 +49,7 @@ namespace PrototypeWithAuth.CRUD
             return await employeehours.AsNoTracking().FirstOrDefaultAsync();
         }
 
-        public async  Task<EmployeeHours> ReadDoubledAsync(DateTime dateTime, string UserID, int EHID)
+        public async Task<EmployeeHours> ReadDoubledAsync(DateTime dateTime, string UserID, int EHID)
         {
             return await _context.EmployeeHours.Where(eh => eh.Date.Date == dateTime.Date && eh.EmployeeID == UserID
                     && eh.EmployeeHoursID != EHID).AsNoTracking().FirstOrDefaultAsync();
@@ -244,7 +244,7 @@ namespace PrototypeWithAuth.CRUD
                         if (newone != null) { companyDaysOff.Add(newone.Date); }
                         if (DateFrom.DayOfWeek != DayOfWeek.Friday && DateFrom.DayOfWeek != DayOfWeek.Saturday && !(companyDaysOff == null))
                         {
-                            var ehaa = _employeeHoursAwaitingApprovalProc.ReadOneByUserIDAndDate(UserID, DateFrom).FirstOrDefault();
+                            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadOneByUserIDAndDateAsync(UserID, DateFrom);
                             employeeHour = await ReadOneByDateAndUserIDAsync(DateFrom, UserID);
                             if (OffDayTypeID == 4 && employeeHour?.OffDayTypeID != 4)
                             {

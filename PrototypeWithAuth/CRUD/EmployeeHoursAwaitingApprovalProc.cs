@@ -7,6 +7,7 @@ using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
@@ -21,16 +22,33 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public IQueryable<EmployeeHoursAwaitingApproval> ReadByPK(int? ID)
+        public async Task<EmployeeHoursAwaitingApproval> ReadByPKAsync(int? ID, List<Expression<Func<EmployeeHoursAwaitingApproval, object>>> includes = null)
         {
-            return  _context.EmployeeHoursAwaitingApprovals                
+            var employeehours = _context.EmployeeHoursAwaitingApprovals
                 .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ID).Take(1);
+            if (includes !=null)
+            {
+                foreach (var t in includes)
+                {
+                    employeehours =employeehours.Include(t);
+                }
+            }
+            return await employeehours.AsNoTracking().FirstOrDefaultAsync(); 
         }
 
-        public IQueryable<EmployeeHoursAwaitingApproval> ReadOneByUserIDAndDate(string UserID, DateTime date)
+        public async Task<EmployeeHoursAwaitingApproval> ReadOneByUserIDAndDateAsync(string UserID, DateTime date, List<Expression<Func<EmployeeHoursAwaitingApproval, object>>> includes = null)
         {
-            return _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == UserID && eh.Date.Date == date.Date)
+
+            var employeehours = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == UserID && eh.Date.Date == date.Date)
                 .Take(1);
+            if (includes !=null)
+            {
+                foreach (var t in includes)
+                {
+                    employeehours =employeehours.Include(t);
+                }
+            }
+            return await employeehours.AsNoTracking().FirstOrDefaultAsync();
         }
 
         public async Task<StringWithBool> Delete(int ID)

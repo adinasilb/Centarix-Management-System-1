@@ -288,7 +288,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadByPK(ehaaID).Include(ehaa => ehaa.EmployeeHours).Include(ehaa => ehaa.PartialOffDayType).AsNoTracking().FirstOrDefaultAsync();
+            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadByPKAsync(ehaaID, new List<Expression<Func<EmployeeHoursAwaitingApproval, object>>> { ehaa => ehaa.EmployeeHours, ehaa => ehaa.PartialOffDayType });
 
             return PartialView(ehaa);
         }
@@ -385,7 +385,7 @@ namespace PrototypeWithAuth.Controllers
             }
             var userID = _userManager.GetUserId(User);
             var user = await _applicationUsersProc.ReadEmployeeByID(userID);
-            var employeeHour = await _employeeHoursProc.ReadOneByDateAndUserIDAsync(chosenDate.Date, userID, new List<Expression<Func<EmployeeHours, object>>> { e => e.Employee });
+            var employeeHour = await _employeeHoursProc.ReadOneByDateAndUserIDAsync(chosenDate.Date, userID, new List<Expression<Func<EmployeeHours, object>>> { e => e.Employee, e=>e.OffDayType });
             if (employeeHour == null)
             {
                 employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate, Employee = user };
@@ -695,7 +695,7 @@ namespace PrototypeWithAuth.Controllers
                 ViewBag.ErrorMessage = "Employee Hour not found. Unable to delete";
                 return NotFound();
             }
-            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadByPK(id).Include(ehaa => ehaa.EmployeeHours).Include(ehaa => ehaa.PartialOffDayType).AsNoTracking().FirstOrDefaultAsync();
+            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadByPKAsync(id, new List<Expression<Func<EmployeeHoursAwaitingApproval, object>>> { ehaa => ehaa.EmployeeHours, ehaa => ehaa.PartialOffDayType });
             DeleteHourViewModel deleteHourViewModel = new DeleteHourViewModel()
             {
                 EmployeeHour = employeeHour,
