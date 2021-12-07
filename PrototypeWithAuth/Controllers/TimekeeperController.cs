@@ -119,7 +119,7 @@ namespace PrototypeWithAuth.Controllers
             var user = await _applicationUsersProc.ReadEmployeeByID(userid);
             if (user != null)
             {
-                ReportDaysViewModel reportDaysViewModel = GetSummaryDaysOffModel(userid, user, DateTime.Now.Year);
+                ReportDaysViewModel reportDaysViewModel = await GetSummaryDaysOffModel(userid, user, DateTime.Now.Year);
                 return View(reportDaysViewModel);
 
             }
@@ -142,14 +142,14 @@ namespace PrototypeWithAuth.Controllers
             var user = await _applicationUsersProc.ReadEmployeeByID(userid);
             if (user != null)
             {
-                ReportDaysViewModel reportDaysViewModel = GetSummaryDaysOffModel(userid, user, year);
+                ReportDaysViewModel reportDaysViewModel = await GetSummaryDaysOffModel(userid, user, year);
 
                 return PartialView(reportDaysViewModel);
             }
 
             return RedirectToAction("ReportHours");
         }
-        private ReportDaysViewModel GetSummaryDaysOffModel(string userid, Employee user, int year)
+        private async Task<ReportDaysViewModel> GetSummaryDaysOffModel(string userid, Employee user, int year)
         {
             int month = DateTime.Now.Month;
             var daysOffViewModel = new ReportDaysViewModel
@@ -159,7 +159,7 @@ namespace PrototypeWithAuth.Controllers
                 SpecialDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(4, year, userid).OrderByDescending(eh => eh.Date).OrderByDescending(eh => eh.Date),
                 SelectedYear = year
             };
-            var sickDaysVacationDaysLeft = getVacationSickDaysLeft(user, year);
+            var sickDaysVacationDaysLeft = await getVacationSickDaysLeft(user, year);
             daysOffViewModel.VacationDays = sickDaysVacationDaysLeft.TotalVacationDays;
             daysOffViewModel.SickDays = sickDaysVacationDaysLeft.TotalSickDays;
             daysOffViewModel.VacationDaysTakenCount = sickDaysVacationDaysLeft.VacationDaysTaken;
@@ -167,7 +167,7 @@ namespace PrototypeWithAuth.Controllers
             return daysOffViewModel;
         }
 
-        private DaysOffViewModel getYearsVacationSickDays(Employee user, int year, DaysOffViewModel pastYearViewModel)
+        private async Task<DaysOffViewModel> getYearsVacationSickDays(Employee user, int year, DaysOffViewModel pastYearViewModel)
         {
             double vacationDays = 0;
             double sickDays = 0;
@@ -175,18 +175,14 @@ namespace PrototypeWithAuth.Controllers
             double sickDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(1, year, user.Id).Count();
             if (user.EmployeeStatusID == 1)
             {
-                var vacationHours =
-                    _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id &&
-                    eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date)
-                    .Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours)
-                    .ToList().Sum(p => p);
+                var vacationHours = await _employeeHoursProc.ReadPartialOffDayHoursAsync(year, 2, user.Id);
                 vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
 
-                var sickHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                var sickHours = await _employeeHoursProc.ReadPartialOffDayHoursAsync(year, 1, user.Id);
                 sickDaysTaken = Math.Round(sickDaysTaken + (sickHours / user.SalariedEmployee.HoursPerDay), 2);
             }
 
-            var unpaidLeaveTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 5 && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).Count();
+            var unpaidLeaveTaken = Convert.ToInt32(await _employeeHoursProc.ReadPartialOffDayHoursAsync(year, 5, user.Id));
             if (year == user.StartedWorking.Year)
             {
                 int month = year == DateTime.Now.Year ? (DateTime.Now.Month - user.StartedWorking.Month + 1) : (12 - user.StartedWorking.Month + 1);
@@ -228,7 +224,7 @@ namespace PrototypeWithAuth.Controllers
 
             return summaryOfDaysOff;
         }
-        private DaysOffViewModel getVacationSickDaysLeft(Employee user, int SelectedYear)
+        private async Task<DaysOffViewModel> getVacationSickDaysLeft(Employee user, int SelectedYear)
         {
             int year = AppUtility.YearStartedTimeKeeper;
             if (user.StartedWorking.Year > AppUtility.YearStartedTimeKeeper)
@@ -240,7 +236,7 @@ namespace PrototypeWithAuth.Controllers
 
             while (year <= SelectedYear)
             {
-                var summaryOfDaysOff = getYearsVacationSickDays(user, year, pastYearViewModel);
+                var summaryOfDaysOff = await getYearsVacationSickDays(user, year, pastYearViewModel);
                 year = year + 1;
                 pastYearViewModel = summaryOfDaysOff;
             }
@@ -334,7 +330,7 @@ namespace PrototypeWithAuth.Controllers
 
                 while (year <= thisYear)
                 {
-                    var summaryOfDaysOff = getYearsVacationSickDays(user, year, pastYearViewModel);
+                    var summaryOfDaysOff = await getYearsVacationSickDays(user, year, pastYearViewModel);
                     if (year == DateTime.Now.Year)
                     {
                         summaryOfDaysOffViewModel.VacationDaysLeft = summaryOfDaysOff.VacationDaysLeft;
@@ -385,7 +381,7 @@ namespace PrototypeWithAuth.Controllers
             }
             var userID = _userManager.GetUserId(User);
             var user = await _applicationUsersProc.ReadEmployeeByID(userID);
-            var employeeHour = await _employeeHoursProc.ReadOneByDateAndUserIDAsync(chosenDate.Date, userID, new List<Expression<Func<EmployeeHours, object>>> { e => e.Employee, e=>e.OffDayType });
+            var employeeHour = await _employeeHoursProc.ReadOneByDateAndUserIDAsync(chosenDate.Date, userID, new List<Expression<Func<EmployeeHours, object>>> { e => e.Employee, e => e.OffDayType });
             if (employeeHour == null)
             {
                 employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate, Employee = user };
@@ -576,7 +572,8 @@ namespace PrototypeWithAuth.Controllers
             var userId = _userManager.GetUserId(User);
             var offDayTypeID = _offDayTypesProc.ReadOneByOffDayTypeEnum(offDayViewModel.OffDayType).OffDayTypeID;
             var success = await _employeeHoursProc.SaveOffDayAsync(offDayViewModel.FromDate, offDayViewModel.ToDate, offDayTypeID, userId);
-            if (!success.Bool) {
+            if (!success.Bool)
+            {
                 errorMessage = success.String;
             }
             return RedirectToAction("_ReportDaysOff", new { errorMessage });
@@ -689,7 +686,7 @@ namespace PrototypeWithAuth.Controllers
                 ViewBag.ErrorMessage = "Employee Hour not found (no id). Unable to delete.";
                 return NotFound();
             }
-            var employeeHour = await _employeeHoursProc.ReadOneByPKAsync(id, new List<Expression<Func<EmployeeHours, object>>> { eh=>eh.OffDayType} );
+            var employeeHour = await _employeeHoursProc.ReadOneByPKAsync(id, new List<Expression<Func<EmployeeHours, object>>> { eh => eh.OffDayType });
             if (employeeHour == null)
             {
                 ViewBag.ErrorMessage = "Employee Hour not found. Unable to delete";

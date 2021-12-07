@@ -29,7 +29,7 @@ namespace PrototypeWithAuth.CRUD
             {
                 foreach (var t in includes)
                 {
-                    employeehours =employeehours.Include(t);
+                    employeehours = employeehours.Include(t);
                 }
             }          
             return await employeehours.AsNoTracking().FirstOrDefaultAsync();
@@ -39,7 +39,7 @@ namespace PrototypeWithAuth.CRUD
         {
             var employeehours = _context.EmployeeHours.Where(eh => eh.Date.Date == dateTime.Date && eh.EmployeeID == UserID).Take(1);
 
-            if (includes !=null)
+            if (includes != null)
             {
                 foreach (var t in includes)
                 {
