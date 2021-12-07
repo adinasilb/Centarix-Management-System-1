@@ -7,6 +7,7 @@ using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
@@ -16,29 +17,8 @@ namespace PrototypeWithAuth.CRUD
         public ApplicationUsersProc (ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base (context, userManager)
         {
             if (!FromBase) { this.InstantiateProcs(); }
-        }
+        }     
 
-        public async Task<Employee> ReadEmployeeByID(string UserID)
-        {
-            return await _context.Users.OfType<Employee>().Where(u => u.Id == UserID).Include(u => u.SalariedEmployee)
-                .AsNoTracking().FirstOrDefaultAsync();
-        }
-
-        public async Task<StringWithBool> UpdateEmployee(Employee employee)
-        {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
-            {
-                _context.Update(employee);
-                await _context.SaveChangesAsync();
-                ReturnVal.Bool = true;
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.Bool = false;
-                ReturnVal.String = AppUtility.GetExceptionMessage(ex);
-            }
-            return ReturnVal;
-        }
+       
     }
 }

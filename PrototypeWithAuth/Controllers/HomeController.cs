@@ -36,7 +36,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var user = _employeesProc.ReadOneByUserID(_userManager.GetUserId(User));
+            var user = await _employeesProc.ReadEmployeeByIDAsync(_userManager.GetUserId(User), new List<System.Linq.Expressions.Expression<Func<Employee, object>>> { e=>e.SalariedEmployee});
             var usersLoggedIn = _employeesProc.GetUsersLoggedInToday().Count();
             var users = _employeesProc.Read();
             HomePageViewModel viewModel = new HomePageViewModel();

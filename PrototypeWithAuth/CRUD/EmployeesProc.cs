@@ -5,12 +5,14 @@ using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class EmployeesProc : ApplicationDbContextProc
+    public class EmployeesProc : ApplicationUsersProc
     {
         public EmployeesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
         {
@@ -20,21 +22,37 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public IQueryable<Employee> Read()
+        public IQueryable<Employee> Read(List<Expression<Func<Employee, object>>> includes = null)
         {
-            return _context.Employees.AsNoTracking().AsQueryable();
+            var employees = _context.Employees.AsQueryable();
+            if (includes !=null)
+            {
+                foreach (var t in includes)
+                {
+                    employees = employees.Include(t);
+                }
+            }
+            return _context.Employees.AsNoTracking();
         }
 
-        public Employee ReadOneByUserID(string UserID)
+        public async Task<Employee> ReadEmployeeByIDAsync(string UserID, List<Expression<Func<Employee, object>>> includes = null)
         {
-            return _context.Employees.Where(u => u.Id == UserID).FirstOrDefault();
+            var employee = _context.Employees.Where(e => e.Id == UserID).Take(1);
+            if (includes !=null)
+            {
+                foreach (var t in includes)
+                {
+                    employee =employee.Include(t);
+                }
+            }
+            return await employee.AsNoTracking().FirstOrDefaultAsync();
         }
 
         public IQueryable<Employee> GetUsersLoggedInToday()
         {
             return _context.Employees.Where(u => u.LastLogin.Date == DateTime.Today.Date).AsNoTracking().AsQueryable();
         }
-
+     
         public async Task<StringWithBool> UpdateAsync(Employee employee)
         {
             StringWithBool ReturnVal = new StringWithBool();
@@ -51,7 +69,7 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        public async Task<StringWithBool> RemoveEmployeeBonusDay(EmployeeHours employeeHour, Employee user)
+        public async Task<StringWithBool> RemoveEmployeeBonusDayAsync(EmployeeHours employeeHour, Employee user)
         {
             if (employeeHour.OffDayTypeID == 2 && employeeHour.IsBonus)
             {
@@ -61,7 +79,7 @@ namespace PrototypeWithAuth.CRUD
             {
                 user.BonusSickDays += 1;
             }
-            var success = await _applicationUsersProc.UpdateEmployee(user);
+            var success = await UpdateAsync(user);
             return success;
         }
 
@@ -74,7 +92,7 @@ namespace PrototypeWithAuth.CRUD
                 {
                     employeeHour.IsBonus = true;
                     user.BonusVacationDays -= 1;
-                    success = await _applicationUsersProc.UpdateEmployee(user);
+                    success = await UpdateAsync(user);
                 }
             }
             else
@@ -83,7 +101,7 @@ namespace PrototypeWithAuth.CRUD
                 {
                     employeeHour.IsBonus = true;
                     user.BonusSickDays -= 1;
-                    success = await _applicationUsersProc.UpdateEmployee(user);
+                    success = await UpdateAsync(user);
                 }
             }
             return success;
@@ -157,7 +175,7 @@ namespace PrototypeWithAuth.CRUD
             {
                 user.BonusSickDays += 1;
             }
-            var success = await _applicationUsersProc.UpdateEmployee(user);
+            var success = await UpdateAsync(user);
             return success;
         }
     }
