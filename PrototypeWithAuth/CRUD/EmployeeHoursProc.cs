@@ -168,7 +168,7 @@ namespace PrototypeWithAuth.CRUD
                     {
                         if (employeeHour.OffDayTypeID == 4)
                         {
-                            var employee = _employeesProc.ReadOneByUserID(employeeHour.EmployeeID);
+                            var employee = await _employeesProc.ReadEmployeeByIDAsync(employeeHour.EmployeeID);
                             employee.SpecialDays += 1;
                             await _employeesProc.UpdateAsync(employee);
                         }
@@ -236,7 +236,7 @@ namespace PrototypeWithAuth.CRUD
                     var companyDaysOff = new List<DateTime>();
                     bool alreadyOffDay = false;
                     EmployeeHours employeeHour = null;
-                    var user = _employeesProc.ReadOneByUserID(UserID);
+                    var user = await _employeesProc.ReadEmployeeByIDAsync(UserID);
 
                     if (DateTo == new DateTime()) //just one date
                     {
@@ -274,7 +274,7 @@ namespace PrototypeWithAuth.CRUD
                                 }
                                 else if (employeeHour.OffDayTypeID != null)
                                 {
-                                    await _employeesProc.RemoveEmployeeBonusDay(employeeHour, user);
+                                    await _employeesProc.RemoveEmployeeBonusDayAsync(employeeHour, user);
                                 }
                                 else
                                 {
@@ -359,7 +359,7 @@ namespace PrototypeWithAuth.CRUD
                                         }
                                         else if (employeeHour.OffDayTypeID != null)
                                         {
-                                            await _employeesProc.RemoveEmployeeBonusDay(employeeHour, user);
+                                            await _employeesProc.RemoveEmployeeBonusDayAsync(employeeHour, user);
                                         }
                                         else
                                         {

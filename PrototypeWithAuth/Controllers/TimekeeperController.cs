@@ -21,7 +21,7 @@ namespace PrototypeWithAuth.Controllers
     {
         private CRUD.EmployeeHoursProc _employeeHoursProc;
         private CRUD.TimekeeperNotificationsProc _timekeeperNotificationsProc;
-        private CRUD.ApplicationUsersProc _applicationUsersProc;
+        private CRUD.EmployeesProc _employeesProc;
         private CRUD.EmployeeHoursAwaitingApprovalProc _employeeHoursAwaitingApprovalProc;
         private CRUD.EmployeeHoursStatuesProc _employeeHoursStatuesProc;
         private CRUD.OffDayTypesProc _offDayTypesProc;
@@ -31,7 +31,7 @@ namespace PrototypeWithAuth.Controllers
         {
             _employeeHoursProc = new CRUD.EmployeeHoursProc(context, userManager);
             _timekeeperNotificationsProc = new CRUD.TimekeeperNotificationsProc(context, userManager);
-            _applicationUsersProc = new CRUD.ApplicationUsersProc(context, userManager);
+            _employeesProc = new CRUD.EmployeesProc(context, userManager);
             _employeeHoursAwaitingApprovalProc = new CRUD.EmployeeHoursAwaitingApprovalProc(context, userManager);
             _employeeHoursStatuesProc = new CRUD.EmployeeHoursStatuesProc(context, userManager);
             _offDayTypesProc = new CRUD.OffDayTypesProc(context, userManager);
@@ -116,7 +116,7 @@ namespace PrototypeWithAuth.Controllers
 
 
             var userid = _userManager.GetUserId(User);
-            var user = await _applicationUsersProc.ReadEmployeeByID(userid);
+            var user = await _employeesProc.ReadEmployeeByIDAsync(userid, new List<Expression<Func<Employee, object>>> { e=>e.SalariedEmployee});
             if (user != null)
             {
                 ReportDaysViewModel reportDaysViewModel = GetSummaryDaysOffModel(userid, user, DateTime.Now.Year);
@@ -139,7 +139,7 @@ namespace PrototypeWithAuth.Controllers
                 return PartialView("InvalidLinkPage");
             }
             var userid = _userManager.GetUserId(User);
-            var user = await _applicationUsersProc.ReadEmployeeByID(userid);
+            var user = await _employeesProc.ReadEmployeeByIDAsync(userid, new List<Expression<Func<Employee, object>>> { e => e.SalariedEmployee });
             if (user != null)
             {
                 ReportDaysViewModel reportDaysViewModel = GetSummaryDaysOffModel(userid, user, year);
@@ -259,7 +259,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 userId = _userManager.GetUserId(User);
             }
-            var user = await _applicationUsersProc.ReadEmployeeByID(userId);
+            var user = await _employeesProc.ReadEmployeeByIDAsync(userId, new List<Expression<Func<Employee, object>>> { e => e.SalariedEmployee });
             SummaryHoursViewModel summaryHoursViewModel = base.SummaryHoursFunction(month, year, user);
             summaryHoursViewModel.PageType = pageType;
             return PartialView(summaryHoursViewModel);
@@ -275,7 +275,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimekeeperSummary;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SummaryHours;
             var userid = _userManager.GetUserId(User);
-            var user = await _applicationUsersProc.ReadEmployeeByID(userid);
+            var user = await _employeesProc.ReadEmployeeByIDAsync(userid, new List<Expression<Func<Employee, object>>> { e => e.SalariedEmployee });
             //int month = Month?.Month ?? DateTime.Now.Month;
             return PartialView(base.SummaryHoursFunction(month, year, user, errorMessage));
         }
@@ -317,7 +317,7 @@ namespace PrototypeWithAuth.Controllers
         private async Task<SummaryOfDaysOffViewModel> ReportDaysOffFunction(string errorMessage = "")
         {
             var userid = _userManager.GetUserId(User);
-            var user = await _applicationUsersProc.ReadEmployeeByID(userid);
+            var user = await _employeesProc.ReadEmployeeByIDAsync(userid, new List<Expression<Func<Employee, object>>> { e => e.SalariedEmployee});
 
             if (user != null)
             {
@@ -384,7 +384,7 @@ namespace PrototypeWithAuth.Controllers
                 chosenDate = DateTime.Today;
             }
             var userID = _userManager.GetUserId(User);
-            var user = await _applicationUsersProc.ReadEmployeeByID(userID);
+            var user = await _employeesProc.ReadEmployeeByIDAsync(userID);
             var employeeHour = await _employeeHoursProc.ReadOneByDateAndUserIDAsync(chosenDate.Date, userID, new List<Expression<Func<EmployeeHours, object>>> { e => e.Employee, e=>e.OffDayType });
             if (employeeHour == null)
             {
