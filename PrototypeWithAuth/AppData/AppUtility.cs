@@ -416,6 +416,11 @@ namespace PrototypeWithAuth.AppData
             return newFileName;
         }
 
+        public static string GetLastElement(string String)
+        {
+            return String.Substring(String.LastIndexOf("."), String.Length - 1);
+        }
+
         private static bool IsInThisMonth(DateTime dateCreated)
         {
             throw new NotImplementedException();
