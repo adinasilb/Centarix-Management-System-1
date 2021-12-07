@@ -31,7 +31,7 @@ namespace PrototypeWithAuth.CRUD
         public async Task<EmployeeHoursAwaitingApproval> ReadOneByUserIDAndDate(string UserID, DateTime date)
         {
             return await _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == UserID && eh.Date.Date == date.Date)
-                .FirstOrDefaultAsync();
+                .AsNoTracking().FirstOrDefaultAsync();
         }
 
         public async Task<StringWithBool> Delete(int ID)
