@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
@@ -26,12 +27,13 @@ namespace PrototypeWithAuth.CRUD
 
         public OffDayType ReadOneByOffDayTypeEnum(AppUtility.OffDayTypeEnum OffDayTypeEnum)
         {
-            return _context.OffDayTypes.Where(odt => odt.Description == AppUtility.GetDisplayNameOfEnumValue(OffDayTypeEnum.ToString())).FirstOrDefault();
+            return _context.OffDayTypes.Where(odt => odt.Description == AppUtility.GetDisplayNameOfEnumValue(OffDayTypeEnum.ToString()))
+                .AsNoTracking().FirstOrDefault();
         }
 
         public OffDayType ReadOneByPK(int ID)
         {
-            return _context.OffDayTypes.Where(odt => odt.OffDayTypeID == ID).FirstOrDefault();
+            return _context.OffDayTypes.Where(odt => odt.OffDayTypeID == ID).AsNoTracking().FirstOrDefault();
         }
     }
 }

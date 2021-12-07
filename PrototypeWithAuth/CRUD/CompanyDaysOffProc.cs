@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using System;
@@ -17,7 +18,7 @@ namespace PrototypeWithAuth.CRUD
 
         public CompanyDayOff ReadOneByDate(DateTime date)
         {
-            return _context.CompanyDayOffs.Where(cdo => cdo.Date.Date == date).FirstOrDefault();
+            return _context.CompanyDayOffs.Where(cdo => cdo.Date.Date == date).AsNoTracking().FirstOrDefault();
         }
 
         public IQueryable<CompanyDayOff> ReadByDateSpan(DateTime DateFrom, DateTime DateTo)
