@@ -6,7 +6,6 @@
 @inject UserManager<ApplicationUser> UserManager
 @{
     string showDetails = "";
-    string showCategories = "";
     string showPayment = "";
     string showComments = "";
     string showContact = "";
@@ -27,65 +26,62 @@
 
     }
 
-string switchClass = "";
-if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
-{
-    switchClass = "suppliers";
-}
-else if (Model.SectionType.Equals(AppUtility.MenuItems.Requests))
-{
-    switchClass = "suppliers";
-}
-else
-{
-    switchClass = "accounting";
-}
+    string switchClass = "";
+    if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement) || Model.SectionType.Equals(AppUtility.MenuItems.Requests))
+    {
+        switchClass = "suppliers";
+    }
+    else if (Model.SectionType.Equals(AppUtility.MenuItems.Accounting))
+    {
+        switchClass = "accounting";
+    }
 
+
+
+    <input type="hidden" class="old-name" value="@Model.Vendor?.VendorEnName" />
+    <div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; ">
+        <input type="hidden" class="setupdropdowns" value="true" />
+        @for (int ct = 0; ct < Model.VendorCategoryTypes?.Count; ct++)
+        {
+            <input type="hidden" asp-for="VendorCategoryTypes[0]" class="vendor-cat-types" />
+        }
+        @if (Model.ModalType == AppUtility.VendorModalType.Edit)
+        {
+            <div class=" row text-right ">
+                <div class="switch col-12 switch-margin">
+                    <label>
+                        <label class="edit-mode-switch-description">Edit Mode Off</label>
+                        <input type="checkbox" class="turn-edit-on-off @switchClass" name="details" value="@Model.Vendor.VendorID">
+                        <span class="lever"></span>
+                    </label>
+                </div>
+            </div>
+        }
+        <div class="tab-content">
+            <div id="details" class="tab-pane fade in @showDetails" value="1">
+                @{await Html.RenderPartialAsync("~/Views/Vendors/_DetailsTab.cshtml", Model); }
+            </div>
+            <div id="payment" class="tab-pane fade in @showPayment" value="2">
+                @{await Html.RenderPartialAsync("~/Views/Vendors/_PaymentTab.cshtml", Model); }
+            </div>
+            <div id="vendorComments" class="tab-pane fade in @showComments" value="3">
+                @{await Html.RenderPartialAsync("~/Views/Vendors/_CommentTab.cshtml", Model); }
+            </div>
+            <div id="contact" class="tab-pane fade in @showContact" value="4">
+                @{await Html.RenderPartialAsync("~/Views/Vendors/_ContactTab.cshtml", Model); }
+            </div>
+        </div>
+    </div>
+}
 <script src="~/js/site.js" asp-append-version="true"></script>
 
 <script src="~/js/Validation/CreateVendorFormValidation.js"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
-
-<input type="hidden" class="old-name" value="@Model.Vendor.VendorEnName" />
-<div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; ">
-    <input type="hidden" class="setupdropdowns" value="true" />
-    @for (int ct = 0; ct < Model.VendorCategoryTypes.Count; ct++)
-    {
-        <input type="hidden" asp-for="VendorCategoryTypes[0]" class="vendor-cat-types" />
-    }
-    @if (Model.SectionType != AppUtility.MenuItems.Requests)
-
-    {<div class=" row text-right mb-0">
-            <div class="switch col-12 switch-margin">
-                <label>
-                    <label class="edit-mode-switch-description">Edit Mode Off</label>
-                    <input type="checkbox" class="turn-edit-on-off @switchClass" name="details" value="@Model.Vendor.VendorID">
-                    <span class="lever"></span>
-                </label>
-            </div>
-        </div>
-    }
-    <div class="tab-content">
-        <div id="item" class="tab-pane fade in" value="1">
-            @{await Html.RenderPartialAsync("_DetailsTab", Model); }
-        </div>
-        <div id="item" class="tab-pane fade in" value="2">
-            @{await Html.RenderPartialAsync("_PaymentTab", Model); }
-        </div>
-        <div id="item" class="tab-pane fade in" value="3">
-            @{await Html.RenderPartialAsync("_CommentTab", Model); }
-        </div>
-        <div id="item" class="tab-pane fade in" value="4">
-            @{await Html.RenderPartialAsync("_ContactTab", Model); }
-        </div>
-    </div>
-</div>
-    }
-@if (Model.Tab != 0 && Model.SectionType!=AppUtility.MenuItems.Requests)
+@if (Model.Tab != 0 && Model.SectionType != AppUtility.MenuItems.Requests)
 {
-    <script>
+    @*<script>
         $.fn.ChangeCheckboxesToFilledIn();
-    </script>
+    </script>*@
 }
 <script type="text/javascript">
     $(function () {

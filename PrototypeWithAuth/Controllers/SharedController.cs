@@ -1589,57 +1589,50 @@ namespace PrototypeWithAuth.Controllers
             return commentsInfoViewModel;
         }
 
-
-        protected async Task<IActionResult> editVendorFunction(int? id, AppUtility.MenuItems SectionType, int? Tab = 0)
+        protected async Task<CreateSupplierViewModel> GetCreateSupplierViewModel(AppUtility.MenuItems SectionType, int VendorID = 0, int Tab = 0)
         {
-            if (id == null)
+            CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel()
             {
-                return NotFound();
-            }
-
-            CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
-            createSupplierViewModel.Countries = new List<SelectListItem>();
+                SectionType = SectionType,
+                CategoryTypes = new List<SelectListItem>(),
+                Tab = Tab==0 ? 1 : Tab,
+                CommentTypes = _context.CommentTypes,
+                Countries = new List<SelectListItem>()
+            };
             foreach (var country in _context.Countries)
             {
                 createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
             }
-            createSupplierViewModel.Vendor = await _context.Vendors.Include(v => v.VendorCategoryTypes).Where(v => v.VendorID == id).FirstOrDefaultAsync();
-            createSupplierViewModel.SectionType = SectionType;
-            createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
-            createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();
-            createSupplierViewModel.Tab = Tab ?? 0;
-            //var count = createSupplierViewModel.Vendor.VendorCategoryTypes.Count();
-            //if (count == 2)
-            //{
 
-            //}
-            // createSupplierViewModel.CategoryTypeID = createSupplierViewModel.Vendor.VendorCategoryTypes
-            if (createSupplierViewModel.Vendor == null)
+            await _context.CategoryTypes.ForEachAsync(ct => {
+                createSupplierViewModel.CategoryTypes.Add(new SelectListItem() { Text = ct.CategoryTypeDescription, Value = ct.CategoryTypeID.ToString() });
+            });
+            createSupplierViewModel.CategoryTypes.Insert(0, new SelectListItem() { Text = "Select Category", Disabled = true, Selected = true });
+            if(VendorID == 0)
             {
-                return NotFound();
+                createSupplierViewModel.VendorContacts = new List<VendorContactWithDeleteViewModel>();
+                createSupplierViewModel.VendorContacts.Add(new VendorContactWithDeleteViewModel()
+                {
+                    VendorContact = new VendorContact(),
+                    Delete = false
+                });
             }
-            createSupplierViewModel.CommentTypes = _context.CommentTypes;
-            createSupplierViewModel.VendorContacts = _context.VendorContacts.Where(c => c.VendorID == id).ToList()
+            else
+            {
+                createSupplierViewModel.Comments = await _context.VendorComments.Include(c => c.ApplicationUser).Include(c => c.CommentType).Where(c => c.ObjectID == VendorID).ToListAsync();
+                createSupplierViewModel.Vendor = await _context.Vendors.Include(v => v.VendorCategoryTypes).Where(v => v.VendorID == VendorID).FirstOrDefaultAsync();
+                createSupplierViewModel.VendorContacts = _context.VendorContacts.Where(c => c.VendorID == VendorID).ToList()
                 .Select(vc => new VendorContactWithDeleteViewModel()
                 {
                     VendorContact = vc,
                     Delete = false
                 }).ToList();
-            createSupplierViewModel.Comments = await _context.VendorComments.Include(c => c.ApplicationUser).Include(c => c.CommentType).Where(c => c.ObjectID == id).ToListAsync();
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.AllSuppliers;
-            //tempdata page type for active tab link
-            if (SectionType == AppUtility.MenuItems.LabManagement)
-            {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
-            }
-            else if (SectionType == AppUtility.MenuItems.Accounting)
-            {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
-            }
-            return PartialView(createSupplierViewModel);
 
+                createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();
+            }
+            return createSupplierViewModel;
         }
+
         //[HttpPost]
         //[Authorize(Roles = "Requests")]
         //public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel)

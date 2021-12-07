@@ -2,7 +2,6 @@
 @using PrototypeWithAuth.AppData
 
 
-
-            <div class=" _EditVendorTabs " >
-                @{await Html.RenderPartialAsync("~/Views/Vendors/_EditVendorTabs.cshtml", Model); }
-            </div>
+<div class=" _EditVendorTabs ">
+    @{ await Html.RenderPartialAsync("~/Views/Vendors/_VendorTabs.cshtml", Model);}
+</div>

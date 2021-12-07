@@ -1,9 +1,10 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddContactViewModel
+@using PrototypeWithAuth.AppData
 <script src="~/js/vendorcontactinfopartial.js"></script>
 @{
 
     var disabled = "";
-    if (Model.IsEdit)
+    if (Model.ModalType == AppUtility.VendorModalType.Edit)
     {
         disabled = "disabled";
     }
@@ -29,15 +30,12 @@
     <input type="hidden" id="@hiddenContactIdID" name="@hiddenContactIdName" value="@Model.VendorContact.VendorContactID" />
     <input type="hidden" id="@hiddenContactDeleteID" name="@hiddenContactDeleteName" value="false" class="contact-deletes" />
 
-    <div class="row mb-0">
-        <div class="col-10 mr-4">@*empty div b/c need same margins as below*@</div>
-        <div class="col-1">
-            <button type="button" class="close modal-close-padding modal-close-style vendor-contact-close mark-readonly" ContactCardID="@Model.Index" aria-label="Close" @disabled>
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+    <div class="float-right pr-1">
+        <button type="button" class="close vendor-contact-close mark-readonly" ContactCardID="@Model.Index" aria-label="Close" @disabled>
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
-    <br />
+    <br/>
     <div class="row mb-3 ">
         <div class="col-6 mr-4  ">
             <label id="@contactNameID" name="@contactNameName" class="control-label ">Name</label>
