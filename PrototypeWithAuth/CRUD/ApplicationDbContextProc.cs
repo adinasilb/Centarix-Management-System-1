@@ -13,7 +13,6 @@ namespace PrototypeWithAuth.CRUD
         protected readonly ApplicationDbContext _context;
         protected readonly UserManager<ApplicationUser> _userManager;
 
-        protected ApplicationUsersProc _applicationUsersProc;
         protected CategoryTypesProc _categoryTypesProc;
         protected CountriesProc _countriesProc;
         protected EmployeeHoursProc _employeeHoursProc;
@@ -37,7 +36,6 @@ namespace PrototypeWithAuth.CRUD
 
         public void InstantiateProcs()
         {
-            _applicationUsersProc = new ApplicationUsersProc(_context, _userManager, true);
             _categoryTypesProc = new CategoryTypesProc(_context, _userManager, true);
             _countriesProc = new CountriesProc(_context, _userManager, true);
             _employeeHoursProc = new EmployeeHoursProc(_context, _userManager, true);
