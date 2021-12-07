@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
+using PrototypeWithAuth.Data;
+using PrototypeWithAuth.Models;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using PrototypeWithAuth.Models;
-using PrototypeWithAuth.Data;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using PrototypeWithAuth.AppData.UtilityModels;
-using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.CRUD
 {
@@ -90,7 +89,7 @@ namespace PrototypeWithAuth.CRUD
             return success;
         }
 
-        public double GetDaysOffCountByUserOffTypeIDYear(Employee User, int OffDayTypeID, int thisYear)
+        public async Task<double> GetDaysOffCountByUserOffTypeIDYearAsync(Employee User, int OffDayTypeID, int thisYear)
         {
             double offDaysLeft = 0;
             var year = AppUtility.YearStartedTimeKeeper;
@@ -102,7 +101,7 @@ namespace PrototypeWithAuth.CRUD
                 double offDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, OffDayTypeID, User.Id).Count();
                 if (User.EmployeeStatusID == 1 && OffDayTypeID == 2)
                 {
-                    var vacationHours = _employeeHoursProc.ReadPartialOffDayHours(year, 2, User.Id);
+                    var vacationHours =await _employeeHoursProc.ReadPartialOffDayHoursAsync(year, 2, User.Id);
                     offDaysTaken = Math.Round(offDaysTaken + (vacationHours / User.SalariedEmployee.HoursPerDay), 2);
                 }
                 if (year == AppUtility.YearStartedTimeKeeper && year == DateTime.Now.Year)

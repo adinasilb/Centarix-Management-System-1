@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -42,13 +43,13 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
-        public IActionResult ReportHours(string errorMessage = null)
+        public async Task<IActionResult> ReportHours(string errorMessage = null)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimeKeeperReport;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ReportHours;
             var userid = _userManager.GetUserId(User);
-            var todaysEntry = _employeeHoursProc.ReadOneByDateAndUserID(DateTime.Today, userid).FirstOrDefault();
+            var todaysEntry = await _employeeHoursProc.ReadOneByDateAndUserIDAsync(DateTime.Today, userid);
             EntryExitViewModel entryExitViewModel = new EntryExitViewModel();
             if (todaysEntry == null || todaysEntry.Entry1 == null)
             {
@@ -93,7 +94,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ReportHours;
             var currentClickButton = entryExitViewModel.EntryExitEnum;
 
-            var updateEmployeeHours = await _employeeHoursProc.ReportHours(entryExitViewModel, _userManager.GetUserId(User));
+            var updateEmployeeHours = await _employeeHoursProc.ReportHoursAsync(entryExitViewModel, _userManager.GetUserId(User));
 
             if (updateEmployeeHours.Bool)
             {
@@ -384,7 +385,7 @@ namespace PrototypeWithAuth.Controllers
             }
             var userID = _userManager.GetUserId(User);
             var user = await _applicationUsersProc.ReadEmployeeByID(userID);
-            var employeeHour = _employeeHoursProc.ReadOneByDateAndUserID(chosenDate.Date, userID).Include(e => e.Employee).FirstOrDefault();
+            var employeeHour = await _employeeHoursProc.ReadOneByDateAndUserIDAsync(chosenDate.Date, userID, new List<Expression<Func<EmployeeHours, object>>> { e => e.Employee });
             if (employeeHour == null)
             {
                 employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate, Employee = user };
@@ -574,7 +575,7 @@ namespace PrototypeWithAuth.Controllers
             string errorMessage = "";
             var userId = _userManager.GetUserId(User);
             var offDayTypeID = _offDayTypesProc.ReadOneByOffDayTypeEnum(offDayViewModel.OffDayType).OffDayTypeID;
-            var success = await _employeeHoursProc.SaveOffDay(offDayViewModel.FromDate, offDayViewModel.ToDate, offDayTypeID, userId);
+            var success = await _employeeHoursProc.SaveOffDayAsync(offDayViewModel.FromDate, offDayViewModel.ToDate, offDayTypeID, userId);
             if (!success.Bool) {
                 errorMessage = success.String;
             }
@@ -641,7 +642,7 @@ namespace PrototypeWithAuth.Controllers
         {
             int offdayid = _offDayTypesProc.ReadOneByOffDayTypeEnum(offDayViewModel.OffDayType).OffDayTypeID;
             string userid = _userManager.GetUserId(User);
-            var success = await _employeeHoursProc.SaveOffDay(offDayViewModel.FromDate, offDayViewModel.ToDate, offdayid, userid);
+            var success = await _employeeHoursProc.SaveOffDayAsync(offDayViewModel.FromDate, offDayViewModel.ToDate, offdayid, userid);
             if (!success.Bool)
             {
                 offDayViewModel.ErrorMessage += success.String;
@@ -688,7 +689,7 @@ namespace PrototypeWithAuth.Controllers
                 ViewBag.ErrorMessage = "Employee Hour not found (no id). Unable to delete.";
                 return NotFound();
             }
-            var employeeHour = await _employeeHoursProc.ReadOneByPK(id);
+            var employeeHour = await _employeeHoursProc.ReadOneByPKAsync(id, new List<Expression<Func<EmployeeHours, object>>> { eh=>eh.OffDayType} );
             if (employeeHour == null)
             {
                 ViewBag.ErrorMessage = "Employee Hour not found. Unable to delete";
@@ -709,7 +710,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> DeleteHourModal(DeleteHourViewModel deleteHourViewModel) //remove ehaa too
         {
-            var success = await _employeeHoursProc.Delete(deleteHourViewModel);
+            var success = await _employeeHoursProc.DeleteAsync(deleteHourViewModel);
             if (success.Bool)
             {
                 return RedirectToAction("SummaryHours",
