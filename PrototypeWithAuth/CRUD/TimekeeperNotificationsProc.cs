@@ -21,7 +21,7 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public async Task<StringWithBool> Create(TimekeeperNotification timekeeperNotification)
+        public async Task<StringWithBool> CreateAsync(TimekeeperNotification timekeeperNotification)
         {
             StringWithBool ReturnVal = new StringWithBool();
             try

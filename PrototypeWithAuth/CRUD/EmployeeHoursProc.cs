@@ -154,7 +154,7 @@ namespace PrototypeWithAuth.CRUD
                         {
                             var employee = _employeesProc.ReadOneByUserID(employeeHour.EmployeeID);
                             employee.SpecialDays += 1;
-                            _employeesProc.Update(employee);
+                            await _employeesProc.UpdateAsync(employee);
                         }
 
                         newEmployeeHour = new EmployeeHours()
@@ -182,7 +182,7 @@ namespace PrototypeWithAuth.CRUD
                                 Controller = "Timekeeper",
                                 Action = "SummaryHours"
                             };
-                            await _timekeeperNotificationsProc.Create(newNotification);
+                            await _timekeeperNotificationsProc.CreateAsync(newNotification);
                         }
                     }
                     else
@@ -228,7 +228,7 @@ namespace PrototypeWithAuth.CRUD
                         companyDaysOff.Add(newone);
                         if (DateFrom.DayOfWeek != DayOfWeek.Friday && DateFrom.DayOfWeek != DayOfWeek.Saturday && !(companyDaysOff == null))
                         {
-                            var ehaa = _employeeHoursAwaitingApprovalProc.ReadOneByUserIDAndDate(UserID, DateFrom);
+                            var ehaa = _employeeHoursAwaitingApprovalProc.ReadOneByUserIDAndDate(UserID, DateFrom).FirstOrDefault();
                             employeeHour = this.ReadOneByDateAndUserID(DateFrom, UserID).FirstOrDefault();
                             if (OffDayTypeID == 4 && employeeHour?.OffDayTypeID != 4)
                             {

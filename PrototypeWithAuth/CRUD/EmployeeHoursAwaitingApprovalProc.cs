@@ -21,17 +21,16 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public async Task<EmployeeHoursAwaitingApproval> ReadByPK(int? ID)
+        public IQueryable<EmployeeHoursAwaitingApproval> ReadByPK(int? ID)
         {
-            return await _context.EmployeeHoursAwaitingApprovals
-                .Include(ehaa => ehaa.EmployeeHours).Include(ehaa => ehaa.PartialOffDayType)
-                .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ID).AsNoTracking().FirstOrDefaultAsync();
+            return  _context.EmployeeHoursAwaitingApprovals                
+                .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ID).AsNoTracking().Take(1);
         }
 
-        public async Task<EmployeeHoursAwaitingApproval> ReadOneByUserIDAndDate(string UserID, DateTime date)
+        public IQueryable<EmployeeHoursAwaitingApproval> ReadOneByUserIDAndDate(string UserID, DateTime date)
         {
-            return await _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == UserID && eh.Date.Date == date.Date)
-                .FirstOrDefaultAsync();
+            return _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == UserID && eh.Date.Date == date.Date)
+                .Take(1);
         }
 
         public async Task<StringWithBool> Delete(int ID)

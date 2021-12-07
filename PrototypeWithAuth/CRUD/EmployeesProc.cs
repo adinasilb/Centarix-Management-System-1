@@ -36,7 +36,7 @@ namespace PrototypeWithAuth.CRUD
             return _context.Employees.Where(u => u.LastLogin.Date == DateTime.Today.Date).AsNoTracking().AsQueryable();
         }
 
-        public async Task<StringWithBool> Update(Employee employee)
+        public async Task<StringWithBool> UpdateAsync(Employee employee)
         {
             StringWithBool ReturnVal = new StringWithBool();
             try
