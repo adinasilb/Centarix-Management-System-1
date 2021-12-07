@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
@@ -409,145 +410,21 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> UpdateHours(UpdateHoursViewModel updateHoursViewModel)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            var success = await _employeeHoursProc.UpdateHours(updateHoursViewModel);
+            if (success.Bool)
             {
-                try
+                if (updateHoursViewModel.PageType == null || updateHoursViewModel.PageType == "ReportHours")
                 {
-                    var ehaa = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == updateHoursViewModel.EmployeeHour.EmployeeID && eh.Date.Date == updateHoursViewModel.EmployeeHour.Date.Date).FirstOrDefault();
-
-                    var eh = _context.EmployeeHours.Where(eh => eh.EmployeeID == updateHoursViewModel.EmployeeHour.EmployeeID && eh.Date.Date == updateHoursViewModel.EmployeeHour.Date.Date).FirstOrDefault();
-
-                    var updateHoursDate = updateHoursViewModel.EmployeeHour.Date;
-
-                    if (ehaa == null)
-                    {
-                        ehaa = new EmployeeHoursAwaitingApproval();
-                    }
-
-                    ehaa.EmployeeID = updateHoursViewModel.EmployeeHour.EmployeeID;
-
-                    if (updateHoursViewModel.EmployeeHour.Entry1 != null)
-                    {
-                        ehaa.Entry1 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Entry1?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Entry1?.Minute ?? 0, 0);
-                    }
-                    else
-                    {
-                        ehaa.Entry1 = null;
-                    }
-                    if (updateHoursViewModel.EmployeeHour.Entry2 != null)
-                    {
-                        ehaa.Entry2 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Entry2?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Entry2?.Minute ?? 0, 0);
-                    }
-                    else
-                    {
-                        ehaa.Entry2 = null;
-                    }
-                    if (updateHoursViewModel.EmployeeHour.Exit1 != null)
-                    {
-                        ehaa.Exit1 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Exit1?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Exit1?.Minute ?? 0, 0);
-                    }
-                    else
-                    {
-                        ehaa.Exit1 = null;
-                    }
-                    if (updateHoursViewModel.EmployeeHour.Exit2 != null)
-                    {
-                        ehaa.Exit2 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Exit2?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Exit2?.Minute ?? 0, 0);
-                    }
-                    else
-                    {
-                        ehaa.Exit2 = null;
-                    }
-                    ehaa.TotalHours = updateHoursViewModel.EmployeeHour.TotalHours;
-                    ehaa.Date = updateHoursViewModel.EmployeeHour.Date;
-                    ehaa.EmployeeHoursStatusEntry1ID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry1ID;
-                    ehaa.EmployeeHoursStatusEntry2ID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry2ID;
-                    ehaa.PartialOffDayTypeID = updateHoursViewModel.EmployeeHour.PartialOffDayTypeID;
-                    if (updateHoursViewModel.EmployeeHour.PartialOffDayTypeID != null && updateHoursViewModel.EmployeeHour.PartialOffDayHours == null)
-                    {
-                        var employeeTime = _context.Employees.Include(e => e.SalariedEmployee).Where(e => e.Id == updateHoursViewModel.EmployeeHour.EmployeeID).FirstOrDefault().SalariedEmployee.HoursPerDay;
-                        var offDayHours = TimeSpan.FromHours(employeeTime) - updateHoursViewModel.EmployeeHour.TotalHours;
-                        if (offDayHours > TimeSpan.Zero)
-                        {
-                            ehaa.PartialOffDayHours = offDayHours;
-                        }
-                        else
-                        {
-                            ehaa.PartialOffDayTypeID = null;
-                        }
-                    }
-                    else
-                    {
-                        ehaa.PartialOffDayHours = updateHoursViewModel.EmployeeHour.PartialOffDayHours;
-                    }
-                    ehaa.IsDenied = false;
-                    //mark as forgot to report if bool is true and not work from home
-                    if (updateHoursViewModel.IsForgotToReport && updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry1ID != 1)
-                    {
-                        if (eh != null)
-                        {
-                            if (eh.IsBonus)
-                            {
-                                ehaa.IsBonus = true;
-                                ehaa.OffDayTypeID = eh.OffDayTypeID;
-                            }
-                            //if(eh.OffDayTypeID ==4)
-                            //{
-                            //    ehaa.OffDayTypeID = eh.OffDayTypeID;
-                            //}
-                            if (eh.OffDayTypeID == null)
-                            {
-                                ehaa.EmployeeHoursStatusEntry1ID = 3;
-                            }
-                        }
-                    }
-                    if (eh == null)
-                    {
-                        updateHoursViewModel.EmployeeHour = new EmployeeHours() { Date = updateHoursViewModel.EmployeeHour.Date, EmployeeID = updateHoursViewModel.EmployeeHour.EmployeeID };
-                        _context.Update(updateHoursViewModel.EmployeeHour);
-                        await _context.SaveChangesAsync();
-                    }
-
-                    var employeeHoursID = updateHoursViewModel.EmployeeHour.EmployeeHoursID;
-                    ehaa.EmployeeHoursID = employeeHoursID;
-                    int Month = ehaa.Date.Month;
-                    int Year = ehaa.Date.Year;
-                    _context.Update(ehaa);
-                    await _context.SaveChangesAsync();
-
-                    var notifications = _context.TimekeeperNotifications.Where(n => n.EmployeeHoursID == updateHoursViewModel.EmployeeHour.EmployeeHoursID).ToList();
-                    foreach (var notification in notifications)
-                    {
-                        _context.Remove(notification);
-                        await _context.SaveChangesAsync();
-                    }
-
-                    //throw new Exception();
-                    await transaction.CommitAsync();
-                    if (updateHoursViewModel.PageType == null || updateHoursViewModel.PageType == "ReportHours")
-                    {
-                        return RedirectToAction("ReportHours");
-                    }
-                    return RedirectToAction("SummaryHours", new { Month = Month, Year = Year });
+                    return RedirectToAction("ReportHours");
                 }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    updateHoursViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
-                    /*updateHoursViewModel.PartialOffDayTypes = _context.OffDayTypes.Where(od => od.OffDayTypeID == 1 *//*Sick Day*//* || od.OffDayTypeID == 2 *//*Vacation Day*//*);
-                    var userID = _userManager.GetUserId(User);
-                    var user = await _context.Employees.Where(u => u.Id == userID).FirstOrDefaultAsync();
-                    updateHoursViewModel.EmployeeHour.Employee = user;
-                    var offDayType = await _context.OffDayTypes.Where(odt => odt.OffDayTypeID == updateHoursViewModel.EmployeeHour.OffDayTypeID).FirstOrDefaultAsync();
-                    updateHoursViewModel.EmployeeHour.OffDayType = offDayType;
-                  */
-                    Response.StatusCode = 500;
-                    return PartialView("_ErrorMessage", updateHoursViewModel.ErrorMessage);
-
-                }
+                return RedirectToAction("SummaryHours", new { Month = updateHoursViewModel.EmployeeHour.Date.Month, Year = updateHoursViewModel.EmployeeHour.Date.Year });
             }
-
-
+            else
+            {
+                Response.StatusCode = 500;
+                return PartialView("_ErrorMessage", success.String /*updateHoursViewModel.ErrorMessage*/);
+            }
+            
         }
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
@@ -602,35 +479,29 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    var userID = _userManager.GetUserId(User);
-                    var todaysEntry = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == DateTime.Now.Date).FirstOrDefault();
-                    if (todaysEntry.Exit1 == null)
-                    {
-                        todaysEntry.Exit1 = DateTime.Now;
-                        _context.EmployeeHours.Update(todaysEntry);
-                        _context.SaveChanges();
-                    }
 
-                    else if (todaysEntry.Exit2 == null)
-                    {
-                        todaysEntry.Exit2 = DateTime.Now;
-                        _context.EmployeeHours.Update(todaysEntry);
-                        _context.SaveChanges();
-                    }
-                    //throw new Exception();
-                    await transaction.CommitAsync();
-                    return PartialView(todaysEntry);
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    string errorMessage = AppUtility.GetExceptionMessage(ex);
-                    return RedirectToAction("ReportHours", new { errorMessage });
-                }
+            var userID = _userManager.GetUserId(User);
+            var todaysEntry = await _employeeHoursProc.ReadOneByDateAndUserIDAsync(DateTime.Now.Date, userID);
+            var success = new StringWithBool();
+            if (todaysEntry.Exit1 == null)
+            {
+                todaysEntry.Exit1 = DateTime.Now;
+                success = await _employeeHoursProc.Update(todaysEntry);
+            }
+
+            else if (todaysEntry.Exit2 == null)
+            {
+                todaysEntry.Exit2 = DateTime.Now;
+                 success = await _employeeHoursProc.Update(todaysEntry);
+            }
+            if (success.Bool)
+            {
+                return PartialView(todaysEntry);
+            }
+            else
+            {
+                string errorMessage = success.Bool ? null : success.String;
+                return RedirectToAction("ReportHours", new { errorMessage });
             }
         }
         [HttpPost]
