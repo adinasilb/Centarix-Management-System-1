@@ -48,7 +48,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimeKeeperReport;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ReportHours;
             var userid = _userManager.GetUserId(User);
-            var todaysEntry = _employeeHoursProc.ReadOneByDateAndUserID(DateTime.Today, userid);
+            var todaysEntry = _employeeHoursProc.ReadOneByDateAndUserID(DateTime.Today, userid).FirstOrDefault();
             EntryExitViewModel entryExitViewModel = new EntryExitViewModel();
             if (todaysEntry == null || todaysEntry.Entry1 == null)
             {
@@ -384,7 +384,7 @@ namespace PrototypeWithAuth.Controllers
             }
             var userID = _userManager.GetUserId(User);
             var user = await _applicationUsersProc.ReadEmployeeByID(userID);
-            var employeeHour = _employeeHoursProc.ReadOneByDateAndUserID(chosenDate.Date, userID);
+            var employeeHour = _employeeHoursProc.ReadOneByDateAndUserID(chosenDate.Date, userID).Include(e => e.Employee).FirstOrDefault();
             if (employeeHour == null)
             {
                 employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate, Employee = user };
