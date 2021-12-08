@@ -20,7 +20,7 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public IQueryable<CommentType> Read(int ID, List<Expression<Func<CommentType, object>>> includes = null)
+        public IQueryable<CommentType> Read(List<Expression<Func<CommentType, object>>> includes = null)
         {
             var comments = _context.CommentTypes.AsNoTracking().AsQueryable();
             if (includes != null)
