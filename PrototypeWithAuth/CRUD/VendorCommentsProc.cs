@@ -28,7 +28,7 @@ namespace PrototypeWithAuth.CRUD
         public IQueryable<VendorComment> ReadByVendorID(int VendorID, List<Expression<Func<VendorComment, object>>> includes = null)
         {
             var comments = _context.VendorComments
-                .Where(vc => vc.VendorID == VendorID);
+                .Where(vc => vc.ObjectID == VendorID);
             if (includes != null)
             {
                 foreach (var t in includes)

@@ -195,20 +195,6 @@ namespace PrototypeWithAuth.Controllers
 
             CreateSupplierViewModel createSupplierViewModel = await GetCreateSupplierViewModel(SectionType);
             //only allowed to have 10 contacts
-            //have to hard coded becasuse did not know how to render dynamic partial views
-            //PROC START
-            createSupplierViewModel.Countries = new List<SelectListItem>();
-            foreach (var country in _country.Read())
-            {
-                createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
-            }
-
-
-            createSupplierViewModel.VendorContacts = vendorContacts;
-            createSupplierViewModel.VendorComments = vendorComments;
-            createSupplierViewModel.SectionType = SectionType; //TODO: take this out when all the views are combined
-            createSupplierViewModel.CategoryTypes = _categoryType.Read();
-            //PROC END
 
             createSupplierViewModel.ModalType = AppUtility.VendorModalType.Create;
             return View(createSupplierViewModel);
@@ -243,7 +229,6 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Create(CreateSupplierViewModel createSupplierViewModel)
         {
             var userid = _userManager.GetUserAsync(User).Result.Id;
-            //PROC START
             StringWithBool vendorCreated = await _vendor.CreateAsync(createSupplierViewModel, ModelState, userid);
             if (!vendorCreated.Bool)
             {
@@ -256,7 +241,7 @@ namespace PrototypeWithAuth.Controllers
                 if (createSupplierViewModel.SectionType == AppUtility.MenuItems.LabManagement)
                 {
                     TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
-           
+
                 }
                 else if (createSupplierViewModel.SectionType == AppUtility.MenuItems.Accounting)
                 {
@@ -264,94 +249,12 @@ namespace PrototypeWithAuth.Controllers
                 }
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.NewSupplier;
                 createSupplierViewModel.ErrorMessage += vendorCreated.String;
-                createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
-                createSupplierViewModel.CategoryTypes = _categoryType.Read();
-                createSupplierViewModel.Countries = _country.ReadAsSelectList();
+                createSupplierViewModel = await GetCreateSupplierViewModel(createSupplierViewModel.SectionType, 0, createSupplierViewModel.Tab);
+                createSupplierViewModel.ModalType = AppUtility.VendorModalType.Create;
 
-                return View("Create", createSupplierViewModel);
+                return View(createSupplierViewModel);
 
             }
-            //PROC END 
-            //VENDOR REDO START
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    foreach (var ms in ModelState.ToArray())
-                    {
-                        if (ms.Key.StartsWith("VendorContact"))
-                        {
-                            ModelState.Remove(ms.Key);
-                        }
-                    }
-                    var context = new ValidationContext(createSupplierViewModel.Vendor, null, null);
-                    var results = new List<ValidationResult>();
-
-                    if (Validator.TryValidateObject(createSupplierViewModel.Vendor, context, results, true))
-                    {
-                        _context.Add(createSupplierViewModel.Vendor);
-                        _context.SaveChanges();
-                        foreach (var type in createSupplierViewModel.VendorCategoryTypes)
-                        {
-                            _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = type });
-                        }
-                        _context.SaveChanges();
-
-                        //add contacts
-                        foreach (var vendorContact in createSupplierViewModel.VendorContacts.Where(vc => !vc.Delete))
-                        {
-                            vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
-                            _context.Update(vendorContact.VendorContact);
-
-                        }
-                        await _context.SaveChangesAsync();
-                        var userid = _userManager.GetUserId(User);
-                        if (createSupplierViewModel.Comments != null)
-                        {
-                            foreach (var vendorComment in createSupplierViewModel.Comments)
-                            {
-                                if (!vendorComment.IsDeleted)
-                                {
-                                    vendorComment.ObjectID = createSupplierViewModel.Vendor.VendorID;
-                                    vendorComment.ApplicationUserID = userid;
-                                    vendorComment.CommentTimeStamp = DateTime.Now;
-                                    _context.Add(vendorComment);
-                                }
-                            }
-                        }
-                        await _context.SaveChangesAsync();
-                        //throw new Exception();
-                        await transaction.CommitAsync();
-                        return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
-                    }
-                    else
-                    {
-                        throw new ModelStateInvalidException();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    TempData[AppUtility.TempDataTypes.MenuType.ToString()] = createSupplierViewModel.SectionType;
-                    //tempdata page type for active tab link
-                    if (createSupplierViewModel.SectionType == AppUtility.MenuItems.LabManagement)
-                    {
-                        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
-
-                    }
-                    else if (createSupplierViewModel.SectionType == AppUtility.MenuItems.Accounting)
-                    {
-                        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
-                    }
-                    TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.NewSupplier;
-                    createSupplierViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
-                    createSupplierViewModel = await GetCreateSupplierViewModel(createSupplierViewModel.SectionType, 0, createSupplierViewModel.Tab);
-                    createSupplierViewModel.ModalType = AppUtility.VendorModalType.Create;
-
-                    return View(createSupplierViewModel);
-                }
-            }
-            //VENDOR REDO END
         }
 
         [Authorize(Roles = "Accounting, LabManagement")]
@@ -391,48 +294,7 @@ namespace PrototypeWithAuth.Controllers
             };
             return PartialView(createSupplierViewModel);
         }
-        public async Task<IActionResult> editFunction(int? id, AppUtility.MenuItems SectionType, int? Tab = 0)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
-            createSupplierViewModel.Countries = _country.ReadAsSelectList();
-            createSupplierViewModel.Vendor = await _vendor.ReadByVendorIDAsync(Convert.ToInt32(id), new List<System.Linq.Expressions.Expression<Func<Vendor, object>>> { v=>v.vendorcate});
-            createSupplierViewModel.SectionType = SectionType;
-            createSupplierViewModel.CategoryTypes = _categoryType.Read();
-            createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();
-            createSupplierViewModel.Tab = Tab ?? 0;
-            //var count = createSupplierViewModel.Vendor.VendorCategoryTypes.Count();
-            //if (count == 2)
-            //{
-
-            //}
-            // createSupplierViewModel.CategoryTypeID = createSupplierViewModel.Vendor.VendorCategoryTypes
-            if (createSupplierViewModel.Vendor == null)
-            {
-                return NotFound();
-            }
-            createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
-            createSupplierViewModel.VendorContacts = _vendorContact.ReadAsVendorContactWithDeleteByVendorID(Convert.ToInt32(id));
-            createSupplierViewModel.VendorComments = await _vendorComment.ReadByVendorID(Convert.ToInt32(id), new List<System.Linq.Expressions.Expression<Func<VendorComment, object>>> { c=>c.ApplicationUser}).ToListAsync();
-
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.AllSuppliers;
-            //tempdata page type for active tab link
-            if (SectionType == AppUtility.MenuItems.LabManagement)
-            {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
-            }
-            else if (SectionType == AppUtility.MenuItems.Accounting)
-            {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
-            }
-            return PartialView(createSupplierViewModel);
-
-        }
+        
         // POST: Vendors/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -449,114 +311,14 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
+                createSupplierViewModel = await GetCreateSupplierViewModel(createSupplierViewModel.SectionType, createSupplierViewModel.Vendor.VendorID, createSupplierViewModel.Tab);
                 createSupplierViewModel.ErrorMessage += vendorUpdated.String;
-                createSupplierViewModel.CategoryTypes = _categoryType.Read();
-                createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
-                createSupplierViewModel.VendorComments = await _vendorComment.ReadByVendorID(createSupplierViewModel.Vendor.VendorID, new List<System.Linq.Expressions.Expression<Func<VendorComment, object>>> { c=>c.ApplicationUser }).ToListAsync();
+                createSupplierViewModel.ModalType = AppUtility.VendorModalType.Edit;
+
                 Response.StatusCode = 550;
                 return PartialView("Edit", createSupplierViewModel);
             }
             //PROC END
-            //VENDOR REDO END
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    //ModelState.Remove()
-                    foreach (var ms in ModelState.ToArray())
-                    {
-                        if (ms.Key.StartsWith("VendorContact"))
-                        {
-                            ModelState.Remove(ms.Key);
-                        }
-                    }
-                    var context = new ValidationContext(createSupplierViewModel.Vendor, null, null);
-                    var results = new List<ValidationResult>();
-
-                    if (Validator.TryValidateObject(createSupplierViewModel.Vendor, context, results, true))
-                    {
-                        _context.Update(createSupplierViewModel.Vendor);
-                        _context.SaveChanges();
-                        var vendor = await _context.Vendors.Where(v => v.VendorID == createSupplierViewModel.Vendor.VendorID).Include(v => v.VendorCategoryTypes).FirstOrDefaultAsync();
-                        if (vendor.VendorCategoryTypes.Count() > 0)
-                        {
-                            foreach (var type in createSupplierViewModel.Vendor.VendorCategoryTypes)
-                            {
-                                _context.Remove(type);
-                            }
-                        }
-
-                        foreach (var type in createSupplierViewModel.VendorCategoryTypes)
-                        {
-                            _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = type });
-                        }
-
-                        //update,add, and delete contacts
-                        foreach (var vendorContact in createSupplierViewModel.VendorContacts)
-                        {
-                            if (vendorContact.Delete && vendorContact.VendorContact.VendorContactID != 0)
-                            {
-                                var dvc = _context.VendorContacts.Where(vc => vc.VendorContactID == vendorContact.VendorContact.VendorContactID).FirstOrDefault();
-                                _context.Remove(dvc);
-                            }
-                            else if (!vendorContact.Delete)
-                            {
-                                vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
-                                _context.Update(vendorContact.VendorContact);
-                            }
-
-                        }
-                        await _context.SaveChangesAsync();
-                        if (createSupplierViewModel.Comments != null)
-                        {
-                            foreach (var vendorComment in createSupplierViewModel.Comments)
-                            {
-                                if (!vendorComment.IsDeleted)
-                                {
-                                    vendorComment.ObjectID = createSupplierViewModel.Vendor.VendorID;
-                                    if (vendorComment.CommentID == 0)
-                                    {
-                                        vendorComment.CommentTimeStamp = DateTime.Now;
-                                        _context.Entry(vendorComment).State = EntityState.Added;
-                                    }
-                                    else
-                                    {
-                                        _context.Entry(vendorComment).State = EntityState.Modified;
-                                    }
-                                }
-                                else
-                                {
-                                    var vendorCommentDB = _context.VendorComments.Where(c => c.CommentID == vendorComment.CommentID).FirstOrDefault();
-                                    if (vendorCommentDB != null)
-                                    {
-                                        vendorCommentDB.IsDeleted = true;
-                                        _context.Entry(vendorCommentDB).State = EntityState.Modified;
-                                    }
-                                }
-                            }
-                        }
-                        await _context.SaveChangesAsync();
-                        await transaction.CommitAsync();
-                        return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
-                    }
-                    else
-                    {
-                        throw new ModelStateInvalidException();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    createSupplierViewModel = await GetCreateSupplierViewModel(createSupplierViewModel.SectionType, createSupplierViewModel.Vendor.VendorID, createSupplierViewModel.Tab);
-                    createSupplierViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
-                    createSupplierViewModel.ModalType = AppUtility.VendorModalType.Edit;
-
-                    Response.StatusCode = 550;
-                    return PartialView("Edit", createSupplierViewModel);
-
-                }
-            }
-            //VENDOR REDO END
         }
 
         // GET: Vendors/Delete/5

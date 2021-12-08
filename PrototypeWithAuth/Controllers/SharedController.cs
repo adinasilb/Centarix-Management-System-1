@@ -31,6 +31,12 @@ namespace PrototypeWithAuth.Controllers
         protected readonly IHttpContextAccessor _httpContextAccessor;
         protected string AccessDeniedPath = "~/Identity/Account/AccessDenied";
         protected ICompositeViewEngine _viewEngine;
+        private CRUD.VendorsProc _vendor;
+        private CRUD.CategoryTypesProc _categoryType;
+        private CRUD.CountriesProc _country;
+        private CRUD.VendorContactsProc _vendorContact;
+        private CRUD.VendorCommentsProc _vendorComment;
+        private CRUD.CommentTypesProc _commentType;
         protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
             
         {
@@ -39,6 +45,14 @@ namespace PrototypeWithAuth.Controllers
             _userManager = userManager;
             _viewEngine = viewEngine;
             _httpContextAccessor = httpContextAccessor;
+
+            _vendor = new CRUD.VendorsProc(context, userManager);
+            _categoryType = new CRUD.CategoryTypesProc(context, userManager);
+            _country = new CRUD.CountriesProc(context, userManager);
+            _vendorContact = new CRUD.VendorContactsProc(context, userManager);
+            _vendorComment = new CRUD.VendorCommentsProc(context, userManager);
+            _commentType = new CRUD.CommentTypesProc(context, userManager);
+
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)
@@ -1548,37 +1562,29 @@ namespace PrototypeWithAuth.Controllers
                 SectionType = SectionType,
                 CategoryTypes = new List<SelectListItem>(),
                 Tab = Tab==0 ? 1 : Tab,
-                CommentTypes = _context.CommentTypes,
+                CommentTypes = _commentType.Read(),
                 Countries = new List<SelectListItem>()
             };
-            foreach (var country in _context.Countries)
-            {
-                createSupplierViewModel.Countries.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
-            }
+            createSupplierViewModel.Countries = _country.ReadAsSelectList();
 
-            await _context.CategoryTypes.ForEachAsync(ct => {
+            await _categoryType.Read().ForEachAsync(ct => {
                 createSupplierViewModel.CategoryTypes.Add(new SelectListItem() { Text = ct.CategoryTypeDescription, Value = ct.CategoryTypeID.ToString() });
             });
             createSupplierViewModel.CategoryTypes.Insert(0, new SelectListItem() { Text = "Select Category", Disabled = true, Selected = true });
             if(VendorID == 0)
             {
-                createSupplierViewModel.VendorContacts = new List<VendorContactWithDeleteViewModel>();
-                createSupplierViewModel.VendorContacts.Add(new VendorContactWithDeleteViewModel()
-                {
-                    VendorContact = new VendorContact(),
-                    Delete = false
-                });
+                createSupplierViewModel.VendorContacts = new List<VendorContactWithDeleteViewModel>() { new VendorContactWithDeleteViewModel()
+                    {
+                        VendorContact = new VendorContact(),
+                        Delete = false
+                    } 
+                };
             }
             else
             {
-                createSupplierViewModel.Comments = await _context.VendorComments.Include(c => c.ApplicationUser).Include(c => c.CommentType).Where(c => c.ObjectID == VendorID).ToListAsync();
-                createSupplierViewModel.Vendor = await _context.Vendors.Include(v => v.VendorCategoryTypes).Where(v => v.VendorID == VendorID).FirstOrDefaultAsync();
-                createSupplierViewModel.VendorContacts = _context.VendorContacts.Where(c => c.VendorID == VendorID).ToList()
-                .Select(vc => new VendorContactWithDeleteViewModel()
-                {
-                    VendorContact = vc,
-                    Delete = false
-                }).ToList();
+                createSupplierViewModel.VendorComments = await _vendorComment.ReadByVendorID(VendorID,  new List<System.Linq.Expressions.Expression<Func<VendorComment, object>>> { c => c.ApplicationUser, c => c.CommentType }).Where(c => c.ObjectID == VendorID).ToListAsync();
+                createSupplierViewModel.Vendor = await _vendor.ReadByVendorIDAsync(VendorID, new List<System.Linq.Expressions.Expression<Func<Vendor, object>>> { v => v.VendorCategoryTypes });
+                createSupplierViewModel.VendorContacts = _vendorContact.ReadAsVendorContactWithDeleteByVendorID(VendorID);
 
                 createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();
             }

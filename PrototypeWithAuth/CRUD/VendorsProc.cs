@@ -145,17 +145,6 @@ namespace PrototypeWithAuth.CRUD
                         {
                             await _vendorCategoryTypesProc.CreateWithoutSavingAsync(createSupplierViewModel.Vendor.VendorID, type);
                         }
-                        await _context.SaveChangesAsync();
-                        //delete contacts that need to be deleted
-                        foreach (var vc in createSupplierViewModel.VendorContacts.Where(vc => vc.Delete))
-                        {
-                            if (vc.VendorContact.VendorContactID != 0) //only will delete if it's a previously loaded ones
-                            {
-                                var dvc =  await _vendorContactsProc.ReadOneByPKAsync(vc.VendorContact.VendorContactID);
-                                _context.Remove(dvc);
-                                await _context.SaveChangesAsync();
-                            }
-                        }
                         //update and add contacts
                         foreach (var vendorContact in createSupplierViewModel.VendorContacts.Where(vc => !vc.Delete))
                         {
@@ -163,17 +152,14 @@ namespace PrototypeWithAuth.CRUD
                             _context.Update(vendorContact.VendorContact);
 
                         }
-                        await _context.SaveChangesAsync();
-                        //var userid = _userManager.GetUserAsync(User).Result.Id;
                         if (createSupplierViewModel.VendorComments != null)
                         {
                             foreach (var vendorComment in createSupplierViewModel.VendorComments)
                             {
-                                vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
+                                vendorComment.ObjectID = createSupplierViewModel.Vendor.VendorID;
                                 vendorComment.ApplicationUserID = UserID;
                                 vendorComment.CommentTimeStamp = DateTime.Now;
                                 _context.Add(vendorComment);
-
                             }
                         }
                         await _context.SaveChangesAsync();
@@ -235,41 +221,48 @@ namespace PrototypeWithAuth.CRUD
                             _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = type });
                         }
                         //delete contacts that need to be deleted
-                        foreach (var vendorContact in createSupplierViewModel.VendorContacts.Where(vc => vc.Delete))
+                        foreach (var vendorContact in createSupplierViewModel.VendorContacts)
                         {
-                            if (vendorContact.VendorContact.VendorContactID != 0) //only will delete if it's a previously loaded ones
+                            if (vendorContact.Delete && vendorContact.VendorContact.VendorContactID != 0)
                             {
                                 var dvc = _context.VendorContacts.Where(vc => vc.VendorContactID == vendorContact.VendorContact.VendorContactID).FirstOrDefault();
                                 _context.Remove(dvc);
-                                await _context.SaveChangesAsync();
                             }
-                        }
-
-
-                        //update and add contacts
-                        foreach (var vendorContact in createSupplierViewModel.VendorContacts.Where(vc => !vc.Delete))
-                        {
-                            //if (vendorContact.VendorContact.VendorID == 0) //in case it was accidentally loaded
-                            //{
+                            else if (!vendorContact.Delete)
+                            {
                                 vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
-                            //}
-                            _context.Update(vendorContact.VendorContact);
+                                _context.Update(vendorContact.VendorContact);
+                            }
 
                         }
                         if (createSupplierViewModel.VendorComments != null)
                         {
-                            foreach (var vendorComment in createSupplierViewModel.VendorComments)
                             {
-                                if (!String.IsNullOrEmpty(vendorComment.CommentText))
+                                foreach (var vendorComment in createSupplierViewModel.VendorComments)
                                 {
-                                    vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
-                                    if (vendorComment.VendorCommentID == 0)
+                                    if (!vendorComment.IsDeleted)
                                     {
-                                        vendorComment.CommentTimeStamp = DateTime.Now;
+                                        vendorComment.ObjectID = createSupplierViewModel.Vendor.VendorID;
+                                        if (vendorComment.CommentID == 0)
+                                        {
+                                            vendorComment.CommentTimeStamp = DateTime.Now;
+                                            _context.Update(vendorComment);
+                                        }
+                                        else
+                                        {
+                                            _context.Add(vendorComment);
+                                        }
                                     }
-                                    _context.Update(vendorComment);
+                                    else
+                                    {
+                                        var vendorCommentDB = _context.VendorComments.Where(c => c.CommentID == vendorComment.CommentID).FirstOrDefault();
+                                        if (vendorCommentDB != null)
+                                        {
+                                            vendorCommentDB.IsDeleted = true;
+                                            _context.Update(vendorCommentDB);
+                                        }
+                                    }
                                 }
-
                             }
                         }
                         _context.SaveChanges();
@@ -306,7 +299,7 @@ namespace PrototypeWithAuth.CRUD
                 {
                     try
                     {
-                        foreach (var vendorComment in _context.VendorComments.Where(vc => vc.VendorID == VendorID))
+                        foreach (var vendorComment in _context.VendorComments.Where(vc => vc.ObjectID == VendorID))
                         {
                             _context.Remove(vendorComment);
                         }
