@@ -46,18 +46,16 @@ namespace PrototypeWithAuth.CRUD
 
         public async Task<Vendor> ReadByVendorIDAsync(int VendorID, List<Expression<Func<Vendor, object>>> includes = null)
         {
-            var vendors = _context.Vendors
-                .Where(v => v.VendorID == VendorID);
+            var vendor = _context.Vendors
+                .Where(v => v.VendorID == VendorID).Take(1);
             if (includes != null)
             {
                 foreach (var t in includes)
                 {
-                    vendors = vendors.Include(t);
+                    vendor = vendor.Include(t);
                 }
             }
-            return await _context.Vendors
-                .Where(v => v.VendorID == VendorID)              
-                .AsNoTracking().FirstOrDefaultAsync();
+            return await vendor.AsNoTracking().FirstOrDefaultAsync();
         }
 
         public Vendor ReadByVendorBusinessIDCountryID(string VendorBusinessID, int CountryID)
