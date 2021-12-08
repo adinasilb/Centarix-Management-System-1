@@ -14,7 +14,7 @@ namespace PrototypeWithAuth.CRUD
 {
     public class EmployeesProc :ApplicationDbContextProc
     {
-        public EmployeesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager, true)
+        public EmployeesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
         {
             if (!FromBase)
             {
