@@ -297,7 +297,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimeKeeperReport;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ReportDaysOff;
-            return View(ReportDaysOffFunction());
+            return View(await ReportDaysOffFunctionAsync());
         }
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
@@ -307,11 +307,11 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            return PartialView(ReportDaysOffFunction(errorMessage));
+            return PartialView(await ReportDaysOffFunctionAsync(errorMessage));
         }
 
         [Authorize(Roles = "TimeKeeper")]
-        private async Task<SummaryOfDaysOffViewModel> ReportDaysOffFunction(string errorMessage = "")
+        private async Task<SummaryOfDaysOffViewModel> ReportDaysOffFunctionAsync(string errorMessage = "")
         {
             var userid = _userManager.GetUserId(User);
             var user = await _employeesProc.ReadEmployeeByIDAsync(userid, new List<Expression<Func<Employee, object>>> { e => e.SalariedEmployee});
