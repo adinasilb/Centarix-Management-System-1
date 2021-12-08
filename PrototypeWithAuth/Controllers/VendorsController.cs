@@ -221,8 +221,8 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Create(CreateSupplierViewModel createSupplierViewModel)
         {
             var userid = _userManager.GetUserAsync(User).Result.Id;
-            StringWithBool vendorCreated = await _vendor.CreateAsync(createSupplierViewModel, ModelState, userid);
-            if (!vendorCreated.Bool)
+            StringWithBool vendorCreated = await _vendor.UpdateAsync(createSupplierViewModel, ModelState, userid);
+            if (vendorCreated.Bool)
             {
                 return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
             }
@@ -296,7 +296,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Edit(CreateSupplierViewModel createSupplierViewModel)
         {
             //PROC START
-            var vendorUpdated = await _vendor.UpdateAsync(createSupplierViewModel, ModelState);
+            var vendorUpdated = await _vendor.UpdateAsync(createSupplierViewModel, ModelState, _userManager.GetUserId(User));
             if (vendorUpdated.Bool)
             {
                 return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
@@ -338,7 +338,7 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult DeleteConfirmed(int id)
         {
             //PROC START
-            _vendor.Delete(id);
+            _vendor.DeleteAsync(id);
             //var vendor = _context.Vendors.Find(id);
             //var contacts = _context.VendorContacts.Where(x => x.VendorID == id);
             //using (var transaction = new TransactionScope())
