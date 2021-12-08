@@ -94,6 +94,7 @@ namespace PrototypeWithAuth.CRUD
                     DeleteWithoutSaving(notifications);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
+                    ReturnVal.SetStringAndBool(true, null);
                 }
                 catch (Exception ex)
                 {
