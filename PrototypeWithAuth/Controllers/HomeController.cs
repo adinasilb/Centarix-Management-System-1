@@ -38,7 +38,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var user = await _employeesProc.ReadEmployeeByIDAsync(_userManager.GetUserId(User), new List<System.Linq.Expressions.Expression<Func<Employee, object>>> { e=>e.SalariedEmployee});
             var usersLoggedIn = _employeesProc.GetUsersLoggedInToday().Count();
-            var users = _employeesProc.Read();
+            var users = await _employeesProc.Read().ToListAsync();
             HomePageViewModel viewModel = new HomePageViewModel();
             using (var transaction = _context.Database.BeginTransaction())
             {
