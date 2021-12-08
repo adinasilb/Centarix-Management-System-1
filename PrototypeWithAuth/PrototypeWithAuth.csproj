@@ -507,6 +507,8 @@
     <Compile Remove="Data\Migrations\20211117091838_ItemSerialNumber.Designer.cs" />
     <Compile Remove="Data\Migrations\20211114083811_AddShareRequestLists.cs" />
     <Compile Remove="Data\Migrations\20211114083811_AddShareRequestLists.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211208073430_TestInheritedBaseClass.cs" />
+    <Compile Remove="Data\Migrations\20211208073430_TestInheritedBaseClass.Designer.cs" />
   </ItemGroup>
 
 
