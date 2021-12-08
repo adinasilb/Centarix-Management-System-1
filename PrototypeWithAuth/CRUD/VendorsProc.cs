@@ -156,9 +156,9 @@ namespace PrototypeWithAuth.CRUD
                             _context.Update(vendorContact.VendorContact);
 
                         }
-                        if (createSupplierViewModel.VendorComments != null)
+                        if (createSupplierViewModel.Comments != null)
                         {
-                            foreach (var vendorComment in createSupplierViewModel.VendorComments)
+                            foreach (var vendorComment in createSupplierViewModel.Comments)
                             {
                                 vendorComment.ObjectID = createSupplierViewModel.Vendor.VendorID;
                                 vendorComment.ApplicationUserID = UserID;
@@ -189,21 +189,13 @@ namespace PrototypeWithAuth.CRUD
             return stringWithBool;
         }
 
-        public async Task<StringWithBool> Update(CreateSupplierViewModel createSupplierViewModel, ModelStateDictionary ModelState)
+        public async Task<StringWithBool> UpdateAsync(CreateSupplierViewModel createSupplierViewModel, ModelStateDictionary ModelState)
         {
             StringWithBool ReturnVal = new StringWithBool();
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    //ModelState.Remove()
-                    foreach (var ms in ModelState.ToArray())
-                    {
-                        if (ms.Key.StartsWith("VendorContact"))
-                        {
-                            ModelState.Remove(ms.Key);
-                        }
-                    }
                     var context = new ValidationContext(createSupplierViewModel.Vendor, null, null);
                     var results = new List<ValidationResult>();
 
@@ -239,10 +231,10 @@ namespace PrototypeWithAuth.CRUD
                             }
 
                         }
-                        if (createSupplierViewModel.VendorComments != null)
+                        if (createSupplierViewModel.Comments != null)
                         {
                             {
-                                foreach (var vendorComment in createSupplierViewModel.VendorComments)
+                                foreach (var vendorComment in createSupplierViewModel.Comments)
                                 {
                                     if (!vendorComment.IsDeleted)
                                     {
