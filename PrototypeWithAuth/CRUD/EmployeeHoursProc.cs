@@ -500,8 +500,8 @@ namespace PrototypeWithAuth.CRUD
                     foreach (var notification in notifications)
                     {
                         _context.Remove(notification);
-                        await _context.SaveChangesAsync();
                     }
+                    await _context.SaveChangesAsync();
 
                     //throw new Exception();
                     await transaction.CommitAsync();
