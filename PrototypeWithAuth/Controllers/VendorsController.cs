@@ -400,7 +400,7 @@ namespace PrototypeWithAuth.Controllers
 
             CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
             createSupplierViewModel.Countries = _country.ReadAsSelectList();
-            createSupplierViewModel.Vendor = await _vendor.ReadByVendorIDAsync(Convert.ToInt32(id), new List<System.Linq.Expressions.Expression<Func<Vendor, object>>> { v=>v.VendorCategoryTypes});
+            createSupplierViewModel.Vendor = await _vendor.ReadByVendorIDAsync(Convert.ToInt32(id), new List<System.Linq.Expressions.Expression<Func<Vendor, object>>> { v=>v.vendorcate});
             createSupplierViewModel.SectionType = SectionType;
             createSupplierViewModel.CategoryTypes = _categoryType.Read();
             createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();

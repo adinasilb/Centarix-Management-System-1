@@ -26,6 +26,7 @@ namespace PrototypeWithAuth.CRUD
         protected EmployeeHoursStatuesProc _employeeHoursStatuesProc;
         protected CompanyDaysOffProc _companyDaysOffProc;
         protected OffDayTypesProc _offDayTypesProc;
+        protected CommentTypesProc _commentTypesProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
@@ -48,7 +49,8 @@ namespace PrototypeWithAuth.CRUD
             _employeeHoursAwaitingApprovalProc = new EmployeeHoursAwaitingApprovalProc(_context, _userManager, true); 
             _employeeHoursStatuesProc = new EmployeeHoursStatuesProc(_context, _userManager, true); 
             _companyDaysOffProc = new CompanyDaysOffProc(_context, _userManager, true); 
-            _offDayTypesProc = new OffDayTypesProc(_context, _userManager, true); 
+            _offDayTypesProc = new OffDayTypesProc(_context, _userManager, true);
+            _commentTypesProc = new CommentTypesProc(_context, _userManager, true);
         }
     }
 }
