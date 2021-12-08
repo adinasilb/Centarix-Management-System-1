@@ -1582,131 +1582,13 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 createSupplierViewModel.Comments = await _vendorComment.ReadByVendorID(VendorID,  new List<System.Linq.Expressions.Expression<Func<VendorComment, object>>> { c => c.ApplicationUser, c => c.CommentType }).Where(c => c.ObjectID == VendorID).ToListAsync();
-                createSupplierViewModel.Vendor = await _vendor.ReadByVendorIDAsync(VendorID, new List<System.Linq.Expressions.Expression<Func<Vendor, object>>> { v => v.VendorCategoryTypes });
+                createSupplierViewModel.Vendor = await _vendor.ReadByVendorIDAsync(VendorID, new List<System.Linq.Expressions.Expression<Func<Vendor, object>>> { v => v.VendorCategoryTypes  });
                 createSupplierViewModel.VendorContacts = await _vendorContact.ReadAsVendorContactWithDeleteByVendorIDAsync(VendorID).ToListAsync();
 
                 createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();
             }
             return createSupplierViewModel;
         }
-
-        //[HttpPost]
-        //[Authorize(Roles = "Requests")]
-        //public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel)
-        //{
-        //    return new EmptyResult();
-        //}
-
-
-        //[HttpPost]
-        //public IActionResult UploadFile(List<IFormFile> files)
-        //{
-        //    foreach (string file in files)
-        //    {
-        //        var FileDataContent = file;
-        //        if (FileDataContent != null && FileDataContent.Length > 0)
-        //        {
-        //            // take the input stream, and save it to a temp folder using
-        //            // the original file.part name posted
-        //            var stream = FileDataContent.InputStream;
-        //            var fileName = Path.GetFileName(FileDataContent.FileName);
-        //            var UploadPath = Server.MapPath("~/App_Data/uploads");
-        //            Directory.CreateDirectory(UploadPath);
-        //            string path = Path.Combine(UploadPath, fileName);
-        //            try
-        //            {
-        //                if (System.IO.File.Exists(path))
-        //                    System.IO.File.Delete(path);
-        //                using (var fileStream = System.IO.File.Create(path))
-        //                {
-        //                    stream.CopyTo(fileStream);
-        //                }
-        //                // Once the file part is saved, see if we have enough to merge it
-        //                Shared.Utils UT = new Shared.Utils();
-        //                UT.MergeFile(path);
-        //            }
-        //            catch (IOException ex)
-        //            {
-        //                // handle
-        //            }
-        //        }
-        //    }
-        //    return new HttpResponseMessage()
-        //    {
-        //        StatusCode = System.Net.HttpStatusCode.OK,
-        //        Content = new StringContent("File uploaded.")
-        //    };
-        //}
-
-
-        //private bool MergeFile(string FileName)
-        //{
-        //    bool rslt = false;
-        //    // parse out the different tokens from the filename according to the convention
-        //    string partToken = ".part_";
-        //    string baseFileName = FileName.Substring(0, FileName.IndexOf(partToken));
-        //    string trailingTokens = FileName.Substring(FileName.IndexOf(partToken) + partToken.Length);
-        //    int FileIndex = 0;
-        //    int FileCount = 0;
-        //    int.TryParse(trailingTokens.Substring(0, trailingTokens.IndexOf(".")), out FileIndex);
-        //    int.TryParse(trailingTokens.Substring(trailingTokens.IndexOf(".") + 1), out FileCount);
-        //    // get a list of all file parts in the temp folder
-        //    string Searchpattern = Path.GetFileName(baseFileName) + partToken + "*";
-        //    string[] FilesList = Directory.GetFiles(Path.GetDirectoryName(FileName), Searchpattern);
-        //    //  merge .. improvement would be to confirm individual parts are there / correctly in
-        //    // sequence, a security check would also be important
-        //    // only proceed if we have received all the file chunks
-        //    if (FilesList.Count() == FileCount)
-        //    {
-        //        // use a singleton to stop overlapping processes
-        //        if (!MergeFileManager.Instance.InUse(baseFileName))
-        //        {
-        //            MergeFileManager.Instance.AddFile(baseFileName);
-        //            if (File.Exists(baseFileName))
-        //                File.Delete(baseFileName);
-        //            // add each file located to a list so we can get them into
-        //            // the correct order for rebuilding the file
-        //            List<SortedFile> MergeList = new List<SortedFile>();
-        //            foreach (string File in FilesList)
-        //            {
-        //                SortedFile sFile = new SortedFile();
-        //                sFile.FileName = File;
-        //                baseFileName = File.Substring(0, File.IndexOf(partToken));
-        //                trailingTokens = File.Substring(File.IndexOf(partToken) + partToken.Length);
-        //                int.TryParse(trailingTokens.
-        //                   Substring(0, trailingTokens.IndexOf(".")), out FileIndex);
-        //                sFile.FileOrder = FileIndex;
-        //                MergeList.Add(sFile);
-        //            }
-        //            // sort by the file-part number to ensure we merge back in the correct order
-        //            var MergeOrder = MergeList.OrderBy(s => s.FileOrder).ToList();
-        //            using (FileStream FS = new FileStream(baseFileName, FileMode.Create))
-        //            {
-        //                // merge each file chunk back into one contiguous file stream
-        //                foreach (var chunk in MergeOrder)
-        //                {
-        //                    try
-        //                    {
-        //                        using (FileStream fileChunk =
-        //                           new FileStream(chunk.FileName, FileMode.Open))
-        //                        {
-        //                            fileChunk.CopyTo(FS);
-        //                        }
-        //                    }
-        //                    catch (IOException ex)
-        //                    {
-        //                        // handle
-        //                    }
-        //                }
-        //            }
-        //            rslt = true;
-        //            // unlock the file from singleton
-        //            MergeFileManager.Instance.RemoveFile(baseFileName);
-        //        }
-        //    }
-        //    return rslt;
-        //}
-
 
     }
 }
