@@ -60,6 +60,5 @@ namespace PrototypeWithAuth.Models
         public OffDayType PartialOffDayType { get; set; }
         [DataType(DataType.Time)]
         public TimeSpan? PartialOffDayHours { get; set; }
-        public bool IsBonus { get; set; }
     }
 }

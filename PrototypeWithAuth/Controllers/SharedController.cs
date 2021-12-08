@@ -127,7 +127,7 @@ namespace PrototypeWithAuth.Controllers
                 unpaidLeave = employeeHours.Where(eh => eh.OffDayTypeID == 5).Count();
                 totalDays = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff);
                 totalhours = (totalDays - (vacationDaysTaken + sickDaysTaken + unpaidLeave + specialDays)) * user.SalariedEmployee.HoursPerDay;
-                workingDays = employeeHours.Where(eh => (eh.OffDayTypeID == null) || (eh.IsBonus && eh.OffDayTypeID != null))
+                workingDays = employeeHours.Where(eh => (eh.OffDayTypeID == null) )
                     .Where(eh => eh.Exit1 != null || eh.TotalHours != null).Count();
                 workingDays = workingDays - Math.Round((sickHours + vacationHours) / user.SalariedEmployee?.HoursPerDay ?? 1, 2);
             }

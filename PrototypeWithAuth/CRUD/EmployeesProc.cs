@@ -69,44 +69,6 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        public async Task<StringWithBool> RemoveEmployeeBonusDayAsync(EmployeeHours employeeHour, Employee user)
-        {
-            if (employeeHour.OffDayTypeID == 2 && employeeHour.IsBonus)
-            {
-                user.BonusVacationDays += 1;
-            }
-            else if (employeeHour.IsBonus)
-            {
-                user.BonusSickDays += 1;
-            }
-            var success = await UpdateAsync(user);
-            return success;
-        }
-
-        public async Task<StringWithBool> TakeBonusDay(Employee user, int OffDayTypeID, EmployeeHours employeeHour)
-        {
-            StringWithBool success = new StringWithBool();
-            if (OffDayTypeID == 2)
-            {
-                if (user.BonusVacationDays >= 1)
-                {
-                    employeeHour.IsBonus = true;
-                    user.BonusVacationDays -= 1;
-                    success = await UpdateAsync(user);
-                }
-            }
-            else
-            {
-                if (user.BonusSickDays >= 1)
-                {
-                    employeeHour.IsBonus = true;
-                    user.BonusSickDays -= 1;
-                    success = await UpdateAsync(user);
-                }
-            }
-            return success;
-        }
-
         public async Task<double> GetDaysOffCountByUserOffTypeIDYearAsync(Employee User, int OffDayTypeID, int thisYear)
         {
             double offDaysLeft = 0;
@@ -165,18 +127,5 @@ namespace PrototypeWithAuth.CRUD
             return offDaysLeft;
         }
 
-        public async Task<StringWithBool> RemoveBonusDay(EmployeeHours employeeHour, Employee user)
-        {
-            if (employeeHour.OffDayTypeID == 2 && employeeHour.IsBonus)
-            {
-                user.BonusVacationDays += 1;
-            }
-            else if (employeeHour.IsBonus)
-            {
-                user.BonusSickDays += 1;
-            }
-            var success = await UpdateAsync(user);
-            return success;
-        }
     }
 }
