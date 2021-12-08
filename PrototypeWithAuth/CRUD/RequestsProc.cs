@@ -20,9 +20,12 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public IQueryable<Request> Read(List<Expression<Func<Request, bool>>> wheres = null, List<Expression<Func<Request, object>>> includes = null)
+        public IQueryable<Request> ReadWithRequestsLocationInsances(List<Expression<Func<Request, bool>>> wheres = null, List<Expression<Func<Request, object>>> includes = null)
         {
-            var requests = _context.Requests.Where(r => !r.IsDeleted).AsNoTracking().AsQueryable();
+            var requests = _context.Requests.Where(r => !r.IsDeleted)
+                .Include(r => r.RequestLocationInstances).ThenInclude(li => li.LocationInstance)
+                .ThenInclude(l => l.LocationInstanceParent)
+                .AsNoTracking().AsQueryable();
             if (wheres != null)
             {
                 foreach (var t in wheres)

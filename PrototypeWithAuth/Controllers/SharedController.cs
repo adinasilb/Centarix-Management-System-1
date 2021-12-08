@@ -20,6 +20,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using X.PagedList;
 using System.Net.Http;
+using System.Linq.Expressions;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -905,10 +906,9 @@ namespace PrototypeWithAuth.Controllers
             includes.Add(r => r.Product.UnitType);
             includes.Add(r => r.Product.SubUnitType);
             includes.Add(r => r.Product.SubSubUnitType);
-            var RequestPassedInWithInclude = _requestsProc.Read(wheres, includes);
-            RequestPassedInWithInclude = RequestPassedInWithInclude.Include(r => r.RequestLocationInstances).ThenInclude(li => li.LocationInstance).ThenInclude(l => l.LocationInstanceParent);
-
-            RequestPassedInWithInclude = FilterListBySelectFilters(selectedFilters, RequestPassedInWithInclude);
+            FilterListBySelectFilters(selectedFilters, wheres);
+           
+      
             //if ((requestsSearchViewModel.PageType != AppUtility.PageTypeEnum.AccountingGeneral && 
             //    requestsSearchViewModel.SidebarEnum != AppUtility.SidebarEnum.Search)
             //    && (Request.Method == "GET" && !AppUtility.IsAjaxRequest(Request)))
@@ -921,7 +921,8 @@ namespace PrototypeWithAuth.Controllers
                 requestsSearchViewModel.Payment = new Payment();
             }
 
-            RequestPassedInWithInclude = ApplySearchToRequestList(requestsSearchViewModel, RequestPassedInWithInclude);
+            ApplySearchToRequestList(requestsSearchViewModel, wheres);
+            var RequestPassedInWithInclude = _requestsProc.ReadWithRequestsLocationInsances(wheres, includes);
 
             onePageOfProducts = await GetColumnsAndRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude);
 
@@ -936,52 +937,50 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters, requestIndexObject.SectionType, isProprietary);
             return requestIndexViewModel;
         }
-        protected static IQueryable<Request> FilterListBySelectFilters(SelectedRequestFilters selectedFilters, IQueryable<Request> fullRequestsList)
+        protected static void FilterListBySelectFilters(SelectedRequestFilters selectedFilters, List<Expression<Func<Request, bool>>> wheres)
         {
             if (selectedFilters != null)
             {
                 if (selectedFilters.SelectedCategoriesIDs.Count() > 0)
                 {
-                    fullRequestsList = fullRequestsList.Where(r => selectedFilters.SelectedCategoriesIDs.Contains(r.Product.ProductSubcategory.ParentCategoryID));
+                    wheres.Add(r => selectedFilters.SelectedCategoriesIDs.Contains(r.Product.ProductSubcategory.ParentCategoryID));
                 }
                 if (selectedFilters.SelectedSubcategoriesIDs.Count() > 0)
                 {
-                    fullRequestsList = fullRequestsList.Where(r => selectedFilters.SelectedSubcategoriesIDs.Contains(r.Product.ProductSubcategoryID));
+                    wheres.Add(r => selectedFilters.SelectedSubcategoriesIDs.Contains(r.Product.ProductSubcategoryID));
                 }
                 if (selectedFilters.SelectedVendorsIDs.Count() > 0)
                 {
-                    fullRequestsList = fullRequestsList.Where(r => selectedFilters.SelectedVendorsIDs.Contains(r.Product.VendorID ?? 0));
+                    wheres.Add(r => selectedFilters.SelectedVendorsIDs.Contains(r.Product.VendorID ?? 0));
                 }
                 if (selectedFilters.SelectedLocationsIDs.Count() > 0)
                 {
-                    fullRequestsList = fullRequestsList.Where(r => selectedFilters.SelectedLocationsIDs.Contains((int)(Math.Floor(r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationTypeID / 100.0) * 100)));
+                    wheres.Add(r => selectedFilters.SelectedLocationsIDs.Contains((int)(Math.Floor(r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationTypeID / 100.0) * 100)));
                 }
                 if (selectedFilters.SelectedOwnersIDs.Count() > 0)
                 {
-                    fullRequestsList = fullRequestsList.Where(r => selectedFilters.SelectedOwnersIDs.Contains(r.ApplicationUserCreatorID));
+                    wheres.Add(r => selectedFilters.SelectedOwnersIDs.Contains(r.ApplicationUserCreatorID));
                 }
                 if (selectedFilters.CatalogNumber != null && selectedFilters.CatalogNumber != "")
                 {
-                    fullRequestsList = fullRequestsList.Where(r => r.Product.CatalogNumber.ToUpper().Contains(selectedFilters.CatalogNumber.ToUpper()));
+                    wheres.Add(r => r.Product.CatalogNumber.ToUpper().Contains(selectedFilters.CatalogNumber.ToUpper()));
                 }
 
             }
             if (selectedFilters?.Archived == true)
             {
-                fullRequestsList = fullRequestsList.Where(r => r.IsArchived == true);
+                wheres.Add(r => r.IsArchived == true);
             }
             else
             {
-                fullRequestsList = fullRequestsList.Where(r => r.IsArchived == false);
+                wheres.Add(r => r.IsArchived == false);
             }
-            return fullRequestsList;
         }
-        protected static IQueryable<Request> ApplySearchToRequestList(RequestsSearchViewModel requestsSearchViewModel, IQueryable<Request> fullRequestsList)
+        protected static void ApplySearchToRequestList(RequestsSearchViewModel requestsSearchViewModel, List<Expression<Func<Request, bool>>> wheres)
         {
-            IQueryable<Request> filteredRequests = fullRequestsList;
             if (requestsSearchViewModel != null)
             {
-                filteredRequests = filteredRequests.Where(r =>
+                wheres.Add(r =>
                     (requestsSearchViewModel.ParentCategoryID == null || r.Product.ProductSubcategory.ParentCategoryID == requestsSearchViewModel.ParentCategoryID)
                     && (requestsSearchViewModel.ProductSubcategoryID == null || r.Product.ProductSubcategory.ProductSubcategoryID == requestsSearchViewModel.ProductSubcategoryID)
                     && (requestsSearchViewModel.VendorID == null || r.Product.VendorID == requestsSearchViewModel.VendorID)
@@ -1011,7 +1010,6 @@ namespace PrototypeWithAuth.Controllers
                     );
 
             }
-            return filteredRequests;
         }
 
         private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude)
