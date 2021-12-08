@@ -345,8 +345,6 @@ namespace PrototypeWithAuth.Controllers
                 summaryOfDaysOffViewModel.DaysOffs = daysOffByYear.OrderByDescending(d => d.Year);
                 summaryOfDaysOffViewModel.TotalVacationDaysPerYear = user.VacationDays;
                 summaryOfDaysOffViewModel.TotalSickDaysPerYear = user.SickDays;
-                summaryOfDaysOffViewModel.BonusSickDays = user.BonusSickDays;
-                summaryOfDaysOffViewModel.BonusVacationDays = user.BonusVacationDays;
                 summaryOfDaysOffViewModel.ErrorMessage += errorMessage;
                 summaryOfDaysOffViewModel.Employee = user;
                 return summaryOfDaysOffViewModel;

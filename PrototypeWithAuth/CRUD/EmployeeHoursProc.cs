@@ -74,12 +74,12 @@ namespace PrototypeWithAuth.CRUD
         public IQueryable<EmployeeHours> ReadOffDaysByYearOffDayTypeIDAndUserID(int year, int offDayTypeID, string userId)
         {
             return _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userId)
-                .Where(eh => eh.OffDayTypeID == offDayTypeID && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).AsNoTracking();
+                .Where(eh => eh.OffDayTypeID == offDayTypeID && eh.Date <= DateTime.Now.Date).AsNoTracking();
         }
         public IQueryable<EmployeeHours> ReadPartialOffDaysByYearOffDayTypeIDAndUserID(int year, int partialOffDayTypeID, string userId)
         {
             return _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userId)
-                .Where(eh => eh.OffDayTypeID == partialOffDayTypeID && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).AsNoTracking();
+                .Where(eh => eh.OffDayTypeID == partialOffDayTypeID && eh.Date <= DateTime.Now.Date).AsNoTracking();
         }
 
         public async Task<double> ReadPartialOffDayHoursAsync(int year, int partialOffDayTypeID, string UserID)
@@ -290,10 +290,6 @@ namespace PrototypeWithAuth.CRUD
                                 {
                                     alreadyOffDay = true;
                                 }
-                                else if (employeeHour.OffDayTypeID != null)
-                                {
-                                    await _employeesProc.RemoveEmployeeBonusDayAsync(employeeHour, user);
-                                }
                                 else
                                 {
                                     _timekeeperNotificationsProc.DeleteWithoutSaving(new List<TimekeeperNotification>() {await _timekeeperNotificationsProc.ReadByPKAsync(employeeHour.EmployeeHoursID) });
@@ -301,37 +297,13 @@ namespace PrototypeWithAuth.CRUD
                                     //RemoveNotifications(employeeHour.EmployeeHoursID);
                                 }
                                 employeeHour.OffDayTypeID = OffDayTypeID;
-
-                                employeeHour.IsBonus = false;
                                 employeeHour.OffDayType = await _offDayTypesProc.ReadOneByPKAsync(OffDayTypeID);
                             }
                             if (!alreadyOffDay)
                             {
-                                if (user.BonusSickDays >= 1 || user.BonusVacationDays >= 1)
-                                {
-                                    var vacationLeftCount = await _employeesProc.GetDaysOffCountByUserOffTypeIDYearAsync(user, OffDayTypeID, DateFrom.Year);
-                                    if (DateFrom.Year != DateTo.Year && DateTo.Year != 1)
-                                    {
-                                        vacationLeftCount += await _employeesProc.GetDaysOffCountByUserOffTypeIDYearAsync(user, OffDayTypeID, DateFrom.Year);
-                                    }
-                                    if (vacationLeftCount < 1)
-                                    {
-                                       await _employeesProc.TakeBonusDay(user, OffDayTypeID, employeeHour);
-                                    }
+                                 var changeTracker = _context.ChangeTracker.Entries();
                                     _context.Update(employeeHour);
                                     _context.SaveChanges();
-                                    if (ehaa != null)
-                                    {
-                                        _context.Remove(ehaa);
-                                        _context.SaveChanges();
-                                    }
-                                }
-                                else
-                                {
-                                    var changeTracker = _context.ChangeTracker.Entries();
-                                    _context.Update(employeeHour);
-                                    _context.SaveChanges();
-                                }
                             }
                         }
                         await transaction.CommitAsync();
@@ -375,10 +347,6 @@ namespace PrototypeWithAuth.CRUD
                                         {
                                             alreadyOffDay = true;
                                         }
-                                        else if (employeeHour.OffDayTypeID != null)
-                                        {
-                                            await _employeesProc.RemoveEmployeeBonusDayAsync(employeeHour, user);
-                                        }
                                         else
                                         {
                                             _timekeeperNotificationsProc.DeleteWithoutSaving(new List<TimekeeperNotification>() { await _timekeeperNotificationsProc.ReadByPKAsync(employeeHour.EmployeeHoursID) });
@@ -386,7 +354,6 @@ namespace PrototypeWithAuth.CRUD
                                             //_timekeeperNotificationsProc.DeleteByEHID(employeeHour.EmployeeHoursID);
                                         }
                                         employeeHour.OffDayTypeID = OffDayTypeID;
-                                        employeeHour.IsBonus = false;
                                     }
                                 }
                                 else
@@ -401,30 +368,9 @@ namespace PrototypeWithAuth.CRUD
 
                                 if (!alreadyOffDay)
                                 {
-                                    if (user.BonusSickDays >= 1 || user.BonusVacationDays >= 1)
-                                    {
-                                        var vacationLeftCount = await _employeesProc.GetDaysOffCountByUserOffTypeIDYearAsync(user, OffDayTypeID, DateFrom.Year);
-                                        if (DateFrom.Year != DateTo.Year && DateTo.Year != 1)
-                                        {
-                                            vacationLeftCount += await _employeesProc.GetDaysOffCountByUserOffTypeIDYearAsync(user, OffDayTypeID, DateTo.Year);
-                                        }
-                                        if (vacationLeftCount < 1)
-                                        {
-                                            await _employeesProc.TakeBonusDay(user, OffDayTypeID, employeeHour);
-                                        }
-                                        _context.Update(employeeHour);
-                                        if (ehaa != null)
-                                        {
-                                            _context.Remove(ehaa);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        var changeTracker = _context.ChangeTracker.Entries();
-                                        _context.Update(employeeHour);
-                                        _context.SaveChanges();
-                                    }
-
+                                    var changeTracker = _context.ChangeTracker.Entries();
+                                    _context.Update(employeeHour);
+                                    _context.SaveChanges();
                                 }
                             }
                             DateFrom = DateFrom.AddDays(1);
@@ -528,16 +474,7 @@ namespace PrototypeWithAuth.CRUD
                     if (updateHoursViewModel.IsForgotToReport && updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry1ID != 1)
                     {
                         if (eh != null)
-                        {
-                            if (eh.IsBonus)
-                            {
-                                ehaa.IsBonus = true;
-                                ehaa.OffDayTypeID = eh.OffDayTypeID;
-                            }
-                            //if(eh.OffDayTypeID ==4)
-                            //{
-                            //    ehaa.OffDayTypeID = eh.OffDayTypeID;
-                            //}
+                        {                           
                             if (eh.OffDayTypeID == null)
                             {
                                 ehaa.EmployeeHoursStatusEntry1ID = 3;
