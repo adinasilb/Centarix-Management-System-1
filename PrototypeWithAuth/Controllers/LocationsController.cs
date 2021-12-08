@@ -340,9 +340,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> AddLocation(AddLocationViewModel addLocationViewModel, SubLocationViewModel subLocationViewModel)
         {
-            if (subLocationViewModel.LocationInstances[1].LabPartID==4)
+            if (subLocationViewModel.LocationInstances.Count > 1 && subLocationViewModel.LocationInstances[1].LabPartID == 4)
             {
-                ModelState.Remove("LocationInstances[2].Height");
+                //for drawer height validation
+              ModelState.Remove("LocationInstances[2].Height");
             }
 
             if (ModelState.IsValid) //make sure this allows for sublocations to be binded
