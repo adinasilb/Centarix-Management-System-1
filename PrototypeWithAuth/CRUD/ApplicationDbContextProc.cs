@@ -27,6 +27,7 @@ namespace PrototypeWithAuth.CRUD
         protected CompanyDaysOffProc _companyDaysOffProc;
         protected OffDayTypesProc _offDayTypesProc;
         protected CommentTypesProc _commentTypesProc;
+        protected RequestsProc _requestsProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
@@ -51,6 +52,7 @@ namespace PrototypeWithAuth.CRUD
             _companyDaysOffProc = new CompanyDaysOffProc(_context, _userManager, true); 
             _offDayTypesProc = new OffDayTypesProc(_context, _userManager, true);
             _commentTypesProc = new CommentTypesProc(_context, _userManager, true);
+            _requestsProc = new RequestsProc(_context, _userManager, true);
         }
     }
 }
