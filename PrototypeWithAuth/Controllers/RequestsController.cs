@@ -4802,7 +4802,6 @@ namespace PrototypeWithAuth.Controllers
                             }
                         }
                     }
-
                     break;
                 case AppUtility.SidebarEnum.StandingOrders:
                     requests = requests

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
-
+using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Models
 {
@@ -104,6 +104,9 @@ namespace PrototypeWithAuth.Models
 
         public IEnumerable<VendorContact> VendorContacts { get; set; }
         public IEnumerable<VendorComment> VendorComments { get; set; }
+
+
+
 
     }
 }

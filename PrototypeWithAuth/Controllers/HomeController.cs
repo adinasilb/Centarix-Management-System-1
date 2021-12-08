@@ -27,18 +27,20 @@ namespace PrototypeWithAuth.Controllers
     {
         private readonly UrlEncoder _urlEncoder;
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+        private CRUD.EmployeesProc _employeesProc;
 
         public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, UrlEncoder urlEncoder, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
             : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
             _urlEncoder = urlEncoder;
+            _employeesProc = new CRUD.EmployeesProc(context, userManager);
         }
 
         public async Task<IActionResult> Index()
         {
-            var user = _context.Employees.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
-            var usersLoggedIn = _context.Employees.Where(u => u.LastLogin.Date == DateTime.Today.Date).Count();
-            var users = _context.Employees.ToList();
+            var user = await _employeesProc.ReadEmployeeByIDAsync(_userManager.GetUserId(User), new List<System.Linq.Expressions.Expression<Func<Employee, object>>> { e=>e.SalariedEmployee});
+            var usersLoggedIn = _employeesProc.GetUsersLoggedInToday().Count();
+            var users =  _employeesProc.Read().AsEnumerable();
             HomePageViewModel viewModel = new HomePageViewModel();
 
             //RecurringJob.AddOrUpdate("DailyNotifications", () => DailyNotificationUpdate(users), Cron.Daily);

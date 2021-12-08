@@ -519,6 +519,8 @@
     <Compile Remove="Data\Migrations\20211123094009_RequestCommentInheritsBase.Designer.cs" />
 	  <Compile Remove="Data\Migrations\20211125115311_BirthdayNotificationColorBlack.cs" />
 	  <Compile Remove="Data\Migrations\20211125115311_BirthdayNotificationColorBlack.Designer.cs" />
+	  <Compile Remove="Data\Migrations\20211208073430_TestInheritedBaseClass.cs" />
+	  <Compile Remove="Data\Migrations\20211208073430_TestInheritedBaseClass.Designer.cs" />
   </ItemGroup>
 
 
@@ -537,6 +539,7 @@
     <PackageReference Include="JSZip" Version="3.1.5" />
     <PackageReference Include="LinqToExcel" Version="1.11.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.16.0" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
@@ -565,6 +568,7 @@
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
     <PackageReference Include="System.Data.OleDb" Version="5.0.0" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0" />
+    <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
     <PackageReference Include="WebcamCapturer.Controls.WPF" Version="1.1.1.2" />
     <PackageReference Include="WebcamCapturer.Core" Version="1.1.1.2" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="7.9.1" />

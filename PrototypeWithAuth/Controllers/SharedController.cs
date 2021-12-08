@@ -31,7 +31,8 @@ namespace PrototypeWithAuth.Controllers
         protected readonly IHttpContextAccessor _httpContextAccessor;
         protected string AccessDeniedPath = "~/Identity/Account/AccessDenied";
         protected ICompositeViewEngine _viewEngine;
-        public SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
+        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
+            
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
@@ -73,7 +74,8 @@ namespace PrototypeWithAuth.Controllers
         }
         private List<EmployeeHoursAndAwaitingApprovalViewModel> GetHours(int year, int month, Employee user)
         {
-            var hours = _context.EmployeeHours.Include(eh => eh.OffDayType).Include(eh => eh.EmployeeHoursStatusEntry1)
+            var hours = _context.EmployeeHours.Include(eh => eh.Employee)
+                .Include(eh => eh.OffDayType).Include(eh => eh.EmployeeHoursStatusEntry1)
                .Include(eh => eh.CompanyDayOff).ThenInclude(cdo => cdo.CompanyDayOffType)
                .Include(eh => eh.PartialOffDayType).Where(eh => eh.EmployeeID == user.Id)
                .Where(eh => eh.Date.Month == month && eh.Date.Year == year && eh.Date.Date <= DateTime.Now.Date)
@@ -126,7 +128,7 @@ namespace PrototypeWithAuth.Controllers
                 unpaidLeave = employeeHours.Where(eh => eh.OffDayTypeID == 5).Count();
                 totalDays = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff);
                 totalhours = (totalDays - (vacationDaysTaken + sickDaysTaken + unpaidLeave + specialDays)) * user.SalariedEmployee.HoursPerDay;
-                workingDays = employeeHours.Where(eh => (eh.OffDayTypeID == null) || (eh.IsBonus && eh.OffDayTypeID != null))
+                workingDays = employeeHours.Where(eh => (eh.OffDayTypeID == null) )
                     .Where(eh => eh.Exit1 != null || eh.TotalHours != null).Count();
                 workingDays = workingDays - Math.Round((sickHours + vacationHours) / user.SalariedEmployee?.HoursPerDay ?? 1, 2);
             }
@@ -149,61 +151,11 @@ namespace PrototypeWithAuth.Controllers
             }
             return summaryHoursViewModel;
         }
-        protected double GetUsersOffDaysLeft(Employee user, int offDayTypeID, int thisYear)
-        {
-            var year = AppUtility.YearStartedTimeKeeper;
-            var offDaysLeft = 0.0;
-            while (year <= thisYear)
-            {
-                double vacationDays = 0;
-                double sickDays = 0;
-                double offDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == offDayTypeID && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).Count();
-                if (user.EmployeeStatusID == 1 && offDayTypeID == 2)
-                {
-                    var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
-                    offDaysTaken = Math.Round(offDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
-                }
-                if (year == AppUtility.YearStartedTimeKeeper && year == DateTime.Now.Year)
-                {
-                    int month = DateTime.Now.Month;
-                    vacationDays = (user.VacationDaysPerMonth * month) + user.RollOverVacationDays;
-                    sickDays = (user.SickDaysPerMonth * month) + user.RollOverSickDays;
-                }
-                else if (year == AppUtility.YearStartedTimeKeeper)
-                {
-                    int month = DateTime.Now.Month;
-                    vacationDays = user.VacationDays + user.RollOverVacationDays;
-                    sickDays = user.SickDays + user.RollOverSickDays;
-                }
-                else if (year == user.StartedWorking.Year)
-                {
-                    int month = 12 - user.StartedWorking.Month + 1;
-                    vacationDays = user.VacationDaysPerMonth * month;
-                    sickDays = user.SickDays * month;
-                }
-                else if (year == DateTime.Now.Year)
-                {
-                    int month = DateTime.Now.Month;
-                    vacationDays = (user.VacationDaysPerMonth * month);
-                    sickDays = (user.SickDaysPerMonth * month);
-                }
-                else
-                {
-                    vacationDays = user.VacationDays;
-                    sickDays = user.SickDays;
-                }
-                if (offDayTypeID == 2)
-                {
-                    offDaysLeft += vacationDays - offDaysTaken;
-                }
-                else
-                {
-                    offDaysLeft += sickDays - offDaysTaken;
-                }
-                year = year + 1;
-            }
-            return offDaysLeft;
-        }
+        //protected double GetUsersOffDaysLeft(Employee user, int offDayTypeID, int thisYear)
+        //{
+            
+        //    return offDaysLeft;
+        //}
 
         protected decimal GetExchangeRate()
         {

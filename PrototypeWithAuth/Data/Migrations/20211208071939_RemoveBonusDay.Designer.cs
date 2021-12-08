@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211208071939_RemoveBonusDay")]
+    partial class RemoveBonusDay
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -516,49 +518,38 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.CommentType", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.Comment", b =>
                 {
-                    b.Property<int>("TypeID")
+                    b.Property<int>("CommentID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Color")
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CommentText")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
+                    b.Property<DateTime>("CommentTimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CommentType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DescriptionEnum")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("Icon")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
 
-                    b.Property<string>("IconActionClass")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("CommentID");
 
-                    b.HasKey("TypeID");
+                    b.HasIndex("ApplicationUserID");
 
-                    b.ToTable("CommentTypes");
+                    b.HasIndex("RequestID");
 
-                    b.HasData(
-                        new
-                        {
-                            TypeID = 1,
-                            Color = "#30BCC9",
-                            Description = "Comment",
-                            DescriptionEnum = "Comment",
-                            Icon = "icon-comment-24px"
-                        },
-                        new
-                        {
-                            TypeID = 2,
-                            Color = " var(--danger-color)",
-                            Description = "Warning",
-                            DescriptionEnum = "Warning",
-                            Icon = "icon-report_problem-24px"
-                        });
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.CompanyAccount", b =>
@@ -1379,53 +1370,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             EmployeeHoursStatusID = 3,
                             Description = "Forgot to report"
                         });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeInfoNotification", b =>
-                {
-                    b.Property<int>("NotificationID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Action")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Controller")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EmployeeID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("NotificationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("NotificationStatusID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.HasKey("NotificationID");
-
-                    b.HasIndex("ApplicationUserID");
-
-                    b.HasIndex("EmployeeID");
-
-                    b.HasIndex("NotificationStatusID");
-
-                    b.ToTable("EmployeeInfoNotifications");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeStatus", b =>
@@ -3836,42 +3780,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.ProductComment", b =>
-                {
-                    b.Property<int>("CommentID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CommentText")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CommentTimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CommentTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ObjectID")
-                        .HasColumnType("int");
-
-                    b.HasKey("CommentID");
-
-                    b.HasIndex("ApplicationUserID");
-
-                    b.HasIndex("CommentTypeID");
-
-                    b.HasIndex("ObjectID");
-
-                    b.ToTable("ProductComments");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.ProductSubcategory", b =>
                 {
                     b.Property<int>("ProductSubcategoryID")
@@ -4823,36 +4731,26 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolComment", b =>
                 {
-                    b.Property<int>("CommentID")
+                    b.Property<int>("ProtocolCommentID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserID")
+                    b.Property<string>("ApplicationUserCreatorID")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CommentText")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CommentTimeStamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CommentTypeID")
-                        .HasColumnType("int");
+                    b.Property<string>("ProtocolCommentDescription")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                    b.Property<string>("ProtocolCommmentType")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ObjectID")
-                        .HasColumnType("int");
+                    b.HasKey("ProtocolCommentID");
 
-                    b.HasKey("CommentID");
-
-                    b.HasIndex("ApplicationUserID");
-
-                    b.HasIndex("CommentTypeID");
-
-                    b.HasIndex("ObjectID");
+                    b.HasIndex("ApplicationUserCreatorID");
 
                     b.ToTable("ProtocolComments");
                 });
@@ -5298,42 +5196,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("Requests");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestComment", b =>
-                {
-                    b.Property<int>("CommentID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CommentText")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CommentTimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CommentTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ObjectID")
-                        .HasColumnType("int");
-
-                    b.HasKey("CommentID");
-
-                    b.HasIndex("ApplicationUserID");
-
-                    b.HasIndex("CommentTypeID");
-
-                    b.HasIndex("ObjectID");
-
-                    b.ToTable("RequestComments");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestList", b =>
                 {
                     b.Property<int>("ListID")
@@ -5423,9 +5285,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("NotificationDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("NotificationStatusID")
                         .HasColumnType("int");
 
@@ -5439,9 +5298,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("TimeStamp")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Vendor")
                         .HasColumnType("nvarchar(max)");
@@ -6350,16 +6207,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("NotificationDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("NotificationStatusID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("NotificationID");
 
@@ -7076,7 +6928,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.VendorComment", b =>
                 {
-                    b.Property<int>("CommentID")
+                    b.Property<int>("VendorCommentID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -7090,22 +6942,17 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("CommentTimeStamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CommentTypeID")
+                    b.Property<string>("CommentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("VendorID")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ObjectID")
-                        .HasColumnType("int");
-
-                    b.HasKey("CommentID");
+                    b.HasKey("VendorCommentID");
 
                     b.HasIndex("ApplicationUserID");
 
-                    b.HasIndex("CommentTypeID");
-
-                    b.HasIndex("ObjectID");
+                    b.HasIndex("VendorID");
 
                     b.ToTable("VendorComments");
                 });
@@ -7250,22 +7097,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationNumber = 1,
                             LocationTypeID = 600,
                             Width = 0
-                        });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeInfoNotificationStatus", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.NotificationStatus");
-
-                    b.HasDiscriminator().HasValue("EmployeeInfoNotificationStatus");
-
-                    b.HasData(
-                        new
-                        {
-                            NotificationStatusID = 6,
-                            Color = "--black-87",
-                            Description = "Happy Birthday",
-                            Icon = "icon-cake_black_24dp"
                         });
                 });
 
@@ -7425,6 +7256,20 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.Comment", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
+                        .WithMany()
+                        .HasForeignKey("RequestID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.CompanyDayOff", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.CompanyDayOffType", "CompanyDayOffType")
@@ -7517,25 +7362,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("EmployeeHoursAwaitingApprovalsPartial")
                         .HasForeignKey("PartialOffDayTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeInfoNotification", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.EmployeeInfoNotificationStatus", "NotificationStatus")
-                        .WithMany("EmployeeInfoNotifications")
-                        .HasForeignKey("NotificationStatusID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ExperimentEntry", b =>
@@ -7958,26 +7784,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.ProductComment", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentType")
-                        .WithMany()
-                        .HasForeignKey("CommentTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ObjectID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.ProductSubcategory", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.ParentCategory", "ParentCategory")
@@ -8004,22 +7810,10 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolComment", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserCreator")
                         .WithMany()
-                        .HasForeignKey("ApplicationUserID")
+                        .HasForeignKey("ApplicationUserCreatorID")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentType")
-                        .WithMany()
-                        .HasForeignKey("CommentTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany()
-                        .HasForeignKey("ObjectID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolInstance", b =>
@@ -8133,26 +7927,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("Requests")
                         .HasForeignKey("SubProjectID")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestComment", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentType")
-                        .WithMany()
-                        .HasForeignKey("CommentTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
-                        .WithMany()
-                        .HasForeignKey("ObjectID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestList", b =>
@@ -8528,15 +8302,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentType")
-                        .WithMany()
-                        .HasForeignKey("CommentTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("PrototypeWithAuth.Models.Vendor", "Vendor")
                         .WithMany("VendorComments")
-                        .HasForeignKey("ObjectID")
+                        .HasForeignKey("VendorID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
