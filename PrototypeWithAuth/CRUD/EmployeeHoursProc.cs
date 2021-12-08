@@ -267,11 +267,13 @@ namespace PrototypeWithAuth.CRUD
                                 //employeeHour.Employee = user;
                                 //employeeHour.Employee.SpecialDays -= 1;
                                 user.SpecialDays -= 1;
+                              
                             }
                             else if (employeeHour?.OffDayTypeID == 4 && OffDayTypeID != 4)
                             {
                                 user.SpecialDays += 1;
                             }
+                            await _employeesProc.UpdateAsync(user);
                             if (employeeHour == null)
                             {
                                 employeeHour = new EmployeeHours

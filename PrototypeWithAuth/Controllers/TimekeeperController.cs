@@ -559,13 +559,13 @@ namespace PrototypeWithAuth.Controllers
                 ViewBag.ErrorMessage = "Employee Hour not found (no id). Unable to delete.";
                 return NotFound();
             }
-            var employeeHour = await _employeeHoursProc.ReadOneByPKAsync(id, new List<Expression<Func<EmployeeHours, object>>> { eh => eh.OffDayType });
+            var employeeHour = await _employeeHoursProc.ReadOneByPKAsync(id, new List<Expression<Func<EmployeeHours, object>>> { eh => eh.PartialOffDayType, eh=>eh.OffDayType, eh=>eh.EmployeeHoursAwaitingApproval, eh=>eh.EmployeeHoursAwaitingApproval.PartialOffDayType });
             if (employeeHour == null)
             {
                 ViewBag.ErrorMessage = "Employee Hour not found. Unable to delete";
                 return NotFound();
             }
-            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadByPKAsync(id, new List<Expression<Func<EmployeeHoursAwaitingApproval, object>>> { ehaa => ehaa.EmployeeHours, ehaa => ehaa.PartialOffDayType });
+            var ehaa = employeeHour.EmployeeHoursAwaitingApproval;
             DeleteHourViewModel deleteHourViewModel = new DeleteHourViewModel()
             {
                 EmployeeHour = employeeHour,
