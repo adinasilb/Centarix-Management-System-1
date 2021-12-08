@@ -19,6 +19,10 @@ namespace PrototypeWithAuth.CRUD
             if (!FromBase) { this.InstantiateProcs(); }
         }     
 
+        public void InstantiateProcs()
+        {
+            base.InstantiateProcs();
+        }
        
     }
 }
