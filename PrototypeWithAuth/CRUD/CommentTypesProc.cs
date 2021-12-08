@@ -10,15 +10,15 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class CommentTypesProc :ApplicationDbContextProc
+    public class CommentTypesProc : ApplicationDbContextProc
     {
-        public CommentTypesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : (context, userManager)
+        public CommentTypesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
         {
             if (!FromBase)
             {
                 base.InstantiateProcs();
             }
-        } 
+        }
 
         public IQueryable<CommentType> Read(int ID, List<Expression<Func<CommentType, object>>> includes = null)
         {
