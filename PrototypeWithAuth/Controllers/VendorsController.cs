@@ -296,7 +296,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Edit(CreateSupplierViewModel createSupplierViewModel)
         {
             //PROC START
-            var vendorUpdated = await _vendor.Update(createSupplierViewModel, ModelState);
+            var vendorUpdated = await _vendor.UpdateAsync(createSupplierViewModel, ModelState);
             if (vendorUpdated.Bool)
             {
                 return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });

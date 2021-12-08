@@ -52,13 +52,13 @@
     </div>
 </div>
 <div class="comment-info-div">
-    <input type="hidden" value="@Model.VendorComments?.Count()" id="comment-index" />
-    @for (int i = 0; i < Model.VendorComments?.Count(); i++)
+    <input type="hidden" value="@Model.Comments?.Count()" id="comment-index" />
+    @for (int i = 0; i < Model.Comments?.Count(); i++)
     {
 
-        <input type="hidden" asp-for="VendorComments[i].CommentID" />
+        <input type="hidden" asp-for="Comments[i].CommentID" />
 
-        await Html.RenderPartialAsync("_CommentInfoPartialView", new CommentsInfoViewModel { Comment = Model.VendorComments[i], Index = i, IsEdit = true });
+        await Html.RenderPartialAsync("_CommentInfoPartialView", new CommentsInfoViewModel { Comment = Model.Comments[i], Index = i, IsEdit = true });
 
     }
 </div>
