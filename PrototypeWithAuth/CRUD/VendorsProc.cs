@@ -163,10 +163,8 @@ namespace PrototypeWithAuth.CRUD
                             }
                         }
                         await _context.SaveChangesAsync();
-                        //throw new Exception();
                         await transaction.CommitAsync();
 
-                        //
                     }
                     else
                     {
@@ -215,12 +213,11 @@ namespace PrototypeWithAuth.CRUD
                                 _context.Remove(type);
                             }
                         }
-
                         foreach (var type in createSupplierViewModel.VendorCategoryTypes)
                         {
                             _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = type });
                         }
-                        //delete contacts that need to be deleted
+                       
                         foreach (var vendorContact in createSupplierViewModel.VendorContacts)
                         {
                             if (vendorContact.Delete && vendorContact.VendorContact.VendorContactID != 0)

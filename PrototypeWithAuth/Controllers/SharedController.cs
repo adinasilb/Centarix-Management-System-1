@@ -1583,7 +1583,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 createSupplierViewModel.VendorComments = await _vendorComment.ReadByVendorID(VendorID,  new List<System.Linq.Expressions.Expression<Func<VendorComment, object>>> { c => c.ApplicationUser, c => c.CommentType }).Where(c => c.ObjectID == VendorID).ToListAsync();
                 createSupplierViewModel.Vendor = await _vendor.ReadByVendorIDAsync(VendorID, new List<System.Linq.Expressions.Expression<Func<Vendor, object>>> { v => v.VendorCategoryTypes });
-                createSupplierViewModel.VendorContacts = _vendorContact.ReadAsVendorContactWithDeleteByVendorID(VendorID);
+                createSupplierViewModel.VendorContacts = await _vendorContact.ReadAsVendorContactWithDeleteByVendorID(VendorID).ToListAsync();
 
                 createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();
             }
