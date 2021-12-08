@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class EmployeesProc : ApplicationUsersProc
+    public class EmployeesProc :ApplicationDbContextProc
     {
         public EmployeesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager, true)
         {

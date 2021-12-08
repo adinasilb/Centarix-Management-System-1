@@ -25,9 +25,9 @@ namespace PrototypeWithAuth.CRUD
             return _context.VendorContacts.AsNoTracking().AsQueryable();
         }
 
-        public VendorContact ReadOneByPK(int VendorContactID)
+        public async Task<VendorContact> ReadOneByPKAsync(int VendorContactID)
         {
-            return _context.VendorContacts.Where(vc => vc.VendorContactID == VendorContactID).AsNoTracking().FirstOrDefault();
+            return await _context.VendorContacts.Where(vc => vc.VendorContactID == VendorContactID).AsNoTracking().FirstOrDefaultAsync();
         }
 
         public IQueryable<VendorContactWithDeleteViewModel> ReadAsVendorContactWithDeleteByVendorID(int id)
