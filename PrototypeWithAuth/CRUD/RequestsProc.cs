@@ -20,9 +20,16 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public IQueryable<Request> Read(List<Expression<Func<Request, object>>> includes = null)
+        public IQueryable<Request> Read(List<Expression<Func<Request, bool>>> wheres = null, List<Expression<Func<Request, object>>> includes = null)
         {
-            var requests = _context.Requests.AsNoTracking().AsQueryable();
+            var requests = _context.Requests.Where(r => !r.IsDeleted).AsNoTracking().AsQueryable();
+            if (wheres != null)
+            {
+                foreach (var t in wheres)
+                {
+                    requests = requests.Where(t);
+                }
+            }
             if (includes != null)
             {
                 foreach (var t in includes)

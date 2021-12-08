@@ -37,6 +37,7 @@ namespace PrototypeWithAuth.Controllers
         protected CRUD.VendorContactsProc _vendorContact;
         protected CRUD.VendorCommentsProc _vendorComment;
         protected CRUD.CommentTypesProc _commentType;
+        protected CRUD.RequestsProc _requestsProc;
         protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
             
         {
@@ -51,6 +52,7 @@ namespace PrototypeWithAuth.Controllers
             _vendorContact = new CRUD.VendorContactsProc(context, userManager);
             _vendorComment = new CRUD.VendorCommentsProc(context, userManager);
             _commentType = new CRUD.CommentTypesProc(context, userManager);
+            _requestsProc = new CRUD.RequestsProc(context, userManager);
 
         }
 
@@ -778,110 +780,76 @@ namespace PrototypeWithAuth.Controllers
                 categoryID = 2;
             }
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable().AsNoTracking();
-            IQueryable<Request> fullRequestsList = _context.Requests.IgnoreQueryFilters().Where(r => !r.IsDeleted).Where(r => r.Product.ProductName.Contains(selectedFilters == null ? "" : selectedFilters.SearchText)).Include(r => r.ApplicationUserCreator)
-         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)/*.Where(r => r.IsArchived == requestIndexObject.IsArchive)*/;
-
+           
+            List<System.Linq.Expressions.Expression<Func<Request, bool>>> wheres = new List<System.Linq.Expressions.Expression<Func<Request, bool>>>();
+            List<System.Linq.Expressions.Expression<Func<Request, object>>> includes = new List<System.Linq.Expressions.Expression<Func<Request, object>>>();
+           
+            wheres.Add(r => r.Product.ProductName.Contains(selectedFilters == null ? "" : selectedFilters.SearchText));
+            wheres.Add(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
+           
             int sideBarID = 0;
             if (requestIndexObject.SidebarType != AppUtility.SidebarEnum.Owner)
             {
                 int.TryParse(requestIndexObject.SidebarFilterID, out sideBarID);
             }
 
-            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementEquipment)
+            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest || requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsRequest)
             {
-                if (requestIndexObject.SidebarType == AppUtility.SidebarEnum.Category)
-                {
-                    RequestsPassedIn = _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5)
-                     .Where(r => r.Product.ProductSubcategoryID == sideBarID).Include(r => r.ParentRequest);
 
+                if ( requestIndexObject.RequestStatusID == 1 || requestIndexObject.RequestStatusID == 6)
+                {
+                    wheres.Add(r => r.RequestStatusID == 1|| r.RequestStatusID==6);                    
                 }
                 else
                 {
-                    RequestsPassedIn = _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5);
-
-                }
-                RequestsPassedIn.OrderByDescending(e => e.ParentRequest.OrderDate);
-            }
-
-            else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest || requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsRequest)
-            {
-                /*
-                 * In order to combine all the requests each one needs to be in a separate list
-                 * Then you need to union them one at a time into separate variables
-                 * you only need the separate union variable in order for the union to work
-                 * and the original queries are on separate lists because each is querying the full database with a separate where
-                 */
-                //var filteredRequests = fullRequestsList;
-                IQueryable<Request> TempRequestList = Enumerable.Empty<Request>().AsQueryable();
-                if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 1 || requestIndexObject.RequestStatusID == 6)
-                {
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 1);
-                    var TempRequestList2 = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 6);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(TempRequestList, TempRequestList2);
-                }
-
-                if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 2)
-                {
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 2);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                }
-
-                if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 3)
-                {
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 3);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-
-                }
+                    wheres.Add(r => r.RequestStatusID == requestIndexObject.RequestStatusID);
+                }               
 
             }
             else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
             {
                 if (requestIndexObject.RequestStatusID == 7)
                 {
-                    RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 7);
+                    wheres.Add(r => r.RequestStatus.RequestStatusID == 7);
                 }
                 else
                 {
-                    RequestsPassedIn = fullRequestsList.Where(r => r.IsInInventory);
-                    /*RequestsPassedIn = RequestsPassedIn.Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-                .Include(r => r.ParentRequest).Include(r => r.ApplicationUserCreator)
-                .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
-                .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType);
-                    RequestsPassedIn = RequestsPassedIn.Include(r => r.RequestLocationInstances).ThenInclude(li => li.LocationInstance).ThenInclude(l => l.LocationInstanceParent);*/
+                   wheres.Add(r => r.IsInInventory);
                 }
             }
             else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.AccountingGeneral)
             {
+                //ignore all the wheres got so far HERE it used to take from context so i reinstantiated the wheres list
+
+
+                ///REMEMBER TO IGNORE QUERY FILTERS
+                wheres.Clear();
                 //we need both categories
-                RequestsPassedIn = _context.Requests.IgnoreQueryFilters().Where(r => !r.IsDeleted).Where(r => r.RequestStatusID == 3)
-                    .Where(r => !r.IsClarify && r.Payments.Where(p => p.IsPaid && p.HasInvoice).Count() == r.Payments.Count())
-                    .Where(r => Years.Contains(r.ParentRequest.OrderDate.Year));
+                wheres.Add(r => r.RequestStatusID == 3);
+                wheres.Add(r => !r.IsClarify && r.Payments.Where(p => p.IsPaid && p.HasInvoice).Count() == r.Payments.Count());
+                wheres.Add(r => Years.Contains(r.ParentRequest.OrderDate.Year));
                 if (Months != null && Months.Count() > 0)
                 {
-                    RequestsPassedIn = RequestsPassedIn.Where(r => Months.Contains(r.ParentRequest.OrderDate.Month));
+                    wheres.Add(r => Months.Contains(r.ParentRequest.OrderDate.Month));
                 }
             }
             else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart && requestIndexObject.SidebarType == AppUtility.SidebarEnum.Favorites)
             {
                 var usersFavoriteRequests = _context.FavoriteRequests.Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
                     .Select(fr => fr.RequestID).ToList();
-                RequestsPassedIn = fullRequestsList.Where(frl => usersFavoriteRequests.Contains(frl.RequestID));
-                //RequestsPassedIn = fullRequestsList.Where(frl =>
-                //_context.FavoriteRequests.Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User)).Select(fr => fr.RequestID)
-                //.Contains(frl.RequestID));
-
+                wheres.Add(frl => usersFavoriteRequests.Contains(frl.RequestID));
             }
             else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart && requestIndexObject.SidebarType == AppUtility.SidebarEnum.SharedRequests)
             {
                 var sharedWithMe = _context.ShareRequests.Where(fr => fr.ToApplicationUserID == _userManager.GetUserId(User))
                     .Select(sr => sr.RequestID).ToList();
-                RequestsPassedIn = fullRequestsList.Where(frl => sharedWithMe.Contains(frl.RequestID));
+                wheres.Add(frl => sharedWithMe.Contains(frl.RequestID));
             }
-            else //we just want what is in inventory
+            else
             {
-                RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3 || r.RequestStatus.RequestStatusID == 4 || r.RequestStatus.RequestStatusID == 5);
-                //change to: (if can reorder operations
-                //RequestsPassedIn = fullRequestsList.Where(r => r.IsInInventory);
+                //do not think it is ever supposed to get here
+                //wheres.Add(r => r.RequestStatus.RequestStatusID == 3);              
+                //wheres.Add(r => r.IsInInventory);
             }
             AppUtility.SidebarEnum SidebarTitle = AppUtility.SidebarEnum.List;
             //now that the lists are created sort by vendor or subcategory
@@ -890,19 +858,16 @@ namespace PrototypeWithAuth.Controllers
             {
                 case AppUtility.SidebarEnum.Vendors:
                     sidebarFilterDescription = _context.Vendors.Where(v => v.VendorID == sideBarID).Select(v => v.VendorEnName).FirstOrDefault();
-                    RequestsPassedIn = RequestsPassedIn
-                     .Where(r => r.Product.VendorID == sideBarID);
+                    wheres.Add(r => r.Product.VendorID == sideBarID);
                     break;
                 case AppUtility.SidebarEnum.Type:
                     sidebarFilterDescription = _context.ProductSubcategories.Where(p => p.ProductSubcategoryID == sideBarID).Select(p => p.ProductSubcategoryDescription).FirstOrDefault();
-                    RequestsPassedIn = RequestsPassedIn
-                   .Where(r => r.Product.ProductSubcategoryID == sideBarID);
+                    wheres.Add(r => r.Product.ProductSubcategoryID == sideBarID);
                     break;
                 case AppUtility.SidebarEnum.Owner:
                     var owner = _context.Employees.Where(e => e.Id.Equals(requestIndexObject.SidebarFilterID)).FirstOrDefault();
                     sidebarFilterDescription = owner.FirstName + " " + owner.LastName;
-                    RequestsPassedIn = RequestsPassedIn
-                    .Where(r => r.ApplicationUserCreatorID == requestIndexObject.SidebarFilterID);
+                    wheres.Add(r => r.ApplicationUserCreatorID == requestIndexObject.SidebarFilterID);
                     break;
             }
 
@@ -930,12 +895,17 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.ErrorMessage = requestIndexObject.ErrorMessage;
             var onePageOfProducts = Enumerable.Empty<RequestIndexPartialRowViewModel>().ToPagedList();
 
-            var RequestPassedInWithInclude = RequestsPassedIn
-                .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-                .Include(r => r.ParentRequest).Include(r => r.ApplicationUserCreator)
-                .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
-                .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType).AsQueryable();
-
+            includes.Add(r => r.Product);
+            includes.Add(r => r.Product.ProductSubcategory);
+            includes.Add(r => r.Product.ProductSubcategory.ParentCategory);
+            includes.Add(r => r.ParentRequest);
+            includes.Add(r => r.ApplicationUserCreator);
+            includes.Add(r => r.Product.Vendor);
+            includes.Add(r => r.RequestStatus);
+            includes.Add(r => r.Product.UnitType);
+            includes.Add(r => r.Product.SubUnitType);
+            includes.Add(r => r.Product.SubSubUnitType);
+            var RequestPassedInWithInclude = _requestsProc.Read(wheres, includes);
             RequestPassedInWithInclude = RequestPassedInWithInclude.Include(r => r.RequestLocationInstances).ThenInclude(li => li.LocationInstance).ThenInclude(l => l.LocationInstanceParent);
 
             RequestPassedInWithInclude = FilterListBySelectFilters(selectedFilters, RequestPassedInWithInclude);
@@ -950,6 +920,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 requestsSearchViewModel.Payment = new Payment();
             }
+
             RequestPassedInWithInclude = ApplySearchToRequestList(requestsSearchViewModel, RequestPassedInWithInclude);
 
             onePageOfProducts = await GetColumnsAndRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude);
