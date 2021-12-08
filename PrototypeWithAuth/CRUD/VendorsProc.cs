@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -137,7 +138,10 @@ namespace PrototypeWithAuth.CRUD
                             ModelState.Remove(ms.Key);
                         }
                     }
-                    if (ModelState.IsValid)
+                    var context = new ValidationContext(createSupplierViewModel.Vendor, null, null);
+                    var results = new List<ValidationResult>();
+
+                    if (Validator.TryValidateObject(createSupplierViewModel.Vendor, context, results, true))
                     {
                         _context.Add(createSupplierViewModel.Vendor);
                         await _context.SaveChangesAsync();
@@ -200,7 +204,10 @@ namespace PrototypeWithAuth.CRUD
                             ModelState.Remove(ms.Key);
                         }
                     }
-                    if (ModelState.IsValid)
+                    var context = new ValidationContext(createSupplierViewModel.Vendor, null, null);
+                    var results = new List<ValidationResult>();
+
+                    if (Validator.TryValidateObject(createSupplierViewModel.Vendor, context, results, true))
                     {
                         _context.Update(createSupplierViewModel.Vendor);
                         _context.SaveChanges();
