@@ -31,12 +31,12 @@ namespace PrototypeWithAuth.Controllers
         protected readonly IHttpContextAccessor _httpContextAccessor;
         protected string AccessDeniedPath = "~/Identity/Account/AccessDenied";
         protected ICompositeViewEngine _viewEngine;
-        private CRUD.VendorsProc _vendor;
-        private CRUD.CategoryTypesProc _categoryType;
-        private CRUD.CountriesProc _country;
-        private CRUD.VendorContactsProc _vendorContact;
-        private CRUD.VendorCommentsProc _vendorComment;
-        private CRUD.CommentTypesProc _commentType;
+        protected CRUD.VendorsProc _vendor;
+        protected CRUD.CategoryTypesProc _categoryType;
+        protected CRUD.CountriesProc _country;
+        protected CRUD.VendorContactsProc _vendorContact;
+        protected CRUD.VendorCommentsProc _vendorComment;
+        protected CRUD.CommentTypesProc _commentType;
         protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
             
         {
@@ -45,7 +45,6 @@ namespace PrototypeWithAuth.Controllers
             _userManager = userManager;
             _viewEngine = viewEngine;
             _httpContextAccessor = httpContextAccessor;
-
             _vendor = new CRUD.VendorsProc(context, userManager);
             _categoryType = new CRUD.CategoryTypesProc(context, userManager);
             _country = new CRUD.CountriesProc(context, userManager);
