@@ -155,9 +155,9 @@ namespace PrototypeWithAuth.Controllers
             int month = DateTime.Now.Month;
             var daysOffViewModel = new ReportDaysViewModel
             {
-                VacationDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(2, year, userid).OrderByDescending(eh => eh.Date),
-                SickDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(1, year, userid).OrderByDescending(eh => eh.Date).OrderByDescending(eh => eh.Date),
-                SpecialDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(4, year, userid).OrderByDescending(eh => eh.Date).OrderByDescending(eh => eh.Date),
+                VacationDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, 2, userid).OrderByDescending(eh => eh.Date),
+                SickDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, 1, userid).OrderByDescending(eh => eh.Date).OrderByDescending(eh => eh.Date),
+                SpecialDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, 4, userid).OrderByDescending(eh => eh.Date).OrderByDescending(eh => eh.Date),
                 SelectedYear = year
             };
             var sickDaysVacationDaysLeft = await getVacationSickDaysLeft(user, year);
@@ -172,8 +172,8 @@ namespace PrototypeWithAuth.Controllers
         {
             double vacationDays = 0;
             double sickDays = 0;
-            double vacationDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(2, year, user.Id).Count();
-            double sickDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(1, year, user.Id).Count();
+            double vacationDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, 2, user.Id).Count();
+            double sickDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, 1, user.Id).Count();
             if (user.EmployeeStatusID == 1)
             {
                 var vacationHours = await _employeeHoursProc.ReadPartialOffDayHoursAsync(year, 2, user.Id);
