@@ -33,7 +33,7 @@ namespace PrototypeWithAuth.Controllers
             _employeeHoursProc = new CRUD.EmployeeHoursProc(context, userManager);
             _timekeeperNotificationsProc = new CRUD.TimekeeperNotificationsProc(context, userManager);
             _employeesProc = new CRUD.EmployeesProc(context, userManager);
-            _employeeHoursAwaitingApprovalProc = new CRUD.EmployeeHoursAwaitingApprovalProc(context, userManager);
+            _employeeHoursAwaitingApprovalProc = new CRUD.EmployeeHoursAwaitingApprovalProc(context);
             _employeeHoursStatuesProc = new CRUD.EmployeeHoursStatuesProc(context, userManager);
             _offDayTypesProc = new CRUD.OffDayTypesProc(context, userManager);
             _companyDaysOffProc = new CRUD.CompanyDaysOffProc(context, userManager);
