@@ -52,5 +52,7 @@ namespace PrototypeWithAuth.CRUD
             _commentTypesProc = new CommentTypesProc(_context, true);
             _requestsProc = new RequestsProc(_context, true);
         }
+
+        
     }
 }
