@@ -60,18 +60,8 @@ namespace PrototypeWithAuth.CRUD
 
         //}
 
-        public IQueryable<T> ReadByInclude(IQueryable<T> ObjectQueryable, List<ComplexIncludes<T>> Includes)
-        {
-            foreach(var ComplexInclude in Includes)
-            {
-                ObjectQueryable = ObjectQueryable.Include(ComplexInclude.Include);
-                if (ComplexInclude.ThenInclude != null)
-                {
-                    ComplexInclude.RecursiveInclude(ObjectQueryable, ComplexInclude.ThenInclude);
-                }
-            }
-            return ObjectQueryable;
-        }
+
+ 
 
     }
 }

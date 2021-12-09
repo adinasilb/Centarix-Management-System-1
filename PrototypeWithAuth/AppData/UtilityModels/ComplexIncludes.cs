@@ -10,17 +10,8 @@ namespace PrototypeWithAuth.AppData.UtilityModels
     public class ComplexIncludes<T>
     {
         public Expression<Func<T, object>> Include { get; set; }
-        public ComplexIncludes<T> ThenInclude { get; set; }
-
-        public IQueryable<T> RecursiveInclude(IQueryable<T> ObjectQueryable, ComplexIncludes<T> Include)
-        {
-            ObjectQueryable.ThenInclude(Include);
-            if (Include.ThenInclude != null)
-            {
-                RecursiveInclude(ObjectQueryable, ThenInclude);
-            }
-            return ObjectQueryable;
-        }
+        public ComplexIncludes<object> ThenInclude { get; set; }
+      
     }
 
 }
