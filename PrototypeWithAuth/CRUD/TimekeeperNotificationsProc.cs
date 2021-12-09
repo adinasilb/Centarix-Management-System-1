@@ -12,9 +12,9 @@ using System.Linq.Expressions;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class TimekeeperNotificationsProc : ApplicationDbContextProc
+    public class TimekeeperNotificationsProc : ApplicationDbContextProc<TimekeeperNotification>
     {
-        public TimekeeperNotificationsProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
+        public TimekeeperNotificationsProc(ApplicationDbContext context, bool FromBase = false) : base(context)
         {
             if (!FromBase)
             {

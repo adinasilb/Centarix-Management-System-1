@@ -39,6 +39,13 @@ namespace PrototypeWithAuth.Controllers
         protected CRUD.VendorCommentsProc _vendorComment;
         protected CRUD.CommentTypesProc _commentType;
         protected CRUD.RequestsProc _requestsProc;
+        protected CRUD.EmployeeHoursProc _employeeHoursProc;
+        protected CRUD.TimekeeperNotificationsProc _timekeeperNotificationsProc;
+        protected CRUD.EmployeesProc _employeesProc;
+        protected CRUD.EmployeeHoursAwaitingApprovalProc _employeeHoursAwaitingApprovalProc;
+        protected CRUD.EmployeeHoursStatuesProc _employeeHoursStatuesProc;
+        protected CRUD.OffDayTypesProc _offDayTypesProc;
+        protected CRUD.CompanyDaysOffProc _companyDaysOffProc;
         protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
             
         {
@@ -47,13 +54,21 @@ namespace PrototypeWithAuth.Controllers
             _userManager = userManager;
             _viewEngine = viewEngine;
             _httpContextAccessor = httpContextAccessor;
-            _vendor = new CRUD.VendorsProc(context, userManager);
-            _categoryType = new CRUD.CategoryTypesProc(context, userManager);
-            _country = new CRUD.CountriesProc(context, userManager);
-            _vendorContact = new CRUD.VendorContactsProc(context, userManager);
-            _vendorComment = new CRUD.VendorCommentsProc(context, userManager);
-            _commentType = new CRUD.CommentTypesProc(context, userManager);
-            _requestsProc = new CRUD.RequestsProc(context, userManager);
+            _vendor = new CRUD.VendorsProc(context);
+            _categoryType = new CRUD.CategoryTypesProc(context);
+            _country = new CRUD.CountriesProc(context);
+            _vendorContact = new CRUD.VendorContactsProc(context);
+            _vendorComment = new CRUD.VendorCommentsProc(context);
+            _commentType = new CRUD.CommentTypesProc(context);
+            _requestsProc = new CRUD.RequestsProc(context);
+            _employeeHoursProc = new CRUD.EmployeeHoursProc(context);
+            _timekeeperNotificationsProc = new CRUD.TimekeeperNotificationsProc(context);
+            _employeesProc = new CRUD.EmployeesProc(context);
+            _employeeHoursAwaitingApprovalProc = new CRUD.EmployeeHoursAwaitingApprovalProc(context);
+            _employeeHoursStatuesProc = new CRUD.EmployeeHoursStatuesProc(context);
+            _offDayTypesProc = new CRUD.OffDayTypesProc(context);
+            _companyDaysOffProc = new CRUD.CompanyDaysOffProc(context);
+
 
         }
 

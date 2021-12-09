@@ -17,7 +17,7 @@ namespace PrototypeWithAuth.CRUD
 {
     public class VendorsProc : ApplicationDbContextProc<Vendor>
     {
-        public VendorsProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
+        public VendorsProc(ApplicationDbContext context, bool FromBase = false) : base(context)
         {
             if (!FromBase)
             {

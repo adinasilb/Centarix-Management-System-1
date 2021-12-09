@@ -25,13 +25,9 @@ namespace PrototypeWithAuth.Controllers
     public class ApplicationUsersController : SharedController
     {
 
-        private CRUD.OffDayTypesProc _offDayTypesProc;
-        private CRUD.EmployeesProc _employeesProc;
         public ApplicationUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
             : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
-            _offDayTypesProc = new CRUD.OffDayTypesProc(context, userManager);
-            _employeesProc = new CRUD.EmployeesProc(context, userManager);
         }
         // GET: /<controller>/
         [HttpGet]

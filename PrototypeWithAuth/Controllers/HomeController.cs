@@ -27,13 +27,11 @@ namespace PrototypeWithAuth.Controllers
     {
         private readonly UrlEncoder _urlEncoder;
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
-        private CRUD.EmployeesProc _employeesProc;
 
         public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, UrlEncoder urlEncoder, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
             : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
             _urlEncoder = urlEncoder;
-            _employeesProc = new CRUD.EmployeesProc(context, userManager);
         }
 
         public async Task<IActionResult> Index()

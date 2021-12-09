@@ -12,7 +12,7 @@ namespace PrototypeWithAuth.CRUD
 {
     public class VendorCategoryTypesProc : ApplicationDbContextProc<VendorCategoryType>
     {
-        public VendorCategoryTypesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
+        public VendorCategoryTypesProc(ApplicationDbContext context, bool FromBase = false) : base(context)
         {
             if (!FromBase)
             {

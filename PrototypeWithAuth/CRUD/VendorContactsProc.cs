@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class VendorContactsProc : ApplicationDbContextProc
+    public class VendorContactsProc : ApplicationDbContextProc<VendorContact>
     {
-        public VendorContactsProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
+        public VendorContactsProc(ApplicationDbContext context, bool FromBase = false) : base(context)
         {
             if (!FromBase)
             {

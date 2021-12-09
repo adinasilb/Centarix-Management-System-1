@@ -11,7 +11,7 @@ namespace PrototypeWithAuth.CRUD
 {
     public class CategoryTypesProc : ApplicationDbContextProc<CategoryType>
     {
-        public CategoryTypesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
+        public CategoryTypesProc(ApplicationDbContext context, bool FromBase = false) : base(context)
         {
             if (!FromBase) { this.InstantiateProcs(); }
         }
