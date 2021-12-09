@@ -46,6 +46,7 @@ namespace PrototypeWithAuth.Controllers
         protected CRUD.EmployeeHoursStatuesProc _employeeHoursStatuesProc;
         protected CRUD.OffDayTypesProc _offDayTypesProc;
         protected CRUD.CompanyDaysOffProc _companyDaysOffProc;
+        protected CRUD.ParticipantsProc _participantsProc;
         protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
             
         {
@@ -68,8 +69,7 @@ namespace PrototypeWithAuth.Controllers
             _employeeHoursStatuesProc = new CRUD.EmployeeHoursStatuesProc(context);
             _offDayTypesProc = new CRUD.OffDayTypesProc(context);
             _companyDaysOffProc = new CRUD.CompanyDaysOffProc(context);
-
-
+            _participantsProc = new CRUD.ParticipantsProc(context);
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)
