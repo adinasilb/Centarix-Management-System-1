@@ -23,9 +23,7 @@ namespace PrototypeWithAuth.CRUD
         public IQueryable<Request> ReadWithRequestsLocationInsances(List<Expression<Func<Request, bool>>> wheres = null, List<Expression<Func<Request, object>>> includes = null)
         {
             var requests = _context.Requests.Where(r => !r.IsDeleted)
-                .Include(r => r.RequestLocationInstances).ThenInclude(li => li.LocationInstance)
-                .ThenInclude(l => l.LocationInstanceParent)
-                .AsNoTracking().AsQueryable();
+          .AsQueryable();
             if (wheres != null)
             {
                 foreach (var t in wheres)
@@ -40,7 +38,9 @@ namespace PrototypeWithAuth.CRUD
                     requests = requests.Include(t);
                 }
             }
-            return requests;
+            return requests.Include(r => r.RequestLocationInstances).ThenInclude(li => li.LocationInstance)
+                .ThenInclude(l => l.LocationInstanceParent)
+                .AsNoTracking().AsQueryable();
         }
     }
 
