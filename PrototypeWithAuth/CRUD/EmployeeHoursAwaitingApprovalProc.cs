@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class EmployeeHoursAwaitingApprovalProc : ApplicationDbContextProc
+    public class EmployeeHoursAwaitingApprovalProc : ApplicationDbContextProc<EmployeeHoursAwaitingApproval>
     {
-        public EmployeeHoursAwaitingApprovalProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
+        public EmployeeHoursAwaitingApprovalProc(ApplicationDbContext context, bool FromBase = false) : base(context)
         {
             if (!FromBase)
             {

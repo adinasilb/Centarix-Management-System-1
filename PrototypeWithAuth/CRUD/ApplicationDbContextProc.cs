@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class ApplicationDbContextProc
+    public class ApplicationDbContextProc<T>
     {
         protected readonly ApplicationDbContext _context;
         protected readonly UserManager<ApplicationUser> _userManager;
@@ -29,11 +29,9 @@ namespace PrototypeWithAuth.CRUD
         protected CommentTypesProc _commentTypesProc;
         protected RequestsProc _requestsProc;
 
-        public ApplicationDbContextProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ApplicationDbContextProc(ApplicationDbContext context)
         {
             _context = context;
-            _userManager = userManager;
-
         }
 
         public void InstantiateProcs()

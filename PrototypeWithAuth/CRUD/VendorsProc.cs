@@ -15,7 +15,7 @@ using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 namespace PrototypeWithAuth.CRUD
 {
-    public class VendorsProc : ApplicationDbContextProc
+    public class VendorsProc : ApplicationDbContextProc<Vendor>
     {
         public VendorsProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
         {
