@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace PrototypeWithAuth.CRUD
 {
@@ -40,19 +42,36 @@ namespace PrototypeWithAuth.CRUD
             _countriesProc = new CountriesProc(_context, _userManager, true);
             _employeeHoursProc = new EmployeeHoursProc(_context, _userManager, true);
             _employeesProc = new EmployeesProc(_context, _userManager, true);
-            _timekeeperNotificationsProc = new TimekeeperNotificationsProc(_context, _userManager, true); 
-            _vendorCommentsProc = new VendorCommentsProc(_context, _userManager, true); 
-            _vendorContactsProc = new VendorContactsProc(_context, _userManager, true); 
+            _timekeeperNotificationsProc = new TimekeeperNotificationsProc(_context, _userManager, true);
+            _vendorCommentsProc = new VendorCommentsProc(_context, _userManager, true);
+            _vendorContactsProc = new VendorContactsProc(_context, _userManager, true);
             _vendorsProc = new VendorsProc(_context, _userManager, true);
-            _vendorCategoryTypesProc = new VendorCategoryTypesProc(_context, _userManager, true); 
-            _employeeHoursAwaitingApprovalProc = new EmployeeHoursAwaitingApprovalProc(_context, _userManager, true); 
-            _employeeHoursStatuesProc = new EmployeeHoursStatuesProc(_context, _userManager, true); 
-            _companyDaysOffProc = new CompanyDaysOffProc(_context, _userManager, true); 
+            _vendorCategoryTypesProc = new VendorCategoryTypesProc(_context, _userManager, true);
+            _employeeHoursAwaitingApprovalProc = new EmployeeHoursAwaitingApprovalProc(_context, _userManager, true);
+            _employeeHoursStatuesProc = new EmployeeHoursStatuesProc(_context, _userManager, true);
+            _companyDaysOffProc = new CompanyDaysOffProc(_context, _userManager, true);
             _offDayTypesProc = new OffDayTypesProc(_context, _userManager, true);
             _commentTypesProc = new CommentTypesProc(_context, _userManager, true);
             _requestsProc = new RequestsProc(_context, _userManager, true);
         }
 
-        
+        //public IQueryable<T> Read()
+        //{
+
+        //}
+
+        public IQueryable<T> ReadByInclude(IQueryable<T> ObjectQueryable, List<ComplexIncludes<T>> Includes)
+        {
+            foreach(var ComplexInclude in Includes)
+            {
+                ObjectQueryable = ObjectQueryable.Include(ComplexInclude.Include);
+                if (ComplexInclude.ThenInclude != null)
+                {
+                    ComplexInclude.RecursiveInclude(ObjectQueryable, ComplexInclude.ThenInclude);
+                }
+            }
+            return ObjectQueryable;
+        }
+
     }
 }
