@@ -292,7 +292,7 @@ namespace PrototypeWithAuth.CRUD
                                 }
                                 else
                                 {
-                                    _timekeeperNotificationsProc.DeleteWithoutSaving(new List<TimekeeperNotification>() {await _timekeeperNotificationsProc.ReadByPKAsync(employeeHour.EmployeeHoursID) });
+                                    _timekeeperNotificationsProc.DeleteWithoutSaving( _timekeeperNotificationsProc.ReadByEHID(employeeHour.EmployeeHoursID) );
                                     _context.SaveChanges();
                                     //RemoveNotifications(employeeHour.EmployeeHoursID);
                                 }
