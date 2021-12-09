@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class CommentType
+    public class CommentType : ModelBase
     {
         [Key]
         public int TypeID { get; set; }

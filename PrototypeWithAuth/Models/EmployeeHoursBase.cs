@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class EmployeeHoursBase
+    public class EmployeeHoursBase : ModelBase
     {    
         public string EmployeeID { get; set; }
         [ForeignKey("EmployeeID")]

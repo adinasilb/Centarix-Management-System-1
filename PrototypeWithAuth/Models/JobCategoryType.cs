@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class JobCategoryType
+    public class JobCategoryType : ModelBase
     {
         [Key]
         public int JobCategoryTypeID { get; set; }

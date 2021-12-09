@@ -7,7 +7,7 @@ using static PrototypeWithAuth.AppData.AppUtility;
 
 namespace PrototypeWithAuth.Models
 {
-    public class GlobalInfo
+    public class GlobalInfo : ModelBase
     {
         public int ID { get; set; }
         public string Description { get; set; }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public  class CommentBase
+    public  class CommentBase : ModelBase
     {
         private DateTime _CommentTimeStamp;
         [Key]

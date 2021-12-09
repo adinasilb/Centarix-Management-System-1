@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class CreditCard
+    public class CreditCard : ModelBase
     { 
         [Key]
         public int CreditCardID { get; set; }
