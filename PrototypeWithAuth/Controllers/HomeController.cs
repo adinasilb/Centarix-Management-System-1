@@ -61,7 +61,7 @@ namespace PrototypeWithAuth.Controllers
                         var existingBirthdays = new List<Employee>();
                         while (nextDay.Date <= DateTime.Today)
                         {
-                            await _context.Employees.Where(r => r.DOB.AddYears(nextDay.Year - r.DOB.Year) == nextDay.Date).ForEachAsync(e => existingBirthdays.Add(e));
+                            users.Where(r => r.DOB.AddYears(nextDay.Year - r.DOB.Year) == nextDay.Date).ToList().ForEach(e => existingBirthdays.Add(e));
                             nextDay = nextDay.AddDays(1);
                         }
                         foreach (Employee employee in users)
