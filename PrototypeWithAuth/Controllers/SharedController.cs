@@ -798,7 +798,7 @@ namespace PrototypeWithAuth.Controllers
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable().AsNoTracking();
            
             List<System.Linq.Expressions.Expression<Func<Request, bool>>> wheres = new List<System.Linq.Expressions.Expression<Func<Request, bool>>>();
-            List<System.Linq.Expressions.Expression<Func<Request, object>>> includes = new List<System.Linq.Expressions.Expression<Func<Request, object>>>();
+            List<ComplexIncludes<Request>> includes = new List<ComplexIncludes<Request>>();
            
             wheres.Add(r => r.Product.ProductName.Contains(selectedFilters == null ? "" : selectedFilters.SearchText));
             wheres.Add(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
@@ -911,16 +911,19 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.ErrorMessage = requestIndexObject.ErrorMessage;
             var onePageOfProducts = Enumerable.Empty<RequestIndexPartialRowViewModel>().ToPagedList();
 
-            includes.Add(r => r.Product);
-            includes.Add(r => r.Product.ProductSubcategory);
-            includes.Add(r => r.Product.ProductSubcategory.ParentCategory);
-            includes.Add(r => r.ParentRequest);
-            includes.Add(r => r.ApplicationUserCreator);
-            includes.Add(r => r.Product.Vendor);
-            includes.Add(r => r.RequestStatus);
-            includes.Add(r => r.Product.UnitType);
-            includes.Add(r => r.Product.SubUnitType);
-            includes.Add(r => r.Product.SubSubUnitType);
+            includes.Add(new ComplexIncludes<Request> { Include= r => r.Product });
+            includes.Add(new ComplexIncludes<Request> { Include= r => r.Product.ProductSubcategory });
+            includes.Add(new ComplexIncludes<Request> { Include= r => r.Product.ProductSubcategory.ParentCategory });
+            includes.Add(new ComplexIncludes<Request> { Include= r => r.ParentRequest });
+            includes.Add(new ComplexIncludes<Request> { Include= r => r.ApplicationUserCreator });
+            includes.Add(new ComplexIncludes<Request> { Include= r => r.Product.Vendor });
+            includes.Add(new ComplexIncludes<Request> { Include= r => r.RequestStatus });
+            includes.Add(new ComplexIncludes<Request> { Include= r => r.Product.UnitType });
+            includes.Add(new ComplexIncludes<Request> { Include= r => r.Product.SubUnitType });
+            includes.Add(new ComplexIncludes<Request> { Include= r => r.Product.SubSubUnitType });
+            includes.Add(new ComplexIncludes<Request> { Include= r => r.RequestLocationInstances,
+                ThenInclude = new ComplexIncludes<RequestLocationInstance> { Include = r=>r.LocationInstance} });
+
             FilterListBySelectFilters(selectedFilters, wheres);
            
       

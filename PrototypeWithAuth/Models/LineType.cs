@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class LineType
+    public class LineType : ModelBase
     {
         [Key]
         public int LineTypeID { get; set; }

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PrototypeWithAuth.Models
 {
-    public class LocationInstance
+    public class LocationInstance : ModelBase
     {
         //WHEN QUERY - NEED TO SPECIFY OfType<LocationInstance> TO NOT HAVE TEMPORARY LOCATIONS
         [Key]

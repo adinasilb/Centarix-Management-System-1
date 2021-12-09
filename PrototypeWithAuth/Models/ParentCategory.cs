@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PrototypeWithAuth.Models
 {
-    public class ParentCategory
+    public class ParentCategory : ModelBase
     {
         [Key]
         public int ParentCategoryID { get; set; }

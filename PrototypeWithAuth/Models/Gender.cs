@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Gender
+    public class Gender : ModelBase
     {
         [Key]
         public int GenderID { get; set; }

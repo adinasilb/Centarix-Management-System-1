@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace PrototypeWithAuth.Models
 {
     //currently
-    public class ParentRequest
+    public class ParentRequest : ModelBase
     {
         [Key]
         public int ParentRequestID { get; set; }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class IpRange
+    public class IpRange : ModelBase
     {
         public int IpRangeID { get; set; }
         public string FromIpAddress { get; set; }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class LocationRoomInstance
+    public class LocationRoomInstance : ModelBase
     {
         [Key]
         public int LocationRoomInstanceID { get; set; }

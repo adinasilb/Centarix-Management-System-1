@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class CompanyDayOffType
+    public class CompanyDayOffType : ModelBase
     {
         [Key]
         public int CompanyDayOffTypeID { get; set; }

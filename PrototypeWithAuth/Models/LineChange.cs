@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class LineChange
+    public class LineChange : ModelBase
     {
 
         public int LineID { get; set; }

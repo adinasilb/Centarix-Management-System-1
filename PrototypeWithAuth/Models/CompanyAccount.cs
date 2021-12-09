@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrototypeWithAuth.Models
 {
-    public class CompanyAccount
+    public class CompanyAccount : ModelBase
     {
         [Key]
         public int CompanyAccountID { get; set; }

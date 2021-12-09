@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using System;
@@ -20,7 +22,7 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public IQueryable<Request> ReadWithRequestsLocationInsances(List<Expression<Func<Request, bool>>> wheres = null, List<Expression<Func<Request, object>>> includes = null)
+        public IQueryable<Request> ReadWithRequestsLocationInsances(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request>> includes = null)
         {
             var requests = _context.Requests.Where(r => !r.IsDeleted)
           .AsQueryable();
@@ -31,17 +33,30 @@ namespace PrototypeWithAuth.CRUD
                     requests = requests.Where(t);
                 }
             }
+            IIncludableQueryable<Request, object> requestsWithInclude = null;
             if (includes != null)
             {
                 foreach (var t in includes)
                 {
-                    requests = requests.Include(t);
+                    requestsWithInclude = requests.Include(t.Include);
+                    if (t.ThenInclude !=null)
+                    {
+                        RecursiveInclude(requestsWithInclude, t.ThenInclude);
+                    }
+            
                 }
             }
-            return requests.Include(r => r.RequestLocationInstances).ThenInclude(li => li.LocationInstance)
-                .ThenInclude(l => l.LocationInstanceParent)
-                .AsNoTracking().AsQueryable();
+            return requestsWithInclude.AsNoTracking().AsQueryable();
         }
-    }
+        public IIncludableQueryable<Request, object> RecursiveInclude(IIncludableQueryable<Request, object> ObjectQueryable, ComplexIncludes<object> currentInclude)
+        {
+            ObjectQueryable = ObjectQueryable.ThenInclude(currentInclude.Include);
+            if (currentInclude.ThenInclude != null)
+            {
+                ObjectQueryable = RecursiveInclude(ObjectQueryable, currentInclude.ThenInclude);
+            }
+            return ObjectQueryable;
+        }
+    }  
 
 }
