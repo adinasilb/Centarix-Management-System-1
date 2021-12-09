@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class EmployeesProc :ApplicationDbContextProc
+    public class EmployeesProc :ApplicationDbContextProc<Employee>
     {
-        public EmployeesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
+        public EmployeesProc(ApplicationDbContext context, bool FromBase = false) : base(context)
         {
             if (!FromBase)
             {

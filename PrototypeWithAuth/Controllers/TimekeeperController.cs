@@ -20,24 +20,10 @@ namespace PrototypeWithAuth.Controllers
 {
     public class TimekeeperController : SharedController
     {
-        private CRUD.EmployeeHoursProc _employeeHoursProc;
-        private CRUD.TimekeeperNotificationsProc _timekeeperNotificationsProc;
-        private CRUD.EmployeesProc _employeesProc;
-        private CRUD.EmployeeHoursAwaitingApprovalProc _employeeHoursAwaitingApprovalProc;
-        private CRUD.EmployeeHoursStatuesProc _employeeHoursStatuesProc;
-        private CRUD.OffDayTypesProc _offDayTypesProc;
-        private CRUD.CompanyDaysOffProc _companyDaysOffProc;
         public TimekeeperController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
-            _employeeHoursProc = new CRUD.EmployeeHoursProc(context, userManager);
-            _timekeeperNotificationsProc = new CRUD.TimekeeperNotificationsProc(context, userManager);
-            _employeesProc = new CRUD.EmployeesProc(context, userManager);
-            _employeeHoursAwaitingApprovalProc = new CRUD.EmployeeHoursAwaitingApprovalProc(context, userManager);
-            _employeeHoursStatuesProc = new CRUD.EmployeeHoursStatuesProc(context, userManager);
-            _offDayTypesProc = new CRUD.OffDayTypesProc(context, userManager);
-            _companyDaysOffProc = new CRUD.CompanyDaysOffProc(context, userManager);
-        }
+          }
         public IActionResult Index()
         {
             return View();

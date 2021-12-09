@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class EmployeeHoursStatuesProc : ApplicationDbContextProc
+    public class EmployeeHoursStatuesProc : ApplicationDbContextProc<EmployeeHoursStatus>
+
     {
-        public EmployeeHoursStatuesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base (context, userManager)
+        public EmployeeHoursStatuesProc(ApplicationDbContext context, bool FromBase = false) : base (context)
         {
             if (!FromBase)
             {

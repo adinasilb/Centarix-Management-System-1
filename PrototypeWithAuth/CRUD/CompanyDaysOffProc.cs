@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class CompanyDaysOffProc : ApplicationDbContextProc
+    public class CompanyDaysOffProc : ApplicationDbContextProc<CompanyDayOff>
     {
-        public CompanyDaysOffProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base (context, userManager)
+        public CompanyDaysOffProc(ApplicationDbContext context, bool FromBase = false) : base (context)
         {
             if (!FromBase) { base.InstantiateProcs(); }
         }

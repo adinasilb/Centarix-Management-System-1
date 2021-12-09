@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class OffDayTypesProc : ApplicationDbContextProc
+    public class OffDayTypesProc : ApplicationDbContextProc<OffDayType>
     {
-        public OffDayTypesProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base (context, userManager)
+        public OffDayTypesProc(ApplicationDbContext context, bool FromBase = false) : base (context)
         {
             if (!FromBase)
             {

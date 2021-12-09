@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class EmployeeHoursProc : ApplicationDbContextProc
+    public class EmployeeHoursProc : ApplicationDbContextProc<EmployeeHours>
     {
-        public EmployeeHoursProc(ApplicationDbContext context, UserManager<ApplicationUser> userManager, bool FromBase = false) : base(context, userManager)
+        public EmployeeHoursProc(ApplicationDbContext context, bool FromBase = false) : base(context)
         {
             if (!FromBase)
             {
