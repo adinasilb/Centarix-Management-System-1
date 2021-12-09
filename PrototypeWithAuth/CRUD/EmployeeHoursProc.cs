@@ -332,6 +332,7 @@ namespace PrototypeWithAuth.CRUD
                                     {
                                         user.SpecialDays += 1;
                                     }
+                                    await _employeesProc.UpdateAsync(user);
                                     if (employeeHour == null)
                                     {
                                         employeeHour = new EmployeeHours
