@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace PrototypeWithAuth.CRUD
 {
@@ -53,6 +55,23 @@ namespace PrototypeWithAuth.CRUD
             _requestsProc = new RequestsProc(_context, true);
         }
 
-        
+        //public IQueryable<T> Read()
+        //{
+
+        //}
+
+        public IQueryable<T> ReadByInclude(IQueryable<T> ObjectQueryable, List<ComplexIncludes<T>> Includes)
+        {
+            foreach(var ComplexInclude in Includes)
+            {
+                ObjectQueryable = ObjectQueryable.Include(ComplexInclude.Include);
+                if (ComplexInclude.ThenInclude != null)
+                {
+                    ComplexInclude.RecursiveInclude(ObjectQueryable, ComplexInclude.ThenInclude);
+                }
+            }
+            return ObjectQueryable;
+        }
+
     }
 }
