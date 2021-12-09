@@ -311,19 +311,7 @@ namespace PrototypeWithAuth.AppData
 
         }
 
-        public static IQueryable<Request> GetRequestsListFromRequestStatusID(IQueryable<Request> FullRequestList, int RequestStatusID, int AmountToTake = 0)
-        {
-            IQueryable<Request> ReturnList = Enumerable.Empty<Request>().AsQueryable();
-            if (AmountToTake > 0)
-            {
-                ReturnList = FullRequestList.Where(r => r.RequestStatusID == RequestStatusID).Take(AmountToTake);
-            }
-            else
-            {
-                ReturnList = FullRequestList.Where(r => r.RequestStatusID == RequestStatusID);
-            }
-            return ReturnList;
-        }
+
 
         //this checks if a list is empty
         //right now used in the requestscontroller -> index

@@ -404,55 +404,55 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        protected void SetViewModelCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, SelectedRequestFilters selectedFilters = null)
-        {
-            int categoryID = 0;
-            if (requestIndexObject.SectionType == AppUtility.MenuItems.Requests)
-            {
-                categoryID = 1;
-            }
-            else if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
-            {
-                categoryID = 2;
-            }
-            IQueryable<Request> fullRequestsList = _context.Requests
-              .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)
-              .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor);
-            IQueryable<Request> changingList = _context.Requests.Where(r => r.Product.ProductName.Contains(selectedFilters.SearchText))
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)
-                .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor);
-            changingList = FilterListBySelectFilters(selectedFilters, changingList);
+        //protected void SetViewModelCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, SelectedRequestFilters selectedFilters = null)
+        //{
+        //    int categoryID = 0;
+        //    if (requestIndexObject.SectionType == AppUtility.MenuItems.Requests)
+        //    {
+        //        categoryID = 1;
+        //    }
+        //    else if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
+        //    {
+        //        categoryID = 2;
+        //    }
+        //    IQueryable<Request> fullRequestsList = _context.Requests
+        //      .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)
+        //      .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor);
+        //    IQueryable<Request> changingList = _context.Requests.Where(r => r.Product.ProductName.Contains(selectedFilters.SearchText))
+        //        .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)
+        //        .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor);
+        //    changingList = FilterListBySelectFilters(selectedFilters, changingList);
 
-            int[] requestStatusIds = { 1, 2, 3, 6 };
-            int[] newRequestStatusIds = new int[2];
-            if (requestIndexObject.RequestStatusID != 6)
-            {
-                newRequestStatusIds[0] = requestIndexObject.RequestStatusID;
-            }
-            else //for approval and approved are combined
-            {
-                newRequestStatusIds[0] = 1;
-                newRequestStatusIds[1] = 6;
-            }
-            requestStatusIds = requestStatusIds.Where(id => !newRequestStatusIds.Contains(id)).ToArray();
-            //foreach (int statusId in requestStatusIds)
-            //{
-            //    SetCountByStatusId(requestIndexObject, viewmodel, fullRequestsList, statusId);
-            //}
-            //foreach (int statusId in newRequestStatusIds)
-            //{
-            //    SetCountByStatusId(requestIndexObject, viewmodel, changingList, statusId);
-            //}
+        //    int[] requestStatusIds = { 1, 2, 3, 6 };
+        //    int[] newRequestStatusIds = new int[2];
+        //    if (requestIndexObject.RequestStatusID != 6)
+        //    {
+        //        newRequestStatusIds[0] = requestIndexObject.RequestStatusID;
+        //    }
+        //    else //for approval and approved are combined
+        //    {
+        //        newRequestStatusIds[0] = 1;
+        //        newRequestStatusIds[1] = 6;
+        //    }
+        //    requestStatusIds = requestStatusIds.Where(id => !newRequestStatusIds.Contains(id)).ToArray();
+        //    //foreach (int statusId in requestStatusIds)
+        //    //{
+        //    //    SetCountByStatusId(requestIndexObject, viewmodel, fullRequestsList, statusId);
+        //    //}
+        //    //foreach (int statusId in newRequestStatusIds)
+        //    //{
+        //    //    SetCountByStatusId(requestIndexObject, viewmodel, changingList, statusId);
+        //    //}
 
-            /*int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            int approvedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 6, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            viewmodel.NewCount = newCount;
-            viewmodel.ApprovedCount = approvedCount;
-            viewmodel.OrderedCount = orderedCount;
-            viewmodel.ReceivedCount = receivedCount;*/
-        }
+        //    /*int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+        //    int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+        //    int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+        //    int approvedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 6, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+        //    viewmodel.NewCount = newCount;
+        //    viewmodel.ApprovedCount = approvedCount;
+        //    viewmodel.OrderedCount = orderedCount;
+        //    viewmodel.ReceivedCount = receivedCount;*/
+        //}
         protected static void SetCountByStatusId(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, IQueryable<Request> requestsList, int statusId)
         {
             int count = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(requestsList, statusId, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
@@ -536,37 +536,37 @@ namespace PrototypeWithAuth.Controllers
 
 
 
-        protected void SetViewModelProprietaryCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, SelectedRequestFilters selectedFilters = null)
-        {
-            int categoryID = 0;
-            if (requestIndexObject.SectionType == AppUtility.MenuItems.Requests)
-            {
-                categoryID = 1;
-            }
-            else if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
-            {
-                categoryID = 2;
-            }
-            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator).Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)
-                .Where(r => r.RequestStatus.RequestStatusID == 3).Include(r => r.Product).ThenInclude(p => p.Vendor).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
-            IQueryable<Request> fullRequestsListProprietary = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)/*.Where(r => r.IsArchived == false)*/
-                .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor);
-            if (requestIndexObject.RequestStatusID == 7)
-            {
-                fullRequestsListProprietary = FilterListBySelectFilters(selectedFilters, fullRequestsListProprietary);
-                fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.Product.ProductName.Contains(selectedFilters.SearchText));
-            }
-            else
-            {
-                fullRequestsList = FilterListBySelectFilters(selectedFilters, fullRequestsList);
-                fullRequestsList = fullRequestsList.Where(r => r.Product.ProductName.Contains(selectedFilters.SearchText));
-            }
+        //protected void SetViewModelProprietaryCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, SelectedRequestFilters selectedFilters = null)
+        //{
+        //    int categoryID = 0;
+        //    if (requestIndexObject.SectionType == AppUtility.MenuItems.Requests)
+        //    {
+        //        categoryID = 1;
+        //    }
+        //    else if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
+        //    {
+        //        categoryID = 2;
+        //    }
+        //    IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator).Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)
+        //        .Where(r => r.RequestStatus.RequestStatusID == 3).Include(r => r.Product).ThenInclude(p => p.Vendor).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
+        //    IQueryable<Request> fullRequestsListProprietary = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)/*.Where(r => r.IsArchived == false)*/
+        //        .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor);
+        //    if (requestIndexObject.RequestStatusID == 7)
+        //    {
+        //        fullRequestsListProprietary = FilterListBySelectFilters(selectedFilters, fullRequestsListProprietary);
+        //        fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.Product.ProductName.Contains(selectedFilters.SearchText));
+        //    }
+        //    else
+        //    {
+        //        fullRequestsList = FilterListBySelectFilters(selectedFilters, fullRequestsList);
+        //        fullRequestsList = fullRequestsList.Where(r => r.Product.ProductName.Contains(selectedFilters.SearchText));
+        //    }
 
-            //int nonProprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            //int proprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsListProprietary, 7, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            //viewmodel.ProprietaryCount = proprietaryCount;
-            //viewmodel.NonProprietaryCount = nonProprietaryCount;
-        }
+        //    //int nonProprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+        //    //int proprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsListProprietary, 7, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+        //    //viewmodel.ProprietaryCount = proprietaryCount;
+        //    //viewmodel.NonProprietaryCount = nonProprietaryCount;
+        //}
 
 
         [HttpGet]

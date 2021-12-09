@@ -124,72 +124,7 @@ namespace PrototypeWithAuth.CRUD
             return listfilteredVendors;
         }
 
-        public async Task<StringWithBool> CreateAsync(CreateSupplierViewModel createSupplierViewModel, ModelStateDictionary ModelState, string UserID)
-        {
-            StringWithBool stringWithBool = new StringWithBool();
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    foreach (var ms in ModelState.ToArray())
-                    {
-                        if (ms.Key.StartsWith("VendorContact"))
-                        {
-                            ModelState.Remove(ms.Key);
-                        }
-                    }
-                    var context = new ValidationContext(createSupplierViewModel.Vendor, null, null);
-                    var results = new List<ValidationResult>();
-
-                    if (Validator.TryValidateObject(createSupplierViewModel.Vendor, context, results, true))
-                    {
-                        _context.Add(createSupplierViewModel.Vendor);
-                        await _context.SaveChangesAsync();
-                        foreach (var type in createSupplierViewModel.VendorCategoryTypes)
-                        {
-                            await _vendorCategoryTypesProc.CreateWithoutSavingAsync(createSupplierViewModel.Vendor.VendorID, type);
-                        }
-                        //update and add contacts
-                        foreach (var vendorContact in createSupplierViewModel.VendorContacts.Where(vc => !vc.Delete))
-                        {
-                            vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
-                            _context.Update(vendorContact.VendorContact);
-
-                        }
-                        if (createSupplierViewModel.Comments != null)
-                        {
-                            foreach (var vendorComment in createSupplierViewModel.Comments)
-                            {
-                                vendorComment.ObjectID = createSupplierViewModel.Vendor.VendorID;
-                                vendorComment.ApplicationUserID = UserID;
-                                vendorComment.CommentTimeStamp = DateTime.Now;
-                                _context.Add(vendorComment);
-                            }
-                        }
-                        await _context.SaveChangesAsync();
-                        await transaction.CommitAsync();
-
-                    }
-                    else
-                    {
-                        stringWithBool.Bool = true;
-                        stringWithBool.String = "Model State Invalid";
-                        throw new ModelStateInvalidException();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-
-                    stringWithBool.Bool = true;
-                    stringWithBool.String = AppUtility.GetExceptionMessage(ex);
-
-                }
-            }
-            return stringWithBool;
-        }
-
-        public async Task<StringWithBool> UpdateAsync(CreateSupplierViewModel createSupplierViewModel, ModelStateDictionary ModelState)
+        public async Task<StringWithBool> UpdateAsync(CreateSupplierViewModel createSupplierViewModel, ModelStateDictionary ModelState, string UserID)
         {
             StringWithBool ReturnVal = new StringWithBool();
             using (var transaction = _context.Database.BeginTransaction())
@@ -201,20 +136,28 @@ namespace PrototypeWithAuth.CRUD
 
                     if (Validator.TryValidateObject(createSupplierViewModel.Vendor, context, results, true))
                     {
-                        _context.Update(createSupplierViewModel.Vendor);
-                        _context.SaveChanges();
+                        if (createSupplierViewModel.Vendor.VendorID==0)
+                        {
+                            _context.Add(createSupplierViewModel.Vendor);
+                        }
+                        else
+                        {
+                            _context.Update(createSupplierViewModel.Vendor);                    
+                        }
+                        await _context.SaveChangesAsync();
                         var vendor = await
                             _context.Vendors.Where(v => v.VendorID == createSupplierViewModel.Vendor.VendorID).Include(v => v.VendorCategoryTypes).FirstOrDefaultAsync();
                         if (vendor.VendorCategoryTypes.Count() > 0)
                         {
                             foreach (var type in createSupplierViewModel.Vendor.VendorCategoryTypes)
                             {
+                                //need proc?
                                 _context.Remove(type);
                             }
                         }
                         foreach (var type in createSupplierViewModel.VendorCategoryTypes)
                         {
-                            _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = type });
+                            await _vendorCategoryTypesProc.CreateWithoutSavingAsync(createSupplierViewModel.Vendor.VendorID, type);
                         }
                        
                         foreach (var vendorContact in createSupplierViewModel.VendorContacts)
@@ -222,18 +165,19 @@ namespace PrototypeWithAuth.CRUD
                             if (vendorContact.Delete && vendorContact.VendorContact.VendorContactID != 0)
                             {
                                 var dvc = _context.VendorContacts.Where(vc => vc.VendorContactID == vendorContact.VendorContact.VendorContactID).FirstOrDefault();
+                                //need proc?
                                 _context.Remove(dvc);
                             }
                             else if (!vendorContact.Delete)
                             {
                                 vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
+                                //need proc?
                                 _context.Update(vendorContact.VendorContact);
                             }
 
                         }
                         if (createSupplierViewModel.Comments != null)
                         {
-                            {
                                 foreach (var vendorComment in createSupplierViewModel.Comments)
                                 {
                                     if (!vendorComment.IsDeleted)
@@ -241,12 +185,14 @@ namespace PrototypeWithAuth.CRUD
                                         vendorComment.ObjectID = createSupplierViewModel.Vendor.VendorID;
                                         if (vendorComment.CommentID == 0)
                                         {
+                                            vendorComment.ApplicationUserID = UserID;
                                             vendorComment.CommentTimeStamp = DateTime.Now;
-                                            _context.Update(vendorComment);
+                                            //need proc?
+                                            _context.Add(vendorComment);
                                         }
                                         else
-                                        {
-                                            _context.Add(vendorComment);
+                                        {    //need proc?
+                                            _context.Update(vendorComment);
                                         }
                                     }
                                     else
@@ -255,13 +201,13 @@ namespace PrototypeWithAuth.CRUD
                                         if (vendorCommentDB != null)
                                         {
                                             vendorCommentDB.IsDeleted = true;
+                                            //need proc?
                                             _context.Update(vendorCommentDB);
                                         }
                                     }
-                                }
-                            }
+                                }                            
                         }
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
                         await transaction.CommitAsync();
                         ReturnVal.Bool = true;
                     }
@@ -282,7 +228,7 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        public async Task<StringWithBool> Delete(int VendorID)
+        public async Task<StringWithBool> DeleteAsync(int VendorID)
         {
             StringWithBool ReturnVal = new StringWithBool();
             if (_context.Products.Where(p => p.VendorID == VendorID).Any())
@@ -297,6 +243,7 @@ namespace PrototypeWithAuth.CRUD
                     {
                         foreach (var vendorComment in _context.VendorComments.Where(vc => vc.ObjectID == VendorID))
                         {
+                            //need proc?
                             _context.Remove(vendorComment);
                         }
                         await _context.SaveChangesAsync();
@@ -304,6 +251,7 @@ namespace PrototypeWithAuth.CRUD
                         {
                             foreach (var vendorContact in _context.VendorContacts.Where(vc => vc.VendorID == VendorID))
                             {
+                                //need proc?
                                 _context.Remove(vendorContact);
                             }
                             await _context.SaveChangesAsync();
@@ -311,6 +259,7 @@ namespace PrototypeWithAuth.CRUD
                             {
                                 foreach (var vendorCT in _context.Vendors.Where(vc => vc.VendorID == VendorID).Select(v => v.VendorCategoryTypes))
                                 {
+                                    //need proc?
                                     _context.Remove(vendorCT);
                                 }
                                 await _context.SaveChangesAsync();

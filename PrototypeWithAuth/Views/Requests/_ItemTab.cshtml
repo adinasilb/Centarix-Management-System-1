@@ -470,7 +470,7 @@ else //isProprietary
 
     $(".open-vendor-float-details").on("click", function (e) {
         e.preventDefault();
-        var vendorID = $(this).attr("value");
+        var vendorID = $("select.vendorList").val();
         $.ajax({
             async: true,
             url: "/Requests/VendorFloatDetails?vendorID=" + vendorID+"&SectionType="+$("#masterSectionType").val(),

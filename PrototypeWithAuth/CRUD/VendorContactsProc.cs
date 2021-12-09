@@ -30,7 +30,7 @@ namespace PrototypeWithAuth.CRUD
             return await _context.VendorContacts.Where(vc => vc.VendorContactID == VendorContactID).AsNoTracking().FirstOrDefaultAsync();
         }
 
-        public IQueryable<VendorContactWithDeleteViewModel> ReadAsVendorContactWithDeleteByVendorID(int id)
+        public IQueryable<VendorContactWithDeleteViewModel> ReadAsVendorContactWithDeleteByVendorIDAsync(int id)
         {
             return _context.VendorContacts
                 .Where(vc => vc.VendorID == id)
