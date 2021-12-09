@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PrototypeWithAuth.Models
 {
-    public class ProtocolType
+    public class ProtocolType : ModelBase
     {
         [Key]
         public int ProtocolTypeID { get; set; }

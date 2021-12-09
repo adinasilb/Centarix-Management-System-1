@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class ProtocolInstance
+    public class ProtocolInstance : ModelBase
     {
         [Key]
         public int ProtocolInstanceID { get; set; }

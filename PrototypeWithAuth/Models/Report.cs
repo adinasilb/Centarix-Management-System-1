@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Report
+    public class Report : ModelBase
     {
         [Key]
         public int ReportID { get; set; }

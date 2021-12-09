@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public abstract class ShareBase
+    public abstract class ShareBase : ModelBase
     {
         [Key]
         public int ShareID { get; set; }

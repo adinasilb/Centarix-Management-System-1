@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Tag
+    public class Tag : ModelBase
     {
         [Key]
         public int TagID { get; set; }

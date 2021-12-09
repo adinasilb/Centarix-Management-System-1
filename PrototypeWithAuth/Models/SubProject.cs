@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrototypeWithAuth.Models
 {
-    public class SubProject
+    public class SubProject : ModelBase
     {
         [Key]
         public int SubProjectID { get; set; }

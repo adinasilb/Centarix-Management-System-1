@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Payment
+    public class Payment : ModelBase
     {
         [Key]
         public int PaymentID { get; set; }

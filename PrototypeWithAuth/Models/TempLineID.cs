@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class TempLineID
+    public class TempLineID : ModelBase
     {
         [Key]
         public int ID { get; set; }

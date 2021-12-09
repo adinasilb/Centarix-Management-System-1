@@ -11,7 +11,7 @@ using System.ComponentModel;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Request //WHEN YOU RETURN REQUEST MAY WANT TO DO A SELECT SO IT DOESN"T ALWAYS NEED TO CALCULATE THE DATE PAID
+    public class Request : ModelBase //WHEN YOU RETURN REQUEST MAY WANT TO DO A SELECT SO IT DOESN"T ALWAYS NEED TO CALCULATE THE DATE PAID
     {
         //IMPT: When adding in data validation make sure that you turn data-val off in the search
         [Key]

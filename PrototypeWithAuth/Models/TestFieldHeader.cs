@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class TestFieldHeader
+    public class TestFieldHeader : ModelBase
     {
         public TestFieldHeader()
         {

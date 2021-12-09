@@ -8,7 +8,7 @@ using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Vendor
+    public class Vendor : ModelBase
     {
         [Key]
         [Display(Name = "No")]

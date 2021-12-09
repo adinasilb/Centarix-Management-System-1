@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Timepoint
+    public class Timepoint : ModelBase
     {
         [Key]
         public int TimepointID { get; set; }

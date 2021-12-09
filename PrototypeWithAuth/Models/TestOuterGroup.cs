@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class TestOuterGroup
+    public class TestOuterGroup : ModelBase
     {
         [Key]
         public int TestOuterGroupID { get; set; }
