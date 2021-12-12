@@ -22,33 +22,16 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public IQueryable<Request> ReadWithRequestsLocationInsances(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
+        public override IQueryable<Request> Read(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
         {
-            var requests = _context.Requests.Where(r => !r.IsDeleted)
-          .AsQueryable();
-            if (wheres != null)
-            {
-                foreach (var t in wheres)
-                {
-                    requests = requests.Where(t);
-                }
-            }
-            IIncludableQueryable<Request, ModelBase> requestsWithInclude = null;
-            if (includes != null)
-            {
-                foreach (var t in includes)
-                {
-                    requestsWithInclude = requests.Include(t.Include);
-                    if (t.ThenInclude !=null)
-                    {
-                        RecursiveInclude(requestsWithInclude, t.ThenInclude);
-                    }
-
-                }
-            }
-            return requestsWithInclude.AsNoTracking().AsQueryable();
+            return base.Read(wheres, includes);
         }
-      
-    }  
+
+        public override IQueryable<Request> ReadWithIgnoreQueryFilters(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
+        {
+            wheres.Add(r => !r.IsDeleted);
+            return base.ReadWithIgnoreQueryFilters(wheres, includes).IgnoreQueryFilters();
+        }
+    }
 
 }

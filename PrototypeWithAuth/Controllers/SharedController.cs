@@ -946,7 +946,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
             ApplySearchToRequestList(requestsSearchViewModel, wheres);
-            var RequestPassedInWithInclude = _requestsProc.ReadWithRequestsLocationInsances(wheres, includes);
+            var RequestPassedInWithInclude = _requestsProc.ReadWithIgnoreQueryFilters(wheres, includes);
 
             onePageOfProducts = await GetColumnsAndRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude);
 

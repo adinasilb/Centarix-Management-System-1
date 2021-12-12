@@ -8,10 +8,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Linq.Expressions;
+
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class ApplicationDbContextProc<T> where T:ModelBase
+    public abstract class ApplicationDbContextProc<T> where T: class , ModelBase
     {
         protected readonly ApplicationDbContext _context;
         protected readonly UserManager<ApplicationUser> _userManager;
@@ -64,7 +66,37 @@ namespace PrototypeWithAuth.CRUD
         //}
 
 
-        public IIncludableQueryable<ModelBase, ModelBase> RecursiveInclude(IIncludableQueryable<ModelBase, ModelBase> ObjectQueryable, ComplexIncludes<ModelBase, ModelBase> currentInclude)
+        public virtual IQueryable<T> Read(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
+        {
+            var dbset = _context.Set<T>().AsQueryable();
+            if (wheres != null)
+            {
+                foreach (var t in wheres)
+                {
+                    dbset = dbset.Where(t);
+                }
+            }
+            IIncludableQueryable<T, ModelBase> requestsWithInclude = null;
+            if (includes != null)
+            {
+                foreach (var t in includes)
+                {
+                    requestsWithInclude = dbset.Include(t.Include);
+                    if (t.ThenInclude !=null)
+                    {
+                        RecursiveInclude(requestsWithInclude, t.ThenInclude);
+                    }
+
+                }
+            }
+            return requestsWithInclude.AsNoTracking().AsQueryable();
+        }
+
+        public virtual IQueryable<T> ReadWithIgnoreQueryFilters(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
+        {
+            return Read(wheres, includes).IgnoreQueryFilters();
+        }
+        public virtual IIncludableQueryable<ModelBase, ModelBase> RecursiveInclude(IIncludableQueryable<ModelBase, ModelBase> ObjectQueryable, ComplexIncludes<ModelBase, ModelBase> currentInclude)
         {
             ObjectQueryable = ObjectQueryable.ThenInclude(currentInclude.Include);
             if (currentInclude.ThenInclude != null)
