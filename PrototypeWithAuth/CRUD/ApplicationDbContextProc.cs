@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
-
+using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.CRUD
 {
@@ -92,11 +92,38 @@ namespace PrototypeWithAuth.CRUD
             return requestsWithInclude.AsNoTracking().AsQueryable();
         }
 
+        public virtual async Task<T> ReadOne(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
+        {
+            var dbset = _context.Set<T>().AsQueryable();
+            if (wheres != null)
+            {
+                foreach (var t in wheres)
+                {
+                    dbset = dbset.Where(t);
+                }
+            }
+            var item = dbset.Take(1);
+            IIncludableQueryable<T, ModelBase> requestWithInclude = null;
+            if (includes != null)
+            {
+                foreach (var t in includes)
+                {
+                    requestWithInclude = item.Include(t.Include);
+                    if (t.ThenInclude !=null)
+                    {
+                        RecursiveInclude(requestWithInclude, t.ThenInclude);
+                    }
+
+                }
+            }
+            return await requestWithInclude.AsNoTracking().FirstOrDefaultAsync();
+        }
+
         public virtual IQueryable<T> ReadWithIgnoreQueryFilters(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
         {
             return Read(wheres, includes).IgnoreQueryFilters();
         }
-        public virtual IIncludableQueryable<ModelBase, ModelBase> RecursiveInclude(IIncludableQueryable<ModelBase, ModelBase> ObjectQueryable, ComplexIncludes<ModelBase, ModelBase> currentInclude)
+        private IIncludableQueryable<ModelBase, ModelBase> RecursiveInclude(IIncludableQueryable<ModelBase, ModelBase> ObjectQueryable, ComplexIncludes<ModelBase, ModelBase> currentInclude)
         {
             ObjectQueryable = ObjectQueryable.ThenInclude(currentInclude.Include);
             if (currentInclude.ThenInclude != null)
@@ -104,6 +131,100 @@ namespace PrototypeWithAuth.CRUD
                 ObjectQueryable = RecursiveInclude(ObjectQueryable, currentInclude.ThenInclude);
             }
             return ObjectQueryable;
+        }
+
+        public virtual async Task<StringWithBool> UpdateWithSaveChangesAsync(T item)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                Update(item);
+                await _context.SaveChangesAsync();
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
+
+        protected virtual StringWithBool Update(T item)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                _context.Entry(item).State = EntityState.Modified;
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
+
+        public virtual async Task<StringWithBool> CreateWithSaveChangesAsync(T item)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                Create(item);
+                await _context.SaveChangesAsync();
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
+
+        public virtual StringWithBool Create(T item)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                _context.Entry(item).State = EntityState.Added;
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
+
+
+        public virtual async Task<StringWithBool> RemoveWithSaveChangesAsync(T item)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                Remove(item);
+                await _context.SaveChangesAsync();
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
+
+        protected virtual StringWithBool Remove(T item)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                _context.Entry(item).State = EntityState.Deleted;
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
         }
 
     }

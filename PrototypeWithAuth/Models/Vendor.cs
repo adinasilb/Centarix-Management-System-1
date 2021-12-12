@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Data;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Models
 {
@@ -99,11 +100,11 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Country")]
         public int CountryID { get; set; }
         public Country Country { get; set; }
-        public IEnumerable<VendorCategoryType> VendorCategoryTypes { get; set; }
-        public IEnumerable<Product> Products { get; set; }
+        public ListImplementsModelBase<VendorCategoryType> VendorCategoryTypes { get; set; }
+        public ListImplementsModelBase<Product> Products { get; set; }
 
-        public IEnumerable<VendorContact> VendorContacts { get; set; }
-        public IEnumerable<VendorComment> VendorComments { get; set; }
+        public ListImplementsModelBase<VendorContact> VendorContacts { get; set; }
+        public ListImplementsModelBase<VendorComment> VendorComments { get; set; }
 
 
 

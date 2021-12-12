@@ -186,7 +186,7 @@ namespace PrototypeWithAuth.CRUD
                         {
                             var employee = await _employeesProc.ReadEmployeeByIDAsync(employeeHour.EmployeeID);
                             employee.SpecialDays += 1;
-                            await _employeesProc.UpdateAsync(employee);
+                            await _employeesProc.UpdateWithSaveChangesAsync(employee);
                         }
 
                         newEmployeeHour = new EmployeeHours()
@@ -214,7 +214,7 @@ namespace PrototypeWithAuth.CRUD
                                 Controller = "Timekeeper",
                                 Action = "SummaryHours"
                             };
-                            await _timekeeperNotificationsProc.CreateAsync(newNotification);
+                            await _timekeeperNotificationsProc.CreateWithSaveChangesAsync(newNotification);
                         }
                     }
                     else
@@ -273,7 +273,7 @@ namespace PrototypeWithAuth.CRUD
                             {
                                 user.SpecialDays += 1;
                             }
-                            await _employeesProc.UpdateAsync(user);
+                            await _employeesProc.UpdateWithSaveChangesAsync(user);
                             if (employeeHour == null)
                             {
                                 employeeHour = new EmployeeHours
@@ -332,7 +332,7 @@ namespace PrototypeWithAuth.CRUD
                                     {
                                         user.SpecialDays += 1;
                                     }
-                                    await _employeesProc.UpdateAsync(user);
+                                    await _employeesProc.UpdateWithSaveChangesAsync(user);
                                     if (employeeHour == null)
                                     {
                                         employeeHour = new EmployeeHours

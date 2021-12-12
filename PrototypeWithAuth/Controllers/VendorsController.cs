@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Transactions;
 using Abp.Extensions;
@@ -57,7 +58,9 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Vendors;
             TempData["CategoryType"] = categoryType;
 
-            var vendors = _vendor.ReadByCategoryTypeID(categoryType);
+            var vendors = _vendor.Read(new List<Expression<Func<Vendor, bool>>> {
+                 v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryType).Count() > 0
+            });
             return View(vendors);
         }
 
@@ -139,7 +142,55 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Search(VendorSearchViewModel vendorSearchViewModel)
 
         {
-            var listfilteredVendors = _vendor.Read(vendorSearchViewModel);
+            List<Expression<Func<Vendor, bool>>> wheres = new List<Expression<Func<Vendor, bool>>>();
+            List<int> orderedVendorCategoryTypes = new List<int>();
+            if (vendorSearchViewModel.VendorCategoryTypes != null)
+            {
+                orderedVendorCategoryTypes = vendorSearchViewModel.VendorCategoryTypes.OrderBy(e => e).ToList();
+            }
+            wheres.Add(fv => (String.IsNullOrEmpty(vendorSearchViewModel.VendorEnName) || fv.VendorEnName.ToLower().Contains(vendorSearchViewModel.VendorEnName.ToLower()))
+                &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorHeName) || fv.VendorHeName.ToLower().Contains(vendorSearchViewModel.VendorHeName.ToLower()))
+             &&
+             (String.IsNullOrEmpty(vendorSearchViewModel.VendorBuisnessID) || fv.VendorBuisnessID.ToLower().Contains(vendorSearchViewModel.VendorBuisnessID.ToLower()))
+             &&
+             (vendorSearchViewModel.CountryID == null || fv.CountryID.ToString().ToLower().Equals(vendorSearchViewModel.CountryID.ToLower()))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorCity) || fv.VendorCity.ToLower().Contains(vendorSearchViewModel.VendorCity.ToLower()))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorStreet) || fv.VendorStreet.ToLower().Contains(vendorSearchViewModel.VendorStreet.ToLower()))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorZip) || fv.VendorZip.ToLower().Contains(vendorSearchViewModel.VendorZip.ToLower()))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorTelephone) || fv.VendorTelephone.Contains(vendorSearchViewModel.VendorTelephone))
+              &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorCellPhone) || fv.VendorCellPhone.Contains(vendorSearchViewModel.VendorCellPhone))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorFax) || fv.VendorFax.Contains(vendorSearchViewModel.VendorFax))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.OrdersEmail) || fv.OrdersEmail.ToLower().Contains(vendorSearchViewModel.OrdersEmail.ToLower()))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.InfoEmail) || fv.InfoEmail.ToLower().Contains(vendorSearchViewModel.InfoEmail.ToLower()))
+            &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorWebsite) || fv.VendorWebsite.ToLower().Contains(vendorSearchViewModel.VendorWebsite.ToLower()))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorBank) || fv.VendorBank.ToLower().Contains(vendorSearchViewModel.VendorBank.ToLower()))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorBankBranch) || fv.VendorBankBranch.ToLower().Contains(vendorSearchViewModel.VendorBankBranch.ToLower()))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorAccountNum) || fv.VendorAccountNum.ToLower().Contains(vendorSearchViewModel.VendorAccountNum.ToLower()))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorSwift) || fv.VendorSwift.ToLower().Contains(vendorSearchViewModel.VendorSwift.ToLower()))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorBIC) || fv.VendorBIC.ToLower().Contains(vendorSearchViewModel.VendorBIC.ToLower()))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorGoldAccount) || fv.VendorGoldAccount.ToLower().Contains(vendorSearchViewModel.VendorGoldAccount.ToLower()))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorRoutingNum) || fv.VendorRoutingNum.ToLower().Contains(vendorSearchViewModel.VendorRoutingNum.ToLower())));
+
+            wheres.Add(fv => (orderedVendorCategoryTypes == null || orderedVendorCategoryTypes.All(fv.VendorCategoryTypes.Select(ct => ct.CategoryTypeID).Contains))); //if choose lab, will include vendors that have both lab and operations
+            
+            var listfilteredVendors = _vendor.Read(wheres, new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include = v=>v.VendorCategoryTypes} });
 
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = vendorSearchViewModel.SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
@@ -160,11 +211,13 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> SearchByVendorNameAndCompanyID(string vendorName, string companyID)
 
         {
+            List<Expression<Func<Vendor, bool>>> wheres = new List<Expression<Func<Vendor, bool>>>();
             IQueryable<Vendor> filteredVendors = _context.Vendors.AsQueryable();
-            var listfilteredVendors = await filteredVendors
-            .Where(fv => (String.IsNullOrEmpty(vendorName) || fv.VendorEnName.ToLower().Contains(vendorName.ToLower()))
+
+            wheres.Add(fv => (String.IsNullOrEmpty(vendorName) || fv.VendorEnName.ToLower().Contains(vendorName.ToLower()))
                 &&
-             (String.IsNullOrEmpty(companyID) || fv.VendorBuisnessID.ToLower().Contains(companyID.ToLower()))).ToListAsync();
+             (String.IsNullOrEmpty(companyID) || fv.VendorBuisnessID.ToLower().Contains(companyID.ToLower())));
+            var listfilteredVendors = _vendor.Read(wheres, new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include = v => v.VendorCategoryTypes } });
             return PartialView("_IndexForPayment", listfilteredVendors);
         }
 
@@ -282,7 +335,7 @@ namespace PrototypeWithAuth.Controllers
             }
             var createSupplierViewModel = new CreateSupplierViewModel()
             {
-                Vendor = await _vendor.ReadByVendorIDAsync(id)
+                Vendor = await _vendor.ReadOne(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == id })
             };
             return PartialView(createSupplierViewModel);
         }
@@ -312,98 +365,17 @@ namespace PrototypeWithAuth.Controllers
             }
             //PROC END
         }
-
-        // GET: Vendors/Delete/5
-        [Authorize(Roles = "Accounting, LabManagement")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var vendor = _vendor.ReadByVendorIDAsync(Convert.ToInt32(id));
-            if (vendor == null)
-            {
-                return NotFound();
-            }
-
-            return View(vendor);
-        }
-
-        // POST: Vendors/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Accounting, LabManagement")]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            //PROC START
-            _vendor.DeleteAsync(id);
-            //var vendor = _context.Vendors.Find(id);
-            //var contacts = _context.VendorContacts.Where(x => x.VendorID == id);
-            //using (var transaction = new TransactionScope())
-            //{
-            //    foreach (var contact in contacts)
-            //    {
-            //        //don't actually remove set a boolean
-            //        _context.Remove(contact);
-            //        _context.SaveChanges();
-            //    }
-            //    transaction.Complete();
-            //}
-            //var comments = _context.VendorComments.Where(x => x.VendorID == id);
-            //using (var transaction = new TransactionScope())
-            //{
-            //    foreach (var comment in comments)
-            //    {
-            //        _context.Remove(comment);
-            //        _context.SaveChanges();
-            //    }
-            //    transaction.Complete();
-            //}
-            //_context.Vendors.Remove(vendor);
-            //_context.SaveChanges();
-            //PROC END
-            //VENDO REDO START
-            var vendor = _context.Vendors.Find(id);
-            var contacts = _context.VendorContacts.Where(x => x.VendorID == id);
-            using (var transaction = new TransactionScope())
-            {
-                foreach (var contact in contacts)
-                {
-                    //don't actually remove set a boolean
-                    _context.Remove(contact);
-                    _context.SaveChanges();
-                }
-                transaction.Complete();
-            }
-            var comments = _context.VendorComments.Where(x => x.ObjectID == id);
-            using (var transaction = new TransactionScope())
-            {
-                foreach (var comment in comments)
-                {
-                    _context.Remove(comment);
-                    _context.SaveChanges();
-                }
-                transaction.Complete();
-            }
-            _context.Vendors.Remove(vendor);
-            _context.SaveChanges();
-            //VENDOR REDO END
-            return RedirectToAction(nameof(IndexForPayment));
-        }
-
+      
         [Authorize(Roles = "Accounting")]
         private async Task<bool> VendorExists(int id)
         {
-            return await _vendor.ReadByVendorIDAsync(id) != null ? true : false;
+            return await _vendor.ReadOne(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == id }) != null ? true : false;
         }
 
-        //Get the Json of the vendor business id from the vendor id so JS (site.js) can auto load the form-control with the newly requested vendor
         [HttpGet]
         public async  Task<JsonResult> GetVendorBusinessID(int VendorID)
         {
-            Vendor vendor = await  _vendor.ReadByVendorIDAsync(VendorID);
+            Vendor vendor = await _vendor.ReadOne(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == VendorID });
             return Json(vendor);
         }
       
@@ -421,26 +393,35 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        public bool CheckUniqueCompanyIDAndCountry(string CompanyID, int CountryID, int? VendorID = null)
+        public async Task<bool> CheckUniqueCompanyIDAndCountry(string CompanyID, int? CountryID, int? VendorID = null)
         {
-            //validation for the create
-            if (CompanyID != null && CountryID != null && VendorID == null && 
-                _vendor.ReadByVendorBusinessIDCountryID(CompanyID, CountryID) != null)
+            Vendor vendor = null; 
+            if (CompanyID != null && CountryID != null && VendorID == null)
             {
-                return false;
+                vendor =await _vendor.ReadOne(new List<Expression<Func<Vendor, bool>>> { v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID == CountryID });
+                if(vendor !=null)
+                {
+                    return false; 
+                }                
             }
-            //validation for the edit
-            if (VendorID != null && 
-                _vendor.ReadByVendorBusinessIDCountryIDVendorID(CompanyID, CountryID, Convert.ToInt32(VendorID)) != null)
+            if (VendorID != null)
             {
-                return false;
+                vendor = await _vendor.ReadOne(new List<Expression<Func<Vendor, bool>>> { v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID == CountryID && v.VendorID ==VendorID });
+                if (vendor !=null)
+                {
+                    return false;
+                }
             }
             return true;
         }
 
         public async Task<string> GetVendorCountryCurrencyIDAsync(int VendorID)
         {
-            var vendor = await _vendor.ReadByVendorIDAsync(VendorID, new List<System.Linq.Expressions.Expression<Func<Vendor, object>>> { v => v.Country });
+            var vendor = await _vendor.ReadOne(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == VendorID },
+                new List<ComplexIncludes<Vendor, ModelBase>> {
+                    new ComplexIncludes<Vendor, ModelBase>{ Include = v => v.Country }
+                }
+            );
             return vendor.Country.CurrencyID.ToString();
         }
     }

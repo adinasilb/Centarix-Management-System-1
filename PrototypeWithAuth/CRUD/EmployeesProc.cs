@@ -53,22 +53,6 @@ namespace PrototypeWithAuth.CRUD
             return _context.Employees.Where(u => u.LastLogin.Date == DateTime.Today.Date).AsNoTracking().AsQueryable();
         }
      
-        public async Task<StringWithBool> UpdateAsync(Employee employee)
-        {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
-            {
-                _context.Update(employee);
-                await _context.SaveChangesAsync();
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-            }
-            return ReturnVal;
-        }
-
         public async Task<double> GetDaysOffCountByUserOffTypeIDYearAsync(Employee User, int OffDayTypeID, int thisYear)
         {
             double offDaysLeft = 0;

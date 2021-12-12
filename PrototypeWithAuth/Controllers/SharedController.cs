@@ -1529,7 +1529,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        protected async Task<IActionResult> _CommentInfoPartialView(int typeID, int index)
+        protected virtual async Task<IActionResult> _CommentInfoPartialView(int typeID, int index)
         {
 
             CommentsInfoViewModel commentsInfoViewModel = GetCommentInfoViewModel(typeID, index);
@@ -1539,7 +1539,7 @@ namespace PrototypeWithAuth.Controllers
         private CommentsInfoViewModel GetCommentInfoViewModel(int typeID, int index)
         {
             CommentBase comment = new CommentBase();
-            comment.ApplicationUser = _userManager.GetUserAsync(User).Result;
+            comment.ApplicationUser = _context.Employees.Where(e => e.Id ==_userManager.GetUserId(User)).FirstOrDefault();
             comment.ApplicationUserID = comment.ApplicationUser.Id;
             comment.CommentTypeID = typeID;
             comment.CommentType = _context.CommentTypes.Where(ct => ct.TypeID ==typeID).FirstOrDefault();
@@ -1574,8 +1574,15 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                createSupplierViewModel.Comments = await _vendorComment.ReadByVendorID(VendorID,  new List<System.Linq.Expressions.Expression<Func<VendorComment, object>>> { c => c.ApplicationUser, c => c.CommentType }).Where(c => c.ObjectID == VendorID).ToListAsync();
-                createSupplierViewModel.Vendor = await _vendor.ReadByVendorIDAsync(VendorID, new List<System.Linq.Expressions.Expression<Func<Vendor, object>>> { v => v.VendorCategoryTypes  });
+                 createSupplierViewModel.Vendor = await _vendor.ReadOne(
+                    new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == VendorID },
+                    new List<ComplexIncludes<Vendor, ModelBase>> { 
+                            new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorCategoryTypes },
+                            new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorComments, ThenInclude  = new ComplexIncludes<ModelBase, ModelBase>{ Include = c=>((VendorComment)c).CommentType } },
+                            new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorComments, ThenInclude  = new ComplexIncludes<ModelBase, ModelBase>{ Include = c=>((VendorComment)c).ApplicationUser } }
+                    });
+                createSupplierViewModel.Comments = createSupplierViewModel.Vendor.VendorComments;
+
                 createSupplierViewModel.VendorContacts = await _vendorContact.ReadAsVendorContactWithDeleteByVendorIDAsync(VendorID).ToListAsync();
 
                 createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();

@@ -22,22 +22,7 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public async Task<StringWithBool> CreateAsync(TimekeeperNotification timekeeperNotification)
-        {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
-            {
-                _context.Add(timekeeperNotification);
-                await _context.SaveChangesAsync();
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-            }
-            return ReturnVal;
-        }
-
+      
         public IQueryable<TimekeeperNotification> ReadByUserID(string UserID, List<Expression<Func<TimekeeperNotification, object>>> includes = null)
         {
             var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == UserID);
