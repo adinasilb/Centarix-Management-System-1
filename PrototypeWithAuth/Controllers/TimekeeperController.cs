@@ -60,7 +60,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
             }
-            var notifications = _timekeeperNotificationsProc.ReadByUserID(userid, new List<Expression<Func<TimekeeperNotification, object>>> { n=>n.EmployeeHours}).OrderByDescending(n => n.EmployeeHours.Date).Take(20).ToList();
+            var notifications = _timekeeperNotificationsProc.Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.ApplicationUserID == userid }).OrderByDescending(n => n.EmployeeHours.Date).Take(20).ToList();
 
             entryExitViewModel.TimekeeperNotifications = notifications;
             if (errorMessage != null)
@@ -593,7 +593,7 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            var success = await _timekeeperNotificationsProc.DeleteByPKAsync(id);
+            var success = await _timekeeperNotificationsProc.RemoveWithSaveChangesAsync(await _timekeeperNotificationsProc.ReadOne(new List<Expression<Func<TimekeeperNotification, bool>>> { tn=>tn.NotificationID == id}));
             if (success.Bool)
             {
                 return RedirectToAction("ReportHours");

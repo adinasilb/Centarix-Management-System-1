@@ -171,7 +171,7 @@ namespace PrototypeWithAuth.CRUD
             StringWithBool ReturnVal = new StringWithBool();
 
             var employeeHoursID = deleteHourViewModel.EmployeeHour.EmployeeHoursID;
-            var notifications = _timekeeperNotificationsProc.ReadByEHID(employeeHoursID);
+            var notifications = _timekeeperNotificationsProc.Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == employeeHoursID });
             var dayoff = await _companyDaysOffProc.ReadOneByDateAsync(deleteHourViewModel.EmployeeHour.Date);
             var anotherEmployeeHourWithSameDate = await ReadDoubledAsync(deleteHourViewModel.EmployeeHour.Date, deleteHourViewModel.EmployeeHour.EmployeeID, deleteHourViewModel.EmployeeHour.EmployeeHoursID);
             var employeeHour = await ReadOneByPKAsync(deleteHourViewModel.EmployeeHour.EmployeeHoursID, new List<Expression<Func<EmployeeHours, object>>> { eh => eh.OffDayType });
@@ -219,7 +219,7 @@ namespace PrototypeWithAuth.CRUD
                     }
                     else
                     {
-                        _timekeeperNotificationsProc.DeleteWithoutSaving(notifications);
+                        _timekeeperNotificationsProc.Remove(notifications);
                         await _context.SaveChangesAsync();
 
                         _context.Remove(employeeHour);
@@ -292,7 +292,7 @@ namespace PrototypeWithAuth.CRUD
                                 }
                                 else
                                 {
-                                    _timekeeperNotificationsProc.DeleteWithoutSaving( _timekeeperNotificationsProc.ReadByEHID(employeeHour.EmployeeHoursID) );
+                                    _timekeeperNotificationsProc.Remove( _timekeeperNotificationsProc.Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == employeeHour.EmployeeHoursID }) );
                                     _context.SaveChanges();
                                     //RemoveNotifications(employeeHour.EmployeeHoursID);
                                 }
@@ -350,7 +350,7 @@ namespace PrototypeWithAuth.CRUD
                                         }
                                         else
                                         {
-                                            _timekeeperNotificationsProc.DeleteWithoutSaving(new List<TimekeeperNotification>() { await _timekeeperNotificationsProc.ReadByPKAsync(employeeHour.EmployeeHoursID) });
+                                            _timekeeperNotificationsProc.Remove(new List<TimekeeperNotification>() { await _timekeeperNotificationsProc.ReadOne(new List<Expression<Func<TimekeeperNotification, bool>>> { tn => tn.EmployeeHoursID ==employeeHour.EmployeeHoursID }) });
                                             _context.SaveChanges();
                                             //_timekeeperNotificationsProc.DeleteByEHID(employeeHour.EmployeeHoursID);
                                         }
@@ -496,7 +496,7 @@ namespace PrototypeWithAuth.CRUD
                     _context.Update(ehaa);
                     await _context.SaveChangesAsync();
 
-                    var notifications = _timekeeperNotificationsProc.ReadByEHID(updateHoursViewModel.EmployeeHour.EmployeeHoursID);
+                    var notifications = _timekeeperNotificationsProc.Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == updateHoursViewModel.EmployeeHour.EmployeeHoursID });
 
                     foreach (var notification in notifications)
                     {

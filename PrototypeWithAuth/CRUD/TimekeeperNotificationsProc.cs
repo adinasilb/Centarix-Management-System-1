@@ -22,31 +22,6 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-      
-        public IQueryable<TimekeeperNotification> ReadByUserID(string UserID, List<Expression<Func<TimekeeperNotification, object>>> includes = null)
-        {
-            var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == UserID);
-            if (includes != null)
-            {
-                foreach (var t in includes)
-                {
-                    notifications = notifications.Include(t);
-                }
-            }
-            return notifications.AsNoTracking().AsQueryable();
- 
-        }
-
-        public IQueryable<TimekeeperNotification> ReadByEHID(int EHID)
-        {
-            return _context.TimekeeperNotifications.Where(n => n.EmployeeHoursID == EHID).AsNoTracking().AsQueryable();
-        }
-
-        public async Task<TimekeeperNotification> ReadByPKAsync(int? ID)
-        {
-            return await _context.TimekeeperNotifications.Where(tn => tn.NotificationID == ID).FirstOrDefaultAsync();
-        }
-
         public async Task<StringWithBool> DeleteByEHIDAsync(int EHID)
         {
             StringWithBool ReturnVal = new StringWithBool();
@@ -54,8 +29,8 @@ namespace PrototypeWithAuth.CRUD
             {
                 try
                 {
-                    var notifications = this.ReadByEHID(EHID);
-                    DeleteWithoutSaving(notifications);
+                    var notifications = Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == EHID });
+                    Remove(notifications);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
@@ -68,15 +43,14 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        public async Task<StringWithBool> DeleteByPKAsync(int? ID)
+        public override async Task<StringWithBool> RemoveWithSaveChangesAsync(TimekeeperNotification notification)
         {
             StringWithBool ReturnVal = new StringWithBool();
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    var notifications = new List<TimekeeperNotification>() {  await ReadByPKAsync(ID) };
-                    DeleteWithoutSaving(notifications);
+                    Remove(notification);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                     ReturnVal.SetStringAndBool(true, null);
@@ -90,22 +64,5 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        public StringWithBool DeleteWithoutSaving(IEnumerable<TimekeeperNotification> notifications)
-        {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
-            {
-                foreach (TimekeeperNotification n in notifications)
-                {
-                    _context.Remove(n);
-                }
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-            }
-            return ReturnVal;
-        }
     }
 }

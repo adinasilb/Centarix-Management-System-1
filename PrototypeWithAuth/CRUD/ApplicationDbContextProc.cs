@@ -213,12 +213,31 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        protected virtual StringWithBool Remove(T item)
+        public virtual StringWithBool Remove(T item)
         {
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
                 _context.Entry(item).State = EntityState.Deleted;
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
+
+
+        public StringWithBool Remove(IEnumerable<T> items)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                foreach (var n in items)
+                {
+                    _context.Remove(n);
+                }
                 ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)
