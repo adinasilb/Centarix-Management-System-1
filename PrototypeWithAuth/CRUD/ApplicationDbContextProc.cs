@@ -150,7 +150,7 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        protected virtual StringWithBool Update(T item)
+        public virtual StringWithBool Update(T item)
         {
             StringWithBool ReturnVal = new StringWithBool();
             try

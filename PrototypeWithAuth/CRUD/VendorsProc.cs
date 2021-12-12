@@ -26,7 +26,7 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        public async Task<StringWithBool> UpdateAsync(CreateSupplierViewModel createSupplierViewModel, ModelStateDictionary ModelState, string UserID)
+        public async Task<StringWithBool> UpdateWithSaveChangesAsync(CreateSupplierViewModel createSupplierViewModel, string UserID)
         {
             StringWithBool ReturnVal = new StringWithBool();
             using (var transaction = _context.Database.BeginTransaction())
@@ -40,21 +40,20 @@ namespace PrototypeWithAuth.CRUD
                     {
                         if (createSupplierViewModel.Vendor.VendorID==0)
                         {
-                            await CreateWithSaveChangesAsync(createSupplierViewModel.Vendor);
+                            Create(createSupplierViewModel.Vendor);
                         }
                         else
                         {
-                            await UpdateWithSaveChangesAsync(createSupplierViewModel.Vendor);
+                            Update(createSupplierViewModel.Vendor);
                         }
                         await _context.SaveChangesAsync();
-                        var vendor = await
-                            _context.Vendors.Where(v => v.VendorID == createSupplierViewModel.Vendor.VendorID).Include(v => v.VendorCategoryTypes).FirstOrDefaultAsync();
+                        var vendor = await ReadOne(new List<Expression<Func<Vendor, bool>>> { v=>v.VendorID == createSupplierViewModel.Vendor.VendorID }, 
+                            new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include= v => v.VendorCategoryTypes } } );
                         if (vendor.VendorCategoryTypes.Count() > 0)
                         {
                             foreach (var type in createSupplierViewModel.Vendor.VendorCategoryTypes)
                             {
-                                //need proc?
-                                _context.Remove(type);
+                                _vendorCategoryTypesProc.Remove(type);
                             }
                         }
                         foreach (var type in createSupplierViewModel.VendorCategoryTypes)
@@ -68,17 +67,14 @@ namespace PrototypeWithAuth.CRUD
                         {
                             if (vendorContact.Delete && vendorContact.VendorContact.VendorContactID != 0)
                             {
-                                var dvc = _context.VendorContacts.Where(vc => vc.VendorContactID == vendorContact.VendorContact.VendorContactID).FirstOrDefault();
-                                //need proc?
-                                _context.Remove(dvc);
+                                var dvc = await _vendorContactsProc.ReadOne(new List<Expression<Func<VendorContact, bool>>> { vc => vc.VendorContactID == vendorContact.VendorContact.VendorContactID });
+                                _vendorContactsProc.Remove(dvc);
                             }
                             else if (!vendorContact.Delete)
                             {
                                 vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
-                                //need proc?
-                                _context.Update(vendorContact.VendorContact);
+                                _vendorContactsProc.Update(vendorContact.VendorContact);
                             }
-
                         }
                         if (createSupplierViewModel.Comments != null)
                         {
@@ -91,11 +87,10 @@ namespace PrototypeWithAuth.CRUD
                                     {
                                         vendorComment.ApplicationUserID = UserID;
                                         vendorComment.CommentTimeStamp = DateTime.Now;
-                                        //need proc?
                                         _context.Add(vendorComment);
                                     }
                                     else
-                                    {    //need proc?
+                                    {    
                                         _context.Update(vendorComment);
                                     }
                                 }
@@ -105,8 +100,7 @@ namespace PrototypeWithAuth.CRUD
                                     if (vendorCommentDB != null)
                                     {
                                         vendorCommentDB.IsDeleted = true;
-                                        //need proc?
-                                        _context.Update(vendorCommentDB);
+                                        _vendorCommentsProc.Update(vendorCommentDB);
                                     }
                                 }
                             }
@@ -132,10 +126,6 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        public override async Task<StringWithBool> UpdateWithSaveChangesAsync(Vendor vendor)
-        {
-            return await base.UpdateWithSaveChangesAsync(vendor);
-        }
     }
 
 

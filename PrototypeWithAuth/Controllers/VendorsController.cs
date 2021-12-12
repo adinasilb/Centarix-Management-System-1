@@ -274,7 +274,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Create(CreateSupplierViewModel createSupplierViewModel)
         {
             var userid = _userManager.GetUserAsync(User).Result.Id;
-            StringWithBool vendorCreated = await _vendor.UpdateAsync(createSupplierViewModel, ModelState, userid);
+            StringWithBool vendorCreated = await _vendor.UpdateWithSaveChangesAsync(createSupplierViewModel, userid);
             if (vendorCreated.Bool)
             {
                 return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
@@ -349,7 +349,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Edit(CreateSupplierViewModel createSupplierViewModel)
         {
             //PROC START
-            var vendorUpdated = await _vendor.UpdateAsync(createSupplierViewModel, ModelState, _userManager.GetUserId(User));
+            var vendorUpdated = await _vendor.UpdateWithSaveChangesAsync(createSupplierViewModel, _userManager.GetUserId(User));
             if (vendorUpdated.Bool)
             {
                 return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
