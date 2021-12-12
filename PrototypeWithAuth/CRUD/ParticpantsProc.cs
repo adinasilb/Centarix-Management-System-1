@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class ParticipantsProc : 
+    public class ParticipantsProc 
     {
 
     }

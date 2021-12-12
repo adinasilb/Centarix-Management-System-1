@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using MimeKit.Cryptography;
 using PrototypeWithAuth.AppData;
 using System.ComponentModel;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Models
 {
@@ -22,7 +23,7 @@ namespace PrototypeWithAuth.Models
         public ParentRequest ParentRequest { get; set; }
         public string ApplicationUserCreatorID { get; set; }
         [ForeignKey("ApplicationUserCreatorID")]
-        public ApplicationUser ApplicationUserCreator { get; set; }
+        public Employee ApplicationUserCreator { get; set; }
         public int? SubProjectID { get; set; }
         public SubProject SubProject { get; set; }
 
@@ -172,7 +173,7 @@ namespace PrototypeWithAuth.Models
 
         [ForeignKey("ApplicationUserReceiverID")]
         public ApplicationUser ApplicationUserReceiver { get; set; }
-        public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
+        public ListImplementsModelBase<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public bool Ignore { get; set; }
         public bool IsReceived { get; set; }
         public bool IncludeVAT { get; set; }

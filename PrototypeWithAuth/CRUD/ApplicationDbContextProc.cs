@@ -7,10 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class ApplicationDbContextProc<T>
+    public class ApplicationDbContextProc<T> where T:ModelBase
     {
         protected readonly ApplicationDbContext _context;
         protected readonly UserManager<ApplicationUser> _userManager;
@@ -61,7 +62,15 @@ namespace PrototypeWithAuth.CRUD
         //}
 
 
- 
+        public IIncludableQueryable<ModelBase, ModelBase> RecursiveInclude(IIncludableQueryable<ModelBase, ModelBase> ObjectQueryable, ComplexIncludes<ModelBase, ModelBase> currentInclude)
+        {
+            ObjectQueryable = ObjectQueryable.ThenInclude(currentInclude.Include);
+            if (currentInclude.ThenInclude != null)
+            {
+                ObjectQueryable = RecursiveInclude(ObjectQueryable, currentInclude.ThenInclude);
+            }
+            return ObjectQueryable;
+        }
 
     }
 }

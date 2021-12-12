@@ -22,7 +22,7 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public IQueryable<Request> ReadWithRequestsLocationInsances(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request>> includes = null)
+        public IQueryable<Request> ReadWithRequestsLocationInsances(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
         {
             var requests = _context.Requests.Where(r => !r.IsDeleted)
           .AsQueryable();
@@ -33,7 +33,7 @@ namespace PrototypeWithAuth.CRUD
                     requests = requests.Where(t);
                 }
             }
-            IIncludableQueryable<Request, object> requestsWithInclude = null;
+            IIncludableQueryable<Request, ModelBase> requestsWithInclude = null;
             if (includes != null)
             {
                 foreach (var t in includes)
@@ -43,20 +43,12 @@ namespace PrototypeWithAuth.CRUD
                     {
                         RecursiveInclude(requestsWithInclude, t.ThenInclude);
                     }
-            
+
                 }
             }
             return requestsWithInclude.AsNoTracking().AsQueryable();
         }
-        public IIncludableQueryable<Request, object> RecursiveInclude(IIncludableQueryable<Request, object> ObjectQueryable, ComplexIncludes<object> currentInclude)
-        {
-            ObjectQueryable = ObjectQueryable.ThenInclude(currentInclude.Include);
-            if (currentInclude.ThenInclude != null)
-            {
-                ObjectQueryable = RecursiveInclude(ObjectQueryable, currentInclude.ThenInclude);
-            }
-            return ObjectQueryable;
-        }
+      
     }  
 
 }

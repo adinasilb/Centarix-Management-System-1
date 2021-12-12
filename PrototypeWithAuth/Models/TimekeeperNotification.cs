@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class TimekeeperNotification : Notification<TimekeeperNotificationStatus>
+    public class TimekeeperNotification : Notification<TimekeeperNotificationStatus>, ModelBase
     {
 
         public int EmployeeHoursID { get; set; }

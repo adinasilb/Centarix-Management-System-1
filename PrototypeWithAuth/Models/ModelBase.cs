@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class ModelBase
+    public interface ModelBase
     {
     }
 }

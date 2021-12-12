@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Employee : ApplicationUser
+    public class Employee : ApplicationUser, ModelBase
     {
         [Display(Name = "Started Working")]
         [DataType(DataType.Date)]
