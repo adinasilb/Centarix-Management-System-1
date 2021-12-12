@@ -25,16 +25,8 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public override IQueryable<Vendor> Read(List<Expression<Func<Vendor, bool>>> wheres = null, List<ComplexIncludes<Vendor, ModelBase>> includes = null)
-        {
-            return base.Read(wheres, includes);
-        }
-        public override async Task<Vendor> ReadOne(List<Expression<Func<Vendor, bool>>> wheres = null, List<ComplexIncludes<Vendor, ModelBase>> includes = null)
-        {
-            return await base.ReadOne(wheres, includes);
-        }
 
-        public  async Task<StringWithBool> UpdateAsync(CreateSupplierViewModel createSupplierViewModel, ModelStateDictionary ModelState, string UserID)
+        public async Task<StringWithBool> UpdateAsync(CreateSupplierViewModel createSupplierViewModel, ModelStateDictionary ModelState, string UserID)
         {
             StringWithBool ReturnVal = new StringWithBool();
             using (var transaction = _context.Database.BeginTransaction())
@@ -69,6 +61,8 @@ namespace PrototypeWithAuth.CRUD
                         {
                             _vendorCategoryTypesProc.Create(new VendorCategoryType { VendorID  = createSupplierViewModel.Vendor.VendorID, CategoryTypeID= type });
                         }
+
+                        
 
                         foreach (var vendorContact in createSupplierViewModel.VendorContacts)
                         {

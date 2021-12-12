@@ -88,8 +88,9 @@ namespace PrototypeWithAuth.CRUD
                     }
 
                 }
+                return requestsWithInclude.AsNoTracking().AsQueryable();
             }
-            return requestsWithInclude.AsNoTracking().AsQueryable();
+            return dbset.AsNoTracking().AsQueryable();
         }
 
         public virtual async Task<T> ReadOne(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)

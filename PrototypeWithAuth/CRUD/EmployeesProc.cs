@@ -22,18 +22,7 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public IQueryable<Employee> Read(List<Expression<Func<Employee, object>>> includes = null)
-        {
-            var employees = _context.Employees.AsQueryable();
-            if (includes !=null)
-            {
-                foreach (var t in includes)
-                {
-                    employees = employees.Include(t);
-                }
-            }
-            return _context.Employees.AsNoTracking();
-        }
+      
 
         public async Task<Employee> ReadEmployeeByIDAsync(string UserID, List<Expression<Func<Employee, object>>> includes = null)
         {
@@ -57,7 +46,7 @@ namespace PrototypeWithAuth.CRUD
         {
             double offDaysLeft = 0;
             var year = AppUtility.YearStartedTimeKeeper;
-
+         
             while (year <= thisYear)
             {
                 double vacationDays = 0;

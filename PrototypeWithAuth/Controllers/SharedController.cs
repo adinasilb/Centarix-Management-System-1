@@ -1543,7 +1543,7 @@ namespace PrototypeWithAuth.Controllers
             comment.ApplicationUserID = comment.ApplicationUser.Id;
             comment.CommentTypeID = typeID;
             comment.CommentType = _context.CommentTypes.Where(ct => ct.TypeID ==typeID).FirstOrDefault();
-            CommentsInfoViewModel commentsInfoViewModel = new CommentsInfoViewModel { Comment = comment, Index = index };
+            CommentsInfoViewModel commentsInfoViewModel = new CommentsInfoViewModel { Comment = comment, Index = index }; 
             return commentsInfoViewModel;
         }
 
