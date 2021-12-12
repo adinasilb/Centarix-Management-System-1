@@ -31,6 +31,7 @@ namespace PrototypeWithAuth.CRUD
         protected OffDayTypesProc _offDayTypesProc;
         protected CommentTypesProc _commentTypesProc;
         protected RequestsProc _requestsProc;
+        protected ParticipantsProc _participantsProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context)
         {
@@ -54,6 +55,7 @@ namespace PrototypeWithAuth.CRUD
             _offDayTypesProc = new OffDayTypesProc(_context, true);
             _commentTypesProc = new CommentTypesProc(_context, true);
             _requestsProc = new RequestsProc(_context, true);
+            _participantsProc = new ParticipantsProc(_context, true);
         }
 
         //public IQueryable<T> Read()
