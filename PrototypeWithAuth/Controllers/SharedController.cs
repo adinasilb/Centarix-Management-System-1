@@ -304,11 +304,11 @@ namespace PrototypeWithAuth.Controllers
                 }
                 string folderPath = Path.Combine(folder, folderName);
                 Directory.CreateDirectory(folderPath);
-                var uniqueFilePath = Path.Combine(folderPath, "_Part2"+ fileName);
-                var uniqueFilePathOld =Path.Combine(folderPath, fileName);
+                var uniqueFilePath = Path.Combine(folderPath, "_Part2" + fileName);
+                var uniqueFilePathOld = Path.Combine(folderPath, fileName);
 
-                var files = Directory.GetFiles(folderPath).Where(f => f==uniqueFilePathOld).ToList();
-               if(!documentsModalViewModel.IsFirstPart)
+                var files = Directory.GetFiles(folderPath).Where(f => f == uniqueFilePathOld).ToList();
+                if (!documentsModalViewModel.IsFirstPart)
                 {
                     foreach (var file in files)
                     {
@@ -327,11 +327,11 @@ namespace PrototypeWithAuth.Controllers
                 }
                 else
                 {
-                    if(files.Count>0)
+                    if (files.Count > 0)
                     {
-                        fileName=(files.Count+1)+ fileName;
+                        fileName = (files.Count + 1) + fileName;
                     }
-                    uniqueFilePathOld =Path.Combine(folderPath, fileName);
+                    uniqueFilePathOld = Path.Combine(folderPath, fileName);
                     FileStream filestream = new FileStream(uniqueFilePathOld, FileMode.Create);
                     documentsModalViewModel.FilesToSave[0].CopyTo(filestream);
                     filestream.Close();
@@ -586,19 +586,19 @@ namespace PrototypeWithAuth.Controllers
                         receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
                         requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
                         requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).OrderBy(l => l.LocationNumber).ToList());
-                        
+
                         while (parent.LocationInstanceParentID != null)
                         {
                             parent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parent.LocationInstanceParentID).FirstOrDefault();
                             requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).OrderBy(l => l.LocationNumber).ToList());
                             receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
                         }
-                        if(parent.LocationTypeID == 500)
+                        if (parent.LocationTypeID == 500)
                         {
 
                             if (parentLocationInstance.LocationTypeID == 500)
                             {
-                                receivedModalSublocationsViewModel.locationInstancesSelected.Insert(0,requestLocationInstances[0].LocationInstance);
+                                receivedModalSublocationsViewModel.locationInstancesSelected.Insert(0, requestLocationInstances[0].LocationInstance);
                                 requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
                                 requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceID).Include(l => l.LabPart).OrderBy(l => l.LocationNumber).ToList());
                             }
@@ -655,7 +655,7 @@ namespace PrototypeWithAuth.Controllers
                                     LocationInstanceId = emptyshelf25.LocationInstance.LocationInstanceID,
                                     Placed = true
                                 });
-                                receivedModalVisualViewModel.RequestChildrenLocationInstances= new List<RequestChildrenLocationInstances>() { emptyshelf25};
+                                receivedModalVisualViewModel.RequestChildrenLocationInstances = new List<RequestChildrenLocationInstances>() { emptyshelf25 };
                             }
                             else
                             {
@@ -763,7 +763,7 @@ namespace PrototypeWithAuth.Controllers
             else if (requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID == 2)
             {
 
-                if (requestItemViewModel.Requests.FirstOrDefault().ParentRequestID !=null)
+                if (requestItemViewModel.Requests.FirstOrDefault().ParentRequestID != null)
                 {
                     GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, AppUtility.ParentFolderName.ParentRequest, ordersFolder, requestItemViewModel.Requests.FirstOrDefault().ParentRequestID.ToString());
                 }
@@ -981,7 +981,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 requestsSearchViewModel = new RequestsSearchViewModel();
             }
-            if( requestsSearchViewModel.Payment == null)
+            if (requestsSearchViewModel.Payment == null)
             {
                 requestsSearchViewModel.Payment = new Payment();
             }
@@ -1420,14 +1420,24 @@ namespace PrototypeWithAuth.Controllers
             MoveDocumentsOutOfTempFolder(id, parentFolderName, additionalRequests, oldID.ToString());
         }
 
+        protected void MoveDocumentsBackToTempFolder(int id, AppUtility.ParentFolderName parentFolderName, string guid, bool additionalRequests = false, bool MoveBackwards = true)
+        {
+            MoveDocumentsOutOfTempFolder(id, parentFolderName, additionalRequests, guid, true);
+        }
 
-        private void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, bool additionalRequests, string oldID)
+
+        private void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, bool additionalRequests, string oldID, bool MoveBackwards = false)
         {
             //rename temp folder to the request id
+
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
-            var TempFolderName = oldID.ToString();
-            string requestFolderFrom = Path.Combine(uploadFolder, TempFolderName);
-            string requestFolderTo = Path.Combine(uploadFolder, id.ToString());
+            var TempFolderName = oldID;
+            string requestFolderFrom = MoveBackwards == false ?
+                Path.Combine(uploadFolder, TempFolderName):
+                Path.Combine(uploadFolder, id.ToString());
+            string requestFolderTo = MoveBackwards == false ?
+                Path.Combine(uploadFolder, id.ToString()):
+                Path.Combine(uploadFolder, TempFolderName);
             if (Directory.Exists(requestFolderFrom))
             {
                 if (Directory.Exists(requestFolderTo))
