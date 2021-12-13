@@ -23,28 +23,6 @@ namespace PrototypeWithAuth.CRUD
             }
          }
 
-        public IQueryable<Models.VendorContact> Read()
-        {
-            return _context.VendorContacts.AsNoTracking().AsQueryable();
-        }
-
-        public async Task<VendorContact> ReadOneByPKAsync(int VendorContactID)
-        {
-            return await _context.VendorContacts.Where(vc => vc.VendorContactID == VendorContactID).AsNoTracking().FirstOrDefaultAsync();
-        }
-
-        public IQueryable<VendorContactWithDeleteViewModel> ReadAsVendorContactWithDeleteByVendorIDAsync(int id)
-        {
-            return _context.VendorContacts
-                .Where(vc => vc.VendorID == id)
-                .Select(vc => new VendorContactWithDeleteViewModel()
-                {
-                    VendorContact = vc,
-                    Delete = false
-                })
-                .AsNoTracking().AsQueryable();
-        }
-
         public async Task<StringWithBool> UpdateAsync(List<VendorContactWithDeleteViewModel> vendorContacts, int vendorID)
         {
             StringWithBool ReturnVal = new StringWithBool();
@@ -73,19 +51,5 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        public StringWithBool Remove(VendorContact item)
-        {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
-            {
-                _context.Remove(item);
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-            }
-            return ReturnVal;
-        }
     }
 }

@@ -1578,8 +1578,11 @@ namespace PrototypeWithAuth.Controllers
                             new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorComments, ThenInclude  = new ComplexIncludes<ModelBase, ModelBase>{ Include = c=>((VendorComment)c).ApplicationUser } }
                     });
                 createSupplierViewModel.Comments = createSupplierViewModel.Vendor.VendorComments;
-
-              //  createSupplierViewModel.VendorContacts = await _vendorContact.ReadAsVendorContactWithDeleteByVendorIDAsync(VendorID).ToListAsync();
+                createSupplierViewModel.VendorContacts = createSupplierViewModel.Vendor.VendorContacts.Select(c=> new VendorContactWithDeleteViewModel()
+                {
+                    VendorContact = c,
+                    Delete = false
+                }).ToList();
 
                 createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();
             }
