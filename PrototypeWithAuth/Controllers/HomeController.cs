@@ -6,8 +6,6 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Hangfire;
-using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -36,6 +34,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> Index()
         {
+            _vendor.Create(new Vendor());
             var user = await _employeesProc.ReadEmployeeByIDAsync(_userManager.GetUserId(User), new List<System.Linq.Expressions.Expression<Func<Employee, object>>> { e=>e.SalariedEmployee});
             var usersLoggedIn = _employeesProc.GetUsersLoggedInToday().Count();
             var users =  _employeesProc.Read().AsEnumerable();

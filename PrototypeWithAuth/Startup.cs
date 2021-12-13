@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Authorization; //in order to allow for authirization 
 using Microsoft.AspNetCore.Mvc.Authorization; // in order to allow for authorize filter
 using Microsoft.AspNetCore.Diagnostics;
 using PrototypeWithAuth.AppData;
-using Hangfire;
 using Microsoft.Extensions.Logging;
 using PrototypeWithAuth.Models;
 using Newtonsoft.Json;
@@ -75,14 +74,12 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"), sqlServerOptions => sqlServerOptions.CommandTimeout(60));
+                    Configuration.GetConnectionString("DevelopersDB"), sqlServerOptions => sqlServerOptions.CommandTimeout(60));
                     options.EnableSensitiveDataLogging(true);   
             });
 
             services.AddControllersWithViews();
 
-            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("RachelLocal")));
-            services.AddHangfireServer();
 
             // Add framework services.
             services.AddMvc();
@@ -169,8 +166,6 @@ namespace PrototypeWithAuth
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
-
-            app.UseHangfireDashboard("/mydashboard");
 
 
             app.UseEndpoints(endpoints =>
