@@ -8,6 +8,7 @@ using PrototypeWithAuth.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
@@ -42,6 +43,34 @@ namespace PrototypeWithAuth.CRUD
                     Delete = false
                 })
                 .AsNoTracking().AsQueryable();
+        }
+
+        public async Task<StringWithBool> UpdateAsync(List<VendorContactWithDeleteViewModel> vendorContacts, int vendorID)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                foreach (var vendorContact in vendorContacts)
+                {
+                    if (vendorContact.Delete && vendorContact.VendorContact.VendorContactID != 0)
+                    {
+                        var dvc = await _vendorContactsProc.ReadOne(new List<Expression<Func<VendorContact, bool>>> { vc => vc.VendorContactID == vendorContact.VendorContact.VendorContactID });
+                        _context.Remove(dvc);
+                    }
+                    else if (!vendorContact.Delete)
+                    {
+                        vendorContact.VendorContact.VendorID = vendorID;
+                        _context.Update(vendorContact.VendorContact);
+                    }
+                }
+                await _context.SaveChangesAsync();
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
         }
 
         public StringWithBool Remove(VendorContact item)

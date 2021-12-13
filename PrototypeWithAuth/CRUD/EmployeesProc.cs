@@ -100,5 +100,20 @@ namespace PrototypeWithAuth.CRUD
             return offDaysLeft;
         }
 
+        public async Task<StringWithBool> UpdateAsync(Employee employee)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                _context.Update(employee);
+                await _context.SaveChangesAsync();
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
     }
 }

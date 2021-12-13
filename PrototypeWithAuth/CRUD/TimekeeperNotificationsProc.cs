@@ -64,5 +64,23 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
+        public async Task<StringWithBool> CreateAsync(TimekeeperNotification notification)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+
+            try
+            {
+                _context.Entry(notification).State = EntityState.Added;
+                await _context.SaveChangesAsync();
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.Bool = false;
+                ReturnVal.String = AppUtility.GetExceptionMessage(ex);
+            }
+            return ReturnVal;
+        }
+
     }
 }

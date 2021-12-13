@@ -26,7 +26,7 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        public async Task<StringWithBool> UpdateWithSaveChangesAsync(CreateSupplierViewModel createSupplierViewModel, string UserID)
+        public async Task<StringWithBool> UpdateAsync(CreateSupplierViewModel createSupplierViewModel, string UserID)
         {
             StringWithBool ReturnVal = new StringWithBool();
             using (var transaction = _context.Database.BeginTransaction())
@@ -40,72 +40,18 @@ namespace PrototypeWithAuth.CRUD
                     {
                         if (createSupplierViewModel.Vendor.VendorID==0)
                         {
-                            Create(createSupplierViewModel.Vendor);
+                            _context.Entry(createSupplierViewModel.Vendor).State = EntityState.Added;
                         }
                         else
                         {
-                            Update(createSupplierViewModel.Vendor);
+                            _context.Entry(createSupplierViewModel.Vendor).State = EntityState.Modified;
                         }
                         await _context.SaveChangesAsync();
-                        var vendor = await ReadOne(new List<Expression<Func<Vendor, bool>>> { v=>v.VendorID == createSupplierViewModel.Vendor.VendorID }, 
-                            new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include= v => v.VendorCategoryTypes } } );
-                        if (vendor.VendorCategoryTypes.Count() > 0)
-                        {
-                            foreach (var type in createSupplierViewModel.Vendor.VendorCategoryTypes)
-                            {
-                                _vendorCategoryTypesProc.Remove(type);
-                            }
-                        }
-                        foreach (var type in createSupplierViewModel.VendorCategoryTypes)
-                        {
-                            _vendorCategoryTypesProc.Create(new VendorCategoryType { VendorID  = createSupplierViewModel.Vendor.VendorID, CategoryTypeID= type });
-                        }
 
-                        
+                        await _vendorCategoryTypesProc.UpdateAsync(createSupplierViewModel.VendorCategoryTypes, createSupplierViewModel.Vendor.VendorID);
+                        await _vendorContactsProc.UpdateAsync(createSupplierViewModel.VendorContacts, createSupplierViewModel.Vendor.VendorID);
 
-                        foreach (var vendorContact in createSupplierViewModel.VendorContacts)
-                        {
-                            if (vendorContact.Delete && vendorContact.VendorContact.VendorContactID != 0)
-                            {
-                                var dvc = await _vendorContactsProc.ReadOne(new List<Expression<Func<VendorContact, bool>>> { vc => vc.VendorContactID == vendorContact.VendorContact.VendorContactID });
-                                _vendorContactsProc.Remove(dvc);
-                            }
-                            else if (!vendorContact.Delete)
-                            {
-                                vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
-                                _vendorContactsProc.Update(vendorContact.VendorContact);
-                            }
-                        }
-                        if (createSupplierViewModel.Comments != null)
-                        {
-                            foreach (var vendorComment in createSupplierViewModel.Comments)
-                            {
-                                if (!vendorComment.IsDeleted)
-                                {
-                                    vendorComment.ObjectID = createSupplierViewModel.Vendor.VendorID;
-                                    if (vendorComment.CommentID == 0)
-                                    {
-                                        vendorComment.ApplicationUserID = UserID;
-                                        vendorComment.CommentTimeStamp = DateTime.Now;
-                                        _context.Add(vendorComment);
-                                    }
-                                    else
-                                    {    
-                                        _context.Update(vendorComment);
-                                    }
-                                }
-                                else
-                                {
-                                    var vendorCommentDB = _context.VendorComments.Where(c => c.CommentID == vendorComment.CommentID).FirstOrDefault();
-                                    if (vendorCommentDB != null)
-                                    {
-                                        vendorCommentDB.IsDeleted = true;
-                                        _vendorCommentsProc.Update(vendorCommentDB);
-                                    }
-                                }
-                            }
-                        }
-                        await _context.SaveChangesAsync();
+                        await _vendorCommentsProc.UpdateAsync(createSupplierViewModel.Comments, createSupplierViewModel.Vendor.VendorID, UserID);
                         await transaction.CommitAsync();
                         ReturnVal.Bool = true;
                     }
@@ -125,7 +71,7 @@ namespace PrototypeWithAuth.CRUD
             }
             return ReturnVal;
         }
-
+       
     }
 
 
