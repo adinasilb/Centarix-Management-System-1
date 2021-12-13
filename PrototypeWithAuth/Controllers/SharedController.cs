@@ -32,19 +32,22 @@ namespace PrototypeWithAuth.Controllers
         protected readonly IHttpContextAccessor _httpContextAccessor;
         protected string AccessDeniedPath = "~/Identity/Account/AccessDenied";
         protected ICompositeViewEngine _viewEngine;
-        protected CRUD.VendorsProc _vendor;
-        protected CRUD.CategoryTypesProc _categoryType;
-        protected CRUD.CountriesProc _country;
-        protected CRUD.CommentTypesProc _commentType;
-        protected CRUD.RequestsProc _requestsProc;
-        protected CRUD.EmployeeHoursProc _employeeHoursProc;
-        protected CRUD.TimekeeperNotificationsProc _timekeeperNotificationsProc;
-        protected CRUD.EmployeesProc _employeesProc;
-        protected CRUD.EmployeeHoursAwaitingApprovalProc _employeeHoursAwaitingApprovalProc;
-        protected CRUD.EmployeeHoursStatuesProc _employeeHoursStatuesProc;
-        protected CRUD.OffDayTypesProc _offDayTypesProc;
-        protected CRUD.CompanyDaysOffProc _companyDaysOffProc;
-        protected CRUD.ParticipantsProc _participantsProc;
+        protected readonly CRUD.VendorsProc _vendor;
+        protected readonly CRUD.CategoryTypesProc _categoryType;
+        protected readonly CRUD.CountriesProc _country;
+        protected readonly CRUD.CommentTypesProc _commentType;
+        protected readonly CRUD.RequestsProc _requestsProc;
+        protected readonly CRUD.EmployeeHoursProc _employeeHoursProc;
+        protected readonly CRUD.TimekeeperNotificationsProc _timekeeperNotificationsProc;
+        protected readonly CRUD.EmployeesProc _employeesProc;
+        protected readonly CRUD.EmployeeHoursAwaitingApprovalProc _employeeHoursAwaitingApprovalProc;
+        protected readonly CRUD.EmployeeHoursStatuesProc _employeeHoursStatuesProc;
+        protected readonly CRUD.OffDayTypesProc _offDayTypesProc;
+        protected readonly CRUD.CompanyDaysOffProc _companyDaysOffProc;
+        protected readonly CRUD.ParticipantsProc _participantsProc;
+        protected readonly CRUD.GendersProc _gendersProc;
+        protected readonly CRUD.ParticipantStatusesProc _participantStatusesProc;
+        protected readonly CRUD.ExperimentEntriesProc _experimentEntriesProc;
         protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
             
         {
@@ -66,6 +69,9 @@ namespace PrototypeWithAuth.Controllers
             _offDayTypesProc = new CRUD.OffDayTypesProc(context);
             _companyDaysOffProc = new CRUD.CompanyDaysOffProc(context);
             _participantsProc = new CRUD.ParticipantsProc(context);
+            _gendersProc = new CRUD.GendersProc(context);
+            _participantStatusesProc = new CRUD.ParticipantStatusesProc(context);
+            _experimentEntriesProc = new CRUD.ExperimentEntriesProc(context);
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)

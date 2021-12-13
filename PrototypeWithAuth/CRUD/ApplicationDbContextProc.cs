@@ -34,6 +34,9 @@ namespace PrototypeWithAuth.CRUD
         protected CommentTypesProc _commentTypesProc;
         protected RequestsProc _requestsProc;
         protected ParticipantsProc _participantsProc;
+        protected GendersProc _gendersProc;
+        protected ParticipantStatusesProc _participantStatusesProc;
+        protected ExperimentEntriesProc _experimentEntriesProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context)
         {
@@ -58,6 +61,9 @@ namespace PrototypeWithAuth.CRUD
             _commentTypesProc = new CommentTypesProc(_context, true);
             _requestsProc = new RequestsProc(_context, true);
             _participantsProc = new ParticipantsProc(_context, true);
+            _gendersProc = new GendersProc(_context, true);
+            _participantStatusesProc = new ParticipantStatusesProc(_context, true);
+            _experimentEntriesProc = new ExperimentEntriesProc(_context, true);
         }
 
         //public IQueryable<T> Read()
