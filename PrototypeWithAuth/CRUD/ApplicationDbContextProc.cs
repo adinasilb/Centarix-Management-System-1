@@ -34,6 +34,9 @@ namespace PrototypeWithAuth.CRUD
         protected CommentTypesProc _commentTypesProc;
         protected RequestsProc _requestsProc;
         protected ParticipantsProc _participantsProc;
+        protected GendersProc _gendersProc;
+        protected ParticipantStatusesProc _participantStatusesProc;
+        protected ExperimentEntriesProc _experimentEntriesProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context)
         {
@@ -58,6 +61,9 @@ namespace PrototypeWithAuth.CRUD
             _commentTypesProc = new CommentTypesProc(_context, true);
             _requestsProc = new RequestsProc(_context, true);
             _participantsProc = new ParticipantsProc(_context, true);
+            _gendersProc = new GendersProc(_context, true);
+            _participantStatusesProc = new ParticipantStatusesProc(_context, true);
+            _experimentEntriesProc = new ExperimentEntriesProc(_context, true);
         }
 
         //public IQueryable<T> Read()
@@ -76,19 +82,19 @@ namespace PrototypeWithAuth.CRUD
                     dbset = dbset.Where(t);
                 }
             }
-            IIncludableQueryable<T, ModelBase> requestsWithInclude = null;
             if (includes != null)
             {
-                foreach (var t in includes)
+                IIncludableQueryable<T, ModelBase> ReqsWithInclude = dbset.Include(includes.FirstOrDefault().Include);
+                for(int t = 0; t < includes.Count; t++)
                 {
-                    requestsWithInclude = dbset.Include(t.Include);
-                    if (t.ThenInclude !=null)
+                    ReqsWithInclude = ReqsWithInclude.Include(includes[t].Include);
+                    if (includes[t].ThenInclude !=null)
                     {
-                        RecursiveInclude(requestsWithInclude, t.ThenInclude);
+                        RecursiveInclude(ReqsWithInclude, includes[t].ThenInclude);
                     }
 
                 }
-                return requestsWithInclude.AsNoTracking().AsQueryable();
+                return ReqsWithInclude.AsNoTracking().AsQueryable();
             }
             return dbset.AsNoTracking().AsQueryable();
         }
@@ -104,20 +110,21 @@ namespace PrototypeWithAuth.CRUD
                 }
             }
             var item = dbset.Take(1);
-            IIncludableQueryable<T, ModelBase> requestWithInclude = null;
             if (includes != null)
             {
+                IIncludableQueryable<T, ModelBase> requestWithInclude = item.Include(includes.FirstOrDefault().Include);
                 foreach (var t in includes)
                 {
-                    requestWithInclude = item.Include(t.Include);
+                    requestWithInclude = requestWithInclude.Include(t.Include);
                     if (t.ThenInclude !=null)
                     {
                         RecursiveInclude(requestWithInclude, t.ThenInclude);
                     }
 
                 }
+                return await requestWithInclude.AsNoTracking().FirstOrDefaultAsync();
             }
-            return await requestWithInclude.AsNoTracking().FirstOrDefaultAsync();
+            return await item.AsNoTracking().FirstOrDefaultAsync();
         }
 
         public virtual IQueryable<T> ReadWithIgnoreQueryFilters(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
