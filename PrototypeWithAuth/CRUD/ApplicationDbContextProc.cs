@@ -40,7 +40,7 @@ namespace PrototypeWithAuth.CRUD
             _context = context;
         }
 
-        public void InstantiateProcs()
+        protected void InstantiateProcs()
         {
             _categoryTypesProc = new CategoryTypesProc(_context, true);
             _countriesProc = new CountriesProc(_context, true);
@@ -229,7 +229,7 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        public StringWithBool Remove(IEnumerable<T> items)
+        public virtual StringWithBool Remove(IEnumerable<T> items)
         {
             StringWithBool ReturnVal = new StringWithBool();
             try
