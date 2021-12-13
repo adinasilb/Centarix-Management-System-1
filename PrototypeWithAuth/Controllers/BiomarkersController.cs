@@ -536,16 +536,12 @@ namespace PrototypeWithAuth.Controllers
                     new ComplexIncludes<Test, ModelBase>{Include = t => (ModelBase)t.TestOuterGroups, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>
                         { Include = tog => (ModelBase)((TestOuterGroup)tog).TestGroups, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = tg => (ModelBase)((TestGroup)tg).TestHeaders } } }
                 }).ToList();
-             //var oldtests =   _context.Tests.Where(t => t.SiteID == ee.SiteID)
-             //       .Include(t => t.TestOuterGroups).ThenInclude(tog => tog.TestGroups).ThenInclude(tg => tg.TestHeaders)
-             //       .Where(t => t.ExperimentTests.Select(et => et.ExperimentID).Contains(ee.Participant.ExperimentID))
-             //       .ToList();
-            var testValues = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ID
-                                && tv.TestHeader.TestGroup.TestOuterGroup.TestID == tests.FirstOrDefault().TestID).ToList();
+            var testValues = _testValuesProc.Read(new List<Expression<Func<TestValue, bool>>> { tv => tv.ExperimentEntryID == ID && tv.TestHeader.TestGroup.TestOuterGroup.TestID == tests.FirstOrDefault().TestID },
+                new List<ComplexIncludes<TestValue, ModelBase>> { new ComplexIncludes<TestValue, ModelBase> { Include = tv => tv.TestHeader } }).ToList();
             var areFilesFilled = new List<BoolIntViewModel>();
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ExperimentEntries.ToString());
 
-            var value1 = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ID).Count();
+            var value1 = _testValuesProc.Read(new List<Expression<Func<TestValue, bool>>> { tv => tv.ExperimentEntryID == ID }).Count();
             var value2 = tests.SelectMany(t => t.TestOuterGroups/*.Where(tog => tog.TestID == tests.FirstOrDefault().TestID)*/.SelectMany(to => to.TestGroups.SelectMany(tg => tg.TestHeaders))).Count();
             if (value1 < value2)
             {
@@ -559,8 +555,7 @@ namespace PrototypeWithAuth.Controllers
                 Guid = Guid.NewGuid(),
                 Tests = tests,
                 TestValues = testValues,
-                ExperimentEntries = _context.ExperimentEntries
-                                  .Where(ee2 => ee2.ParticipantID == ee.ParticipantID)
+                ExperimentEntries = _experimentEntriesProc.Read(new List<Expression<Func<ExperimentEntry, bool>>> { ee2 => ee2.ParticipantID == ee.ParticipantID })
                                   .Select(
                                       e => new SelectListItem
                                       {
@@ -569,21 +564,6 @@ namespace PrototypeWithAuth.Controllers
                                       }
                                   ).ToList(),
                 FilesPrevFilled = filesPrevFilled
-                //FieldViewModels = new List<FieldViewModel>()
-                //{
-                //    new FieldViewModel()
-                //    {
-                //        DataTypeEnum = AppUtility.DataTypeEnum.String,
-                //        String = "Hello World",
-                //        TestHeader = _context.TestHeaders.FirstOrDefault()
-                //    },
-                //    new FieldViewModel()
-                //    {
-                //        DataTypeEnum = AppUtility.DataTypeEnum.Bool,
-                //        String = "False",
-                //        TestHeader = _context.TestHeaders.FirstOrDefault()
-                //    }
-                //}
             };
             return View(testViewModel);
         }
@@ -660,7 +640,7 @@ namespace PrototypeWithAuth.Controllers
                 };
                 if (fieldTest.TestValueID != 0)
                 {
-                    testValue = _context.TestValues.Where(tv => tv.TestValueID == fieldTest.TestValueID).FirstOrDefault();
+                    testValue = await _testValuesProc.ReadOne(new List<Expression<Func<TestValue, bool>>> { tv => tv.TestValueID == fieldTest.TestValueID });
                 }
                 else
                 {
@@ -691,7 +671,6 @@ namespace PrototypeWithAuth.Controllers
                 }
                 _context.Update(testValue);
             }
-            var entries = _context.ChangeTracker.Entries();
             await _context.SaveChangesAsync();
 
             SaveFiles(testViewModel.Guid, testViewModel.ExperimentEntry.ExperimentEntryID);
@@ -758,8 +737,8 @@ namespace PrototypeWithAuth.Controllers
 
         private List<TestValue> GetTestValuesFromTestIDAndExperimentEntryID(int TestID, int ExperimentEntryID)
         {
-            return _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ExperimentEntryID
-                              && tv.TestHeader.TestGroup.TestOuterGroup.TestID == TestID).ToList();
+            return _testValuesProc.Read(new List<Expression<Func<TestValue, bool>>> { tv => tv.ExperimentEntryID == ExperimentEntryID && tv.TestHeader.TestGroup.TestOuterGroup.TestID == TestID },
+                new List<ComplexIncludes<TestValue, ModelBase>> { new ComplexIncludes<TestValue, ModelBase> { Include = tv => tv.TestHeader } }).ToList();
         }
 
         public async Task<ActionResult> CancelTestChanges(Guid CurrentGuid, int TestID, int ListNumber, int SiteID, int ExperimentID, int ExperimentEntryID)
@@ -771,11 +750,20 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<ActionResult> _TestValues(int TestID, int ListNumber, int SiteID, int ExperimentID, int ExperimentEntryID)
         {
-            var test = _context.Tests.Where(t => t.TestID == TestID).FirstOrDefault();
-            var tests = _context.Tests.Where(t => t.SiteID == SiteID)
-                     .Include(t => t.TestOuterGroups).ThenInclude(tog => tog.TestGroups).ThenInclude(tg => tg.TestHeaders)
-                     .Where(t => t.ExperimentTests.Select(et => et.ExperimentID).Contains(ExperimentID))
-                     .ToList();
+            var test = await _testsProc.ReadOne(new List<Expression<Func<Test, bool>>> { t => t.TestID == TestID });
+            var tests = _testsProc.Read(new List<Expression<Func<Test, bool>>> { t => t.SiteID == SiteID && t.ExperimentTests.Select(et => et.ExperimentID).Contains(ExperimentID) },
+                new List<ComplexIncludes<Test, ModelBase>> {
+                    new ComplexIncludes<Test, ModelBase>
+                    {
+                        Include = t => (ModelBase)t.TestOuterGroups, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>
+                        {
+                            Include = tog => (ModelBase)((TestOuterGroup)tog).TestGroups, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>
+                            {
+                                Include = tg => (ModelBase)((TestGroup)tg).TestHeaders
+                            }
+                        }
+                    }
+                }).ToList();
             var testValues = GetTestValuesFromTestIDAndExperimentEntryID(TestID, ExperimentEntryID);
             List<BoolIntViewModel> filesPrevFilled = CheckForFiles(testValues, ExperimentEntryID);
             TestValuesViewModel testValuesViewModel = new TestValuesViewModel()
