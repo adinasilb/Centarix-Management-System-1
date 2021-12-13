@@ -37,6 +37,7 @@ namespace PrototypeWithAuth.CRUD
         protected GendersProc _gendersProc;
         protected ParticipantStatusesProc _participantStatusesProc;
         protected ExperimentEntriesProc _experimentEntriesProc;
+        protected SitesProc _sitesProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context)
         {
@@ -64,6 +65,7 @@ namespace PrototypeWithAuth.CRUD
             _gendersProc = new GendersProc(_context, true);
             _participantStatusesProc = new ParticipantStatusesProc(_context, true);
             _experimentEntriesProc = new ExperimentEntriesProc(_context, true);
+            _sitesProc = new SitesProc(_context, true);
         }
 
         //public IQueryable<T> Read()

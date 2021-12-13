@@ -48,6 +48,7 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.GendersProc _gendersProc;
         protected readonly CRUD.ParticipantStatusesProc _participantStatusesProc;
         protected readonly CRUD.ExperimentEntriesProc _experimentEntriesProc;
+        protected readonly CRUD.SitesProc _sitesProc;
         protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
             
         {
@@ -72,6 +73,7 @@ namespace PrototypeWithAuth.Controllers
             _gendersProc = new CRUD.GendersProc(context);
             _participantStatusesProc = new CRUD.ParticipantStatusesProc(context);
             _experimentEntriesProc = new CRUD.ExperimentEntriesProc(context);
+            _sitesProc = new CRUD.SitesProc(context);
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)

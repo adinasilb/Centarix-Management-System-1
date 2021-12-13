@@ -341,10 +341,10 @@ namespace PrototypeWithAuth.Controllers
             if (editParticipant.IsTestPage)
             {
                 Participant participant = editParticipant.Participant;
-                participant.Gender = await _gendersProc.ReadOne(new List<Expression<Func<Gender, bool>>> 
+                participant.Gender = await _gendersProc.ReadOne(new List<Expression<Func<Gender, bool>>>
                      { g => g.GenderID == participant.GenderID });
-                participant.ParticipantStatus = 
-                    await _participantStatusesProc.ReadOne(new List<Expression<Func<ParticipantStatus, bool>>> 
+                participant.ParticipantStatus =
+                    await _participantStatusesProc.ReadOne(new List<Expression<Func<ParticipantStatus, bool>>>
                     { ps => ps.ParticipantStatusID == participant.ParticipantStatusID });
                 return PartialView("_ParticipantsHeader", participant);
             }
@@ -361,7 +361,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<int> GetParticipantsCount(int ExperimentID)
         {
-            return ( _participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.ExperimentID == ExperimentID }).Count());
+            return (_participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.ExperimentID == ExperimentID }).Count());
         }
 
         public async Task<ActionResult> Entries(int ParticipantID)
@@ -387,7 +387,7 @@ namespace PrototypeWithAuth.Controllers
                     new ComplexIncludes<Participant, ModelBase>{Include = p => p.ParticipantStatus },
                     new ComplexIncludes<Participant, ModelBase>{Include = p => p.Gender }
                      }),
-                
+
                 EntryHeaders = await GetEntriesHeaders(),
                 EntryRows = await GetEntriesRows(ParticipantID)
             };
@@ -466,17 +466,13 @@ namespace PrototypeWithAuth.Controllers
         public async Task<ActionResult> _NewEntry(int ID)
         {
             //var visits =
-            var read = _participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ID });
-            var visits = read.Select(p => p.Experiment.AmountOfVisits).FirstOrDefault();
+            var visits = _participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ID }).Select(p => p.Experiment.AmountOfVisits).FirstOrDefault();
             visits = visits == 0 ? 10 : visits;
             //var lastVisitNum = 0;
             var prevVisitNums = new List<int>();
-            if ( /*_participantsProc*/
-                
-                _context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.ExperimentEntries).Any())
+            if (_participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ID }).Select(p => p.Experiment).Any())
             {
-                prevVisitNums = _context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.ExperimentEntries.Select(ee => ee.VisitNumber)).FirstOrDefault().ToList();
-                //lastVisitNum = _context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.ExperimentEntries.OrderByDescending(ee => ee.VisitNumber).FirstOrDefault().VisitNumber).FirstOrDefault();
+                prevVisitNums = _participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ID }).Select(p => p.ExperimentEntries.Select(ee => ee.VisitNumber)).FirstOrDefault().ToList();
             }
 
             var visitList = new List<SelectListItem>();
@@ -493,7 +489,7 @@ namespace PrototypeWithAuth.Controllers
             };
             NewEntryViewModel nevm = new NewEntryViewModel()
             {
-                Sites = _context.Sites,
+                Sites = _sitesProc.Read(),
                 ParticipantID = ID,
                 VisitNumbers = visitList,
                 Date = DateTime.Now
