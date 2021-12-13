@@ -585,15 +585,10 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "TimeKeeper")]
-        public async Task<IActionResult> DeleteNotification(int? id)
+        public async Task<IActionResult> DeleteNotification(int id)
         {
-            if (id == null)
-            {
-                ViewBag.ErrorMessage = "Timekeeper Notification not found (no id). Unable to delete.";
-                return NotFound();
-            }
+            var success = await _timekeeperNotificationsProc.DeleteByPKAsync(id);
 
-            var success = await _timekeeperNotificationsProc.RemoveWithSaveChangesAsync(await _timekeeperNotificationsProc.ReadOne(new List<Expression<Func<TimekeeperNotification, bool>>> { tn=>tn.NotificationID == id}));
             if (success.Bool)
             {
                 return RedirectToAction("ReportHours");

@@ -219,9 +219,7 @@ namespace PrototypeWithAuth.CRUD
                     }
                     else
                     {
-                        _timekeeperNotificationsProc.Remove(notifications);
-                        await _context.SaveChangesAsync();
-
+                        await _timekeeperNotificationsProc.DeleteByEHIDAsync(employeeHoursID);
                         _context.Remove(employeeHour);
                         await _context.SaveChangesAsync();
 
@@ -292,9 +290,7 @@ namespace PrototypeWithAuth.CRUD
                                 }
                                 else
                                 {
-                                    _timekeeperNotificationsProc.Remove( _timekeeperNotificationsProc.Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == employeeHour.EmployeeHoursID }) );
-                                    _context.SaveChanges();
-                                    //RemoveNotifications(employeeHour.EmployeeHoursID);
+                                    await _timekeeperNotificationsProc.DeleteByEHIDAsync(employeeHour.EmployeeHoursID);
                                 }
                                 employeeHour.OffDayTypeID = OffDayTypeID;
                                 employeeHour.OffDayType = await _offDayTypesProc.ReadOneByPKAsync(OffDayTypeID);
@@ -350,9 +346,7 @@ namespace PrototypeWithAuth.CRUD
                                         }
                                         else
                                         {
-                                            _timekeeperNotificationsProc.Remove(new List<TimekeeperNotification>() { await _timekeeperNotificationsProc.ReadOne(new List<Expression<Func<TimekeeperNotification, bool>>> { tn => tn.EmployeeHoursID ==employeeHour.EmployeeHoursID }) });
-                                            _context.SaveChanges();
-                                            //_timekeeperNotificationsProc.DeleteByEHID(employeeHour.EmployeeHoursID);
+                                            await _timekeeperNotificationsProc.DeleteByEHIDAsync(employeeHour.EmployeeHoursID);
                                         }
                                         employeeHour.OffDayTypeID = OffDayTypeID;
                                     }
