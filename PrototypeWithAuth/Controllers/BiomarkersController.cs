@@ -54,7 +54,7 @@ namespace PrototypeWithAuth.Controllers
             };
             experimentListViewModel.ValuesPerRow = new List<List<TDViewModel>>();
 
-            _context.Experiments.ToList().ForEach(e =>
+            _experimentsProc.Read().ToList().ForEach(e =>
             experimentListViewModel.ValuesPerRow.Add(
                 new List<TDViewModel>()
                 {
@@ -163,7 +163,7 @@ namespace PrototypeWithAuth.Controllers
 
             ExperimentViewModel experimentViewModel = new ExperimentViewModel()
             {
-                Experiment = _context.Experiments.Where(e => e.ExperimentID == ID).FirstOrDefault(),
+                Experiment = await _experimentsProc.ReadOne(new List<Expression<Func<Experiment, bool>>> { e => e.ExperimentID == ID }),
                 _ParticipantsViewModel = await GetParticipantsViewModel(ID)
             };
 
@@ -184,9 +184,17 @@ namespace PrototypeWithAuth.Controllers
         {
             _ParticipantsViewModel participantsViewModel = new _ParticipantsViewModel()
             {
-                Experiment = _context.Experiments.Include(e => e.Participants)
-                .ThenInclude(p => p.Gender).Include(e => e.Participants).ThenInclude(p => p.ParticipantStatus)
-                .Where(e => e.ExperimentID == ID).FirstOrDefault()
+                Experiment = await _experimentsProc.ReadOne(new List<Expression<Func<Experiment, bool>>> { e => e.ExperimentID == ID },
+                new List<ComplexIncludes<Experiment, ModelBase>>
+                {
+                    new ComplexIncludes<Experiment, ModelBase>
+                    {
+                        Include = e => (ModelBase)e.Participants ,
+                        ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{Include = p => ((Participant)p).Gender }},
+                    new ComplexIncludes<Experiment, ModelBase>{
+                        Include = e => (ModelBase)e.Participants ,
+                        ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{Include = p => ((Participant)p).ParticipantStatus }},
+                })
             };
             participantsViewModel.Headers = new List<TDViewModel>()
             {
@@ -229,7 +237,12 @@ namespace PrototypeWithAuth.Controllers
             List<List<TDViewModel>> BioRows = new List<List<TDViewModel>>();
             if (ExperimentID != null)
             {
-                BioRows = await GetParticipantsRows(_context.Participants.Include(p => p.Gender).Include(p => p.ParticipantStatus).Where(p => p.ExperimentID == ExperimentID));
+                BioRows = await GetParticipantsRows(_participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.ExperimentID == ExperimentID },
+                    new List<ComplexIncludes<Participant, ModelBase>>
+                    {
+                        new ComplexIncludes<Participant, ModelBase>{Include = p => p.Gender},
+                        new ComplexIncludes<Participant, ModelBase>{Include = p => p.ParticipantStatus}
+                    }));
             }
             else if (ParticipantID != null)
             {
@@ -288,7 +301,7 @@ namespace PrototypeWithAuth.Controllers
                     ExperimentID = ExperimentID,
                     DOB = DateTime.Now
                 },
-                Genders = _context.Genders.ToList()
+                Genders = _gendersProc.Read().ToList()
 
             };
 
@@ -299,33 +312,23 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Biomarkers")]
         public async Task<ActionResult> AddParticipantModal(AddParticipantViewModel addParticipant)
         {
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    addParticipant.Participant.ParticipantStatusID = 1;
-                    _context.Add(addParticipant.Participant);
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw ex;
-                }
-            }
+            var success = _participantsProc.CreateAsync(addParticipant.Participant);
             return RedirectToAction("_BiomarkersRows", new { ExperimentID = addParticipant.Participant.ExperimentID });
         }
 
         [HttpGet]
         [Authorize(Roles = "Biomarkers")]
-        public ActionResult EditParticipantModal(int ParticipantID, bool IsTestPage)
+        public async Task<ActionResult> EditParticipantModal(int ParticipantID, bool IsTestPage)
         {
             AddParticipantViewModel addParticipantViewModel = new AddParticipantViewModel()
             {
-                Participant = _context.Participants.Where(p => p.ParticipantID == ParticipantID).Include(p => p.Gender).Include(p => p.ParticipantStatus).FirstOrDefault(),
-                Genders = _context.Genders.ToList(),
-                ParticipantStatuses = _context.ParticipantStatuses.ToList(),
+                Participant = await _participantsProc.ReadOne(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ParticipantID },
+                    new List<ComplexIncludes<Participant, ModelBase>> {
+                        new ComplexIncludes<Participant, ModelBase>{Include = p => p.Gender},
+                        new ComplexIncludes<Participant, ModelBase>{Include = p => p.ParticipantStatus}
+                }),
+                Genders = _gendersProc.Read().ToList(),
+                ParticipantStatuses = _participantStatusesProc.Read().ToList(),
                 DisableFields = true,
                 IsTestPage = IsTestPage
             };
@@ -508,9 +511,7 @@ namespace PrototypeWithAuth.Controllers
                 ApplicationUserID = _userManager.GetUserId(User),
                 SiteID = newEntryViewModel.SiteID
             };
-
-            _context.Add(ee);
-            await _context.SaveChangesAsync();
+            _experimentEntriesProc.CreateAsync(ee);
 
             return RedirectToAction("_BiomarkersRows", new { ParticipantID = newEntryViewModel.ParticipantID });
         }
@@ -523,13 +524,22 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.BiomarkersExperiments;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Biomarkers;
 
-            var ee = _context.ExperimentEntries.Where(e => e.ExperimentEntryID == ID).Include(ee => ee.Site)
-                    .Include(ee => ee.Participant).ThenInclude(p => p.Gender).Include(ee => ee.Participant.ParticipantStatus)
-                    .FirstOrDefault();
-            var tests = _context.Tests.Where(t => t.SiteID == ee.SiteID)
-                    .Include(t => t.TestOuterGroups).ThenInclude(tog => tog.TestGroups).ThenInclude(tg => tg.TestHeaders)
-                    .Where(t => t.ExperimentTests.Select(et => et.ExperimentID).Contains(ee.Participant.ExperimentID))
-                    .ToList();
+            var ee = await _experimentEntriesProc.ReadOne(new List<Expression<Func<ExperimentEntry, bool>>> { e => e.ExperimentEntryID == ID },
+                new List<ComplexIncludes<ExperimentEntry, ModelBase>>
+                {
+                    new ComplexIncludes<ExperimentEntry, ModelBase> {Include = ee => ee.Site},
+                    new ComplexIncludes<ExperimentEntry, ModelBase> {Include = ee => ee.Participant, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = p => ((Participant)p).Gender } },
+                    new ComplexIncludes<ExperimentEntry, ModelBase> {Include = ee => ee.Participant.ParticipantStatus}
+                });
+            var tests = _testsProc.Read(new List<Expression<Func<Test, bool>>> { t => t.SiteID == ee.SiteID, t => t.ExperimentTests.Select(et => et.ExperimentID).Contains(ee.Participant.ExperimentID) },
+                new List<ComplexIncludes<Test, ModelBase>> {
+                    new ComplexIncludes<Test, ModelBase>{Include = t => (ModelBase)t.TestOuterGroups, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>
+                        { Include = tog => (ModelBase)((TestOuterGroup)tog).TestGroups, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = tg => (ModelBase)((TestGroup)tg).TestHeaders } } }
+                }).ToList();
+             //var oldtests =   _context.Tests.Where(t => t.SiteID == ee.SiteID)
+             //       .Include(t => t.TestOuterGroups).ThenInclude(tog => tog.TestGroups).ThenInclude(tg => tg.TestHeaders)
+             //       .Where(t => t.ExperimentTests.Select(et => et.ExperimentID).Contains(ee.Participant.ExperimentID))
+             //       .ToList();
             var testValues = _context.TestValues.Include(tv => tv.TestHeader).Where(tv => tv.ExperimentEntryID == ID
                                 && tv.TestHeader.TestGroup.TestOuterGroup.TestID == tests.FirstOrDefault().TestID).ToList();
             var areFilesFilled = new List<BoolIntViewModel>();

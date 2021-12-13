@@ -1,4 +1,6 @@
-﻿using PrototypeWithAuth.Data;
+﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
+using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,22 @@ namespace PrototypeWithAuth.CRUD
             {
                 base.InstantiateProcs();
             }
+        }
+
+        public async Task<StringWithBool> CreateAsync(ExperimentEntry experimentEntry)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                _context.Add(experimentEntry);
+                await _context.SaveChangesAsync();
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch(Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
         }
     }
 }
