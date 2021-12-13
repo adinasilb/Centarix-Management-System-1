@@ -196,56 +196,7 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-
-        public virtual async Task<StringWithBool> RemoveWithSaveChangesAsync(T item)
-        {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
-            {
-                Remove(item);
-                await _context.SaveChangesAsync();
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-            }
-            return ReturnVal;
-        }
-
-        public virtual StringWithBool Remove(T item)
-        {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
-            {
-                _context.Entry(item).State = EntityState.Deleted;
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-            }
-            return ReturnVal;
-        }
-
-
-        public virtual StringWithBool Remove(IEnumerable<T> items)
-        {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
-            {
-                foreach (var n in items)
-                {
-                    _context.Remove(n);
-                }
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-            }
-            return ReturnVal;
-        }
-
+        
+       
     }
 }

@@ -35,8 +35,6 @@ namespace PrototypeWithAuth.Controllers
         protected CRUD.VendorsProc _vendor;
         protected CRUD.CategoryTypesProc _categoryType;
         protected CRUD.CountriesProc _country;
-        protected CRUD.VendorContactsProc _vendorContact;
-        protected CRUD.VendorCommentsProc _vendorComment;
         protected CRUD.CommentTypesProc _commentType;
         protected CRUD.RequestsProc _requestsProc;
         protected CRUD.EmployeeHoursProc _employeeHoursProc;
@@ -58,8 +56,6 @@ namespace PrototypeWithAuth.Controllers
             _vendor = new CRUD.VendorsProc(context);
             _categoryType = new CRUD.CategoryTypesProc(context);
             _country = new CRUD.CountriesProc(context);
-            _vendorContact = new CRUD.VendorContactsProc(context);
-            _vendorComment = new CRUD.VendorCommentsProc(context);
             _commentType = new CRUD.CommentTypesProc(context);
             _requestsProc = new CRUD.RequestsProc(context);
             _employeeHoursProc = new CRUD.EmployeeHoursProc(context);
@@ -1583,7 +1579,7 @@ namespace PrototypeWithAuth.Controllers
                     });
                 createSupplierViewModel.Comments = createSupplierViewModel.Vendor.VendorComments;
 
-                createSupplierViewModel.VendorContacts = await _vendorContact.ReadAsVendorContactWithDeleteByVendorIDAsync(VendorID).ToListAsync();
+              //  createSupplierViewModel.VendorContacts = await _vendorContact.ReadAsVendorContactWithDeleteByVendorIDAsync(VendorID).ToListAsync();
 
                 createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();
             }

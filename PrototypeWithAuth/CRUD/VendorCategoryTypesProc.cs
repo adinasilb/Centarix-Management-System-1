@@ -41,5 +41,20 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
+
+        public StringWithBool Remove(VendorCategoryType item)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                _context.Remove(item);
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
     }
 }

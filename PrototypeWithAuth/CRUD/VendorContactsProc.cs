@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
@@ -40,6 +42,21 @@ namespace PrototypeWithAuth.CRUD
                     Delete = false
                 })
                 .AsNoTracking().AsQueryable();
+        }
+
+        public StringWithBool Remove(VendorContact item)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                _context.Remove(item);
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
         }
     }
 }

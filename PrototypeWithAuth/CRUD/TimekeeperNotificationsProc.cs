@@ -22,6 +22,13 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
+        public new async Task<StringWithBool> Create(Vendor v)
+        {
+            StringWithBool ReturnVal = new StringWithBool { String= "You cannot access this function directly. Please use the proc.", Bool=true };    
+            return ReturnVal;
+        }
+
+
         public async Task<StringWithBool> DeleteByEHIDAsync(int EHID)
         {
             StringWithBool ReturnVal = new StringWithBool();
@@ -43,7 +50,7 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        public override async Task<StringWithBool> RemoveWithSaveChangesAsync(TimekeeperNotification notification)
+        public async Task<StringWithBool> RemoveWithSaveChangesAsync(TimekeeperNotification notification)
         {
             StringWithBool ReturnVal = new StringWithBool();
             using (var transaction = _context.Database.BeginTransaction())
@@ -63,6 +70,42 @@ namespace PrototypeWithAuth.CRUD
             }
             return ReturnVal;
         }
+
+
+        public StringWithBool Remove(IEnumerable<TimekeeperNotification> items)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                foreach (var n in items)
+                {
+                    _context.Remove(n);
+                }
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
+
+
+        public StringWithBool Remove(TimekeeperNotification item)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                _context.Remove(item);
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
+
 
     }
 }
