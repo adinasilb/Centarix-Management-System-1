@@ -1575,7 +1575,8 @@ namespace PrototypeWithAuth.Controllers
                     new List<ComplexIncludes<Vendor, ModelBase>> { 
                             new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorCategoryTypes },
                             new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorComments, ThenInclude  = new ComplexIncludes<ModelBase, ModelBase>{ Include = c=>((VendorComment)c).CommentType } },
-                            new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorComments, ThenInclude  = new ComplexIncludes<ModelBase, ModelBase>{ Include = c=>((VendorComment)c).ApplicationUser } }
+                            new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorComments, ThenInclude  = new ComplexIncludes<ModelBase, ModelBase>{ Include = c=>((VendorComment)c).ApplicationUser } },
+                            new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorContacts}
                     });
                 createSupplierViewModel.Comments = createSupplierViewModel.Vendor.VendorComments;
                 createSupplierViewModel.VendorContacts = createSupplierViewModel.Vendor.VendorContacts.Select(c=> new VendorContactWithDeleteViewModel()
