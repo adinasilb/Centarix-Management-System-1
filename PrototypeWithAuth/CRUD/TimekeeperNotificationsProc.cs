@@ -22,42 +22,35 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public new async Task<StringWithBool> Create(Vendor v)
-        {
-            StringWithBool ReturnVal = new StringWithBool { String= "You cannot access this function directly. Please use the proc.", Bool=true };    
-            return ReturnVal;
-        }
-
-
         public async Task<StringWithBool> DeleteByEHIDAsync(int EHID)
         {
             StringWithBool ReturnVal = new StringWithBool();
-            using (var transaction = _context.Database.BeginTransaction())
+            try
             {
-                try
+                var notifications = Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == EHID });
+                foreach (var n in notifications)
                 {
-                    var notifications = Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == EHID });
-                    Remove(notifications);
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
+                    _context.Remove(n);
                 }
-                catch (Exception ex)
-                {
-                    ReturnVal.Bool = false;
-                    ReturnVal.String = AppUtility.GetExceptionMessage(ex);
-                }
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.Bool = false;
+                ReturnVal.String = AppUtility.GetExceptionMessage(ex);
             }
             return ReturnVal;
         }
 
-        public async Task<StringWithBool> RemoveWithSaveChangesAsync(TimekeeperNotification notification)
+        public async Task<StringWithBool> DeleteByPKAsync(int id)
         {
             StringWithBool ReturnVal = new StringWithBool();
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    Remove(notification);
+                    var notification = await _timekeeperNotificationsProc.ReadOne(new List<Expression<Func<TimekeeperNotification, bool>>> { tn => tn.NotificationID == id });
+                    _context.Remove(notification);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                     ReturnVal.SetStringAndBool(true, null);
@@ -71,41 +64,23 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-
-        public StringWithBool Remove(IEnumerable<TimekeeperNotification> items)
+        public async Task<StringWithBool> CreateAsync(TimekeeperNotification notification)
         {
             StringWithBool ReturnVal = new StringWithBool();
+
             try
             {
-                foreach (var n in items)
-                {
-                    _context.Remove(n);
-                }
+                _context.Entry(notification).State = EntityState.Added;
+                await _context.SaveChangesAsync();
                 ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)
             {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                ReturnVal.Bool = false;
+                ReturnVal.String = AppUtility.GetExceptionMessage(ex);
             }
             return ReturnVal;
         }
-
-
-        public StringWithBool Remove(TimekeeperNotification item)
-        {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
-            {
-                _context.Remove(item);
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-            }
-            return ReturnVal;
-        }
-
 
     }
 }

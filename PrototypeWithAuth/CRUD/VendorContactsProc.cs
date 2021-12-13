@@ -8,6 +8,7 @@ using PrototypeWithAuth.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
@@ -22,34 +23,25 @@ namespace PrototypeWithAuth.CRUD
             }
          }
 
-        public IQueryable<Models.VendorContact> Read()
-        {
-            return _context.VendorContacts.AsNoTracking().AsQueryable();
-        }
-
-        public async Task<VendorContact> ReadOneByPKAsync(int VendorContactID)
-        {
-            return await _context.VendorContacts.Where(vc => vc.VendorContactID == VendorContactID).AsNoTracking().FirstOrDefaultAsync();
-        }
-
-        public IQueryable<VendorContactWithDeleteViewModel> ReadAsVendorContactWithDeleteByVendorIDAsync(int id)
-        {
-            return _context.VendorContacts
-                .Where(vc => vc.VendorID == id)
-                .Select(vc => new VendorContactWithDeleteViewModel()
-                {
-                    VendorContact = vc,
-                    Delete = false
-                })
-                .AsNoTracking().AsQueryable();
-        }
-
-        public StringWithBool Remove(VendorContact item)
+        public async Task<StringWithBool> UpdateAsync(List<VendorContactWithDeleteViewModel> vendorContacts, int vendorID)
         {
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
-                _context.Remove(item);
+                foreach (var vendorContact in vendorContacts)
+                {
+                    if (vendorContact.Delete && vendorContact.VendorContact.VendorContactID != 0)
+                    {
+                        var dvc = await _vendorContactsProc.ReadOne(new List<Expression<Func<VendorContact, bool>>> { vc => vc.VendorContactID == vendorContact.VendorContact.VendorContactID });
+                        _context.Remove(dvc);
+                    }
+                    else if (!vendorContact.Delete)
+                    {
+                        vendorContact.VendorContact.VendorID = vendorID;
+                        _context.Update(vendorContact.VendorContact);
+                    }
+                }
+                await _context.SaveChangesAsync();
                 ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)
@@ -58,5 +50,6 @@ namespace PrototypeWithAuth.CRUD
             }
             return ReturnVal;
         }
+
     }
 }

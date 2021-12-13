@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using System;
@@ -37,6 +39,50 @@ namespace PrototypeWithAuth.CRUD
                 }
             }
             return comments.AsNoTracking().AsQueryable();
+        }
+
+        public async Task<StringWithBool> UpdateAsync(List<VendorComment> comments, int vendorID, string userID)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                if (comments != null)
+                {
+                    foreach (var vendorComment in comments)
+                    {
+                        if (!vendorComment.IsDeleted)
+                        {
+                            vendorComment.ObjectID = vendorID;
+                            if (vendorComment.CommentID == 0)
+                            {
+                                vendorComment.ApplicationUserID = userID;
+                                vendorComment.CommentTimeStamp = DateTime.Now;
+                                _context.Add(vendorComment);
+                            }
+                            else
+                            {
+                                _context.Update(vendorComment);
+                            }
+                        }
+                        else
+                        {
+                            var vendorCommentDB = _context.VendorComments.Where(c => c.CommentID == vendorComment.CommentID).FirstOrDefault();
+                            if (vendorCommentDB != null)
+                            {
+                                vendorCommentDB.IsDeleted = true;
+                                _context.Update(vendorCommentDB);
+                            }
+                        }
+                    }
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+
         }
     }
 }

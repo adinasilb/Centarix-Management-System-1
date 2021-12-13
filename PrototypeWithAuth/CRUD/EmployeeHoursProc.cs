@@ -186,7 +186,7 @@ namespace PrototypeWithAuth.CRUD
                         {
                             var employee = await _employeesProc.ReadEmployeeByIDAsync(employeeHour.EmployeeID);
                             employee.SpecialDays += 1;
-                            await _employeesProc.UpdateWithSaveChangesAsync(employee);
+                            await _employeesProc.UpdateAsync(employee);
                         }
 
                         newEmployeeHour = new EmployeeHours()
@@ -214,14 +214,12 @@ namespace PrototypeWithAuth.CRUD
                                 Controller = "Timekeeper",
                                 Action = "SummaryHours"
                             };
-                            await _timekeeperNotificationsProc.CreateWithSaveChangesAsync(newNotification);
+                            await _timekeeperNotificationsProc.CreateAsync(newNotification);
                         }
                     }
                     else
                     {
-                        _timekeeperNotificationsProc.Remove(notifications);
-                        await _context.SaveChangesAsync();
-
+                        await _timekeeperNotificationsProc.DeleteByEHIDAsync(employeeHoursID);
                         _context.Remove(employeeHour);
                         await _context.SaveChangesAsync();
 
@@ -273,7 +271,7 @@ namespace PrototypeWithAuth.CRUD
                             {
                                 user.SpecialDays += 1;
                             }
-                            await _employeesProc.UpdateWithSaveChangesAsync(user);
+                            await _employeesProc.UpdateAsync(user);
                             if (employeeHour == null)
                             {
                                 employeeHour = new EmployeeHours
@@ -292,9 +290,7 @@ namespace PrototypeWithAuth.CRUD
                                 }
                                 else
                                 {
-                                    _timekeeperNotificationsProc.Remove( _timekeeperNotificationsProc.Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == employeeHour.EmployeeHoursID }) );
-                                    _context.SaveChanges();
-                                    //RemoveNotifications(employeeHour.EmployeeHoursID);
+                                    await _timekeeperNotificationsProc.DeleteByEHIDAsync(employeeHour.EmployeeHoursID);
                                 }
                                 employeeHour.OffDayTypeID = OffDayTypeID;
                                 employeeHour.OffDayType = await _offDayTypesProc.ReadOneByPKAsync(OffDayTypeID);
@@ -332,7 +328,7 @@ namespace PrototypeWithAuth.CRUD
                                     {
                                         user.SpecialDays += 1;
                                     }
-                                    await _employeesProc.UpdateWithSaveChangesAsync(user);
+                                    await _employeesProc.UpdateAsync(user);
                                     if (employeeHour == null)
                                     {
                                         employeeHour = new EmployeeHours
@@ -350,9 +346,7 @@ namespace PrototypeWithAuth.CRUD
                                         }
                                         else
                                         {
-                                            _timekeeperNotificationsProc.Remove(new List<TimekeeperNotification>() { await _timekeeperNotificationsProc.ReadOne(new List<Expression<Func<TimekeeperNotification, bool>>> { tn => tn.EmployeeHoursID ==employeeHour.EmployeeHoursID }) });
-                                            _context.SaveChanges();
-                                            //_timekeeperNotificationsProc.DeleteByEHID(employeeHour.EmployeeHoursID);
+                                            await _timekeeperNotificationsProc.DeleteByEHIDAsync(employeeHour.EmployeeHoursID);
                                         }
                                         employeeHour.OffDayTypeID = OffDayTypeID;
                                     }
