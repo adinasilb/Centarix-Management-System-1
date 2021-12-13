@@ -109,7 +109,7 @@ namespace PrototypeWithAuth.ViewModels
             this.payments = payments;
             if (locationInstance != null)
             {
-                r.RequestLocationInstances = new ListImplementsModelBase<RequestLocationInstance> { new RequestLocationInstance { Request = r, LocationInstance = locationInstance } };
+                r.RequestLocationInstances = new ListImplementsModelBase<RequestLocationInstance>() { new RequestLocationInstance { Request = r, LocationInstance = locationInstance } };
                 r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent = parentLocationInstance;
             }
             this.user = user;

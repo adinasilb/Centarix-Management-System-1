@@ -383,11 +383,11 @@ namespace PrototypeWithAuth.Controllers
             var entriesViewModel = new EntriesViewModel()
             {
                 Participant = await _participantsProc.ReadOne(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ParticipantID },
-                new List<ComplexIncludes<Participant, ModelBase>> { new ComplexIncludes<Participant, ModelBase>{Include = p => p.ParticipantStatus },
-                    new ComplexIncludes<Participant, ModelBase>{Include = p => p.Gender } }),
+                new List<ComplexIncludes<Participant, ModelBase>> {
+                    new ComplexIncludes<Participant, ModelBase>{Include = p => p.ParticipantStatus },
+                    new ComplexIncludes<Participant, ModelBase>{Include = p => p.Gender }
+                     }),
                 
-                //_context.Participants.Include(p => p.Gender).Include(p => p.ParticipantStatus)
-                //    .Where(p => p.ParticipantID == ParticipantID).FirstOrDefault(),
                 EntryHeaders = await GetEntriesHeaders(),
                 EntryRows = await GetEntriesRows(ParticipantID)
             };
@@ -466,13 +466,14 @@ namespace PrototypeWithAuth.Controllers
         public async Task<ActionResult> _NewEntry(int ID)
         {
             //var visits =
-            var read = await _participantsProc.ReadOne(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ID });
-            var visits = read.Experiment.AmountOfVisits;
-                //_context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.Experiment.AmountOfVisits).FirstOrDefault();
-            visits = visits == 0 || visits == null ? 10 : visits;
+            var read = _participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ID });
+            var visits = read.Select(p => p.Experiment.AmountOfVisits).FirstOrDefault();
+            visits = visits == 0 ? 10 : visits;
             //var lastVisitNum = 0;
             var prevVisitNums = new List<int>();
-            if (_context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.ExperimentEntries).Any())
+            if ( /*_participantsProc*/
+                
+                _context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.ExperimentEntries).Any())
             {
                 prevVisitNums = _context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.ExperimentEntries.Select(ee => ee.VisitNumber)).FirstOrDefault().ToList();
                 //lastVisitNum = _context.Participants.Where(p => p.ParticipantID == ID).Select(p => p.ExperimentEntries.OrderByDescending(ee => ee.VisitNumber).FirstOrDefault().VisitNumber).FirstOrDefault();
