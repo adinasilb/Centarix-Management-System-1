@@ -243,7 +243,7 @@ namespace PrototypeWithAuth.Controllers
                 userId = _userManager.GetUserId(User);
             }
             var user = await _employeesProc.ReadEmployeeByIDAsync(userId, new List<Expression<Func<Employee, object>>> { e => e.SalariedEmployee });
-            SummaryHoursViewModel summaryHoursViewModel = base.SummaryHoursFunction(month, year, user);
+            SummaryHoursViewModel summaryHoursViewModel = await base.SummaryHoursFunctionAsync(month, year, user);
             summaryHoursViewModel.PageType = pageType;
             return PartialView(summaryHoursViewModel);
         }
@@ -260,7 +260,7 @@ namespace PrototypeWithAuth.Controllers
             var userid = _userManager.GetUserId(User);
             var user = await _employeesProc.ReadEmployeeByIDAsync(userid, new List<Expression<Func<Employee, object>>> { e => e.SalariedEmployee });
             //int month = Month?.Month ?? DateTime.Now.Month;
-            return PartialView(base.SummaryHoursFunction(month, year, user, errorMessage));
+            return PartialView(await base.SummaryHoursFunctionAsync(month, year, user, errorMessage));
         }
 
         [HttpGet]

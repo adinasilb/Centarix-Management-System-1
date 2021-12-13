@@ -22,11 +22,6 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public override IQueryable<Request> Read(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
-        {
-            return base.Read(wheres, includes);
-        }
-
         public override IQueryable<Request> ReadWithIgnoreQueryFilters(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
         {
             wheres.Add(r => !r.IsDeleted);

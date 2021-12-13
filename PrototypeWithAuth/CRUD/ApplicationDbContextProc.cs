@@ -37,6 +37,7 @@ namespace PrototypeWithAuth.CRUD
         protected GendersProc _gendersProc;
         protected ParticipantStatusesProc _participantStatusesProc;
         protected ExperimentEntriesProc _experimentEntriesProc;
+        protected ProductsProc _productsProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context)
         {
@@ -64,13 +65,8 @@ namespace PrototypeWithAuth.CRUD
             _gendersProc = new GendersProc(_context, true);
             _participantStatusesProc = new ParticipantStatusesProc(_context, true);
             _experimentEntriesProc = new ExperimentEntriesProc(_context, true);
+            _productsProc = new ProductsProc(_context, true);
         }
-
-        //public IQueryable<T> Read()
-        //{
-
-        //}
-
 
         public virtual IQueryable<T> Read(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
         {
@@ -99,7 +95,7 @@ namespace PrototypeWithAuth.CRUD
             return dbset.AsNoTracking().AsQueryable();
         }
 
-        public virtual async Task<T> ReadOne(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
+        public virtual async Task<T> ReadOneAsync(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
         {
             var dbset = _context.Set<T>().AsQueryable();
             if (wheres != null)

@@ -2294,7 +2294,7 @@ namespace PrototypeWithAuth.Controllers
 
             requestItemViewModel.Requests = new List<Request>();
             requestItemViewModel.Requests.Add(new Request());
-            requestItemViewModel.Requests.FirstOrDefault().ExchangeRate = GetExchangeRate();
+            requestItemViewModel.Requests.FirstOrDefault().ExchangeRate = await GetExchangeRateAsync();
             requestItemViewModel.Requests.FirstOrDefault().Product = new Product();
             requestItemViewModel.Requests.FirstOrDefault().ParentQuote = new ParentQuote();
             requestItemViewModel.Requests.FirstOrDefault().SubProject = new SubProject();
@@ -3816,7 +3816,7 @@ namespace PrototypeWithAuth.Controllers
                 PageRequestStatusID = request.RequestStatusID
             };
             receivedLocationViewModel.locationInstancesSelected.Add(new LocationInstance());
-            var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+            var currentUser = await _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
             receivedLocationViewModel.Request.ApplicationUserReceiverID = currentUser.Id;
             receivedLocationViewModel.Request.ApplicationUserReceiver = currentUser;
             receivedLocationViewModel.Request.ArrivalDate = DateTime.Today;
@@ -4028,7 +4028,7 @@ namespace PrototypeWithAuth.Controllers
                         requestReceived.ArrivalDate = receivedLocationViewModel.Request.ArrivalDate;
                     }
                     requestReceived.ApplicationUserReceiverID = receivedLocationViewModel.Request.ApplicationUserReceiverID;
-                    requestReceived.ApplicationUserReceiver = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault();
+                    requestReceived.ApplicationUserReceiver = await _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID });
 
                     requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
                     requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
@@ -4437,7 +4437,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "LabManagement")]
-        public IActionResult EditQuoteDetails(int id, int[] requestIds = null)
+        public async Task<IActionResult> EditQuoteDetails(int id, int[] requestIds = null)
         {
             StringWithBool Error = new StringWithBool();
             if (!AppUtility.IsAjaxRequest(Request))
@@ -4452,7 +4452,7 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.ParentQuote)
                     .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType).ToList();
-                var exchangeRate = GetExchangeRate();
+                var exchangeRate = await GetExchangeRateAsync();
 
                 var VendorID = requests.FirstOrDefault().Product.VendorID;
 

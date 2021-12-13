@@ -341,10 +341,10 @@ namespace PrototypeWithAuth.Controllers
             if (editParticipant.IsTestPage)
             {
                 Participant participant = editParticipant.Participant;
-                participant.Gender = await _gendersProc.ReadOne(new List<Expression<Func<Gender, bool>>> 
+                participant.Gender = await _gendersProc.ReadOneAsync(new List<Expression<Func<Gender, bool>>> 
                      { g => g.GenderID == participant.GenderID });
                 participant.ParticipantStatus = 
-                    await _participantStatusesProc.ReadOne(new List<Expression<Func<ParticipantStatus, bool>>> 
+                    await _participantStatusesProc.ReadOneAsync(new List<Expression<Func<ParticipantStatus, bool>>> 
                     { ps => ps.ParticipantStatusID == participant.ParticipantStatusID });
                 return PartialView("_ParticipantsHeader", participant);
             }
@@ -356,7 +356,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<ActionResult> _ParticipantsHeader(int ParticipantID)
         {
-            return PartialView(await _participantsProc.ReadOne(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ParticipantID }));
+            return PartialView(await _participantsProc.ReadOneAsync(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ParticipantID }));
         }
 
         public async Task<int> GetParticipantsCount(int ExperimentID)
@@ -382,7 +382,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var entriesViewModel = new EntriesViewModel()
             {
-                Participant = await _participantsProc.ReadOne(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ParticipantID },
+                Participant = await _participantsProc.ReadOneAsync(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ParticipantID },
                 new List<ComplexIncludes<Participant, ModelBase>> {
                     new ComplexIncludes<Participant, ModelBase>{Include = p => p.ParticipantStatus },
                     new ComplexIncludes<Participant, ModelBase>{Include = p => p.Gender }

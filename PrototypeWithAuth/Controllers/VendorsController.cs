@@ -335,7 +335,7 @@ namespace PrototypeWithAuth.Controllers
             }
             var createSupplierViewModel = new CreateSupplierViewModel()
             {
-                Vendor = await _vendor.ReadOne(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == id })
+                Vendor = await _vendor.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == id })
             };
             return PartialView(createSupplierViewModel);
         }
@@ -369,13 +369,13 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting")]
         private async Task<bool> VendorExists(int id)
         {
-            return await _vendor.ReadOne(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == id }) != null ? true : false;
+            return await _vendor.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == id }) != null ? true : false;
         }
 
         [HttpGet]
         public async  Task<JsonResult> GetVendorBusinessID(int VendorID)
         {
-            Vendor vendor = await _vendor.ReadOne(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == VendorID });
+            Vendor vendor = await _vendor.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == VendorID });
             return Json(vendor);
         }
       
@@ -398,7 +398,7 @@ namespace PrototypeWithAuth.Controllers
             Vendor vendor = null; 
             if (CompanyID != null && CountryID != null && VendorID == null)
             {
-                vendor =await _vendor.ReadOne(new List<Expression<Func<Vendor, bool>>> { v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID == CountryID });
+                vendor =await _vendor.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID == CountryID });
                 if(vendor !=null)
                 {
                     return false; 
@@ -406,7 +406,7 @@ namespace PrototypeWithAuth.Controllers
             }
             if (VendorID != null)
             {
-                vendor = await _vendor.ReadOne(new List<Expression<Func<Vendor, bool>>> { v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID == CountryID && v.VendorID ==VendorID });
+                vendor = await _vendor.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID == CountryID && v.VendorID ==VendorID });
                 if (vendor !=null)
                 {
                     return false;
@@ -417,7 +417,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<string> GetVendorCountryCurrencyIDAsync(int VendorID)
         {
-            var vendor = await _vendor.ReadOne(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == VendorID },
+            var vendor = await _vendor.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == VendorID },
                 new List<ComplexIncludes<Vendor, ModelBase>> {
                     new ComplexIncludes<Vendor, ModelBase>{ Include = v => v.Country }
                 }
