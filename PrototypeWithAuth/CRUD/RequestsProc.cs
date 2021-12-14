@@ -25,7 +25,19 @@ namespace PrototypeWithAuth.CRUD
         public override IQueryable<Request> ReadWithIgnoreQueryFilters(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
         {
             wheres.Add(r => !r.IsDeleted);
-            return base.ReadWithIgnoreQueryFilters(wheres, includes).IgnoreQueryFilters();
+            return base.ReadWithIgnoreQueryFilters(wheres, includes);
+        }
+
+        public override IQueryable<Request> ReadOneWithIgnoreQueryFilters(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
+        {
+            wheres.Add(r => !r.IsDeleted);
+            return base.ReadOneWithIgnoreQueryFilters(wheres, includes);
+        }
+
+        public override async Task<Request> ReadOneWithIgnoreQueryFiltersAsync(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
+        {
+            wheres.Add(r => !r.IsDeleted);
+            return await base.ReadOneWithIgnoreQueryFiltersAsync(wheres, includes);
         }
     }
 

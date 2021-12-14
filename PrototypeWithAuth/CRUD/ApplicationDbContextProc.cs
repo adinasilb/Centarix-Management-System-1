@@ -107,11 +107,9 @@ namespace PrototypeWithAuth.CRUD
                 ReqsWithInclude = ReqsWithInclude.Include(includes[t].Include);
                 if (includes[t].ThenInclude !=null)
                 {
-                    RecursiveInclude(ReqsWithInclude, includes[t].ThenInclude);
+                      ReqsWithInclude = RecursiveInclude(ReqsWithInclude, includes[t].ThenInclude);
                 }
-
             }
-
             return ReqsWithInclude;
         }
 
@@ -153,7 +151,8 @@ namespace PrototypeWithAuth.CRUD
         {
             return Read(wheres, includes).IgnoreQueryFilters();
         }
-        private IIncludableQueryable<ModelBase, ModelBase> RecursiveInclude(IIncludableQueryable<ModelBase, ModelBase> ObjectQueryable, ComplexIncludes<ModelBase, ModelBase> currentInclude)
+
+        private IIncludableQueryable<T, ModelBase> RecursiveInclude(IIncludableQueryable<T, ModelBase> ObjectQueryable, ComplexIncludes<ModelBase, ModelBase> currentInclude)
         {
             ObjectQueryable = ObjectQueryable.ThenInclude(currentInclude.Include);
             if (currentInclude.ThenInclude != null)
@@ -161,7 +160,6 @@ namespace PrototypeWithAuth.CRUD
                 ObjectQueryable = RecursiveInclude(ObjectQueryable, currentInclude.ThenInclude);
             }
             return ObjectQueryable;
-        }        
-
+        }
     }
 }
