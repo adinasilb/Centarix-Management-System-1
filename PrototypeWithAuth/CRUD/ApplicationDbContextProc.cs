@@ -77,33 +77,17 @@ namespace PrototypeWithAuth.CRUD
         public virtual IQueryable<T> Read(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
         {
             var dbset = _context.Set<T>().AsQueryable();
-            if (wheres != null)
-            {
-                foreach (var t in wheres)
-                {
-                    dbset = dbset.Where(t);
-                }
-            }
+            dbset=ApplyWheres(wheres, dbset);
             if (includes != null)
             {
-                IIncludableQueryable<T, ModelBase> ReqsWithInclude = dbset.Include(includes.FirstOrDefault().Include);
-                for(int t = 0; t < includes.Count; t++)
-                {
-                    ReqsWithInclude = ReqsWithInclude.Include(includes[t].Include);
-                    if (includes[t].ThenInclude !=null)
-                    {
-                        RecursiveInclude(ReqsWithInclude, includes[t].ThenInclude);
-                    }
-
-                }
+                IIncludableQueryable<T, ModelBase> ReqsWithInclude = ApplyIncludes(includes, dbset);
                 return ReqsWithInclude.AsNoTracking().AsQueryable();
             }
             return dbset.AsNoTracking().AsQueryable();
         }
 
-        public async Task<T> ReadOneAsync(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
+        private static IQueryable<T> ApplyWheres(List<Expression<Func<T, bool>>> wheres, IQueryable<T> dbset)
         {
-            var dbset = _context.Set<T>().AsQueryable();
             if (wheres != null)
             {
                 foreach (var t in wheres)
@@ -111,23 +95,58 @@ namespace PrototypeWithAuth.CRUD
                     dbset = dbset.Where(t);
                 }
             }
+
+            return dbset;
+        }
+
+        private IIncludableQueryable<T, ModelBase> ApplyIncludes(List<ComplexIncludes<T, ModelBase>> includes, IQueryable<T> dbset)
+        {
+            IIncludableQueryable<T, ModelBase> ReqsWithInclude = dbset.Include(includes.FirstOrDefault().Include);
+            for (int t = 0; t < includes.Count; t++)
+            {
+                ReqsWithInclude = ReqsWithInclude.Include(includes[t].Include);
+                if (includes[t].ThenInclude !=null)
+                {
+                    RecursiveInclude(ReqsWithInclude, includes[t].ThenInclude);
+                }
+
+            }
+
+            return ReqsWithInclude;
+        }
+
+        public async Task<T> ReadOneAsync(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
+        {
+            var dbset = _context.Set<T>().AsQueryable();
+            dbset=ApplyWheres(wheres, dbset);
             var item = dbset.Take(1);
             if (includes != null)
             {
-                IIncludableQueryable<T, ModelBase> requestWithInclude = item.Include(includes.FirstOrDefault().Include);
-                foreach (var t in includes)
-                {
-                    requestWithInclude = requestWithInclude.Include(t.Include);
-                    if (t.ThenInclude !=null)
-                    {
-                        RecursiveInclude(requestWithInclude, t.ThenInclude);
-                    }
-
-                }
-                var one = requestWithInclude.FirstOrDefault();
-                return one;
+                IIncludableQueryable<T, ModelBase> requestWithInclude = ApplyIncludes(includes, dbset);
+                return await requestWithInclude.AsNoTracking().FirstOrDefaultAsync();
             }
             return await item.AsNoTracking().FirstOrDefaultAsync();
+        }
+        public virtual IQueryable<T> ReadOne(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
+        {
+            var dbset = _context.Set<T>().AsQueryable();
+            dbset=ApplyWheres(wheres, dbset);
+            var item = dbset.Take(1);
+            if (includes != null)
+            {
+                IIncludableQueryable<T, ModelBase> requestWithInclude = ApplyIncludes(includes, dbset);
+                return  requestWithInclude.AsNoTracking();
+            }
+            return  item.AsNoTracking();
+        }
+        public virtual async Task<T> ReadOneWithIgnoreQueryFiltersAsync(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
+        {
+            return await ReadOne(wheres, includes).IgnoreQueryFilters().FirstOrDefaultAsync();
+        }
+
+        public virtual  IQueryable<T> ReadOneWithIgnoreQueryFilters(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
+        {
+            return ReadOne(wheres, includes).IgnoreQueryFilters();
         }
 
         public virtual IQueryable<T> ReadWithIgnoreQueryFilters(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
