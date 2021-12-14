@@ -43,9 +43,26 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        public async Task<int> GetNumberOfVisits(int ParticipantID)
+        public async Task<StringWithBool> CreateAsync(Participant participant)
         {
-            return _context.Participants.Where(p => p.ParticipantID == ParticipantID).Select(p => p.Experiment.AmountOfVisits).FirstOrDefault();
+            StringWithBool ReturnVal = new StringWithBool();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    participant.ParticipantStatusID = 1;
+                    _context.Add(participant);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    ReturnVal.SetStringAndBool(true, null);
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                }
+            }
+            return ReturnVal;
         }
     }
 }

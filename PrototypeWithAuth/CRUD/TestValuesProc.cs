@@ -9,26 +9,24 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class ExperimentEntriesProc : ApplicationDbContextProc<ExperimentEntry>
+    public class TestValuesProc : ApplicationDbContextProc<TestValue>
     {
-        public ExperimentEntriesProc(ApplicationDbContext context, bool FromBase = false) : base(context)
+        public TestValuesProc(ApplicationDbContext context, bool FromBase = false) : base(context)
         {
             if (!FromBase)
             {
-                base.InstantiateProcs();
+                this.InstantiateProcs();
             }
         }
 
-        public async Task<StringWithBool> CreateAsync(ExperimentEntry experimentEntry)
+        public async Task<StringWithBool> RunScripts()
         {
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
-                _context.Add(experimentEntry);
-                await _context.SaveChangesAsync();
                 ReturnVal.SetStringAndBool(true, null);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
             }

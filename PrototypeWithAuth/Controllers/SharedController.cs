@@ -48,6 +48,10 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.GendersProc _gendersProc;
         protected readonly CRUD.ParticipantStatusesProc _participantStatusesProc;
         protected readonly CRUD.ExperimentEntriesProc _experimentEntriesProc;
+        protected readonly CRUD.SitesProc _sitesProc;
+        protected readonly CRUD.ExperimentsProc _experimentsProc;
+        protected readonly CRUD.TestsProc _testsProc;
+        protected readonly CRUD.TestValuesProc _testValuesProc;
         protected readonly CRUD.ProductsProc _productsProc;
         protected readonly CRUD.GlobalInfosProc _globalInfosProc;
         protected readonly CRUD.RequestCommentsProc _requestCommentsProc;
@@ -80,6 +84,10 @@ namespace PrototypeWithAuth.Controllers
             _globalInfosProc = new CRUD.GlobalInfosProc(context);
             _requestCommentsProc = new CRUD.RequestCommentsProc(context);
             _productCommentsProc = new CRUD.ProductCommentsProc(context);
+            _sitesProc = new CRUD.SitesProc(context);
+            _experimentsProc = new CRUD.ExperimentsProc(context);
+            _testsProc = new CRUD.TestsProc(context);
+            _testValuesProc = new CRUD.TestValuesProc(context);
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)
