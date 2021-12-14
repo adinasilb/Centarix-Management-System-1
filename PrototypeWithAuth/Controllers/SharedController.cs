@@ -56,6 +56,9 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.GlobalInfosProc _globalInfosProc;
         protected readonly CRUD.RequestCommentsProc _requestCommentsProc;
         protected readonly CRUD.ProductCommentsProc _productCommentsProc;
+        protected readonly CRUD.LocationInstancesProc _locationInstancesProc;
+        protected readonly CRUD.TemporaryLocationInstancesProc _temporaryLocationInstancesProc;
+        protected readonly CRUD.LocationTypesProc _locationTypesProc;
         protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
 
         {
@@ -440,9 +443,9 @@ namespace PrototypeWithAuth.Controllers
                 return null;
             }
 
-            var productId = _requestsProc.ReadWithIgnoreQueryFilters(new List<Expression<Func<Request, bool>>> { r => r.RequestID == id }).Take(1).Select(r => r.ProductID).FirstOrDefault();
+            var productId = await _requestsProc.ReadOneWithIgnoreQueryFilters(new List<Expression<Func<Request, bool>>> { r => r.RequestID == id }).Select(r => r.ProductID).FirstOrDefaultAsync();
 
-            var request = await _requestsProc.ReadWithIgnoreQueryFilters(new List<Expression<Func<Request, bool>>> { r=>r.RequestID == id},  new List<ComplexIncludes<Request, ModelBase>>
+            var request = await _requestsProc.ReadOneWithIgnoreQueryFiltersAsync(new List<Expression<Func<Request, bool>>> { r=>r.RequestID == id},  new List<ComplexIncludes<Request, ModelBase>>
             {
                 new ComplexIncludes<Request, ModelBase> { Include = r => r.Product },
                 new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote },
@@ -473,7 +476,7 @@ namespace PrototypeWithAuth.Controllers
                     ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Payment)p).Invoice}
                 },
                 new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserReceiver }
-            }).FirstOrDefaultAsync();
+            });
 
 
 if (request.RequestStatusID == 7)
@@ -544,8 +547,8 @@ FillDocumentsInfo(requestItemViewModel, productSubcategory, requestId, parentQuo
 //locations:
 //get the list of requestLocationInstances in this request
 //can't look for _context.RequestLocationInstances b/c it's a join table and doesn't have a dbset]
-var request1 = await _requestsProc.ReadWithIgnoreQueryFilters( new List<Expression<Func<Request, bool>>> { r => r.RequestID == id }, new List<ComplexIncludes<Request, ModelBase>>{
-    new ComplexIncludes<Request, ModelBase>{Include = r => r.RequestLocationInstances, ThenInclude = new  ComplexIncludes<ModelBase, ModelBase>{ Include = rli => ((RequestLocationInstance)rli).LocationInstance } } }).FirstOrDefaultAsync();
+var request1 = await _requestsProc.ReadOneWithIgnoreQueryFiltersAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == id }, new List<ComplexIncludes<Request, ModelBase>>{
+    new ComplexIncludes<Request, ModelBase>{Include = r => r.RequestLocationInstances, ThenInclude = new  ComplexIncludes<ModelBase, ModelBase>{ Include = rli => ((RequestLocationInstance)rli).LocationInstance } } });
 var requestLocationInstances = request1.RequestLocationInstances.ToList();
 //if it has => (which it should once its in a details view)
 requestItemViewModel.LocationInstances = new List<LocationInstance>();
@@ -571,19 +574,19 @@ if (request1.RequestStatusID == 3 || request1.RequestStatusID == 5 || request1.R
         //get the parent location instances of the first one
         //can do this now b/c can only be in one box - later on will have to be a list or s/t b/c will have more boxes
         //int? locationInstanceParentID = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstanceID).FirstOrDefault().LocationInstanceParentID;
-        LocationInstance parentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).Include(li => li.LocationType).FirstOrDefault();
+        LocationInstance parentLocationInstance = await _locationInstancesProc.ReadOneAsync( new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID }, new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = li => li.LocationType} });
         //requestItemViewModel.ParentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
         //need to test b/c the model is int? which is nullable
 
         if (parentLocationInstance == null)
         {
-            var locationType = _context.TemporaryLocationInstances.IgnoreQueryFilters().Where(l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID).Select(li => li.LocationType).FirstOrDefault();
+            var locationType = await _temporaryLocationInstancesProc.ReadOneWithIgnoreQueryFilters( new List<Expression<Func<TemporaryLocationInstance, bool>>> { l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID }).Select(li => li.LocationType).FirstOrDefaultAsync();
 
             ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
             {
                 locationInstancesDepthZero = new List<LocationInstance>(),
                 locationTypeNames = new List<string>(),
-                locationInstancesSelected = _context.LocationInstances.IgnoreQueryFilters().Where(l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID).ToList()
+                locationInstancesSelected = await _locationInstancesProc.ReadWithIgnoreQueryFilters( new List<Expression<Func<LocationInstance, bool>>> { l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID }).ToListAsync()
 
             };
             requestItemViewModel.ReceivedModalSublocationsViewModel = receivedModalSublocationsViewModel;
@@ -598,7 +601,7 @@ if (request1.RequestStatusID == 3 || request1.RequestStatusID == 5 || request1.R
             var locationType = parentLocationInstance.LocationType;
             while (locationType.Depth != 0)
             {
-                locationType = _context.LocationTypes.Where(l => l.LocationTypeID == locationType.LocationTypeParentID).FirstOrDefault();
+                locationType = await _locationTypesProc.ReadOneAsync( new List<Expression<Func<LocationType, bool>>> { l => l.LocationTypeID == locationType.LocationTypeParentID });
             }
 
             receivedLocationViewModel.locationInstancesSelected.Add(parentLocationInstance);
@@ -607,7 +610,7 @@ if (request1.RequestStatusID == 3 || request1.RequestStatusID == 5 || request1.R
 
             ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
             {
-                locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == locationType.LocationTypeID && !(li is TemporaryLocationInstance)),
+                locationInstancesDepthZero = _locationInstancesProc.Read( new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationTypeID == locationType.LocationTypeID && !(li is TemporaryLocationInstance)}).AsEnumerable(),
                 locationTypeNames = new List<string>(),
                 locationInstancesSelected = new List<LocationInstance>()
             };
@@ -616,12 +619,12 @@ if (request1.RequestStatusID == 3 || request1.RequestStatusID == 5 || request1.R
             var parent = parentLocationInstance;
             receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
             requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
-            requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).OrderBy(l => l.LocationNumber).ToList());
+            requestItemViewModel.ChildrenLocationInstances.Add(_locationInstancesProc.Read( new List<Expression<Func<LocationInstance, bool>>> { l => l.LocationInstanceParentID == parent.LocationInstanceParentID }).OrderBy(l => l.LocationNumber).ToList());
 
             while (parent.LocationInstanceParentID != null)
             {
-                parent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parent.LocationInstanceParentID).FirstOrDefault();
-                requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).OrderBy(l => l.LocationNumber).ToList());
+                parent = await _locationInstancesProc.ReadOneAsync(new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceID == parent.LocationInstanceParentID });
+                requestItemViewModel.ChildrenLocationInstances.Add(_locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { l => l.LocationInstanceParentID == parent.LocationInstanceParentID }).OrderBy(l => l.LocationNumber).ToList());
                 receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
             }
             if (parent.LocationTypeID == 500)
@@ -631,7 +634,7 @@ if (request1.RequestStatusID == 3 || request1.RequestStatusID == 5 || request1.R
                 {
                     receivedModalSublocationsViewModel.locationInstancesSelected.Insert(0, requestLocationInstances[0].LocationInstance);
                     requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
-                    requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceID).Include(l => l.LabPart).OrderBy(l => l.LocationNumber).ToList());
+                    requestItemViewModel.ChildrenLocationInstances.Add(_locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { l => l.LocationInstanceParentID == parent.LocationInstanceID }).Include(l => l.LabPart).OrderBy(l => l.LocationNumber).ToList());
                 }
                 receivedModalSublocationsViewModel.locationInstancesSelected.First().LabPart = _context.LabParts.Where(lp => lp.LabPartID == receivedModalSublocationsViewModel.locationInstancesSelected.First().LabPartID).FirstOrDefault();
                 receivedModalSublocationsViewModel.LabPartTypes = _context.LabParts;
