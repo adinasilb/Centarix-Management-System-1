@@ -12,5 +12,6 @@ namespace PrototypeWithAuth.CRUD
                 base.InstantiateProcs();
             }
         }
+
     }
 }
