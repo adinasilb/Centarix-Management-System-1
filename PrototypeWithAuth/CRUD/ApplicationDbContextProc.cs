@@ -115,7 +115,7 @@ namespace PrototypeWithAuth.CRUD
             return ReqsWithInclude;
         }
 
-        public virtual async Task<T> ReadOneAsync(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
+        public async Task<T> ReadOneAsync(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
         {
             var dbset = _context.Set<T>().AsQueryable();
             dbset=ApplyWheres(wheres, dbset);

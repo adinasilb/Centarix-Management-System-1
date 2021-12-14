@@ -106,7 +106,7 @@ namespace PrototypeWithAuth.Controllers
         // GET: Vendors/Search
         [HttpGet]
         [Authorize(Roles = "Accounting, LabManagement")]
-        public IActionResult Search(AppUtility.MenuItems SectionType)
+        public async Task<IActionResult> Search(AppUtility.MenuItems SectionType)
         {
 
             VendorSearchViewModel vendorSearchViewModel = new VendorSearchViewModel

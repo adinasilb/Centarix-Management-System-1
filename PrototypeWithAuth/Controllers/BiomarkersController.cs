@@ -163,7 +163,7 @@ namespace PrototypeWithAuth.Controllers
 
             ExperimentViewModel experimentViewModel = new ExperimentViewModel()
             {
-                Experiment = await _experimentsProc.ReadOne(new List<Expression<Func<Experiment, bool>>> { e => e.ExperimentID == ID }),
+                Experiment = await _experimentsProc.ReadOneAsync(new List<Expression<Func<Experiment, bool>>> { e => e.ExperimentID == ID }),
                 _ParticipantsViewModel = await GetParticipantsViewModel(ID)
             };
 
@@ -182,19 +182,18 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Biomarkers")]
         public async Task<_ParticipantsViewModel> GetParticipantsViewModel(int ID)
         {
-            _ParticipantsViewModel participantsViewModel = new _ParticipantsViewModel()
-            {
-                Experiment = await _experimentsProc.ReadOne(new List<Expression<Func<Experiment, bool>>> { e => e.ExperimentID == ID },
+            var experiment = await _experimentsProc.ReadOneAsync(new List<Expression<Func<Experiment, bool>>> { e => e.ExperimentID == ID },
                 new List<ComplexIncludes<Experiment, ModelBase>>
                 {
-                    new ComplexIncludes<Experiment, ModelBase>
-                    {
-                        Include = e => (ModelBase)e.Participants ,
-                        ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{Include = p => ((Participant)p).Gender }},
+                    new ComplexIncludes<Experiment, ModelBase> {Include = p => p.Participants  ,
+                        ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{Include = p => ((Participant)p).Gender } },
                     new ComplexIncludes<Experiment, ModelBase>{
-                        Include = e => (ModelBase)e.Participants ,
+                        Include = e => e.Participants ,
                         ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{Include = p => ((Participant)p).ParticipantStatus }},
-                })
+                });
+            _ParticipantsViewModel participantsViewModel = new _ParticipantsViewModel()
+            {
+                Experiment = experiment
             };
             participantsViewModel.Headers = new List<TDViewModel>()
             {
@@ -254,39 +253,43 @@ namespace PrototypeWithAuth.Controllers
         public async Task<List<List<TDViewModel>>> GetParticipantsRows(IEnumerable<Participant> Participants)
         {
             List<List<TDViewModel>> rows = new List<List<TDViewModel>>();
-            Participants.OrderByDescending(p => p.DateCreated).ToList().ForEach(p =>
-                 rows.Add(
-                     new List<TDViewModel>()
-                     {
-                        new TDViewModel()
-                        {
-                            Value = p.CentarixID,
-                            AjaxLink = "open-participant-entries",
-                            ID = p.ParticipantID
-                        },
-                        new TDViewModel()
-                        {
-                            Value = p.DOB.GetElixirDateFormat()
-                        },
-                        new TDViewModel()
-                        {
-                            Value = p.Gender.Description
-                        },
-                        //new TDViewModel()
-                        //{
-                        //    Value = "0"
-                        //},
-                        //new TDViewModel()
-                        //{
-                        //    Value = "0"
-                        //},
-                        new TDViewModel()
-                        {
-                            Value = p.ParticipantStatus.Description
-                        }
-                     }
-                     )
-                 );
+            Participants.OrderByDescending(p => p.DateCreated).ToList();
+            foreach (var p in Participants)
+            {
+                var row = new List<TDViewModel>();
+                var vm1 = new TDViewModel()
+                {
+                    Value = p.CentarixID,
+                    AjaxLink = "open-participant-entries",
+                    ID = p.ParticipantID
+                };
+                row.Add(vm1);
+                var vm2 = new TDViewModel()
+                {
+                    Value = p.DOB.GetElixirDateFormat()
+                };
+                row.Add(vm2);
+                var vm3 = new TDViewModel()
+                {
+                    Value = p.Gender.Description
+                };
+                row.Add(vm3);
+                //new TDViewModel()
+                //{
+                //    Value = "0"
+                //},
+                //new TDViewModel()
+                //{
+                //    Value = "0"
+                //},
+                var vm4 = new TDViewModel()
+                {
+                    Value = p.ParticipantStatus.Description
+                };
+                row.Add(vm4);
+
+                rows.Add(row);
+            }
             return rows;
         }
 
@@ -322,7 +325,7 @@ namespace PrototypeWithAuth.Controllers
         {
             AddParticipantViewModel addParticipantViewModel = new AddParticipantViewModel()
             {
-                Participant = await _participantsProc.ReadOne(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ParticipantID },
+                Participant = await _participantsProc.ReadOneAsync(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ParticipantID },
                     new List<ComplexIncludes<Participant, ModelBase>> {
                         new ComplexIncludes<Participant, ModelBase>{Include = p => p.Gender},
                         new ComplexIncludes<Participant, ModelBase>{Include = p => p.ParticipantStatus}
@@ -344,10 +347,10 @@ namespace PrototypeWithAuth.Controllers
             if (editParticipant.IsTestPage)
             {
                 Participant participant = editParticipant.Participant;
-                participant.Gender = await _gendersProc.ReadOne(new List<Expression<Func<Gender, bool>>>
+                participant.Gender = await _gendersProc.ReadOneAsync(new List<Expression<Func<Gender, bool>>>
                      { g => g.GenderID == participant.GenderID });
                 participant.ParticipantStatus =
-                    await _participantStatusesProc.ReadOne(new List<Expression<Func<ParticipantStatus, bool>>>
+                    await _participantStatusesProc.ReadOneAsync(new List<Expression<Func<ParticipantStatus, bool>>>
                     { ps => ps.ParticipantStatusID == participant.ParticipantStatusID });
                 return PartialView("_ParticipantsHeader", participant);
             }
@@ -524,7 +527,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.BiomarkersExperiments;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Biomarkers;
 
-            var ee = await _experimentEntriesProc.ReadOne(new List<Expression<Func<ExperimentEntry, bool>>> { e => e.ExperimentEntryID == ID },
+            var ee = await _experimentEntriesProc.ReadOneAsync(new List<Expression<Func<ExperimentEntry, bool>>> { e => e.ExperimentEntryID == ID },
                 new List<ComplexIncludes<ExperimentEntry, ModelBase>>
                 {
                     new ComplexIncludes<ExperimentEntry, ModelBase> {Include = ee => ee.Site},
@@ -599,7 +602,7 @@ namespace PrototypeWithAuth.Controllers
         }
         private async Task<List<TestValue>> CreateTestValuesIfNoneAsync(List<Test> tests, List<TestValue> testValues, int ExperimentEntryID)
         {
-            
+
             return testValues;
         }
 
@@ -697,7 +700,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<ActionResult> _TestValues(int TestID, int ListNumber, int SiteID, int ExperimentID, int ExperimentEntryID)
         {
-            var test = await _testsProc.ReadOne(new List<Expression<Func<Test, bool>>> { t => t.TestID == TestID });
+            var test = await _testsProc.ReadOneAsync(new List<Expression<Func<Test, bool>>> { t => t.TestID == TestID });
             var tests = _testsProc.Read(new List<Expression<Func<Test, bool>>> { t => t.SiteID == SiteID && t.ExperimentTests.Select(et => et.ExperimentID).Contains(ExperimentID) },
                 new List<ComplexIncludes<Test, ModelBase>> {
                     new ComplexIncludes<Test, ModelBase>
@@ -736,9 +739,9 @@ namespace PrototypeWithAuth.Controllers
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
-                
 
-                
+
+
                 ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)
@@ -754,13 +757,13 @@ namespace PrototypeWithAuth.Controllers
             var boolCheck = true;
             //validation for create
 
-            if (CentarixID != null && ParticipantID == null && _participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.CentarixID == CentarixID}).Any())
+            if (CentarixID != null && ParticipantID == null && _participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.CentarixID == CentarixID }).Any())
             {
                 boolCheck = false;
             }
             //validation for edit
             else if (CentarixID != null && ParticipantID != null &&
-                _participantsProc.Read(new List<Expression<Func<Participant, bool>>> {  p => p.CentarixID == CentarixID && p.ParticipantID != ParticipantID}).Any())
+                _participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.CentarixID == CentarixID && p.ParticipantID != ParticipantID }).Any())
             {
                 boolCheck = false;
             }
