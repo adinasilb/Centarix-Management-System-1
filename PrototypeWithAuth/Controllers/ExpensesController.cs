@@ -41,22 +41,22 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Reports")]
-        public IActionResult _PieChart(SummaryChartsViewModel summaryChartsViewModel)
+        public async Task<IActionResult> _PieChart(SummaryChartsViewModel summaryChartsViewModel)
         {
-            ChartViewModel pieChartViewModel = GetChartData(summaryChartsViewModel);
+            ChartViewModel pieChartViewModel = await GetChartData(summaryChartsViewModel);
 
             return PartialView(pieChartViewModel);
         }
         [HttpPost]
         [Authorize(Roles = "Reports")]
-        public IActionResult _GraphChart(SummaryChartsViewModel summaryChartsViewModel)
+        public async Task<IActionResult> _GraphChart(SummaryChartsViewModel summaryChartsViewModel)
         {
-            ChartViewModel chartViewModel = GetChartData(summaryChartsViewModel);
+            ChartViewModel chartViewModel = await GetChartData(summaryChartsViewModel);
 
             return PartialView(chartViewModel);
         }
         [Authorize(Roles = "Reports")]
-        private ChartViewModel GetChartData(SummaryChartsViewModel summaryChartsViewModel)
+        private async Task<ChartViewModel> GetChartData(SummaryChartsViewModel summaryChartsViewModel)
         {
             var count = 0;
             bool isDollars = false;
@@ -88,7 +88,7 @@ namespace PrototypeWithAuth.Controllers
             pieChartViewModel.SectionName = new List<String>();
             pieChartViewModel.SectionValue = new List<decimal>();
             pieChartViewModel.Currency = currency;
-            var latestExchangeRate = base.GetExchangeRate();
+            var latestExchangeRate = await base.GetExchangeRateAsync();
             if (summaryChartsViewModel.SelectedEmployees != null)
             {
                 var employees = _context.Employees.Where(e => summaryChartsViewModel.SelectedEmployees.Contains(e.Id));
@@ -340,26 +340,26 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Reports")]
-        public IActionResult SummaryTables()
+        public async Task<IActionResult> SummaryTables()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ExpensesSummary;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Tables;
 
-            SummaryTablesViewModel summaryTablesViewModel = GetSummaryTablesViewModel(AppUtility.CurrencyEnum.USD, DateTime.Now.Year);
+            SummaryTablesViewModel summaryTablesViewModel = await GetSummaryTablesViewModel(AppUtility.CurrencyEnum.USD, DateTime.Now.Year);
             return View(summaryTablesViewModel);
         }
 
         [HttpGet]
         [Authorize(Roles = "Reports")]
-        public IActionResult _SummaryTables(AppUtility.CurrencyEnum currencyEnum, int year)
+        public async Task<IActionResult> _SummaryTables(AppUtility.CurrencyEnum currencyEnum, int year)
         {
-            SummaryTablesViewModel summaryTablesViewModel = GetSummaryTablesViewModel(currencyEnum, year);
+            SummaryTablesViewModel summaryTablesViewModel =await GetSummaryTablesViewModel(currencyEnum, year);
             return PartialView(summaryTablesViewModel);
         }
 
         [Authorize(Roles = "Reports")]
-        public SummaryTablesViewModel GetSummaryTablesViewModel(AppUtility.CurrencyEnum currencyEnum, int year)
+        public async  Task<SummaryTablesViewModel> GetSummaryTablesViewModel(AppUtility.CurrencyEnum currencyEnum, int year)
         {
             List<SummaryTableItem> summaryTableItems = new List<SummaryTableItem>();
             for (int i = 1; i <= 12; i++)
@@ -379,7 +379,7 @@ namespace PrototypeWithAuth.Controllers
                 decimal plastics = 0;
                 decimal reusables = 0;
                 decimal total = 0;
-                var latestExchangeRate = base.GetExchangeRate();
+                var latestExchangeRate = await base.GetExchangeRateAsync();
                 switch (currencyEnum)
                 {
                     case AppUtility.CurrencyEnum.NIS:

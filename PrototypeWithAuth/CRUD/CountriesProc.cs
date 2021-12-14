@@ -25,14 +25,5 @@ namespace PrototypeWithAuth.CRUD
             return _context.Countries.AsNoTracking().AsQueryable();
         }
 
-        public List<SelectListItem> ReadAsSelectList()
-        {
-            var returnList = new List<SelectListItem>();
-            foreach (var country in _context.Countries)
-            {
-                returnList.Add(new SelectListItem() { Text = country.CountryName, Value = country.CountryID.ToString() });
-            }
-            return returnList;
-        }
     }
 }

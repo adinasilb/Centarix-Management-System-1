@@ -84,7 +84,7 @@ namespace PrototypeWithAuth.Models
 
         //payment info
         public uint? Installments { get; set; } //number of installments
-        public List<Payment> Payments { get; set; }
+        public ListImplementsModelBase<Payment> Payments { get; set; }
 
         public int? PaymentStatusID { get; set; }
         [ForeignKey("PaymentStatusID")]
@@ -172,7 +172,7 @@ namespace PrototypeWithAuth.Models
         public string ApplicationUserReceiverID { get; set; } //this is the owner of the request - do we have every received request have its own reciever?
 
         [ForeignKey("ApplicationUserReceiverID")]
-        public ApplicationUser ApplicationUserReceiver { get; set; }
+        public Employee ApplicationUserReceiver { get; set; }
         public ListImplementsModelBase<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public bool Ignore { get; set; }
         public bool IsReceived { get; set; }

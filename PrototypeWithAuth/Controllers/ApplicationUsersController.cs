@@ -252,7 +252,7 @@ namespace PrototypeWithAuth.Controllers
 
             Employee user = _context.Employees.Include(e => e.SalariedEmployee).Where(e => e.Id == userId).FirstOrDefault();
 
-            SummaryHoursViewModel viewModel = base.SummaryHoursFunction(month, year, user);
+            SummaryHoursViewModel viewModel = await base.SummaryHoursFunctionAsync(month, year, user);
             viewModel.PageType = PageTypeEnum.UsersWorkers;
             return View(viewModel);
         }

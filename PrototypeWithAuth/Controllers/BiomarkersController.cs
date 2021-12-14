@@ -359,7 +359,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<ActionResult> _ParticipantsHeader(int ParticipantID)
         {
-            return PartialView(await _participantsProc.ReadOne(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ParticipantID }));
+            return PartialView(await _participantsProc.ReadOneAsync(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ParticipantID }));
         }
 
         public async Task<int> GetParticipantsCount(int ExperimentID)
@@ -385,7 +385,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var entriesViewModel = new EntriesViewModel()
             {
-                Participant = await _participantsProc.ReadOne(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ParticipantID },
+                Participant = await _participantsProc.ReadOneAsync(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ParticipantID },
                 new List<ComplexIncludes<Participant, ModelBase>> {
                     new ComplexIncludes<Participant, ModelBase>{Include = p => p.ParticipantStatus },
                     new ComplexIncludes<Participant, ModelBase>{Include = p => p.Gender }

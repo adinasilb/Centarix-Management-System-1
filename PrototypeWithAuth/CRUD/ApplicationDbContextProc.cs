@@ -40,6 +40,7 @@ namespace PrototypeWithAuth.CRUD
         protected SitesProc _sitesProc;
         protected TestsProc _testsProc;
         protected TestValuesProc _testValuesProc;
+        protected ProductsProc _productsProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context)
         {
@@ -70,13 +71,8 @@ namespace PrototypeWithAuth.CRUD
             _sitesProc = new SitesProc(_context, true);
             _testsProc = new TestsProc(_context, true);
             _testValuesProc = new TestValuesProc(_context, true);
+            _productsProc = new ProductsProc(_context, true);
         }
-
-        //public IQueryable<T> Read()
-        //{
-
-        //}
-
 
         public virtual IQueryable<T> Read(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
         {
@@ -105,7 +101,7 @@ namespace PrototypeWithAuth.CRUD
             return dbset.AsNoTracking().AsQueryable();
         }
 
-        public virtual async Task<T> ReadOne(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
+        public virtual async Task<T> ReadOneAsync(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
         {
             var dbset = _context.Set<T>().AsQueryable();
             if (wheres != null)

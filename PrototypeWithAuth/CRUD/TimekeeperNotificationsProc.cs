@@ -49,7 +49,7 @@ namespace PrototypeWithAuth.CRUD
             {
                 try
                 {
-                    var notification = await _timekeeperNotificationsProc.ReadOne(new List<Expression<Func<TimekeeperNotification, bool>>> { tn => tn.NotificationID == id });
+                    var notification = await _timekeeperNotificationsProc.ReadOneAsync(new List<Expression<Func<TimekeeperNotification, bool>>> { tn => tn.NotificationID == id });
                     _context.Remove(notification);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();

@@ -68,7 +68,7 @@ namespace PrototypeWithAuth.CRUD
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
-                var vendor = await _vendorsProc.ReadOne(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == vendorID },
+                var vendor = await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == vendorID },
                          new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include= v => v.VendorCategoryTypes } });
 
                 await _vendorCategoryTypesProc.RemoveAsync(vendor.VendorCategoryTypes);
