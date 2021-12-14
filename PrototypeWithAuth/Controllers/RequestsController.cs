@@ -1287,7 +1287,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 _context.Entry(tempRequest.Request.Product).State = EntityState.Modified;
             }
-            if ((tempRequest.Request.ParentQuoteID == 0 || tempRequest.Request.ParentQuoteID == null) && tempRequest.Request.ParentQuote != null)
+            if ((tempRequest.Request.ParentQuoteID == 0 || tempRequest.Request.ParentQuoteID == null) && (tempRequest.Request.ParentQuote != null && tempRequest.Request.ParentQuote?.ParentQuoteID==0 ))
             {
                 _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Added;
             }
@@ -3125,6 +3125,7 @@ namespace PrototypeWithAuth.Controllers
             //var requests = new List<Request>();
             //var payments = new List<Payment>();
             List<ModelAndID> ModelsCreated = new List<ModelAndID>();
+            List<ModelAndID> ModelsModified = new List<ModelAndID>();
 
             var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
             var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson, 4);
@@ -3193,6 +3194,15 @@ namespace PrototypeWithAuth.Controllers
                                 ModelsEnum = AppUtility.ModelsEnum.Product
                             });
                         }
+                        else
+                        {
+                            ModelsModified.Add(new ModelAndID()
+                            {
+                                ID = tempRequest.Request.ProductID,
+                                ModelsEnum = AppUtility.ModelsEnum.Product
+                            });
+
+                        }
                         if (AddedRequest)
                         {
                             ModelsCreated.Add(new ModelAndID()
@@ -3201,9 +3211,26 @@ namespace PrototypeWithAuth.Controllers
                                 ModelsEnum = AppUtility.ModelsEnum.Request
                             });
                         }
+                        else
+                        {
+                            ModelsModified.Add(new ModelAndID()
+                            {
+                                ID = tempRequest.Request.RequestID,
+                                ModelsEnum = AppUtility.ModelsEnum.Request
+                            });
+
+                        }
                         if (AddedParentQuote)
                         {
                             ModelsCreated.Add(new ModelAndID()
+                            {
+                                ID = Convert.ToInt32(tempRequest.Request.ParentQuoteID),
+                                ModelsEnum = AppUtility.ModelsEnum.ParentQuote
+                            });
+                        }
+                        else
+                        {
+                            ModelsModified.Add(new ModelAndID()
                             {
                                 ID = Convert.ToInt32(tempRequest.Request.ParentQuoteID),
                                 ModelsEnum = AppUtility.ModelsEnum.ParentQuote
@@ -3414,6 +3441,11 @@ namespace PrototypeWithAuth.Controllers
                     else //if coming from approve order
                     {
                         _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Modified;
+                        ModelsModified.Add(new ModelAndID()
+                        {
+                            ID = Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID),
+                            ModelsEnum = AppUtility.ModelsEnum.ParentRequest
+                        });
                         await _context.SaveChangesAsync();
                     }
                     if (moveOrderDoc)
@@ -3440,11 +3472,9 @@ namespace PrototypeWithAuth.Controllers
                         {
                             ViewBag.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                             transaction.Rollback();
-                            if (!Success)
-                            {
-                                await RollbackRequest(ModelsCreated, tempRequestListViewModel.GUID);
-                            }
-                            await RollbackCurrentTempAsync(tempRequestListViewModel.GUID);
+
+                            await RollbackRequest(ModelsCreated, ModelsModified, tempRequestListViewModel.GUID);
+                            
                             //base.RemoveRequestWithCommentsAndEmailSessions();
                             return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
                         }
@@ -3462,11 +3492,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    if (!Success)
-                    {
-                        await RollbackRequest(ModelsCreated, tempRequestListViewModel.GUID);
-                    }
-                    await RollbackCurrentTempAsync(tempRequestListViewModel.GUID);
+                    await RollbackRequest(ModelsCreated, ModelsModified, tempRequestListViewModel.GUID);
                     //base.RemoveRequestWithCommentsAndEmailSessions();
                     return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
                 }
@@ -3476,11 +3502,13 @@ namespace PrototypeWithAuth.Controllers
 
 
             tempRequestListViewModel.RequestIndexObject.RequestStatusID = 2;
+            tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
 
             if (!Success)
             {
-                await RollbackRequest(ModelsCreated, tempRequestListViewModel.GUID);
-                await RollbackCurrentTempAsync(tempRequestListViewModel.GUID);
+               
+                await RollbackRequest(ModelsCreated, ModelsModified, tempRequestListViewModel.GUID);
+                tempRequestListViewModel.RequestIndexObject.RequestStatusID = 6;
                 return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
             }
             return new EmptyResult();
@@ -3501,11 +3529,16 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        public async Task<StringWithBool> RollbackRequest(List<ModelAndID> ModelsCreated, Guid guid)
+        public async Task<StringWithBool> RollbackRequest(List<ModelAndID> ModelsCreated, List<ModelAndID> ModelModified, Guid guid)
         {
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
+                var entries = _context.ChangeTracker.Entries();
+                foreach (var entry in entries)
+                {
+                    entry.State = EntityState.Detached;
+                }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
                 {
                     var model6 = _context.Comments.Where(pr => pr.CommentID == ModelWithID.ID).FirstOrDefault();
@@ -3525,16 +3558,22 @@ namespace PrototypeWithAuth.Controllers
                 {
                     var model = _context.Requests.Where(r => r.RequestID == ModelWithID.ID).FirstOrDefault();
                     _context.Remove(model);
+                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentRequest, guid.ToString(), false, true);
+
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentQuote))
                 {
                     var model2 = _context.ParentQuotes.Where(pr => pr.ParentQuoteID == ModelWithID.ID).FirstOrDefault();
                     _context.Remove(model2);
+                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentQuote, guid.ToString(), false, true);
+
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentRequest))
                 {
                     var model3 = _context.ParentRequests.Where(pr => pr.ParentRequestID == ModelWithID.ID).FirstOrDefault();
                     _context.Remove(model3);
+                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.Requests, guid.ToString(), true, true);
+
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Product))
                 {
@@ -3546,17 +3585,42 @@ namespace PrototypeWithAuth.Controllers
 
                 //Move parentquote docs back to parentquote:
 
+                await RollbackCurrentTempAsync(guid);
 
                 var oldTempRequestJson = await GetTempRequestAsync(guid);
 
                 var deTLVM = new TempRequestListViewModel()
                 {
                     TempRequestViewModels = oldTempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
-                };
+                };           
+                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
+                {
+                    var comment = deTLVM.TempRequestViewModels.Select(t => t.Comments.Where(c => c.CommentID== ModelWithID.ID).FirstOrDefault()).FirstOrDefault();
+                    _context.Entry(comment).State = EntityState.Modified;
+                }
+                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Payment))
+                {
+                    var payment = deTLVM.TempRequestViewModels.Select(t => t.Payments.Where(c => c.PaymentID== ModelWithID.ID).FirstOrDefault()).FirstOrDefault();
+                    _context.Entry(payment).State = EntityState.Modified;
+                }           
+                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Request))
+                {
+                    var request = deTLVM.TempRequestViewModels.Where(c => c.Request.RequestID== ModelWithID.ID).Select(r=>r.Request).FirstOrDefault();
+                    _context.Entry(request).State = EntityState.Modified;
+                }
+                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentRequest))
+                {
+                    var parentRequest = deTLVM.TempRequestViewModels.Where(c => c.Request.ParentRequestID== ModelWithID.ID).Select(r => r.Request.ParentRequest).FirstOrDefault();
+                    _context.Entry(parentRequest).State = EntityState.Modified;
+                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentRequest, guid.ToString(), false, true);
 
-                MoveDocumentsBackToTempFolder(Convert.ToInt32(deTLVM.TempRequestViewModels[0].Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, guid.ToString(), false, true);
-                MoveDocumentsBackToTempFolder(Convert.ToInt32(deTLVM.TempRequestViewModels[0].Request.RequestID), AppUtility.ParentFolderName.Requests, guid.ToString(), true, true);
-                MoveDocumentsBackToTempFolder(Convert.ToInt32(deTLVM.TempRequestViewModels[0].Request.ParentRequestID), AppUtility.ParentFolderName.ParentRequest, guid.ToString(), false, true);
+                }
+                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Product))
+                {
+                    var product = deTLVM.TempRequestViewModels.Where(c => c.Request.ProductID== ModelWithID.ID).Select(r => r.Request.Product).FirstOrDefault();
+                    _context.Entry(product).State = EntityState.Modified;
+                }
+                await _context.SaveChangesAsync();
                 ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception e)
