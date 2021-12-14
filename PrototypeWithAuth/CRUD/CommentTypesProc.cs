@@ -19,18 +19,5 @@ namespace PrototypeWithAuth.CRUD
                 base.InstantiateProcs();
             }
         }
-
-        public IQueryable<CommentType> Read(List<Expression<Func<CommentType, object>>> includes = null)
-        {
-            var comments = _context.CommentTypes.AsNoTracking().AsQueryable();
-            if (includes != null)
-            {
-                foreach (var t in includes)
-                {
-                    comments = comments.Include(t);
-                }
-            }
-            return comments;
-        }
     }
 }

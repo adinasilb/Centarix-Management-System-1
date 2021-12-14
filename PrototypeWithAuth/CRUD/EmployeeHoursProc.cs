@@ -35,7 +35,7 @@ namespace PrototypeWithAuth.CRUD
             return await employeehours.AsNoTracking().FirstOrDefaultAsync();
         }
 
-        public async Task<StringWithBool> Update(EmployeeHours EmployeeHour)
+        public async Task<StringWithBool> UpdateAsync(EmployeeHours EmployeeHour)
         {
             var ReturnVal = new StringWithBool();
             try
@@ -49,26 +49,6 @@ namespace PrototypeWithAuth.CRUD
                 ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
             }
             return ReturnVal;
-        }
-
-        public async Task<EmployeeHours> ReadOneByDateAndUserIDAsync(DateTime dateTime, string UserID, List<Expression<Func<EmployeeHours, object>>> includes = null)
-        {
-            var employeehours = _context.EmployeeHours.Where(eh => eh.Date.Date == dateTime.Date && eh.EmployeeID == UserID).Take(1);
-
-            if (includes != null)
-            {
-                foreach (var t in includes)
-                {
-                    employeehours = employeehours.Include(t);
-                }
-            }
-            return await employeehours.AsNoTracking().FirstOrDefaultAsync();
-        }
-
-        public async Task<EmployeeHours> ReadDoubledAsync(DateTime dateTime, string UserID, int EHID)
-        {
-            return await _context.EmployeeHours.Where(eh => eh.Date.Date == dateTime.Date && eh.EmployeeID == UserID
-                    && eh.EmployeeHoursID != EHID).AsNoTracking().FirstOrDefaultAsync();
         }
 
         public IQueryable<EmployeeHours> ReadOffDaysByYearOffDayTypeIDAndUserID(int year, int offDayTypeID, string userId)
@@ -172,8 +152,9 @@ namespace PrototypeWithAuth.CRUD
 
             var employeeHoursID = deleteHourViewModel.EmployeeHour.EmployeeHoursID;
             var notifications = _timekeeperNotificationsProc.Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == employeeHoursID });
-            var dayoff = await _companyDaysOffProc.ReadOneByDateAsync(deleteHourViewModel.EmployeeHour.Date);
-            var anotherEmployeeHourWithSameDate = await ReadDoubledAsync(deleteHourViewModel.EmployeeHour.Date, deleteHourViewModel.EmployeeHour.EmployeeID, deleteHourViewModel.EmployeeHour.EmployeeHoursID);
+            var dayoff = await _companyDaysOffProc.ReadOneAsync( new List<Expression<Func<CompanyDayOff, bool>>> { co => co.Date.Date == deleteHourViewModel.EmployeeHour.Date.Date });
+            var anotherEmployeeHourWithSameDate = await ReadOneAsync( new List<Expression<Func<EmployeeHours, bool>>>{eh => eh.Date.Date == deleteHourViewModel.EmployeeHour.Date.Date && eh.EmployeeID == deleteHourViewModel.EmployeeHour.EmployeeID
+                    && eh.EmployeeHoursID !=  deleteHourViewModel.EmployeeHour.EmployeeHoursID });
             var employeeHour = await ReadOneByPKAsync(deleteHourViewModel.EmployeeHour.EmployeeHoursID, new List<Expression<Func<EmployeeHours, object>>> { eh => eh.OffDayType });
             EmployeeHours newEmployeeHour = null;
             using (var transaction = _context.Database.BeginTransaction())
@@ -224,7 +205,7 @@ namespace PrototypeWithAuth.CRUD
                         await _context.SaveChangesAsync();
 
                     }
-                    await _employeeHoursAwaitingApprovalProc.Delete(employeeHoursID);
+                    await _employeeHoursAwaitingApprovalProc.DeleteAsync(employeeHoursID);
 
                     await transaction.CommitAsync();
                     ReturnVal.SetStringAndBool(true, null);
@@ -254,12 +235,13 @@ namespace PrototypeWithAuth.CRUD
 
                     if (DateTo == new DateTime()) //just one date
                     {
-                        var newone = await _companyDaysOffProc.ReadOneByDateAsync(DateFrom);
+                        var newone = await _companyDaysOffProc.ReadOneAsync( new List<Expression<Func<CompanyDayOff, bool>>> { companyDaysOff => companyDaysOff.Date.Date == DateFrom.Date });
                         if (newone != null) { companyDaysOff.Add(newone.Date); }
                         if (DateFrom.DayOfWeek != DayOfWeek.Friday && DateFrom.DayOfWeek != DayOfWeek.Saturday && !(companyDaysOff == null))
                         {
-                            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadOneByUserIDAndDateAsync(UserID, DateFrom);
-                            employeeHour = await ReadOneByDateAndUserIDAsync(DateFrom, UserID);
+                            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadOneAsync( new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { eh => eh.EmployeeID == UserID && eh.Date.Date == DateFrom.Date });
+                            employeeHour = await _employeeHoursProc.ReadOneAsync(new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.EmployeeID == UserID && eh.Date.Date == DateFrom.Date });
+
                             if (OffDayTypeID == 4 && employeeHour?.OffDayTypeID != 4)
                             {
                                 //employeeHour.Employee = user;
@@ -307,8 +289,7 @@ namespace PrototypeWithAuth.CRUD
                     else
                     {
                         var employeeHours = this.ReadByDateSpanAndUserID(DateTo, DateFrom, UserID);
-                        companyDaysOff = _companyDaysOffProc.ReadByDateSpan(DateFrom, DateTo).Select(cdf => cdf.Date).ToList();
-
+                        companyDaysOff = await _companyDaysOffProc.Read( new List<Expression<Func<CompanyDayOff, bool>>> { d => d.Date >= DateFrom && d.Date <= DateTo }).Select(cdf => cdf.Date).ToListAsync();
 
                         while (DateFrom <= DateTo)
                         {
@@ -392,12 +373,12 @@ namespace PrototypeWithAuth.CRUD
             {
                 try
                 {
-                    var ehaa = await _employeeHoursAwaitingApprovalProc.ReadOneByUserIDAndDateAsync(updateHoursViewModel.EmployeeHour.EmployeeID, updateHoursViewModel.EmployeeHour.Date.Date);
+                    var ehaa = await _employeeHoursAwaitingApprovalProc.ReadOneAsync( new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { eh => eh.EmployeeID == updateHoursViewModel.EmployeeHour.EmployeeID && eh.Date.Date == updateHoursViewModel.EmployeeHour.Date.Date});
 
 
-                    var eh = await ReadOneByDateAndUserIDAsync(updateHoursViewModel.EmployeeHour.Date.Date, updateHoursViewModel.EmployeeHour.EmployeeID);
+                    var eh = await ReadOneAsync( new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.Date.Date == updateHoursViewModel.EmployeeHour.Date.Date, eh => eh.EmployeeID == updateHoursViewModel.EmployeeHour.EmployeeID });
 
-
+                    
                     var updateHoursDate = updateHoursViewModel.EmployeeHour.Date;
 
                     if (ehaa == null)
