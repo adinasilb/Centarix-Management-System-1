@@ -406,7 +406,7 @@ namespace PrototypeWithAuth.Controllers
             }
             if (VendorID != null)
             {
-                vendor = await _vendor.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID == CountryID && v.VendorID ==VendorID });
+                vendor = await _vendor.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID == CountryID && v.VendorID !=VendorID });
                 if (vendor !=null)
                 {
                     return false;
