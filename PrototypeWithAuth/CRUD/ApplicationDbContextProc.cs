@@ -101,7 +101,7 @@ namespace PrototypeWithAuth.CRUD
             return dbset.AsNoTracking().AsQueryable();
         }
 
-        public virtual async Task<T> ReadOneAsync(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
+        public async Task<T> ReadOneAsync(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
         {
             var dbset = _context.Set<T>().AsQueryable();
             if (wheres != null)
@@ -124,7 +124,8 @@ namespace PrototypeWithAuth.CRUD
                     }
 
                 }
-                return await requestWithInclude.AsNoTracking().FirstOrDefaultAsync();
+                var one = requestWithInclude.FirstOrDefault();
+                return one;
             }
             return await item.AsNoTracking().FirstOrDefaultAsync();
         }

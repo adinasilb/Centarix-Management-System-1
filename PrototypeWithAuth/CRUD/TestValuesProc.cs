@@ -31,7 +31,7 @@ namespace PrototypeWithAuth.CRUD
                     TestValue testValue = new TestValue();
                     if (fieldTest.TestValueID != 0)
                     {
-                        testValue = await _testValuesProc.ReadOne(new List<Expression<Func<TestValue, bool>>> 
+                        testValue = await this.ReadOneAsync(new List<Expression<Func<TestValue, bool>>> 
                                                             { tv => tv.TestValueID == fieldTest.TestValueID });
                     }
                     else
