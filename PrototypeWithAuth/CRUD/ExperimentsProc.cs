@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,12 @@ namespace PrototypeWithAuth.CRUD
             {
                 this.InstantiateProcs();
             }
+        }
+
+        public IQueryable<Experiment> ReadWithParticipantsByID(int ExperimentID)
+        {
+            return _context.Experiments.Where(e => e.ExperimentID == ExperimentID)
+                .Include(e => e.Participants).ThenInclude(p => p.Gender).Include(e => e.Participants).ThenInclude(p => p.ParticipantStatus).Take(1);
         }
     }
 }

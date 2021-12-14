@@ -182,18 +182,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Biomarkers")]
         public async Task<_ParticipantsViewModel> GetParticipantsViewModel(int ID)
         {
-            var experiment = await _experimentsProc.ReadOneAsync(new List<Expression<Func<Experiment, bool>>> { e => e.ExperimentID == ID },
-                new List<ComplexIncludes<Experiment, ModelBase>>
-                {
-                    new ComplexIncludes<Experiment, ModelBase> {Include = p => p.Participants  ,
-                        ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{Include = p => ((Participant)p).Gender } },
-                    new ComplexIncludes<Experiment, ModelBase>{
-                        Include = e => e.Participants ,
-                        ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{Include = p => ((Participant)p).ParticipantStatus }},
-                });
+            var experiment = _experimentsProc.ReadWithParticipantsByID(ID);
             _ParticipantsViewModel participantsViewModel = new _ParticipantsViewModel()
             {
-                Experiment = experiment
+                Experiment = experiment.FirstOrDefault()
             };
             participantsViewModel.Headers = new List<TDViewModel>()
             {
