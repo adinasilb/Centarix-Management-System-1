@@ -236,7 +236,7 @@ namespace PrototypeWithAuth.CRUD
                                     EmployeeID = UserID,
                                     Date = DateFrom,
                                     OffDayTypeID = OffDayTypeID,
-                                    OffDayType = await _offDayTypesProc.ReadOneByPKAsync(OffDayTypeID)
+                                    OffDayType = await _offDayTypesProc.ReadOneAsync(new List<Expression<Func<OffDayType, bool>>> { od => od.OffDayTypeID == OffDayTypeID })
                                 };
                             }
                             else if (employeeHour.Entry1 == null && employeeHour.Entry2 == null && employeeHour.TotalHours == null)
@@ -250,7 +250,7 @@ namespace PrototypeWithAuth.CRUD
                                     await _timekeeperNotificationsProc.DeleteByEHIDAsync(employeeHour.EmployeeHoursID);
                                 }
                                 employeeHour.OffDayTypeID = OffDayTypeID;
-                                employeeHour.OffDayType = await _offDayTypesProc.ReadOneByPKAsync(OffDayTypeID);
+                                employeeHour.OffDayType = await _offDayTypesProc.ReadOneAsync(new List<Expression<Func<OffDayType, bool>>> { od => od.OffDayTypeID == OffDayTypeID });
                             }
                             if (!alreadyOffDay)
                             {
