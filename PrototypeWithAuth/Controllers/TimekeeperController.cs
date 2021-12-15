@@ -393,7 +393,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 updateHoursViewModel.AutoFillEntry1Type = 1;
             }
-            updateHoursViewModel.PartialOffDayTypes = _offDayTypesProc.ReadManyByPKS(new List<int>() { 1, 2 });
+            updateHoursViewModel.PartialOffDayTypes = _offDayTypesProc.Read( new List<Expression<Func<OffDayType, bool>>> { od => new List<int>() { 1, 2 }.Contains(od.OffDayTypeID) });
             return updateHoursViewModel;
         }
 
@@ -438,7 +438,7 @@ namespace PrototypeWithAuth.Controllers
         {
             string errorMessage = "";
             var userId = _userManager.GetUserId(User);
-            var offDayType = await _offDayTypesProc.ReadOneByOffDayTypeEnumAsync(offDayViewModel.OffDayType);
+            var offDayType = await _offDayTypesProc.ReadOneAsync( new List<Expression<Func<OffDayType, bool>>> { odt => odt.Description == AppUtility.GetDisplayNameOfEnumValue(offDayViewModel.OffDayType.ToString())});
             var offDayTypeID = offDayType.OffDayTypeID;
             var success = await _employeeHoursProc.SaveOffDayAsync(offDayViewModel.FromDate, offDayViewModel.ToDate, offDayTypeID, userId);
             if (!success.Bool)
@@ -500,7 +500,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> OffDayConfirmModal(OffDayViewModel offDayViewModel)
         {
-            var offday = await _offDayTypesProc.ReadOneByOffDayTypeEnumAsync(offDayViewModel.OffDayType);
+            var offday = await _offDayTypesProc.ReadOneAsync(new List<Expression<Func<OffDayType, bool>>> { odt => odt.Description == AppUtility.GetDisplayNameOfEnumValue(offDayViewModel.OffDayType.ToString()) });
             int offdayid = offday.OffDayTypeID;
             string userid = _userManager.GetUserId(User);
             var success = await _employeeHoursProc.SaveOffDayAsync(offDayViewModel.FromDate, offDayViewModel.ToDate, offdayid, userid);

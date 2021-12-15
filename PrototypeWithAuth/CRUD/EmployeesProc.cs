@@ -81,7 +81,7 @@ namespace PrototypeWithAuth.CRUD
             return offDaysLeft;
         }
 
-        private async Task<StringWithBool> UpdateAsync(Employee employee)
+        public async Task<StringWithBool> UpdateAsync(Employee employee)
         {
             StringWithBool ReturnVal = new StringWithBool();
             try

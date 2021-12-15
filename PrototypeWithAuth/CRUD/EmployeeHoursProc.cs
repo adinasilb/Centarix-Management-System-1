@@ -140,7 +140,7 @@ namespace PrototypeWithAuth.CRUD
                     {
                         if (employeeHour.OffDayTypeID == 4)
                         {
-                            var employee = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id==employeeHour.e });
+                            var employee = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id==employeeHour.EmployeeID });
                             employee.SpecialDays += 1;
                             await _employeesProc.UpdateAsync(employee);
                         }
