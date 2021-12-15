@@ -60,7 +60,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
             }
-            var notifications = _timekeeperNotificationsProc.Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.ApplicationUserID == userid }).OrderByDescending(n => n.EmployeeHours.Date).Take(20).ToList();
+            var notifications = _timekeeperNotificationsProc.Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.ApplicationUserID == userid },
+            new List<ComplexIncludes<TimekeeperNotification, ModelBase>> { new ComplexIncludes<TimekeeperNotification, ModelBase>{ Include = tn => tn.EmployeeHours } }).OrderByDescending(n => n.EmployeeHours.Date).Take(20).ToList();
             
             entryExitViewModel.TimekeeperNotifications = notifications;
             if (errorMessage != null)
