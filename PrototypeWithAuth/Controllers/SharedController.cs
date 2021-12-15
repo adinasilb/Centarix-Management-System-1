@@ -62,7 +62,7 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.LabPartsProc _lapPartsProc;
         protected readonly CRUD.ShareRequestsProc _shareRequestsProc;
         protected readonly CRUD.FavoriteRequestsProc _favoriteRequestsProc;
-        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
+        public SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
 
         {
             _context = context;
@@ -291,6 +291,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+        [HttpPost]
         public string UploadFile(DocumentsModalViewModel documentsModalViewModel)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
