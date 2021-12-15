@@ -22,20 +22,8 @@ namespace PrototypeWithAuth.CRUD
                 base.InstantiateProcs();
             }
         }
-        public async Task<EmployeeHours> ReadOneByPKAsync(int? EHID, List<Expression<Func<EmployeeHours, object>>> includes = null)
-        {
-            var employeehours = _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == EHID).Take(1);
-            if (includes != null)
-            {
-                foreach (var t in includes)
-                {
-                    employeehours = employeehours.Include(t);
-                }
-            }
-            return await employeehours.AsNoTracking().FirstOrDefaultAsync();
-        }
 
-        public async Task<StringWithBool> Update(EmployeeHours EmployeeHour)
+        public async Task<StringWithBool> UpdateAsync(EmployeeHours EmployeeHour)
         {
             var ReturnVal = new StringWithBool();
             try
@@ -51,47 +39,16 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        public async Task<EmployeeHours> ReadOneByDateAndUserIDAsync(DateTime dateTime, string UserID, List<Expression<Func<EmployeeHours, object>>> includes = null)
+        public IQueryable<EmployeeHours> ReadOffDaysByYear(int year, int offDayTypeID, string userId)
         {
-            var employeehours = _context.EmployeeHours.Where(eh => eh.Date.Date == dateTime.Date && eh.EmployeeID == UserID).Take(1);
-
-            if (includes != null)
-            {
-                foreach (var t in includes)
-                {
-                    employeehours = employeehours.Include(t);
-                }
-            }
-            return await employeehours.AsNoTracking().FirstOrDefaultAsync();
+            return Read(new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.Date.Year == year, eh => eh.EmployeeID == userId, eh => eh.OffDayTypeID == offDayTypeID && eh.Date <= DateTime.Now.Date });
         }
 
-        public async Task<EmployeeHours> ReadDoubledAsync(DateTime dateTime, string UserID, int EHID)
+        public async Task<double> ReadPartialOffDayHoursByYearAsync(int year, int partialOffDayTypeID, string UserID)
         {
-            return await _context.EmployeeHours.Where(eh => eh.Date.Date == dateTime.Date && eh.EmployeeID == UserID
-                    && eh.EmployeeHoursID != EHID).AsNoTracking().FirstOrDefaultAsync();
-        }
-
-        public IQueryable<EmployeeHours> ReadOffDaysByYearOffDayTypeIDAndUserID(int year, int offDayTypeID, string userId)
-        {
-            return _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userId)
-                .Where(eh => eh.OffDayTypeID == offDayTypeID && eh.Date <= DateTime.Now.Date).AsNoTracking();
-        }
-        public IQueryable<EmployeeHours> ReadPartialOffDaysByYearOffDayTypeIDAndUserID(int year, int partialOffDayTypeID, string userId)
-        {
-            return _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userId)
-                .Where(eh => eh.OffDayTypeID == partialOffDayTypeID && eh.Date <= DateTime.Now.Date).AsNoTracking();
-        }
-
-        public async Task<double> ReadPartialOffDayHoursAsync(int year, int partialOffDayTypeID, string UserID)
-        {
-            var offdays = ReadPartialOffDaysByYearOffDayTypeIDAndUserID(year, partialOffDayTypeID, UserID);
+            var offdays = Read(new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.Date.Year == year, eh => eh.EmployeeID == UserID, eh => eh.OffDayTypeID == partialOffDayTypeID && eh.Date <= DateTime.Now.Date });
             var list = await offdays.Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToListAsync();
             return list.Sum(p => p);
-        }
-
-        public IQueryable<EmployeeHours> ReadByDateSpanAndUserID(DateTime DateTo, DateTime DateFrom, string UserID)
-        {
-            return _context.EmployeeHours.Where(eh => (eh.Date.Date >= DateFrom.Date && eh.Date.Date <= DateTo.Date) && eh.EmployeeID == UserID);
         }
 
         public async Task<StringWithBool> ReportHoursAsync(EntryExitViewModel entryExitViewModel, string userid)
@@ -101,9 +58,7 @@ namespace PrototypeWithAuth.CRUD
             {
                 try
                 {
-                    var todaysEntry = _context.EmployeeHours
-                        .Include(eh => eh.OffDayType)
-                        .Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
+                    var todaysEntry = await ReadOneAsync(new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid }, new List<ComplexIncludes<EmployeeHours, ModelBase>> { new ComplexIncludes<EmployeeHours, ModelBase> { Include=eh => eh.OffDayType } });
                     if (todaysEntry != null && todaysEntry.OffDayTypeID != null)
                     {
                         todaysEntry.OffDayTypeID = null;
@@ -121,7 +76,7 @@ namespace PrototypeWithAuth.CRUD
                             todaysEntry.Entry1 = DateTime.Now;
 
                         }
-                        _context.EmployeeHours.Update(todaysEntry);
+                        _context.Update(todaysEntry);
                         await _context.SaveChangesAsync();
                         //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit1;
                         //entryExitViewModel.Entry = todaysEntry.Entry1;
@@ -129,14 +84,14 @@ namespace PrototypeWithAuth.CRUD
                     else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Exit1)
                     {
                         todaysEntry.Exit1 = DateTime.Now;
-                        _context.EmployeeHours.Update(todaysEntry);
+                        _context.Update(todaysEntry);
                         await _context.SaveChangesAsync();
                         //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Entry2;
                     }
                     else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Entry2)
                     {
                         todaysEntry.Entry2 = DateTime.Now;
-                        _context.EmployeeHours.Update(todaysEntry);
+                        _context.Update(todaysEntry);
                         await _context.SaveChangesAsync();
                         //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit2;
                         //entryExitViewModel.Entry = todaysEntry.Entry2;
@@ -145,7 +100,7 @@ namespace PrototypeWithAuth.CRUD
                     else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Exit2)
                     {
                         todaysEntry.Exit2 = DateTime.Now;
-                        _context.EmployeeHours.Update(todaysEntry);
+                        _context.Update(todaysEntry);
                         await _context.SaveChangesAsync();
                         //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
                     }
@@ -172,9 +127,10 @@ namespace PrototypeWithAuth.CRUD
 
             var employeeHoursID = deleteHourViewModel.EmployeeHour.EmployeeHoursID;
             var notifications = _timekeeperNotificationsProc.Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == employeeHoursID });
-            var dayoff = await _companyDaysOffProc.ReadOneByDateAsync(deleteHourViewModel.EmployeeHour.Date);
-            var anotherEmployeeHourWithSameDate = await ReadDoubledAsync(deleteHourViewModel.EmployeeHour.Date, deleteHourViewModel.EmployeeHour.EmployeeID, deleteHourViewModel.EmployeeHour.EmployeeHoursID);
-            var employeeHour = await ReadOneByPKAsync(deleteHourViewModel.EmployeeHour.EmployeeHoursID, new List<Expression<Func<EmployeeHours, object>>> { eh => eh.OffDayType });
+            var dayoff = await _companyDaysOffProc.ReadOneAsync( new List<Expression<Func<CompanyDayOff, bool>>> { co => co.Date.Date == deleteHourViewModel.EmployeeHour.Date.Date });
+            var anotherEmployeeHourWithSameDate = await ReadOneAsync( new List<Expression<Func<EmployeeHours, bool>>>{eh => eh.Date.Date == deleteHourViewModel.EmployeeHour.Date.Date && eh.EmployeeID == deleteHourViewModel.EmployeeHour.EmployeeID
+                    && eh.EmployeeHoursID !=  deleteHourViewModel.EmployeeHour.EmployeeHoursID });
+            var employeeHour = await ReadOneAsync(new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.EmployeeHoursID ==  deleteHourViewModel.EmployeeHour.EmployeeHoursID }, new List<ComplexIncludes<EmployeeHours, ModelBase>> { new ComplexIncludes<EmployeeHours, ModelBase> { Include= eh => eh.OffDayType } });
             EmployeeHours newEmployeeHour = null;
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -184,7 +140,7 @@ namespace PrototypeWithAuth.CRUD
                     {
                         if (employeeHour.OffDayTypeID == 4)
                         {
-                            var employee = await _employeesProc.ReadEmployeeByIDAsync(employeeHour.EmployeeID);
+                            var employee = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id==employeeHour.EmployeeID });
                             employee.SpecialDays += 1;
                             await _employeesProc.UpdateAsync(employee);
                         }
@@ -224,7 +180,7 @@ namespace PrototypeWithAuth.CRUD
                         await _context.SaveChangesAsync();
 
                     }
-                    await _employeeHoursAwaitingApprovalProc.Delete(employeeHoursID);
+                    await _employeeHoursAwaitingApprovalProc.DeleteAsync(employeeHoursID);
 
                     await transaction.CommitAsync();
                     ReturnVal.SetStringAndBool(true, null);
@@ -250,22 +206,23 @@ namespace PrototypeWithAuth.CRUD
                     var companyDaysOff = new List<DateTime>();
                     bool alreadyOffDay = false;
                     EmployeeHours employeeHour = null;
-                    var user = await _employeesProc.ReadEmployeeByIDAsync(UserID);
+                    var user = await _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { e => e.Id== UserID });
 
                     if (DateTo == new DateTime()) //just one date
                     {
-                        var newone = await _companyDaysOffProc.ReadOneByDateAsync(DateFrom);
+                        var newone = await _companyDaysOffProc.ReadOneAsync(new List<Expression<Func<CompanyDayOff, bool>>> { companyDaysOff => companyDaysOff.Date.Date == DateFrom.Date });
                         if (newone != null) { companyDaysOff.Add(newone.Date); }
                         if (DateFrom.DayOfWeek != DayOfWeek.Friday && DateFrom.DayOfWeek != DayOfWeek.Saturday && !(companyDaysOff == null))
                         {
-                            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadOneByUserIDAndDateAsync(UserID, DateFrom);
-                            employeeHour = await ReadOneByDateAndUserIDAsync(DateFrom, UserID);
+                            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadOneAsync(new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { eh => eh.EmployeeID == UserID && eh.Date.Date == DateFrom.Date });
+                            employeeHour = await _employeeHoursProc.ReadOneAsync(new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.EmployeeID == UserID && eh.Date.Date == DateFrom.Date });
+
                             if (OffDayTypeID == 4 && employeeHour?.OffDayTypeID != 4)
                             {
                                 //employeeHour.Employee = user;
                                 //employeeHour.Employee.SpecialDays -= 1;
                                 user.SpecialDays -= 1;
-                              
+
                             }
                             else if (employeeHour?.OffDayTypeID == 4 && OffDayTypeID != 4)
                             {
@@ -279,7 +236,7 @@ namespace PrototypeWithAuth.CRUD
                                     EmployeeID = UserID,
                                     Date = DateFrom,
                                     OffDayTypeID = OffDayTypeID,
-                                    OffDayType = await _offDayTypesProc.ReadOneByPKAsync(OffDayTypeID)
+                                    OffDayType = await _offDayTypesProc.ReadOneAsync(new List<Expression<Func<OffDayType, bool>>> { od => od.OffDayTypeID == OffDayTypeID })
                                 };
                             }
                             else if (employeeHour.Entry1 == null && employeeHour.Entry2 == null && employeeHour.TotalHours == null)
@@ -293,22 +250,21 @@ namespace PrototypeWithAuth.CRUD
                                     await _timekeeperNotificationsProc.DeleteByEHIDAsync(employeeHour.EmployeeHoursID);
                                 }
                                 employeeHour.OffDayTypeID = OffDayTypeID;
-                                employeeHour.OffDayType = await _offDayTypesProc.ReadOneByPKAsync(OffDayTypeID);
+                                employeeHour.OffDayType = await _offDayTypesProc.ReadOneAsync(new List<Expression<Func<OffDayType, bool>>> { od => od.OffDayTypeID == OffDayTypeID });
                             }
                             if (!alreadyOffDay)
                             {
-                                 var changeTracker = _context.ChangeTracker.Entries();
-                                    _context.Update(employeeHour);
-                                    _context.SaveChanges();
+                                var changeTracker = _context.ChangeTracker.Entries();
+                                _context.Update(employeeHour);
+                                _context.SaveChanges();
                             }
                         }
                         await transaction.CommitAsync();
                     }
                     else
                     {
-                        var employeeHours = this.ReadByDateSpanAndUserID(DateTo, DateFrom, UserID);
-                        companyDaysOff = _companyDaysOffProc.ReadByDateSpan(DateFrom, DateTo).Select(cdf => cdf.Date).ToList();
-
+                        var employeeHours = Read(new List<Expression<Func<EmployeeHours, bool>>> { eh => (eh.Date.Date >= DateFrom.Date && eh.Date.Date <= DateTo.Date) && eh.EmployeeID == UserID});
+                        companyDaysOff = await _companyDaysOffProc.Read( new List<Expression<Func<CompanyDayOff, bool>>> { d => d.Date >= DateFrom && d.Date <= DateTo }).Select(cdf => cdf.Date).ToListAsync();
 
                         while (DateFrom <= DateTo)
                         {
@@ -392,12 +348,12 @@ namespace PrototypeWithAuth.CRUD
             {
                 try
                 {
-                    var ehaa = await _employeeHoursAwaitingApprovalProc.ReadOneByUserIDAndDateAsync(updateHoursViewModel.EmployeeHour.EmployeeID, updateHoursViewModel.EmployeeHour.Date.Date);
+                    var ehaa = await _employeeHoursAwaitingApprovalProc.ReadOneAsync( new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { eh => eh.EmployeeID == updateHoursViewModel.EmployeeHour.EmployeeID && eh.Date.Date == updateHoursViewModel.EmployeeHour.Date.Date});
 
 
-                    var eh = await ReadOneByDateAndUserIDAsync(updateHoursViewModel.EmployeeHour.Date.Date, updateHoursViewModel.EmployeeHour.EmployeeID);
+                    var eh = await ReadOneAsync( new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.Date.Date == updateHoursViewModel.EmployeeHour.Date.Date, eh => eh.EmployeeID == updateHoursViewModel.EmployeeHour.EmployeeID });
 
-
+                    
                     var updateHoursDate = updateHoursViewModel.EmployeeHour.Date;
 
                     if (ehaa == null)
@@ -446,8 +402,8 @@ namespace PrototypeWithAuth.CRUD
                     ehaa.PartialOffDayTypeID = updateHoursViewModel.EmployeeHour.PartialOffDayTypeID;
                     if (updateHoursViewModel.EmployeeHour.PartialOffDayTypeID != null && updateHoursViewModel.EmployeeHour.PartialOffDayHours == null)
                     {
-                        var employee = await _employeesProc.ReadEmployeeByIDAsync(updateHoursViewModel.EmployeeHour.EmployeeID,
-                            new List<Expression<Func<Employee, object>>> { eh => eh.SalariedEmployee });
+                        var employee = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id==updateHoursViewModel.EmployeeHour.EmployeeID },
+                new List<ComplexIncludes<Employee, ModelBase>> { new ComplexIncludes<Employee, ModelBase> { Include = e => e.SalariedEmployee } });
                         var employeeTime = employee.SalariedEmployee.HoursPerDay;
 
                         var offDayHours = TimeSpan.FromHours(employeeTime) - updateHoursViewModel.EmployeeHour.TotalHours;

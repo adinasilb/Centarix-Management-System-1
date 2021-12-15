@@ -16,9 +16,5 @@ namespace PrototypeWithAuth.CRUD
             if (!FromBase) { this.InstantiateProcs(); }
         }
 
-        public IQueryable<CategoryType> Read()
-        {
-            return _context.CategoryTypes.AsNoTracking().AsQueryable();
-        }
     }
 }

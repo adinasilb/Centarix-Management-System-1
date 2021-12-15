@@ -27,20 +27,7 @@ namespace PrototypeWithAuth.CRUD
             return _context.VendorComments.AsNoTracking().AsQueryable();
         }
 
-        public IQueryable<VendorComment> ReadByVendorID(int VendorID, List<Expression<Func<VendorComment, object>>> includes = null)
-        {
-            var comments = _context.VendorComments
-                .Where(vc => vc.ObjectID == VendorID);
-            if (includes != null)
-            {
-                foreach (var t in includes)
-                {
-                    comments = comments.Include(t);
-                }
-            }
-            return comments.AsNoTracking().AsQueryable();
-        }
-
+     
         public async Task<StringWithBool> UpdateAsync(List<VendorComment> comments, int vendorID, string userID)
         {
             StringWithBool ReturnVal = new StringWithBool();

@@ -22,27 +22,6 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public async Task<StringWithBool> CreateWithoutSavingAsync(int VendorID, int CategoryTypeID)
-        {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
-            {
-                VendorCategoryType vct = new VendorCategoryType()
-                {
-                    CategoryTypeID = CategoryTypeID,
-                    VendorID = VendorID
-                };
-                _context.Add(vct);
-                ReturnVal.Bool = true;
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.Bool = false;
-                ReturnVal.String = AppUtility.GetExceptionMessage(ex);
-            }
-            return ReturnVal;
-        }
-
 
         private async Task<StringWithBool> RemoveAsync(List<VendorCategoryType> items)
         {

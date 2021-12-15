@@ -16,20 +16,5 @@ namespace PrototypeWithAuth.CRUD
             if (!FromBase) { base.InstantiateProcs(); }
         }
 
-        public async Task<CompanyDayOff> ReadOneByDateAsync(DateTime date)
-        {
-            return await _context.CompanyDayOffs.Where(cdo => cdo.Date.Date == date).AsNoTracking().FirstOrDefaultAsync();
-        }
-
-        public IQueryable<CompanyDayOff> ReadByDateSpan(DateTime DateFrom, DateTime DateTo)
-        {
-            return _context.CompanyDayOffs.Where(d => d.Date >= DateFrom && d.Date <= DateTo).AsQueryable();
-        }
-
-        public IQueryable<CompanyDayOff> ReadByDate(DateTime date)
-        {
-            return _context.CompanyDayOffs.Where(cdo => cdo.Date.Date == date).AsQueryable();
-        }
-
     }
 }

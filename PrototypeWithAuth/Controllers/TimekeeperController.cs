@@ -36,7 +36,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimeKeeperReport;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ReportHours;
             var userid = _userManager.GetUserId(User);
-            var todaysEntry = await _employeeHoursProc.ReadOneByDateAndUserIDAsync(DateTime.Today, userid);
+            var todaysEntry = await _employeeHoursProc.ReadOneAsync(new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.Date.Date == DateTime.Today, eh => eh.Employee.Id==userid });
             EntryExitViewModel entryExitViewModel = new EntryExitViewModel();
             if (todaysEntry == null || todaysEntry.Entry1 == null)
             {
@@ -60,7 +60,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
             }
-            var notifications = _timekeeperNotificationsProc.Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.ApplicationUserID == userid }).OrderByDescending(n => n.EmployeeHours.Date).Take(20).ToList();
+            var notifications = _timekeeperNotificationsProc.Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.ApplicationUserID == userid },
+            new List<ComplexIncludes<TimekeeperNotification, ModelBase>> { new ComplexIncludes<TimekeeperNotification, ModelBase>{ Include = tn => tn.EmployeeHours } }).OrderByDescending(n => n.EmployeeHours.Date).Take(20).ToList();
             
             entryExitViewModel.TimekeeperNotifications = notifications;
             if (errorMessage != null)
@@ -103,7 +104,8 @@ namespace PrototypeWithAuth.Controllers
 
 
             var userid = _userManager.GetUserId(User);
-            var user = await _employeesProc.ReadEmployeeByIDAsync(userid, new List<Expression<Func<Employee, object>>> { e=>e.SalariedEmployee});
+            var user = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id==userid },
+                new List<ComplexIncludes<Employee, ModelBase>>{ new ComplexIncludes<Employee, ModelBase> { Include= e => e.SalariedEmployee } });
             if (user != null)
             {
                 ReportDaysViewModel reportDaysViewModel = await GetSummaryDaysOffModel(userid, user, DateTime.Now.Year);
@@ -126,7 +128,8 @@ namespace PrototypeWithAuth.Controllers
                 return PartialView("InvalidLinkPage");
             }
             var userid = _userManager.GetUserId(User);
-            var user = await _employeesProc.ReadEmployeeByIDAsync(userid, new List<Expression<Func<Employee, object>>> { e => e.SalariedEmployee });
+            var user = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id==userid },  
+                new List<ComplexIncludes<Employee, ModelBase>>{ new ComplexIncludes<Employee, ModelBase> { Include = e => e.SalariedEmployee } });
             if (user != null)
             {
                 ReportDaysViewModel reportDaysViewModel = await GetSummaryDaysOffModel(userid, user, year);
@@ -141,9 +144,9 @@ namespace PrototypeWithAuth.Controllers
             int month = DateTime.Now.Month;
             var daysOffViewModel = new ReportDaysViewModel
             {
-                VacationDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, 2, userid).OrderByDescending(eh => eh.Date),
-                SickDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, 1, userid).OrderByDescending(eh => eh.Date).OrderByDescending(eh => eh.Date),
-                SpecialDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, 4, userid).OrderByDescending(eh => eh.Date).OrderByDescending(eh => eh.Date),
+                VacationDaysTaken = _employeeHoursProc.ReadOffDaysByYear(year, 2, userid).OrderByDescending(eh => eh.Date),
+                SickDaysTaken = _employeeHoursProc.ReadOffDaysByYear(year, 1, userid).OrderByDescending(eh => eh.Date).OrderByDescending(eh => eh.Date),
+                SpecialDaysTaken = _employeeHoursProc.ReadOffDaysByYear(year, 4, userid).OrderByDescending(eh => eh.Date).OrderByDescending(eh => eh.Date),
                 SelectedYear = year
             };
             var sickDaysVacationDaysLeft = await getVacationSickDaysLeft(user, year);
@@ -158,18 +161,18 @@ namespace PrototypeWithAuth.Controllers
         {
             double vacationDays = 0;
             double sickDays = 0;
-            double vacationDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, 2, user.Id).Count();
-            double sickDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, 1, user.Id).Count();
+            double vacationDaysTaken = _employeeHoursProc.ReadOffDaysByYear(year, 2, user.Id).Count();
+            double sickDaysTaken = _employeeHoursProc.ReadOffDaysByYear(year, 1, user.Id).Count();
             if (user.EmployeeStatusID == 1)
             {
-                var vacationHours = await _employeeHoursProc.ReadPartialOffDayHoursAsync(year, 2, user.Id);
+                var vacationHours = await _employeeHoursProc.ReadPartialOffDayHoursByYearAsync(year, 2, user.Id);
                 vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
 
-                var sickHours = await _employeeHoursProc.ReadPartialOffDayHoursAsync(year, 1, user.Id);
+                var sickHours = await _employeeHoursProc.ReadPartialOffDayHoursByYearAsync(year, 1, user.Id);
                 sickDaysTaken = Math.Round(sickDaysTaken + (sickHours / user.SalariedEmployee.HoursPerDay), 2);
             }
 
-            var unpaidLeaveTaken = Convert.ToInt32(await _employeeHoursProc.ReadPartialOffDayHoursAsync(year, 5, user.Id));
+            var unpaidLeaveTaken = Convert.ToInt32(await _employeeHoursProc.ReadPartialOffDayHoursByYearAsync(year, 5, user.Id));
             if (year == user.StartedWorking.Year)
             {
                 int month = year == DateTime.Now.Year ? (DateTime.Now.Month - user.StartedWorking.Month + 1) : (12 - user.StartedWorking.Month + 1);
@@ -242,7 +245,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 userId = _userManager.GetUserId(User);
             }
-            var user = await _employeesProc.ReadEmployeeByIDAsync(userId, new List<Expression<Func<Employee, object>>> { e => e.SalariedEmployee });
+            var user = await _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { e => e.Id==userId },
+               new List<ComplexIncludes<Employee, ModelBase>> { new ComplexIncludes<Employee, ModelBase> { Include = e => e.SalariedEmployee } });
             SummaryHoursViewModel summaryHoursViewModel = await base.SummaryHoursFunctionAsync(month, year, user);
             summaryHoursViewModel.PageType = pageType;
             return PartialView(summaryHoursViewModel);
@@ -258,7 +262,8 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimekeeperSummary;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SummaryHours;
             var userid = _userManager.GetUserId(User);
-            var user = await _employeesProc.ReadEmployeeByIDAsync(userid, new List<Expression<Func<Employee, object>>> { e => e.SalariedEmployee });
+            var user = await _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { e => e.Id== userid },
+                 new List<ComplexIncludes<Employee, ModelBase>> { new ComplexIncludes<Employee, ModelBase> { Include= e => e.SalariedEmployee } });
             //int month = Month?.Month ?? DateTime.Now.Month;
             return PartialView(await base.SummaryHoursFunctionAsync(month, year, user, errorMessage));
         }
@@ -271,8 +276,10 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadByPKAsync(ehaaID, new List<Expression<Func<EmployeeHoursAwaitingApproval, object>>> { ehaa => ehaa.EmployeeHours, ehaa => ehaa.PartialOffDayType });
-
+            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadOneAsync(new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ehaaID },
+                new List<ComplexIncludes<EmployeeHoursAwaitingApproval, ModelBase>> { new ComplexIncludes<EmployeeHoursAwaitingApproval, ModelBase> { Include =ehaa => ehaa.EmployeeHours },
+                    new  ComplexIncludes<EmployeeHoursAwaitingApproval, ModelBase>{ Include = ehaa => ehaa.PartialOffDayType } });
+             
             return PartialView(ehaa);
         }
 
@@ -300,7 +307,8 @@ namespace PrototypeWithAuth.Controllers
         private async Task<SummaryOfDaysOffViewModel> ReportDaysOffFunctionAsync(string errorMessage = "")
         {
             var userid = _userManager.GetUserId(User);
-            var user = await _employeesProc.ReadEmployeeByIDAsync(userid, new List<Expression<Func<Employee, object>>> { e => e.SalariedEmployee});
+            var user = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id== userid },
+                 new List<ComplexIncludes<Employee, ModelBase>> { new ComplexIncludes<Employee, ModelBase> { Include= e => e.SalariedEmployee } });
 
             if (user != null)
             {
@@ -365,14 +373,14 @@ namespace PrototypeWithAuth.Controllers
                 chosenDate = DateTime.Today;
             }
             var userID = _userManager.GetUserId(User);
-            var user = await _employeesProc.ReadEmployeeByIDAsync(userID);
-            var employeeHour = await _employeeHoursProc.ReadOneByDateAndUserIDAsync(chosenDate.Date, userID, new List<Expression<Func<EmployeeHours, object>>> { e => e.Employee, e=>e.OffDayType });
+            var user = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id== userID });
+            var employeeHour = await _employeeHoursProc.ReadOneAsync( new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.Date.Date== chosenDate.Date, eh => eh.Employee.Id == userID }, new List<ComplexIncludes<EmployeeHours, ModelBase>>{ new ComplexIncludes<EmployeeHours, ModelBase> { Include = e => e.Employee }, new ComplexIncludes<EmployeeHours, ModelBase>{ Include = e => e.OffDayType } });
             if (employeeHour == null)
             {
                 employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate, Employee = user };
             }
-            employeeHour.EmployeeHoursStatusEntry1 = _employeeHoursStatuesProc.ReadOneByPK(employeeHour.EmployeeHoursStatusEntry1ID);
-            employeeHour.EmployeeHoursStatusEntry2 = _employeeHoursStatuesProc.ReadOneByPK(employeeHour.EmployeeHoursStatusEntry2ID);
+            employeeHour.EmployeeHoursStatusEntry1 =await _employeeHoursStatuesProc.ReadOneAsync( new List<Expression<Func<EmployeeHoursStatus, bool>>> { ehs => ehs.EmployeeHoursStatusID == employeeHour.EmployeeHoursStatusEntry1ID });
+            employeeHour.EmployeeHoursStatusEntry2 = await _employeeHoursStatuesProc.ReadOneAsync( new List<Expression<Func<EmployeeHoursStatus, bool>>> { ehs => ehs.EmployeeHoursStatusID == employeeHour.EmployeeHoursStatusEntry2ID });
             UpdateHoursViewModel updateHoursViewModel = new UpdateHoursViewModel() { EmployeeHour = employeeHour, PageType = PageType };
             if (employeeHour.Entry1 == null && employeeHour.TotalHours == null && !isWorkFromHome)
             {
@@ -386,7 +394,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 updateHoursViewModel.AutoFillEntry1Type = 1;
             }
-            updateHoursViewModel.PartialOffDayTypes = _offDayTypesProc.ReadManyByPKS(new List<int>() { 1, 2 });
+            updateHoursViewModel.PartialOffDayTypes = _offDayTypesProc.Read( new List<Expression<Func<OffDayType, bool>>> { od => new List<int>() { 1, 2 }.Contains(od.OffDayTypeID) });
             return updateHoursViewModel;
         }
 
@@ -431,7 +439,7 @@ namespace PrototypeWithAuth.Controllers
         {
             string errorMessage = "";
             var userId = _userManager.GetUserId(User);
-            var offDayType = await _offDayTypesProc.ReadOneByOffDayTypeEnumAsync(offDayViewModel.OffDayType);
+            var offDayType = await _offDayTypesProc.ReadOneAsync( new List<Expression<Func<OffDayType, bool>>> { odt => odt.Description == AppUtility.GetDisplayNameOfEnumValue(offDayViewModel.OffDayType.ToString())});
             var offDayTypeID = offDayType.OffDayTypeID;
             var success = await _employeeHoursProc.SaveOffDayAsync(offDayViewModel.FromDate, offDayViewModel.ToDate, offDayTypeID, userId);
             if (!success.Bool)
@@ -466,18 +474,18 @@ namespace PrototypeWithAuth.Controllers
             }
 
             var userID = _userManager.GetUserId(User);
-            var todaysEntry = await _employeeHoursProc.ReadOneByDateAndUserIDAsync(DateTime.Now.Date, userID);
+            var todaysEntry = await _employeeHoursProc.ReadOneAsync( new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.Date.Date == DateTime.Now.Date && eh.EmployeeID == userID });
             var success = new StringWithBool();
             if (todaysEntry.Exit1 == null)
             {
                 todaysEntry.Exit1 = DateTime.Now;
-                success = await _employeeHoursProc.Update(todaysEntry);
+                success = await _employeeHoursProc.UpdateAsync(todaysEntry);
             }
 
             else if (todaysEntry.Exit2 == null)
             {
                 todaysEntry.Exit2 = DateTime.Now;
-                 success = await _employeeHoursProc.Update(todaysEntry);
+                 success = await _employeeHoursProc.UpdateAsync(todaysEntry);
             }
             if (success.Bool)
             {
@@ -493,7 +501,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> OffDayConfirmModal(OffDayViewModel offDayViewModel)
         {
-            var offday = await _offDayTypesProc.ReadOneByOffDayTypeEnumAsync(offDayViewModel.OffDayType);
+            var offday = await _offDayTypesProc.ReadOneAsync(new List<Expression<Func<OffDayType, bool>>> { odt => odt.Description == AppUtility.GetDisplayNameOfEnumValue(offDayViewModel.OffDayType.ToString()) });
             int offdayid = offday.OffDayTypeID;
             string userid = _userManager.GetUserId(User);
             var success = await _employeeHoursProc.SaveOffDayAsync(offDayViewModel.FromDate, offDayViewModel.ToDate, offdayid, userid);
@@ -543,7 +551,9 @@ namespace PrototypeWithAuth.Controllers
                 ViewBag.ErrorMessage = "Employee Hour not found (no id). Unable to delete.";
                 return NotFound();
             }
-            var employeeHour = await _employeeHoursProc.ReadOneByPKAsync(id, new List<Expression<Func<EmployeeHours, object>>> { eh => eh.PartialOffDayType, eh=>eh.OffDayType, eh=>eh.EmployeeHoursAwaitingApproval, eh=>eh.EmployeeHoursAwaitingApproval.PartialOffDayType });
+            var employeeHour = await _employeeHoursProc.ReadOneAsync( new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.EmployeeHoursID ==  id }, new List<ComplexIncludes<EmployeeHours, ModelBase>>{
+                new ComplexIncludes<EmployeeHours, ModelBase>{ Include = eh => eh.PartialOffDayType }, new ComplexIncludes<EmployeeHours, ModelBase>{Include = eh => eh.OffDayType },
+                    new ComplexIncludes<EmployeeHours, ModelBase> {Include = eh=>eh.EmployeeHoursAwaitingApproval }, new ComplexIncludes<EmployeeHours, ModelBase>{ Include = eh=>eh.EmployeeHoursAwaitingApproval.PartialOffDayType }});
             if (employeeHour == null)
             {
                 ViewBag.ErrorMessage = "Employee Hour not found. Unable to delete";

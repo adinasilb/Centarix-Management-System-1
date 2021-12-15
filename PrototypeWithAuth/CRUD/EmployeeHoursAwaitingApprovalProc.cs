@@ -22,41 +22,13 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public async Task<EmployeeHoursAwaitingApproval> ReadByPKAsync(int? ID, List<Expression<Func<EmployeeHoursAwaitingApproval, object>>> includes = null)
-        {
-            var employeehours = _context.EmployeeHoursAwaitingApprovals
-                .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ID).Take(1);
-            if (includes !=null)
-            {
-                foreach (var t in includes)
-                {
-                    employeehours =employeehours.Include(t);
-                }
-            }
-            return await employeehours.AsNoTracking().FirstOrDefaultAsync(); 
-        }
 
-        public async Task<EmployeeHoursAwaitingApproval> ReadOneByUserIDAndDateAsync(string UserID, DateTime date, List<Expression<Func<EmployeeHoursAwaitingApproval, object>>> includes = null)
-        {
-
-            var employeehours = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == UserID && eh.Date.Date == date.Date)
-                .Take(1);
-            if (includes !=null)
-            {
-                foreach (var t in includes)
-                {
-                    employeehours =employeehours.Include(t);
-                }
-            }
-            return await employeehours.AsNoTracking().FirstOrDefaultAsync();
-        }
-
-        public async Task<StringWithBool> Delete(int ID)
+        public async Task<StringWithBool> DeleteAsync(int ID)
         {
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
-                var ehaa = _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursID == ID).FirstOrDefault();
+                var ehaa = await _employeeHoursAwaitingApprovalProc.ReadOneAsync( new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { ehaa => ehaa.EmployeeHoursID == ID });
                 if (ehaa != null)
                 {
                     _context.Remove(ehaa);

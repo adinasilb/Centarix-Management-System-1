@@ -21,28 +21,9 @@ namespace PrototypeWithAuth.CRUD
                 base.InstantiateProcs();
             }
         }
-
       
-
-        public async Task<Employee> ReadEmployeeByIDAsync(string UserID, List<Expression<Func<Employee, object>>> includes = null)
-        {
-            var employee = _context.Employees.Where(e => e.Id == UserID).Take(1);
-            if (includes !=null)
-            {
-                foreach (var t in includes)
-                {
-                    employee =employee.Include(t);
-                }
-            }
-            return await employee.AsNoTracking().FirstOrDefaultAsync();
-        }
-
-        public IQueryable<Employee> GetUsersLoggedInToday()
-        {
-            return _context.Employees.Where(u => u.LastLogin.Date == DateTime.Today.Date).AsNoTracking().AsQueryable();
-        }
      
-        public async Task<double> GetDaysOffCountByUserOffTypeIDYearAsync(Employee User, int OffDayTypeID, int thisYear)
+        public async Task<double> GetOffDaysByYear(Employee User, int OffDayTypeID, int thisYear)
         {
             double offDaysLeft = 0;
             var year = AppUtility.YearStartedTimeKeeper;
@@ -51,10 +32,10 @@ namespace PrototypeWithAuth.CRUD
             {
                 double vacationDays = 0;
                 double sickDays = 0;
-                double offDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, OffDayTypeID, User.Id).Count();
+                double offDaysTaken = _employeeHoursProc.ReadOffDaysByYear(year, OffDayTypeID, User.Id).Count();
                 if (User.EmployeeStatusID == 1 && OffDayTypeID == 2)
                 {
-                    var vacationHours =await _employeeHoursProc.ReadPartialOffDayHoursAsync(year, 2, User.Id);
+                    var vacationHours =await _employeeHoursProc.ReadPartialOffDayHoursByYearAsync(year, 2, User.Id);
                     offDaysTaken = Math.Round(offDaysTaken + (vacationHours / User.SalariedEmployee.HoursPerDay), 2);
                 }
                 if (year == AppUtility.YearStartedTimeKeeper && year == DateTime.Now.Year)

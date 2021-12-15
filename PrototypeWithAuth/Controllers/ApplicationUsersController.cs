@@ -375,7 +375,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         var partialHours = employeeHours.PartialOffDayHours?.TotalHours ?? 0;
                         var days = Math.Round(partialHours / user.SalariedEmployee.HoursPerDay, 2);
-                        var vacationLeftCount = await _employeesProc.GetDaysOffCountByUserOffTypeIDYearAsync(user, employeeHoursBeingApproved.PartialOffDayTypeID ?? 2, employeeHoursBeingApproved.Date.Year);
+                        var vacationLeftCount = await _employeesProc.GetOffDaysByYear(user, employeeHoursBeingApproved.PartialOffDayTypeID ?? 2, employeeHoursBeingApproved.Date.Year);
                             //base.GetUsersOffDaysLeft(user, employeeHoursBeingApproved.PartialOffDayTypeID ?? 2, 
                             //employeeHoursBeingApproved.Date.Year);
                         /*if (vacationLeftCount < days)

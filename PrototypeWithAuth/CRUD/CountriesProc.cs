@@ -20,10 +20,5 @@ namespace PrototypeWithAuth.CRUD
             }
          }
 
-        public IQueryable<Models.Country> Read()
-        {
-            return _context.Countries.AsNoTracking().AsQueryable();
-        }
-
     }
 }
