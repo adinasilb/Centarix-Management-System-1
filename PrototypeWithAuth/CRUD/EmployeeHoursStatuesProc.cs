@@ -19,11 +19,5 @@ namespace PrototypeWithAuth.CRUD
                 base.InstantiateProcs();
             }
         }
-
-        public EmployeeHoursStatus ReadOneByPK(int? ID)
-        {
-            return _context.EmployeeHoursStatuses.Where(ehs => ehs.EmployeeHoursStatusID == ID)
-                .AsNoTracking().FirstOrDefault();
-        }
     }
 }

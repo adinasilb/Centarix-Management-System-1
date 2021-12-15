@@ -21,28 +21,9 @@ namespace PrototypeWithAuth.CRUD
                 base.InstantiateProcs();
             }
         }
-
       
-
-        public async Task<Employee> ReadEmployeeByIDAsync(string UserID, List<Expression<Func<Employee, object>>> includes = null)
-        {
-            var employee = _context.Employees.Where(e => e.Id == UserID).Take(1);
-            if (includes !=null)
-            {
-                foreach (var t in includes)
-                {
-                    employee =employee.Include(t);
-                }
-            }
-            return await employee.AsNoTracking().FirstOrDefaultAsync();
-        }
-
-        public IQueryable<Employee> GetUsersLoggedInToday()
-        {
-            return _context.Employees.Where(u => u.LastLogin.Date == DateTime.Today.Date).AsNoTracking().AsQueryable();
-        }
      
-        public async Task<double> GetDaysOffCountByUserOffTypeIDYearAsync(Employee User, int OffDayTypeID, int thisYear)
+        public async Task<double> GetOffDaysByYear(Employee User, int OffDayTypeID, int thisYear)
         {
             double offDaysLeft = 0;
             var year = AppUtility.YearStartedTimeKeeper;
@@ -100,7 +81,7 @@ namespace PrototypeWithAuth.CRUD
             return offDaysLeft;
         }
 
-        public async Task<StringWithBool> UpdateAsync(Employee employee)
+        private async Task<StringWithBool> UpdateAsync(Employee employee)
         {
             StringWithBool ReturnVal = new StringWithBool();
             try

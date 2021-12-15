@@ -103,7 +103,8 @@ namespace PrototypeWithAuth.Controllers
 
 
             var userid = _userManager.GetUserId(User);
-            var user = await _employeesProc.ReadEmployeeByIDAsync(userid, new List<Expression<Func<Employee, object>>> { e=>e.SalariedEmployee});
+            var user = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id==userid },
+                new List<ComplexIncludes<Employee, ModelBase>>{ new ComplexIncludes<Employee, ModelBase> { Include= e => e.SalariedEmployee } });
             if (user != null)
             {
                 ReportDaysViewModel reportDaysViewModel = await GetSummaryDaysOffModel(userid, user, DateTime.Now.Year);
@@ -126,7 +127,8 @@ namespace PrototypeWithAuth.Controllers
                 return PartialView("InvalidLinkPage");
             }
             var userid = _userManager.GetUserId(User);
-            var user = await _employeesProc.ReadEmployeeByIDAsync(userid, new List<Expression<Func<Employee, object>>> { e => e.SalariedEmployee });
+            var user = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id==userid },  
+                new List<ComplexIncludes<Employee, ModelBase>>{ new ComplexIncludes<Employee, ModelBase> { Include = e => e.SalariedEmployee } });
             if (user != null)
             {
                 ReportDaysViewModel reportDaysViewModel = await GetSummaryDaysOffModel(userid, user, year);
@@ -242,7 +244,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 userId = _userManager.GetUserId(User);
             }
-            var user = await _employeesProc.ReadEmployeeByIDAsync(userId, new List<Expression<Func<Employee, object>>> { e => e.SalariedEmployee });
+            var user = await _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { e => e.Id==userId },
+               new List<ComplexIncludes<Employee, ModelBase>> { new ComplexIncludes<Employee, ModelBase> { Include = e => e.SalariedEmployee } });
             SummaryHoursViewModel summaryHoursViewModel = await base.SummaryHoursFunctionAsync(month, year, user);
             summaryHoursViewModel.PageType = pageType;
             return PartialView(summaryHoursViewModel);
@@ -258,7 +261,8 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimekeeperSummary;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SummaryHours;
             var userid = _userManager.GetUserId(User);
-            var user = await _employeesProc.ReadEmployeeByIDAsync(userid, new List<Expression<Func<Employee, object>>> { e => e.SalariedEmployee });
+            var user = await _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { e => e.Id== userid },
+                 new List<ComplexIncludes<Employee, ModelBase>> { new ComplexIncludes<Employee, ModelBase> { Include= e => e.SalariedEmployee } });
             //int month = Month?.Month ?? DateTime.Now.Month;
             return PartialView(await base.SummaryHoursFunctionAsync(month, year, user, errorMessage));
         }
@@ -302,7 +306,8 @@ namespace PrototypeWithAuth.Controllers
         private async Task<SummaryOfDaysOffViewModel> ReportDaysOffFunctionAsync(string errorMessage = "")
         {
             var userid = _userManager.GetUserId(User);
-            var user = await _employeesProc.ReadEmployeeByIDAsync(userid, new List<Expression<Func<Employee, object>>> { e => e.SalariedEmployee});
+            var user = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id== userid },
+                 new List<ComplexIncludes<Employee, ModelBase>> { new ComplexIncludes<Employee, ModelBase> { Include= e => e.SalariedEmployee } });
 
             if (user != null)
             {
@@ -367,14 +372,14 @@ namespace PrototypeWithAuth.Controllers
                 chosenDate = DateTime.Today;
             }
             var userID = _userManager.GetUserId(User);
-            var user = await _employeesProc.ReadEmployeeByIDAsync(userID);
+            var user = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id== userID });
             var employeeHour = await _employeeHoursProc.ReadOneAsync( new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.Date.Date== chosenDate.Date, eh => eh.Employee.Id == userID }, new List<ComplexIncludes<EmployeeHours, ModelBase>>{ new ComplexIncludes<EmployeeHours, ModelBase> { Include = e => e.Employee }, new ComplexIncludes<EmployeeHours, ModelBase>{ Include = e => e.OffDayType } });
             if (employeeHour == null)
             {
                 employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate, Employee = user };
             }
-            employeeHour.EmployeeHoursStatusEntry1 = _employeeHoursStatuesProc.ReadOneByPK(employeeHour.EmployeeHoursStatusEntry1ID);
-            employeeHour.EmployeeHoursStatusEntry2 = _employeeHoursStatuesProc.ReadOneByPK(employeeHour.EmployeeHoursStatusEntry2ID);
+            employeeHour.EmployeeHoursStatusEntry1 =await _employeeHoursStatuesProc.ReadOneAsync( new List<Expression<Func<EmployeeHoursStatus, bool>>> { ehs => ehs.EmployeeHoursStatusID == employeeHour.EmployeeHoursStatusEntry1ID });
+            employeeHour.EmployeeHoursStatusEntry2 = await _employeeHoursStatuesProc.ReadOneAsync( new List<Expression<Func<EmployeeHoursStatus, bool>>> { ehs => ehs.EmployeeHoursStatusID == employeeHour.EmployeeHoursStatusEntry2ID });
             UpdateHoursViewModel updateHoursViewModel = new UpdateHoursViewModel() { EmployeeHour = employeeHour, PageType = PageType };
             if (employeeHour.Entry1 == null && employeeHour.TotalHours == null && !isWorkFromHome)
             {

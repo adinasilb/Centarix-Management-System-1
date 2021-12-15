@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
@@ -34,8 +35,9 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var user = await _employeesProc.ReadEmployeeByIDAsync(_userManager.GetUserId(User), new List<System.Linq.Expressions.Expression<Func<Employee, object>>> { e=>e.SalariedEmployee});
-            var usersLoggedIn = _employeesProc.GetUsersLoggedInToday().Count();
+            var user = await _employeesProc.ReadOneAsync( new List<System.Linq.Expressions.Expression<Func<Employee, bool>>> { e => e.Id==_userManager.GetUserId(User) }, 
+                new List<ComplexIncludes<Employee, ModelBase>> { new ComplexIncludes<Employee, ModelBase> { Include = e => e.SalariedEmployee } });
+            var usersLoggedIn = _employeesProc.ReadOne(new List<System.Linq.Expressions.Expression<Func<Employee, bool>>> { u => u.LastLogin.Date == DateTime.Today.Date }).Count();
             var users =  _employeesProc.Read().AsEnumerable();
             HomePageViewModel viewModel = new HomePageViewModel();
 

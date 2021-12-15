@@ -140,7 +140,7 @@ namespace PrototypeWithAuth.CRUD
                     {
                         if (employeeHour.OffDayTypeID == 4)
                         {
-                            var employee = await _employeesProc.ReadEmployeeByIDAsync(employeeHour.EmployeeID);
+                            var employee = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id==employeeHour.e });
                             employee.SpecialDays += 1;
                             await _employeesProc.UpdateAsync(employee);
                         }
@@ -206,7 +206,7 @@ namespace PrototypeWithAuth.CRUD
                     var companyDaysOff = new List<DateTime>();
                     bool alreadyOffDay = false;
                     EmployeeHours employeeHour = null;
-                    var user = await _employeesProc.ReadEmployeeByIDAsync(UserID);
+                    var user = await _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { e => e.Id== UserID });
 
                     if (DateTo == new DateTime()) //just one date
                     {
@@ -402,8 +402,8 @@ namespace PrototypeWithAuth.CRUD
                     ehaa.PartialOffDayTypeID = updateHoursViewModel.EmployeeHour.PartialOffDayTypeID;
                     if (updateHoursViewModel.EmployeeHour.PartialOffDayTypeID != null && updateHoursViewModel.EmployeeHour.PartialOffDayHours == null)
                     {
-                        var employee = await _employeesProc.ReadEmployeeByIDAsync(updateHoursViewModel.EmployeeHour.EmployeeID,
-                            new List<Expression<Func<Employee, object>>> { eh => eh.SalariedEmployee });
+                        var employee = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id==updateHoursViewModel.EmployeeHour.EmployeeID },
+                new List<ComplexIncludes<Employee, ModelBase>> { new ComplexIncludes<Employee, ModelBase> { Include = e => e.SalariedEmployee } });
                         var employeeTime = employee.SalariedEmployee.HoursPerDay;
 
                         var offDayHours = TimeSpan.FromHours(employeeTime) - updateHoursViewModel.EmployeeHour.TotalHours;
