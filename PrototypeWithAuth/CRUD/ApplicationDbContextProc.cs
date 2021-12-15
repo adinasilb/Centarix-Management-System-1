@@ -41,6 +41,7 @@ namespace PrototypeWithAuth.CRUD
         protected TestsProc _testsProc;
         protected TestValuesProc _testValuesProc;
         protected ProductsProc _productsProc;
+        protected ProductSubcategoriesProc _productSubcategoriesProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context)
         {
@@ -72,6 +73,7 @@ namespace PrototypeWithAuth.CRUD
             _testsProc = new TestsProc(_context, true);
             _testValuesProc = new TestValuesProc(_context, true);
             _productsProc = new ProductsProc(_context, true);
+            _productSubcategoriesProc = new ProductSubcategoriesProc(_context, true);
         }
 
         public virtual IQueryable<T> Read(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)

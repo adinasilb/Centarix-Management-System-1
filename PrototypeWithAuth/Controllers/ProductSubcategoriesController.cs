@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -38,8 +39,13 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementEquipment;
-                var equipmentCategories = _context.ProductSubcategories.Include(p => p.ParentCategory).ThenInclude(pc => pc.CategoryType)
-              .Where(ps => ps.ParentCategoryID ==5);
+                var equipmentCategories = _productSubcategoriesProc.Read(new List<System.Linq.Expressions.Expression<Func<ProductSubcategory, bool>>>
+                    { ps => ps.ParentCategoryID == 5 },
+                    new List<ComplexIncludes<ProductSubcategory, ModelBase>>
+                    {
+                        new ComplexIncludes<ProductSubcategory, ModelBase>{ Include = ps => ps.ParentCategory, ThenInclude =
+                        new ComplexIncludes<ModelBase, ModelBase>{Include = pc => ((ParentCategory)pc).CategoryType}}
+                    });
                 return View(await equipmentCategories.ToListAsync());
             }
             else if (categoryType == 1)
@@ -52,8 +58,13 @@ namespace PrototypeWithAuth.Controllers
             }
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
-            var applicationDbContext = _context.ProductSubcategories.Include(p => p.ParentCategory).ThenInclude(pc => pc.CategoryType)
-                .Where(ps => ps.ParentCategory.CategoryTypeID == categoryType);
+            var applicationDbContext = _productSubcategoriesProc.Read(new List<System.Linq.Expressions.Expression<Func<ProductSubcategory, bool>>>
+            { ps => ps.ParentCategory.CategoryTypeID == categoryType},
+            new List<ComplexIncludes<ProductSubcategory, ModelBase>>
+            {
+                new ComplexIncludes<ProductSubcategory, ModelBase>{Include = p => p.ParentCategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>
+                { Include = pc => ((ParentCategory)pc).CategoryType}}
+            });
             if(PageType == AppUtility.PageTypeEnum.RequestRequest)
             {
                 applicationDbContext = applicationDbContext.Where(ps => ps.ParentCategory.IsProprietary == false);
@@ -65,10 +76,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, Operations")]
         public JsonResult GetSubCategoryList(int? ParentCategoryId)
         {
-            var subCategoryList = _context.ProductSubcategories.ToList();
+            var subCategoryList = _productSubcategoriesProc.Read().ToList();
             if (ParentCategoryId != null)
             {
-                subCategoryList = _context.ProductSubcategories.Where(c => c.ParentCategoryID == ParentCategoryId).ToList();
+                subCategoryList = _productSubcategoriesProc.Read(new List<System.Linq.Expressions.Expression<Func<ProductSubcategory, bool>>> { c => c.ParentCategoryID == ParentCategoryId }).ToList();
             }
             return Json(subCategoryList);
         }
@@ -79,8 +90,12 @@ namespace PrototypeWithAuth.Controllers
             var requests = _context.Requests.Where(r => SelectedCategoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID)).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ApplicationUserCreator);
             var parentCategories = _context.ParentCategories.Where(pc => SelectedCategoryTypes.Contains(pc.CategoryTypeID)).Include(pc => pc.ProductSubcategories);
             var parentCategoriesJson = parentCategories.Select(pc => new { parentCategoryID = pc.ParentCategoryID, parentCategoryDescription = pc.ParentCategoryDescription });
-            var vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(vct=>vct.CategoryTypeID).Where(cti=> SelectedCategoryTypes.Contains(cti)).Any()).Select(v => new { vendorID = v.VendorID, vendorName = v.VendorEnName });
-            var subCategoryList = parentCategories.SelectMany(pc=>pc.ProductSubcategories).Select(ps => new { subCategoryID = ps.ProductSubcategoryID, subCategoryDescription = ps.ProductSubcategoryDescription });
+            var vendors = _vendor.Read(new List<System.Linq.Expressions.Expression<Func<Vendor, bool>>>
+            {
+                v => v.VendorCategoryTypes.Select(vct=>vct.CategoryTypeID).Where(cti=> SelectedCategoryTypes.Contains(cti)).Any()
+            }).Select(v => new { vendorID = v.VendorID, vendorName = v.VendorEnName });
+            var subCategoryList = parentCategories.SelectMany(pc=>pc.ProductSubcategories)
+                .Select(ps => new { subCategoryID = ps.ProductSubcategoryID, subCategoryDescription = ps.ProductSubcategoryDescription });
             var workers = requests.Select(r => r.ApplicationUserCreator).Select(e => new { workerID = e.Id, workerName = e.FirstName + " " + e.LastName }).Distinct();
             return Json(new { Vendors = vendors, ProductSubcategories = subCategoryList, ParentCategories = parentCategoriesJson, Employees = workers });
 

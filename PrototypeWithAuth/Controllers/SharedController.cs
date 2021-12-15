@@ -62,6 +62,7 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.LabPartsProc _lapPartsProc;
         protected readonly CRUD.ShareRequestsProc _shareRequestsProc;
         protected readonly CRUD.FavoriteRequestsProc _favoriteRequestsProc;
+        protected readonly CRUD.ProductSubcategoriesProc _productSubcategoriesProc;
         public SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
 
         {
@@ -100,6 +101,7 @@ namespace PrototypeWithAuth.Controllers
             _lapPartsProc = new CRUD.LabPartsProc(context);
             _shareRequestsProc = new CRUD.ShareRequestsProc(context);
             _favoriteRequestsProc = new CRUD.FavoriteRequestsProc(context);
+            _productSubcategoriesProc = new CRUD.ProductSubcategoriesProc(context);
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)
