@@ -141,9 +141,9 @@ namespace PrototypeWithAuth.Controllers
             int month = DateTime.Now.Month;
             var daysOffViewModel = new ReportDaysViewModel
             {
-                VacationDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, 2, userid).OrderByDescending(eh => eh.Date),
-                SickDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, 1, userid).OrderByDescending(eh => eh.Date).OrderByDescending(eh => eh.Date),
-                SpecialDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, 4, userid).OrderByDescending(eh => eh.Date).OrderByDescending(eh => eh.Date),
+                VacationDaysTaken = _employeeHoursProc.ReadOffDaysByYear(year, 2, userid).OrderByDescending(eh => eh.Date),
+                SickDaysTaken = _employeeHoursProc.ReadOffDaysByYear(year, 1, userid).OrderByDescending(eh => eh.Date).OrderByDescending(eh => eh.Date),
+                SpecialDaysTaken = _employeeHoursProc.ReadOffDaysByYear(year, 4, userid).OrderByDescending(eh => eh.Date).OrderByDescending(eh => eh.Date),
                 SelectedYear = year
             };
             var sickDaysVacationDaysLeft = await getVacationSickDaysLeft(user, year);
@@ -158,18 +158,18 @@ namespace PrototypeWithAuth.Controllers
         {
             double vacationDays = 0;
             double sickDays = 0;
-            double vacationDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, 2, user.Id).Count();
-            double sickDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, 1, user.Id).Count();
+            double vacationDaysTaken = _employeeHoursProc.ReadOffDaysByYear(year, 2, user.Id).Count();
+            double sickDaysTaken = _employeeHoursProc.ReadOffDaysByYear(year, 1, user.Id).Count();
             if (user.EmployeeStatusID == 1)
             {
-                var vacationHours = await _employeeHoursProc.ReadPartialOffDayHoursAsync(year, 2, user.Id);
+                var vacationHours = await _employeeHoursProc.ReadPartialOffDayHoursByYearAsync(year, 2, user.Id);
                 vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
 
-                var sickHours = await _employeeHoursProc.ReadPartialOffDayHoursAsync(year, 1, user.Id);
+                var sickHours = await _employeeHoursProc.ReadPartialOffDayHoursByYearAsync(year, 1, user.Id);
                 sickDaysTaken = Math.Round(sickDaysTaken + (sickHours / user.SalariedEmployee.HoursPerDay), 2);
             }
 
-            var unpaidLeaveTaken = Convert.ToInt32(await _employeeHoursProc.ReadPartialOffDayHoursAsync(year, 5, user.Id));
+            var unpaidLeaveTaken = Convert.ToInt32(await _employeeHoursProc.ReadPartialOffDayHoursByYearAsync(year, 5, user.Id));
             if (year == user.StartedWorking.Year)
             {
                 int month = year == DateTime.Now.Year ? (DateTime.Now.Month - user.StartedWorking.Month + 1) : (12 - user.StartedWorking.Month + 1);
@@ -545,7 +545,9 @@ namespace PrototypeWithAuth.Controllers
                 ViewBag.ErrorMessage = "Employee Hour not found (no id). Unable to delete.";
                 return NotFound();
             }
-            var employeeHour = await _employeeHoursProc.ReadOneByPKAsync(id, new List<Expression<Func<EmployeeHours, object>>> { eh => eh.PartialOffDayType, eh=>eh.OffDayType, eh=>eh.EmployeeHoursAwaitingApproval, eh=>eh.EmployeeHoursAwaitingApproval.PartialOffDayType });
+            var employeeHour = await _employeeHoursProc.ReadOneAsync( new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.EmployeeHoursID ==  id }, new List<ComplexIncludes<EmployeeHours, ModelBase>>{
+                new ComplexIncludes<EmployeeHours, ModelBase>{ Include = eh => eh.PartialOffDayType }, new ComplexIncludes<EmployeeHours, ModelBase>{Include = eh => eh.OffDayType },
+                    new ComplexIncludes<EmployeeHours, ModelBase> {Include = eh=>eh.EmployeeHoursAwaitingApproval }, new ComplexIncludes<EmployeeHours, ModelBase>{ Include = eh=>eh.EmployeeHoursAwaitingApproval.PartialOffDayType }});
             if (employeeHour == null)
             {
                 ViewBag.ErrorMessage = "Employee Hour not found. Unable to delete";

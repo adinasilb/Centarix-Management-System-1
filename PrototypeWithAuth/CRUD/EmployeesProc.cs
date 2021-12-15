@@ -51,10 +51,10 @@ namespace PrototypeWithAuth.CRUD
             {
                 double vacationDays = 0;
                 double sickDays = 0;
-                double offDaysTaken = _employeeHoursProc.ReadOffDaysByYearOffDayTypeIDAndUserID(year, OffDayTypeID, User.Id).Count();
+                double offDaysTaken = _employeeHoursProc.ReadOffDaysByYear(year, OffDayTypeID, User.Id).Count();
                 if (User.EmployeeStatusID == 1 && OffDayTypeID == 2)
                 {
-                    var vacationHours =await _employeeHoursProc.ReadPartialOffDayHoursAsync(year, 2, User.Id);
+                    var vacationHours =await _employeeHoursProc.ReadPartialOffDayHoursByYearAsync(year, 2, User.Id);
                     offDaysTaken = Math.Round(offDaysTaken + (vacationHours / User.SalariedEmployee.HoursPerDay), 2);
                 }
                 if (year == AppUtility.YearStartedTimeKeeper && year == DateTime.Now.Year)
