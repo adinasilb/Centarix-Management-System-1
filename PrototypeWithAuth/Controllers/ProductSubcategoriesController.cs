@@ -87,7 +87,18 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, Operations")]
         public JsonResult FilterByCategoryType(List<int> SelectedCategoryTypes)
         {
-            var requests = _context.Requests.Where(r => SelectedCategoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID)).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ApplicationUserCreator);
+            var requests = _requestsProc.Read(new List<System.Linq.Expressions.Expression<Func<Request, bool>>>
+                { r => SelectedCategoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID) },
+                new List<ComplexIncludes<Request, ModelBase>> {
+                    new ComplexIncludes<Request, ModelBase>
+                    {
+                        Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> {Include = p => ((Product)p).Vendor }
+                    },
+                    new ComplexIncludes<Request, ModelBase> {
+                        Include = p => p.Product.ProductSubcategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = ps => ((ProductSubcategory)ps).ParentCategory}
+                        },
+                    new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator }
+                });
             var parentCategories = _parentCategoriesProc.Read(new List<System.Linq.Expressions.Expression<Func<ParentCategory, bool>>>
                 { pc => SelectedCategoryTypes.Contains(pc.CategoryTypeID) }, new List<ComplexIncludes<ParentCategory, ModelBase>>
                 { new ComplexIncludes<ParentCategory, ModelBase>{ Include = pc => pc.ProductSubcategories } });
@@ -108,7 +119,16 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, Operations")]
         public JsonResult FilterByParentCategories(List<int> ParentCategoryIds)
         {
-            var requests = _context.Requests.Where(r => ParentCategoryIds.Contains(r.Product.ProductSubcategory.ParentCategoryID)).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product.ProductSubcategory).Include(r => r.ApplicationUserCreator);
+            var requests = _requestsProc.Read(new List<System.Linq.Expressions.Expression<Func<Request, bool>>>
+                { r => ParentCategoryIds.Contains(r.Product.ProductSubcategory.ParentCategoryID) },
+                new List<ComplexIncludes<Request, ModelBase>> {
+                    new ComplexIncludes<Request, ModelBase>
+                    {
+                        Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).Vendor }
+                    },
+                    new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.ProductSubcategory },
+                    new ComplexIncludes<Request, ModelBase>{ Include = r => r.ApplicationUserCreator }
+                });
             var vendors = requests.Select(r => r.Product.Vendor).Distinct().Select(v => new { vendorID = v.VendorID, vendorName = v.VendorEnName });
             var subCategoryList = _productSubcategoriesProc.Read(new List<System.Linq.Expressions.Expression<Func<ProductSubcategory, bool>>>
                 { ps=>ParentCategoryIds.Contains(ps.ParentCategoryID) })
@@ -122,7 +142,16 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, Operations")]
         public JsonResult FilterBySubCategories(List<int> SubCategoryIds)
         {
-            var requests = _context.Requests.Where(r => SubCategoryIds.Contains(r.Product.ProductSubcategoryID)).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product.ProductSubcategory).Include(r => r.ApplicationUserCreator);
+            var requests = _requestsProc.Read(new List<System.Linq.Expressions.Expression<Func<Request, bool>>> { r => SubCategoryIds.Contains(r.Product.ProductSubcategoryID) },
+                new List<ComplexIncludes<Request, ModelBase>>
+                {
+                    new ComplexIncludes<Request, ModelBase>
+                    {
+                        Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => p.Vendor }
+                    },
+                    new ComplexIncludes<Request, ModelBase> { Include = p => p.Product.ProductSubcategory },
+                    new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator }
+                });
             var vendors = requests.Select(r => r.Product.Vendor).Distinct().Select(v => new { vendorID = v.VendorID, vendorName = v.VendorEnName });
             var workers = requests.Select(r => r.ApplicationUserCreator).Select(e => new { workerID = e.Id, workerName = e.FirstName + " " + e.LastName }).Distinct();
             return Json(new { Vendors = vendors, Employees = workers });
