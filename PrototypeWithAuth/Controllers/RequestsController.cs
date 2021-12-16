@@ -152,142 +152,170 @@ namespace PrototypeWithAuth.Controllers
             string checkboxString = "Checkbox";
             string buttonText = "";
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
-            switch (requestIndexObject.PageType)
+
+            List<Expression<Func<Request, bool>>> wheres = new List<Expression<Func<Request, bool>>>();
+            List<ComplexIncludes<Request, ModelBase>> includes = new List<ComplexIncludes<Request, ModelBase>>();
+            Expression<Func<Request, RequestIndexPartialRowViewModel>> select = null;
+            Expression<Func<RequestPaymentsViewModel, RequestIndexPartialRowViewModel>> selectForPayments = null;
+            Expression<Func<Request, DateTime>> orderby = null;
+            Expression<Func<RequestPaymentsViewModel, DateTime>> orderbyForPayments = null;
+            //generic includes
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product, ThenInclude= new ComplexIncludes<ModelBase, ModelBase> { Include =p => ((Product)p).Vendor } });
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude= new ComplexIncludes<ModelBase, ModelBase> { Include =p => ((ProductSubcategory)p).ParentCategory } });
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.UnitType });
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubUnitType });
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubSubUnitType });
+            //switch (requestIndexObject.PageType)
+            //{
+            //    case AppUtility.PageTypeEnum.LabManagementQuotes:
+            //        switch (requestIndexObject.SidebarType)
+            //        {
+            //            case AppUtility.SidebarEnum.Orders:
+            //                wheres.Add(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
+            //                wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
+            //                wheres.Add(r => r.QuoteStatusID == 4 && r.RequestStatusID == 6);                            
+            //                includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator });
+            //                select = r => new RequestIndexPartialRowViewModel
+            //                 (AppUtility.IndexTableTypes.LabOrders, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+            //            r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString)
+
+            //                {
+            //                    ButtonClasses = " load-terms-modal lab-man-background-color ",
+            //                    ButtonText = "Order"
+            //                };
+            //                orderby = r => r.CreationDate;
+            //                iconList.Add(deleteIcon);
+                            
+            //                break;
+            //            case AppUtility.SidebarEnum.Quotes:
+            //                wheres.Add(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
+            //                wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
+            //                wheres.Add(r => (r.QuoteStatusID == 1 || r.QuoteStatusID == 2) && r.RequestStatusID == 6);
+            //                includes.Add( new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote });
+            //                includes.Add( new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator });
+            //                iconList.Add(resendIcon);
+            //                iconList.Add(editQuoteDetailsIcon);
+            //                iconList.Add(deleteIcon);
+            //                orderby = r => r.CreationDate;
+            //                select = r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.LabQuotes, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+            //            r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString, r.ParentQuote)
+
+            //                {
+            //                    ButtonClasses = " confirm-quote lab-man-background-color ",
+            //                    ButtonText = "Ask For Quote"
+            //                };
+            //                break;
+            //        }
+            //        break;
+            //    case AppUtility.PageTypeEnum.AccountingNotifications:
+            //        wheres.Add(r => r.RequestStatusID != 7);
+            //        includes.Add(new ComplexIncludes<Request, ModelBase> { Include =  r => r.ParentRequest });
+            //        if (notificationFilterViewModel == null)
+            //        {
+            //            notificationFilterViewModel = new NotificationFilterViewModel() { Vendors = _vendorsProc.Read( new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Select(v => v.CategoryTypeID).Contains(1) }).ToList() };
+            //        }
+            //        else
+            //        {
+            //            wheres.Add(r => (notificationFilterViewModel.SelectedVendor == null || r.Product.VendorID == notificationFilterViewModel.SelectedVendor)
+            //            && (notificationFilterViewModel.CentarixOrderNumber == null || r.ParentRequest.OrderNumber == notificationFilterViewModel.CentarixOrderNumber)
+            //            && (notificationFilterViewModel.ProductName == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.ProductName.ToLower())));
+            //        }
+            //        iconList.Add(popoverPartialClarifyIcon);
+            //        switch (requestIndexObject.SidebarType)
+            //        {
+            //            case AppUtility.SidebarEnum.DidntArrive:
+            //                wheres.Add(r => r.RequestStatusID == 2);
+            //                wheres.Add(r => r.ExpectedSupplyDays != null);
+            //                wheres.Add(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
+            //                checkboxString = "";
+            //                break;
+            //            case AppUtility.SidebarEnum.PartialDelivery:
+            //                wheres.Add(r => r.RequestStatusID == 2 && r.IsPartial);
+            //                checkboxString = "";
+            //                break;
+            //            case AppUtility.SidebarEnum.ForClarification:
+            //                wheres.Add(r => r.IsClarify);
+            //                checkboxString = "";
+            //                break;
+            //            case AppUtility.SidebarEnum.NoInvoice:
+            //                wheres.Add(r => r.Payments.FirstOrDefault().HasInvoice == false);
+            //                wheres.Add(r => (r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3));
+            //                iconList.Add(addInvoiceIcon);
+            //                buttonText = "Add To All";
+            //                break;
+            //        }
+            //        orderby =r => r.ParentRequest.OrderDate;
+            //        select = r => new RequestIndexPartialRowViewModel
+            //        (AppUtility.IndexTableTypes.AccountingNotifications, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+            //            r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString, _context.Requests.Where(pr => pr.ParentRequestID == pr.ParentRequestID && r.ProductID == pr.ProductID && r.RequestStatusID == 2).FirstOrDefault())
+            //        {
+            //            ButtonClasses = " invoice-add-all accounting-background-color ",
+            //            ButtonText = buttonText
+            //        };
+            //        viewModelByVendor.NotificationFilterViewModel = notificationFilterViewModel;
+            //        break;
+            //    case AppUtility.PageTypeEnum.AccountingPayments:
+            //        wheres.Add(r => r.RequestStatusID != 7 && r.Payments.Where(p => !p.IsPaid).Count() > 0);
+            //        includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest });
+            //        includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments });
+                    
+            //        var paymentList = await GetPaymentRequests(requestIndexObject.SidebarType);
+            //        switch (requestIndexObject.SidebarType)
+            //        {
+            //            case AppUtility.SidebarEnum.Installments:
+            //            case AppUtility.SidebarEnum.StandingOrders:
+            //                payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-invoice-one", "Pay");
+            //                checkboxString = "";
+            //                iconList.Add(payNowIcon);
+            //                iconList.Add(popoverMoreIcon);
+                            
+            //                orderbyForPayments = r => r.Request.ParentRequest.OrderDate;
+            //                selectForPayments = r => new RequestIndexPartialRowViewModel
+            //                 (AppUtility.IndexTableTypes.AccountingPaymentsInstallments, r.Request, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
+            //                    r.Request.Product.ProductSubcategory.ParentCategory, r.Request.Product.UnitType, r.Request.Product.SubUnitType, r.Request.Product.SubSubUnitType, requestIndexObject, iconList,
+            //                    defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
+
+            //                {
+            //                    ButtonText = "",
+            //                };
+            //                break;
+            //            default:
+            //                iconList.Add(payNowIcon);
+            //                iconList.Add(popoverMoreIcon);
+            //                orderbyForPayments =r => r.Request.ParentRequest.OrderDate;
+            //                selectForPayments = r => new RequestIndexPartialRowViewModel
+            //                 (AppUtility.IndexTableTypes.AccountingPaymentsDefault, r.Request, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
+            //            r.Request.Product.ProductSubcategory.ParentCategory, r.Request.Product.UnitType, r.Request.Product.SubUnitType, r.Request.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
+
+            //                {
+            //                    ButtonClasses = " payments-pay-now accounting-background-color ",
+            //                    ButtonText = "Pay All"
+            //                };
+            //                buttonText = "Pay All";
+            //                break;
+            //        }
+
+            //        viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(orderbyForPayments).Select(selectForPayments)
+            //        break;
+            //    case AppUtility.PageTypeEnum.RequestCart:                   
+            //        wheres.Add(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User));
+            //        wheres.Add(r => r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString());
+            //        wheres.Add(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
+            //        includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator });
+            //        iconList.Add(deleteIcon);
+            //        orderby = r => r.CreationDate;
+            //        select = r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Cart, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+            //            r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString)
+            //        {
+            //            ButtonClasses = " load-terms-modal order-inv-background-color ",
+            //            ButtonText = "Order",
+            //        };
+            //        break;
+
+            //}
+            if (requestIndexObject.PageType != AppUtility.PageTypeEnum.AccountingPayments)
             {
-                case AppUtility.PageTypeEnum.LabManagementQuotes:
-                    switch (requestIndexObject.SidebarType)
-                    {
-                        case AppUtility.SidebarEnum.Orders:
-                            var ordersRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.QuoteStatusID == 4 && r.RequestStatusID == 6)
-                                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-                                     .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType).Include(r => r.ApplicationUserCreator);
-
-                            iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = ordersRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel
-                             (AppUtility.IndexTableTypes.LabOrders, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString)
-
-                            {
-                                ButtonClasses = " load-terms-modal lab-man-background-color ",
-                                ButtonText = "Order"
-                            }).ToLookup(c => c.Vendor);
-                            break;
-                        case AppUtility.SidebarEnum.Quotes:
-                            var quoteRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                                .Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
-                                .Where(r => (r.QuoteStatusID == 1 || r.QuoteStatusID == 2) && r.RequestStatusID == 6)
-                                .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-                                .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType)
-                                .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator);
-                            iconList.Add(resendIcon);
-                            iconList.Add(editQuoteDetailsIcon);
-                            iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = quoteRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.LabQuotes, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString, r.ParentQuote)
-
-                            {
-                                ButtonClasses = " confirm-quote lab-man-background-color ",
-                                ButtonText = "Ask For Quote"
-                            }).ToLookup(c => c.Vendor);
-                            break;
-                    }
-                    break;
-                case AppUtility.PageTypeEnum.AccountingNotifications:
-
-                    var accountingNotificationsList = GetPaymentNotificationRequests(requestIndexObject.SidebarType);
-                    if (notificationFilterViewModel == null)
-                    {
-                        notificationFilterViewModel = new NotificationFilterViewModel() { Vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(v => v.CategoryTypeID).Contains(1)).ToList() };
-                    }
-                    else
-                    {
-                        accountingNotificationsList = accountingNotificationsList.Where(r => (notificationFilterViewModel.SelectedVendor == null || r.Product.VendorID == notificationFilterViewModel.SelectedVendor)
-                        && (notificationFilterViewModel.CentarixOrderNumber == null || r.ParentRequest.OrderNumber == notificationFilterViewModel.CentarixOrderNumber)
-                        && (notificationFilterViewModel.ProductName == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.ProductName.ToLower())));
-                    }
-                    iconList.Add(popoverPartialClarifyIcon);
-                    switch (requestIndexObject.SidebarType)
-                    {
-                        case AppUtility.SidebarEnum.DidntArrive:
-                            checkboxString = "";
-                            break;
-                        case AppUtility.SidebarEnum.PartialDelivery:
-                            checkboxString = "";
-                            break;
-                        case AppUtility.SidebarEnum.ForClarification:
-                            checkboxString = "";
-                            break;
-                        case AppUtility.SidebarEnum.NoInvoice:
-                            iconList.Add(addInvoiceIcon);
-                            buttonText = "Add To All";
-                            break;
-                    }
-                    viewModelByVendor.RequestsByVendor = accountingNotificationsList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
-                    (AppUtility.IndexTableTypes.AccountingNotifications, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString, _context.Requests.Where(pr => pr.ParentRequestID == pr.ParentRequestID && r.ProductID == pr.ProductID && r.RequestStatusID == 2).FirstOrDefault())
-                    {
-                        ButtonClasses = " invoice-add-all accounting-background-color ",
-                        ButtonText = buttonText
-                    }).ToLookup(c => c.Vendor);
-                    viewModelByVendor.NotificationFilterViewModel = notificationFilterViewModel;
-                    break;
-                case AppUtility.PageTypeEnum.AccountingPayments:
-
-                    var paymentList = GetPaymentRequests(requestIndexObject.SidebarType).Result;
-                    switch (requestIndexObject.SidebarType)
-                    {
-                        case AppUtility.SidebarEnum.Installments:
-                        case AppUtility.SidebarEnum.StandingOrders:
-                            payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-invoice-one", "Pay");
-                            checkboxString = "";
-                            iconList.Add(payNowIcon);
-                            iconList.Add(popoverMoreIcon);
-                            var requestPaymentList =
-                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.Request.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
-                             (AppUtility.IndexTableTypes.AccountingPaymentsInstallments, r.Request, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
-                                r.Request.Product.ProductSubcategory.ParentCategory, r.Request.Product.UnitType, r.Request.Product.SubUnitType, r.Request.Product.SubSubUnitType, requestIndexObject, iconList,
-                                defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
-
-                            {
-                                ButtonText = "",
-                            }).ToLookup(c => c.Vendor);
-                            break;
-                        default:
-                            iconList.Add(payNowIcon);
-                            iconList.Add(popoverMoreIcon);
-                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.Request.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
-                             (AppUtility.IndexTableTypes.AccountingPaymentsDefault, r.Request, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
-                        r.Request.Product.ProductSubcategory.ParentCategory, r.Request.Product.UnitType, r.Request.Product.SubUnitType, r.Request.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
-
-                            {
-                                ButtonClasses = " payments-pay-now accounting-background-color ",
-                                ButtonText = "Pay All"
-                            }).ToLookup(c => c.Vendor);
-                            buttonText = "Pay All";
-                            break;
-                    }
-
-
-                    break;
-                case AppUtility.PageTypeEnum.RequestCart:
-                    var cartRequests = _context.Requests
-              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-              .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType)
-              .Include(r => r.ApplicationUserCreator)
-              .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
-              .Where(r => r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString())
-              .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
-
-                    iconList.Add(deleteIcon);
-                    viewModelByVendor.RequestsByVendor = cartRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Cart, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString)
-                    {
-                        ButtonClasses = " load-terms-modal order-inv-background-color ",
-                        ButtonText = "Order",
-                    }).ToLookup(c => c.Vendor);
-
-                    break;
-
+                viewModelByVendor.RequestsByVendor = _requestsProc.Read(wheres, includes).OrderByDescending(orderby).Select(select).ToLookup(c => c.Vendor);
             }
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
@@ -4816,31 +4844,7 @@ namespace PrototypeWithAuth.Controllers
             }
             return requestList;
         }
-        private IQueryable<Request> GetPaymentNotificationRequests(AppUtility.SidebarEnum accountingNotificationsEnum)
-        {
-            var requestsList = _context.Requests
-                .Include(r => r.ParentRequest)
-                .Include(r => r.Product).ThenInclude(p => p.Vendor)
-                .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType)
-                .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
-                .Where(r => r.RequestStatusID != 7);
-            switch (accountingNotificationsEnum)
-            {
-                case AppUtility.SidebarEnum.NoInvoice:
-                    requestsList = requestsList.Where(r => r.Payments.FirstOrDefault().HasInvoice == false).Where(r => (r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3));
-                    break;
-                case AppUtility.SidebarEnum.DidntArrive:
-                    requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
-                    break;
-                case AppUtility.SidebarEnum.PartialDelivery:
-                    requestsList = requestsList.Where(r => r.RequestStatusID == 2 && r.IsPartial);
-                    break;
-                case AppUtility.SidebarEnum.ForClarification:
-                    requestsList = requestsList.Where(r => r.IsClarify);
-                    break;
-            }
-            return requestsList;
-        }
+
         [HttpGet]
         [Authorize(Roles = " Accounting")]
         public async Task<IActionResult> ChangePaymentStatus(AppUtility.PaymentsPopoverEnum newStatus, int requestID, AppUtility.PaymentsPopoverEnum currentStatus)

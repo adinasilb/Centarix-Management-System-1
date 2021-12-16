@@ -82,7 +82,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         private UserIndexViewModel GetUserIndexViewModel()
         {
-            var centarixIds = _centarixIDsProc.Read(new List<System.Linq.Expressions.Expression<Func<CentarixID, bool>>> { ci => ci.EmployeeID == u.Id })
+            var centarixIds = _centarixIDsProc.Read(new List<System.Linq.Expressions.Expression<Func<CentarixID, bool>>> { ci => ci.EmployeeID == ci.Id })
                         .OrderBy(ci => ci.TimeStamp);
             var users = _employeesProc.Read().OrderBy(u => u.UserNum)
                 .Select(u => new UserWithCentarixIDViewModel
