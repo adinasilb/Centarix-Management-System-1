@@ -66,6 +66,10 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.ParentCategoriesProc _parentCategoriesProc;
         protected readonly CRUD.CentarixIDsProc _centarixIDsProc;
         protected readonly CRUD.EmployeeStatusesProc _employeeStatusesProc;
+        protected readonly CRUD.JobCategoryTypesProc _jobCategoryTypesProc;
+        protected readonly CRUD.MaritalStatusesProc _maritalStatusesProc;
+        protected readonly CRUD.DegreesProc _degreesProc;
+        protected readonly CRUD.CitizenshipsProc _citizenshipsProc;
         public SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
 
         {
@@ -108,6 +112,10 @@ namespace PrototypeWithAuth.Controllers
             _parentCategoriesProc = new CRUD.ParentCategoriesProc(context);
             _centarixIDsProc = new CRUD.CentarixIDsProc(context);
             _employeeStatusesProc = new CRUD.EmployeeStatusesProc(context);
+            _jobCategoryTypesProc = new CRUD.JobCategoryTypesProc(context);
+            _maritalStatusesProc = new CRUD.MaritalStatusesProc(context);
+            _degreesProc = new CRUD.DegreesProc(context);
+            _citizenshipsProc = new CRUD.CitizenshipsProc(context);
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)

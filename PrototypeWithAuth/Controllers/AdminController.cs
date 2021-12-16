@@ -82,13 +82,13 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         private UserIndexViewModel GetUserIndexViewModel()
         {
-            var centarixIds = _centarixIDsProc.Read(new List<System.Linq.Expressions.Expression<Func<CentarixID, bool>>> { ci => ci.EmployeeID == u.Id })
-                        .OrderBy(ci => ci.TimeStamp);
             var users = _employeesProc.Read().OrderBy(u => u.UserNum)
                 .Select(u => new UserWithCentarixIDViewModel
                 {
                     Employee = u,
-                    CentarixID = AppUtility.GetEmployeeCentarixID(centarixIds)
+                    CentarixID = AppUtility.GetEmployeeCentarixID(_centarixIDsProc
+                        .Read(new List<System.Linq.Expressions.Expression<Func<CentarixID, bool>>> { ci => ci.EmployeeID == u.Id }, null)
+                        .OrderBy(ci => ci.TimeStamp))
                 });
 
             UserIndexViewModel userIndexViewModel = new UserIndexViewModel()
@@ -289,11 +289,11 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
-                registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jc => jc).ToList();
-                registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
-                registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
-                registerUserViewModel.Degrees = _context.Degrees.Select(d => d).ToList();
-                registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();
+                registerUserViewModel.JobCategoryTypes = _jobCategoryTypesProc.Read().ToList();
+                registerUserViewModel.EmployeeStatuses = _employeeStatusesProc.Read().ToList();
+                registerUserViewModel.MaritalStatuses = _maritalStatusesProc.Read().ToList();
+                registerUserViewModel.Degrees = _degreesProc.Read().ToList();
+                registerUserViewModel.Citizenships = _citizenshipsProc.Read().ToList();
                 return View("CreateUser", registerUserViewModel);
             }
             if (success.String != null)
@@ -645,15 +645,17 @@ namespace PrototypeWithAuth.Controllers
         }
         private void FillViewDropdowns(RegisterUserViewModel registerUserViewModel)
         {
-            registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jc => jc).ToList();
-            registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
-            registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
-            registerUserViewModel.Degrees = _context.Degrees.Select(d => d).ToList();
-            registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();
-            registerUserViewModel.NewEmployee = _context.Employees.Where(u => u.Id == registerUserViewModel.ApplicationUserID).Where(u => !u.IsSuspended)
-                  .Include(s => s.SalariedEmployee).Include(e => e.JobSubcategoryType).FirstOrDefault();
-            registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
-            registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jt => jt).ToList();
+            registerUserViewModel.JobCategoryTypes = _jobCategoryTypesProc.Read().ToList();
+            registerUserViewModel.EmployeeStatuses = _employeeStatusesProc.Read().ToList();
+            registerUserViewModel.MaritalStatuses = _maritalStatusesProc.Read().ToList();
+            registerUserViewModel.Degrees = _degreesProc.Read().ToList();
+            registerUserViewModel.Citizenships = _citizenshipsProc.Read().ToList();
+            registerUserViewModel.NewEmployee = _employeesProc.Read(new List<System.Linq.Expressions.Expression<Func<Employee, bool>>>
+                { u => u.Id == registerUserViewModel.ApplicationUserID && !u.IsSuspended }, new List<ComplexIncludes<Employee, ModelBase>>
+                {
+                    new ComplexIncludes<Employee, ModelBase>{Include = s => s.SalariedEmployee},
+                    new ComplexIncludes<Employee, ModelBase>{Include = e => e.JobSubcategoryType}
+                }).FirstOrDefault(); 
             if (registerUserViewModel.NewEmployee != null)
             {
                 //get CentarixID
@@ -812,7 +814,8 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 var user = _signInManager.GetTwoFactorAuthenticationUserAsync();
-                var appUser = await _context.Employees.Where(e => e.Email == user.Result.Email).FirstOrDefaultAsync();
+                var appUser = await _employeesProc.Read(new List<System.Linq.Expressions.Expression<Func<Employee, bool>>>
+                    { e => e.Email == user.Result.Email }).FirstOrDefaultAsync();
                 if (rememberTwoFactor)
                 {
                     var cookieNum = 1;
@@ -829,22 +832,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 else
                 {
-                    using (var transaction = _context.Database.BeginTransaction())
-                    {
-                        try
-                        {
-                            appUser.RememberTwoFactor = false;
-                            _context.Update(appUser);
-                            await _context.SaveChangesAsync();
-                            await transaction.CommitAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            await transaction.RollbackAsync();
-                            throw ex;
-
-                        }
-                    }
+                    var success = _employeesProc.UpdateAsync(appUser);
                 }
             }
             catch (Exception ex)
@@ -857,7 +845,8 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> editUserFunction(string id, int? Tab = 0)
         {
-            Employee userSelected = _context.Employees.Where(u => u.Id == id).FirstOrDefault();
+            Employee userSelected = _employeesProc.Read(new List<System.Linq.Expressions.Expression<Func<Employee, bool>>>
+                { u => u.Id == id }).FirstOrDefault();
             if (userSelected != null)
             {
                 RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel
@@ -908,7 +897,6 @@ namespace PrototypeWithAuth.Controllers
 
 
 
-                //var userToShow = _context.Users.Where(u => u.Id == id).FirstOrDefault();
                 IList<string> rolesList = await _userManager.GetRolesAsync(userSelected).ConfigureAwait(false);
 
                 var counter = 0;
@@ -1078,7 +1066,7 @@ namespace PrototypeWithAuth.Controllers
 
             return Json(password);
         }
-        
+
 
         public string SaveTempUserImage(UserImageViewModel userImageViewModel)
         {
@@ -1129,17 +1117,19 @@ namespace PrototypeWithAuth.Controllers
 
 
 
-        
+
 
         public JsonResult GetJobSubcategoryTypeList(int JobCategoryTypeID)
         {
-            var subcategories = _context.JobSubcategoryTypes.Where(js => js.JobCategoryTypeID == JobCategoryTypeID).ToList();
+            var subcategories = _jobCategoryTypesProc.Read(new List<System.Linq.Expressions.Expression<Func<JobCategoryType, bool>>>
+                { js => js.JobCategoryTypeID == JobCategoryTypeID }).ToList();
             return Json(subcategories);
         }
 
         public bool CheckUserEmailExist(bool isEdit, string email, string currentEmail)
         {
-            return !_context.Users.Where(u => u.Email.ToLower().Equals(email.ToLower())).Any() || (isEdit && currentEmail.ToLower().Equals(email.ToLower()));
+            return !(_employeesProc.Read(new List<System.Linq.Expressions.Expression<Func<Employee, bool>>> { u => u.Email.ToLower().Equals(email.ToLower()) })).Any()
+                || (isEdit && currentEmail.ToLower().Equals(email.ToLower()));
         }
 
     }
