@@ -13,7 +13,7 @@ using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public abstract class ApplicationDbContextProc<T> where T: class , ModelBase
+    public abstract class ApplicationDbContextProc<T> where T : class, ModelBase
     {
         protected readonly ApplicationDbContext _context;
         protected readonly UserManager<ApplicationUser> _userManager;
@@ -41,7 +41,8 @@ namespace PrototypeWithAuth.CRUD
         protected TestsProc _testsProc;
         protected TestValuesProc _testValuesProc;
         protected ProductsProc _productsProc;
-
+        protected ProductSubcategoriesProc _productSubcategoriesProc;
+        protected ParentCategoriesProc _parentCategoriesProc;
         public ApplicationDbContextProc(ApplicationDbContext context)
         {
             _context = context;
@@ -53,14 +54,14 @@ namespace PrototypeWithAuth.CRUD
             _countriesProc = new CountriesProc(_context, true);
             _employeeHoursProc = new EmployeeHoursProc(_context, true);
             _employeesProc = new EmployeesProc(_context, true);
-            _timekeeperNotificationsProc = new TimekeeperNotificationsProc(_context, true); 
-            _vendorCommentsProc = new VendorCommentsProc(_context, true); 
-            _vendorContactsProc = new VendorContactsProc(_context, true); 
+            _timekeeperNotificationsProc = new TimekeeperNotificationsProc(_context, true);
+            _vendorCommentsProc = new VendorCommentsProc(_context, true);
+            _vendorContactsProc = new VendorContactsProc(_context, true);
             _vendorsProc = new VendorsProc(_context, true);
-            _vendorCategoryTypesProc = new VendorCategoryTypesProc(_context, true); 
-            _employeeHoursAwaitingApprovalProc = new EmployeeHoursAwaitingApprovalProc(_context, true); 
-            _employeeHoursStatuesProc = new EmployeeHoursStatuesProc(_context, true); 
-            _companyDaysOffProc = new CompanyDaysOffProc(_context, true); 
+            _vendorCategoryTypesProc = new VendorCategoryTypesProc(_context, true);
+            _employeeHoursAwaitingApprovalProc = new EmployeeHoursAwaitingApprovalProc(_context, true);
+            _employeeHoursStatuesProc = new EmployeeHoursStatuesProc(_context, true);
+            _companyDaysOffProc = new CompanyDaysOffProc(_context, true);
             _offDayTypesProc = new OffDayTypesProc(_context, true);
             _commentTypesProc = new CommentTypesProc(_context, true);
             _requestsProc = new RequestsProc(_context, true);
@@ -72,13 +73,15 @@ namespace PrototypeWithAuth.CRUD
             _testsProc = new TestsProc(_context, true);
             _testValuesProc = new TestValuesProc(_context, true);
             _productsProc = new ProductsProc(_context, true);
+            _productSubcategoriesProc = new ProductSubcategoriesProc(_context, true);
+            _parentCategoriesProc = new ParentCategoriesProc(_context, true);
         }
 
         public virtual IQueryable<T> Read(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
         {
             var dbset = _context.Set<T>().AsQueryable();
-            dbset=ApplyWheres(wheres, dbset);
-            if (includes != null)
+            dbset = ApplyWheres(wheres, dbset);
+            if (includes != null && includes.Count > 0)
             {
                 IIncludableQueryable<T, ModelBase> ReqsWithInclude = ApplyIncludes(includes, dbset);
                 return ReqsWithInclude.AsNoTracking().AsQueryable();
@@ -105,9 +108,9 @@ namespace PrototypeWithAuth.CRUD
             for (int t = 0; t < includes.Count; t++)
             {
                 ReqsWithInclude = ReqsWithInclude.Include(includes[t].Include);
-                if (includes[t].ThenInclude !=null)
+                if (includes[t].ThenInclude != null)
                 {
-                      ReqsWithInclude = RecursiveInclude(ReqsWithInclude, includes[t].ThenInclude);
+                    ReqsWithInclude = RecursiveInclude(ReqsWithInclude, includes[t].ThenInclude);
                 }
             }
             return ReqsWithInclude;
@@ -116,9 +119,9 @@ namespace PrototypeWithAuth.CRUD
         public async Task<T> ReadOneAsync(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
         {
             var dbset = _context.Set<T>().AsQueryable();
-            dbset=ApplyWheres(wheres, dbset);
+            dbset = ApplyWheres(wheres, dbset);
             var item = dbset.Take(1);
-            if (includes != null)
+            if (includes != null && includes.Count > 0)
             {
                 IIncludableQueryable<T, ModelBase> requestWithInclude = ApplyIncludes(includes, dbset);
                 return await requestWithInclude.AsNoTracking().FirstOrDefaultAsync();
@@ -128,21 +131,21 @@ namespace PrototypeWithAuth.CRUD
         public virtual IQueryable<T> ReadOne(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
         {
             var dbset = _context.Set<T>().AsQueryable();
-            dbset=ApplyWheres(wheres, dbset);
+            dbset = ApplyWheres(wheres, dbset);
             var item = dbset.Take(1);
-            if (includes != null)
+            if (includes != null && includes.Count > 0)
             {
                 IIncludableQueryable<T, ModelBase> requestWithInclude = ApplyIncludes(includes, dbset);
-                return  requestWithInclude.AsNoTracking();
+                return requestWithInclude.AsNoTracking();
             }
-            return  item.AsNoTracking();
+            return item.AsNoTracking();
         }
         public virtual async Task<T> ReadOneWithIgnoreQueryFiltersAsync(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
         {
             return await ReadOne(wheres, includes).IgnoreQueryFilters().FirstOrDefaultAsync();
         }
 
-        public virtual  IQueryable<T> ReadOneWithIgnoreQueryFilters(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
+        public virtual IQueryable<T> ReadOneWithIgnoreQueryFilters(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
         {
             return ReadOne(wheres, includes).IgnoreQueryFilters();
         }

@@ -212,7 +212,7 @@ namespace PrototypeWithAuth.Controllers
 
         {
             List<Expression<Func<Vendor, bool>>> wheres = new List<Expression<Func<Vendor, bool>>>();
-            IQueryable<Vendor> filteredVendors = _context.Vendors.AsQueryable();
+            IQueryable<Vendor> filteredVendors = _vendor.Read();
 
             wheres.Add(fv => (String.IsNullOrEmpty(vendorName) || fv.VendorEnName.ToLower().Contains(vendorName.ToLower()))
                 &&

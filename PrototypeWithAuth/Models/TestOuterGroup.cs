@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Models
 {
@@ -14,7 +15,7 @@ namespace PrototypeWithAuth.Models
         public bool IsNone { get; set; }
         public int TestID { get; set; }
         public Test Test { get; set; }
-        public List<TestGroup> TestGroups { get; set; }
+        public ListImplementsModelBase<TestGroup> TestGroups { get; set; }
         public int SequencePosition { get; set; }
     }
 }
