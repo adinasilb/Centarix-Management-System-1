@@ -28,7 +28,7 @@ namespace PrototypeWithAuth.CRUD
         protected VendorsProc _vendorsProc;
         protected VendorCategoryTypesProc _vendorCategoryTypesProc;
         protected EmployeeHoursAwaitingApprovalProc _employeeHoursAwaitingApprovalProc;
-        protected EmployeeHoursStatuesProc _employeeHoursStatuesProc;
+        protected EmployeeHoursStatusesProc _employeeHoursStatuesProc;
         protected CompanyDaysOffProc _companyDaysOffProc;
         protected OffDayTypesProc _offDayTypesProc;
         protected CommentTypesProc _commentTypesProc;
@@ -63,7 +63,7 @@ namespace PrototypeWithAuth.CRUD
             _vendorsProc = new VendorsProc(_context, true);
             _vendorCategoryTypesProc = new VendorCategoryTypesProc(_context, true);
             _employeeHoursAwaitingApprovalProc = new EmployeeHoursAwaitingApprovalProc(_context, true);
-            _employeeHoursStatuesProc = new EmployeeHoursStatuesProc(_context, true);
+            _employeeHoursStatuesProc = new EmployeeHoursStatusesProc(_context, true);
             _companyDaysOffProc = new CompanyDaysOffProc(_context, true);
             _offDayTypesProc = new OffDayTypesProc(_context, true);
             _commentTypesProc = new CommentTypesProc(_context, true);

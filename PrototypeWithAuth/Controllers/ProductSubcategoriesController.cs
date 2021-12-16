@@ -103,7 +103,7 @@ namespace PrototypeWithAuth.Controllers
                 { pc => SelectedCategoryTypes.Contains(pc.CategoryTypeID) }, new List<ComplexIncludes<ParentCategory, ModelBase>>
                 { new ComplexIncludes<ParentCategory, ModelBase>{ Include = pc => pc.ProductSubcategories } });
             var parentCategoriesJson = parentCategories.Select(pc => new { parentCategoryID = pc.ParentCategoryID, parentCategoryDescription = pc.ParentCategoryDescription });
-            var vendors = _vendor.Read(new List<System.Linq.Expressions.Expression<Func<Vendor, bool>>>
+            var vendors = _vendorsProc.Read(new List<System.Linq.Expressions.Expression<Func<Vendor, bool>>>
             {
                 v => v.VendorCategoryTypes.Select(vct=>vct.CategoryTypeID).Where(cti=> SelectedCategoryTypes.Contains(cti)).Any()
             }).Select(v => new { vendorID = v.VendorID, vendorName = v.VendorEnName });

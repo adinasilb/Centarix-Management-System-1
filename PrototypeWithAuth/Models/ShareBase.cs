@@ -14,10 +14,10 @@ namespace PrototypeWithAuth.Models
         public int ShareID { get; set; }
         public string FromApplicationUserID { get; set; }
         [ForeignKey("FromApplicationUserID")]
-        public ApplicationUser FromApplicationUser { get; set; }
+        public Employee FromApplicationUser { get; set; }
         public string ToApplicationUserID { get; set; }
         [ForeignKey("ToApplicationUserID")]
-        public ApplicationUser ToApplicationUser { get; set; }
+        public Employee ToApplicationUser { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime TimeStamp { get; set; }
     }
