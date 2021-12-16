@@ -147,7 +147,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     new ComplexIncludes<Request, ModelBase>
                     {
-                        Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => p.Vendor }
+                        Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).Vendor }
                     },
                     new ComplexIncludes<Request, ModelBase> { Include = p => p.Product.ProductSubcategory },
                     new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator }
