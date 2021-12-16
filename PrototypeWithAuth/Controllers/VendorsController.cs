@@ -58,7 +58,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Vendors;
             TempData["CategoryType"] = categoryType;
 
-            var vendors = _vendor.Read(new List<Expression<Func<Vendor, bool>>> {
+            var vendors = _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> {
                  v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryType).Count() > 0
             });
             return View(vendors);
@@ -80,7 +80,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
 
-            return View(_vendor.Read());
+            return View(_vendorsProc.Read());
 
         }
         // GET: Vendors
@@ -98,7 +98,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
             }
 
-            return PartialView(_vendor.Read());
+            return PartialView(_vendorsProc.Read());
 
         }
 
@@ -112,7 +112,7 @@ namespace PrototypeWithAuth.Controllers
             VendorSearchViewModel vendorSearchViewModel = new VendorSearchViewModel
             {
                 CategoryTypes = _categoryType.Read(),
-                Vendors = _vendor.Read(),
+                Vendors = _vendorsProc.Read(),
                 Countries = _country.Read(),
                 SectionType = SectionType
             };
@@ -190,7 +190,7 @@ namespace PrototypeWithAuth.Controllers
 
             wheres.Add(fv => (orderedVendorCategoryTypes == null || orderedVendorCategoryTypes.All(fv.VendorCategoryTypes.Select(ct => ct.CategoryTypeID).Contains))); //if choose lab, will include vendors that have both lab and operations
             
-            var listfilteredVendors = _vendor.Read(wheres, new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include = v=>v.VendorCategoryTypes} });
+            var listfilteredVendors = _vendorsProc.Read(wheres, new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include = v=>v.VendorCategoryTypes} });
 
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = vendorSearchViewModel.SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
@@ -212,12 +212,12 @@ namespace PrototypeWithAuth.Controllers
 
         {
             List<Expression<Func<Vendor, bool>>> wheres = new List<Expression<Func<Vendor, bool>>>();
-            IQueryable<Vendor> filteredVendors = _vendor.Read();
+            IQueryable<Vendor> filteredVendors = _vendorsProc.Read();
 
             wheres.Add(fv => (String.IsNullOrEmpty(vendorName) || fv.VendorEnName.ToLower().Contains(vendorName.ToLower()))
                 &&
              (String.IsNullOrEmpty(companyID) || fv.VendorBuisnessID.ToLower().Contains(companyID.ToLower())));
-            var listfilteredVendors = _vendor.Read(wheres, new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include = v => v.VendorCategoryTypes } });
+            var listfilteredVendors = _vendorsProc.Read(wheres, new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include = v => v.VendorCategoryTypes } });
             return PartialView("_IndexForPayment", listfilteredVendors);
         }
 
@@ -274,7 +274,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Create(CreateSupplierViewModel createSupplierViewModel)
         {
             var userid = _userManager.GetUserAsync(User).Result.Id;
-            StringWithBool vendorCreated = await _vendor.UpdateAsync(createSupplierViewModel, userid);
+            StringWithBool vendorCreated = await _vendorsProc.UpdateAsync(createSupplierViewModel, userid);
             if (vendorCreated.Bool)
             {
                 return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
@@ -335,7 +335,7 @@ namespace PrototypeWithAuth.Controllers
             }
             var createSupplierViewModel = new CreateSupplierViewModel()
             {
-                Vendor = await _vendor.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == id })
+                Vendor = await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == id })
             };
             return PartialView(createSupplierViewModel);
         }
@@ -349,7 +349,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Edit(CreateSupplierViewModel createSupplierViewModel)
         {
             //PROC START
-            var vendorUpdated = await _vendor.UpdateAsync(createSupplierViewModel, _userManager.GetUserId(User));
+            var vendorUpdated = await _vendorsProc.UpdateAsync(createSupplierViewModel, _userManager.GetUserId(User));
             if (vendorUpdated.Bool)
             {
                 return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
@@ -369,13 +369,13 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting")]
         private async Task<bool> VendorExists(int id)
         {
-            return await _vendor.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == id }) != null ? true : false;
+            return await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == id }) != null ? true : false;
         }
 
         [HttpGet]
         public async  Task<JsonResult> GetVendorBusinessID(int VendorID)
         {
-            Vendor vendor = await _vendor.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == VendorID });
+            Vendor vendor = await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == VendorID });
             return Json(vendor);
         }
       
@@ -398,7 +398,7 @@ namespace PrototypeWithAuth.Controllers
             Vendor vendor = null; 
             if (CompanyID != null && CountryID != null && VendorID == null)
             {
-                vendor =await _vendor.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID == CountryID });
+                vendor =await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID == CountryID });
                 if(vendor !=null)
                 {
                     return false; 
@@ -406,7 +406,7 @@ namespace PrototypeWithAuth.Controllers
             }
             if (VendorID != null)
             {
-                vendor = await _vendor.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID == CountryID && v.VendorID !=VendorID });
+                vendor = await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorBuisnessID.Equals(CompanyID) && v.CountryID == CountryID && v.VendorID !=VendorID });
                 if (vendor !=null)
                 {
                     return false;
@@ -417,7 +417,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<string> GetVendorCountryCurrencyIDAsync(int VendorID)
         {
-            var vendor = await _vendor.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == VendorID },
+            var vendor = await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == VendorID },
                 new List<ComplexIncludes<Vendor, ModelBase>> {
                     new ComplexIncludes<Vendor, ModelBase>{ Include = v => v.Country }
                 }
