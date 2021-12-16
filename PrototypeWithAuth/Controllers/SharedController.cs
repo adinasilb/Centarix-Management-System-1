@@ -64,6 +64,8 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.FavoriteRequestsProc _favoriteRequestsProc;
         protected readonly CRUD.ProductSubcategoriesProc _productSubcategoriesProc;
         protected readonly CRUD.ParentCategoriesProc _parentCategoriesProc;
+        protected readonly CRUD.CentarixIDsProc _centarixIDsProc;
+        protected readonly CRUD.EmployeeStatusesProc _employeeStatusesProc;
         public SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
 
         {
@@ -104,6 +106,8 @@ namespace PrototypeWithAuth.Controllers
             _favoriteRequestsProc = new CRUD.FavoriteRequestsProc(context);
             _productSubcategoriesProc = new CRUD.ProductSubcategoriesProc(context);
             _parentCategoriesProc = new CRUD.ParentCategoriesProc(context);
+            _centarixIDsProc = new CRUD.CentarixIDsProc(context);
+            _employeeStatusesProc = new CRUD.EmployeeStatusesProc(context);
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)
