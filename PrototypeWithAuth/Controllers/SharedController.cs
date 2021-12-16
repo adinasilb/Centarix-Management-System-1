@@ -941,7 +941,7 @@ protected async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestInde
             wheres.Add(r => r.Product.VendorID == sideBarID);
             break;
         case AppUtility.SidebarEnum.Type:
-            sidebarFilterDescription = await _productSubCategoriesProc.ReadOne( new List<Expression<Func<ProductSubcategory, bool>>> { p => p.ProductSubcategoryID == sideBarID }).Select(p => p.ProductSubcategoryDescription).FirstOrDefaultAsync();
+            sidebarFilterDescription = await _productSubcategoriesProc.ReadOne( new List<Expression<Func<ProductSubcategory, bool>>> { p => p.ProductSubcategoryID == sideBarID }).Select(p => p.ProductSubcategoryDescription).FirstOrDefaultAsync();
             wheres.Add(r => r.Product.ProductSubcategoryID == sideBarID);
             break;
         case AppUtility.SidebarEnum.Owner:
