@@ -919,13 +919,13 @@ protected async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestInde
     }
     else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart && requestIndexObject.SidebarType == AppUtility.SidebarEnum.Favorites)
     {
-        var usersFavoriteRequests = _context.FavoriteRequests.Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+                var usersFavoriteRequests = _favoriteRequestsProc.Read(new List<Expression<Func<FavoriteRequest, bool>>> { fr => fr.ApplicationUserID == _userManager.GetUserId(User) })
             .Select(fr => fr.RequestID).ToList();
         wheres.Add(frl => usersFavoriteRequests.Contains(frl.RequestID));
     }
     else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart && requestIndexObject.SidebarType == AppUtility.SidebarEnum.SharedRequests)
     {
-        var sharedWithMe = _context.ShareRequests.Where(fr => fr.ToApplicationUserID == _userManager.GetUserId(User))
+        var sharedWithMe = _shareRequestsProc.Read( new List<Expression<Func<ShareRequest, bool>>> { fr => fr.ToApplicationUserID == _userManager.GetUserId(User) })
             .Select(sr => sr.RequestID).ToList();
         wheres.Add(frl => sharedWithMe.Contains(frl.RequestID));
     }
@@ -941,15 +941,15 @@ protected async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestInde
     switch (requestIndexObject.SidebarType)
     {
         case AppUtility.SidebarEnum.Vendors:
-            sidebarFilterDescription = _context.Vendors.Where(v => v.VendorID == sideBarID).Select(v => v.VendorEnName).FirstOrDefault();
+            sidebarFilterDescription = await _vendor.ReadOne( new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == sideBarID }).Select(v => v.VendorEnName).FirstOrDefaultAsync();
             wheres.Add(r => r.Product.VendorID == sideBarID);
             break;
         case AppUtility.SidebarEnum.Type:
-            sidebarFilterDescription = _context.ProductSubcategories.Where(p => p.ProductSubcategoryID == sideBarID).Select(p => p.ProductSubcategoryDescription).FirstOrDefault();
+            sidebarFilterDescription = await _productSubcategoriesProc.ReadOne( new List<Expression<Func<ProductSubcategory, bool>>> { p => p.ProductSubcategoryID == sideBarID }).Select(p => p.ProductSubcategoryDescription).FirstOrDefaultAsync();
             wheres.Add(r => r.Product.ProductSubcategoryID == sideBarID);
             break;
         case AppUtility.SidebarEnum.Owner:
-            var owner = _context.Employees.Where(e => e.Id.Equals(requestIndexObject.SidebarFilterID)).FirstOrDefault();
+            var owner = await _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { e => e.Id.Equals(requestIndexObject.SidebarFilterID) });
             sidebarFilterDescription = owner.FirstName + " " + owner.LastName;
             wheres.Add(r => r.ApplicationUserCreatorID == requestIndexObject.SidebarFilterID);
             break;
