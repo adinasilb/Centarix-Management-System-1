@@ -20,5 +20,10 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
+
+        public override async Task<StringWithBool> UpdateAsync<ProductComment>(List<ProductComment> comments, int vendorID, string userID)
+        {
+            return await base.UpdateAsync(comments, vendorID, userID);
+        }
     }
 }
