@@ -12,23 +12,16 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class VendorCommentsProc : ApplicationDbContextProc<VendorComment>
+    public class VendorCommentsProc : CommentBasesProc<VendorComment>
     {
-        public VendorCommentsProc(ApplicationDbContext context, bool FromBase = false) : base (context)
+        public VendorCommentsProc(ApplicationDbContext context, bool FromBase = false) : base (context, FromBase)
         {
-            if (!FromBase)
-            {
-                base.InstantiateProcs();
-            }
+
         }
 
-        public IQueryable<VendorComment> Read()
-        {
-            return _context.VendorComments.AsNoTracking().AsQueryable();
-        }
 
      
-        public override async Task<StringWithBool> UpdateAsync<VendorComment>(List<VendorComment> comments, int vendorID, string userID)
+        public override async Task<StringWithBool> UpdateAsync(List<VendorComment> comments, int vendorID, string userID)
         {
             return await base.UpdateAsync(comments, vendorID, userID);
         }

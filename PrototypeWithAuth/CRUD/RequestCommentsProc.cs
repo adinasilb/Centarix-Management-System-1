@@ -10,18 +10,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class RequestCommentsProc : ApplicationDbContextProc<RequestComment>
+    public class RequestCommentsProc : CommentBasesProc<RequestComment>
     {
-        public RequestCommentsProc(ApplicationDbContext context, bool FromBase = false) : base(context)
+        public RequestCommentsProc(ApplicationDbContext context, bool FromBase = false) : base(context, FromBase)
         {
-            if (!FromBase)
-            {
-                base.InstantiateProcs();
-            }
         }
 
 
-        public override async Task<StringWithBool> UpdateAsync<RequestComment>(List<RequestComment> comments, int vendorID, string userID)
+        public override async Task<StringWithBool> UpdateAsync(List<RequestComment> comments, int vendorID, string userID)
         {
             return await base.UpdateAsync(comments, vendorID, userID);
         }
