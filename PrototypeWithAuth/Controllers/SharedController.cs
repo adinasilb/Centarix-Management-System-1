@@ -77,6 +77,7 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.CompanyAccountsProc _companyAccountsProc;
         protected readonly CRUD.ProjectsProc _projectsProc;
         protected readonly CRUD.SubProjectsProc _subProjectsProc;
+        protected readonly CRUD.JobSubcategoryTypesProc _jobSubcategoryTypesProc;
         public SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
 
         {
@@ -131,6 +132,7 @@ namespace PrototypeWithAuth.Controllers
             _maritalStatusesProc = new CRUD.MaritalStatusesProc(context);
             _degreesProc = new CRUD.DegreesProc(context);
             _citizenshipsProc = new CRUD.CitizenshipsProc(context);
+            _jobSubcategoryTypesProc = new CRUD.JobSubcategoryTypesProc(context);
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)
