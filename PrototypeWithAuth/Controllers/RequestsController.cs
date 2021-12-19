@@ -152,56 +152,71 @@ namespace PrototypeWithAuth.Controllers
             string checkboxString = "Checkbox";
             string buttonText = "";
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
+
+            List<Expression<Func<Request, bool>>> wheres = new List<Expression<Func<Request, bool>>>();
+            List<ComplexIncludes<Request, ModelBase>> includes = new List<ComplexIncludes<Request, ModelBase>>();
+            Expression<Func<Request, RequestIndexPartialRowViewModel>> select = null;
+            Func<RequestPaymentsViewModel, RequestIndexPartialRowViewModel> selectForPayments = null;
+            Expression<Func<Request, DateTime>> orderby = null;
+            Func<RequestPaymentsViewModel, DateTime> orderbyForPayments = null;
+            //generic includes
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product, ThenInclude= new ComplexIncludes<ModelBase, ModelBase> { Include =p => ((Product)p).Vendor } });
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude= new ComplexIncludes<ModelBase, ModelBase> { Include =p => ((ProductSubcategory)p).ParentCategory } });
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.UnitType });
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubUnitType });
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubSubUnitType });
             switch (requestIndexObject.PageType)
             {
                 case AppUtility.PageTypeEnum.LabManagementQuotes:
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.Orders:
-                            var ordersRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.QuoteStatusID == 4 && r.RequestStatusID == 6)
-                                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-                                     .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType).Include(r => r.ApplicationUserCreator);
-
-                            iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = ordersRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel
+                            wheres.Add(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
+                            wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
+                            wheres.Add(r => r.QuoteStatusID == 4 && r.RequestStatusID == 6);
+                            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator });
+                            select = r => new RequestIndexPartialRowViewModel
                              (AppUtility.IndexTableTypes.LabOrders, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString)
 
                             {
                                 ButtonClasses = " load-terms-modal lab-man-background-color ",
                                 ButtonText = "Order"
-                            }).ToLookup(c => c.Vendor);
+                            };
+                            orderby = r => r.CreationDate;
+                            iconList.Add(deleteIcon);
+
                             break;
                         case AppUtility.SidebarEnum.Quotes:
-                            var quoteRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                                .Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
-                                .Where(r => (r.QuoteStatusID == 1 || r.QuoteStatusID == 2) && r.RequestStatusID == 6)
-                                .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-                                .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType)
-                                .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator);
+                            wheres.Add(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
+                            wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
+                            wheres.Add(r => (r.QuoteStatusID == 1 || r.QuoteStatusID == 2) && r.RequestStatusID == 6);
+                            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote });
+                            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator });
                             iconList.Add(resendIcon);
                             iconList.Add(editQuoteDetailsIcon);
                             iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = quoteRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.LabQuotes, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                            orderby = r => r.CreationDate;
+                            select = r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.LabQuotes, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString, r.ParentQuote)
 
                             {
                                 ButtonClasses = " confirm-quote lab-man-background-color ",
                                 ButtonText = "Ask For Quote"
-                            }).ToLookup(c => c.Vendor);
+                            };
                             break;
                     }
                     break;
                 case AppUtility.PageTypeEnum.AccountingNotifications:
-
-                    var accountingNotificationsList = GetPaymentNotificationRequests(requestIndexObject.SidebarType);
+                    wheres.Add(r => r.RequestStatusID != 7);
+                    includes.Add(new ComplexIncludes<Request, ModelBase> { Include =  r => r.ParentRequest });
                     if (notificationFilterViewModel == null)
                     {
-                        notificationFilterViewModel = new NotificationFilterViewModel() { Vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(v => v.CategoryTypeID).Contains(1)).ToList() };
+                        notificationFilterViewModel = new NotificationFilterViewModel() { Vendors = _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Select(v => v.CategoryTypeID).Contains(1) }).ToList() };
                     }
                     else
                     {
-                        accountingNotificationsList = accountingNotificationsList.Where(r => (notificationFilterViewModel.SelectedVendor == null || r.Product.VendorID == notificationFilterViewModel.SelectedVendor)
+                        wheres.Add(r => (notificationFilterViewModel.SelectedVendor == null || r.Product.VendorID == notificationFilterViewModel.SelectedVendor)
                         && (notificationFilterViewModel.CentarixOrderNumber == null || r.ParentRequest.OrderNumber == notificationFilterViewModel.CentarixOrderNumber)
                         && (notificationFilterViewModel.ProductName == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.ProductName.ToLower())));
                     }
@@ -209,31 +224,38 @@ namespace PrototypeWithAuth.Controllers
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.DidntArrive:
+                            wheres.Add(r => r.RequestStatusID == 2);
+                            wheres.Add(r => r.ExpectedSupplyDays != null);
+                            wheres.Add(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
                             checkboxString = "";
                             break;
                         case AppUtility.SidebarEnum.PartialDelivery:
+                            wheres.Add(r => r.RequestStatusID == 2 && r.IsPartial);
                             checkboxString = "";
                             break;
                         case AppUtility.SidebarEnum.ForClarification:
+                            wheres.Add(r => r.IsClarify);
                             checkboxString = "";
                             break;
                         case AppUtility.SidebarEnum.NoInvoice:
+                            wheres.Add(r => r.Payments.FirstOrDefault().HasInvoice == false);
+                            wheres.Add(r => (r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3));
                             iconList.Add(addInvoiceIcon);
                             buttonText = "Add To All";
                             break;
                     }
-                    viewModelByVendor.RequestsByVendor = accountingNotificationsList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
+                    orderby =r => r.ParentRequest.OrderDate;
+                    select = r => new RequestIndexPartialRowViewModel
                     (AppUtility.IndexTableTypes.AccountingNotifications, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString, _context.Requests.Where(pr => pr.ParentRequestID == pr.ParentRequestID && r.ProductID == pr.ProductID && r.RequestStatusID == 2).FirstOrDefault())
+                        r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString, _requestsProc.ReadOne( new List<Expression<Func<Request, bool>>> { pr => pr.ParentRequestID == pr.ParentRequestID && r.ProductID == pr.ProductID && r.RequestStatusID == 2 }, null).FirstOrDefault())
                     {
                         ButtonClasses = " invoice-add-all accounting-background-color ",
                         ButtonText = buttonText
-                    }).ToLookup(c => c.Vendor);
+                    };
                     viewModelByVendor.NotificationFilterViewModel = notificationFilterViewModel;
                     break;
-                case AppUtility.PageTypeEnum.AccountingPayments:
-
-                    var paymentList = GetPaymentRequests(requestIndexObject.SidebarType).Result;
+                case AppUtility.PageTypeEnum.AccountingPayments:  
+                    var paymentList = await GetPaymentRequests(requestIndexObject.SidebarType);
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.Installments:
@@ -242,52 +264,54 @@ namespace PrototypeWithAuth.Controllers
                             checkboxString = "";
                             iconList.Add(payNowIcon);
                             iconList.Add(popoverMoreIcon);
-                            var requestPaymentList =
-                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.Request.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
+
+                            orderbyForPayments = r => r.Request.ParentRequest.OrderDate;
+                            selectForPayments = r => new RequestIndexPartialRowViewModel
                              (AppUtility.IndexTableTypes.AccountingPaymentsInstallments, r.Request, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
                                 r.Request.Product.ProductSubcategory.ParentCategory, r.Request.Product.UnitType, r.Request.Product.SubUnitType, r.Request.Product.SubSubUnitType, requestIndexObject, iconList,
                                 defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
 
                             {
                                 ButtonText = "",
-                            }).ToLookup(c => c.Vendor);
+                            };
                             break;
                         default:
                             iconList.Add(payNowIcon);
                             iconList.Add(popoverMoreIcon);
-                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.Request.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
+                            orderbyForPayments =r => r.Request.ParentRequest.OrderDate;
+                            selectForPayments = r => new RequestIndexPartialRowViewModel
                              (AppUtility.IndexTableTypes.AccountingPaymentsDefault, r.Request, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
                         r.Request.Product.ProductSubcategory.ParentCategory, r.Request.Product.UnitType, r.Request.Product.SubUnitType, r.Request.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
 
                             {
                                 ButtonClasses = " payments-pay-now accounting-background-color ",
                                 ButtonText = "Pay All"
-                            }).ToLookup(c => c.Vendor);
+                            };
                             buttonText = "Pay All";
                             break;
                     }
 
-
+                    viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(orderbyForPayments).Select(selectForPayments).ToLookup(r => r.Vendor);
                     break;
                 case AppUtility.PageTypeEnum.RequestCart:
-                    var cartRequests = _context.Requests
-              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-              .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType)
-              .Include(r => r.ApplicationUserCreator)
-              .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
-              .Where(r => r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString())
-              .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
-
+                    wheres.Add(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User));
+                    wheres.Add(r => r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString());
+                    wheres.Add(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
+                    includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator });
                     iconList.Add(deleteIcon);
-                    viewModelByVendor.RequestsByVendor = cartRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Cart, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                    orderby = r => r.CreationDate;
+                    select = r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Cart, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString)
                     {
                         ButtonClasses = " load-terms-modal order-inv-background-color ",
                         ButtonText = "Order",
-                    }).ToLookup(c => c.Vendor);
-
+                    };
                     break;
 
+            }
+            if (requestIndexObject.PageType != AppUtility.PageTypeEnum.AccountingPayments)
+            {
+                viewModelByVendor.RequestsByVendor = _requestsProc.Read(wheres, includes).OrderByDescending(orderby).Select(select).ToLookup(c => c.Vendor);
             }
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
@@ -301,181 +325,6 @@ namespace PrototypeWithAuth.Controllers
             return viewModelByVendor;
         }
 
-        //protected void FillDocumentsInfo(RequestItemViewModel requestItemViewModel, string uploadFolder, ProductSubcategory productSubcategory)
-        //{
-        //    requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
-
-        //    if (productSubcategory.ParentCategory.IsProprietary)
-        //    {
-        //        if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
-        //        {
-        //            GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.S, uploadFolder);
-
-        //        }
-        //        if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
-        //            && productSubcategory.ProductSubcategoryDescription != "Cells")
-        //        {
-        //            GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
-
-        //        }
-        //        if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
-        //            && productSubcategory.ProductSubcategoryDescription != "Cells" && productSubcategory.ProductSubcategoryDescription != "Probes")
-        //        {
-        //            GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Map, uploadFolder);
-
-        //        }
-        //    }
-        //    else if (requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID == 2)
-        //    {
-        //        GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, uploadFolder);
-        //        GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, uploadFolder);
-        //        GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Details, uploadFolder);
-        //        GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, uploadFolder);
-        //    }
-        //    else
-        //    {
-        //        GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, uploadFolder);
-        //        GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, uploadFolder);
-        //        GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, uploadFolder);
-        //        GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Shipments, uploadFolder);
-
-        //        GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
-        //        GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
-        //        //GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Returns, uploadFolder);
-        //        //GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Credits, uploadFolder);
-        //    }
-        //}
-        //protected async Task<RequestItemViewModel> FillRequestDropdowns(RequestItemViewModel requestItemViewModel, ProductSubcategory productSubcategory, int categoryTypeId)
-        //{
-        //    var parentcategories = new List<ParentCategory>();
-        //    var productsubcategories = new List<ProductSubcategory>();
-        //    var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-        //    if (productSubcategory != null)
-        //    {
-        //        if (categoryTypeId == 1)
-        //        {
-        //            parentcategories = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == productSubcategory.ParentCategoryID).ToListAsync();
-        //        }
-        //        else
-        //        {
-        //            parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 2).ToListAsync();
-        //        }
-        //        productsubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == productSubcategory.ParentCategoryID).ToListAsync();
-        //        unittypes = _context.UnitTypes.Where(ut => ut.UnitTypeParentCategory.Where(up => up.ParentCategoryID == productSubcategory.ParentCategoryID).Count() > 0).Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-        //    }
-        //    else
-        //    {
-        //        if (requestItemViewModel.IsProprietary)
-        //        {
-        //            var proprietarycategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Samples.ToString()).FirstOrDefaultAsync();
-        //            productsubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == proprietarycategory.ParentCategoryID).ToListAsync();
-        //        }
-        //        else
-        //        {
-        //            parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == categoryTypeId && !pc.IsProprietary).ToListAsync();
-        //        }
-        //    }
-        //    var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryTypeId).Count() > 0).ToListAsync();
-        //    var projects = await _context.Projects.ToListAsync();
-        //    var subprojects = await _context.SubProjects.ToListAsync();
-        //    var unittypeslookup = unittypes.ToLookup(u => u.UnitParentType);
-        //    var paymenttypes = await _context.PaymentTypes.ToListAsync();
-        //    var companyaccounts = await _context.CompanyAccounts.ToListAsync();
-        //    List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
-
-        //    requestItemViewModel.ParentCategories = parentcategories;
-        //    requestItemViewModel.ProductSubcategories = productsubcategories;
-        //    requestItemViewModel.Vendors = vendors;
-        //    requestItemViewModel.Projects = projects;
-        //    requestItemViewModel.SubProjects = subprojects;
-
-        //    requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
-        //    requestItemViewModel.UnitTypes = unittypeslookup;
-        //    requestItemViewModel.CommentTypes = commentTypes;
-        //    requestItemViewModel.PaymentTypes = paymenttypes;
-        //    requestItemViewModel.CompanyAccounts = companyaccounts;
-        //    return requestItemViewModel;
-        //}
-
-
-        protected bool SetFavorite<T1, T2>(T1 ModelInstanceID, T2 FavoriteTable, bool IsFavorite)
-        {
-            return true;
-        }
-
-
-        //protected void SetViewModelCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, SelectedRequestFilters selectedFilters = null)
-        //{
-        //    int categoryID = 0;
-        //    if (requestIndexObject.SectionType == AppUtility.MenuItems.Requests)
-        //    {
-        //        categoryID = 1;
-        //    }
-        //    else if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
-        //    {
-        //        categoryID = 2;
-        //    }
-        //    IQueryable<Request> fullRequestsList = _context.Requests
-        //      .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)
-        //      .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor);
-        //    IQueryable<Request> changingList = _context.Requests.Where(r => r.Product.ProductName.Contains(selectedFilters.SearchText))
-        //        .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)
-        //        .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor);
-        //    changingList = FilterListBySelectFilters(selectedFilters, changingList);
-
-        //    int[] requestStatusIds = { 1, 2, 3, 6 };
-        //    int[] newRequestStatusIds = new int[2];
-        //    if (requestIndexObject.RequestStatusID != 6)
-        //    {
-        //        newRequestStatusIds[0] = requestIndexObject.RequestStatusID;
-        //    }
-        //    else //for approval and approved are combined
-        //    {
-        //        newRequestStatusIds[0] = 1;
-        //        newRequestStatusIds[1] = 6;
-        //    }
-        //    requestStatusIds = requestStatusIds.Where(id => !newRequestStatusIds.Contains(id)).ToArray();
-        //    //foreach (int statusId in requestStatusIds)
-        //    //{
-        //    //    SetCountByStatusId(requestIndexObject, viewmodel, fullRequestsList, statusId);
-        //    //}
-        //    //foreach (int statusId in newRequestStatusIds)
-        //    //{
-        //    //    SetCountByStatusId(requestIndexObject, viewmodel, changingList, statusId);
-        //    //}
-
-        //    /*int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-        //    int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-        //    int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-        //    int approvedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 6, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-        //    viewmodel.NewCount = newCount;
-        //    viewmodel.ApprovedCount = approvedCount;
-        //    viewmodel.OrderedCount = orderedCount;
-        //    viewmodel.ReceivedCount = receivedCount;*/
-        //}
-        protected static void SetCountByStatusId(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, IQueryable<Request> requestsList, int statusId)
-        {
-            int count = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(requestsList, statusId, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            switch (statusId)
-            {
-                case 1:
-                    viewmodel.ApprovedCount += count;
-                    break;
-                case 2:
-                    viewmodel.OrderedCount = count;
-                    break;
-                case 3:
-                    viewmodel.ReceivedCount = count;
-                    break;
-                case 6:
-                    viewmodel.ApprovedCount += count;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-
         [HttpGet]
         [HttpPost]
         [Authorize(Roles = "Requests, Operations")] //redo this later
@@ -486,7 +335,6 @@ namespace PrototypeWithAuth.Controllers
                 return PartialView("InvalidLinkPage");
             }
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, selectedFilters: selectedFilters, numFilters: numFilters, requestsSearchViewModel: requestsSearchViewModel);
-            //SetViewModelCounts(requestIndexObject, viewModel, selectedFilters);
             return PartialView(viewModel);
         }
 
@@ -515,7 +363,6 @@ namespace PrototypeWithAuth.Controllers
                 return PartialView("InvalidLinkPage");
             }
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters, numFilters, requestsSearchViewModel: requestsSearchViewModel);
-            //SetViewModelProprietaryCounts(requestIndexObject, viewModel, selectedFilters);
             return PartialView(viewModel);
         }
 
@@ -532,42 +379,7 @@ namespace PrototypeWithAuth.Controllers
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters, requestsSearchViewModel: requestsSearchViewModel);
 
             return PartialView(viewModel);
-        }
-
-
-
-        //protected void SetViewModelProprietaryCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, SelectedRequestFilters selectedFilters = null)
-        //{
-        //    int categoryID = 0;
-        //    if (requestIndexObject.SectionType == AppUtility.MenuItems.Requests)
-        //    {
-        //        categoryID = 1;
-        //    }
-        //    else if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
-        //    {
-        //        categoryID = 2;
-        //    }
-        //    IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator).Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)
-        //        .Where(r => r.RequestStatus.RequestStatusID == 3).Include(r => r.Product).ThenInclude(p => p.Vendor).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
-        //    IQueryable<Request> fullRequestsListProprietary = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)/*.Where(r => r.IsArchived == false)*/
-        //        .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor);
-        //    if (requestIndexObject.RequestStatusID == 7)
-        //    {
-        //        fullRequestsListProprietary = FilterListBySelectFilters(selectedFilters, fullRequestsListProprietary);
-        //        fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.Product.ProductName.Contains(selectedFilters.SearchText));
-        //    }
-        //    else
-        //    {
-        //        fullRequestsList = FilterListBySelectFilters(selectedFilters, fullRequestsList);
-        //        fullRequestsList = fullRequestsList.Where(r => r.Product.ProductName.Contains(selectedFilters.SearchText));
-        //    }
-
-        //    //int nonProprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-        //    //int proprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsListProprietary, 7, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-        //    //viewmodel.ProprietaryCount = proprietaryCount;
-        //    //viewmodel.NonProprietaryCount = nonProprietaryCount;
-        //}
-
+        }     
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
@@ -698,7 +510,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 request.Currency = AppUtility.CurrencyEnum.NIS.ToString();
                             }
-                            isInBudget = checkIfInBudget(request);
+                            isInBudget =  await checkIfInBudgetAsync(request);
                         }
                         request.ExchangeRate = exchangeRate;
                         TempRequestViewModel trvm = await AddItemAccordingToOrderType(request, OrderType, isInBudget, requestItemViewModel.TempRequestListViewModel, requestNum: RequestNum);
@@ -930,13 +742,13 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        protected bool checkIfInBudget(Request request, Product oldProduct = null)
+        protected async Task<bool> checkIfInBudgetAsync(Request request, Product oldProduct = null)
         {
             if (oldProduct == null)
             {
                 oldProduct = request.Product;
             }
-            var user = _context.Users.Where(u => u.Id == request.ApplicationUserCreatorID).FirstOrDefault();
+            var user = await _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { u => u.Id == request.ApplicationUserCreatorID });
             DateTime firstOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             if (oldProduct.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
             { //lab
@@ -949,10 +761,10 @@ namespace PrototypeWithAuth.Controllers
                 {
                     return false;
                 }
-                var monthsSpending = _context.Requests
-                      .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                      .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID && r.Product.VendorID == oldProduct.VendorID)
-                      .Where(r => r.ParentRequest.OrderDate >= firstOfMonth).AsEnumerable()
+                var monthsSpending = _requestsProc.Read(new List<Expression<Func<Request, bool>>> {
+                      r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1,
+                      r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID && r.Product.VendorID == oldProduct.VendorID,
+                      r => r.ParentRequest.OrderDate >= firstOfMonth}).AsEnumerable()
                       .Sum(r => r.TotalWithVat);
                 if (monthsSpending + request.TotalWithVat > user.LabMonthlyLimit)
                 {
@@ -973,10 +785,10 @@ namespace PrototypeWithAuth.Controllers
                     return false;
                 }
 
-                var monthsSpending = _context.Requests
-                    .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
-                    .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID)
-                    .Where(r => r.ParentRequest.OrderDate >= firstOfMonth)
+                var monthsSpending = _requestsProc.Read( new List<Expression<Func<Request, bool>>> {
+                    r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2,
+                    r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID,
+                    r => r.ParentRequest.OrderDate >= firstOfMonth})
                     .Sum(r => r.Cost);
                 if (monthsSpending + request.Cost > user.OperationMonthlyLimit)
                 {
@@ -2935,7 +2747,7 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.Requests.FirstOrDefault().ProductID = oldRequest.ProductID;
                 requestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
                 var entries = _context.ChangeTracker.Entries();
-                var isInBudget = checkIfInBudget(requestItemViewModel.Requests.FirstOrDefault(), oldRequest.Product);
+                var isInBudget = await checkIfInBudgetAsync(requestItemViewModel.Requests.FirstOrDefault(), oldRequest.Product);
                 var entries2 = _context.ChangeTracker.Entries();
 
                 TempRequestViewModel newTrvm = await AddItemAccordingToOrderType(requestItemViewModel.Requests.FirstOrDefault(), OrderTypeEnum, isInBudget, tempRequestListViewModel);
@@ -4762,12 +4574,16 @@ namespace PrototypeWithAuth.Controllers
         }
         private async Task<List<RequestPaymentsViewModel>> GetPaymentRequests(AppUtility.SidebarEnum accountingPaymentsEnum)
         {
-            var requests = _context.Requests
-                  .Include(r => r.ParentRequest)
-                  .Include(r => r.Product).ThenInclude(p => p.Vendor)
-                  .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType)
-                  .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory).Include(r => r.Payments)
-                  .Where(r => r.RequestStatusID != 7 && r.Payments.Where(p => !p.IsPaid).Count() > 0);
+            var requests = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.RequestStatusID != 7 && r.Payments.Where(p => !p.IsPaid).Count() > 0 },
+                  new List<ComplexIncludes<Request, ModelBase>> {
+                    new ComplexIncludes<Request, ModelBase> { Include = r => r.Product, ThenInclude= new ComplexIncludes<ModelBase, ModelBase> { Include =p => ((Product)p).Vendor } },
+                    new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude= new ComplexIncludes<ModelBase, ModelBase> { Include =p => ((ProductSubcategory)p).ParentCategory } },
+                    new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.UnitType },
+                    new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubUnitType },
+                    new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubSubUnitType },
+                    new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest },
+                    new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments } });
+             
             var requestList = new List<RequestPaymentsViewModel>();
             switch (accountingPaymentsEnum)
             {
@@ -4816,31 +4632,7 @@ namespace PrototypeWithAuth.Controllers
             }
             return requestList;
         }
-        private IQueryable<Request> GetPaymentNotificationRequests(AppUtility.SidebarEnum accountingNotificationsEnum)
-        {
-            var requestsList = _context.Requests
-                .Include(r => r.ParentRequest)
-                .Include(r => r.Product).ThenInclude(p => p.Vendor)
-                .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType)
-                .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
-                .Where(r => r.RequestStatusID != 7);
-            switch (accountingNotificationsEnum)
-            {
-                case AppUtility.SidebarEnum.NoInvoice:
-                    requestsList = requestsList.Where(r => r.Payments.FirstOrDefault().HasInvoice == false).Where(r => (r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3));
-                    break;
-                case AppUtility.SidebarEnum.DidntArrive:
-                    requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
-                    break;
-                case AppUtility.SidebarEnum.PartialDelivery:
-                    requestsList = requestsList.Where(r => r.RequestStatusID == 2 && r.IsPartial);
-                    break;
-                case AppUtility.SidebarEnum.ForClarification:
-                    requestsList = requestsList.Where(r => r.IsClarify);
-                    break;
-            }
-            return requestsList;
-        }
+
         [HttpGet]
         [Authorize(Roles = " Accounting")]
         public async Task<IActionResult> ChangePaymentStatus(AppUtility.PaymentsPopoverEnum newStatus, int requestID, AppUtility.PaymentsPopoverEnum currentStatus)
