@@ -465,7 +465,7 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public static string GeneratePassword(bool includeLowercase = true, bool includeUppercase = true, bool includeNumeric = true, bool includeSpecial = true, bool includeSpaces = false, int lengthOfPassword = 12)
+        public string GeneratePassword(bool includeLowercase = true, bool includeUppercase = true, bool includeNumeric = true, bool includeSpecial = true, bool includeSpaces = false, int lengthOfPassword = 12)
         {
             const int MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS = 2;
             const string LOWERCASE_CHARACTERS = "abcdefghijklmnopqrstuvwxyz";
