@@ -1068,48 +1068,48 @@ namespace PrototypeWithAuth.Controllers
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).Vendor } });
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((ProductSubcategory)p).ParentCategory } });
 
+            if(vendorID != 0 || (requestIds != null && requestIds.Count != 0))
+            {
+                if (vendorID != 0)
+                {
+                    List<Request> reqsFromDB = new List<Request>();
+                    if (tempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Cart)
+                    {
+                        wheres.Add(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString()
+                            && r.QuoteStatusID == 4);
+                        wheres.Add(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User));
 
-            if (vendorID != 0)
-            {
-                List<Request> reqsFromDB = new List<Request>();
-                if (tempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Cart)
-                {
-                    wheres.Add(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString()
-                        && r.QuoteStatusID == 4);
-                    wheres.Add(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User));
-                         
+                    }
+                    else if (tempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Orders)
+                    {
+                        wheres.Add(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()
+                         && r.QuoteStatusID == 4);
+                    }
+                    tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>();
                 }
-                else if (tempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Orders)
+                else if (requestIds != null && requestIds.Count != 0)
                 {
-                    wheres.Add(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()
-                     && r.QuoteStatusID == 4);
+                    tempRequestListViewModel.GUID = Guid.NewGuid();
+                    tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>();
+                    wheres.Add(r => requestIds.Contains(r.RequestID));
                 }
-                tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>();
+                AppUtility.CurrencyEnum CurrencyUsed = AppUtility.CurrencyEnum.None;
+                var requests = _requestsProc.Read(wheres, includes).AsEnumerable();
+                Enum.TryParse(requests.FirstOrDefault().Currency, out CurrencyUsed);
+                var VendorID = requests.FirstOrDefault().Product.VendorID;
+                foreach (var request in requests)
+                {
+                    if (request.Currency != CurrencyUsed.ToString())
+                    {
+                        Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
+                    }
+                    if (request.Product.VendorID != VendorID)
+                    {
+                        Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
+                    }
+                    tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
+                }
             }
-            else if (requestIds != null && requestIds.Count != 0)
-            {
-                tempRequestListViewModel.GUID = Guid.NewGuid();
-                tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>();
-                wheres.Add(r => requestIds.Contains(r.RequestID));    
-            }
-            AppUtility.CurrencyEnum CurrencyUsed = AppUtility.CurrencyEnum.None;        
-            var requests = _requestsProc.Read(wheres, includes).AsEnumerable();
-            Enum.TryParse(requests.FirstOrDefault().Currency, out CurrencyUsed);
-            var VendorID = requests.FirstOrDefault().Product.VendorID;
-            foreach (var request in requests)
-            {
-                if (request.Currency != CurrencyUsed.ToString())
-                {
-                    Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
-                }
-                if (request.Product.VendorID != VendorID)
-                {
-                    Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
-                }
-                tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
-            }
-            await _tempRequestJsonsProc.UpdateAsync(tempRequestListViewModel.GUID, tempRequestListViewModel.RequestIndexObject, tempRequestListViewModel, _userManager.GetUserId(User), true);
-
             var termsList = new List<SelectListItem>() { };
             await _paymentStatusesProc.Read().ForEachAsync(ps =>
             {
@@ -1130,7 +1130,7 @@ namespace PrototypeWithAuth.Controllers
             tempRequestListViewModel.RequestIndexObject.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum),
                 tempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Currency);
             termsViewModel.TempRequestListViewModel = tempRequestListViewModel;
-
+            await _tempRequestJsonsProc.UpdateAsync(tempRequestListViewModel.GUID, tempRequestListViewModel.RequestIndexObject, tempRequestListViewModel, _userManager.GetUserId(User), true);
             return termsViewModel;
         }
 
@@ -1777,7 +1777,7 @@ namespace PrototypeWithAuth.Controllers
         }
         private async Task<RequestItemViewModel> FillRequestItemViewModel(RequestItemViewModel requestItemViewModel, int categoryTypeId, int productSubcategoryId = 0)
         {
-            var productSubcategory = await _productSubcategoriesProc.ReadOneAsync( new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ProductSubcategoryID == productSubcategoryId });
+            var productSubcategory = await _productSubcategoriesProc.ReadOneAsync( new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ProductSubcategoryID == productSubcategoryId }, new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = p=>p.ParentCategory} });
             requestItemViewModel = await FillRequestDropdowns(requestItemViewModel, productSubcategory, categoryTypeId);
 
             if (productSubcategory == null)
