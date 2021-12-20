@@ -14,6 +14,7 @@ namespace PrototypeWithAuth.CRUD
     {
         public RequestCommentsProc(ApplicationDbContext context, bool FromBase = false) : base(context, FromBase)
         {
+
         }
 
 
