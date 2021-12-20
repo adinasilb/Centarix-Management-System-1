@@ -59,7 +59,7 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.LocationInstancesProc _locationInstancesProc;
         protected readonly CRUD.TemporaryLocationInstancesProc _temporaryLocationInstancesProc;
         protected readonly CRUD.LocationTypesProc _locationTypesProc;
-        protected readonly CRUD.LabPartsProc _lapPartsProc;
+        protected readonly CRUD.LabPartsProc _labPartsProc;
         protected readonly CRUD.ShareRequestsProc _shareRequestsProc;
         protected readonly CRUD.FavoriteRequestsProc _favoriteRequestsProc;
         protected readonly CRUD.ProductSubcategoriesProc _productSubcategoriesProc;
@@ -77,6 +77,9 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.CompanyAccountsProc _companyAccountsProc;
         protected readonly CRUD.ProjectsProc _projectsProc;
         protected readonly CRUD.SubProjectsProc _subProjectsProc;
+        protected readonly CRUD.JobSubcategoryTypesProc _jobSubcategoryTypesProc;
+        protected readonly CRUD.LocationRoomInstancesProc _locationRoomInstancesProc;
+
         protected readonly CRUD.RequestListsProc _requestListsProc;
         protected readonly CRUD.TempRequestJsonsProc _tempRequestJsonsProc;
         protected readonly CRUD.RequestNotificationsProc _requestNotificationsProc;
@@ -118,7 +121,7 @@ namespace PrototypeWithAuth.Controllers
             _locationTypesProc = new CRUD.LocationTypesProc(context);
             _locationInstancesProc = new CRUD.LocationInstancesProc(context);
             _temporaryLocationInstancesProc = new CRUD.TemporaryLocationInstancesProc(context);
-            _lapPartsProc = new CRUD.LabPartsProc(context);
+            _labPartsProc = new CRUD.LabPartsProc(context);
             _shareRequestsProc = new CRUD.ShareRequestsProc(context);
             _favoriteRequestsProc = new CRUD.FavoriteRequestsProc(context);
             _productSubcategoriesProc = new CRUD.ProductSubcategoriesProc(context);
@@ -140,6 +143,9 @@ namespace PrototypeWithAuth.Controllers
             _maritalStatusesProc = new CRUD.MaritalStatusesProc(context);
             _degreesProc = new CRUD.DegreesProc(context);
             _citizenshipsProc = new CRUD.CitizenshipsProc(context);
+            _jobSubcategoryTypesProc = new CRUD.JobSubcategoryTypesProc(context);
+            _locationRoomInstancesProc = new CRUD.LocationRoomInstancesProc(context);
+
             _requestNotificationsProc = new CRUD.RequestNotificationsProc(context);
 
             _paymentsProc = new CRUD.PaymentsProc(context);
@@ -691,8 +697,8 @@ if (request1.RequestStatusID == 3 || request1.RequestStatusID == 5 || request1.R
                     requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
                     requestItemViewModel.ChildrenLocationInstances.Add(_locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { l => l.LocationInstanceParentID == parent.LocationInstanceID }).Include(l => l.LabPart).OrderBy(l => l.LocationNumber).ToList());
                 }
-                receivedModalSublocationsViewModel.locationInstancesSelected.First().LabPart = await _lapPartsProc.ReadOneAsync( new List<Expression<Func<LabPart, bool>>> { lp => lp.LabPartID == receivedModalSublocationsViewModel.locationInstancesSelected.First().LabPartID });
-                receivedModalSublocationsViewModel.LabPartTypes = _lapPartsProc.Read().AsEnumerable();
+                receivedModalSublocationsViewModel.locationInstancesSelected.First().LabPart = await _labPartsProc.ReadOneAsync( new List<Expression<Func<LabPart, bool>>> { lp => lp.LabPartID == receivedModalSublocationsViewModel.locationInstancesSelected.First().LabPartID });
+                receivedModalSublocationsViewModel.LabPartTypes = _labPartsProc.Read().AsEnumerable();
             }
             while (!finished)
             {

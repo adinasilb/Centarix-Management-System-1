@@ -140,9 +140,9 @@ namespace PrototypeWithAuth.CRUD
                     {
                         if (employeeHour.OffDayTypeID == 4)
                         {
-                            var employee = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id==employeeHour.EmployeeID });
-                            employee.SpecialDays += 1;
-                            await _employeesProc.UpdateAsync(employee);
+                            //var employee = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id==employeeHour.EmployeeID });
+                            //employee.SpecialDays += 1;
+                            await _employeesProc.AddSpecialDays(employeeHour.EmployeeID, 1);
                         }
 
                         newEmployeeHour = new EmployeeHours()
@@ -206,7 +206,7 @@ namespace PrototypeWithAuth.CRUD
                     var companyDaysOff = new List<DateTime>();
                     bool alreadyOffDay = false;
                     EmployeeHours employeeHour = null;
-                    var user = await _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { e => e.Id== UserID });
+                    //var user = await _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { e => e.Id== UserID });
 
                     if (DateTo == new DateTime()) //just one date
                     {
@@ -221,14 +221,16 @@ namespace PrototypeWithAuth.CRUD
                             {
                                 //employeeHour.Employee = user;
                                 //employeeHour.Employee.SpecialDays -= 1;
-                                user.SpecialDays -= 1;
+                                await _employeesProc.AddSpecialDays(UserID, -1);
+                                //user.SpecialDays -= 1;
 
                             }
                             else if (employeeHour?.OffDayTypeID == 4 && OffDayTypeID != 4)
                             {
-                                user.SpecialDays += 1;
+                                await _employeesProc.AddSpecialDays(UserID, 1);
+                                //user.SpecialDays += 1;
                             }
-                            await _employeesProc.UpdateAsync(user);
+                            //await _employeesProc.UpdateAsync(user);
                             if (employeeHour == null)
                             {
                                 employeeHour = new EmployeeHours
@@ -278,13 +280,14 @@ namespace PrototypeWithAuth.CRUD
                                     {
                                         //employeeHour.Employee = user;
                                         //employeeHour.Employee.SpecialDays -= 1;
-                                        user.SpecialDays -= 1;
+                                        await _employeesProc.AddSpecialDays(UserID, -1);
+                                        //user.SpecialDays -= 1;
                                     }
                                     else if (employeeHour?.OffDayTypeID == 4 && OffDayTypeID != 4)
                                     {
-                                        user.SpecialDays += 1;
+                                        await _employeesProc.AddSpecialDays(UserID, 1);
+                                        //user.SpecialDays += 1;
                                     }
-                                    await _employeesProc.UpdateAsync(user);
                                     if (employeeHour == null)
                                     {
                                         employeeHour = new EmployeeHours

@@ -91,6 +91,10 @@ namespace PrototypeWithAuth.AppData
             RequestLists
         }
 
+        internal static Task<string> GetEmployeeCentarixID(IAsyncEnumerable<CentarixID> asyncEnumerable)
+        {
+            throw new NotImplementedException();
+        }
 
         public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
