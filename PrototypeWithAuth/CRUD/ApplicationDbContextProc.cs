@@ -60,7 +60,7 @@ namespace PrototypeWithAuth.CRUD
             _categoryTypesProc = new CategoryTypesProc(_context, true);
             _countriesProc = new CountriesProc(_context, true);
             _employeeHoursProc = new EmployeeHoursProc(_context, true);
-            //_employeesProc = new EmployeesProc(_context, true);
+            _employeesProc = new EmployeesProc(_context, true);
             _timekeeperNotificationsProc = new TimekeeperNotificationsProc(_context, true);
             _vendorCommentsProc = new VendorCommentsProc(_context, true);
             _vendorContactsProc = new VendorContactsProc(_context, true);

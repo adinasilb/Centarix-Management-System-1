@@ -52,65 +52,6 @@ namespace PrototypeWithAuth.CRUD
             }
             return ReturnVal;
         }
-      
-     
-        public async Task<double> GetOffDaysByYear(Employee User, int OffDayTypeID, int thisYear)
-        {
-            double offDaysLeft = 0;
-            var year = AppUtility.YearStartedTimeKeeper;
-         
-            while (year <= thisYear)
-            {
-                double vacationDays = 0;
-                double sickDays = 0;
-                double offDaysTaken = _employeeHoursProc.ReadOffDaysByYear(year, OffDayTypeID, User.Id).Count();
-                if (User.EmployeeStatusID == 1 && OffDayTypeID == 2)
-                {
-                    var vacationHours =await _employeeHoursProc.ReadPartialOffDayHoursByYearAsync(year, 2, User.Id);
-                    offDaysTaken = Math.Round(offDaysTaken + (vacationHours / User.SalariedEmployee.HoursPerDay), 2);
-                }
-                if (year == AppUtility.YearStartedTimeKeeper && year == DateTime.Now.Year)
-                {
-                    int month = DateTime.Now.Month;
-                    vacationDays = (User.VacationDaysPerMonth * month) + User.RollOverVacationDays;
-                    sickDays = (User.SickDaysPerMonth * month) + User.RollOverSickDays;
-                }
-                else if (year == AppUtility.YearStartedTimeKeeper)
-                {
-                    int month = DateTime.Now.Month;
-                    vacationDays = User.VacationDays + User.RollOverVacationDays;
-                    sickDays = User.SickDays + User.RollOverSickDays;
-                }
-                else if (year == User.StartedWorking.Year)
-                {
-                    int month = 12 - User.StartedWorking.Month + 1;
-                    vacationDays = User.VacationDaysPerMonth * month;
-                    sickDays = User.SickDays * month;
-                }
-                else if (year == DateTime.Now.Year)
-                {
-                    int month = DateTime.Now.Month;
-                    vacationDays = (User.VacationDaysPerMonth * month);
-                    sickDays = (User.SickDaysPerMonth * month);
-                }
-                else
-                {
-                    vacationDays = User.VacationDays;
-                    sickDays = User.SickDays;
-                }
-                if (OffDayTypeID == 2)
-                {
-                    offDaysLeft += vacationDays - offDaysTaken;
-                }
-                else
-                {
-                    offDaysLeft += sickDays - offDaysTaken;
-                }
-                year = year + 1;
-            }
-
-            return offDaysLeft;
-        }
 
         //public async Task<StringWithBool> UpdateAsync(Employee employee)
         //{

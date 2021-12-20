@@ -471,5 +471,86 @@ namespace PrototypeWithAuth.CRUD
             }
             return ReturnVal;
         }
+
+        public async Task<StringWithBool> UpdateApprovedHoursAsync(int approvalHoursID)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    EmployeeHours employeeHours = new EmployeeHours();
+                    EmployeeHoursAwaitingApproval employeeHoursBeingApproved = await _employeeHoursAwaitingApprovalProc.ReadOneAsync(new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { ehaa => ehaa.EmployeeHoursAwaitingApprovalID == approvalHoursID },
+                new List<ComplexIncludes<EmployeeHoursAwaitingApproval, ModelBase>> {
+                    new ComplexIncludes<EmployeeHoursAwaitingApproval, ModelBase> { Include = ehaa => ehaa.EmployeeHours}
+                });
+                    employeeHours = await _employeeHoursProc.ReadOneAsync(new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.EmployeeHoursID == employeeHoursBeingApproved.EmployeeHoursID });
+                    var user = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id == employeeHoursBeingApproved.EmployeeID },
+                        new List<ComplexIncludes<Employee, ModelBase>> {
+                            new ComplexIncludes<Employee, ModelBase> { Include = e => e.SalariedEmployee}
+                        });
+                    if (employeeHoursBeingApproved.OffDayTypeID != null)
+                    {
+                        employeeHoursBeingApproved.OffDayTypeID = null;
+                    }
+                    else if (employeeHoursBeingApproved.EmployeeHours.OffDayTypeID == 4)
+                    {
+                        await _employeesProc.AddSpecialDays(user.Id, 1);
+                    }
+                    if (employeeHours == null)
+                    {
+                        employeeHours = new EmployeeHours
+                        {
+                            Entry1 = employeeHoursBeingApproved.Entry1,
+                            Entry2 = employeeHoursBeingApproved.Entry2,
+                            Exit1 = employeeHoursBeingApproved.Exit1,
+                            Exit2 = employeeHoursBeingApproved.Exit2,
+                            TotalHours = employeeHoursBeingApproved.TotalHours,
+                            EmployeeHoursStatusEntry1ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry1ID,
+                            EmployeeHoursStatusEntry2ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry2ID,
+                            EmployeeID = employeeHoursBeingApproved.EmployeeID,
+                            Date = employeeHoursBeingApproved.Date,
+                            EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID,
+                            PartialOffDayTypeID = employeeHoursBeingApproved.PartialOffDayTypeID,
+                            PartialOffDayHours = employeeHoursBeingApproved.PartialOffDayHours,
+                            OffDayTypeID = employeeHoursBeingApproved.OffDayTypeID
+                        };
+                    }
+                    else
+                    {
+                        employeeHours.Entry1 = employeeHoursBeingApproved.Entry1;
+                        employeeHours.Entry2 = employeeHoursBeingApproved.Entry2;
+                        employeeHours.Exit1 = employeeHoursBeingApproved.Exit1;
+                        employeeHours.Exit2 = employeeHoursBeingApproved.Exit2;
+                        employeeHours.TotalHours = employeeHoursBeingApproved.TotalHours;
+                        employeeHours.EmployeeHoursStatusEntry1ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry1ID;
+                        employeeHours.EmployeeHoursStatusEntry2ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry2ID;
+                        employeeHours.EmployeeID = employeeHoursBeingApproved.EmployeeID;
+                        employeeHours.Date = employeeHoursBeingApproved.Date;
+                        employeeHours.EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID;
+                        employeeHours.PartialOffDayTypeID = employeeHoursBeingApproved.PartialOffDayTypeID;
+                        employeeHours.PartialOffDayHours = employeeHoursBeingApproved.PartialOffDayHours;
+                        employeeHours.OffDayTypeID = employeeHoursBeingApproved.OffDayTypeID;
+                    }
+                    _context.Update(employeeHours);
+                    await _context.SaveChangesAsync();
+                    var ehaaDeleted  = await _employeeHoursAwaitingApprovalProc.DeleteAsync(employeeHoursBeingApproved.EmployeeHoursAwaitingApprovalID);
+                    if (!ehaaDeleted.Bool)
+                    {
+                        ReturnVal.SetStringAndBool(false, "Failed to Delete hours awaiting approval"); ;
+                        return ReturnVal;
+                    }
+                    await transaction.CommitAsync();
+                    ReturnVal.SetStringAndBool(true, null);
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+
+                }
+            }
+            return ReturnVal;
+        }
     }
 }

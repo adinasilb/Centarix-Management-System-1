@@ -449,13 +449,13 @@ namespace PrototypeWithAuth.CRUD
                             break;
                     }
                     await transaction.CommitAsync();
-                    ReturnVal.Bool = true;
+                    ReturnVal.SetStringAndBool(true, null);
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    ReturnVal.Bool = false;
-                    ReturnVal.String = "Error adding location. Please try again. " + AppUtility.GetExceptionMessage(ex);
+                    ReturnVal.SetStringAndBool(false, "Error adding location. Please try again. " + AppUtility.GetExceptionMessage(ex));
+                    
                 }
             }
             return ReturnVal;

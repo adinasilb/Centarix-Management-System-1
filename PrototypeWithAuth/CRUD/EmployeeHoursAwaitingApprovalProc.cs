@@ -28,7 +28,7 @@ namespace PrototypeWithAuth.CRUD
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
-                var ehaa = await _employeeHoursAwaitingApprovalProc.ReadOneAsync( new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { ehaa => ehaa.EmployeeHoursID == ID });
+                var ehaa = await ReadOneAsync( new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ID });
                 if (ehaa != null)
                 {
                     _context.Remove(ehaa);
@@ -40,6 +40,50 @@ namespace PrototypeWithAuth.CRUD
             {
                 ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
             }
+            return ReturnVal;
+        }
+
+        public async Task<StringWithBool> DenyHoursAsync(int ID)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    EmployeeHoursAwaitingApproval employeeHoursBeingApproved = await _employeeHoursAwaitingApprovalProc.ReadOneAsync(
+                        new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ID },
+                        new List<ComplexIncludes<EmployeeHoursAwaitingApproval, ModelBase>> {
+                            new ComplexIncludes<EmployeeHoursAwaitingApproval, ModelBase> { Include = ehwa => ehwa.EmployeeHours},
+                            new ComplexIncludes<EmployeeHoursAwaitingApproval, ModelBase> { Include = ehwa => ehwa.Employee}
+                        });
+
+                    employeeHoursBeingApproved.IsDenied = true;
+                    _context.Update(employeeHoursBeingApproved);
+                    await _context.SaveChangesAsync();
+
+                    TimekeeperNotification notification = new TimekeeperNotification()
+                    {
+                        EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID,
+                        IsRead = false,
+                        ApplicationUserID = employeeHoursBeingApproved.EmployeeID,
+                        Description = "update hours request denied for " + employeeHoursBeingApproved.Date.GetElixirDateFormat(),
+                        NotificationStatusID = 5,
+                        TimeStamp = DateTime.Now,
+                        Controller = "Timekeeper",
+                        Action = "SummaryHours"
+                    };
+                    await _timekeeperNotificationsProc.CreateAsync(notification);
+
+                    await transaction.CommitAsync();
+                    ReturnVal.SetStringAndBool(true, null);
+                }
+                catch(Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                }
+            }
+
             return ReturnVal;
         }
     }
