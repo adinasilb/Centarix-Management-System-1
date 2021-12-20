@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using PrototypeWithAuth.Data;
 using System.ComponentModel.DataAnnotations.Schema;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Models
 {
@@ -16,7 +17,7 @@ namespace PrototypeWithAuth.Models
         public string UnitTypeDescription { get; set; }
         public int UnitParentTypeID { get; set; }
         public UnitParentType UnitParentType { get; set; }
-        public IEnumerable<UnitTypeParentCategory> UnitTypeParentCategory { get; set; }
+        public ListImplementsModelBase<UnitTypeParentCategory> UnitTypeParentCategory { get; set; }
 
     }
 }
