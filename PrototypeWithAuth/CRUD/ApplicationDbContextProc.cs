@@ -45,6 +45,9 @@ namespace PrototypeWithAuth.CRUD
         protected ParentCategoriesProc _parentCategoriesProc;
         protected CentarixIDsProc _centarixIDsProc;
         protected EmployeeStatusesProc _employeeStatusesProc;
+        protected LocationTypesProc _locationTypesProc;
+        protected LocationRoomInstancesProc _locationRoomInstancesProc;
+        protected LabPartsProc _labPartsProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context)
         {
@@ -80,6 +83,9 @@ namespace PrototypeWithAuth.CRUD
             _parentCategoriesProc = new ParentCategoriesProc(_context, true);
             _centarixIDsProc = new CentarixIDsProc(_context, true);
             _employeeStatusesProc = new EmployeeStatusesProc(_context, true);
+            _locationTypesProc = new LocationTypesProc(_context, true);
+            _locationRoomInstancesProc = new LocationRoomInstancesProc(_context, true);
+            _labPartsProc = new LabPartsProc(_context, true);
         }
 
         public virtual IQueryable<T> Read(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
