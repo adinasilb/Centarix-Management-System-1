@@ -3228,7 +3228,7 @@ namespace PrototypeWithAuth.Controllers
             int locationTypeIDLoop = LocationTypeID;
             if (LocationTypeID == 500)
             {
-                receivedModalSublocationsViewModel.LabPartTypes = _lapPartsProc.Read().AsEnumerable();
+                receivedModalSublocationsViewModel.LabPartTypes = _labPartsProc.Read().AsEnumerable();
             }
             while (!finished)
             {
