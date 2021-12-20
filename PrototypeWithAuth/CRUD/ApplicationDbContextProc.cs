@@ -16,7 +16,7 @@ namespace PrototypeWithAuth.CRUD
     public abstract class ApplicationDbContextProc<T> where T : class, ModelBase
     {
         protected readonly ApplicationDbContext _context;
-        protected readonly UserManager<ApplicationUser> _userManager;
+        //protected readonly UserManager<ApplicationUser> _userManager;
 
         protected CategoryTypesProc _categoryTypesProc;
         protected CountriesProc _countriesProc;
@@ -45,6 +45,7 @@ namespace PrototypeWithAuth.CRUD
         protected ParentCategoriesProc _parentCategoriesProc;
         protected CentarixIDsProc _centarixIDsProc;
         protected EmployeeStatusesProc _employeeStatusesProc;
+        protected JobSubcategoryTypesProc _jobSubcategoryTypesProc;
         protected LocationTypesProc _locationTypesProc;
         protected LocationRoomInstancesProc _locationRoomInstancesProc;
         protected LabPartsProc _labPartsProc;
@@ -59,7 +60,7 @@ namespace PrototypeWithAuth.CRUD
             _categoryTypesProc = new CategoryTypesProc(_context, true);
             _countriesProc = new CountriesProc(_context, true);
             _employeeHoursProc = new EmployeeHoursProc(_context, true);
-            _employeesProc = new EmployeesProc(_context, true);
+            //_employeesProc = new EmployeesProc(_context, true);
             _timekeeperNotificationsProc = new TimekeeperNotificationsProc(_context, true);
             _vendorCommentsProc = new VendorCommentsProc(_context, true);
             _vendorContactsProc = new VendorContactsProc(_context, true);
@@ -83,6 +84,7 @@ namespace PrototypeWithAuth.CRUD
             _parentCategoriesProc = new ParentCategoriesProc(_context, true);
             _centarixIDsProc = new CentarixIDsProc(_context, true);
             _employeeStatusesProc = new EmployeeStatusesProc(_context, true);
+            _jobSubcategoryTypesProc = new JobSubcategoryTypesProc(_context, true);
             _locationTypesProc = new LocationTypesProc(_context, true);
             _locationRoomInstancesProc = new LocationRoomInstancesProc(_context, true);
             _labPartsProc = new LabPartsProc(_context, true);
@@ -175,5 +177,8 @@ namespace PrototypeWithAuth.CRUD
             }
             return ObjectQueryable;
         }
+
+   
+     
     }
 }

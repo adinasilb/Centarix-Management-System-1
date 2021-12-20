@@ -12,64 +12,18 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class VendorCommentsProc : ApplicationDbContextProc<VendorComment>
+    public class VendorCommentsProc : CommentBasesProc<VendorComment>
     {
-        public VendorCommentsProc(ApplicationDbContext context, bool FromBase = false) : base (context)
+        public VendorCommentsProc(ApplicationDbContext context, bool FromBase = false) : base (context, FromBase)
         {
-            if (!FromBase)
-            {
-                base.InstantiateProcs();
-            }
+
         }
 
-        public IQueryable<VendorComment> Read()
-        {
-            return _context.VendorComments.AsNoTracking().AsQueryable();
-        }
 
      
-        public async Task<StringWithBool> UpdateAsync(List<VendorComment> comments, int vendorID, string userID)
+        public override async Task<StringWithBool> UpdateAsync(List<VendorComment> comments, int vendorID, string userID)
         {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
-            {
-                if (comments != null)
-                {
-                    foreach (var vendorComment in comments)
-                    {
-                        if (!vendorComment.IsDeleted)
-                        {
-                            vendorComment.ObjectID = vendorID;
-                            if (vendorComment.CommentID == 0)
-                            {
-                                vendorComment.ApplicationUserID = userID;
-                                vendorComment.CommentTimeStamp = DateTime.Now;
-                                _context.Add(vendorComment);
-                            }
-                            else
-                            {
-                                _context.Update(vendorComment);
-                            }
-                        }
-                        else
-                        {
-                            var vendorCommentDB = _context.VendorComments.Where(c => c.CommentID == vendorComment.CommentID).FirstOrDefault();
-                            if (vendorCommentDB != null)
-                            {
-                                vendorCommentDB.IsDeleted = true;
-                                _context.Update(vendorCommentDB);
-                            }
-                        }
-                    }
-                    await _context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-            }
-            return ReturnVal;
-
+            return await base.UpdateAsync(comments, vendorID, userID);
         }
     }
 }
