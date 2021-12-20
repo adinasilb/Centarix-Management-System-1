@@ -77,6 +77,12 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.CompanyAccountsProc _companyAccountsProc;
         protected readonly CRUD.ProjectsProc _projectsProc;
         protected readonly CRUD.SubProjectsProc _subProjectsProc;
+        protected readonly CRUD.RequestListsProc _requestListsProc;
+        protected readonly CRUD.TempRequestJsonsProc _tempRequestJsonsProc;
+        protected readonly CRUD.RequestNotificationsProc _requestNotificationsProc;
+        protected readonly CRUD.PaymentsProc _paymentsProc;
+        protected readonly CRUD.PaymentStatusesProc _paymentStatusesProc;
+        protected readonly CRUD.ParentRequestsProc _parentRequestsProc;
         public SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
 
         {
@@ -125,12 +131,20 @@ namespace PrototypeWithAuth.Controllers
             _projectsProc = new CRUD.ProjectsProc(context);
             _subProjectsProc = new CRUD.SubProjectsProc(context);
 
+            _requestListsProc = new CRUD.RequestListsProc(context);
+            _tempRequestJsonsProc = new CRUD.TempRequestJsonsProc(context);
+
             _centarixIDsProc = new CRUD.CentarixIDsProc(context);
             _employeeStatusesProc = new CRUD.EmployeeStatusesProc(context);
             _jobCategoryTypesProc = new CRUD.JobCategoryTypesProc(context);
             _maritalStatusesProc = new CRUD.MaritalStatusesProc(context);
             _degreesProc = new CRUD.DegreesProc(context);
             _citizenshipsProc = new CRUD.CitizenshipsProc(context);
+            _requestNotificationsProc = new CRUD.RequestNotificationsProc(context);
+
+            _paymentsProc = new CRUD.PaymentsProc(context);
+            _paymentStatusesProc = new CRUD.PaymentStatusesProc(context);
+            _parentRequestsProc = new CRUD.ParentRequestsProc(context);
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)
