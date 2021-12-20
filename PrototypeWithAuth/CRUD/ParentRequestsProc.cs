@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class CategoryTypesProc : ApplicationDbContextProc<CategoryType>
+    public class ParentRequestsProc : ApplicationDbContextProc<ParentRequest>
     {
-        public CategoryTypesProc(ApplicationDbContext context, bool FromBase = false) : base(context)
+        public ParentRequestsProc(ApplicationDbContext context, bool FromBase = false) : base(context)
         {
             if (!FromBase) { this.InstantiateProcs(); }
         }
