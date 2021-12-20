@@ -119,28 +119,6 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;           
         }
 
-        private async Task<TempRequestJson> CopyToNewCurrentTempRequestAsync(TempRequestJson original, int SequencePosition)
-        {
-            original.IsCurrent = false; //just to make sure but i think this should be taken out here b/c it's done before...
-            original.IsOriginal = true; //just to make sure that there wont be any mistakes...
-            _context.Update(original);
-            await _context.SaveChangesAsync();
-
-            TempRequestJson newTempRequestJson = new TempRequestJson()
-            {
-                Json = original.Json,
-                ApplicationUserID = original.ApplicationUserID,
-                GuidID = original.GuidID,
-                SequencePosition = SequencePosition,
-                IsOriginal = false,
-                IsCurrent = true
-            };
-            _context.Add(newTempRequestJson);
-            await _context.SaveChangesAsync();
-
-            return newTempRequestJson;
-        }
-
 
         public IQueryable<TempRequestJson> GetTempRequest(Guid cookieID, string userID)
         {
@@ -149,6 +127,7 @@ namespace PrototypeWithAuth.CRUD
                 .OrderByDescending(t => t.SequencePosition)
                 .Take(1);
         }
+
 
     }
 }
