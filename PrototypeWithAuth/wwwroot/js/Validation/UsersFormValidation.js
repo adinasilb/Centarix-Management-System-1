@@ -1,14 +1,14 @@
 ﻿var isEmployee = function () {
 	//console.log('is employee ' + ($("#NewEmployee_EmployeeStatusID").val() != "4"))
-	return $("#NewEmployee_EmployeeStatusID").val() != "4";
+	return $("#Employee_EmployeeStatusID").val() != "4";
 }
 var isEmployeeOnly = function () {
 	//console.log('is employee only' + $("#NewEmployee_EmployeeStatusID").val() == "1")
-	return $("#NewEmployee_EmployeeStatusID").val() == "1";
+	return $("#Employee_EmployeeStatusID").val() == "1";
 }
 var isUserAndIsNotEdit = function () {
 	//console.log('is user and not in edit' + $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false)
-	return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false;
+	return $("#Employee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false;
 }
 var isEdit = function () {
 	//console.log('is edit' + $('#myForm').hasClass('editUser'))
@@ -16,7 +16,7 @@ var isEdit = function () {
 }
 var isUser = function () {
 	//console.log('is user' + $("#NewEmployee_EmployeeStatusID").val() == "4")
-	return $("#NewEmployee_EmployeeStatusID").val() == "4";
+	return $("#Employee_EmployeeStatusID").val() == "4";
 }
 $.validator.addMethod("validTime", function (value, element) {
 	var t = value.split(':');
@@ -50,7 +50,7 @@ $('.usersForm').validate({
 		//	minlength: 1,
 		//	//integer: true
 		//},
-		"Email": {
+		"Employee.Email": {
 			email: true,
 			required: true,
 			remote:{
@@ -59,48 +59,48 @@ $('.usersForm').validate({
 				data: { "email":function(){ return $("#Email").val()}},
 			}
 		},
-		"PhoneNumber": {
+		"Employee.PhoneNumber": {
 			required: true,
 			minlength: 9
 		},
-		"NewEmployee.DOB": {
+		"Employee.DOB": {
 			required: isEmployee
 		},
-		"NewEmployee.JobSubcategoryType.JobCategoryTypeID":{
+		"Employee.JobSubcategoryType.JobCategoryTypeID":{
 			selectRequired: isEmployee,
 		},
-		"NewEmployee.JobSubcategoryTypeID": {
+		"Employee.JobSubcategoryTypeID": {
 			selectRequired: isEmployee,
 		},
-		"NewEmployee.DegreeID": {
+		"Employee.DegreeID": {
 			selectRequired: isEmployee,
 		},
-		"NewEmployee.MaritalStatusID": {
+		"Employee.MaritalStatusID": {
 			selectRequired: isEmployee,
 		},
-		"NewEmployee.CitizenshipID": {
+		"Employee.CitizenshipID": {
 			selectRequired: isEmployee,
 		},
-		"NewEmployee.IDNumber": {
+		"Employee.IDNumber": {
 			required: isEmployee,
 			number: true,
 			min: 1,
 			integer: true
 		},
-		"PhoneNumber2": {
+		"Employee.PhoneNumber2": {
 			minlength: 9
 		},
-		"NewEmployee.StartedWorking": {
+		"Employee.StartedWorking": {
 			required: isEmployee,
 		},
-		"NewEmployee.TaxCredits": {
+		"Employee.TaxCredits": {
 			number: true,
 			integer: true
 		},
-		"NewEmployeeWorkScope": {
+		"EmployeeWorkScope": {
 			required: isEmployeeOnly,
 		},
-		"NewEmployee.SalariedEmployee.HoursPerDay": {
+		"Employee.SalariedEmployee.HoursPerDay": {
 			required: isEmployeeOnly,
 			number: true
 		},
@@ -108,7 +108,7 @@ $('.usersForm').validate({
 			required: isEmployeeOnly,
 			validHours: isEmployeeOnly
         },
-		"NewEmployee.VacationDays": {
+		"Employee.VacationDays": {
 			required: isEmployeeOnly,
 			number: true,
 			integer: true
@@ -122,14 +122,14 @@ $('.usersForm').validate({
 			minlength: 8,
 			maxlength: 20
 		},
-		"SecureAppPass": {
+		"Employee.SecureAppPass": {
 			required: isUserAndIsNotEdit || function () {
 				return $('#Password').val() != '';
 			}
 			//todo: are we allowing edit of secure appp password
 			// validate format
 		},
-		"NewEmployee.EmployeeStatusID": {
+		"Employee.EmployeeStatusID": {
 			required: true,
 			min: 1
 		},
@@ -154,7 +154,7 @@ $('.usersForm').validate({
 		},
 	},
 	messages: {
-		"NewEmployee.EmployeeStatusID": {
+		"Employee.EmployeeStatusID": {
 			required: "",
 			min: "",
 		},

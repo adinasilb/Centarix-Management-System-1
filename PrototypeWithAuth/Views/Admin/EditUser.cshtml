@@ -20,11 +20,11 @@
                 @* HIDDEN INPUTS TO DISABLE AUTOFILLS *@
                 <input type="email" class="hidden" />
                 <input type="password" class="hidden" />
-                <input type="hidden" class="hidden" asp-for="ApplicationUserID" />
-                <input type="hidden" asp-for="UserNum" />
+                <input type="hidden" class="hidden" asp-for="Employee.Id" />
+                <input type="hidden" asp-for="Employee.UserNum" />
 
                 <input type="hidden" text="close" class="modal-open-state" />
-                <input type="hidden" asp-for="NewEmployeeImage" />
+                <input type="hidden" asp-for="EmployeeImage" />
                 <input type="hidden" asp-for="UserImageSaved" value="false" />
                 <input type="hidden" id="UserImagePath" value="" />
 
@@ -55,7 +55,7 @@
                                 </div>
                             </button>
                         </div>
-                        <input class="modal-product-title heading-1 userName form-control-plaintext border-0" disabled value="@Model.FirstName @Model.LastName" />
+                        <input class="modal-product-title heading-1 userName form-control-plaintext border-0" disabled value="@Model.Employee.FirstName @Model.Employee.LastName" />
                     </div>
 
                  
@@ -96,7 +96,7 @@
                     </div>
                 </div>
                 <div class="new-modal-body edit-modal-outer-body partial-div" style="background: #F6F7F8; padding: 1em">
-                    @Html.Partial("EditUserPartial")
+                    @{ await Html.RenderPartialAsync("EditUserPartial"); }
                 </div>
             </form>
             @*</div>
