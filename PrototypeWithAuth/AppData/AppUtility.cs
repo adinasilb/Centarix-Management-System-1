@@ -947,6 +947,8 @@ namespace PrototypeWithAuth.AppData
         public static void CheckForError(StringWithBool stringWithBool,  String Message)
         {
         }
+
+
     }
 
 }

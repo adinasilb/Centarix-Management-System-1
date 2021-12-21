@@ -460,5 +460,65 @@ namespace PrototypeWithAuth.CRUD
             }
             return ReturnVal;
         }
+
+
+        public async Task<StringWithBool> MarkLocationAvailableAsync(int requestId, int locationInstanceID)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                var locationInstance = await ReadOneAsync( new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceID == locationInstanceID });
+                if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+                {
+                    locationInstance.IsFull = false;
+                    _context.Update(locationInstance);
+                }
+                else if (locationInstance.IsEmptyShelf)
+                {
+                    var duplicateLocations = await _requestLocationInstancesProc.Read( new List<Expression<Func<RequestLocationInstance, bool>>> { rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
+                                            && rli.RequestID != requestId}).ToListAsync();
+                    if (duplicateLocations.Count() == 0)
+                    {
+                        locationInstance.ContainsItems = false;
+                        _context.Update(locationInstance);
+                    }
+                }
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+            
+        }
+
+
+        public async Task<StringWithBool> MarkLocationInstanceAsFullAsync(LocationInstance locationInstance)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                //updating the locationinstance
+                //var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
+                if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+                {
+                    locationInstance.IsFull = true;
+                }
+                else
+                {
+                    locationInstance.ContainsItems = true;
+                }
+                _context.Update(locationInstance);           
+                await _context.SaveChangesAsync();
+       
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+
+        }
     }
 }

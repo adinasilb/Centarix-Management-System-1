@@ -49,6 +49,10 @@ namespace PrototypeWithAuth.CRUD
         protected LocationTypesProc _locationTypesProc;
         protected LocationRoomInstancesProc _locationRoomInstancesProc;
         protected LabPartsProc _labPartsProc;
+        protected LocationInstancesProc _locationInstancesProc;
+        protected RequestLocationInstancesProc _requestLocationInstancesProc;
+        protected RequestCommentsProc _requestCommentsProc;
+        protected ProductCommentsProc _productCommentsProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context)
         {
@@ -88,6 +92,11 @@ namespace PrototypeWithAuth.CRUD
             _locationTypesProc = new LocationTypesProc(_context, true);
             _locationRoomInstancesProc = new LocationRoomInstancesProc(_context, true);
             _labPartsProc = new LabPartsProc(_context, true);
+            _locationInstancesProc = new LocationInstancesProc(_context, true);
+            _requestLocationInstancesProc = new RequestLocationInstancesProc(_context, true);
+            _requestCommentsProc = new RequestCommentsProc(_context, true);
+            _productCommentsProc = new ProductCommentsProc(_context, true);
+
         }
 
         public virtual IQueryable<T> Read(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)

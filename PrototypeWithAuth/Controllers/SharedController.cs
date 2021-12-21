@@ -86,6 +86,7 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.PaymentsProc _paymentsProc;
         protected readonly CRUD.PaymentStatusesProc _paymentStatusesProc;
         protected readonly CRUD.ParentRequestsProc _parentRequestsProc;
+        protected readonly CRUD.RequestLocationInstancesProc _requestLocationInstancesProc;
         public SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
 
         {
@@ -151,6 +152,7 @@ namespace PrototypeWithAuth.Controllers
             _paymentsProc = new CRUD.PaymentsProc(context);
             _paymentStatusesProc = new CRUD.PaymentStatusesProc(context);
             _parentRequestsProc = new CRUD.ParentRequestsProc(context);
+            _requestLocationInstancesProc = new CRUD.RequestLocationInstancesProc(context);
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)
@@ -1608,28 +1610,10 @@ protected async Task<string> RenderPartialViewToString(string viewName, object m
             writer,
             new HtmlHelperOptions()
         );
-
         await viewResult.View.RenderAsync(viewContext);
 
         return writer.GetStringBuilder().ToString();
     }
-}
-public string GetSerialNumber(bool isOperations)
-{
-    var categoryType = 1;
-    var serialLetter = "L";
-    int lastSerialNumberInt = 0;
-    if (isOperations)
-    {
-        categoryType = 2;
-        serialLetter = "P";
-    }
-    var serialnumberList = _productsProc.ReadWithIgnoreQueryFilters(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType })
-        .Select(p => int.Parse(p.SerialNumber.Substring(1))).ToList();
-
-    lastSerialNumberInt = serialnumberList.OrderBy(s => s).LastOrDefault();
-
-    return serialLetter + (lastSerialNumberInt + 1);
 }
 
 [HttpGet]
