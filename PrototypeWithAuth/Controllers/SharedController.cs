@@ -1170,6 +1170,11 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
 
     var defaultImage = "/images/css/CategoryImages/placeholder.png";
     var user = await _userManager.GetUserAsync(User);
+
+    var userFavoriteRequests = _favoriteRequestsProc.Read(new List<Expression<Func<FavoriteRequest, bool>>> { fr => fr.ApplicationUserID == user.Id });
+    var userSharedRequests = _shareRequestsProc.Read(new List<Expression<Func<ShareRequest, bool>>> { sr => sr.ToApplicationUserID == user.Id }, new List<ComplexIncludes<ShareRequest, ModelBase>> {
+                                new ComplexIncludes<ShareRequest, ModelBase>{Include = sr => sr.FromApplicationUser }});
+
     switch (requestIndexObject.PageType)
     {
         case AppUtility.PageTypeEnum.RequestRequest:
@@ -1210,9 +1215,8 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
                     onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).ThenBy(r => r.Product.ProductName).Select(r =>
                     new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
                      r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
-                                  r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, _favoriteRequestsProc.ReadOne( new List<Expression<Func<FavoriteRequest, bool>>> { fr => fr.RequestID == r.RequestID, fr => fr.ApplicationUserID == user.Id }, null).FirstOrDefault(),
-                                    _shareRequestsProc.ReadOne(new List<Expression<Func<ShareRequest, bool>>> { sr => sr.RequestID == r.RequestID, sr => sr.ToApplicationUserID == user.Id }, new List<ComplexIncludes<ShareRequest, ModelBase>> {
-                                     new ComplexIncludes<ShareRequest, ModelBase>{Include = sr => sr.FromApplicationUser }}).FirstOrDefault(), user,
+                                  r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, userFavoriteRequests.Where( fr => fr.RequestID == r.RequestID).FirstOrDefault(),
+                                    userSharedRequests.Where( sr => sr.RequestID == r.RequestID).FirstOrDefault(), user,
                                     r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                     break;
 
@@ -1248,9 +1252,8 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
             iconList.Add(popoverMoreIcon);
             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
                      r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
-                     r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, _favoriteRequestsProc.ReadOne(new List<Expression<Func<FavoriteRequest, bool>>> { fr => fr.RequestID == r.RequestID, fr => fr.ApplicationUserID == user.Id }, null).FirstOrDefault(),
-                                    _shareRequestsProc.ReadOne(new List<Expression<Func<ShareRequest, bool>>> { sr => sr.RequestID == r.RequestID, sr => sr.ToApplicationUserID == user.Id }, new List<ComplexIncludes<ShareRequest, ModelBase>> {
-                                     new ComplexIncludes<ShareRequest, ModelBase>{Include = sr => sr.FromApplicationUser }}).FirstOrDefault(), user,
+                     r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
+                                    userSharedRequests.Where(sr => sr.RequestID == r.RequestID).FirstOrDefault(), user,
                  r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
             break;
         case AppUtility.PageTypeEnum.RequestSummary:
@@ -1264,9 +1267,8 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
                     iconList.Add(popoverMoreIcon);
                     onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.SummaryProprietary,
                     r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
-                                 r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, _favoriteRequestsProc.ReadOne(new List<Expression<Func<FavoriteRequest, bool>>> { fr => fr.RequestID == r.RequestID, fr => fr.ApplicationUserID == user.Id }, null).FirstOrDefault(),
-                                    _shareRequestsProc.ReadOne(new List<Expression<Func<ShareRequest, bool>>> { sr => sr.RequestID == r.RequestID, sr => sr.ToApplicationUserID == user.Id }, new List<ComplexIncludes<ShareRequest, ModelBase>> {
-                                     new ComplexIncludes<ShareRequest, ModelBase>{Include = sr => sr.FromApplicationUser }}).FirstOrDefault(), user,
+                                 r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
+                                    userSharedRequests.Where(sr => sr.RequestID == r.RequestID).FirstOrDefault(), user,
                                   r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)
                                ).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
 
@@ -1278,9 +1280,8 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
                     iconList.Add(popoverMoreIcon);
                     onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ThenBy(r => r.Product.ProductName).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Summary,
                      r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
-                            r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage,  _favoriteRequestsProc.ReadOne(new List<Expression<Func<FavoriteRequest, bool>>> { fr => fr.RequestID == r.RequestID, fr => fr.ApplicationUserID == user.Id }, null).FirstOrDefault(),
-                                    _shareRequestsProc.ReadOne(new List<Expression<Func<ShareRequest, bool>>> { sr => sr.RequestID == r.RequestID, sr => sr.ToApplicationUserID == user.Id }, new List<ComplexIncludes<ShareRequest, ModelBase>> {
-                                     new ComplexIncludes<ShareRequest, ModelBase>{Include = sr => sr.FromApplicationUser }}).FirstOrDefault(), user, r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)
+                            r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
+                                    userSharedRequests.Select(sr => sr).Where(sr => sr.RequestID == r.RequestID).FirstOrDefault(), user, r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)
                    )
                         //.ToLookup(r => r.r.ProductID).Select(e => e.First())
                         .ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
@@ -1306,7 +1307,7 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r =>
                     new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
                      r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
-                                  r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, _favoriteRequestsProc.ReadOne(new List<Expression<Func<FavoriteRequest, bool>>> { fr => fr.RequestID == r.RequestID, fr => fr.ApplicationUserID == user.Id }, null).FirstOrDefault(),
+                                  r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
                                 user, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
             break;
         case AppUtility.PageTypeEnum.ExpensesStatistics:
@@ -1327,7 +1328,7 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
                     onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r =>
                    new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryFavorites,
                     r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
-                                 r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, _favoriteRequestsProc.ReadOne(new List<Expression<Func<FavoriteRequest, bool>>> { fr => fr.RequestID == r.RequestID, fr => fr.ApplicationUserID == user.Id }, null).FirstOrDefault(),
+                                 r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
                                  user, r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                     break;
                 case AppUtility.SidebarEnum.SharedRequests:
@@ -1339,9 +1340,8 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
                     new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryShared,
                      r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                   r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage,
-                              _favoriteRequestsProc.ReadOne(new List<Expression<Func<FavoriteRequest, bool>>> { fr => fr.RequestID == r.RequestID, fr => fr.ApplicationUserID == user.Id }, null).FirstOrDefault(),
-                                    _shareRequestsProc.ReadOne(new List<Expression<Func<ShareRequest, bool>>> { sr => sr.RequestID == r.RequestID, sr => sr.ToApplicationUserID == user.Id }, new List<ComplexIncludes<ShareRequest, ModelBase>> {
-                                     new ComplexIncludes<ShareRequest, ModelBase>{Include = sr => sr.FromApplicationUser }}).FirstOrDefault(), user,
+                              userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
+                                    userSharedRequests.Where(sr => sr.RequestID == r.RequestID).FirstOrDefault(), userSharedRequests.Where(sr => sr.RequestID == r.RequestID).Select(sr => sr.FromApplicationUser).FirstOrDefault(), user,
                                   r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                     break;
                 case AppUtility.SidebarEnum.MyLists:
@@ -1355,9 +1355,8 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
                     new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.RequestLists,
                      r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                   r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage,
-                                 _favoriteRequestsProc.ReadOne(new List<Expression<Func<FavoriteRequest, bool>>> { fr => fr.RequestID == r.RequestID, fr => fr.ApplicationUserID == user.Id }, null).FirstOrDefault(),
-                                    _shareRequestsProc.ReadOne(new List<Expression<Func<ShareRequest, bool>>> { sr => sr.RequestID == r.RequestID, sr => sr.ToApplicationUserID == user.Id }, new List<ComplexIncludes<ShareRequest, ModelBase>> {
-                                     new ComplexIncludes<ShareRequest, ModelBase>{Include = sr => sr.FromApplicationUser }}).FirstOrDefault(), user,
+                                 userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
+                                    userSharedRequests.Where(sr => sr.RequestID == r.RequestID).FirstOrDefault(), user,
                                   r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest,
                                   _shareRequestListsProc.Read( new List<Expression<Func<ShareRequestList, bool>>> { srl => srl.RequestListID == requestIndexObject.ListID && srl.ToApplicationUserID == user.Id }, null).FirstOrDefault().ViewOnly
                                   )).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
