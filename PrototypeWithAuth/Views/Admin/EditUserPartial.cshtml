@@ -51,10 +51,10 @@
     }
 }
 
-<script src="~/js/confirmedit.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/Validation/UsersFormValidation.js"></script>
-<script src="~/js/validate.js" asp-append-version="true"></script>
+<script src="~/js/validate.js"></script>
+<script src="~/js/confirmedit.js"></script>
+<script src="~/js/site.js"></script>
 <script src="~/js/CreateUser.js"></script>
 
 <input type="hidden" asp-for="Employee.IsUser" />
@@ -134,7 +134,6 @@
                 </div>
                 <div class="col-6 ">
                     <label asp-for="Employee.Email" class="control-label "></label>
-                    <input asp-for="Employee.Email" class="form-control-plaintext border-bottom mark-readonly @isedittable" autocomplete="nope" type="text" />
                     <input asp-for="Employee.Email" class="form-control-plaintext border-bottom mark-readonly @isedittable" autocomplete="nope" type="text" />
                     <span asp-validation-for="Employee.Email" class="text-danger-centarix"></span>
                 </div>
@@ -357,7 +356,7 @@
                         <div class="row">
                             <div class="col-6 p-0">*@
                     <label asp-for="Employee.SecureAppPass" class="control-label"></label>
-                    <input asp-for="Employee.SecureAppPass" class="form-control-plaintext border-bottom mark-readonly @isedittable" autocomplete="off" />
+                    <input asp-for="Employee.SecureAppPass" value="" class="form-control-plaintext border-bottom mark-readonly @isedittable" autocomplete="off" />
                     <span asp-validation-for="Employee.SecureAppPass" class="text-danger-centarix"></span>
                 </div>
 

@@ -652,7 +652,8 @@ $(function () {
             success: (result) => {
                 console.log("result: " + result);
                 if (result) {
-                    if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+                    if (/*( extn == "png" || extn == "jpg" || extn == "jpeg") && */result > '') {
+                        alert("empty string");
                         console.log("inside the if statement");
                         if (typeof (FileReader) != "undefined") {
                             console.log("file reader does not equal undefined");
@@ -669,7 +670,7 @@ $(function () {
                         $("#UserImagePath").val(result);
                     }
                     else {
-                        //alert("Please only select images");
+                        alert("Please only select images");
                     }
 
                 }
@@ -692,6 +693,7 @@ $(function () {
         var imgPath = $("#UserImagePath").val();
         //$(".user-image").html('<img src="~/' + imgPath + '" class="user-image" />');
         $("#user-image").attr("src", "/" + imgPath);
+        alert("img path: " + imgPath);
         $(".userImage i").hide();
 
         $.fn.CloseModal('user-picture');
@@ -1599,17 +1601,17 @@ $(function () {
         $('#ExternalCalibrations_0__IsRepeat').val(val)
     });
 
-    $('.modal #FirstName').off('change').change(function () {
-        $('.userName').val($(this).val() + " " + $('#LastName').val())
+    $('.modal #Employee_FirstName').off('change').change(function () {
+        $('.userName').val($(this).val() + " " + $('#Employee_LastName').val())
     });
-    $('.modal #LastName').off('change').change(function () {
-        $('.userName').val($('#FirstName').val() + " " + $(this).val())
+    $('.modal #Employee_LastName').off('change').change(function () {
+        $('.userName').val($('#Employee_FirstName').val() + " " + $(this).val())
     });
-    $('#FirstName').off('change').change(function () {
-        $('.userName').val($(this).val() + " " + $('#LastName').val())
+    $('#Employee_FirstName').off('change').change(function () {
+        $('.userName').val($(this).val() + " " + $('#Employee_LastName').val())
     });
-    $('#LastName').off('change').change(function () {
-        $('.userName').val($('#FirstName').val() + " " + $(this).val())
+    $('#Employee_LastName').off('change').change(function () {
+        $('.userName').val($('#Employee_FirstName').val() + " " + $(this).val())
     });
     $.fn.CallPageTimekeeper = function (url) {
         $.ajax({

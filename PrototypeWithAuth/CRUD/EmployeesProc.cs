@@ -386,16 +386,17 @@ namespace PrototypeWithAuth.CRUD
                 try
                 {
 
-                    int userid = 0;
                     int usernum = 1;
-                    if (_employeesProc.Read().Any())
+                    if (_employeesProc.Read().AsNoTracking().Any())
                     {
-                        usernum = _employeesProc.Read().OrderByDescending(u => u.UserNum).FirstOrDefault().UserNum + 1;
+                        usernum = _employeesProc.Read().OrderByDescending(u => u.UserNum).AsNoTracking().FirstOrDefault().UserNum + 1;
                     }
                     int UserType = registerUserViewModel.Employee.EmployeeStatusID;
 
                     Employee user = registerUserViewModel.Employee;
 
+                    user.UserNum = usernum;
+                    user.UserName = registerUserViewModel.Employee.Email;
                     user.DateCreated = DateTime.Now;
                     user.IsUser = true;
                     user.NeedsToResetPassword = true;
@@ -429,6 +430,10 @@ namespace PrototypeWithAuth.CRUD
                         registerUserViewModel.Password = newPassword;
                     }
                     IdentityResult result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
+                    //if (!result.Succeeded)
+                    //{
+                    //    throw new Exception(result.Errors.ToString());
+                    //}
                     await _userManager.ResetAuthenticatorKeyAsync(user);
                     await _userManager.UpdateSecurityStampAsync(user);
                     if (result.Succeeded)
@@ -451,7 +456,7 @@ namespace PrototypeWithAuth.CRUD
                         }
 
                         //add in CentarixID
-                        var employeeStatus = _employeeStatusesProc.ReadOne(new List<Expression<Func<EmployeeStatus, bool>>> { es => es.EmployeeStatusID == UserType }).FirstOrDefault();
+                        var employeeStatus = _employeeStatusesProc.ReadOne(new List<Expression<Func<EmployeeStatus, bool>>> { es => es.EmployeeStatusID == UserType }).AsNoTracking().FirstOrDefault();
                         var currentNum = employeeStatus.LastCentarixID + 1;
                         var abbrev = employeeStatus.Abbreviation;
                         if (abbrev[1] == ' ')
@@ -465,8 +470,9 @@ namespace PrototypeWithAuth.CRUD
                             CentarixIDNumber = cID,
                             IsCurrent = true,
                             TimeStamp = DateTime.Now,
-                            Employee = this.Read(new List<Expression<Func<Employee, bool>>> { e => e.Id == user.Id }).FirstOrDefault()
+                            Employee = this.Read(new List<Expression<Func<Employee, bool>>> { e => e.Id == user.Id }).AsNoTracking().FirstOrDefault()
                         };
+                        var changetracker = _context.ChangeTracker.Entries();
                         _centarixIDsProc.CreateWithoutSaving(centarixID);
                         await _context.SaveChangesAsync();
 
@@ -633,6 +639,8 @@ namespace PrototypeWithAuth.CRUD
                         {
                             ReturnVal.String += "User Failed to add. Please try again. " + e.Code.ToString() + " " + e.Description.ToString();
                         }
+                        ReturnVal.Bool = false;
+                        throw new Exception(ReturnVal.String);
                         //refill Model to view errors
                     }
                     //throw new Exception();

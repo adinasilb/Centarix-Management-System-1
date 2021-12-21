@@ -3,7 +3,6 @@ $(function () {
 
 
 	$("#Employee_DOB").off("change").on("change", function () {
-		alert("in fx");
 		var val = $(this).val();
 		val = val.split("/").reverse().join("-");
 		var DOB = moment(val);

@@ -271,15 +271,12 @@ namespace PrototypeWithAuth.Controllers
             var success = await _employeesProc.CreateUser(registerUserViewModel, _hostingEnvironment, Url, Request, _userManager);
             if (!success.Bool)
             {
+                FillViewDropdowns(registerUserViewModel);
                 registerUserViewModel.ErrorMessage = success.String;
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
-                registerUserViewModel.JobCategoryTypes = _jobCategoryTypesProc.Read().ToList();
-                registerUserViewModel.EmployeeStatuses = _employeeStatusesProc.Read().ToList();
-                registerUserViewModel.MaritalStatuses = _maritalStatusesProc.Read().ToList();
-                registerUserViewModel.Degrees = _degreesProc.Read().ToList();
-                registerUserViewModel.Citizenships = _citizenshipsProc.Read().ToList();
+                registerUserViewModel.Employee.IsUser = false;
                 return View("CreateUser", registerUserViewModel);
             }
             if (success.String != null)
@@ -315,6 +312,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 Response.StatusCode = 500;
                 registerUserViewModel.ErrorMessage = success.String;
+                GetEmployeeFields(registerUserViewModel);
                 FillViewDropdowns(registerUserViewModel);
                 return PartialView("EditUser", registerUserViewModel);
             }
@@ -332,6 +330,16 @@ namespace PrototypeWithAuth.Controllers
             }
             return await editUserFunction(id, Tab);
         }
+
+        private void GetEmployeeFields(RegisterUserViewModel registerUserViewModel)
+        {
+            registerUserViewModel.Employee = _employeesProc.Read(new List<System.Linq.Expressions.Expression<Func<Employee, bool>>>
+                { u => u.Id == registerUserViewModel.Employee.Id && !u.IsSuspended }, new List<ComplexIncludes<Employee, ModelBase>>
+                {
+                    new ComplexIncludes<Employee, ModelBase>{Include = s => s.SalariedEmployee},
+                    new ComplexIncludes<Employee, ModelBase>{Include = e => e.JobSubcategoryType}
+                }).FirstOrDefault();
+        }
         private void FillViewDropdowns(RegisterUserViewModel registerUserViewModel)
         {
             registerUserViewModel.JobCategoryTypes = _jobCategoryTypesProc.Read().ToList();
@@ -340,15 +348,6 @@ namespace PrototypeWithAuth.Controllers
             registerUserViewModel.Degrees = _degreesProc.Read().ToList();
             registerUserViewModel.Citizenships = _citizenshipsProc.Read().ToList();
 
-            if (registerUserViewModel.Employee.Email != null)
-            {
-                registerUserViewModel.Employee = _employeesProc.Read(new List<System.Linq.Expressions.Expression<Func<Employee, bool>>>
-                { u => u.Id == registerUserViewModel.Employee.Id && !u.IsSuspended }, new List<ComplexIncludes<Employee, ModelBase>>
-                {
-                    new ComplexIncludes<Employee, ModelBase>{Include = s => s.SalariedEmployee},
-                    new ComplexIncludes<Employee, ModelBase>{Include = e => e.JobSubcategoryType}
-                }).FirstOrDefault();
-            }
             if (registerUserViewModel.Employee is Employee)
             {
                 //get CentarixID
@@ -501,7 +500,7 @@ namespace PrototypeWithAuth.Controllers
                     Tab = Tab ?? 1,
                     ConfirmedEmail = userSelected.EmailConfirmed,
                     SidebarEnum = AppUtility.SidebarEnum.List
-            };
+                };
 
 
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
@@ -514,6 +513,7 @@ namespace PrototypeWithAuth.Controllers
                         registerUserViewModel.UserImage = file.FullName;
                     }
                 }
+                GetEmployeeFields(registerUserViewModel);
                 FillViewDropdowns(registerUserViewModel);
 
                 //if (registerUserViewModel.NewEmployee == null)
@@ -703,43 +703,48 @@ namespace PrototypeWithAuth.Controllers
 
         public string SaveTempUserImage(UserImageViewModel userImageViewModel)
         {
+            // 1. application/pdf 2. application/msword 3. image/jpeg 4. image/png
             string SavedUserImagePath = "";
 
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
-            Directory.CreateDirectory(uploadFolder);
-            if (userImageViewModel.FileToSave != null) //test for more than one???
+            var supportedContentTypes = new List<String> { "image/jpeg", "image/png" };
+            if (supportedContentTypes.Contains(userImageViewModel.FileToSave.ContentType))
             {
-                string FileName = "TempUserImage";
-
-                DirectoryInfo dir = new DirectoryInfo(uploadFolder);
-                FileInfo[] files = dir.GetFiles(FileName + ".*");
-                if (files.Length > 0)
+                string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
+                Directory.CreateDirectory(uploadFolder);
+                if (userImageViewModel.FileToSave != null) //test for more than one???
                 {
-                    //File exists
-                    foreach (FileInfo file in files)
-                    {
-                        System.IO.File.Delete(file.FullName);
-                    }
-                }
+                    string FileName = "TempUserImage";
 
-                int indexOfDot = userImageViewModel.FileToSave.FileName.IndexOf(".");
-                string extension = userImageViewModel.FileToSave.FileName.Substring(indexOfDot, userImageViewModel.FileToSave.FileName.Length - indexOfDot);
-                string uniqueFileName = FileName + extension;
-                string filePath = Path.Combine(uploadFolder, uniqueFileName);
-
-                using (FileStream FileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    try
+                    DirectoryInfo dir = new DirectoryInfo(uploadFolder);
+                    FileInfo[] files = dir.GetFiles(FileName + ".*");
+                    if (files.Length > 0)
                     {
-                        userImageViewModel.FileToSave.CopyTo(FileStream);
-                        SavedUserImagePath = AppUtility.GetLastFiles(filePath, 2);
-                        //throw new Exception();
+                        //File exists
+                        foreach (FileInfo file in files)
+                        {
+                            System.IO.File.Delete(file.FullName);
+                        }
                     }
-                    catch (Exception e)
+
+                    int indexOfDot = userImageViewModel.FileToSave.FileName.IndexOf(".");
+                    string extension = userImageViewModel.FileToSave.FileName.Substring(indexOfDot, userImageViewModel.FileToSave.FileName.Length - indexOfDot);
+                    string uniqueFileName = FileName + extension;
+                    string filePath = Path.Combine(uploadFolder, uniqueFileName);
+
+                    using (FileStream FileStream = new FileStream(filePath, FileMode.Create))
                     {
-                        Response.StatusCode = 500;
-                        //Response.WriteAsync(AppUtility.GetExceptionMessage(e)); both do same thing - which is better?
-                        return AppUtility.GetExceptionMessage(e);
+                        try
+                        {
+                            userImageViewModel.FileToSave.CopyTo(FileStream);
+                            SavedUserImagePath = AppUtility.GetLastFiles(filePath, 2);
+                            //throw new Exception();
+                        }
+                        catch (Exception e)
+                        {
+                            Response.StatusCode = 500;
+                            //Response.WriteAsync(AppUtility.GetExceptionMessage(e)); both do same thing - which is better?
+                            return AppUtility.GetExceptionMessage(e);
+                        }
                     }
                 }
             }
@@ -760,7 +765,7 @@ namespace PrototypeWithAuth.Controllers
 
         public bool CheckUserEmailExist(bool isEdit, string email, string currentEmail)
         {
-            var emailcheck1 = email == null ? true : !(_employeesProc.Read(new List<Expression<Func<Employee, bool>>> { u => u.Email.ToLower()==email.ToLower() }).Any());
+            var emailcheck1 = email == null ? true : !(_employeesProc.Read(new List<Expression<Func<Employee, bool>>> { u => u.Email.ToLower() == email.ToLower() }).Any());
             var emailcheck2 = email == null ? true : (isEdit && currentEmail.ToLower().Equals(email.ToLower()));
             var check = emailcheck1 || emailcheck2;
             return check;

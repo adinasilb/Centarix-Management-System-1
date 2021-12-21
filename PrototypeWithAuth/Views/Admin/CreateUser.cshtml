@@ -7,14 +7,14 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 
 }
-
+@*<script src="~/js/validate.js"></script>*@
 <div class="col-12 create-user mx-auto on-form-modal users-form add-item-box scroll-page" style="width: 60%">
     <div class="on-form-modal-border">
         <form action="" id="myForm" method="post" class="usersForm" enctype="multipart/form-data" style="height: 100%; ">
 
             @* HIDDEN INPUTS TO DISABLE AUTOFILLS *@
-            <input type="email" class="hidden" />
-            <input type="password" class="hidden" />
+            @*<input type="email" class="hidden" />
+            <input type="password" class="hidden" />*@
             <input type="hidden" class="hidden" asp-for="Employee.Id" />
             <input type="hidden" asp-for="Employee.UserNum" />
 
@@ -117,7 +117,8 @@
             </div>*@
     </div>
 </div>
-<script src="~/js/CreateUser.js"></script>
+@*<script src="~/js/CreateUser.js"></script>
+<script src="~/js/Validation/UsersFormValidation.js"></script>*@
 <script>
     $(".upload-image").off("click").on("click", function (e) {
         console.log("in upload image 2");
