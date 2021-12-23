@@ -178,6 +178,20 @@ namespace PrototypeWithAuth.CRUD
             return ObjectQueryable;
         }
 
+        public async Task<StringWithBool> SaveDbChangesAsync()
+        {
+            var ReturnVal = new StringWithBool();
+            try
+            {
+                await _context.SaveChangesAsync();
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch(Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
    
      
     }
