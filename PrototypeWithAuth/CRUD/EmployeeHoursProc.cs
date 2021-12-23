@@ -38,6 +38,20 @@ namespace PrototypeWithAuth.CRUD
             }
             return ReturnVal;
         }
+        public StringWithBool UpdateWithoutSaving(EmployeeHours EmployeeHour)
+        {
+            var ReturnVal = new StringWithBool();
+            try
+            {
+                _context.Update(EmployeeHour);
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
 
         public IQueryable<EmployeeHours> ReadOffDaysByYear(int year, int offDayTypeID, string userId)
         {
@@ -552,5 +566,19 @@ namespace PrototypeWithAuth.CRUD
             }
             return ReturnVal;
         }
+        //public async Task<StringWithBool> UpdateMissingDaysAsync(Employee user, DateTime lastUpdate)
+        //{
+        //    StringWithBool ReturnVal = new StringWithBool();
+                
+        //            }
+
+        //            ReturnVal.SetStringAndBool(true, null);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+        //        }
+        //    return ReturnVal;
+        //}
     }
 }

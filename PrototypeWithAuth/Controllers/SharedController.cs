@@ -86,6 +86,7 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.PaymentsProc _paymentsProc;
         protected readonly CRUD.PaymentStatusesProc _paymentStatusesProc;
         protected readonly CRUD.ParentRequestsProc _parentRequestsProc;
+        protected readonly CRUD.ApplicationContextTransaction _applicationContextTransaction;
         public SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
 
         {
@@ -151,6 +152,7 @@ namespace PrototypeWithAuth.Controllers
             _paymentsProc = new CRUD.PaymentsProc(context);
             _paymentStatusesProc = new CRUD.PaymentStatusesProc(context);
             _parentRequestsProc = new CRUD.ParentRequestsProc(context);
+            _applicationContextTransaction = new CRUD.ApplicationContextTransaction(context);
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)

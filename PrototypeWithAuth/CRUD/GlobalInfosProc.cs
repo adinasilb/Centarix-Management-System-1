@@ -7,6 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.CRUD
 {
@@ -18,6 +19,20 @@ namespace PrototypeWithAuth.CRUD
             {
                 base.InstantiateProcs();
             }
+        }
+        public async Task<StringWithBool> UpdateAsyncWithoutSaving(GlobalInfo globalInfo)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                _context.Update(globalInfo);
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch(Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
         }
 
     }
