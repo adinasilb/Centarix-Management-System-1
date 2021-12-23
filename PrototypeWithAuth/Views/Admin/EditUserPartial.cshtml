@@ -63,7 +63,6 @@
         @if (Model.ErrorMessage != null)
         {
             <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
-
         }
     </div>
     @if (modaltype == "edit")
@@ -129,7 +128,7 @@
                 </div>
                 <div class="col-3 only-employee @hidden">
                     <label asp-for="Employee.IDNumber" class="control-label only-employee"></label>
-                    <input asp-for="Employee.IDNumber" class="form-control-plaintext border-bottom mark-readonly only-employee @isedittable" />
+                    <input asp-for="Employee.IDNumber" type="text" class="form-control-plaintext border-bottom mark-readonly only-employee @isedittable" />
                     <span asp-validation-for="Employee.IDNumber" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-6 ">

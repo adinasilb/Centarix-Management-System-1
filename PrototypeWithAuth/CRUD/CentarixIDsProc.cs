@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.AppData;
+﻿using Microsoft.EntityFrameworkCore;
+using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
@@ -11,14 +12,19 @@ namespace PrototypeWithAuth.CRUD
 {
     public class CentarixIDsProc : ApplicationDbContextProc<CentarixID>
     {
+        private readonly EmployeeStatusesProc _employeeStatusesProc;
         public CentarixIDsProc(ApplicationDbContext context, bool FromBase = false) : base(context)
         {
             if (!FromBase) { base.InstantiateProcs(); }
+            else
+            {
+                _employeeStatusesProc = new EmployeeStatusesProc(context, true);
+            }
         }
 
         public void CreateWithoutSaving(CentarixID centarixID)
         {
-            _context.Add(centarixID);
+            _context.Entry(centarixID).State = EntityState.Added;
         }
 
 
@@ -33,8 +39,9 @@ namespace PrototypeWithAuth.CRUD
                 _context.Update(oldCentarixID);
                 await _context.SaveChangesAsync();
 
-                var lastStatus = _employeeStatusesProc.Read(new List<System.Linq.Expressions.Expression<Func<EmployeeStatus, bool>>>
-                { es => es.EmployeeStatusID == StatusID }).FirstOrDefault();
+                var lastStatusList = _employeeStatusesProc.Read(new List<System.Linq.Expressions.Expression<Func<EmployeeStatus, bool>>>
+                { es => es.EmployeeStatusID == StatusID });
+                var lastStatus = lastStatusList.FirstOrDefault();
                 var newNum = lastStatus.LastCentarixID + 1;
                 var abbrev = lastStatus.Abbreviation;
                 if (abbrev[1] == ' ')

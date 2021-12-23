@@ -86,6 +86,11 @@ namespace PrototypeWithAuth.CRUD
             _jobSubcategoryTypesProc = new JobSubcategoryTypesProc(_context, true);
         }
 
+        //protected void InstantiateProcs(List<String> Types)
+        //{
+        //    foreach(var)
+        //}
+
         public virtual IQueryable<T> Read(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
         {
             var dbset = _context.Set<T>().AsQueryable();

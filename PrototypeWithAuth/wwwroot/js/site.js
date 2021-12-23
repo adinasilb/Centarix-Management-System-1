@@ -1435,6 +1435,7 @@ $(function () {
         else {
             console.log('close edit')
             $.fn.CloseModal("edits");
+            $.fn.CloseModal('invalid-right-modal');
         }
     })
 

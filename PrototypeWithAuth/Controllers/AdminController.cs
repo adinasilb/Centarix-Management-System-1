@@ -689,7 +689,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "ApplicationUsers");
+                return PartialView("InvalidLinkPageRightModal");
             }
         }
 

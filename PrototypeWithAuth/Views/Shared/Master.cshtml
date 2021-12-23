@@ -845,9 +845,14 @@
                 cache: true,
                 success: function (data) {
                     $("#loading").hide();
-                    $.fn.OpenModal('users-form', 'edits', data)
-                    $.fn.CalculateAge();
-                    $.fn.OnOpenModal();
+                    if (data.includes("Invalid")) {
+                        $.fn.OpenModal('invalid-right-modal', 'right-invalid', data);
+                    }
+                    else {
+                        $.fn.OpenModal('users-form', 'edits', data)
+                        $.fn.CalculateAge();
+                        $.fn.OnOpenModal();
+                    }
                 }
             });
         };

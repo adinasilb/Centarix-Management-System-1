@@ -147,7 +147,7 @@ namespace PrototypeWithAuth.CRUD
                         }
                         if (selectedStatusID == 4)
                         {
-                            //never was an employee only was a user and wants to update info                 
+                            //is going to become a user                
                             employeeEditted.UserName = registerUserViewModel.Employee.Email;
                             employeeEditted.FirstName = registerUserViewModel.Employee.FirstName;
                             employeeEditted.LastName = registerUserViewModel.Employee.LastName;
@@ -171,7 +171,11 @@ namespace PrototypeWithAuth.CRUD
 
                             if (changedEmployeeStatus)
                             {
-                                await _centarixIDsProc.AddNewCentarixID(employeeEditted.Id, 4);// AddNewCentarixID(employeeEditted.Id, 4);
+                                var success = await _centarixIDsProc.AddNewCentarixID(employeeEditted.Id, 4);// AddNewCentarixID(employeeEditted.Id, 4);
+                                if (!success.Bool)
+                                {
+                                    throw new NotImplementedException("Unable to create the CentarixID: " + success.String);
+                                }
                             }
                         }
                         else
@@ -443,7 +447,7 @@ namespace PrototypeWithAuth.CRUD
                             user.LockoutEnabled = true;
                             user.LockoutEnd = new DateTime(2999, 01, 01);
                             user.IsUser = false;
-                            _context.Update(user);
+                            _context.Entry(user).State = EntityState.Modified;
                             await _context.SaveChangesAsync();
                         }
 
@@ -451,9 +455,11 @@ namespace PrototypeWithAuth.CRUD
                         {
                             user.LockoutEnabled = true;
                             user.LockoutEnd = new DateTime(2999, 01, 01);
-                            _context.Update(user);
+                            _context.Entry(user).State = EntityState.Modified;
                             await _context.SaveChangesAsync();
                         }
+
+                        //_context.ChangeTracker.Entries().Where(e => e.Entity is ApplicationUser).FirstOrDefault().State = EntityState.Detached;
 
                         //add in CentarixID
                         var employeeStatus = _employeeStatusesProc.ReadOne(new List<Expression<Func<EmployeeStatus, bool>>> { es => es.EmployeeStatusID == UserType }).AsNoTracking().FirstOrDefault();
@@ -464,22 +470,24 @@ namespace PrototypeWithAuth.CRUD
                             abbrev = abbrev.Substring(0, 1);
                         }
                         var cID = abbrev + currentNum.ToString();
+                        //_context.ChangeTracker.Entries().ToList().ForEach(e => e.State = EntityState.Detached);
+
                         CentarixID centarixID = new CentarixID()
                         {
                             EmployeeID = user.Id,
                             CentarixIDNumber = cID,
                             IsCurrent = true,
                             TimeStamp = DateTime.Now,
-                            Employee = this.Read(new List<Expression<Func<Employee, bool>>> { e => e.Id == user.Id }).AsNoTracking().FirstOrDefault()
+                            Employee = this.Read(new List<Expression<Func<Employee, bool>>> { e => e.Id == user.Id }).AsNoTracking().Select(e => new Employee() { Id = e.Id, EmployeeStatusID = e.EmployeeStatusID }).FirstOrDefault()
                         };
-                        var changetracker = _context.ChangeTracker.Entries();
                         _centarixIDsProc.CreateWithoutSaving(centarixID);
+                        //_context.Entry<Employee>(centarixID.Employee).State = EntityState.Detached;
                         await _context.SaveChangesAsync();
 
                         //update last ID
                         employeeStatus.LastCentarixID = currentNum;
                         employeeStatus.LastCentarixIDTimeStamp = DateTime.Now;
-                        _employeeStatusesProc.CreateWithoutSaving(employeeStatus);
+                        _employeeStatusesProc.UpdateWithoutSaving(employeeStatus);
                         await _context.SaveChangesAsync();
 
                         switch (UserType)
@@ -586,7 +594,7 @@ namespace PrototypeWithAuth.CRUD
                         }
                         catch (Exception ex)
                         {
-                            ReturnVal.SetStringAndBool(true, "User saved successful but something went wrong while tring to add the roles. Please retry adding roles to the newly create user");                       
+                            ReturnVal.SetStringAndBool(true, "User saved successfully but something went wrong while tring to add the roles. Please retry adding roles to the newly create user");                       
                         }
 
                         if (registerUserViewModel.UserImageSaved == "true")
