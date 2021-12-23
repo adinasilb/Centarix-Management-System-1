@@ -53,6 +53,8 @@ namespace PrototypeWithAuth.CRUD
         protected RequestLocationInstancesProc _requestLocationInstancesProc;
         protected RequestCommentsProc _requestCommentsProc;
         protected ProductCommentsProc _productCommentsProc;
+        protected ShareRequestListsProc _shareRequestListsProc;
+        protected RequestListRequestsProc _requestListRequestsProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context)
         {
@@ -96,6 +98,8 @@ namespace PrototypeWithAuth.CRUD
             _requestLocationInstancesProc = new RequestLocationInstancesProc(_context, true);
             _requestCommentsProc = new RequestCommentsProc(_context, true);
             _productCommentsProc = new ProductCommentsProc(_context, true);
+            _shareRequestListsProc = new ShareRequestListsProc(_context, true);
+            _requestListRequestsProc = new RequestListRequestsProc(_context, true);
 
         }
 
@@ -186,8 +190,7 @@ namespace PrototypeWithAuth.CRUD
             }
             return ObjectQueryable;
         }
-
-   
      
+
     }
 }

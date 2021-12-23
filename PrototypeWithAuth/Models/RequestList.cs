@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PrototypeWithAuth.AppData.UtilityModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -15,6 +16,6 @@ namespace PrototypeWithAuth.Models
         public Employee ApplicationUserOwner { get; set; }
         public DateTime DateCreated { get; set; }
         public bool IsDefault { get; set; }
-        public IEnumerable<RequestListRequest> RequestListRequests { get; set; }
+        public ListImplementsModelBase<RequestListRequest> RequestListRequests { get; set; }
     }
 }

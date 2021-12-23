@@ -677,10 +677,6 @@ namespace PrototypeWithAuth.Controllers
         }
         protected async Task<TempRequestViewModel> AddToCart(Request request, bool isInBudget, TempRequestListViewModel tempRequestListViewModel)
         {
-            /*using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {*/
             if (isInBudget)
             {
                 request.RequestStatusID = 6;
@@ -691,59 +687,19 @@ namespace PrototypeWithAuth.Controllers
             }
             request.OrderType = AppUtility.OrderTypeEnum.AddToCart.ToString();
 
-            //if (request.ProductID == 0 || request.ProductID == null)
-            //{
-            //    _context.Entry(request.Product).State = EntityState.Added;
-            //}
-            //_context.Entry(request).State = EntityState.Added;
-            ////tempRequestListViewModel.TempRequestViewModels[0].Request = request;
-            ////await SaveCommentFromTempRequestListViewModelAsync(request, tempRequestListViewModel.TempRequestViewModels[0]);
-            //await _context.SaveChangesAsync();
-            //await transaction.CommitAsync();
             tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>() { new TempRequestViewModel() { Request = request } };
-            /*TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
-            await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);*/
-            //base.MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests);
-            //await transaction.CommitAsync();
-            //}
-            /*catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                throw ex;
-            }*/
-            //}
+        
             return tempRequestListViewModel.TempRequestViewModels.FirstOrDefault();
         }
 
         private async Task<TempRequestViewModel> AlreadyPurchased(Request request, TempRequestListViewModel tempRequestListViewModel)
         {
-            /*using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {*/
             request.RequestStatusID = 2;
             request.ParentQuoteID = null;
             request.OrderType = AppUtility.OrderTypeEnum.AlreadyPurchased.ToString();
 
             tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>() { new TempRequestViewModel() { Request = request } };
-            /*
-                                TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);*/
-            //TempRequestJson tempRequestJson = new TempRequestJson()
-            //{
-            //    CookieGUID = tempRequestListViewModel.GUID,
-            //    ApplicationUserID = _userManager.GetUserId(User),
-            //    IsOriginal = true,
-            //    IsCurrent = true
-            //};
-            /*await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
-            await transaction.CommitAsync();*/
-            /*}
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                throw ex;
-            }
-        }*/
+           
             return tempRequestListViewModel.TempRequestViewModels.FirstOrDefault();
         }
         private async Task<TempRequestViewModel> OrderNow(Request request, bool isInBudget, TempRequestListViewModel tempRequestListViewModel)
@@ -4897,10 +4853,11 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var request = await _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.ApplicationUserCreator).FirstOrDefaultAsync();
-            var vendor = await _context.Requests.Where(r => r.RequestID == requestID).Select(r => r.Product.Vendor).FirstOrDefaultAsync();
-            var vendorCartTotal = _context.Requests.Where(r => r.Product.VendorID == vendor.VendorID && r.ApplicationUserCreatorID == request.ApplicationUserCreatorID &&
-            r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString() && r.RequestStatusID != 1)
+            var request = await _requestsProc.Read( new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID }, new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator },
+            new ComplexIncludes<Request, ModelBase>{ Include = r=>r.Product.Vendor } }).FirstOrDefaultAsync();
+            var vendor = request.Product.Vendor;
+            var vendorCartTotal = _requestsProc.Read( new List<Expression<Func<Request, bool>>>{ r => r.Product.VendorID == vendor.VendorID && r.ApplicationUserCreatorID == request.ApplicationUserCreatorID &&
+            r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString() && r.RequestStatusID != 1 })
                 .Select(r => r.Cost).Sum();
             vendorCartTotal = Math.Round(vendorCartTotal ?? 0, 2);
             CartTotalViewModel viewModel = new CartTotalViewModel()
@@ -4975,33 +4932,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ArchiveRequest(int requestId, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    if (receivedModalVisualViewModel.LocationInstancePlaces != null)
-                    {
-                        var request = _context.Requests.Where(r => r.RequestID == requestId).FirstOrDefault();
-                        var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
-                        //archive one location and delete the rest
-                        var iterator = requestLocations.GetEnumerator();
-                        while (iterator.MoveNext())
-                        {
-                            var locationToDelete = iterator.Current;
-                            _context.Remove(locationToDelete);
-                            await _locationInstancesProc.MarkLocationAvailableAsync(requestId, locationToDelete.LocationInstanceID);
-                        }
-                        await _context.SaveChangesAsync();
-                         await _requestLocationInstancesProc.SaveLocationsAsync(receivedModalVisualViewModel, request, true);
-                        await transaction.CommitAsync();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw new Exception(AppUtility.GetExceptionMessage(ex));
-                }
-            }
+            await _requestLocationInstancesProc.ArchiveAsync(requestId, receivedModalVisualViewModel);
             return RedirectToAction("_LocationTab", new { id = requestId });
         }
 
@@ -5010,44 +4941,28 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> MoveToListModal(int requestID, int prevListID = 0)
         {
             var pageType = AppUtility.PageTypeEnum.RequestCart;
-            var userLists = _context.RequestLists.Where(rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User))
+            var userLists = _requestListsProc.Read( new List<Expression<Func<RequestList, bool>>> { rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User) })
                .OrderBy(rl => rl.DateCreated).ToList();
-            var sharedLists =  _context.ShareRequestLists.Where(srl => srl.ToApplicationUserID == _userManager.GetUserId(User) && !srl.ViewOnly).Include(srl => srl.RequestList).OrderBy(srl => srl.TimeStamp).Select(srl => srl.RequestList).ToList();
+            var sharedLists = _shareRequestListsProc.Read(new List<Expression<Func<ShareRequestList, bool>>> { srl => srl.ToApplicationUserID == _userManager.GetUserId(User) && !srl.ViewOnly },
+                new List<ComplexIncludes<ShareRequestList, ModelBase>> {  new ComplexIncludes<ShareRequestList, ModelBase>{Include = srl => srl.RequestList }}).OrderBy(srl => srl.TimeStamp).Select(srl => srl.RequestList).ToList();
             sharedLists.ForEach(sl => userLists.Add(sl));
             if (userLists.Count == 0)
             {
-                RequestList requestList = new RequestList
-                {
-                    Title = "List 1",
-                    ApplicationUserOwnerID = _userManager.GetUserId(User),
-                    RequestListRequests = new List<RequestListRequest>(),
-                    DateCreated = DateTime.Now,
-                    IsDefault = true
-                };
-                using (var transaction = _context.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        _context.Entry(requestList).State = EntityState.Added;
-                        await _context.SaveChangesAsync();
-                        userLists.Add(requestList);
-                        await transaction.CommitAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        await transaction.RollbackAsync();
-                        throw new Exception(AppUtility.GetExceptionMessage(ex));
-                    }
-                }
+                var  requestList = await _requestListsProc.CreateAndGetDefaultListAsync(_userManager.GetUserId(User));
+                userLists.Add(requestList);               
             }
-            userLists = userLists.Where(ul => ul.ListID != prevListID).ToList();
+            else
+            {
+                userLists = userLists.Where(ul => ul.ListID != prevListID).ToList();
+            }
+
             if (prevListID == 0)
             {
                 pageType = AppUtility.PageTypeEnum.RequestInventory;
             }
             MoveListViewModel viewModel = new MoveListViewModel()
             {
-                Request = _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault(),
+                Request = await _requestsProc.ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID }, new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product } }),
                 PreviousListID = prevListID,
                 RequestLists = userLists,
                 PageType = pageType
@@ -5055,53 +4970,13 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(viewModel);
         }
 
-        public async void MoveLists(int requestToMoveId, int newListID, int prevListID = 0)
-        {
-
-            var existingListRequest = _context.RequestListRequests.Where(l => l.RequestID == requestToMoveId && l.ListID == newListID).FirstOrDefault();
-            if (existingListRequest != null)
-            {
-                existingListRequest.TimeStamp = DateTime.Now;
-                _context.Update(existingListRequest);
-            }
-            else
-            {
-                RequestListRequest requestListRequest = new RequestListRequest()
-                {
-                    RequestID = requestToMoveId,
-                    ListID = newListID,
-                    TimeStamp = DateTime.Now
-                };
-                _context.Entry(requestListRequest).State = EntityState.Added;
-            }
-            if (prevListID != 0)
-            {
-                var oldRequestListRequest = _context.RequestListRequests
-                    .Where(rlr => rlr.RequestID == requestToMoveId && rlr.ListID == prevListID).FirstOrDefault();
-                _context.Remove(oldRequestListRequest);
-            }
-
-        }
-
+     
         [HttpPost]
         [Authorize(Roles = "Requests")]
 
         public async Task<IActionResult> MoveToListModal(MoveListViewModel moveListViewModel)
         {
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    MoveLists(moveListViewModel.Request.RequestID, moveListViewModel.NewListID, moveListViewModel.PreviousListID);
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw new Exception(AppUtility.GetExceptionMessage(ex));
-                }
-            }
+            await _requestListRequestsProc.MoveList(moveListViewModel.Request.RequestID, moveListViewModel.NewListID, moveListViewModel.PreviousListID);
             if (moveListViewModel.PageType == AppUtility.PageTypeEnum.RequestCart)
             {
                 RequestIndexObject indexObject = new RequestIndexObject()
@@ -5135,32 +5010,8 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> NewListModal(NewListViewModel newListViewModel)
         {
-            var newList = new RequestList();
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    newList.ApplicationUserOwnerID = newListViewModel.OwnerID;
-                    newList.Title = newListViewModel.ListTitle;
-                    newList.DateCreated = DateTime.Now;
-                    _context.Entry(newList).State = EntityState.Added;
 
-                    await _context.SaveChangesAsync();
-
-                    if (newListViewModel.RequestToAddID != 0)
-                    {
-                        MoveLists(newListViewModel.RequestToAddID, newList.ListID, newListViewModel.RequestPreviousListID);
-
-                        await _context.SaveChangesAsync();
-                    }
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw new Exception(AppUtility.GetExceptionMessage(ex));
-                }
-            }
+            var newList = await _requestListsProc.CreateAndGetAsync(newListViewModel);
             RequestIndexObject indexObject = new RequestIndexObject()
             {
                 PageType = AppUtility.PageTypeEnum.RequestCart,
@@ -5176,8 +5027,8 @@ namespace PrototypeWithAuth.Controllers
         {
             DeleteListRequestViewModel viewModel = new DeleteListRequestViewModel()
             {
-                Request = _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault(),
-                List = _context.RequestLists.Where(l => l.ListID == listID).FirstOrDefault()
+                Request = await _requestsProc.ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID }, new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product } }),
+                List = await _requestListsProc.ReadOneAsync( new List<Expression<Func<RequestList, bool>>> { l => l.ListID == listID })
             };
             return PartialView(viewModel);
         }
@@ -5186,23 +5037,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> DeleteListRequestModal(DeleteListRequestViewModel viewModel)
         {
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    var list = _context.RequestLists.Where(l => l.ListID == viewModel.List.ListID)
-                        .Include(l => l.RequestListRequests).FirstOrDefault();
-                    var requestListRequest = list.RequestListRequests.Where(rlr => rlr.RequestID == viewModel.Request.RequestID).FirstOrDefault();
-                    _context.Remove(requestListRequest);
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw new Exception(AppUtility.GetExceptionMessage(ex));
-                }
-            }
+            await _requestListRequestsProc.DeleteByListIDAndRequestIDsAsync(viewModel.List.ListID, viewModel.Request.RequestID);
             RequestIndexObject indexObject = new RequestIndexObject()
             {
                 PageType = AppUtility.PageTypeEnum.RequestCart,
@@ -5217,17 +5052,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ListSettingsModal(AppUtility.SidebarEnum SidebarType, int selectedListID=0)
         {
-            //var sharedList = new ShareRequestList()
-            //{
-            //    RequestListID = 27,
-            //    FromApplicationUserID = "b96445c0-f6ef-42eb-8638-9a65ab094445",
-            //    ToApplicationUserID = "f61f584c-7d1d-4692-801a-82a3069acad5"
-            //};
-            //_context.Update(sharedList);
-            //await _context.SaveChangesAsync();
-
-            var listSettings = GetListSettingsInfo(selectedListID, SidebarType);
-
+            var listSettings = await GetListSettingsInfoAsync(selectedListID, SidebarType);
             return PartialView(listSettings);
         }
 
@@ -5235,7 +5060,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ListSettingsModal(ListSettingsViewModel listSettings, int selectedIndexListID)
         {
-            await UpdateListDetails(listSettings);
+            await _requestListsProc.UpdateAsync(listSettings, _userManager.GetUserId(User));
 
             RequestIndexObject indexObject = new RequestIndexObject()
             {
@@ -5251,77 +5076,25 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _ListSettings(int listID, AppUtility.SidebarEnum SidebarType)
         {
-            var listSettings = GetListSettingsInfo(listID, SidebarType);
+            var listSettings = await GetListSettingsInfoAsync(listID, SidebarType);
 
             return PartialView(listSettings);
         }
 
-        [Authorize(Roles = "Requests")]
-        public async Task<bool> UpdateListDetails(ListSettingsViewModel listSettings)
-        {
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    var viewModelList = listSettings.SidebarType == AppUtility.SidebarEnum.MyLists ? listSettings.SelectedList : listSettings.SelectedSharedList.RequestList;
-                    var list = _context.RequestLists.Where(rl => rl.ListID == viewModelList.ListID).FirstOrDefault();
-                    list.Title = viewModelList.Title;
-                    _context.Update(list);
-                    if (listSettings.SharedUsers != null)
-                    {
-                        foreach (var user in listSettings.SharedUsers)
-                        {
-                            if (!user.IsRemoved)
-                            {
-                                if (user.ShareRequestList.ShareID == 0)
-                                {
-                                    user.ShareRequestList.ToApplicationUser = null;
-                                    user.ShareRequestList.RequestListID = listSettings.SelectedList.ListID;
-                                    user.ShareRequestList.FromApplicationUserID = _userManager.GetUserId(User);
-                                    _context.Add(user.ShareRequestList);
-                                }
-                                else
-                                {
-                                    var sharelist = _context.ShareRequestLists.Where(srl => srl.ShareID == user.ShareRequestList.ShareID).FirstOrDefault();
-                                    sharelist.ViewOnly = user.ShareRequestList.ViewOnly;
-                                    _context.Update(sharelist);
-                                }
-                            }
-                            else
-                            {
-                                if (user.ShareRequestList.ShareID != 0)
-                                {
-                                    _context.Remove(user.ShareRequestList);
-                                }
-                            }
-
-                        }
-                    }
-
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw new Exception(AppUtility.GetExceptionMessage(ex));
-                }
-            }
-            return true;
-        }
+       
 
         [Authorize(Roles = "Requests")]
-        private ListSettingsViewModel GetListSettingsInfo(int selectedListID, AppUtility.SidebarEnum sidebarType)
+        private async Task<ListSettingsViewModel> GetListSettingsInfoAsync(int selectedListID, AppUtility.SidebarEnum sidebarType)
         {
 
             var viewModel = new ListSettingsViewModel();
             if(sidebarType == AppUtility.SidebarEnum.SharedLists)
             {
-                viewModel = GetSharedListSettings(selectedListID);
+                viewModel = await GetSharedListSettingsAsync(selectedListID);
             }
             else
             {
-                viewModel = GetMyListSettings(selectedListID);
+                viewModel = await GetMyListSettingsAsync(selectedListID);
             }
 
             if(viewModel.SelectedList == null && viewModel.SelectedSharedList == null)
@@ -5330,7 +5103,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
            
-            viewModel.SharedUsers = _context.ShareRequestLists.Where(l => l.RequestListID == selectedListID).Include(l => l.ToApplicationUser).Select(
+            viewModel.SharedUsers = _shareRequestListsProc.Read( new List<Expression<Func<ShareRequestList, bool>>> { l => l.RequestListID == selectedListID }, new List<ComplexIncludes<ShareRequestList, ModelBase>> { new ComplexIncludes<ShareRequestList, ModelBase> { Include = l => l.ToApplicationUser } }).Select(
                 l => new ShareRequestListViewModel
                 {
                     ShareRequestList = l
@@ -5342,11 +5115,12 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests")]
-        private ListSettingsViewModel GetSharedListSettings(int selectedListID)
+        private async  Task<ListSettingsViewModel> GetSharedListSettingsAsync(int selectedListID)
         {
             var userLists = new List<RequestList>();
-            var defaultList = _context.ShareRequestLists.Where(srl => srl.RequestListID == selectedListID && srl.ToApplicationUserID == _userManager.GetUserId(User)).Include(srl => srl.RequestList).Include(srl => srl.FromApplicationUser).FirstOrDefault();
-            userLists = _context.ShareRequestLists.Where(srl => srl.ToApplicationUserID == _userManager.GetUserId(User)).Include(srl => srl.RequestList).OrderBy(srl => srl.TimeStamp).Select(srl => srl.RequestList).ToList();
+            var defaultList = await _shareRequestListsProc.ReadOneAsync(new List<Expression<Func<ShareRequestList, bool>>> { srl => srl.RequestListID == selectedListID && srl.ToApplicationUserID == _userManager.GetUserId(User) },
+                new List<ComplexIncludes<ShareRequestList, ModelBase>> { new ComplexIncludes<ShareRequestList, ModelBase> { Include = srl => srl.RequestList }, new ComplexIncludes<ShareRequestList, ModelBase> { Include = srl => srl.FromApplicationUser } });
+            userLists = _shareRequestListsProc.Read( new List<Expression<Func<ShareRequestList, bool>>> { srl => srl.ToApplicationUserID == _userManager.GetUserId(User) }, new List<ComplexIncludes<ShareRequestList, ModelBase>> { new ComplexIncludes<ShareRequestList, ModelBase> { Include = srl => srl.RequestList } }).OrderBy(srl => srl.TimeStamp).Select(srl => srl.RequestList).ToList();
             ListSettingsViewModel viewModel = new ListSettingsViewModel()
             {
                 RequestLists = userLists,
@@ -5357,11 +5131,11 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests")]
-        private ListSettingsViewModel GetMyListSettings(int selectedListID)
+        private async Task<ListSettingsViewModel> GetMyListSettingsAsync(int selectedListID)
         {
             var userLists = new List<RequestList>();
-            var defaultList = _context.RequestLists.Where(rl => rl.ListID == selectedListID).FirstOrDefault();
-            userLists = _context.RequestLists.Where(rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User)).OrderBy(rl => rl.DateCreated).ToList();
+            var defaultList = await _requestListsProc.ReadOneAsync( new List<Expression<Func<RequestList, bool>>> { rl => rl.ListID == selectedListID });
+            userLists = _requestListsProc.Read( new List<Expression<Func<RequestList, bool>>> { rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User) }).OrderBy(rl => rl.DateCreated).ToList();
             if (selectedListID == 0)
             {
                 defaultList = userLists.Where(l => l.IsDefault).FirstOrDefault();
@@ -5379,10 +5153,9 @@ namespace PrototypeWithAuth.Controllers
         private List<SelectListItem> GetListUsersDropdown(ListSettingsViewModel listSettings)
         {
             var selectedList = listSettings.SidebarType==AppUtility.SidebarEnum.MyLists ? listSettings.SelectedList : listSettings.SelectedSharedList.RequestList;
-            listSettings.ApplicationUsers = _context.Users
-                              .Where(u => u.Id != _userManager.GetUserId(User)
+            listSettings.ApplicationUsers =  _employeesProc.Read( new List<Expression<Func<Employee, bool>>> { u => u.Id != _userManager.GetUserId(User)
                               && (!listSettings.SharedUsers.Select(su => su.ShareRequestList.ToApplicationUserID).Contains(u.Id))
-                              && u.Id != selectedList.ApplicationUserOwnerID)
+                              && u.Id != selectedList.ApplicationUserOwnerID})
                               .Select(
                                   u => new SelectListItem
                                   {
@@ -5430,7 +5203,7 @@ namespace PrototypeWithAuth.Controllers
                                 ShareRequestList = new ShareRequestList()
                                 {
                                     ToApplicationUserID = id,
-                                    ToApplicationUser = _context.Employees.Where(e => e.Id == id).FirstOrDefault(),
+                                    ToApplicationUser = await _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { e => e.Id == id }),
                                     ViewOnly = true
                                 }
                             }
@@ -5457,7 +5230,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> DeleteListModal(int listID)
         {
-            var viewModel = _context.RequestLists.Where(rl => rl.ListID == listID).FirstOrDefault();
+            var viewModel = _requestListsProc.ReadOneAsync(new List<Expression<Func<RequestList, bool>>> { rl => rl.ListID == listID });
 
             return PartialView(viewModel);
         }
@@ -5466,33 +5239,8 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> DeleteListModal(RequestList deleteList)
         {
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    var list = _context.RequestLists.Where(l => l.ListID == deleteList.ListID)
-                        .Include(l => l.RequestListRequests).FirstOrDefault();
-                    foreach (var rlr in list.RequestListRequests)
-                    {
-                        _context.Remove(rlr);
-                    }
-                    var shareRequestLists = _context.ShareRequestLists.Where(srl => srl.RequestListID == deleteList.ListID).ToList();
-                    foreach(var srl in shareRequestLists)
-                    {
-                        _context.Remove(srl);
-                    }
-                    _context.Remove(list);
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw new Exception(AppUtility.GetExceptionMessage(ex));
-                }
-            }
-
-            return RedirectToAction("ListSettingsModal");
+             await _requestListsProc.DeleteAsync(deleteList);
+             return RedirectToAction("ListSettingsModal");
         }
 
         [HttpGet]
@@ -5506,333 +5254,13 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> SaveListModal(ListSettingsViewModel listSettings)
         {
-            await UpdateListDetails(listSettings);
-
+            await _requestListsProc.UpdateAsync(listSettings, _userManager.GetUserId(User));
             return new EmptyResult();
         }
 
 
-        [HttpGet]
-        public async Task UploadRequestsFromExcel()
-        {
-            var InventoryFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\inventoryexcel2.csv";
-            var POFileName = @"C:\Users\debbie\OneDrive - Centarix\Desktop\ExcelForTesting\_2019.xlsx";
 
-            var lineNumber = 0;
-
-            var excelRequests = new ExcelQueryFactory(InventoryFileName);
-            var excelInvoices = new ExcelQueryFactory(POFileName);
-            try
-            {
-                var requests = from r in excelRequests.Worksheet<UploadExcelModel>("inventory excel") select r;
-                var requestsInvoice = from i in excelInvoices.Worksheet<UploadInvoiceExcelModel>("orders") select i;
-                var lastSerialNumber = int.Parse(_context.Products.IgnoreQueryFilters().Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == 1).OrderBy(p => p).LastOrDefault()?.SerialNumber?.Substring(1) ?? "1");
-                var currency = AppUtility.CurrencyEnum.USD;
-                long lastParentRequestOrderNum = 1500;
-                var requestInvoiceList = requestsInvoice.ToList();
-                foreach (var r in requests)
-                {
-                    lineNumber++;
-                    using (var transaction = _context.Database.BeginTransaction())
-                    {
-                        try
-                        {
-                            var categories = await _context.ProductSubcategories.IgnoreQueryFilters().Include(pc => pc.ParentCategory).Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
-                            var requestedBy = _context.Employees.Where(e => e.Email == r.RequstedBy).FirstOrDefault()?.Id;
-                            var receivedBy = _context.Employees.Where(e => e.Email == r.ReceivedBy).FirstOrDefault()?.Id;
-                            var orderedBy = _context.Employees.Where(e => e.Email == r.OrderedBy).FirstOrDefault()?.Id;
-                            var vendorID = _context.Vendors.Where(v => v.VendorEnName == r.VendorName).Select(v => v.VendorID).FirstOrDefault();
-                            //check if product exists based on vendor catalog number
-                            var productID = _context.Products.Where(p => p.VendorID == vendorID && p.CatalogNumber.ToLower() == r.CatalogNumber.ToLower()).Select(p => p.ProductID).FirstOrDefault();
-                            var request = new Request() { };
-                            if (vendorID == 0)
-                            {
-
-                                WriteErrorToFile("Row " + lineNumber + " did not have a proper vendor");
-                                _context.ChangeTracker.Entries()
-                                    .Where(e => e.Entity != null).ToList();
-
-
-                                throw new Exception("failed to find vendor");
-                            }
-                            if (productID == 0)
-                            {
-                                var product = new Product()
-                                {
-                                    ProductName = r.ItemName,
-                                    VendorID = vendorID,
-                                    ProductSubcategoryID = categories.Where(ps => new string(ps.ProductSubcategoryDescription.ToLower().Where(c => char.IsLetterOrDigit(c)).ToArray()) == new string(r.ProductSubCategoryName.ToLower().Where(c => char.IsLetterOrDigit(c)).ToArray()) && ps.ParentCategory.ParentCategoryDescription.ToLower() == r.ParentCategoryName.ToLower()).Select(ps => ps.ProductSubcategoryID).FirstOrDefault(),
-                                    CatalogNumber = r.CatalogNumber,
-                                    SerialNumber = "L" + lastSerialNumber++,
-                                    ProductCreationDate = DateTime.Now,
-                                    UnitTypeID = -1,
-                                };
-                                if (lineNumber > 548)
-                                {
-                                    lineNumber = lineNumber;
-                                }
-                                _context.Entry(product).State = EntityState.Added;
-                                await _context.SaveChangesAsync();
-                                request.ProductID = product.ProductID;
-                            }
-                            else
-                            {
-                                request.ProductID = productID;
-                            }
-
-                            var orderType = AppUtility.OrderTypeEnum.ExcelUpload.ToString();
-
-
-                            var exchangeRate = AppUtility.GetExchangeRateByDate(r.DateOrdered);
-                            //cost = cost * exchangeRate; //always from quartzy in dollars        
-                            int parentRequestID = 0;
-                            if (r.OrderNumber != "")
-                            {
-                                parentRequestID = _context.ParentRequests.Where(pr => pr.QuartzyOrderNumber == r.OrderNumber).Select(pr => pr.ParentRequestID).FirstOrDefault();
-
-                            }
-                            if (parentRequestID != 0)
-                            {
-                                request.ParentRequestID = parentRequestID;
-                            }
-                            else
-                            {
-                                ParentRequest parentRequest = null;
-                                if (r.OrderNumber != null && r.OrderNumber.StartsWith("1") && r.OrderNumber.Length == 8)
-                                {
-                                    parentRequest = new ParentRequest() { QuartzyOrderNumber = r.OrderNumber, OrderNumber = int.Parse(r.OrderNumber.Substring(3)), ApplicationUserID = orderedBy, OrderDate = r.DateOrdered };
-                                }
-                                else
-                                {
-                                    parentRequest = new ParentRequest() { QuartzyOrderNumber = r.OrderNumber, OrderNumber = lastParentRequestOrderNum++, ApplicationUserID = orderedBy, OrderDate = r.DateOrdered };
-                                }
-                                _context.Entry(parentRequest).State = EntityState.Added;
-                                await _context.SaveChangesAsync();
-                                request.ParentRequestID = parentRequest.ParentRequestID;
-                            }
-                            request.ApplicationUserCreatorID = requestedBy;
-                            request.RequestStatusID = 3;
-                            request.ApplicationUserReceiverID = receivedBy;
-                            request.ArrivalDate = r.DateReceived;
-                            request.Cost = r.TotalPrice * 3.2M;
-                            request.Currency = currency.ToString();
-                            request.Unit = r.Unit;
-                            request.ExchangeRate = 3.2M;
-                            request.CreationDate = r.DateRequested;
-                            request.ParentQuoteID = null;
-                            request.OrderType = orderType;
-                            request.IncludeVAT = true;
-                            request.URL = r.Url;
-                            request.PaymentStatusID = 2;
-                            request.Installments = 1;
-                            _context.Entry(request).State = EntityState.Added;
-                            await _context.SaveChangesAsync();
-
-                            var requestLocationInstance = new RequestLocationInstance() { RequestID = request.RequestID, LocationInstanceID = -1 };
-                            _context.Entry(requestLocationInstance).State = EntityState.Added;
-                            await _context.SaveChangesAsync();
-                            try
-                            {
-                                try
-                                {
-                                    if (r.OrderNumber != null && r.OrderNumber != "")
-                                    {
-
-                                        var invoiceRow = requestInvoiceList.Where(i => i.OrderNumber == r.OrderNumber && new string(i.CatalogNumber.ToLower().Where(c => char.IsLetterOrDigit(c)).ToArray()) == new string(r.CatalogNumber.ToLower().Where(c => char.IsLetterOrDigit(c)).ToArray()) && i.DocumentNumber != 0 && i.InvoiceNumber != "").FirstOrDefault();
-                                        // var invoiceNumbers = invoiceRows.Select(ir => ir.InvoiceNumber).ToList();
-                                        if (invoiceRow != null)
-                                        {
-
-                                            WriteErrorToFile("this row went in perfectly");
-                                            await SetInvoiceAndPaymentsAccordingToResultsFromDB(r, request, invoiceRow);
-                                        }
-
-
-                                        //var invoiceIds= invoices.Select(i=>i.InvoiceID);
-                                        //if(invoiceIds.Count()==invoiceNumbers.Count() && invoiceNumbers.Count()>0)
-                                        //{
-                                        //    foreach(var invoiceID in invoiceIds)
-                                        //    {
-                                        //        var payment = new Payment() { InvoiceID = invoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
-                                        //        _context.Entry(payment).State = EntityState.Added;
-                                        //    }
-
-                                        //}
-                                        //else if (invoiceIds.Count() != invoiceNumbers.Count() && invoiceNumbers.Count() > 0)
-                                        //{
-                                        //    foreach (var invoiceID in invoiceIds)
-                                        //    {
-                                        //        var payment = new Payment() { InvoiceID = invoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
-                                        //        _context.Entry(payment).State = EntityState.Added;
-                                        //    }
-                                        //    var invoiceNumbersNotInDataBaseYet = invoiceRows.Where(i => !invoices.Select(i=>i.InvoiceNumber).Contains(i.InvoiceNumber));
-                                        //    foreach(var ie in invoiceNumbersNotInDataBaseYet)
-                                        //    {
-                                        //        var invoice = new Invoice() {InvoiceNumber = ie.InvoiceNumber, InvoiceDate = ie.InvoiceDate };
-                                        //        _context.Entry(invoice).State = EntityState.Added;
-                                        //        await _context.SaveChangesAsync();
-                                        //        var payment = new Payment() { InvoiceID = invoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID =3 , RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
-                                        //        _context.Entry(payment).State = EntityState.Added;
-
-                                        //    }
-                                        //    //upload the invoice documents ---
-                                        //}
-                                        else // no invoice in the excel
-                                        {
-                                            var invoiceRows = requestInvoiceList.Where(i => i.OrderNumber == r.OrderNumber && i.DocumentNumber > 0 && i.InvoiceNumber != "");
-                                            if (invoiceRows.Count() == 0)
-                                            {
-                                                WriteErrorToFile("There is not matching catalog number and order number to row" + lineNumber + " - added default invoice for requestID: " + request.RequestID);
-
-                                                var emptyInvoice = new Invoice() { InvoiceNumber = "000000000", InvoiceDate = r.DateOrdered };
-                                                _context.Entry(emptyInvoice).State = EntityState.Added;
-                                                await _context.SaveChangesAsync();
-                                                var payment = new Payment() { InvoiceID = emptyInvoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
-                                                _context.Entry(payment).State = EntityState.Added;
-                                                //no docments either....
-
-                                            }
-                                            else if (invoiceRows.Count() == 1)
-                                            {
-
-                                                WriteErrorToFile("this row went in okay - there was one row for the po # but not matching catlog number");
-                                                await SetInvoiceAndPaymentsAccordingToResultsFromDB(r, request, invoiceRows.FirstOrDefault());
-                                            }
-                                            else if (invoiceRows.Select(ir => ir.InvoiceNumber).Distinct().Count() < 2 && invoiceRows.Select(ir => ir.DocumentNumber).Distinct().Count() < 2)
-                                            {
-                                                WriteErrorToFile("this row went in okay - there was one row for the po # but not matching catlog number");
-
-                                                await SetInvoiceAndPaymentsAccordingToResultsFromDB(r, request, invoiceRows.FirstOrDefault());
-                                            }
-                                            else
-                                            {
-                                                WriteErrorToFile("There are duplicate matching invoices for " + lineNumber + " - added default invoice for requestID: " + request.RequestID);
-
-                                                var emptyInvoice = new Invoice() { InvoiceNumber = "000000000", InvoiceDate = r.DateOrdered };
-                                                _context.Entry(emptyInvoice).State = EntityState.Added;
-                                                await _context.SaveChangesAsync();
-                                                var payment = new Payment() { InvoiceID = emptyInvoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
-                                                _context.Entry(payment).State = EntityState.Added;
-                                                //no docments either....
-                                            }
-                                        }
-                                        await _context.SaveChangesAsync();
-                                    }
-                                    else
-                                    {
-                                        var emptyInvoice = new Invoice() { InvoiceNumber = "000000000", InvoiceDate = r.DateOrdered };
-                                        _context.Entry(emptyInvoice).State = EntityState.Added;
-                                        await _context.SaveChangesAsync();
-                                        var payment = new Payment() { InvoiceID = emptyInvoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
-                                        _context.Entry(payment).State = EntityState.Added;
-                                        //no docments either....
-                                        WriteErrorToFile("This item has no order number" + lineNumber + " - added default invoice for requestID: " + request.RequestID);
-
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    WriteErrorToFile("Row " + lineNumber + " failed to enter database: " + AppUtility.GetExceptionMessage(ex));
-                                    _context.ChangeTracker.Entries()
-                                        .Where(e => e.Entity != null).ToList()
-                                        .ForEach(e => e.State = EntityState.Detached);
-                                }
-
-                            }
-                            catch (Exception ex)
-                            {
-                                WriteErrorToFile("Error reading invoice file: " + AppUtility.GetExceptionMessage(ex));
-                            }
-                            await transaction.CommitAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            WriteErrorToFile("Row " + lineNumber + " failed to enter database: " + AppUtility.GetExceptionMessage(ex));
-                        }
-
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorToFile("Error reading requests file: " + AppUtility.GetExceptionMessage(ex));
-            }
-        }
-
-        private async Task SetInvoiceAndPaymentsAccordingToResultsFromDB(UploadExcelModel r, Request request, UploadInvoiceExcelModel invoiceRow)
-        {
-            string sourceFile = @"C:\Users\debbie\OneDrive - Centarix\Desktop\DocumentsInvoices\" + invoiceRow.DocumentNumber + ".pdf";
-
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-            string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
-            string uploadFolderPathTo = Path.Combine(requestFolderTo, AppUtility.FolderNamesEnum.Invoices.ToString());
-
-            try
-            {
-                if (!Directory.Exists(requestFolderTo))
-                {
-                    Directory.CreateDirectory(requestFolderTo);
-                    Directory.CreateDirectory(uploadFolderPathTo);
-                }
-                else
-                {
-                    if (!Directory.Exists(uploadFolderPathTo))
-                    {
-                        Directory.CreateDirectory(uploadFolderPathTo);
-                    }
-                }
-                System.IO.File.Copy(sourceFile, uploadFolderPathTo + @"\" + invoiceRow.DocumentNumber + ".pdf", true);
-                WriteErrorToFile("file was addeded for request id:" + request.RequestID);
-            }
-            catch (IOException iox)
-            {
-                WriteErrorToFile("error adding file" + request.RequestID);
-            }
-            var invoiceDB = _context.Invoices.Where(i => i.InvoiceNumber == invoiceRow.InvoiceNumber).AsNoTracking().FirstOrDefault();
-            if (invoiceDB != null)
-            {
-                var payment = new Payment() { InvoiceID = invoiceDB.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
-                _context.Entry(payment).State = EntityState.Added;
-            }
-            else
-            {
-                var invoice = new Invoice() { InvoiceNumber = invoiceRow.InvoiceNumber, InvoiceDate = invoiceRow.InvoiceDate };
-                _context.Entry(invoice).State = EntityState.Added;
-                await _context.SaveChangesAsync();
-                var payment = new Payment() { InvoiceID = invoice.InvoiceID, HasInvoice = true, IsPaid = true, PaymentTypeID = 3, RequestID = request.RequestID, PaymentDate = r.DateOrdered, CompanyAccountID = 5 };
-                _context.Entry(payment).State = EntityState.Added;
-            }
-        }
-
-        private static void WriteErrorToFile(string message)
-        {
-            var errorFilePath = "InventoryError.txt";
-            if (!System.IO.File.Exists(errorFilePath))
-            {
-                var errorFile = System.IO.File.Create(errorFilePath);
-                errorFile.Close();
-
-            }
-            var sw = System.IO.File.AppendText(errorFilePath);
-            sw.WriteLine("\n" + message);
-            sw.Close();
-        }
-        private async Task MarkInventory()
-        {
-            //before running this function, run the following in ssms:
-            //update requests set IsInInventory = 'false'
-
-            var requests = _context.Requests.IgnoreQueryFilters().Where(r => !r.IsDeleted).Where(r => r.RequestStatusID == 3 && r.OrderType != AppUtility.OrderTypeEnum.Save.ToString());
-            var requestsInInventory = requests.OrderByDescending(r => r.ArrivalDate).ToLookup(r => r.ProductID).Select(e => e.First());
-
-            foreach (var r in requestsInInventory)
-            {
-                r.IsInInventory = true;
-                _context.Update(r);
-            }
-            await _context.SaveChangesAsync();
-        }
-
+     
         public async Task<String> GetUrlFromUserData(String inputtedUrl)
         {
             return AppUtility.GetUrlFromUserData(inputtedUrl);
@@ -5857,9 +5285,10 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            // requestItemViewModel.HasQuote =_context.Requests.Where(r => r.ProductID == request.ProductID && r.ParentQuote.ExpirationDate >= DateTime.Now.Date).Select(r => r.ParentQuote).OrderByDescending(r => r.QuoteDate).Count()>0;
+            // requestItemViewModel.HasQuote =_proc.Requests.Where(r => r.ProductID == request.ProductID && r.ParentQuote.ExpirationDate >= DateTime.Now.Date).Select(r => r.ParentQuote).OrderByDescending(r => r.QuoteDate).Count()>0;
 
-            var viewModel = _context.ProductComments.Include(p=>p.ApplicationUser).Include(p=>p.CommentType).Where(p => p.ObjectID==productID && p.CommentTypeID==2).ToList();
+            var viewModel = _productCommentsProc.Read(new List<Expression<Func<ProductComment, bool>>> { p => p.ObjectID==productID && p.CommentTypeID==2 },
+                new List<ComplexIncludes<ProductComment, ModelBase>> { new ComplexIncludes<ProductComment, ModelBase> { Include = p => p.ApplicationUser }, new ComplexIncludes<ProductComment, ModelBase> { Include= p => p.CommentType } }).ToListAsync();
             return PartialView(viewModel);
         }
 
