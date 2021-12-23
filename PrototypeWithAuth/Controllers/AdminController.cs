@@ -303,6 +303,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> EditUser(RegisterUserViewModel registerUserViewModel)
 
         {
+            
             var success = await _employeesProc.UpdateUser(registerUserViewModel, _hostingEnvironment, Url, Request, _userManager);
             if (success.Bool)
             {

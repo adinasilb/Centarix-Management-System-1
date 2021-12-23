@@ -1,5 +1,4 @@
-﻿const { contains } = require("jquery");
-
+﻿
 $(function () {
     $(".save-request-edits").on("click", function (e) {
         $.fn.CloseModal("confirm-edit");
@@ -19,11 +18,12 @@ $(function () {
         if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
             console.log("has class suppliers or accounting");
             url = "/Vendors/Edit";
-        } else if ($('.turn-edit-on-off').hasClass('users')) {
+        }
+        else if ($('.turn-edit-on-off').hasClass('users')) {
             console.log("has class users");
             url = "/Admin/EditUser";
-
-        } else if ($('.turn-edit-on-off').hasClass('orders')) {
+        }
+        else if ($('.turn-edit-on-off').hasClass('orders')) {
             $("#loading").show();
             console.log("has class orders");
             url = "/Requests/EditModalView";
@@ -132,13 +132,14 @@ $(function () {
                             type: 'GET',
                             cache: true,
                             success: function (data) {
-                                alert(data.toString);
                                 if (data.includes("Invalid Url")) {
-                                    alert("in invalid url if");
+                                    alert("in invalid url");
+                                    $.fn.OpenModal('invalid-right-modal', 'right-invalid', data);
                                 }
-                                $('#usersTable').html(data);
-                                //	alert("Updated CentarixID: " + $("#CentarixID").val());
-                                $("#OriginalStatusID").attr("CentarixID", $("#CentarixID").val());
+                                else {
+                                    $('#usersTable').html(data);
+                                    $("#OriginalStatusID").attr("CentarixID", $("#CentarixID").val());
+                                }
                             }
                         });
 
