@@ -11,30 +11,12 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class RequestNotificationsProc : ApplicationDbContextProc<RequestNotification>
+    public class RequestNotificationsProc : NotificationsBaseProc<RequestNotification, RequestNotificationStatus>
     {
-        public RequestNotificationsProc(ApplicationDbContext context, bool FromBase = false) : base(context)
+        public RequestNotificationsProc(ApplicationDbContext context, bool FromBase = false) : base(context, FromBase)
         {
-            if (!FromBase) { this.InstantiateProcs(); }
         }
 
-
-        public StringWithBool CreateWithoutSaveChanges(RequestNotification notification)
-        {
-            StringWithBool ReturnVal = new StringWithBool();
-
-            try
-            {
-                _context.Entry(notification).State = EntityState.Added;
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.Bool = false;
-                ReturnVal.String = AppUtility.GetExceptionMessage(ex);
-            }
-            return ReturnVal;
-        }
 
     }
 }

@@ -12,14 +12,11 @@ using System.Linq.Expressions;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class TimekeeperNotificationsProc : ApplicationDbContextProc<TimekeeperNotification>
+    public class TimekeeperNotificationsProc : NotificationsBaseProc<TimekeeperNotification, TimekeeperNotificationStatus>
     {
-        public TimekeeperNotificationsProc(ApplicationDbContext context, bool FromBase = false) : base(context)
+        public TimekeeperNotificationsProc(ApplicationDbContext context, bool FromBase = false) : base(context, FromBase)
         {
-            if (!FromBase)
-            {
-                base.InstantiateProcs();
-            }
+
         }
 
         public async Task<StringWithBool> DeleteByEHIDAsync(int EHID)
@@ -64,22 +61,9 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        public async Task<StringWithBool> CreateAsync(TimekeeperNotification notification)
+        public override Task<StringWithBool> CreateAsync(TimekeeperNotification notification)
         {
-            StringWithBool ReturnVal = new StringWithBool();
-
-            try
-            {
-                _context.Entry(notification).State = EntityState.Added;
-                await _context.SaveChangesAsync();
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.Bool = false;
-                ReturnVal.String = AppUtility.GetExceptionMessage(ex);
-            }
-            return ReturnVal;
+            return base.CreateAsync(notification);
         }
 
     }
