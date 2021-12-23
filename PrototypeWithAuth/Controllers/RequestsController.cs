@@ -574,87 +574,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        protected async Task SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived, bool archiveOneRequest)
-        {
-            //getting the parentlocationinstanceid
-            var liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
-            var mayHaveParent = true;
-            while (mayHaveParent)
-            {
-                if (liParent.LocationInstanceParentID != null)
-                {
-                    liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == liParent.LocationInstanceParentID).FirstOrDefault();
-                }
-                else
-                {
-                    mayHaveParent = false;
-                }
-            }
-            foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
-            {
-                if (place.Placed)
-                {
-
-                    //adding the requestlocationinstance
-                    var rli = new RequestLocationInstance()
-                    {
-                        LocationInstanceID = place.LocationInstanceId,
-                        RequestID = requestReceived.RequestID,
-                        ParentLocationInstanceID = liParent.LocationInstanceID
-                    };
-                    var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
-                    if (locationInstance.IsFull == false)
-                    {
-                        _context.Add(rli);
-                    }
-                    else
-                    {
-                        throw new LocationAlreadyFullException();
-                    }
-                    try
-                    {
-                        if (archiveOneRequest)
-                        {
-                            requestReceived.IsArchived = true;
-                            _context.Update(requestReceived);
-                            await _context.SaveChangesAsync();
-                            rli.IsArchived = true;
-                            _context.Update(rli);
-                            await _context.SaveChangesAsync();
-                            MarkLocationAvailable(requestReceived.RequestID, place.LocationInstanceId);
-                            await _context.SaveChangesAsync();
-                            return;
-                        }
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
-
-                    //updating the locationinstance
-                    //var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
-                    if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
-                    {
-                        locationInstance.IsFull = true;
-                    }
-                    else
-                    {
-                        locationInstance.ContainsItems = true;
-                    }
-                    _context.Update(locationInstance);
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
-                }
-            }
-        }
-
+     
         protected async Task<bool> checkIfInBudgetAsync(Request request, Product oldProduct = null)
         {
             if (oldProduct == null)
@@ -864,34 +784,7 @@ namespace PrototypeWithAuth.Controllers
         }
         private async Task<TempRequestViewModel> RequestItem(Request newRequest, bool isInBudget)
         {
-
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    newRequest.RequestStatusID = 6;
-                    newRequest.Cost = 0;
-                    //newRequest.ParentQuote = new ParentQuote();
-                    newRequest.QuoteStatusID = 1;
-                    newRequest.OrderType = AppUtility.OrderTypeEnum.RequestPriceQuote.ToString();
-                    //this is assuming that we only reorder request price quotes
-                    _context.Entry(newRequest).State = EntityState.Added;
-                    //_context.Entry(newRequest.ParentQuote).State = EntityState.Added;
-                    _context.Entry(newRequest.Product).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (DbUpdateException ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw ex;
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw ex;
-                }
-            }
+            await _requestsProc.RequestPriceQuoteProcAsync(newRequest);
             return new TempRequestViewModel()
             {
                 Request = newRequest
@@ -899,96 +792,31 @@ namespace PrototypeWithAuth.Controllers
         }
         private async Task<TempRequestViewModel> SaveItem(Request newRequest, RequestItemViewModel requestItemViewModel, Guid guid,  ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
-
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    newRequest.RequestStatusID = 7;
-                    newRequest.OrderType = AppUtility.OrderTypeEnum.Save.ToString();
-                    newRequest.Unit = 1;
-                    newRequest.Product.UnitTypeID = 5;
-                    newRequest.Product.SerialNumber = GetSerialNumber(false);
-                    if (newRequest.CreationDate == DateTime.Today) //if it's today, add seconds to be now so it shows up on top
-                    {
-                        newRequest.CreationDate = DateTime.Now;
-                    }
-                    _context.Add(newRequest);
-                    await _context.SaveChangesAsync();
-
-                    //await _context.SaveChangesAsync(); //what is this for?
-                    if (receivedModalVisualViewModel.LocationInstancePlaces != null)
-                    {
-                        await SaveLocations(receivedModalVisualViewModel, newRequest, false);
-                    }                   
-
-                    await SaveRequestProductCommentsFunctionAsync( requestItemViewModel.Comments, newRequest, await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e=>e.Id == _userManager.GetUserId(User)}));
-                    MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests, false, guid);
-
-                    newRequest.Product = await _context.Products.Where(p => p.ProductID == newRequest.ProductID).FirstOrDefaultAsync();
-                    RequestNotification requestNotification = new RequestNotification();
-                    requestNotification.RequestID = newRequest.RequestID;
-                    requestNotification.IsRead = false;
-                    requestNotification.RequestName = newRequest.Product.ProductName;
-                    requestNotification.ApplicationUserID = newRequest.ApplicationUserCreatorID;
-                    requestNotification.Description = "item created";
-                    requestNotification.NotificationStatusID = 2;
-                    requestNotification.NotificationDate = DateTime.Now;
-                    requestNotification.Controller = "Requests";
-                    requestNotification.Action = "NotificationsView";
-                    requestNotification.OrderDate = DateTime.Now;
-                    _context.Update(requestNotification);
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (DbUpdateException ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw ex;
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw ex;
-                }
-            }
+            await _requestsProc.SaveProprietaryAsync(newRequest, requestItemViewModel, guid, receivedModalVisualViewModel, _userManager.GetUserId(User));
+            
+            MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests, false, guid);            
+           
             return new TempRequestViewModel() { Request = newRequest };
         }
         private async Task<TempRequestViewModel> SaveOperationsItem(Request request, int requestNum, TempRequestListViewModel tempRequestListViewModel)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+        
+            if (request.IsReceived)
             {
-                try
-                {
-                    if (request.IsReceived)
-                    {
-                        request.RequestStatusID = 3;
-                        request.ApplicationUserReceiverID = _userManager.GetUserId(User);
-                        request.ArrivalDate = DateTime.Now;
-                        request.IsInInventory = true;
-                    }
-                    else
-                    {
-                        request.RequestStatusID = 2;
-                    }
-                    request.Product.UnitTypeID = 5;
-                    request.OrderType = AppUtility.OrderTypeEnum.SaveOperations.ToString();
-
-                    return new TempRequestViewModel() { Request = request };
-
-                }
-                catch (DbUpdateException ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw ex;
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw ex;
-                }
-                return tempRequestListViewModel.TempRequestViewModels[0];
+                request.RequestStatusID = 3;
+                request.ApplicationUserReceiverID = _userManager.GetUserId(User);
+                request.ArrivalDate = DateTime.Now;
+                request.IsInInventory = true;
             }
+            else
+            {
+                request.RequestStatusID = 2;
+            }
+            request.Product.UnitTypeID = 5;
+            request.OrderType = AppUtility.OrderTypeEnum.SaveOperations.ToString();
+
+            return new TempRequestViewModel() { Request = request };
+            
         }
     
 
@@ -1014,10 +842,11 @@ namespace PrototypeWithAuth.Controllers
             _context.Entry(tempRequest.Request.ParentRequest).State = EntityState.Added;
 
             await _context.SaveChangesAsync();
-
+            var userID = _userManager.GetUserId(User);
             if (tempRequest.Comments != null && tempRequest.Comments.Any())
             {
-                await SaveRequestProductCommentsFunctionAsync(tempRequest.Comments, tempRequest.Request,  await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e=>e.Id==_userManager.GetUserId(User)}));
+                await _requestCommentsProc.UpdateAsync((List<RequestComment>)tempRequest.Comments.Where(c => c.CommentTypeID==1), tempRequest.Request.RequestID, userID);
+                await _productCommentsProc.UpdateAsync((List<ProductComment>)tempRequest.Comments.Where(c => c.CommentTypeID==2), tempRequest.Request.ProductID, userID);
             }
         }
 
@@ -1200,7 +1029,7 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     isOperations = true;
                                 }
-                                tempRequest.Request.Product.SerialNumber = GetSerialNumber(isOperations);
+                                tempRequest.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(isOperations);
                                 await SaveTempRequestAndCommentsAsync(tempRequest);
 
                                 var additionalRequests = counter + 1 < newTRLVM.TempRequestViewModels.Count ? true : false;
@@ -2210,7 +2039,7 @@ namespace PrototypeWithAuth.Controllers
                                 }
                             }
                             await _context.SaveChangesAsync();
-                            await SaveLocations(receivedModalVisualViewModel, request, false);
+                            await _requestLocationInstancesProc.SaveLocationsAsync(receivedModalVisualViewModel, request, false);
                         }
                     }
                     else
@@ -2726,7 +2555,7 @@ namespace PrototypeWithAuth.Controllers
                                     {
                                         if (tempRequest.Request.Product.ProductID == 0)
                                         {
-                                            tempRequest.Request.Product.SerialNumber = GetSerialNumber(false);
+                                            tempRequest.Request.Product.SerialNumber =  await _requestsProc.GetSerialNumberAsync(false);
                                             _context.Entry(tempRequest.Request.Product).State = EntityState.Added;
                                         }
                                         else
@@ -3404,7 +3233,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         else
                         {
-                            await SaveLocations(receivedModalVisualViewModel, requestReceived, false);
+                            await _requestLocationInstancesProc.SaveLocationsAsync(receivedModalVisualViewModel, requestReceived, false);
                         }
                     }
 
@@ -3534,11 +3363,11 @@ namespace PrototypeWithAuth.Controllers
                         foreach (var location in requestLocations)
                         {
                             _context.Remove(location);
-                            MarkLocationAvailable(request.RequestID, location.LocationInstanceID);
+                            await _locationInstancesProc.MarkLocationAvailableAsync(request.RequestID, location.LocationInstanceID);
                         }
                         receivedModalVisualViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
 
-                        await SaveLocations(receivedModalVisualViewModel, request, false);
+                        await _requestLocationInstancesProc.SaveLocationsAsync(receivedModalVisualViewModel, request, false);
                         await transaction.CommitAsync();
                     }
 
@@ -3604,25 +3433,6 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(documentsModalViewModel);
         }
 
-        private void MarkLocationAvailable(int requestId, int locationInstanceID)
-        {
-            var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstanceID).FirstOrDefault();
-            if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
-            {
-                locationInstance.IsFull = false;
-                _context.Update(locationInstance);
-            }
-            else if (locationInstance.IsEmptyShelf)
-            {
-                var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
-                                        && rli.RequestID != requestId).ToList();
-                if (duplicateLocations.Count() == 0)
-                {
-                    locationInstance.ContainsItems = false;
-                    _context.Update(locationInstance);
-                }
-            }
-        }
 
 
         [HttpPost]
@@ -4841,7 +4651,7 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 if (tempRequestViewModel.Request.Product.ProductID == 0)
                                 {
-                                    tempRequestViewModel.Request.Product.SerialNumber = GetSerialNumber(false);
+                                    tempRequestViewModel.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(false);
                                     _context.Entry(tempRequestViewModel.Request.Product).State = EntityState.Added;
                                 }
                                 else
@@ -5179,10 +4989,10 @@ namespace PrototypeWithAuth.Controllers
                         {
                             var locationToDelete = iterator.Current;
                             _context.Remove(locationToDelete);
-                            MarkLocationAvailable(requestId, locationToDelete.LocationInstanceID);
+                            await _locationInstancesProc.MarkLocationAvailableAsync(requestId, locationToDelete.LocationInstanceID);
                         }
                         await _context.SaveChangesAsync();
-                        await SaveLocations(receivedModalVisualViewModel, request, true);
+                         await _requestLocationInstancesProc.SaveLocationsAsync(receivedModalVisualViewModel, request, true);
                         await transaction.CommitAsync();
                     }
                 }
