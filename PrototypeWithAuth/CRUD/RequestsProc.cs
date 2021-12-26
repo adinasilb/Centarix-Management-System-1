@@ -130,8 +130,7 @@ namespace PrototypeWithAuth.CRUD
                         requestNotification.Controller = "Requests";
                         requestNotification.Action = "NotificationsView";
                         requestNotification.OrderDate = DateTime.Now;
-                        _context.Update(requestNotification);
-                        await _context.SaveChangesAsync();
+                        await _requestNotificationsProc.CreateAsync(requestNotification);
                         await transaction.CommitAsync();
                     }
                     catch (DbUpdateException ex)

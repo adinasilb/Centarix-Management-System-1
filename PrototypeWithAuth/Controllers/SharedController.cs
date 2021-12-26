@@ -79,7 +79,6 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.SubProjectsProc _subProjectsProc;
         protected readonly CRUD.JobSubcategoryTypesProc _jobSubcategoryTypesProc;
         protected readonly CRUD.LocationRoomInstancesProc _locationRoomInstancesProc;
-
         protected readonly CRUD.RequestListsProc _requestListsProc;
         protected readonly CRUD.TempRequestJsonsProc _tempRequestJsonsProc;
         protected readonly CRUD.RequestNotificationsProc _requestNotificationsProc;
@@ -87,9 +86,12 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.PaymentStatusesProc _paymentStatusesProc;
         protected readonly CRUD.ParentRequestsProc _parentRequestsProc;
         protected readonly CRUD.RequestLocationInstancesProc _requestLocationInstancesProc;
-        protected readonly CRUD.ApplicationContextTransaction _applicationContextTransaction;
+        protected readonly CRUD.ApplicationDbContextTransaction _applicationDbContextTransaction;
+        protected readonly CRUD.EmployeeInfoNotificationsProc _employeeInfoNotificationsProc;
+        protected readonly CRUD.ApplicationDbContextEntries _applicationDbContextEntries;
         protected readonly CRUD.ParentQuotesProc _parentQuotesProc;
         protected readonly CRUD.InvoicesProc _invoicesProc;
+
 
         public SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
 
@@ -138,10 +140,8 @@ namespace PrototypeWithAuth.Controllers
             _paymentTypesProc = new CRUD.PaymentTypesProc(context);
             _projectsProc = new CRUD.ProjectsProc(context);
             _subProjectsProc = new CRUD.SubProjectsProc(context);
-
             _requestListsProc = new CRUD.RequestListsProc(context);
             _tempRequestJsonsProc = new CRUD.TempRequestJsonsProc(context);
-
             _centarixIDsProc = new CRUD.CentarixIDsProc(context);
             _employeeStatusesProc = new CRUD.EmployeeStatusesProc(context);
             _jobCategoryTypesProc = new CRUD.JobCategoryTypesProc(context);
@@ -150,14 +150,14 @@ namespace PrototypeWithAuth.Controllers
             _citizenshipsProc = new CRUD.CitizenshipsProc(context);
             _jobSubcategoryTypesProc = new CRUD.JobSubcategoryTypesProc(context);
             _locationRoomInstancesProc = new CRUD.LocationRoomInstancesProc(context);
-
             _requestNotificationsProc = new CRUD.RequestNotificationsProc(context);
-
             _paymentsProc = new CRUD.PaymentsProc(context);
             _paymentStatusesProc = new CRUD.PaymentStatusesProc(context);
             _parentRequestsProc = new CRUD.ParentRequestsProc(context);
             _requestLocationInstancesProc = new CRUD.RequestLocationInstancesProc(context);
-            _applicationContextTransaction = new CRUD.ApplicationContextTransaction(context);
+            _applicationDbContextTransaction = new CRUD.ApplicationDbContextTransaction(context);
+            _employeeInfoNotificationsProc = new CRUD.EmployeeInfoNotificationsProc(context);
+            _applicationDbContextEntries = new CRUD.ApplicationDbContextEntries(context);
             _parentQuotesProc =  new CRUD.ParentQuotesProc(context);
             _invoicesProc = new CRUD.InvoicesProc(context);
         }

@@ -52,6 +52,40 @@ namespace PrototypeWithAuth.CRUD
             }
             return ReturnVal;
         }
+        public async Task<StringWithBool> UpdateLastReadNotification(string UserID)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                var employee = this.Read(new List<Expression<Func<Employee, bool>>> { u => u.Id == UserID }).FirstOrDefault();
+                employee.DateLastReadNotifications = DateTime.Now;
+                _context.Update(employee);
+                await _context.SaveChangesAsync();
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
+
+        public StringWithBool UpdateLastLoginWithoutSaving(string UserID)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                var employee = this.Read(new List<Expression<Func<Employee, bool>>> { u => u.Id == UserID }).FirstOrDefault();
+                employee.LastLogin = DateTime.Now;
+                _context.Update(employee);
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
 
         //public async Task<StringWithBool> UpdateAsync(Employee employee)
         //{

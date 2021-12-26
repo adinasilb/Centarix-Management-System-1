@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class ApplicationContextTransaction
+    public class ApplicationDbContextTransaction
     {
         private ApplicationDbContext _context;
-        public ApplicationContextTransaction(ApplicationDbContext _context)
+        public ApplicationDbContextTransaction(ApplicationDbContext _context)
         {
             this._context = _context;
         }

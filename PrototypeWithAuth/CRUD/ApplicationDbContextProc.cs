@@ -59,6 +59,7 @@ namespace PrototypeWithAuth.CRUD
         protected ParentRequestsProc _parentRequestsProc;
         protected ParentQuotesProc _parentQuotesProc;
         protected RequestNotificationsProc _requestNotificationsProc;
+        protected EmployeeInfoNotificationsProc _employeeInfoNotificationsProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context)
         {
@@ -108,6 +109,7 @@ namespace PrototypeWithAuth.CRUD
             _parentRequestsProc = new ParentRequestsProc(_context, true);
             _parentQuotesProc = new ParentQuotesProc(_context, true);
             _requestNotificationsProc  = new RequestNotificationsProc(_context, true);
+            _employeeInfoNotificationsProc = new EmployeeInfoNotificationsProc(_context, true);
 
         }
 
