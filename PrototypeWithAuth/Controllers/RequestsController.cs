@@ -3814,14 +3814,14 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Accounting")]
-        public async Task<IActionResult> AccountingPayments(AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
+        public async Task<IActionResult> AccountingPayments(AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment, String ErrorMessage=null)
         {
             var payNowCount = await GetPaymentRequests(AppUtility.SidebarEnum.PayNow);
             TempData["PayNowCount"] = payNowCount.Count();
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingPayments;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = accountingPaymentsEnum;
-            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Accounting, PageType = AppUtility.PageTypeEnum.AccountingPayments, SidebarType = accountingPaymentsEnum }));
+            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Accounting, PageType = AppUtility.PageTypeEnum.AccountingPayments, SidebarType = accountingPaymentsEnum, ErrorMessage=ErrorMessage }));
 
         }
         private async Task<List<RequestPaymentsViewModel>> GetPaymentRequests(AppUtility.SidebarEnum accountingPaymentsEnum)
@@ -3889,55 +3889,27 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = " Accounting")]
         public async Task<IActionResult> ChangePaymentStatus(AppUtility.PaymentsPopoverEnum newStatus, int requestID, AppUtility.PaymentsPopoverEnum currentStatus)
         {
-
-            var request = _context.Requests.Where(r => r.RequestID == requestID).FirstOrDefault();
-            try
-            {
-                request.PaymentStatusID = (int)newStatus;
-                _context.Update(request);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-
-            }
-
+            var StringWithBool = await _requestsProc.UpdatePaymentStatusAsync(newStatus, requestID);
             var accountingPaymentsEnum = (AppUtility.SidebarEnum)Enum.Parse(typeof(AppUtility.SidebarEnum), currentStatus.ToString());
-
-            return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = accountingPaymentsEnum });
+            return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = accountingPaymentsEnum, ErrorMessage = StringWithBool.String });
         }
 
         [HttpGet]
         [Authorize(Roles = " Accounting")]
         public async Task<IActionResult> HandleNotifications(AppUtility.SidebarEnum type, int requestID)
         {
-            var request = _context.Requests.Where(r => r.RequestID == requestID).FirstOrDefault();
-            switch (type)
-            {
-
-                case AppUtility.SidebarEnum.DidntArrive:
-
-                    break;
-                case AppUtility.SidebarEnum.PartialDelivery:
-                    request.IsPartial = false;
-                    break;
-                case AppUtility.SidebarEnum.ForClarification:
-                    request.IsClarify = false;
-                    break;
-            }
-            _context.Update(request);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("AccountingNotifications", new { accountingNotificationsEnum = type });
+            var StringWithBool = await _requestsProc.UpdatePartialClarifyStatusAsync(type, requestID);
+            return RedirectToAction("AccountingNotifications", new { accountingNotificationsEnum = type, ErrorMessage = StringWithBool.String });
         }
 
         [HttpGet]
         [Authorize(Roles = "Accounting")]
-        public async Task<IActionResult> AccountingNotifications(AppUtility.SidebarEnum accountingNotificationsEnum = AppUtility.SidebarEnum.NoInvoice)
+        public async Task<IActionResult> AccountingNotifications(AppUtility.SidebarEnum accountingNotificationsEnum = AppUtility.SidebarEnum.NoInvoice, string ErrorMessage =null)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingNotifications;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = accountingNotificationsEnum;
-            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Accounting, PageType = AppUtility.PageTypeEnum.AccountingNotifications, SidebarType = accountingNotificationsEnum }));
+            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Accounting, PageType = AppUtility.PageTypeEnum.AccountingNotifications, SidebarType = accountingNotificationsEnum, ErrorMessage= ErrorMessage }));
 
         }
 

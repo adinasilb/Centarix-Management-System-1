@@ -258,6 +258,84 @@ namespace PrototypeWithAuth.CRUD
             _context.Update(RequestToSave);
         }
 
+        public async Task<StringWithBool> UpdatePartialClarifyStatusAsync(AppUtility.SidebarEnum type, int requestID)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+
+                        var request = await ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID });
+                        switch (type)
+                        {
+
+                            case AppUtility.SidebarEnum.DidntArrive:
+
+                                break;
+                            case AppUtility.SidebarEnum.PartialDelivery:
+                                request.IsPartial = false;
+                                break;
+                            case AppUtility.SidebarEnum.ForClarification:
+                                request.IsClarify = false;
+                                break;
+                        }
+                        _context.Update(request);
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        throw new Exception(AppUtility.GetExceptionMessage(e));
+                    }
+                    ReturnVal.SetStringAndBool(true, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+
+        }
+
+        public async Task<StringWithBool> UpdatePaymentStatusAsync(AppUtility.PaymentsPopoverEnum newStatus, int requestID)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var request = await ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID });
+
+                        request.PaymentStatusID = (int)newStatus;
+                        _context.Update(request);
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        throw new Exception(AppUtility.GetExceptionMessage(e));
+                    }
+                    ReturnVal.SetStringAndBool(true, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+
+        }
+
         //private async Task<StringWithBool> MarkInventory()
         //{
         //    //before running this function, run the following in ssms:
@@ -301,7 +379,7 @@ namespace PrototypeWithAuth.CRUD
         //    }
         //    return ReturnVal;
 
-            
+
         //}
         //
         //private async Task UploadRequestsFromExcel()
