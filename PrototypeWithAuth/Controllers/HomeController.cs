@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MimeKit;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
@@ -43,7 +45,7 @@ namespace PrototypeWithAuth.Controllers
             HomePageViewModel viewModel = new HomePageViewModel();
 
             //RecurringJob.AddOrUpdate("DailyNotifications", () => DailyNotificationUpdate(users), Cron.Daily);
-            using (var transaction = _applicationContextTransaction.Transaction)
+            using (var transaction = _applicationDbContextTransaction.Transaction)
             {
                 try
                 {
@@ -57,17 +59,17 @@ namespace PrototypeWithAuth.Controllers
                     if(lastLoginUpdate == null)
                     {
                         lastLoginUpdate = new GlobalInfo { GlobalInfoType = AppUtility.GlobalInfoType.LoginUpdates.ToString(), Date = DateTime.Now.AddDays(-1) };
-                        await _globalInfosProc.UpdateAsyncWithoutSaving(lastLoginUpdate);
+                        _globalInfosProc.UpdateWithoutSaving(lastLoginUpdate);
                     }
                     if (lastUpdateToTimekeeperNotifications == null)
                     {
                         lastUpdateToTimekeeperNotifications = new GlobalInfo { GlobalInfoType = AppUtility.GlobalInfoType.TimekeeperNotificationUpdated.ToString(), Date = lastLoginUpdate.Date};
-                        updateTimekeeperNotifications = (await _globalInfosProc.UpdateAsyncWithoutSaving(lastUpdateToTimekeeperNotifications)).Bool;
+                        updateTimekeeperNotifications = (_globalInfosProc.UpdateWithoutSaving(lastUpdateToTimekeeperNotifications)).Bool;
                     }
                     if (lastUpdateToBirthdayNotifications == null)
                     {
                         lastUpdateToBirthdayNotifications = new GlobalInfo { GlobalInfoType = AppUtility.GlobalInfoType.BirthdayNotificationUpdated.ToString(), Date = lastLoginUpdate.Date };
-                        updateBirthdayNotifications =  (await _globalInfosProc.UpdateAsyncWithoutSaving(lastUpdateToBirthdayNotifications)).Bool;
+                        updateBirthdayNotifications =  (_globalInfosProc.UpdateWithoutSaving(lastUpdateToBirthdayNotifications)).Bool;
                     }
 
                     if (lastUpdateToBirthdayNotifications.Date.Date < DateTime.Today || lastUpdateToTimekeeperNotifications.Date.Date < DateTime.Today)
@@ -106,12 +108,11 @@ namespace PrototypeWithAuth.Controllers
                         if (updateTimekeeperNotifications)
                         {
                             lastUpdateToTimekeeperNotifications.Date = DateTime.Now;
-                            await _globalInfosProc.UpdateAsyncWithoutSaving(lastUpdateToTimekeeperNotifications);
+                            _globalInfosProc.UpdateWithoutSaving(lastUpdateToTimekeeperNotifications);
                         }
                         else
                         {
-                            var entries = _context.ChangeTracker.Entries();
-                            var timekeeperentries = _context.ChangeTracker.Entries().Where(e => e.Entity.GetType() == new TimekeeperNotification().GetType() ||
+                            var timekeeperentries = _applicationDbContextEntries.Entries.Where(e => e.Entity.GetType() == new TimekeeperNotification().GetType() ||
                             e.Entity.Equals(lastUpdateToTimekeeperNotifications) || e.Entity.GetType() == new EmployeeHours().GetType());
                             foreach (var te in timekeeperentries)
                             {
@@ -121,14 +122,12 @@ namespace PrototypeWithAuth.Controllers
                         if (updateBirthdayNotifications)
                         {
                             lastUpdateToBirthdayNotifications.Date = DateTime.Now;
-                            await _globalInfosProc.UpdateAsyncWithoutSaving(lastUpdateToBirthdayNotifications);
+                            _globalInfosProc.UpdateWithoutSaving(lastUpdateToBirthdayNotifications);
 
                         }
                         else
                         {
-                            var entries = _context.ChangeTracker.Entries();
-
-                            var birthdayentries = _context.ChangeTracker.Entries().Where(e => e.Entity.GetType() == new EmployeeInfoNotification().GetType()
+                            var birthdayentries = _applicationDbContextEntries.Entries.Where(e => e.Entity.GetType() == new EmployeeInfoNotification().GetType()
                             );
                             foreach (var be in birthdayentries)
                             {
@@ -145,7 +144,7 @@ namespace PrototypeWithAuth.Controllers
                     viewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                 }
             }
-            using (var transaction2 = _applicationContextTransaction.Transaction)
+            using (var transaction2 = _applicationDbContextTransaction.Transaction)
             {
                 var orderLatesUpdated = new StringWithBool();
                 try
@@ -155,7 +154,7 @@ namespace PrototypeWithAuth.Controllers
                         orderLatesUpdated = await fillInOrderLate(user);
                         if (orderLatesUpdated.Bool)
                         {
-                            await _employeesProc.UpdateLastLoginWithoutSaving(user.Id);
+                            _employeesProc.UpdateLastLoginWithoutSaving(user.Id);
                             orderLatesUpdated = await _employeesProc.SaveDbChangesAsync();
                         }
                         else
@@ -184,7 +183,7 @@ namespace PrototypeWithAuth.Controllers
             //}
             viewModel.Menus = menu;
             //update latest exchange rate if need be
-            var latestRate = _context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.ExchangeRate.ToString()).FirstOrDefault();
+            var latestRate = await _globalInfosProc.ReadOneAsync(new List<Expression<Func<GlobalInfo, bool>>> { gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.ExchangeRate.ToString() });
 
             if (latestRate == null)
             {
@@ -199,19 +198,61 @@ namespace PrototypeWithAuth.Controllers
                 {
                     latestRate.Date = DateTime.Now;
                     latestRate.Description = currentRate.ToString();
-                    _context.Update(latestRate);
-                    await _context.SaveChangesAsync();
+                    var exchangeRateUpdated = await _globalInfosProc.UpdateAsync(latestRate);
+                    if (!exchangeRateUpdated.Bool)
+                    {
+                        viewModel.ErrorMessage += exchangeRateUpdated.String;
+                    }
+                }
+                else
+                {
+                    var message = new MimeMessage();
+
+                    //instantiate the body builder
+                    var builder = new BodyBuilder();                                                                                                                
+                    var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Email == "elixir@centarix.com" });
+                    string ownerEmail = currentUser.Email;
+                    string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
+                    string ownerPassword = currentUser.SecureAppPass;
+                    string recipientEmail = "logistic@centarix.com";
+                    string recipientName = "Logistics Centarix";
+                    //add a "From" Email
+                    message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
+
+                    // add a "To" Email
+                    message.To.Add(new MailboxAddress(recipientName, recipientEmail));
+
+                    //subject
+                    message.Subject = "Error with Exchange Rate";
+
+                    //body
+                    builder.TextBody = @"There has been an error in accessing today's Exchange Rate." + "\n" + "Please forward this email to a company software developer";
+
+                    message.Body = builder.ToMessageBody();
+
+                    using (var client = new SmtpClient())
+                    {
+
+                        client.Connect("smtp.gmail.com", 587, false);
+                        client.Authenticate(ownerEmail, ownerPassword);
+                        client.Timeout = 500000; // 500 seconds
+                        try
+                        {
+                            client.Send(message);
+                            client.Disconnect(true);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
                 }
             }
             return View(viewModel);
         }
-        public async Task DailyNotificationUpdate(List<Employee> users)
-        {
-
-        }
         public async Task<IActionResult> _MenuButtons()
         {
-            var user = await _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefaultAsync();
+            var user = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
             var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
             IEnumerable<Menu> menu = null;
             //if (rolesList.Contains(AppUtility.RoleItems.CEO.ToString()) || rolesList.Contains(AppUtility.RoleItems.Admin.ToString()))
@@ -239,21 +280,24 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public int GetNotificationCount()
+        public async Task<int> GetNotificationCount()
         {
             var currentUserID = _userManager.GetUserId(User);
-            DateTime lastReadNotfication = _context.Users.FirstOrDefault(u => u.Id == currentUserID).DateLastReadNotifications;
-            int count1 = _context.RequestNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID).Count();
-            int count2 = _context.EmployeeInfoNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID).Count();
+            DateTime lastReadNotfication = (await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) })).DateLastReadNotifications;
+            int count1 = _requestNotificationsProc.Read(new List<Expression<Func<RequestNotification, bool>>> {n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID}).Count();
+            int count2 = _employeeInfoNotificationsProc.Read(new List<Expression<Func<EmployeeInfoNotification, bool>>> { n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID }).Count();
             return count1 + count2;
         }
         [HttpGet]
-        public JsonResult GetLatestNotifications()
+        public async Task<JsonResult> GetLatestNotifications()
         {
-            ApplicationUser currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+            ApplicationUser currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
             //todo: figure out exactly which notfications to show
-            var rnotification = _context.RequestNotifications.Include(n => n.NotificationStatus).Where(n => n.ApplicationUserID == currentUser.Id)
-
+            var rnotification = _requestNotificationsProc.Read(new List<Expression<Func<RequestNotification, bool>>> { n => n.ApplicationUserID == currentUser.Id },
+                new List<ComplexIncludes<RequestNotification, ModelBase>>
+                {
+                    new ComplexIncludes<RequestNotification, ModelBase>{ Include = n => n.NotificationStatus}
+                })
              .Select(n => new
              {
                  id = n.NotificationID,
@@ -269,7 +313,11 @@ namespace PrototypeWithAuth.Controllers
                  timestamp = n.TimeStamp
              });
 
-            var enotification = _context.EmployeeInfoNotifications.Include(n => n.NotificationStatus).Where(n => n.ApplicationUserID == currentUser.Id)
+            var enotification = _employeeInfoNotificationsProc.Read(new List<Expression<Func<EmployeeInfoNotification, bool>>> { n => n.ApplicationUserID == currentUser.Id },
+                new List<ComplexIncludes<EmployeeInfoNotification, ModelBase>>
+                {
+                    new ComplexIncludes<EmployeeInfoNotification, ModelBase>{ Include = n => n.NotificationStatus}
+                })
 
             .Select(n => new
             {
@@ -306,14 +354,10 @@ namespace PrototypeWithAuth.Controllers
             return Json(notificationsCombined);
         }
         [HttpPost]
-        public bool UpdateLastReadNotifications()
+        public async Task<bool> UpdateLastReadNotifications()
         {
-            ApplicationUser currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-            DateTime lastReadNotfication = currentUser.DateLastReadNotifications;
-            currentUser.DateLastReadNotifications = DateTime.Now;
-            _context.Update(currentUser);
-            _context.SaveChanges();
-            return true;
+            var returnVal = await _employeesProc.UpdateLastReadNotification(_userManager.GetUserId(User));
+            return returnVal.Bool;
         }
 
         [HttpGet]
@@ -409,9 +453,14 @@ namespace PrototypeWithAuth.Controllers
         private StringWithBool fillInTimekeeperNotifications(ApplicationUser user, DateTime lastUpdate)
         {
             var ReturnVal = new StringWithBool() {Bool = true };
-            var eh = _context.EmployeeHours.Where(r => r.EmployeeID == user.Id).Where(r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null && r.TotalHours == null) || (r.Entry2 != null && r.Exit2 == null))
-                .Where(r => r.Date.Date >=lastUpdate.Date && r.Date.Date < DateTime.Today).Where(r => r.CompanyDayOffID==null)
-                .Where(r => r.EmployeeHoursAwaitingApproval == null);
+
+            var eh = _employeeHoursProc.Read(new List<Expression<Func<EmployeeHours, bool>>> {
+                r => r.EmployeeID == user.Id,
+                r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null && r.TotalHours == null) || (r.Entry2 != null && r.Exit2 == null),
+                r => r.Date.Date >=lastUpdate.Date && r.Date.Date < DateTime.Today,
+                r => r.CompanyDayOffID==null,
+                r => r.EmployeeHoursAwaitingApproval == null
+            });
             foreach (var e in eh)
             {
                 TimekeeperNotification timekeeperNotification = new TimekeeperNotification();

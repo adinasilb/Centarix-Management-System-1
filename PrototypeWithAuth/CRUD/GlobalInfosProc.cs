@@ -20,7 +20,7 @@ namespace PrototypeWithAuth.CRUD
                 base.InstantiateProcs();
             }
         }
-        public async Task<StringWithBool> UpdateAsyncWithoutSaving(GlobalInfo globalInfo)
+        public StringWithBool UpdateWithoutSaving(GlobalInfo globalInfo)
         {
             StringWithBool ReturnVal = new StringWithBool();
             try
@@ -29,6 +29,21 @@ namespace PrototypeWithAuth.CRUD
                 ReturnVal.SetStringAndBool(true, null);
             }
             catch(Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
+        public async Task<StringWithBool> UpdateAsync(GlobalInfo globalInfo)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                _context.Update(globalInfo);
+                await _context.SaveChangesAsync();
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
             {
                 ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
             }
