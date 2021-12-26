@@ -4129,6 +4129,7 @@ namespace PrototypeWithAuth.Controllers
                         requestReceived.Unit = (uint)(requestReceived.Unit - receivedLocationViewModel.AmountArrived);
                         requestReceived.Cost = pricePerUnit * requestReceived.Unit;
                         requestReceived.IsPartial = true;
+                        requestReceived.SerialNumber = 0; 
                         _context.Entry(requestReceived).State = EntityState.Added;
                         await _context.SaveChangesAsync();
                         MoveDocumentsOutOfTempFolder(requestReceived.RequestID, AppUtility.ParentFolderName.Requests, receivedLocationViewModel.Request.RequestID, true);
