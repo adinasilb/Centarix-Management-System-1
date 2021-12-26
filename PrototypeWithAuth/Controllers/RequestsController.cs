@@ -946,7 +946,7 @@ namespace PrototypeWithAuth.Controllers
                     termsViewModel.ParentRequest.IsShippingPaid = false;
                     hasShippingOnPayment = false;
                 }
-                using (var transaction = _applicationContextTransaction.Transaction)
+                using (var transaction = _applicationDbContextTransaction.Transaction)
                 {
                     try
                     {
@@ -4305,7 +4305,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> AddInvoiceModal(AddInvoiceViewModel addInvoiceViewModel)
         {
-            using (var transaction = _applicationContextTransaction.Transaction)
+            using (var transaction = _applicationDbContextTransaction.Transaction)
             {
                 try
                 {
@@ -4480,7 +4480,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 else
                 {
-                    using (var transaction = _applicationContextTransaction.Transaction)
+                    using (var transaction = _applicationDbContextTransaction.Transaction)
                     {
                         try
                         {
