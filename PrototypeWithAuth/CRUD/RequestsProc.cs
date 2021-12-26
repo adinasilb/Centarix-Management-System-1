@@ -268,7 +268,6 @@ namespace PrototypeWithAuth.CRUD
                 {
                     try
                     {
-
                         var request = await ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID });
                         switch (type)
                         {
@@ -369,7 +368,6 @@ namespace PrototypeWithAuth.CRUD
         //                await transaction.RollbackAsync();
         //                throw ex;
         //            }
-
 
         //        }
         //    }
