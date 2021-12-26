@@ -53,6 +53,7 @@ namespace PrototypeWithAuth.CRUD
                     {
                         await DeleteByListIDAndRequestIDsWithoutSaveChangesAsync(listID, requestID);
                         await transaction.CommitAsync();
+                        ReturnVal.SetStringAndBool(true, null);
                     }
                     catch (Exception ex)
                     {
@@ -82,6 +83,7 @@ namespace PrototypeWithAuth.CRUD
                 {
                     _context.Remove(requestListRequest);
                     await _context.SaveChangesAsync();
+                    ReturnVal.SetStringAndBool(true, null);
                 }
                 catch (Exception ex)
                 {
@@ -122,6 +124,7 @@ namespace PrototypeWithAuth.CRUD
                 {
                     await _requestListRequestsProc.DeleteByListIDAndRequestIDsWithoutSaveChangesAsync(prevListID, requestToMoveId);
                 }
+                ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)
             {
@@ -150,6 +153,7 @@ namespace PrototypeWithAuth.CRUD
                         await transaction.RollbackAsync();
                         throw new Exception(AppUtility.GetExceptionMessage(ex));
                     }
+                    ReturnVal.SetStringAndBool(true, null);
                 }
             }
             catch (Exception ex)

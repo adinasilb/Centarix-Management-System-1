@@ -9,7 +9,7 @@ using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Vendor : ModelBase
+    public class Vendor : ModelBase, IEquatable<Vendor>
     {
         [Key]
         [Display(Name = "No")]
@@ -108,6 +108,20 @@ namespace PrototypeWithAuth.Models
 
 
 
+        public bool Equals(Vendor other)
+        {
+            if (VendorID == other.VendorID)
+                return true;
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = VendorID.GetHashCode();
+
+            return hash;
+        }
 
     }
 }

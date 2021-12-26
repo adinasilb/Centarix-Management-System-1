@@ -73,12 +73,14 @@ namespace PrototypeWithAuth.CRUD
                             await _context.SaveChangesAsync();
                         }
                         await transaction.CommitAsync();
+                          ReturnVal.SetStringAndBool(true, null);
                     }
                     catch (Exception ex)
                     {
                         await transaction.RollbackAsync();
                         throw new Exception(AppUtility.GetExceptionMessage(ex));
                     }
+                    ReturnVal.SetStringAndBool(true, null);
                 }
 
             }
@@ -112,6 +114,7 @@ namespace PrototypeWithAuth.CRUD
                         await transaction.RollbackAsync();
                         throw new Exception(AppUtility.GetExceptionMessage(ex));
                     }
+                    ReturnVal.SetStringAndBool(true, null);
                 }
 
             }
@@ -145,7 +148,9 @@ namespace PrototypeWithAuth.CRUD
                     {
                         await transaction.RollbackAsync();
                         throw new Exception(AppUtility.GetExceptionMessage(ex));
+
                     }
+                    ReturnVal.SetStringAndBool(true, null);
                 }
 
             }

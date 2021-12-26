@@ -22,11 +22,8 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        public virtual async Task<StringWithBool> UpdateAsync(List<T> comments, int objectID, string userID)
+        public virtual async Task UpdateAsync(List<T> comments, int objectID, string userID)
         {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
-            {
                 if (comments != null)
                 {
                     foreach (var c in comments)
@@ -57,6 +54,23 @@ namespace PrototypeWithAuth.CRUD
                     }
                     await _context.SaveChangesAsync();
                 }
+
+        }
+
+
+        public virtual async Task<StringWithBool> DeleteAsync(int objectID)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                var comments = _context.Set<T>().Where(c => c.ObjectID == objectID).ToList();
+                foreach (var comment in comments)
+                {
+                    comment.IsDeleted = true;
+                    _context.Update(comment);
+                    await _context.SaveChangesAsync();
+                }
+                ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)
             {
@@ -65,6 +79,5 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
 
         }
-
     }
 }

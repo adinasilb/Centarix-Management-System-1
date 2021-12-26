@@ -18,9 +18,9 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        public override async Task<StringWithBool> UpdateAsync(List<RequestComment> comments, int vendorID, string userID)
+        public override async Task UpdateAsync(List<RequestComment> comments, int vendorID, string userID)
         {
-            return await base.UpdateAsync(comments, vendorID, userID);
+            await base.UpdateAsync(comments, vendorID, userID);
         }
     }
 }

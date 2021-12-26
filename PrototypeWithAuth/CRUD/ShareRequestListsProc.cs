@@ -32,6 +32,7 @@ namespace PrototypeWithAuth.CRUD
                 {
                     _context.Remove(srl);
                 }
+                ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)
             {
@@ -77,6 +78,7 @@ namespace PrototypeWithAuth.CRUD
 
                     }
                 }
+                ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)
             {

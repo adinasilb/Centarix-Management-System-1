@@ -134,8 +134,29 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
 
         }
-    }
 
+        public async Task<StringWithBool> DeleteAsync(List<RequestLocationInstance> requestLocationInstances)
+        {
 
- 
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                
+                foreach (var requestLocationInstance in requestLocationInstances)
+                {
+
+                    await _locationInstancesProc.MarkLocationAvailableAsync(requestLocationInstance.RequestID, requestLocationInstance.LocationInstanceID);
+                    _context.Remove(requestLocationInstance);
+                    await _context.SaveChangesAsync();
+                }
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+         
+        }
+    } 
 }

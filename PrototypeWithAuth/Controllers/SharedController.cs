@@ -88,6 +88,8 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.ParentRequestsProc _parentRequestsProc;
         protected readonly CRUD.RequestLocationInstancesProc _requestLocationInstancesProc;
         protected readonly CRUD.ApplicationContextTransaction _applicationContextTransaction;
+        protected readonly CRUD.ParentQuotesProc _parentQuotesProc;
+        protected readonly CRUD.InvoicesProc _invoicesProc;
 
         public SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
 
@@ -156,7 +158,8 @@ namespace PrototypeWithAuth.Controllers
             _parentRequestsProc = new CRUD.ParentRequestsProc(context);
             _requestLocationInstancesProc = new CRUD.RequestLocationInstancesProc(context);
             _applicationContextTransaction = new CRUD.ApplicationContextTransaction(context);
-
+            _parentQuotesProc =  new CRUD.ParentQuotesProc(context);
+            _invoicesProc = new CRUD.InvoicesProc(context);
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)

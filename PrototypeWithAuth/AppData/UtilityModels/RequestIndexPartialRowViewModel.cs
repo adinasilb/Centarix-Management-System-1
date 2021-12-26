@@ -24,7 +24,7 @@ namespace PrototypeWithAuth.ViewModels
         private LocationInstance locationInstanceParent;
         private ParentRequest parentRequest;
         private List<Payment> payments;
-        public Request partialRequest;
+        private Request partialRequest;
         public bool viewOnly;
         private string currentCurrency ="currencyEnum";
 
@@ -98,6 +98,7 @@ namespace PrototypeWithAuth.ViewModels
             r.Product.UnitType = unitType;
             r.Product.SubUnitType = subUnitType;
             r.Product.SubSubUnitType = subSubUnitType;
+            vendor.Products = null;
             Vendor = vendor;
             TotalCost = (r.Cost ?? 0) + r.VAT;
             ExchangeRate = r.ExchangeRate;

@@ -24,12 +24,8 @@ namespace PrototypeWithAuth.CRUD
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
-                var notifications = Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == EHID });
-                foreach (var n in notifications)
-                {
-                    _context.Remove(n);
-                }
-                await _context.SaveChangesAsync();
+                var notifications = await Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == EHID }).ToListAsync();
+                await DeleteAsync(notifications);
             }
             catch (Exception ex)
             {

@@ -77,7 +77,7 @@ namespace PrototypeWithAuth.CRUD
                         throw ex;
                     }
 
-
+                    ReturnVal.SetStringAndBool(true, null);
                 }
             }
             catch (Exception ex)
@@ -144,6 +144,7 @@ namespace PrototypeWithAuth.CRUD
                         await transaction.RollbackAsync();
                         throw ex;
                     }
+                    ReturnVal.SetStringAndBool(true, null);
                 }
             }
             catch (Exception ex)
@@ -162,6 +163,64 @@ namespace PrototypeWithAuth.CRUD
                 request.IsArchived = true;
                 _context.Update(request);
                 await _context.SaveChangesAsync();
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+
+        }
+
+
+        public async Task<StringWithBool> DeleteAsync(int requestID)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                var request = await ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID },
+                    new List<ComplexIncludes<Request, ModelBase>>
+                    {
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.ParentRequest },
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.ParentQuote },
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.RequestLocationInstances},
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{Include =p => ((Product)p).ProductSubcategory,
+                        ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = ps => ((ProductSubcategory)ps).ParentCategory} } }
+                    });
+
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        request.IsDeleted = true;
+                        _context.Update(request);
+                        await _context.SaveChangesAsync();
+
+                        if (request.ParentRequest != null)
+                        {
+                            await _parentRequestsProc.DeleteAsync(request.ParentRequest, request.RequestID);
+                        }
+                        if (request.ParentQuote != null)
+                        {
+                            await _parentQuotesProc.DeleteAsync(request.ParentQuote);
+                        }
+                        await _productsProc.DeleteAsync(request.Product);
+                        var requestLocationInstances = request.RequestLocationInstances.ToList();
+                        await _requestLocationInstancesProc.DeleteAsync(requestLocationInstances);
+                        await _requestCommentsProc.DeleteAsync(request.RequestID);
+                        var notifications = _requestNotificationsProc.Read(new List<Expression<Func<RequestNotification, bool>>> { rn => rn.RequestID == request.RequestID }).ToList();
+                        await _requestNotificationsProc.DeleteAsync(notifications);
+                        //throw new Exception();
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        throw new Exception(AppUtility.GetExceptionMessage(e));
+                    }
+                    ReturnVal.SetStringAndBool(true, null);
+                }
             }
             catch (Exception ex)
             {
@@ -189,6 +248,15 @@ namespace PrototypeWithAuth.CRUD
             lastSerialNumberInt = serialnumberList.OrderBy(s => s).LastOrDefault();
 
             return serialLetter + (lastSerialNumberInt + 1);
+        }
+
+        public async Task UpdateRequestInvoiceInfoAsync(AddInvoiceViewModel addInvoiceViewModel, Request request)
+        {
+            var RequestToSave = await ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == request.RequestID }, new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments } });
+            RequestToSave.Cost = request.Cost;
+            RequestToSave.Payments.FirstOrDefault().InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
+            RequestToSave.Payments.FirstOrDefault().HasInvoice = true;
+            _context.Update(RequestToSave);
         }
 
         //private async Task<StringWithBool> MarkInventory()

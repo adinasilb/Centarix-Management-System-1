@@ -41,6 +41,28 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
+        public virtual async Task<StringWithBool> DeleteAsync(List<T1> notifications)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+
+            try
+            {
+                foreach (var notification in notifications)
+                {
+                    _context.Remove(notification);
+                }
+                await _context.SaveChangesAsync();
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.Bool = false;
+                ReturnVal.String = AppUtility.GetExceptionMessage(ex);
+            }
+            return ReturnVal;
+        }
+
+
         public virtual StringWithBool CreateWithoutSaveChanges(T1 notification)
         {
             StringWithBool ReturnVal = new StringWithBool();
