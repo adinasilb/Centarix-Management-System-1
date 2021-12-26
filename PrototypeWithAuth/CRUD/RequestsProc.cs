@@ -128,8 +128,7 @@ namespace PrototypeWithAuth.CRUD
                         requestNotification.Controller = "Requests";
                         requestNotification.Action = "NotificationsView";
                         requestNotification.OrderDate = DateTime.Now;
-                        _context.Update(requestNotification);
-                        await _context.SaveChangesAsync();
+                        await _requestNotificationsProc.CreateAsync(requestNotification);
                         await transaction.CommitAsync();
                     }
                     catch (DbUpdateException ex)
@@ -160,6 +159,7 @@ namespace PrototypeWithAuth.CRUD
                 request.IsArchived = true;
                 _context.Update(request);
                 await _context.SaveChangesAsync();
+                ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)
             {

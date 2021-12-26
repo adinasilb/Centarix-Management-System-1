@@ -53,6 +53,8 @@ namespace PrototypeWithAuth.CRUD
         protected RequestLocationInstancesProc _requestLocationInstancesProc;
         protected RequestCommentsProc _requestCommentsProc;
         protected ProductCommentsProc _productCommentsProc;
+        protected RequestNotificationsProc _requestNotificationsProc;
+        protected EmployeeInfoNotificationsProc _employeeInfoNotificationsProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context)
         {
@@ -96,6 +98,8 @@ namespace PrototypeWithAuth.CRUD
             _requestLocationInstancesProc = new RequestLocationInstancesProc(_context, true);
             _requestCommentsProc = new RequestCommentsProc(_context, true);
             _productCommentsProc = new ProductCommentsProc(_context, true);
+            _requestNotificationsProc = new RequestNotificationsProc(_context, true);
+            _employeeInfoNotificationsProc = new EmployeeInfoNotificationsProc(_context, true);
 
         }
 

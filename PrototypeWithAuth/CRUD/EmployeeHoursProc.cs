@@ -566,19 +566,5 @@ namespace PrototypeWithAuth.CRUD
             }
             return ReturnVal;
         }
-        //public async Task<StringWithBool> UpdateMissingDaysAsync(Employee user, DateTime lastUpdate)
-        //{
-        //    StringWithBool ReturnVal = new StringWithBool();
-                
-        //            }
-
-        //            ReturnVal.SetStringAndBool(true, null);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-        //        }
-        //    return ReturnVal;
-        //}
     }
 }

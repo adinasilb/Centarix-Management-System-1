@@ -70,14 +70,12 @@ namespace PrototypeWithAuth.Controllers
                         updateBirthdayNotifications =  (await _globalInfosProc.UpdateAsyncWithoutSaving(lastUpdateToBirthdayNotifications)).Bool;
                     }
 
-                    else if (lastUpdateToBirthdayNotifications.Date.Date < DateTime.Today || lastUpdateToTimekeeperNotifications.Date.Date < DateTime.Today)
+                    if (lastUpdateToBirthdayNotifications.Date.Date < DateTime.Today || lastUpdateToTimekeeperNotifications.Date.Date < DateTime.Today)
                     {
-                        var entries = _context.ChangeTracker.Entries().Where(e => e.Entity.GetType() == new GlobalInfo().GetType()).ToList();
-                        entries.ForEach(e => e.State = EntityState.Detached);
-                        _context.ChangeTracker.Entries();
-                        await transaction.CommitAsync();
+                        
                         DateTime birthdaysNextDay = lastUpdateToBirthdayNotifications.Date.AddDays(1);
                         var existingBirthdays = new List<Employee>();
+                        var timekeeperInfoUpdated = new StringWithBool();
 
                         while (birthdaysNextDay.Date <= DateTime.Today)
                         {
@@ -89,28 +87,56 @@ namespace PrototypeWithAuth.Controllers
                             var userRoles = await _userManager.GetRolesAsync(employee);
                             if (updateTimekeeperNotifications && userRoles.Contains("TimeKeeper") && employee.EmployeeStatusID != 4) //if employee statuses updated, function needs to be changed
                             {
-                                var timekeeperInfoUpdated = await fillInTimekeeperMissingDays(employee, lastUpdateToTimekeeperNotifications.Date);
+                                timekeeperInfoUpdated = await fillInTimekeeperMissingDays(employee, lastUpdateToTimekeeperNotifications.Date);
                                 if (timekeeperInfoUpdated.Bool)
                                 {
-                                    timekeeperInfoUpdated = await fillInTimekeeperNotifications(employee, lastUpdateToTimekeeperNotifications.Date);
+                                    timekeeperInfoUpdated = fillInTimekeeperNotifications(employee, lastUpdateToTimekeeperNotifications.Date);
                                 }
                                 if(!timekeeperInfoUpdated.Bool)
                                 {
                                     updateTimekeeperNotifications = false;
                                     viewModel.ErrorMessage += timekeeperInfoUpdated.String;
-                                    var timekeeperentries = _context.ChangeTracker.Entries().Where(e => e.Entity.GetType() == new TimekeeperNotification().GetType());
                                 }
                             }
                             if (updateBirthdayNotifications && existingBirthdays.Count > 0)
                             {
-                                fillInBirthdayNotifications(employee, existingBirthdays);
+                                updateBirthdayNotifications = fillInBirthdayNotifications(employee, existingBirthdays).Bool;
                             }
                         }
-                        lastUpdateToTimekeeperNotifications.Date = DateTime.Now;
-                        lastUpdateToBirthdayNotifications.Date = DateTime.Now;
-                        //_context.Update(lastUpdateToNotifications);
-                        await _context.SaveChangesAsync();
+                        if (updateTimekeeperNotifications)
+                        {
+                            lastUpdateToTimekeeperNotifications.Date = DateTime.Now;
+                            await _globalInfosProc.UpdateAsyncWithoutSaving(lastUpdateToTimekeeperNotifications);
+                        }
+                        else
+                        {
+                            var entries = _context.ChangeTracker.Entries();
+                            var timekeeperentries = _context.ChangeTracker.Entries().Where(e => e.Entity.GetType() == new TimekeeperNotification().GetType() ||
+                            e.Entity.Equals(lastUpdateToTimekeeperNotifications) || e.Entity.GetType() == new EmployeeHours().GetType());
+                            foreach (var te in timekeeperentries)
+                            {
+                                te.State = EntityState.Detached;
+                            }
+                        }
+                        if (updateBirthdayNotifications)
+                        {
+                            lastUpdateToBirthdayNotifications.Date = DateTime.Now;
+                            await _globalInfosProc.UpdateAsyncWithoutSaving(lastUpdateToBirthdayNotifications);
+
+                        }
+                        else
+                        {
+                            var entries = _context.ChangeTracker.Entries();
+
+                            var birthdayentries = _context.ChangeTracker.Entries().Where(e => e.Entity.GetType() == new EmployeeInfoNotification().GetType()
+                            );
+                            foreach (var be in birthdayentries)
+                            {
+                                be.State = EntityState.Detached;
+                            }
+                        }
                     }
+                    await _globalInfosProc.SaveDbChangesAsync();
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
@@ -119,16 +145,23 @@ namespace PrototypeWithAuth.Controllers
                     viewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                 }
             }
-            using (var transaction2 = _context.Database.BeginTransaction())
+            using (var transaction2 = _applicationContextTransaction.Transaction)
             {
+                var orderLatesUpdated = new StringWithBool();
                 try
                 {
                     if (user.LastLogin.Date < DateTime.Today)
                     {
-                        fillInOrderLate(user);
-                        user.LastLogin = DateTime.Now;
-                        _context.Update(user);
-                        await _context.SaveChangesAsync();
+                        orderLatesUpdated = await fillInOrderLate(user);
+                        if (orderLatesUpdated.Bool)
+                        {
+                            await _employeesProc.UpdateLastLoginWithoutSaving(user.Id);
+                            orderLatesUpdated = await _employeesProc.SaveDbChangesAsync();
+                        }
+                        else
+                        {
+                            viewModel.ErrorMessage += orderLatesUpdated.String;
+                        }
                     }
                     await transaction2.CommitAsync();
                 }
@@ -351,10 +384,11 @@ namespace PrototypeWithAuth.Controllers
             return missingDaysFilled;
         }
 
-        private void fillInOrderLate(ApplicationUser user)
-
+        private async Task<StringWithBool> fillInOrderLate(ApplicationUser user)
         {
-                var lateOrders = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.ApplicationUserCreatorID == user.Id, r => r.RequestStatusID == 2, r => r.ExpectedSupplyDays != null,
+            var ReturnVal = new StringWithBool();
+
+            var lateOrders = await  _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.ApplicationUserCreatorID == user.Id, r => r.RequestStatusID == 2, r => r.ExpectedSupplyDays != null,
                     r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date >= user.LastLogin.Date && r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today},
                     new List<ComplexIncludes<Request, ModelBase>> {
                         new ComplexIncludes<Request, ModelBase> {
@@ -367,51 +401,41 @@ namespace PrototypeWithAuth.Controllers
                         new ComplexIncludes<Request, ModelBase> {
                             Include = r => r.ParentRequest,
                         }
-                    });
-                foreach (var request in lateOrders)
-                {
-                    RequestNotification requestNotification = new RequestNotification();
-                    requestNotification.RequestID = request.RequestID;
-                    requestNotification.IsRead = false;
-                    requestNotification.RequestName = request.Product.ProductName;
-                    requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                    requestNotification.Description = "should have arrived " + request.ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).GetElixirDateFormat();
-                    requestNotification.NotificationStatusID = 1;
-                    requestNotification.NotificationDate = DateTime.Now;
-                    requestNotification.Controller = "Requests";
-                    requestNotification.Action = "NotificationsView";
-                    requestNotification.OrderDate = request.ParentRequest.OrderDate;
-                    requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                    _requestNotificationsProc.CreateWithoutSaveChanges(requestNotification);
-                }
-                _context.SaveChanges();
+                    }).ToListAsync();
+            ReturnVal = await _requestNotificationsProc.CreateManyOrderLateWithoutSaveAsync(lateOrders);
+
+            return ReturnVal;
         }
-        private async Task<StringWithBool> fillInTimekeeperNotifications(ApplicationUser user, DateTime lastUpdate)
+        private StringWithBool fillInTimekeeperNotifications(ApplicationUser user, DateTime lastUpdate)
         {
-            var ReturnVal = new StringWithBool();
-                var eh = _context.EmployeeHours.Where(r => r.EmployeeID == user.Id).Where(r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null && r.TotalHours == null) || (r.Entry2 != null && r.Exit2 == null))
-                    .Where(r => r.Date.Date >=lastUpdate.Date && r.Date.Date < DateTime.Today).Where(r => r.CompanyDayOffID==null)
-                    .Where(r => r.EmployeeHoursAwaitingApproval == null);
-                foreach (var e in eh)
+            var ReturnVal = new StringWithBool() {Bool = true };
+            var eh = _context.EmployeeHours.Where(r => r.EmployeeID == user.Id).Where(r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null && r.TotalHours == null) || (r.Entry2 != null && r.Exit2 == null))
+                .Where(r => r.Date.Date >=lastUpdate.Date && r.Date.Date < DateTime.Today).Where(r => r.CompanyDayOffID==null)
+                .Where(r => r.EmployeeHoursAwaitingApproval == null);
+            foreach (var e in eh)
+            {
+                TimekeeperNotification timekeeperNotification = new TimekeeperNotification();
+                timekeeperNotification.EmployeeHoursID = e.EmployeeHoursID;
+                timekeeperNotification.IsRead = false;
+                timekeeperNotification.ApplicationUserID = e.EmployeeID;
+                timekeeperNotification.Description = "no hours reported for " + e.Date.GetElixirDateFormat();
+                timekeeperNotification.NotificationStatusID = 5;
+                timekeeperNotification.NotificationDate = DateTime.Now;
+                timekeeperNotification.Controller = "Timekeeper";
+                timekeeperNotification.Action = "SummaryHours";
+                ReturnVal = _timekeeperNotificationsProc.CreateWithoutSaveChanges(timekeeperNotification);
+                if (!ReturnVal.Bool)
                 {
-                    TimekeeperNotification timekeeperNotification = new TimekeeperNotification();
-                    timekeeperNotification.EmployeeHoursID = e.EmployeeHoursID;
-                    timekeeperNotification.IsRead = false;
-                    timekeeperNotification.ApplicationUserID = e.EmployeeID;
-                    timekeeperNotification.Description = "no hours reported for " + e.Date.GetElixirDateFormat();
-                    timekeeperNotification.NotificationStatusID = 5;
-                    timekeeperNotification.NotificationDate = DateTime.Now;
-                    timekeeperNotification.Controller = "Timekeeper";
-                    timekeeperNotification.Action = "SummaryHours";
-                    _context.Update(timekeeperNotification);
+                    return ReturnVal;
                 }
-                _context.SaveChanges();
+            }
             return ReturnVal;
         }
 
-        private async Task<StringWithBool> fillInBirthdayNotifications(Employee user, List<Employee> userBirthdays)
+        private StringWithBool fillInBirthdayNotifications(Employee user, List<Employee> userBirthdays)
         {
-            var ReturnVal = new StringWithBool();
+            var ReturnVal = new StringWithBool() { Bool = true };
+            
             foreach (var e in userBirthdays)
             {
                 EmployeeInfoNotification BirthdayNotification = new EmployeeInfoNotification();
@@ -423,10 +447,12 @@ namespace PrototypeWithAuth.Controllers
                 BirthdayNotification.NotificationDate = new DateTime(DateTime.Today.Year, e.DOB.Month, e.DOB.Day);
                 BirthdayNotification.Controller = "";
                 BirthdayNotification.Action = "";
-                _context.Update(BirthdayNotification);
+                ReturnVal = _employeeInfoNotificationsProc.CreateWithoutSaveChanges(BirthdayNotification);
+                if (!ReturnVal.Bool)
+                {
+                    return ReturnVal;
+                }
             }
-            _context.SaveChanges();
-
             return ReturnVal;
         }
 
