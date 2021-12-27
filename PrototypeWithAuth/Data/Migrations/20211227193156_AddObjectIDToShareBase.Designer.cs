@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211227193156_AddObjectIDToShareBase")]
+    partial class AddObjectIDToShareBase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5803,7 +5805,10 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("FromApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ObjectID")
+                    b.Property<int?>("ObjectID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProtocolVersionID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
@@ -5817,8 +5822,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("ShareID");
 
                     b.HasIndex("FromApplicationUserID");
-
-                    b.HasIndex("ObjectID");
 
                     b.HasIndex("ToApplicationUserID");
 
@@ -5838,6 +5841,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ObjectID")
                         .HasColumnType("int");
 
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("TimeStamp")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
@@ -5849,8 +5855,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("ShareID");
 
                     b.HasIndex("FromApplicationUserID");
-
-                    b.HasIndex("ObjectID");
 
                     b.HasIndex("ToApplicationUserID");
 
@@ -5870,6 +5874,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ObjectID")
                         .HasColumnType("int");
 
+                    b.Property<int>("RequestListID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("TimeStamp")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
@@ -5884,8 +5891,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("ShareID");
 
                     b.HasIndex("FromApplicationUserID");
-
-                    b.HasIndex("ObjectID");
 
                     b.HasIndex("ToApplicationUserID");
 
@@ -5905,6 +5910,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ObjectID")
                         .HasColumnType("int");
 
+                    b.Property<int>("ResourceID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("TimeStamp")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
@@ -5916,8 +5924,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("ShareID");
 
                     b.HasIndex("FromApplicationUserID");
-
-                    b.HasIndex("ObjectID");
 
                     b.HasIndex("ToApplicationUserID");
 
@@ -8271,12 +8277,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("FromApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
-                        .WithMany()
-                        .HasForeignKey("ObjectID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("PrototypeWithAuth.Models.Employee", "ToApplicationUser")
                         .WithMany()
                         .HasForeignKey("ToApplicationUserID")
@@ -8289,12 +8289,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("ShareRequestsCreated")
                         .HasForeignKey("FromApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
-                        .WithMany("ShareRequests")
-                        .HasForeignKey("ObjectID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.Employee", "ToApplicationUser")
                         .WithMany("ShareRequestsReceived")
@@ -8309,12 +8303,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("FromApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.RequestList", "RequestList")
-                        .WithMany()
-                        .HasForeignKey("ObjectID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("PrototypeWithAuth.Models.Employee", "ToApplicationUser")
                         .WithMany()
                         .HasForeignKey("ToApplicationUserID")
@@ -8327,12 +8315,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("ShareResourcesCreated")
                         .HasForeignKey("FromApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Resource", "Resource")
-                        .WithMany()
-                        .HasForeignKey("ObjectID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.Employee", "ToApplicationUser")
                         .WithMany("ShareResourcesReceived")

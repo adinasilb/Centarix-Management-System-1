@@ -27,7 +27,7 @@ namespace PrototypeWithAuth.CRUD
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
-                var shareRequestLists = _shareRequestListsProc.Read(new List<Expression<Func<ShareRequestList, bool>>> { srl => srl.RequestListID == id }).ToList();
+                var shareRequestLists = _shareRequestListsProc.Read(new List<Expression<Func<ShareRequestList, bool>>> { srl => srl.ObjectID == id }).ToList();
                 foreach (var srl in shareRequestLists)
                 {
                     _context.Remove(srl);
@@ -57,7 +57,7 @@ namespace PrototypeWithAuth.CRUD
                             if (user.ShareRequestList.ShareID == 0)
                             {
                                 user.ShareRequestList.ToApplicationUser = null;
-                                user.ShareRequestList.RequestListID = listSettings.SelectedList.ListID;
+                                user.ShareRequestList.ObjectID = listSettings.SelectedList.ListID;
                                 user.ShareRequestList.FromApplicationUserID = userID;
                                 _context.Add(user.ShareRequestList);
                             }

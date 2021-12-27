@@ -10,7 +10,8 @@ namespace PrototypeWithAuth.Models
 {
     public class ShareRequest : ShareBase
     {
-        public int RequestID { get; set; }
+
+        [ForeignKey("ObjectID")]
         public Request Request { get; set; }
     }
 }

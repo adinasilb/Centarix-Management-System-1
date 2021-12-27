@@ -163,7 +163,7 @@ namespace PrototypeWithAuth.Controllers
                             break;
                         case AppUtility.SidebarEnum.SharedWithMe:
                             var shareProtocols = _context.ShareProtocols.Where(fr => fr.ToApplicationUserID == _userManager.GetUserId(User))
-                    .Select(fr => fr.ProtocolVersionID);
+                    .Select(fr => fr.ObjectID);
                             fullProtocolsList = fullProtocolsList.Where(frl => shareProtocols.Contains(frl.ProtocolVersionID));
                             break;
                         case AppUtility.SidebarEnum.LastProtocol:
@@ -231,7 +231,7 @@ namespace PrototypeWithAuth.Controllers
                             onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate)
    .Select(p => new ProtocolsIndexPartialRowViewModel(p, p.Protocol, p.Protocol.ProtocolType, p.Protocol.ProtocolSubCategory, p.ApplicationUserCreator, protocolsIndexObject, iconList,
                                                  _context.ShareProtocols
-                .Where(fr => fr.ProtocolVersionID == p.ProtocolVersionID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(),
+                .Where(fr => fr.ObjectID == p.ProtocolVersionID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(),
                                                   _context.FavoriteProtocols.Where(fr => fr.ProtocolVersionID == p.ProtocolVersionID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(), user,
                                                           _context.ProtocolInstances.Where(pi => pi.ProtocolVersionID == p.ProtocolVersionID && pi.ApplicationUserID == user.Id && !pi.IsFinished).OrderByDescending(pi => pi.StartDate).FirstOrDefault()
                                         )).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 20);
@@ -242,7 +242,7 @@ namespace PrototypeWithAuth.Controllers
                             onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate)
 .Select(p => new ProtocolsIndexPartialRowViewModel(p, p.Protocol, p.Protocol.ProtocolType, p.Protocol.ProtocolSubCategory, protocolsIndexObject, iconList, p.ApplicationUserCreator,
                                               _context.ShareProtocols
-             .Where(fr => fr.ProtocolVersionID == p.ProtocolVersionID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user, _context.ProtocolInstances.Where(pi => pi.ProtocolVersionID == p.ProtocolVersionID && pi.ApplicationUserID == user.Id && !pi.IsFinished).OrderByDescending(pi => pi.StartDate).FirstOrDefault()
+             .Where(fr => fr.ObjectID == p.ProtocolVersionID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user, _context.ProtocolInstances.Where(pi => pi.ProtocolVersionID == p.ProtocolVersionID && pi.ApplicationUserID == user.Id && !pi.IsFinished).OrderByDescending(pi => pi.StartDate).FirstOrDefault()
                                      )).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 20);
                             break;
                         case AppUtility.SidebarEnum.LastProtocol:
@@ -2608,7 +2608,7 @@ namespace PrototypeWithAuth.Controllers
             }).ToList();
 
             var tempResourcesWithFavorites = from r in _context.Resources
-                                             join sr in _context.ShareResources on r.ResourceID equals sr.ResourceID
+                                             join sr in _context.ShareResources on r.ResourceID equals sr.ObjectID
                                              join fr in _context.FavoriteResources on r.ResourceID equals fr.ResourceID into g
                                              from fr in g.DefaultIfEmpty()
                                              where sr.ToApplicationUserID == _userManager.GetUserId(User)
@@ -2782,7 +2782,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Remove(sharedResource);
                             break;
                         case AppUtility.ModelsEnum.Protocols:
-                            var sharedProtocols = _context.ShareProtocols.Where(sr => sr.ProtocolVersionID == ShareID && sr.ToApplicationUserID == _userManager.GetUserId(User));
+                            var sharedProtocols = _context.ShareProtocols.Where(sr => sr.ObjectID == ShareID && sr.ToApplicationUserID == _userManager.GetUserId(User));
                             foreach (var sr in sharedProtocols)
                             {
                                 _context.Remove(sr);
@@ -2841,7 +2841,7 @@ namespace PrototypeWithAuth.Controllers
                         {
                             case AppUtility.ModelsEnum.Resource:
                                 var PrevSharedResource = _context.ShareResources
-                                    .Where(sr => sr.ResourceID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == userID).FirstOrDefault();
+                                    .Where(sr => sr.ObjectID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == userID).FirstOrDefault();
                                 if (PrevSharedResource != null)
                                 {
                                     //PrevSharedResource.TimeStamp = DateTime.Now;
@@ -2851,7 +2851,7 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     var shareResource = new ShareResource()
                                     {
-                                        ResourceID = shareModalViewModel.ID,
+                                        ObjectID = shareModalViewModel.ID,
                                         FromApplicationUserID = currentUserID,
                                         ToApplicationUserID = userID,
                                         //TimeStamp = DateTime.Now
@@ -2861,7 +2861,7 @@ namespace PrototypeWithAuth.Controllers
                                 break;
                             case AppUtility.ModelsEnum.Protocols:
                                 var PrevSharedProtocol = _context.ShareProtocols
-                                    .Where(sr => sr.ProtocolVersionID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == userID).FirstOrDefault();
+                                    .Where(sr => sr.ObjectID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == userID).FirstOrDefault();
                                 if (PrevSharedProtocol != null)
                                 {
                                     //PrevSharedProtocol.TimeStamp = DateTime.Now;
@@ -2871,7 +2871,7 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     var shareProtocol = new ShareProtocol()
                                     {
-                                        ProtocolVersionID = shareModalViewModel.ID,
+                                        ObjectID = shareModalViewModel.ID,
                                         FromApplicationUserID = currentUserID,
                                         ToApplicationUserID = userID,
                                         //TimeStamp = DateTime.Now
