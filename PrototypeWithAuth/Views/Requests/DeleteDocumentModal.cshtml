@@ -25,10 +25,10 @@
     }
 }
 <script src="~/js/DeleteDocModal.js"></script>
-<div class="modal modal-document-delete fader " id="DeleteDocumentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9999">
+<div class="modal modal-document-delete fader " id="DeleteDocumentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9998">
     <div class="elixir-modal-sm modal-dialog-centered mx-auto">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$('.documents-delete').html('');">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('documents-delete'); $('#loading').hide();">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" id="myForm" class="modal-padding DeleteDocumentModalForm">
@@ -69,13 +69,13 @@
                                                 iframeFilestring = "images/wordicon.png";
                                             }
                                        }
-                                        <iframe src="/@iframeFilestring" title="View" class="responsive-iframe" scrolling="no"></iframe>
+                                        <iframe src="/@iframeFilestring" title="View" class="responsive-iframe delete" scrolling="no"></iframe>
 
                                     </div>
                                     <div class="card-body text-center">
                                         Are you sure you want to delete?<br />
                                         <input type="submit" value="Save" href="@Url.Action("DeleteDocumentModal", "Requests")" id="submitDelete" style="display: none;" />
-                                        <button class="custom-button custom-button-font @bcColor delete-file-perm">Delete</button>
+                                        <button class="custom-button custom-button-font @bcColor delete-file-perm disabled disabled-submit">Delete</button>
                                     </div>
                                 </div>
                             </div>
@@ -86,3 +86,9 @@
         </div>
     </div>
 </div>
+<script>
+    $(".responsive-iframe.delete").on("load", function (e) {
+        $(".delete-file-perm").removeClass("disabled disabled-submit")
+        $("#loading").hide();
+    })
+</script>

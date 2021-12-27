@@ -867,7 +867,7 @@ namespace PrototypeWithAuth.AppData
             var returnUrl = "";
             if (!UserUrl.IsNullOrEmpty())
             {
-                if (UserUrl.StartsWith("http://"))
+                if (UserUrl.StartsWith("http://") || UserUrl.StartsWith("https://"))
                 {
                     returnUrl = UserUrl;
                 }
