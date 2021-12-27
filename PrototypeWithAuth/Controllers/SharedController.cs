@@ -975,7 +975,7 @@ protected async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestInde
     else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart && requestIndexObject.SidebarType == AppUtility.SidebarEnum.SharedRequests)
     {
         var sharedWithMe = _shareRequestsProc.Read( new List<Expression<Func<ShareRequest, bool>>> { fr => fr.ToApplicationUserID == _userManager.GetUserId(User) })
-            .Select(sr => sr.RequestID).ToList();
+            .Select(sr => sr.ObjectID).ToList();
         wheres.Add(frl => sharedWithMe.Contains(frl.RequestID));
     }
     else
@@ -1223,7 +1223,7 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
                     new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
                      r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                   r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, userFavoriteRequests.Where( fr => fr.RequestID == r.RequestID).FirstOrDefault(),
-                                    userSharedRequests.Where( sr => sr.RequestID == r.RequestID).FirstOrDefault(), user,
+                                    userSharedRequests.Where( sr => sr.ObjectID == r.RequestID).FirstOrDefault(), user,
                                     r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                     break;
 
@@ -1260,7 +1260,7 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
                      r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                      r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
-                                    userSharedRequests.Where(sr => sr.RequestID == r.RequestID).FirstOrDefault(), user,
+                                    userSharedRequests.Where(sr => sr.ObjectID == r.RequestID).FirstOrDefault(), user,
                  r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
             break;
         case AppUtility.PageTypeEnum.RequestSummary:
@@ -1275,7 +1275,7 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
                     onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.SummaryProprietary,
                     r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                  r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
-                                    userSharedRequests.Where(sr => sr.RequestID == r.RequestID).FirstOrDefault(), user,
+                                    userSharedRequests.Where(sr => sr.ObjectID == r.RequestID).FirstOrDefault(), user,
                                   r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)
                                ).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
 
@@ -1288,7 +1288,7 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
                     onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ThenBy(r => r.Product.ProductName).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Summary,
                      r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                             r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
-                                    userSharedRequests.Select(sr => sr).Where(sr => sr.RequestID == r.RequestID).FirstOrDefault(), user, r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)
+                                    userSharedRequests.Select(sr => sr).Where(sr => sr.ObjectID == r.RequestID).FirstOrDefault(), user, r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)
                    )
                         //.ToLookup(r => r.r.ProductID).Select(e => e.First())
                         .ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
@@ -1348,7 +1348,7 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
                      r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                   r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage,
                               userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
-                                    userSharedRequests.Where(sr => sr.RequestID == r.RequestID).FirstOrDefault(), userSharedRequests.Where(sr => sr.RequestID == r.RequestID).Select(sr => sr.FromApplicationUser).FirstOrDefault(), user,
+                                    userSharedRequests.Where(sr => sr.ObjectID == r.RequestID).FirstOrDefault(), userSharedRequests.Where(sr => sr.ObjectID == r.RequestID).Select(sr => sr.FromApplicationUser).FirstOrDefault(), user,
                                   r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                     break;
                 case AppUtility.SidebarEnum.MyLists:
@@ -1364,9 +1364,9 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
                      r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                   r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage,
                                  userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
-                                    userSharedRequests.Where(sr => sr.RequestID == r.RequestID).FirstOrDefault(), user,
+                                    userSharedRequests.Where(sr => sr.ObjectID == r.RequestID).FirstOrDefault(), user,
                                   r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest,
-                                  sharedRequestList.Where(srl=> srl.RequestListID == requestIndexObject.ListID).FirstOrDefault().ViewOnly
+                                  sharedRequestList.Where(srl=> srl.ObjectID == requestIndexObject.ListID).FirstOrDefault().ViewOnly
                                   )).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                     break;
             }

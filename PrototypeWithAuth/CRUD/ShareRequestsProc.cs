@@ -7,14 +7,16 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class ShareRequestsProc : ApplicationDbContextProc<ShareRequest>
+    public class ShareRequestsProc : ShareBasesProc<ShareRequest>
     {
-        public ShareRequestsProc(ApplicationDbContext context, bool FromBase = false) : base(context)
+        public ShareRequestsProc(ApplicationDbContext context, bool FromBase = false) : base(context, FromBase)
         {
             if (!FromBase)
             {
                 this.InstantiateProcs();
             }
         }
+
+
     }
 }

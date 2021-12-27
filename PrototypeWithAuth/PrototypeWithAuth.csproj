@@ -521,6 +521,8 @@
 	  <Compile Remove="Data\Migrations\20211125115311_BirthdayNotificationColorBlack.Designer.cs" />
 	  <Compile Remove="Data\Migrations\20211208073430_TestInheritedBaseClass.cs" />
 	  <Compile Remove="Data\Migrations\20211208073430_TestInheritedBaseClass.Designer.cs" />
+	  <Compile Remove="Data\Migrations\20211227192336_AddObjectIDToShareBase.cs" />
+	  <Compile Remove="Data\Migrations\20211227192336_AddObjectIDToShareBase.Designer.cs" />
   </ItemGroup>
 
 
