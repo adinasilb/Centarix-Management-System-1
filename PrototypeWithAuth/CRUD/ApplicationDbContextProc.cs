@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 using System.Linq.Dynamic.Core;
+using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.CRUD
 {
