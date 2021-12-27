@@ -2110,18 +2110,6 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        private async Task RemoveOldRequestFromInventory(int requestId)
-        {
-
-            var productID = _context.Requests.Where(r => r.RequestID == requestId).Select(r => r.ProductID).FirstOrDefault();
-            var oldRequest = _context.Requests.Where(r => r.ProductID == productID && r.RequestID != requestId).Where(r => r.IsInInventory).FirstOrDefault();
-            if (oldRequest != null)
-            {
-                oldRequest.IsInInventory = false;
-                _context.Update(oldRequest);
-                await _context.SaveChangesAsync();
-            }
-        }
 
 
 
@@ -3148,7 +3136,7 @@ namespace PrototypeWithAuth.Controllers
 
                     //need to do this function before save changes because if new request it should not have an id yet
 
-                    await RemoveOldRequestFromInventory(requestReceived.RequestID);
+                    await _requestsProc.RemoveFromInventoryAsync(requestReceived.RequestID);
 
                     RequestNotification requestNotification = new RequestNotification();
                     requestNotification.RequestID = requestReceived.RequestID;

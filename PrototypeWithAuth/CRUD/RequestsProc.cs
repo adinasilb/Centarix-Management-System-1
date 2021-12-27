@@ -335,6 +335,19 @@ namespace PrototypeWithAuth.CRUD
 
         }
 
+        public async Task RemoveFromInventoryAsync(int requestId)
+        {
+
+            var productID = ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestId }).Result.ProductID;
+            var oldRequest = await ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.ProductID == productID && r.RequestID != requestId, r => r.IsInInventory });
+            if (oldRequest != null)
+            {
+                oldRequest.IsInInventory = false;
+                _context.Update(oldRequest);
+                await _context.SaveChangesAsync();
+            }
+        }
+
         //private async Task<StringWithBool> MarkInventory()
         //{
         //    //before running this function, run the following in ssms:
