@@ -1672,51 +1672,15 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<bool> ShareModal(ShareModalViewModel shareModalViewModel)
         {
-            bool error = false;
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    foreach (var userID in shareModalViewModel.ApplicationUserIDs)
-                    {
-                        var sharedRequest = _context.ShareRequests.Where(sr => sr.ObjectID == shareModalViewModel.ID)
-                                               .Where(sr => sr.FromApplicationUserID == _userManager.GetUserId(User))
-                                               .Where(sr => sr.ToApplicationUserID == userID).FirstOrDefault();
-                        if (sharedRequest == null)
-                        {
-                            sharedRequest = new ShareRequest()
-                            {
-                                ObjectID = shareModalViewModel.ID,
-                                FromApplicationUserID = _userManager.GetUserId(User),
-                                ToApplicationUserID = userID,
-                                //TimeStamp = DateTime.Now
-                            };
-                        }
-                        else
-                        {
-                            //sharedRequest.TimeStamp = DateTime.Now;
-                        }
-                        _context.Update(sharedRequest);
-                    }
-
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception e)
-                {
-                    await transaction.RollbackAsync();
-                    error = true;
-                }
-            }
-            return error;
+            var error = await _shareRequestsProc.UpdateAsync(shareModalViewModel.ID, _userManager.GetUserId(User), shareModalViewModel.ApplicationUserIDs);
+            return error.Bool;
         }
 
         [Authorize(Roles = "Requests")]
         public async Task<bool> RemoveShare(int ID, AppUtility.ModelsEnum ModelsEnum = AppUtility.ModelsEnum.Request)
         {
-            bool error = false;
-
-            return error;
+            var error = await _shareRequestsProc.DeleteAsync(ID, _userManager.GetUserId(User));
+            return error.Bool;
         }
 
         [Authorize(Roles = "Requests")]

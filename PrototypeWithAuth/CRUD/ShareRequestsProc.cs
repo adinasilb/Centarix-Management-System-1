@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Data;
+﻿using PrototypeWithAuth.AppData.UtilityModels;
+using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,14 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
+        public override async Task<StringWithBool> DeleteAsync(int objectID, string userID)
+        {
+            return await base.DeleteAsync(objectID, userID);
+        }
 
+        public async Task<StringWithBool> UpdateAsync(int objectID, string currentUserID, List<string> userIDs)
+        {
+            return await base.UpdateAsync(objectID, currentUserID, userIDs, new ShareRequest());
+        }
     }
 }

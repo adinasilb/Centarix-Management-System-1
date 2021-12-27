@@ -23,7 +23,7 @@ namespace PrototypeWithAuth.CRUD
 
 
 
-        public virtual async Task<StringWithBool> DeleteAsync(int objectID, string userID, AppUtility.ModelsEnum modelsEnum)
+        public virtual async Task<StringWithBool> DeleteAsync(int objectID, string userID)
         {
             StringWithBool ReturnVal = new StringWithBool();
             using (var transaction = _context.Database.BeginTransaction())
@@ -44,6 +44,44 @@ namespace PrototypeWithAuth.CRUD
                     ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
                 }
             };
+            return ReturnVal;
+
+        }
+
+        protected async Task<StringWithBool> UpdateAsync(int objectID, string currentUserID, List<string> userIDs, T sharedObject)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var userID in userIDs)
+                    {
+                        var sharedObjectDB = _context.Set<T>().Where(sr => sr.ObjectID == objectID)
+                                               .Where(sr => sr.FromApplicationUserID == currentUserID)
+                                               .Where(sr => sr.ToApplicationUserID == userID).FirstOrDefault();
+                        if (sharedObjectDB == null)
+                        {
+                            sharedObject.ObjectID = objectID;
+                            sharedObject.FromApplicationUserID = currentUserID;
+                            sharedObject.ToApplicationUserID = userID;
+                        }
+                        else
+                        {
+                            //sharedRequest.TimeStamp = DateTime.Now;
+                        }
+                        _context.Update(sharedObject);
+                    }
+
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                }
+            }
             return ReturnVal;
 
         }
