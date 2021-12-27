@@ -529,7 +529,9 @@
     <PackageReference Include="Aspose.Slides.NET" Version="21.5.0" />
     <PackageReference Include="bootstrap" Version="4.5.0" />
     <PackageReference Include="Chart.Mvc.Core" Version="1.1.0" />
+    <PackageReference Include="CsvHelper" Version="27.2.1" />
     <PackageReference Include="EmguCV" Version="3.1.0.1" />
+    <PackageReference Include="EPPlus" Version="5.8.4" />
     <PackageReference Include="GoogleAuthenticator" Version="2.0.1" />
     <PackageReference Include="jQuery.Fullcalendar" Version="3.9.0" />
     <PackageReference Include="jQuery.Validation" Version="1.19.2" />

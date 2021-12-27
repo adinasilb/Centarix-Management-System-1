@@ -816,6 +816,11 @@ namespace PrototypeWithAuth.AppData
             return dateRange;
         }
 
+        public static string GetExcelDateFormat(DateTime? date)
+        {
+            return date?.ToString("dd/MM/yyyy HH:mm:ss") ?? "";
+        }
+
         public static string GetElixirDateFormat(this DateTime? date)
         {
             return date?.ToString("d MMM yyyy") ?? "";
