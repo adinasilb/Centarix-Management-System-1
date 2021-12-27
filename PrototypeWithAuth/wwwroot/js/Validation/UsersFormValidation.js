@@ -16,7 +16,7 @@
 	}
 	var UserOrChangedToUser = function () {
 		//console.log('is edit' + $('#myForm').hasClass('editUser'))
-		var createuser = $('#myForm').hasClass('createUser');
+		var createuser = $('#myForm').hasClass('createUser') && $("#EmployeeStatusID4:checked").length > 0;
 		var changedToUser = $("#OriginalStatusID").val() != 4 && $("#EmployeeStatusID4:checked").length > 0 && $("#hiddenSecureAppPass").val() == false
 		return createuser || changedToUser;
 	}
