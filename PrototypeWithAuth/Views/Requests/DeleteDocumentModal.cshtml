@@ -28,7 +28,7 @@
 <div class="modal modal-document-delete fader " id="DeleteDocumentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9998">
     <div class="elixir-modal-sm modal-dialog-centered mx-auto">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$('.documents-delete').html('');">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('documents-delete'); $('#loading').hide();">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" id="myForm" class="modal-padding DeleteDocumentModalForm">
@@ -89,6 +89,6 @@
 <script>
     $(".responsive-iframe.delete").on("load", function (e) {
         $(".delete-file-perm").removeClass("disabled disabled-submit")
-        $("#loading").hide()
+        $("#loading").hide();
     })
 </script>
