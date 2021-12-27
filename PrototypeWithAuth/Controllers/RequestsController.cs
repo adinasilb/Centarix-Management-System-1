@@ -4435,7 +4435,6 @@ namespace PrototypeWithAuth.Controllers
                 }
                 catch (Exception ex)
                 {
-                    //do something here
                 }
             }
         }

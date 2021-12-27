@@ -321,7 +321,6 @@ namespace PrototypeWithAuth.Controllers
                         fileStreamOld.Close();
 
                         System.IO.File.Delete(uniqueFilePath);
-
                     }
 
                 }
