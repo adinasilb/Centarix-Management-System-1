@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.AppData;
+﻿using Microsoft.EntityFrameworkCore;
+using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
@@ -14,11 +15,16 @@ namespace PrototypeWithAuth.CRUD
         public CentarixIDsProc(ApplicationDbContext context, bool FromBase = false) : base(context)
         {
             if (!FromBase) { base.InstantiateProcs(); }
+            else
+            {
+                _employeeStatusesProc = new EmployeeStatusesProc(context, true);
+                _employeesProc = new EmployeesProc(context, true);
+            }
         }
 
         public void CreateWithoutSaving(CentarixID centarixID)
         {
-            _context.Add(centarixID);
+            _context.Entry(centarixID).State = EntityState.Added;
         }
 
 
@@ -33,8 +39,9 @@ namespace PrototypeWithAuth.CRUD
                 _context.Update(oldCentarixID);
                 await _context.SaveChangesAsync();
 
-                var lastStatus = _employeeStatusesProc.Read(new List<System.Linq.Expressions.Expression<Func<EmployeeStatus, bool>>>
-                { es => es.EmployeeStatusID == StatusID }).FirstOrDefault();
+                var lastStatusList = _employeeStatusesProc.Read(new List<System.Linq.Expressions.Expression<Func<EmployeeStatus, bool>>>
+                { es => es.EmployeeStatusID == StatusID });
+                var lastStatus = lastStatusList.FirstOrDefault();
                 var newNum = lastStatus.LastCentarixID + 1;
                 var abbrev = lastStatus.Abbreviation;
                 if (abbrev[1] == ' ')
@@ -43,6 +50,7 @@ namespace PrototypeWithAuth.CRUD
                 }
                 var newID = abbrev + newNum.ToString();
 
+                var changetracker = _context.ChangeTracker.Entries();
                 var newCentarixID = new CentarixID()
                 {
                     EmployeeID = UserID,
@@ -50,9 +58,11 @@ namespace PrototypeWithAuth.CRUD
                     IsCurrent = true,
                     TimeStamp = DateTime.Now,
                     Employee = _employeesProc.Read(new List<System.Linq.Expressions.Expression<Func<Employee, bool>>>
-                    { e => e.Id == UserID }).FirstOrDefault()
+                    { e => e.Id == UserID }).AsNoTracking().Select(e => new Employee() { Id = e.Id, EmployeeStatusID = e.EmployeeStatusID }).AsNoTracking().FirstOrDefault()
                 };
-                _context.Add(newCentarixID);
+                //_context.Entry(newCentarixID.Employee).State = EntityState.Detached;
+                _context.Entry(newCentarixID).State = EntityState.Added;
+                //_context.Update(newCentarixID);
                 await _context.SaveChangesAsync();
 
                 lastStatus.LastCentarixID = newNum;

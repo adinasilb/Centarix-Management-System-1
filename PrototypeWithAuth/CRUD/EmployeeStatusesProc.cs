@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,10 @@ namespace PrototypeWithAuth.CRUD
             if (!FromBase) { base.InstantiateProcs(); }
         }
 
-        public void CreateWithoutSaving(EmployeeStatus employeeStatus)
+        public void UpdateWithoutSaving(EmployeeStatus employeeStatus)
         {
-            _context.Add(employeeStatus);
+            _context.Entry(employeeStatus).State = EntityState.Modified;
+            //_context.Add(employeeStatus);
         }
     }
 }

@@ -112,81 +112,80 @@ namespace PrototypeWithAuth.CRUD
                 {
                     try
                     {
-                        int selectedStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
-                        Employee employeeEditted = await _context.Employees.Where(e => e.Id == registerUserViewModel.ApplicationUserID).FirstOrDefaultAsync();
+                        int selectedStatusID = registerUserViewModel.Employee.EmployeeStatusID;
+                        Employee employeeEditted = await _context.Employees.Where(e => e.Id == registerUserViewModel.Employee.Id).AsNoTracking().FirstOrDefaultAsync();
                         int oldSelectedStatus = employeeEditted.EmployeeStatusID;
-                        bool changedEmployeeStatus = false;
                         if (selectedStatusID != oldSelectedStatus)
                         {
-                            changedEmployeeStatus = true;
+                            var success = await _centarixIDsProc.AddNewCentarixID(employeeEditted.Id, selectedStatusID);// AddNewCentarixID(employeeEditted.Id, 4);
+                            if (!success.Bool)
+                            {
+                                throw new NotImplementedException("Unable to create the CentarixID: " + success.String);
+                            }
                         }
                         if (selectedStatusID == 4)
                         {
-                            //never was an employee only was a user and wants to update info                 
-                            employeeEditted.UserName = registerUserViewModel.Email;
-                            employeeEditted.FirstName = registerUserViewModel.FirstName;
-                            employeeEditted.LastName = registerUserViewModel.LastName;
-                            employeeEditted.Email = registerUserViewModel.Email;
-                            employeeEditted.NormalizedEmail = registerUserViewModel.Email.ToUpper();
-                            employeeEditted.PhoneNumber = registerUserViewModel.PhoneNumber;
+                            //is going to become a user                
+                            employeeEditted.UserName = registerUserViewModel.Employee.Email;
+                            employeeEditted.FirstName = registerUserViewModel.Employee.FirstName;
+                            employeeEditted.LastName = registerUserViewModel.Employee.LastName;
+                            employeeEditted.Email = registerUserViewModel.Employee.Email;
+                            employeeEditted.NormalizedEmail = registerUserViewModel.Employee.Email.ToUpper();
+                            employeeEditted.PhoneNumber = registerUserViewModel.Employee.PhoneNumber;
                             //are users allowed to update their password
-                            if (registerUserViewModel.SecureAppPass != null)
+                            if (registerUserViewModel.Employee.SecureAppPass != null)
                             {
-                                employeeEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
+                                employeeEditted.SecureAppPass = registerUserViewModel.Employee.SecureAppPass;
                             }
-                            employeeEditted.LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit;
-                            employeeEditted.LabUnitLimit = registerUserViewModel.LabUnitLimit;
-                            employeeEditted.LabOrderLimit = registerUserViewModel.LabOrderLimit;
-                            employeeEditted.OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit;
-                            employeeEditted.OperationUnitLimit = registerUserViewModel.OperationUnitLimit;
-                            employeeEditted.OperationOrderLimit = registerUserViewModel.OperaitonOrderLimit;
-                            employeeEditted.EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
+                            employeeEditted.LabMonthlyLimit = registerUserViewModel.Employee.LabMonthlyLimit;
+                            employeeEditted.LabUnitLimit = registerUserViewModel.Employee.LabUnitLimit;
+                            employeeEditted.LabOrderLimit = registerUserViewModel.Employee.LabOrderLimit;
+                            employeeEditted.OperationMonthlyLimit = registerUserViewModel.Employee.OperationMonthlyLimit;
+                            employeeEditted.OperationUnitLimit = registerUserViewModel.Employee.OperationUnitLimit;
+                            employeeEditted.OperationOrderLimit = registerUserViewModel.Employee.OperationOrderLimit;
+                            employeeEditted.EmployeeStatusID = registerUserViewModel.Employee.EmployeeStatusID;
                             _context.Update(employeeEditted);
                             await _context.SaveChangesAsync();
 
-                            if (changedEmployeeStatus)
-                            {
-                                await _centarixIDsProc.AddNewCentarixID(employeeEditted.Id, 4);// AddNewCentarixID(employeeEditted.Id, 4);
-                            }
                         }
                         else
                         {
                             // still wants to remain an employee
-                            employeeEditted.UserName = registerUserViewModel.Email;
-                            employeeEditted.FirstName = registerUserViewModel.FirstName;
-                            employeeEditted.LastName = registerUserViewModel.LastName;
-                            employeeEditted.Email = registerUserViewModel.Email;
-                            employeeEditted.NormalizedEmail = registerUserViewModel.Email.ToUpper();
-                            employeeEditted.PhoneNumber = registerUserViewModel.PhoneNumber;
+                            employeeEditted.UserName = registerUserViewModel.Employee.Email;
+                            employeeEditted.FirstName = registerUserViewModel.Employee.FirstName;
+                            employeeEditted.LastName = registerUserViewModel.Employee.LastName;
+                            employeeEditted.Email = registerUserViewModel.Employee.Email;
+                            employeeEditted.NormalizedEmail = registerUserViewModel.Employee.Email.ToUpper();
+                            employeeEditted.PhoneNumber = registerUserViewModel.Employee.PhoneNumber;
                             //are users allowed to update their password
-                            if (registerUserViewModel.SecureAppPass != null)
+                            if (registerUserViewModel.Employee.SecureAppPass != null)
                             {
-                                employeeEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
+                                employeeEditted.SecureAppPass = registerUserViewModel.Employee.SecureAppPass;
                             }
-                            employeeEditted.LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit;
-                            employeeEditted.LabUnitLimit = registerUserViewModel.LabUnitLimit;
-                            employeeEditted.LabOrderLimit = registerUserViewModel.LabOrderLimit;
-                            employeeEditted.OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit;
-                            employeeEditted.OperationUnitLimit = registerUserViewModel.OperationUnitLimit;
-                            employeeEditted.OperationOrderLimit = registerUserViewModel.OperaitonOrderLimit;
-                            employeeEditted.StartedWorking = registerUserViewModel.NewEmployee.StartedWorking;
-                            employeeEditted.DOB = registerUserViewModel.NewEmployee.DOB;
-                            employeeEditted.GrossSalary = registerUserViewModel.NewEmployee.GrossSalary;
-                            employeeEditted.EmployerTax = registerUserViewModel.NewEmployee.EmployerTax;
-                            employeeEditted.IncomeTax = registerUserViewModel.NewEmployee.IncomeTax;
-                            employeeEditted.TaxCredits = registerUserViewModel.NewEmployee.TaxCredits;
-                            employeeEditted.VacationDays = registerUserViewModel.NewEmployee.VacationDays;
-                            employeeEditted.JobSubcategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID;
-                            employeeEditted.DegreeID = registerUserViewModel.NewEmployee.DegreeID;
-                            employeeEditted.IDNumber = registerUserViewModel.NewEmployee.IDNumber;
-                            employeeEditted.MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID;
-                            employeeEditted.CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID;
+                            employeeEditted.LabMonthlyLimit = registerUserViewModel.Employee.LabMonthlyLimit;
+                            employeeEditted.LabUnitLimit = registerUserViewModel.Employee.LabUnitLimit;
+                            employeeEditted.LabOrderLimit = registerUserViewModel.Employee.LabOrderLimit;
+                            employeeEditted.OperationMonthlyLimit = registerUserViewModel.Employee.OperationMonthlyLimit;
+                            employeeEditted.OperationUnitLimit = registerUserViewModel.Employee.OperationUnitLimit;
+                            employeeEditted.OperationOrderLimit = registerUserViewModel.Employee.OperationOrderLimit;
+                            employeeEditted.StartedWorking = registerUserViewModel.Employee.StartedWorking;
+                            employeeEditted.DOB = registerUserViewModel.Employee.DOB;
+                            employeeEditted.GrossSalary = registerUserViewModel.Employee.GrossSalary;
+                            employeeEditted.EmployerTax = registerUserViewModel.Employee.EmployerTax;
+                            employeeEditted.IncomeTax = registerUserViewModel.Employee.IncomeTax;
+                            employeeEditted.TaxCredits = registerUserViewModel.Employee.TaxCredits;
+                            employeeEditted.VacationDays = registerUserViewModel.Employee.VacationDays;
+                            employeeEditted.JobSubcategoryTypeID = registerUserViewModel.Employee.JobSubcategoryTypeID;
+                            employeeEditted.DegreeID = registerUserViewModel.Employee.DegreeID;
+                            employeeEditted.IDNumber = registerUserViewModel.Employee.IDNumber;
+                            employeeEditted.MaritalStatusID = registerUserViewModel.Employee.MaritalStatusID;
+                            employeeEditted.CitizenshipID = registerUserViewModel.Employee.CitizenshipID;
                             employeeEditted.EmployeeStatusID = selectedStatusID;
-                            employeeEditted.RollOverSickDays = registerUserViewModel.NewEmployee.RollOverSickDays;
-                            employeeEditted.RollOverVacationDays = registerUserViewModel.NewEmployee.RollOverVacationDays;
+                            employeeEditted.RollOverSickDays = registerUserViewModel.Employee.RollOverSickDays;
+                            employeeEditted.RollOverVacationDays = registerUserViewModel.Employee.RollOverVacationDays;
                             //employeeEditted.BonusSickDays = registerUserViewModel.NewEmployee.BonusSickDays;
                             //employeeEditted.BonusVacationDays = registerUserViewModel.NewEmployee.BonusVacationDays;
-                            employeeEditted.SpecialDays = registerUserViewModel.NewEmployee.SpecialDays;
+                            employeeEditted.SpecialDays = registerUserViewModel.Employee.SpecialDays;
                             //employeeEditted.JobSubategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID;
 
                             _context.Update(employeeEditted);
@@ -200,12 +199,8 @@ namespace PrototypeWithAuth.CRUD
                                     {
                                         salariedEmployee = new SalariedEmployee();
                                     }
-                                    if (changedEmployeeStatus)
-                                    {
-                                        await _centarixIDsProc.AddNewCentarixID(employeeEditted.Id, 1);// AddNewCentarixID(employeeEditted.Id, 1);
-                                    }
                                     salariedEmployee.EmployeeId = employeeEditted.Id;
-                                    salariedEmployee.HoursPerDay = registerUserViewModel.NewEmployee.SalariedEmployee.HoursPerDay;
+                                    salariedEmployee.HoursPerDay = registerUserViewModel.Employee.SalariedEmployee.HoursPerDay;
                                     employeeEditted.SalariedEmployee = salariedEmployee;
                                     break;
                                 case 2: /*Freelancer*/
@@ -213,10 +208,6 @@ namespace PrototypeWithAuth.CRUD
                                     if (freelancer == null)
                                     {
                                         freelancer = new Freelancer();
-                                    }
-                                    if (changedEmployeeStatus)
-                                    {
-                                        await _centarixIDsProc.AddNewCentarixID(employeeEditted.Id, 2);// await AddNewCentarixID(employeeEditted.Id, 2);
                                     }
                                     freelancer.EmployeeId = employeeEditted.Id;
                                     employeeEditted.Freelancer = freelancer;
@@ -226,10 +217,6 @@ namespace PrototypeWithAuth.CRUD
                                     if (advisor == null)
                                     {
                                         advisor = new Advisor();
-                                    }
-                                    if (changedEmployeeStatus)
-                                    {
-                                        await _centarixIDsProc.AddNewCentarixID(employeeEditted.Id, 3);// AddNewCentarixID(employeeEditted.Id, 3);
                                     }
                                     advisor.EmployeeID = employeeEditted.Id;
                                     employeeEditted.Advisor = advisor;
@@ -253,7 +240,7 @@ namespace PrototypeWithAuth.CRUD
                                 _context.Update(employeeEditted);
                                 await _context.SaveChangesAsync();
 
-                                if (!registerUserViewModel.NewEmployee.IsUser)
+                                if (!registerUserViewModel.Employee.IsUser)
                                 {
                                     employeeEditted.IsUser = true;
                                     _context.Update(employeeEditted);
@@ -306,7 +293,7 @@ namespace PrototypeWithAuth.CRUD
                             //delete old photo
                             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
                             DirectoryInfo dir1 = new DirectoryInfo(uploadFolder1);
-                            FileInfo[] files1 = dir1.GetFiles(registerUserViewModel.UserNum + ".*");
+                            FileInfo[] files1 = dir1.GetFiles(registerUserViewModel.Employee.UserNum + ".*");
                             if (files1.Length > 0)
                             {
                                 foreach (FileInfo file in files1)
@@ -325,7 +312,7 @@ namespace PrototypeWithAuth.CRUD
                                 foreach (FileInfo file in files)
                                 {
                                     //System.IO.File.Move(file., user.UserNum.ToString());
-                                    file.MoveTo(Path.Combine(uploadFolder, registerUserViewModel.UserNum.ToString() + file.Extension));
+                                    file.MoveTo(Path.Combine(uploadFolder, registerUserViewModel.Employee.UserNum.ToString() + file.Extension));
                                     employeeEditted.UserImage = file.FullName;
                                 }
                                 _context.Update(employeeEditted);
@@ -361,39 +348,21 @@ namespace PrototypeWithAuth.CRUD
                 try
                 {
 
-                    int userid = 0;
                     int usernum = 1;
-                    if (_employeesProc.Read().Any())
+                    if (_employeesProc.Read().AsNoTracking().Any())
                     {
-                        usernum = _employeesProc.Read().OrderByDescending(u => u.UserNum).FirstOrDefault().UserNum + 1;
+                        usernum = _employeesProc.Read().OrderByDescending(u => u.UserNum).AsNoTracking().FirstOrDefault().UserNum + 1;
                     }
-                    int UserType = registerUserViewModel.NewEmployee.EmployeeStatusID;
+                    int UserType = registerUserViewModel.Employee.EmployeeStatusID;
 
-                    Employee user = new Employee()
-                    {
-                        /*User*/
-                        UserName = registerUserViewModel.Email,
-                        Email = registerUserViewModel.Email,
-                        FirstName = registerUserViewModel.FirstName,
-                        LastName = registerUserViewModel.LastName,
-                        SecureAppPass = registerUserViewModel.SecureAppPass,
-                        PhoneNumber = registerUserViewModel.PhoneNumber,
-                        PhoneNumber2 = registerUserViewModel.PhoneNumber2,
-                        UserNum = usernum,
-                        LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit,
-                        LabUnitLimit = registerUserViewModel.LabUnitLimit,
-                        LabOrderLimit = registerUserViewModel.LabOrderLimit,
-                        OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit,
-                        OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
-                        OperationOrderLimit = registerUserViewModel.OperaitonOrderLimit,
-                        DateCreated = DateTime.Now,
-                        EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID,
-                        JobSubcategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID,
-                        IsUser = true,
-                        NeedsToResetPassword = true,
-                        TwoFactorEnabled = true
+                    Employee user = registerUserViewModel.Employee;
 
-                    };
+                    user.UserNum = usernum;
+                    user.UserName = registerUserViewModel.Employee.Email;
+                    user.DateCreated = DateTime.Now;
+                    user.IsUser = true;
+                    user.NeedsToResetPassword = true;
+                    user.TwoFactorEnabled = true;
                     if (UserType == 4)
                     {
 
@@ -403,7 +372,6 @@ namespace PrototypeWithAuth.CRUD
                         /*User*/
                         /*Employee*/
                         user.IsUser = true;
-                        user.StartedWorking = registerUserViewModel.NewEmployee.StartedWorking;
                         if (user.StartedWorking > AppUtility.DateSoftwareLaunched)
                         {
                             user.LastLogin = user.StartedWorking;
@@ -412,18 +380,7 @@ namespace PrototypeWithAuth.CRUD
                         {
                             user.LastLogin = AppUtility.DateSoftwareLaunched;
                         }
-                        user.DOB = registerUserViewModel.NewEmployee.DOB;
-                        user.GrossSalary = registerUserViewModel.NewEmployee.GrossSalary;
-                        user.EmployerTax = registerUserViewModel.NewEmployee.EmployerTax;
-                        user.IncomeTax = registerUserViewModel.NewEmployee.IncomeTax;
-                        user.TaxCredits = registerUserViewModel.NewEmployee.TaxCredits;
-                        user.VacationDays = registerUserViewModel.NewEmployee.VacationDays;
                         //user.JobSubcategoryTypeID = registerUserViewModel.NewEmployee.JobSubategoryTypeID;
-                        user.DegreeID = registerUserViewModel.NewEmployee.DegreeID;
-                        user.IDNumber = registerUserViewModel.NewEmployee.IDNumber;
-                        user.MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID;
-                        user.CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID;
-                        user.JobSubcategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID;
                         /*Salaried Employee*/
                     }
 
@@ -435,6 +392,10 @@ namespace PrototypeWithAuth.CRUD
                         registerUserViewModel.Password = newPassword;
                     }
                     IdentityResult result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
+                    //if (!result.Succeeded)
+                    //{
+                    //    throw new Exception(result.Errors.ToString());
+                    //}
                     await _userManager.ResetAuthenticatorKeyAsync(user);
                     await _userManager.UpdateSecurityStampAsync(user);
                     if (result.Succeeded)
@@ -444,7 +405,7 @@ namespace PrototypeWithAuth.CRUD
                             user.LockoutEnabled = true;
                             user.LockoutEnd = new DateTime(2999, 01, 01);
                             user.IsUser = false;
-                            _context.Update(user);
+                            _context.Entry(user).State = EntityState.Modified;
                             await _context.SaveChangesAsync();
                         }
 
@@ -452,12 +413,14 @@ namespace PrototypeWithAuth.CRUD
                         {
                             user.LockoutEnabled = true;
                             user.LockoutEnd = new DateTime(2999, 01, 01);
-                            _context.Update(user);
+                            _context.Entry(user).State = EntityState.Modified;
                             await _context.SaveChangesAsync();
                         }
 
+                        //_context.ChangeTracker.Entries().Where(e => e.Entity is ApplicationUser).FirstOrDefault().State = EntityState.Detached;
+
                         //add in CentarixID
-                        var employeeStatus = _employeeStatusesProc.ReadOne(new List<Expression<Func<EmployeeStatus, bool>>> { es => es.EmployeeStatusID == UserType }).FirstOrDefault();
+                        var employeeStatus = _employeeStatusesProc.ReadOne(new List<Expression<Func<EmployeeStatus, bool>>> { es => es.EmployeeStatusID == UserType }).AsNoTracking().FirstOrDefault();
                         var currentNum = employeeStatus.LastCentarixID + 1;
                         var abbrev = employeeStatus.Abbreviation;
                         if (abbrev[1] == ' ')
@@ -465,21 +428,24 @@ namespace PrototypeWithAuth.CRUD
                             abbrev = abbrev.Substring(0, 1);
                         }
                         var cID = abbrev + currentNum.ToString();
+                        //_context.ChangeTracker.Entries().ToList().ForEach(e => e.State = EntityState.Detached);
+
                         CentarixID centarixID = new CentarixID()
                         {
                             EmployeeID = user.Id,
                             CentarixIDNumber = cID,
                             IsCurrent = true,
                             TimeStamp = DateTime.Now,
-                            Employee = this.Read(new List<Expression<Func<Employee, bool>>> { e => e.Id == user.Id }).FirstOrDefault()
+                            Employee = this.Read(new List<Expression<Func<Employee, bool>>> { e => e.Id == user.Id }).AsNoTracking().Select(e => new Employee() { Id = e.Id, EmployeeStatusID = e.EmployeeStatusID }).FirstOrDefault()
                         };
                         _centarixIDsProc.CreateWithoutSaving(centarixID);
+                        //_context.Entry<Employee>(centarixID.Employee).State = EntityState.Detached;
                         await _context.SaveChangesAsync();
 
                         //update last ID
                         employeeStatus.LastCentarixID = currentNum;
                         employeeStatus.LastCentarixIDTimeStamp = DateTime.Now;
-                        _employeeStatusesProc.CreateWithoutSaving(employeeStatus);
+                        _employeeStatusesProc.UpdateWithoutSaving(employeeStatus);
                         await _context.SaveChangesAsync();
 
                         switch (UserType)
@@ -488,7 +454,7 @@ namespace PrototypeWithAuth.CRUD
                                 SalariedEmployee salariedEmployee = new SalariedEmployee()
                                 {
                                     EmployeeId = user.Id,
-                                    HoursPerDay = registerUserViewModel.NewEmployee.SalariedEmployee.HoursPerDay
+                                    HoursPerDay = registerUserViewModel.Employee.SalariedEmployee.HoursPerDay
                                 };
                                 _context.Add(salariedEmployee);
                                 break;
@@ -586,7 +552,7 @@ namespace PrototypeWithAuth.CRUD
                         }
                         catch (Exception ex)
                         {
-                            ReturnVal.SetStringAndBool(true, "User saved successful but something went wrong while tring to add the roles. Please retry adding roles to the newly create user");                       
+                            ReturnVal.SetStringAndBool(true, "User saved successfully but something went wrong while tring to add the roles. Please retry adding roles to the newly create user");                       
                         }
 
                         if (registerUserViewModel.UserImageSaved == "true")
@@ -639,6 +605,8 @@ namespace PrototypeWithAuth.CRUD
                         {
                             ReturnVal.String += "User Failed to add. Please try again. " + e.Code.ToString() + " " + e.Description.ToString();
                         }
+                        ReturnVal.Bool = false;
+                        throw new Exception(ReturnVal.String);
                         //refill Model to view errors
                     }
                     //throw new Exception();

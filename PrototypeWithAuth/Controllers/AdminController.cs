@@ -1,36 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using MailKit.Net.Smtp;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.Differencing;
-using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
-using MimeKit;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Text;
 using System.Text.Encodings.Web;
-using System.Text.RegularExpressions;
-using Abp.Extensions;
 using System.Linq.Dynamic.Core;
-using OpenCvSharp;
 using PrototypeWithAuth.AppData.UtilityModels;
-using PrototypeWithAuth.Areas.Identity.Pages.Account;
-using Microsoft.CodeAnalysis.CSharp;
-using Org.BouncyCastle.Asn1.Cms;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using System.Linq.Expressions;
 
@@ -109,9 +93,9 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
 
-            RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel();
+            RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel() { SidebarEnum = AppUtility.SidebarEnum.Add };
 
-            registerUserViewModel.NewEmployee = new Employee()
+            registerUserViewModel.Employee = new Employee()
             {
                 StartedWorking = DateTime.Today
             };
@@ -287,15 +271,12 @@ namespace PrototypeWithAuth.Controllers
             var success = await _employeesProc.CreateUser(registerUserViewModel, _hostingEnvironment, Url, Request, _userManager);
             if (!success.Bool)
             {
+                FillViewDropdowns(registerUserViewModel);
                 registerUserViewModel.ErrorMessage = success.String;
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
-                registerUserViewModel.JobCategoryTypes = _jobCategoryTypesProc.Read().ToList();
-                registerUserViewModel.EmployeeStatuses = _employeeStatusesProc.Read().ToList();
-                registerUserViewModel.MaritalStatuses = _maritalStatusesProc.Read().ToList();
-                registerUserViewModel.Degrees = _degreesProc.Read().ToList();
-                registerUserViewModel.Citizenships = _citizenshipsProc.Read().ToList();
+                registerUserViewModel.Employee.IsUser = false;
                 return View("CreateUser", registerUserViewModel);
             }
             if (success.String != null)
@@ -322,6 +303,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> EditUser(RegisterUserViewModel registerUserViewModel)
 
         {
+            
             var success = await _employeesProc.UpdateUser(registerUserViewModel, _hostingEnvironment, Url, Request, _userManager);
             if (success.Bool)
             {
@@ -331,6 +313,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 Response.StatusCode = 500;
                 registerUserViewModel.ErrorMessage = success.String;
+                GetEmployeeFields(registerUserViewModel);
                 FillViewDropdowns(registerUserViewModel);
                 return PartialView("EditUser", registerUserViewModel);
             }
@@ -348,6 +331,16 @@ namespace PrototypeWithAuth.Controllers
             }
             return await editUserFunction(id, Tab);
         }
+
+        private void GetEmployeeFields(RegisterUserViewModel registerUserViewModel)
+        {
+            registerUserViewModel.Employee = _employeesProc.Read(new List<System.Linq.Expressions.Expression<Func<Employee, bool>>>
+                { u => u.Id == registerUserViewModel.Employee.Id && !u.IsSuspended }, new List<ComplexIncludes<Employee, ModelBase>>
+                {
+                    new ComplexIncludes<Employee, ModelBase>{Include = s => s.SalariedEmployee},
+                    new ComplexIncludes<Employee, ModelBase>{Include = e => e.JobSubcategoryType}
+                }).FirstOrDefault();
+        }
         private void FillViewDropdowns(RegisterUserViewModel registerUserViewModel)
         {
             registerUserViewModel.JobCategoryTypes = _jobCategoryTypesProc.Read().ToList();
@@ -355,30 +348,24 @@ namespace PrototypeWithAuth.Controllers
             registerUserViewModel.MaritalStatuses = _maritalStatusesProc.Read().ToList();
             registerUserViewModel.Degrees = _degreesProc.Read().ToList();
             registerUserViewModel.Citizenships = _citizenshipsProc.Read().ToList();
-            registerUserViewModel.NewEmployee = _employeesProc.Read(new List<System.Linq.Expressions.Expression<Func<Employee, bool>>>
-                { u => u.Id == registerUserViewModel.ApplicationUserID && !u.IsSuspended }, new List<ComplexIncludes<Employee, ModelBase>>
-                {
-                    new ComplexIncludes<Employee, ModelBase>{Include = s => s.SalariedEmployee},
-                    new ComplexIncludes<Employee, ModelBase>{Include = e => e.JobSubcategoryType}
-                }).FirstOrDefault();
-            if (registerUserViewModel.NewEmployee != null)
+
+            if (registerUserViewModel.Employee is Employee)
             {
                 //get CentarixID
                 registerUserViewModel.CentarixID = AppUtility.GetEmployeeCentarixID(_centarixIDsProc.Read(new List<Expression<Func<CentarixID, bool>>>
-                    { ci => ci.EmployeeID == registerUserViewModel.ApplicationUserID }).OrderBy(ci => ci.TimeStamp));
+                    { ci => ci.EmployeeID == registerUserViewModel.Employee.Id }).OrderBy(ci => ci.TimeStamp));
 
-                if (registerUserViewModel.NewEmployee.JobSubcategoryTypeID != null)
+                if (registerUserViewModel.Employee.JobSubcategoryTypeID != null)
                 {
                     registerUserViewModel.JobSubcategoryTypes =
                         _jobSubcategoryTypesProc.Read(new List<Expression<Func<JobSubcategoryType, bool>>> {
-                        js => js.JobCategoryTypeID == registerUserViewModel.NewEmployee.JobSubcategoryType.JobCategoryTypeID }).ToList();
+                        js => js.JobCategoryTypeID == registerUserViewModel.Employee.JobSubcategoryType.JobCategoryTypeID }).ToList();
                 }
                 else
                 {
                     registerUserViewModel.JobSubcategoryTypes = new List<JobSubcategoryType>();
                 }
             }
-
         }
         public string GetProbableNextCentarixID(int StatusID)
         {
@@ -507,29 +494,19 @@ namespace PrototypeWithAuth.Controllers
             {
                 RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel
                 {
-                    ApplicationUserID = userSelected.Id,
-                    UserNum = userSelected.UserNum,
-                    FirstName = userSelected.FirstName,
-                    LastName = userSelected.LastName,
-                    Email = userSelected.Email,
-                    PhoneNumber = userSelected.PhoneNumber,
+                    Employee = userSelected,
                     //CentarixID = userSelected.CentarixID,
                     UserImageSaved = userSelected.UserImage,
                     //TODO: do we want to show the secure app pass??
-                    LabMonthlyLimit = userSelected.LabMonthlyLimit,
-                    LabUnitLimit = userSelected.LabUnitLimit,
-                    LabOrderLimit = userSelected.LabOrderLimit,
-                    OperationMonthlyLimit = userSelected.OperationMonthlyLimit,
-                    OperationUnitLimit = userSelected.OperationUnitLimit,
-                    OperaitonOrderLimit = userSelected.OperationOrderLimit,
                     Tab = Tab ?? 1,
-                    ConfirmedEmail = userSelected.EmailConfirmed
+                    ConfirmedEmail = userSelected.EmailConfirmed,
+                    SidebarEnum = AppUtility.SidebarEnum.List
                 };
 
 
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
                 DirectoryInfo dir1 = new DirectoryInfo(uploadFolder1);
-                FileInfo[] files1 = dir1.GetFiles(registerUserViewModel.UserNum + ".*");
+                FileInfo[] files1 = dir1.GetFiles(registerUserViewModel.Employee.UserNum + ".*");
                 if (files1.Length > 0)
                 {
                     foreach (FileInfo file in files1)
@@ -537,18 +514,19 @@ namespace PrototypeWithAuth.Controllers
                         registerUserViewModel.UserImage = file.FullName;
                     }
                 }
+                GetEmployeeFields(registerUserViewModel);
                 FillViewDropdowns(registerUserViewModel);
 
-                if (registerUserViewModel.NewEmployee == null)
-                {
-                    registerUserViewModel.NewEmployee = new Employee();
-                    registerUserViewModel.NewEmployee.EmployeeStatusID = 4;
-                }
+                //if (registerUserViewModel.NewEmployee == null)
+                //{
+                //    registerUserViewModel.NewEmployee = new Employee();
+                //    registerUserViewModel.NewEmployee.EmployeeStatusID = 4;
+                //}
 
 
                 //round job scope
-                string WorkScope = registerUserViewModel.NewEmployee?.SalariedEmployee?.WorkScope.ToString("0.00") ?? "0";
-                registerUserViewModel.NewEmployeeWorkScope = Decimal.Parse(WorkScope);
+                string WorkScope = registerUserViewModel.Employee?.SalariedEmployee?.WorkScope.ToString("0.00") ?? "0";
+                registerUserViewModel.EmployeeWorkScope = Decimal.Parse(WorkScope);
 
 
 
@@ -680,11 +658,11 @@ namespace PrototypeWithAuth.Controllers
 
 
 
-                if (registerUserViewModel.NewEmployee.UserImage == null)
+                if (registerUserViewModel.Employee.UserImage == null)
                 {
                     string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
                     string filePath = Path.Combine(uploadFolder, "profile_circle_big.png");
-                    registerUserViewModel.NewEmployee.UserImage = filePath;
+                    registerUserViewModel.Employee.UserImage = filePath;
                 }
 
 
@@ -712,7 +690,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "ApplicationUsers");
+                return PartialView("InvalidLinkPageRightModal");
             }
         }
 
@@ -726,43 +704,48 @@ namespace PrototypeWithAuth.Controllers
 
         public string SaveTempUserImage(UserImageViewModel userImageViewModel)
         {
+            // 1. application/pdf 2. application/msword 3. image/jpeg 4. image/png
             string SavedUserImagePath = "";
 
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
-            Directory.CreateDirectory(uploadFolder);
-            if (userImageViewModel.FileToSave != null) //test for more than one???
+            var supportedContentTypes = new List<String> { "image/jpeg", "image/png" };
+            if (supportedContentTypes.Contains(userImageViewModel.FileToSave.ContentType))
             {
-                string FileName = "TempUserImage";
-
-                DirectoryInfo dir = new DirectoryInfo(uploadFolder);
-                FileInfo[] files = dir.GetFiles(FileName + ".*");
-                if (files.Length > 0)
+                string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
+                Directory.CreateDirectory(uploadFolder);
+                if (userImageViewModel.FileToSave != null) //test for more than one???
                 {
-                    //File exists
-                    foreach (FileInfo file in files)
-                    {
-                        System.IO.File.Delete(file.FullName);
-                    }
-                }
+                    string FileName = "TempUserImage";
 
-                int indexOfDot = userImageViewModel.FileToSave.FileName.IndexOf(".");
-                string extension = userImageViewModel.FileToSave.FileName.Substring(indexOfDot, userImageViewModel.FileToSave.FileName.Length - indexOfDot);
-                string uniqueFileName = FileName + extension;
-                string filePath = Path.Combine(uploadFolder, uniqueFileName);
-
-                using (FileStream FileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    try
+                    DirectoryInfo dir = new DirectoryInfo(uploadFolder);
+                    FileInfo[] files = dir.GetFiles(FileName + ".*");
+                    if (files.Length > 0)
                     {
-                        userImageViewModel.FileToSave.CopyTo(FileStream);
-                        SavedUserImagePath = AppUtility.GetLastFiles(filePath, 2);
-                        //throw new Exception();
+                        //File exists
+                        foreach (FileInfo file in files)
+                        {
+                            System.IO.File.Delete(file.FullName);
+                        }
                     }
-                    catch (Exception e)
+
+                    int indexOfDot = userImageViewModel.FileToSave.FileName.IndexOf(".");
+                    string extension = userImageViewModel.FileToSave.FileName.Substring(indexOfDot, userImageViewModel.FileToSave.FileName.Length - indexOfDot);
+                    string uniqueFileName = FileName + extension;
+                    string filePath = Path.Combine(uploadFolder, uniqueFileName);
+
+                    using (FileStream FileStream = new FileStream(filePath, FileMode.Create))
                     {
-                        Response.StatusCode = 500;
-                        //Response.WriteAsync(AppUtility.GetExceptionMessage(e)); both do same thing - which is better?
-                        return AppUtility.GetExceptionMessage(e);
+                        try
+                        {
+                            userImageViewModel.FileToSave.CopyTo(FileStream);
+                            SavedUserImagePath = AppUtility.GetLastFiles(filePath, 2);
+                            //throw new Exception();
+                        }
+                        catch (Exception e)
+                        {
+                            Response.StatusCode = 500;
+                            //Response.WriteAsync(AppUtility.GetExceptionMessage(e)); both do same thing - which is better?
+                            return AppUtility.GetExceptionMessage(e);
+                        }
                     }
                 }
             }
@@ -783,8 +766,10 @@ namespace PrototypeWithAuth.Controllers
 
         public bool CheckUserEmailExist(bool isEdit, string email, string currentEmail)
         {
-            return !(_employeesProc.Read(new List<System.Linq.Expressions.Expression<Func<Employee, bool>>> { u => u.Email.ToLower().Equals(email.ToLower()) })).Any()
-                || (isEdit && currentEmail.ToLower().Equals(email.ToLower()));
+            var emailcheck1 = email == null ? true : !(_employeesProc.Read(new List<Expression<Func<Employee, bool>>> { u => u.Email.ToLower() == email.ToLower() }).Any());
+            var emailcheck2 = email == null ? true : (isEdit && currentEmail.ToLower().Equals(email.ToLower()));
+            var check = emailcheck1 || emailcheck2;
+            return check;
         }
 
     }
