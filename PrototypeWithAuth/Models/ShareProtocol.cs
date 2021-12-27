@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 namespace PrototypeWithAuth.Models
 {
     public class ShareProtocol :ShareBase
-    {        
-        public int? ProtocolVersionID { get; set; }
+    {
+
+        [ForeignKey("ObjectID")]
         public ProtocolVersion ProtocolVersion { get; set; }
     }
 }

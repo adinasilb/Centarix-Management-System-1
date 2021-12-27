@@ -20,5 +20,6 @@ namespace PrototypeWithAuth.Models
         public Employee ToApplicationUser { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime TimeStamp { get; set; }
+        public int ObjectID { get; set; }
     }
 }
