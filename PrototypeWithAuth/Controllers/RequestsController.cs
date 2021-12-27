@@ -4651,12 +4651,14 @@ namespace PrototypeWithAuth.Controllers
                         //var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
                         //firstRequest.ParentQuote.QuoteDate = quoteDate;
 
+                        _context.Entry(editQuoteDetailsViewModel.ParentQuote).State = EntityState.Added;
+                        _context.SaveChanges();
+
                         foreach (var quote in editQuoteDetailsViewModel.Requests)
                         {
                             //throw new Exception();
                             var request = requests.Where(r => r.RequestID == quote.RequestID).FirstOrDefault();
                             request.ParentQuote = editQuoteDetailsViewModel.ParentQuote;
-                            _context.Entry(request.ParentQuote).State = EntityState.Added;
                             request.QuoteStatusID = 4;
                             request.Cost = quote.Cost;
                             request.Currency = editQuoteDetailsViewModel.Requests[0].Currency;
