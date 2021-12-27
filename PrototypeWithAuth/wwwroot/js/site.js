@@ -1464,7 +1464,8 @@ $(function () {
         else if ($(this).hasClass('users')) {
             url = "/Admin/EditUser";
             section = "Users";
-        } else if ($(this).hasClass('orders')) {
+        }
+        else if ($(this).hasClass('orders')) {
             url = "/Requests/EditModalView";
             section = "Requests";
         }
@@ -1503,6 +1504,9 @@ $(function () {
         else if (type == 'details') {
             if ($(this).hasClass('locations')) {
                 $.fn.MakeLocationsEditable();
+            }
+            else if ($(this).hasClass('users')) {
+                $.fn.enableUsersMarkReadonly();
             }
             else {
                 enableMarkReadonly($(this));

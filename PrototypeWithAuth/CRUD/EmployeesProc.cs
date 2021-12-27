@@ -138,12 +138,15 @@ namespace PrototypeWithAuth.CRUD
                     try
                     {
                         int selectedStatusID = registerUserViewModel.Employee.EmployeeStatusID;
-                        Employee employeeEditted = await _context.Employees.Where(e => e.Id == registerUserViewModel.Employee.Id).FirstOrDefaultAsync();
+                        Employee employeeEditted = await _context.Employees.Where(e => e.Id == registerUserViewModel.Employee.Id).AsNoTracking().FirstOrDefaultAsync();
                         int oldSelectedStatus = employeeEditted.EmployeeStatusID;
-                        bool changedEmployeeStatus = false;
                         if (selectedStatusID != oldSelectedStatus)
                         {
-                            changedEmployeeStatus = true;
+                            var success = await _centarixIDsProc.AddNewCentarixID(employeeEditted.Id, selectedStatusID);// AddNewCentarixID(employeeEditted.Id, 4);
+                            if (!success.Bool)
+                            {
+                                throw new NotImplementedException("Unable to create the CentarixID: " + success.String);
+                            }
                         }
                         if (selectedStatusID == 4)
                         {
@@ -169,14 +172,6 @@ namespace PrototypeWithAuth.CRUD
                             _context.Update(employeeEditted);
                             await _context.SaveChangesAsync();
 
-                            if (changedEmployeeStatus)
-                            {
-                                var success = await _centarixIDsProc.AddNewCentarixID(employeeEditted.Id, 4);// AddNewCentarixID(employeeEditted.Id, 4);
-                                if (!success.Bool)
-                                {
-                                    throw new NotImplementedException("Unable to create the CentarixID: " + success.String);
-                                }
-                            }
                         }
                         else
                         {
@@ -229,10 +224,6 @@ namespace PrototypeWithAuth.CRUD
                                     {
                                         salariedEmployee = new SalariedEmployee();
                                     }
-                                    if (changedEmployeeStatus)
-                                    {
-                                        await _centarixIDsProc.AddNewCentarixID(employeeEditted.Id, 1);// AddNewCentarixID(employeeEditted.Id, 1);
-                                    }
                                     salariedEmployee.EmployeeId = employeeEditted.Id;
                                     salariedEmployee.HoursPerDay = registerUserViewModel.Employee.SalariedEmployee.HoursPerDay;
                                     employeeEditted.SalariedEmployee = salariedEmployee;
@@ -243,10 +234,6 @@ namespace PrototypeWithAuth.CRUD
                                     {
                                         freelancer = new Freelancer();
                                     }
-                                    if (changedEmployeeStatus)
-                                    {
-                                        await _centarixIDsProc.AddNewCentarixID(employeeEditted.Id, 2);// await AddNewCentarixID(employeeEditted.Id, 2);
-                                    }
                                     freelancer.EmployeeId = employeeEditted.Id;
                                     employeeEditted.Freelancer = freelancer;
                                     break;
@@ -255,10 +242,6 @@ namespace PrototypeWithAuth.CRUD
                                     if (advisor == null)
                                     {
                                         advisor = new Advisor();
-                                    }
-                                    if (changedEmployeeStatus)
-                                    {
-                                        await _centarixIDsProc.AddNewCentarixID(employeeEditted.Id, 3);// AddNewCentarixID(employeeEditted.Id, 3);
                                     }
                                     advisor.EmployeeID = employeeEditted.Id;
                                     employeeEditted.Advisor = advisor;

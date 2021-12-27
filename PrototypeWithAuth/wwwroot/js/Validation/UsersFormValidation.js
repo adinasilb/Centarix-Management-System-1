@@ -7,22 +7,25 @@
 		//console.log('is employee only' + $("#NewEmployee_EmployeeStatusID").val() == "1")
 		return $("#Employee_EmployeeStatusID").val() == "1";
 	}
+	var isEdit = function () {
+		return $('#myForm').hasClass('editUser');
+	}
 	var isUserAndIsNotEdit = function () {
 		//console.log('is user and not in edit' + $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false)
 		return $("#Employee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false;
 	}
-	var isEdit = function () {
+	var UserOrChangedToUser = function () {
 		//console.log('is edit' + $('#myForm').hasClass('editUser'))
-		return $('#myForm').hasClass('editUser');
+		var createuser = $('#myForm').hasClass('createUser');
+		var changedToUser = $("#OriginalStatusID").val() != 4 && $("#EmployeeStatusID4:checked").length > 0 && $("#hiddenSecureAppPass").val() == false
+		return createuser || changedToUser;
 	}
 	var isUser = function () {
 		//console.log('is user' + $("#NewEmployee_EmployeeStatusID").val() == "4")
 		return $("#Employee_EmployeeStatusID").val() == "4";
 	}
 	var isTrueIfNotEmpty = function (variable) {
-		alert("variable: " + variable.val());
 		if (variable.val() == "") {
-			alert("empty string!");
 			return false;
 		}
 		return true;
@@ -92,73 +95,73 @@
 			},
 			"Employee.IDNumber": {
 				required: isEmployee,
-				number: isTrueIfNotEmpty($("#Employee_IDNumber")),
-				//min: 1,
-				//integer: true
+				number: true,
+				min: 1,
+				integer: true
 			},
-		//	"Employee.PhoneNumber2": {
-		//		minlength: 9
-		//	},
-		//	"Employee.StartedWorking": {
-		//		required: isEmployee,
-		//	},
-		//	"Employee.TaxCredits": {
-		//		number: true,
-		//		integer: true
-		//	},
-		//	"EmployeeWorkScope": {
-		//		required: isEmployeeOnly,
-		//	},
-		//	"Employee.SalariedEmployee.HoursPerDay": {
-		//		required: isEmployeeOnly,
-		//		number: true
-		//	},
-		//	"TimeSpan-HoursPerDay": {
-		//		required: isEmployeeOnly,
-		//		validHours: isEmployeeOnly
-		//	},
-		//	"Employee.VacationDays": {
-		//		required: isEmployeeOnly,
-		//		number: true,
-		//		integer: true
-		//	},
-		//	"Password": {
-		//		required: isUserAndIsNotEdit,
-		//		nonAlphaNumeric: true,
-		//		uppercase: true,
-		//		lowercase: true,
-		//		containsNumber: true,
-		//		minlength: 8,
-		//		maxlength: 20
-		//	},
-		//	"Employee.SecureAppPass": {
-		//		required: true
-		//		//todo: are we allowing edit of secure appp password
-		//		// validate format
-		//	},
-		//	"Employee.EmployeeStatusID": {
-		//		required: true,
-		//		min: 1
-		//	},
-		//	//UserImage: { extension: "jpg|jpeg|png" },
-		//	LabMonthlyLimit: {
-		//		integer: true
-		//	},
-		//	LabUnitLimit: {
-		//		integer: true
-		//	},
-		//	LabOrderLimit: {
-		//		integer: true
-		//	},
-		//	OperationMonthlyLimit: {
-		//		integer: true
-		//	},
-		//	OperationUnitLimit: {
-		//		integer: true
-		//	},
-		//	OperaitonOrderLimit: {
-		//		integer: true
-		//	},
+			"Employee.PhoneNumber2": {
+				minlength: 9
+			},
+			"Employee.StartedWorking": {
+				required: isEmployee,
+			},
+			"Employee.TaxCredits": {
+				number: true,
+				integer: true
+			},
+			"EmployeeWorkScope": {
+				required: isEmployeeOnly,
+			},
+			"Employee.SalariedEmployee.HoursPerDay": {
+				required: isEmployeeOnly,
+				number: true
+			},
+			"TimeSpan-HoursPerDay": {
+				required: isEmployeeOnly,
+				validHours: isEmployeeOnly
+			},
+			"Employee.VacationDays": {
+				required: isEmployeeOnly,
+				number: true,
+				integer: true
+			},
+			"Password": {
+				required: isUserAndIsNotEdit,
+				nonAlphaNumeric: true,
+				uppercase: true,
+				lowercase: true,
+				containsNumber: true,
+				minlength: 8,
+				maxlength: 20
+			},
+			"Employee.SecureAppPass": {
+				required: UserOrChangedToUser
+				//todo: are we allowing edit of secure appp password
+				// validate format
+			},
+			"Employee.EmployeeStatusID": {
+				required: true,
+				min: 1
+			},
+			//UserImage: { extension: "jpg|jpeg|png" },
+			LabMonthlyLimit: {
+				integer: true
+			},
+			LabUnitLimit: {
+				integer: true
+			},
+			LabOrderLimit: {
+				integer: true
+			},
+			OperationMonthlyLimit: {
+				integer: true
+			},
+			OperationUnitLimit: {
+				integer: true
+			},
+			OperaitonOrderLimit: {
+				integer: true
+			},
 		},
 		messages: {
 			"Employee.EmployeeStatusID": {

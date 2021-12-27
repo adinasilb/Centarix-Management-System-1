@@ -112,8 +112,8 @@ $(function () {
 			$('.only-employee').removeClass("hidden");
 			$('.only-employee').removeClass("m-0");
 			//$('.only-employee').prop('disabled', false)
-        }
-
+		}
+		$.fn.enableUsersMarkReadonly();
 		$.fn.AppendAsteriskToRequired();
 
 		var centarixIDInput = $('#CentarixID');

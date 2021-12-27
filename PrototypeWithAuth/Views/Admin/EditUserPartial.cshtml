@@ -49,6 +49,7 @@
     {
         hidden = "hidden";
     }
+    var secureapppassBool = Model.Employee.SecureAppPass == null ? false : true;
 }
 
 <script src="~/js/Validation/UsersFormValidation.js"></script>
@@ -57,7 +58,9 @@
 <script src="~/js/site.js"></script>
 <script src="~/js/CreateUser.js"></script>
 
+
 <input type="hidden" asp-for="Employee.IsUser" />
+<input type="hidden" id="hiddenSecureAppPass" value="@secureapppassBool" />
 <div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; padding: 2em; border: 2px solid #EAEAEB;">
     <div class="row">
         @if (Model.ErrorMessage != null)
@@ -355,7 +358,7 @@
                         <div class="row">
                             <div class="col-6 p-0">*@
                     <label asp-for="Employee.SecureAppPass" class="control-label"></label>
-                    <input asp-for="Employee.SecureAppPass" value="" class="form-control-plaintext border-bottom mark-readonly @isedittable" autocomplete="off" />
+                    <input asp-for="Employee.SecureAppPass" value="" class="form-control-plaintext border-bottom mark-readonly @isedittable @modaltype" autocomplete="off" />
                     <span asp-validation-for="Employee.SecureAppPass" class="text-danger-centarix"></span>
                 </div>
 
@@ -722,18 +725,12 @@
 @if (Model.Tab != 0)
 {
     <script>
+        $(document).ready(function () {
+            console.log("in doc ready of edit user partial");
+            if ($('#Employee_FirstName').val() > '') {
+                $('#Employee_FirstName').trigger('change');
+            }
+        });
         $('.mdb-select').materialSelect();
     </script>
 }
-
-<script>
-    $('#FirstName').trigger('change');
-
-    @*$(function () {
-    $.fn.AddErrorMessage = function () {
-        //alert("in error message with msg: " + @ViewBag.ErrorMessage);
-        $(".error-message").html(@ViewBag.ErrorMessage);
-    };
-    });*@
-
-</script>
