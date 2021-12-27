@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 using PrototypeWithAuth.AppData;
+using System.Diagnostics;
 
 namespace PrototypeWithAuth.CRUD
 {
@@ -115,6 +116,7 @@ namespace PrototypeWithAuth.CRUD
 
         public virtual IQueryable<T> Read(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
         {
+
             var dbset = _context.Set<T>().AsQueryable();
             dbset = ApplyWheres(wheres, dbset);
             if (includes != null && includes.Count > 0)
@@ -134,7 +136,6 @@ namespace PrototypeWithAuth.CRUD
                     dbset = dbset.Where(t);
                 }
             }
-
             return dbset;
         }
 
@@ -153,7 +154,7 @@ namespace PrototypeWithAuth.CRUD
         }
 
         public async Task<T> ReadOneAsync(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
-        {
+        {       
             var dbset = _context.Set<T>().AsQueryable();
             dbset = ApplyWheres(wheres, dbset);
             var item = dbset.Take(1);
@@ -215,7 +216,9 @@ namespace PrototypeWithAuth.CRUD
             }
             return ReturnVal;
         }
-   
-     
+
+
+
+
     }
 }

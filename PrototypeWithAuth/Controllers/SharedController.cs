@@ -1354,9 +1354,10 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
                 case AppUtility.SidebarEnum.MyLists:
                 case AppUtility.SidebarEnum.SharedLists:
                     iconList.Add(reorderIcon);
-                    iconList.Add(favoriteIcon);
+                    iconList.Add(favoriteIcon); 
                     popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverMoveList, popoverShare, popoverDeleteFromList };
                     iconList.Add(popoverMoreIcon);
+                    var sharedRequestList = _shareRequestListsProc.Read(new List<Expression<Func<ShareRequestList, bool>>> { srl => srl.ToApplicationUserID == user.Id });
                     onePageOfProducts = await _requestListRequestsProc.Read( new List<Expression<Func<RequestListRequest, bool>>> { rlr => rlr.ListID == requestIndexObject.ListID }).OrderByDescending(rlr => rlr.TimeStamp)
                         .Select(rlr => rlr.Request).Select(r =>
                     new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.RequestLists,
@@ -1365,7 +1366,7 @@ private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRow
                                  userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
                                     userSharedRequests.Where(sr => sr.RequestID == r.RequestID).FirstOrDefault(), user,
                                   r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest,
-                                  _shareRequestListsProc.Read( new List<Expression<Func<ShareRequestList, bool>>> { srl => srl.RequestListID == requestIndexObject.ListID && srl.ToApplicationUserID == user.Id }, null).FirstOrDefault().ViewOnly
+                                  sharedRequestList.Where(srl=> srl.RequestListID == requestIndexObject.ListID).FirstOrDefault().ViewOnly
                                   )).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                     break;
             }

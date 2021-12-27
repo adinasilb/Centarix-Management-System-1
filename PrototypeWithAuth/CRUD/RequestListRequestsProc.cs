@@ -98,40 +98,28 @@ namespace PrototypeWithAuth.CRUD
 
         }
 
-        public async Task<StringWithBool> MoveListWithoutSaveChanges(int requestToMoveId, int newListID, int prevListID = 0)
+        public async Task MoveListWithoutSaveChanges(int requestToMoveId, int newListID, int prevListID = 0)
         {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
+            var existingListRequest = _context.RequestListRequests.Where(l => l.RequestID == requestToMoveId && l.ListID == newListID).FirstOrDefault();
+            if (existingListRequest != null)
             {
-
-                var existingListRequest = _context.RequestListRequests.Where(l => l.RequestID == requestToMoveId && l.ListID == newListID).FirstOrDefault();
-                if (existingListRequest != null)
-                {
-                    existingListRequest.TimeStamp = DateTime.Now;
-                    _context.Update(existingListRequest);
-                }
-                else
-                {
-                    RequestListRequest requestListRequest = new RequestListRequest()
-                    {
-                        RequestID = requestToMoveId,
-                        ListID = newListID,
-                        TimeStamp = DateTime.Now
-                    };
-                    _context.Entry(requestListRequest).State = EntityState.Added;
-                }
-                if (prevListID != 0)
-                {
-                    await _requestListRequestsProc.DeleteByListIDAndRequestIDsWithoutSaveChangesAsync(prevListID, requestToMoveId);
-                }
-                ReturnVal.SetStringAndBool(true, null);
+                existingListRequest.TimeStamp = DateTime.Now;
+                _context.Update(existingListRequest);
             }
-            catch (Exception ex)
+            else
             {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                RequestListRequest requestListRequest = new RequestListRequest()
+                {
+                    RequestID = requestToMoveId,
+                    ListID = newListID,
+                    TimeStamp = DateTime.Now
+                };
+                _context.Entry(requestListRequest).State = EntityState.Added;
             }
-            return ReturnVal;
-
+            if (prevListID != 0)
+            {
+                await _requestListRequestsProc.DeleteByListIDAndRequestIDsWithoutSaveChangesAsync(prevListID, requestToMoveId);
+            }
         }
 
         public async Task<StringWithBool> MoveList(int requestToMoveId, int newListID, int prevListID = 0)
@@ -139,7 +127,7 @@ namespace PrototypeWithAuth.CRUD
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
-
+                throw new Exception();
                 using (var transaction = _context.Database.BeginTransaction())
                 {
 

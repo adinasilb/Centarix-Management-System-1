@@ -18,7 +18,7 @@
                     <input type="hidden" asp-for="SidebarType" />
                     <input type="hidden" class="setupdropdowns" value="true" />
                     <div class="modal-padding">
-                        <div class="row error-message">
+                        <div class="row error-message text-danger-centarix">
                             @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
                         </div>
                         <div class="modal-header pt-0" style="border-bottom: 0;">

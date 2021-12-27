@@ -1234,7 +1234,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTableWithListTabs(RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> _IndexTableWithListTabs(RequestIndexObject requestIndexObject, String errorMessage)
         {
             RequestListIndexViewModel viewModel = new RequestListIndexViewModel();
             if (requestIndexObject.SidebarType == AppUtility.SidebarEnum.MyLists)
@@ -1245,6 +1245,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 viewModel = await GetSharedRequestListIndexObjectAsync(requestIndexObject);
             }
+            viewModel.ErrorMessage = errorMessage;
             return PartialView(viewModel);
         }
 
@@ -4187,8 +4188,6 @@ namespace PrototypeWithAuth.Controllers
                         }
 
                         MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, AppUtility.FolderNamesEnum.Invoices, true, addInvoiceViewModel.Guid);
-
-
                     }
                     await _requestsProc.SaveDbChangesAsync();
                     await transaction.CommitAsync();
@@ -4724,16 +4723,16 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> MoveToListModal(MoveListViewModel moveListViewModel)
         {
-            await _requestListRequestsProc.MoveList(moveListViewModel.Request.RequestID, moveListViewModel.NewListID, moveListViewModel.PreviousListID);
+            var error = await _requestListRequestsProc.MoveList(moveListViewModel.Request.RequestID, moveListViewModel.NewListID, moveListViewModel.PreviousListID);
             if (moveListViewModel.PageType == AppUtility.PageTypeEnum.RequestCart)
             {
-                RequestIndexObject indexObject = new RequestIndexObject()
+                return RedirectToAction("_IndexTableWithListTabs", new
                 {
                     PageType = AppUtility.PageTypeEnum.RequestCart,
                     SidebarType = AppUtility.SidebarEnum.MyLists,
-                    ListID = moveListViewModel.PreviousListID
-                };
-                return RedirectToAction("_IndexTableWithListTabs", indexObject);
+                    ListID = moveListViewModel.PreviousListID,
+                    errorMessage = error.String
+                });
             }
             else
             {
@@ -4798,9 +4797,10 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ListSettingsModal(AppUtility.SidebarEnum SidebarType, int selectedListID=0)
+        public async Task<IActionResult> ListSettingsModal(AppUtility.SidebarEnum SidebarType, int selectedListID=0, string errorMessage=null)
         {
             var listSettings = await GetListSettingsInfoAsync(selectedListID, SidebarType);
+            listSettings.ErrorMessage=errorMessage;
             return PartialView(listSettings);
         }
 
@@ -4808,16 +4808,14 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ListSettingsModal(ListSettingsViewModel listSettings, int selectedIndexListID)
         {
-            await _requestListsProc.UpdateAsync(listSettings, _userManager.GetUserId(User));
-
-            RequestIndexObject indexObject = new RequestIndexObject()
+            var error = await _requestListsProc.UpdateAsync(listSettings, _userManager.GetUserId(User));
+            return RedirectToAction("_IndexTableWithListTabs", new
             {
                 PageType = AppUtility.PageTypeEnum.RequestCart,
                 SidebarType = listSettings.SidebarType,
-                ListID = selectedIndexListID
-                
-            };
-            return RedirectToAction("_IndexTableWithListTabs", indexObject);
+                ListID = selectedIndexListID,
+                errorMessage = error.String
+            });
         }
 
         [HttpGet]
@@ -4978,8 +4976,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> DeleteListModal(int listID)
         {
-            var viewModel = _requestListsProc.ReadOneAsync(new List<Expression<Func<RequestList, bool>>> { rl => rl.ListID == listID });
-
+            var viewModel = await _requestListsProc.ReadOneAsync(new List<Expression<Func<RequestList, bool>>> { rl => rl.ListID == listID });
             return PartialView(viewModel);
         }
 
@@ -4987,8 +4984,8 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> DeleteListModal(RequestList deleteList)
         {
-             await _requestListsProc.DeleteAsync(deleteList);
-             return RedirectToAction("ListSettingsModal");
+             var error = await _requestListsProc.DeleteAsync(deleteList);
+             return RedirectToAction("ListSettingsModal", error.String);
         }
 
         [HttpGet]
@@ -5000,10 +4997,10 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> SaveListModal(ListSettingsViewModel listSettings)
+        public async Task<string> SaveListModal(ListSettingsViewModel listSettings)
         {
-            await _requestListsProc.UpdateAsync(listSettings, _userManager.GetUserId(User));
-            return new EmptyResult();
+            var error = await _requestListsProc.UpdateAsync(listSettings, _userManager.GetUserId(User));
+            return error.String;
         }
 
 
