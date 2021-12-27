@@ -50,7 +50,7 @@ namespace PrototypeWithAuth.CRUD
         {
             foreach (var shipping in paymentsPayModalViewModel.ShippingToPay)
             {
-                var parentRequest = await _parentRequestsProc.ReadOneAsync(new List<Expression<Func<ParentRequest, bool>>> { pr => pr.ParentRequestID == shipping.ID });
+                var parentRequest = await ReadOneAsync(new List<Expression<Func<ParentRequest, bool>>> { pr => pr.ParentRequestID == shipping.ID });
                 parentRequest.IsShippingPaid = true;
 
                 _context.Update(parentRequest);

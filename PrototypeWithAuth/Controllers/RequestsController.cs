@@ -3821,7 +3821,9 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingPayments;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = accountingPaymentsEnum;
-            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Accounting, PageType = AppUtility.PageTypeEnum.AccountingPayments, SidebarType = accountingPaymentsEnum, ErrorMessage=ErrorMessage }));
+            var viewModel = await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Accounting, PageType = AppUtility.PageTypeEnum.AccountingPayments, SidebarType = accountingPaymentsEnum });
+            viewModel.ErrorMessage = ErrorMessage;
+            return View(viewModel);
 
         }
         private async Task<List<RequestPaymentsViewModel>> GetPaymentRequests(AppUtility.SidebarEnum accountingPaymentsEnum, List<Expression<Func<Request, bool>>> wheres = null )
@@ -3912,7 +3914,14 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingNotifications;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = accountingNotificationsEnum;
-            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Accounting, PageType = AppUtility.PageTypeEnum.AccountingNotifications, SidebarType = accountingNotificationsEnum, ErrorMessage= ErrorMessage }));
+            var viewmodel = await GetIndexViewModelByVendor(new RequestIndexObject
+            {
+                SectionType = AppUtility.MenuItems.Accounting,
+                PageType = AppUtility.PageTypeEnum.AccountingNotifications,
+                SidebarType = accountingNotificationsEnum
+            });
+            viewmodel.ErrorMessage = ErrorMessage;
+            return View(viewmodel);
 
         }
 
