@@ -3301,12 +3301,9 @@ namespace PrototypeWithAuth.Controllers
                         }
                         if (tempRequest.Comments != null)
                         {
+                            await SaveRequestProductCommentsFunctionAsync(tempRequest.Comments, tempRequest.Request);
                             foreach (var c in tempRequest.Comments)
-                            {
-                                //DO WE NEED THIS NEXT LINE HERE???
-                                c.RequestID = tempRequest.Request.RequestID;
-                                _context.Add(c);
-                                await _context.SaveChangesAsync();
+                            {                                
                                 ModelsCreated.Add(new ModelAndID()
                                 {
                                     ID = c.CommentID,
