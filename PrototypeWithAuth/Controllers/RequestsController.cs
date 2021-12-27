@@ -3989,86 +3989,8 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> PaymentsPayModal(PaymentsPayModalViewModel paymentsPayModalViewModel)
         {
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                if (paymentsPayModalViewModel.ShippingToPay != null)
-                {
-                    try
-                    {
-                        foreach (var shipping in paymentsPayModalViewModel.ShippingToPay)
-                        {
-                            var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == shipping.ID).FirstOrDefault();
-                            parentRequest.IsShippingPaid = true;
-
-                            _context.Update(parentRequest);
-                            await _context.SaveChangesAsync();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        //throw exception here
-                    }
-                }
-                try
-                {
-                    var paymentsList = _context.Payments.Where(p => p.IsPaid == false);
-                    foreach (Request request in paymentsPayModalViewModel.Requests)
-                    {
-                        var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
-                        Payment payment = _context.Payments.Where(p => p.RequestID == request.RequestID).FirstOrDefault();
-                        //if (requestToUpdate.PaymentStatusID == 7)
-                        //{
-                        //    payment = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID).FirstOrDefault();
-                        //    _context.Add(new Payment() { PaymentDate = payment.PaymentDate.AddMonths(1), RequestID = requestToUpdate.RequestID });
-                        //}
-                        //else if (requestToUpdate.PaymentStatusID == 5)
-                        //{
-                        //    var payments = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID);
-                        //    var count = payments.Count();
-
-                        //    payment = payments.OrderBy(p => p.PaymentDate).FirstOrDefault();
-                        //    if (count <= 1)
-                        //    {
-                        //        payment.Sum = requestToUpdate.Cost ?? 0;
-                        //    }
-                        //}
-                        //else
-                        //{
-                        payment.Sum = request.Cost ?? 0;
-                        payment.PaymentDate = DateTime.Now.Date;
-                        payment.RequestID = requestToUpdate.RequestID;
-                        //}
-                        payment.Reference = paymentsPayModalViewModel.Payment.Reference;
-                        payment.CompanyAccountID = paymentsPayModalViewModel.Payment.CompanyAccountID;
-                        payment.PaymentReferenceDate = paymentsPayModalViewModel.Payment.PaymentReferenceDate;
-                        payment.PaymentTypeID = paymentsPayModalViewModel.Payment.PaymentTypeID;
-                        payment.CreditCardID = paymentsPayModalViewModel.Payment.CreditCardID;
-                        payment.CheckNumber = paymentsPayModalViewModel.Payment.CheckNumber;
-                        payment.IsPaid = true;
-
-
-                        _context.Update(payment);
-                        _context.Update(requestToUpdate); //don't need this line of code
-                    }
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    Response.StatusCode = 500;
-                    /*for (int i = 0; i < paymentsPayModalViewModel.Requests.Count; i++)
-                    {
-                        paymentsPayModalViewModel.Requests[i] = _context.Requests.Where(r => r.RequestID == paymentsPayModalViewModel.Requests[i].RequestID).Include(r => r.Product)
-                            .ThenInclude(p => p.Vendor).FirstOrDefault();
-                    }*/
-                    paymentsPayModalViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
-                    return PartialView("_ErrorMessage", paymentsPayModalViewModel.ErrorMessage);
-                }
-            }
-
-            return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsPayModalViewModel.AccountingEnum, ErrorMessage = paymentsPayModalViewModel.ErrorMessage });
+            var stringWithBool = await _paymentsProc.UpdateAsync(paymentsPayModalViewModel);
+            return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsPayModalViewModel.AccountingEnum, ErrorMessage = stringWithBool.String });
         }
         [HttpGet]
         [Authorize(Roles = "Accounting")]
@@ -4078,7 +4000,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var payment = _context.Payments.Where(p => p.PaymentID == paymentid).FirstOrDefault();
+            var payment = await _paymentsProc.ReadOneAsync( new List<Expression<Func<Payment, bool>>> { p => p.PaymentID == paymentid });
             var requestToPay = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.RequestID == payment.RequestID },
                 new List<ComplexIncludes<Request, ModelBase>>
                 {
@@ -4121,63 +4043,35 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> PaymentsInvoiceModal(PaymentsInvoiceViewModel paymentsInvoiceViewModel)
-        {
-            using (var transaction = _context.Database.BeginTransaction())
+        {           
+            using (var transaction = _applicationDbContextTransaction.Transaction)
             {
                 try
                 {
-                    var payment = _context.Payments.Where(p => p.PaymentID == paymentsInvoiceViewModel.Payment.PaymentID).FirstOrDefault(); ;
-                    foreach (Request request in paymentsInvoiceViewModel.Requests)
+                    await _paymentsProc.UpdateWithoutTransactionAsync(paymentsInvoiceViewModel);
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+                    string requestFolder = Path.Combine(uploadFolder, paymentsInvoiceViewModel.Requests.FirstOrDefault().RequestID.ToString());
+                    Directory.CreateDirectory(requestFolder);
+                    if (paymentsInvoiceViewModel.InvoiceImage != null)
                     {
-                        var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
-
-                        payment.Sum = request.Payments.FirstOrDefault().Sum;
-
-                        //else
-                        //{
-                        //    payment.Sum = request.Cost ?? 0;
-                        //    payment.PaymentDate = DateTime.Now.Date;
-                        //    payment.RequestID = requestToUpdate.RequestID;
-                        //}
-                        payment.Reference = paymentsInvoiceViewModel.Payment.Reference;
-                        payment.CompanyAccountID = paymentsInvoiceViewModel.Payment.CompanyAccountID;
-                        payment.PaymentReferenceDate = paymentsInvoiceViewModel.Payment.PaymentReferenceDate;
-                        payment.PaymentTypeID = paymentsInvoiceViewModel.Payment.PaymentTypeID;
-                        payment.CreditCardID = paymentsInvoiceViewModel.Payment.CreditCardID;
-                        payment.CheckNumber = paymentsInvoiceViewModel.Payment.CheckNumber;
-                        payment.IsPaid = true;
-                        payment.HasInvoice = true;
-                        payment.Invoice = paymentsInvoiceViewModel.Invoice;
-
-                        _context.Update(payment);
-                        _context.Update(requestToUpdate);
-                        await _context.SaveChangesAsync();
-
-                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-                        string requestFolder = Path.Combine(uploadFolder, request.RequestID.ToString());
-                        Directory.CreateDirectory(requestFolder);
-                        if (paymentsInvoiceViewModel.InvoiceImage != null)
+                        int x = 1;
+                        //create file
+                        string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Invoices.ToString());
+                        if (Directory.Exists(folderPath))
                         {
-                            int x = 1;
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Invoices.ToString());
-                            if (Directory.Exists(folderPath))
-                            {
-                                var filesInDirectory = Directory.GetFiles(folderPath);
-                                x = filesInDirectory.Length + 1;
-                            }
-                            else
-                            {
-                                Directory.CreateDirectory(folderPath);
-                            }
-                            string uniqueFileName = x + paymentsInvoiceViewModel.InvoiceImage.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            FileStream filestream = new FileStream(filePath, FileMode.Create);
-                            paymentsInvoiceViewModel.InvoiceImage.CopyTo(filestream);
-                            filestream.Close();
+                            var filesInDirectory = Directory.GetFiles(folderPath);
+                            x = filesInDirectory.Length + 1;
                         }
+                        else
+                        {
+                            Directory.CreateDirectory(folderPath);
+                        }
+                        string uniqueFileName = x + paymentsInvoiceViewModel.InvoiceImage.FileName;
+                        string filePath = Path.Combine(folderPath, uniqueFileName);
+                        FileStream filestream = new FileStream(filePath, FileMode.Create);
+                        paymentsInvoiceViewModel.InvoiceImage.CopyTo(filestream);
+                        filestream.Close();
                     }
-                    await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
