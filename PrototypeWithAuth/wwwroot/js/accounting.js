@@ -6,12 +6,10 @@
 			$(this).closest("tr").attr("class", "text-center");
 		}
 		else {
-			//alert("is checked")
 			$.fn.AddBorderBySectionType(this);
 		}
 		var activeVendor = $(".activeVendor").val();
 		if (activeVendor == "" && $(this).is(":checked")) {
-			//	alert("reset vendor")
 			$(".activeVendor").val($(this).attr("vendorid"))
 		}
 		var selectedButton = $(this).closest("tbody").find(".button-for-selected-items");

@@ -114,7 +114,7 @@
             //processData: true,
             //contentType: true,
             async: true,
-            url: "/Requests/_UploadQuoteModal",
+            url: "/Requests/_UploadQuoteModal?guid=" + $(".hidden-guid").val(),
             type: 'GET',
             cache: false,
             //data: formData,

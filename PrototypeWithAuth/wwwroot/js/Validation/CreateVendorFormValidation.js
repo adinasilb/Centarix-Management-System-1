@@ -38,6 +38,10 @@
 			email: true,
 			required: true
 		},
+		"Vendor.QuotesEmail": {
+			email: true,
+			required: true
+		},
 		"Vendor.InfoEmail": {
 			email: true
 		},
