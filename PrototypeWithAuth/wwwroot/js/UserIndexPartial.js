@@ -3,10 +3,15 @@
     $(".open-user-modal").on("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        $("#loading").show();
-        var $itemurl = "/Admin/EditUser/?id=" + $(this).attr("value");
-        console.log("itemurl: " + $itemurl);
-        $.fn.CallPageUser($itemurl);
+        console.log("open user modal for " + $(this).attr("value"));
+        console.log("suspended? " + $(this).closest('tr').attr("isSuspended"));
+        if ($(this).closest('tr').attr("isSuspended") == "False") {
+            console.log("opening...");
+            $("#loading").show();
+            var $itemurl = "/Admin/EditUser/?id=" + $(this).attr("value");
+            console.log("itemurl: " + $itemurl);
+            $.fn.CallPageUser($itemurl);
+        }
         return false;
     });
     $(".suspend-user-modal-icon").click(function (e) {

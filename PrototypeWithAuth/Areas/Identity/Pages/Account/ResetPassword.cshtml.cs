@@ -110,6 +110,8 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 
                 var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
                     user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
+                //var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
+                //    user, Input.Code, verificationCode);
 
                 if (!is2faTokenValid)
                 {

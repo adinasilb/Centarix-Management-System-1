@@ -2,7 +2,7 @@
 $(function () {
 
 
-	$("#NewEmployee_DOB").off("change").on("change", function () {
+	$("#Employee_DOB").off("change").on("change", function () {
 		var val = $(this).val();
 		val = val.split("/").reverse().join("-");
 		var DOB = moment(val);
@@ -68,10 +68,10 @@ $(function () {
 		SetHiddenHoursPerDay(hoursPercentage);
 
 		var percentageWorked = parseFloat(100 * (hoursPercentage / 8.4)).toFixed(2);
-		$("#NewEmployeeWorkScope").val(percentageWorked);
+		$("#EmployeeWorkScope").val(percentageWorked);
 	});
 
-	$("#NewEmployeeWorkScope").on("change", function () {
+	$("#EmployeeWorkScope").on("change", function () {
 		var workScope = $(this).val();
 		console.log("workScope: " + workScope);
 
@@ -94,13 +94,13 @@ $(function () {
 	});
 
 	function SetHiddenHoursPerDay(hoursPercentage) {
-		$("#NewEmployee_SalariedEmployee_HoursPerDay").val(hoursPercentage);
+		$("#Employee_SalariedEmployee_HoursPerDay").val(hoursPercentage);
 	};
 
 	$('.employee-status-radio').off("click").on("click", function () {
 
 		var val = $(this).val();
-		$('#NewEmployee_EmployeeStatusID').val(val)
+		$('#Employee_EmployeeStatusID').val(val)
 		$("#validation-EmployeeStatus").addClass("hidden");
 		if (val == "4") {
 			$('.only-employee').removeClass("error");
@@ -112,8 +112,8 @@ $(function () {
 			$('.only-employee').removeClass("hidden");
 			$('.only-employee').removeClass("m-0");
 			//$('.only-employee').prop('disabled', false)
-        }
-
+		}
+		$.fn.enableUsersMarkReadonly();
 		$.fn.AppendAsteriskToRequired();
 
 		var centarixIDInput = $('#CentarixID');
@@ -135,7 +135,6 @@ $(function () {
 						orginalID='';
 					}
 					var showCentarixID = orginalID + data;
-					console.log("showCentarixID: " + showCentarixID);
 					centarixIDInput.val(showCentarixID);
 				}
 			});

@@ -4,11 +4,14 @@ using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
+using System.Linq.Dynamic.Core;
 using PrototypeWithAuth.AppData;
 using System.Diagnostics;
 
@@ -113,6 +116,11 @@ namespace PrototypeWithAuth.CRUD
             _employeeInfoNotificationsProc = new EmployeeInfoNotificationsProc(_context, true);
 
         }
+
+        //protected void InstantiateProcs(List<String> Types)
+        //{
+        //    foreach(var)
+        //}
 
         public virtual IQueryable<T> Read(List<Expression<Func<T, bool>>> wheres = null, List<ComplexIncludes<T, ModelBase>> includes = null)
         {
