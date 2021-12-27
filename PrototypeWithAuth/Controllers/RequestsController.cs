@@ -2139,7 +2139,7 @@ namespace PrototypeWithAuth.Controllers
             //var isRequests = true;
             //var RequestNum = 1;
             long lastParentRequestOrderNum = 0;
-            //var prs = _context.ParentRequests;
+            //var prs = _proc.ParentRequests;
             if (_parentRequestsProc.Read().Any())
             {
                 lastParentRequestOrderNum = _parentRequestsProc.ReadWithIgnoreQueryFilters().OrderByDescending(x => x.OrderNumber).Select(pr => pr.OrderNumber).FirstOrDefault() ?? 0;
@@ -2157,8 +2157,8 @@ namespace PrototypeWithAuth.Controllers
             var allRequests = new List<Request>();
             if (id != 0) //already has terms, being sent from approve order button -- not in a temprequestjson
             {
-                var request = _context.Requests.Where(r => r.RequestID == id).AsNoTracking().FirstOrDefault();
-                var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == request.ParentRequestID).AsNoTracking().FirstOrDefault();
+                var request = await _requestsProc.ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == id });
+                var parentRequest = await _parentRequestsProc.ReadOneAsync( new List<Expression<Func<ParentRequest, bool>>> { pr => pr.ParentRequestID == request.ParentRequestID });
                 if (parentRequest != null)
                 {
                     pr = parentRequest;
@@ -2168,13 +2168,16 @@ namespace PrototypeWithAuth.Controllers
                 request.ParentRequest = pr;
                 if (request.Product == null)
                 {
-                    request.Product = _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor)
-                      .Include(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
+                    request.Product = await  _productsProc.ReadOneAsync(new List<Expression<Func<Product, bool>>> { p => p.ProductID == request.ProductID }, new List<ComplexIncludes<Product, ModelBase>>{
+                        new ComplexIncludes<Product, ModelBase> { Include = p => p.Vendor },
+                        new ComplexIncludes<Product, ModelBase> { Include = p => p.ProductSubcategory },
+                        new ComplexIncludes<Product, ModelBase> { Include = p => p.ProductSubcategory.ParentCategory },
+                    });                     
                 }
                 else
                 {
-                    request.Product.ProductSubcategory.ParentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).FirstOrDefault();
-                    request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
+                    request.Product.ProductSubcategory.ParentCategory = await _parentCategoriesProc.ReadOneAsync(  new List<Expression<Func<ParentCategory, bool>>> { pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID });
+                    request.Product.Vendor = await _vendorsProc.ReadOneAsync( new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == request.Product.VendorID });
                 }
                 newTRLVM.TempRequestViewModels = new List<TempRequestViewModel>()
                 {
@@ -2187,7 +2190,7 @@ namespace PrototypeWithAuth.Controllers
                 newTRLVM.SequencePosition = updatedTempRequestJson.SequencePosition;
 
                 await _tempRequestJsonsProc.UpdateAsync(newTRLVM.GUID, requestIndexObject, newTRLVM, userID, true );                 
-                var payments = _context.Payments.Where(p => p.RequestID == id);
+                var payments = _paymentsProc.Read(new List<Expression<Func<Payment, bool>>> { p => p.RequestID == id }).AsEnumerable();
 
                 allRequests.Add(request);
             }
@@ -2204,7 +2207,7 @@ namespace PrototypeWithAuth.Controllers
 
                 foreach (var tempRequest in newTRLVM.TempRequestViewModels)
                 {
-                    tempRequest.Request.PaymentStatus = _context.PaymentStatuses.Where(ps => ps.PaymentStatusID == tempRequest.Request.PaymentStatusID).FirstOrDefault();
+                    tempRequest.Request.PaymentStatus = await _paymentStatusesProc.ReadOneAsync(new List<Expression<Func<PaymentStatus, bool>>> { ps => ps.PaymentStatusID == tempRequest.Request.PaymentStatusID });
                     if (tempRequest.Request.ParentRequest != null)
                     {
                         pr.Shipping = tempRequest.Request.ParentRequest.Shipping;
@@ -2213,13 +2216,16 @@ namespace PrototypeWithAuth.Controllers
                     tempRequest.Request.ParentRequest = pr;
                     if (tempRequest.Request.Product == null)
                     {
-                        tempRequest.Request.Product = _context.Products.Where(p => p.ProductID == tempRequest.Request.ProductID).Include(p => p.Vendor)
-                          .Include(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
+                        tempRequest.Request.Product =  await _productsProc.ReadOneAsync(new List<Expression<Func<Product, bool>>> { p => p.ProductID == tempRequest.Request.ProductID }, new List<ComplexIncludes<Product, ModelBase>>{
+                        new ComplexIncludes<Product, ModelBase> { Include = p => p.Vendor },
+                        new ComplexIncludes<Product, ModelBase> { Include = p => p.ProductSubcategory },
+                        new ComplexIncludes<Product, ModelBase> { Include = p => p.ProductSubcategory.ParentCategory },
+                    });
                     }
                     else
                     {
-                        tempRequest.Request.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == tempRequest.Request.Product.ProductSubcategoryID).Include(ps => ps.ParentCategory).FirstOrDefault();
-                        tempRequest.Request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == tempRequest.Request.Product.VendorID).FirstOrDefault();
+                        tempRequest.Request.Product.ProductSubcategory = await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ProductSubcategoryID == tempRequest.Request.Product.ProductSubcategoryID }, new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> {  Include = ps => ps.ParentCategory } });
+                        tempRequest.Request.Product.Vendor = await _vendorsProc.ReadOneAsync( new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == tempRequest.Request.Product.VendorID });
                     }
                     allRequests.Add(tempRequest.Request);
                 }
