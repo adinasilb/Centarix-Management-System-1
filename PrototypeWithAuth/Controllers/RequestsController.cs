@@ -744,7 +744,10 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 additionalRequests = false;
                             }
-                            await SaveRequestProductCommentsFunctionAsync(trvm.Comments, request);
+                            if (trvm.Comments != null)
+                            {
+                                await SaveRequestProductCommentsFunctionAsync(trvm.Comments, request);
+                            }
                             MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, trlvm.GUID);
                             if (request.ParentQuoteID != null)
                             {
