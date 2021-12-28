@@ -3099,7 +3099,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel, RequestsSearchViewModel requestsSearchViewModel = null, SelectedRequestFilters selectedFilters = null, int numFilters = 0)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var transaction = _applicationDbContextTransaction.Transaction)
             {
                 try
                 {
@@ -3175,7 +3175,6 @@ namespace PrototypeWithAuth.Controllers
 
 
                     //need to do this function before save changes because if new request it should not have an id yet
-
                     await _requestsProc.RemoveFromInventoryAsync(requestReceived.RequestID);
 
                     RequestNotification requestNotification = new RequestNotification();
@@ -3192,13 +3191,12 @@ namespace PrototypeWithAuth.Controllers
                     requestNotification.Vendor = requestReceived.Product.Vendor.VendorEnName;
                     await _requestNotificationsProc.CreateWithoutTransactionAsync(requestNotification);
 
-                    var didntArriveNotification = _context.RequestNotifications.Where(r => r.RequestID == requestReceived.RequestID && r.NotificationStatusID == 1).FirstOrDefault();
+                    var didntArriveNotification = await _requestNotificationsProc.ReadOneAsync( new List<Expression<Func<RequestNotification, bool>>> { r => r.RequestID == requestReceived.RequestID && r.NotificationStatusID == 1 });
                     if (didntArriveNotification != null)
                     {
-                        _context.Remove(didntArriveNotification);
+                         await _requestNotificationsProc.DeleteWithoutTransactionAsync(new List<RequestNotification> { didntArriveNotification });
                     }
-                    //throw new Exception();
-                    await _context.SaveChangesAsync();
+
                     await transaction.CommitAsync();
 
                 }
@@ -3207,11 +3205,11 @@ namespace PrototypeWithAuth.Controllers
                     await transaction.RollbackAsync();
                     receivedLocationViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     Response.StatusCode = 500;
-                    /*receivedLocationViewModel.locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0);
+                    /*receivedLocationViewModel.locationTypesDepthZero = _proc.LocationTypes.Where(lt => lt.Depth == 0);
                     var userid = _userManager.GetUserId(User);
-                    receivedLocationViewModel.Request.ApplicationUserReceiver = _context.Users.Where(u => u.Id == userid).FirstOrDefault();
+                    receivedLocationViewModel.Request.ApplicationUserReceiver = _proc.Users.Where(u => u.Id == userid).FirstOrDefault();
                     receivedLocationViewModel.Request.ApplicationUserReceiverID = userid;
-                    receivedLocationViewModel.Request = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                    receivedLocationViewModel.Request = _proc.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
                     .FirstOrDefault();
                     return PartialView("ReceivedModal", receivedLocationViewModel);*/
                     return PartialView("_ErrorMessage", receivedLocationViewModel.ErrorMessage);

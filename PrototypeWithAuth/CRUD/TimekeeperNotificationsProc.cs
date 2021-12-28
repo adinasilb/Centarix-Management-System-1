@@ -25,7 +25,7 @@ namespace PrototypeWithAuth.CRUD
             try
             {
                 var notifications = await Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == EHID }).ToListAsync();
-                await DeleteAsync(notifications);
+                await DeleteWithoutTransactionAsync(notifications);
             }
             catch (Exception ex)
             {
