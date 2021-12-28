@@ -188,7 +188,7 @@ $(function () {
     };
 
 	$("body, .modal").off("click", ".delete-document").on("click",".delete-document", function (e) {
-		e.preventDefault();
+        e.preventDefault();
 		var hasClass = $(this).hasClass("delete-file-document");
 		var reportFile = $(this).hasClass("report-file");
 		console.log(reportFile)
@@ -207,6 +207,7 @@ $(function () {
                 cache: false,
                 success: function (data) {
                     $.fn.OpenModal('modal-document-delete', "documents-delete", data)
+                    $("#loading").show()
                 }
             });
         }
