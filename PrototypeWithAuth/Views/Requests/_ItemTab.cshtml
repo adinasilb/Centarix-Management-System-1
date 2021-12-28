@@ -78,7 +78,7 @@
         + " d-none";
     var batchCategories = AppUtility.ParentCategoryEnum.Biological
         + " d-none";
-    if(modalType != AppUtility.RequestModalType.Create)
+    if (modalType != AppUtility.RequestModalType.Create)
     {
         batchCategories += " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals;
     }
@@ -110,15 +110,15 @@
 @{ var request = Model.Requests[0];}
 <span class="heading-1 modal-tab-name">Item</span>
 @*@if (modalType == AppUtility.RequestModalType.Create && !Model.IsProprietary)
-{
-    <div class="row">
-        <div class="col-4 offset-8">
-            <input type="checkbox" class="form-check-input filled-in isRequest" asp-for="IsRequestQuote" />
-            <label class="form-check-label" asp-for="IsRequestQuote">Need To Request Price</label>
-            <input type="hidden" value="@Model.IsRequestQuote.ToString().ToLower()" id="requestQuoteValue" />
+    {
+        <div class="row">
+            <div class="col-4 offset-8">
+                <input type="checkbox" class="form-check-input filled-in isRequest" asp-for="IsRequestQuote" />
+                <label class="form-check-label" asp-for="IsRequestQuote">Need To Request Price</label>
+                <input type="hidden" value="@Model.IsRequestQuote.ToString().ToLower()" id="requestQuoteValue" />
+            </div>
         </div>
-    </div>
-}*@
+    }*@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
@@ -135,8 +135,13 @@
              "ParentCategoryID",
              "ParentCategoryDescription"
              ), "Select Category",
-             new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "parentlist", 
-                 @searchable = "Select Category", @data_stop_refresh = "true" })
+             new
+                  {
+                      @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass,
+                      @id = "parentlist",
+                 @searchable = "Select Category",
+                      @data_stop_refresh = "true"
+                  })
             }
             <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" />
             <span asp-validation-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
@@ -151,8 +156,13 @@
                 "ProductSubcategoryID",
                 "ProductSubcategoryDescription"
                 ), "Select Sub Category",
-                new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist",
-                    @searchable = "Select Sub Category", @data_stop_refresh = "true" })
+                new
+                     {
+                         @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass,
+                         @id = "sublist",
+                    @searchable = "Select Sub Category",
+                         @data_stop_refresh = "true"
+                     })
             <input type="hidden" asp-for="Requests[0].Product.ProductSubcategoryID" disabled class="proprietryHidenCategory" />
             <span asp-validation-for="Requests[0].Product.ProductSubcategoryID" class="text-danger-centarix"></span>
         </div>
@@ -257,11 +267,11 @@
                 <input asp-for="Requests[0].ParentQuote.QuoteNumber" readonly class="form-control-plaintext border-bottom @quoteCategories @markReadOnlyClass" disabled />
                 <span asp-validation-for="Requests[0].ParentQuote.QuoteNumber" class="text-danger-centarix" />
             </div>
-            @*<div class="col-md-6">
-                    <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
-                    <input asp-for="Request.ParentQuote.QuoteDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories @markReadOnlyClass" disabled />
-                    <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
-                </div>*@
+            <div class="col-md-6">
+                    <label asp-for="Requests[0].ParentQuote.ExpirationDate" class="control-label"></label>
+                    <input asp-for="Requests[0].ParentQuote.ExpirationDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories @markReadOnlyClass" disabled value="@Model.Requests[0].ParentQuote.ExpirationDate.GetElixirDateFormat()" />
+                    <span asp-validation-for="Requests[0].ParentQuote.ExpirationDate" class="text-danger-centarix quote-date" />
+                </div>
         </div>
     }
     <div class="row">
@@ -277,7 +287,7 @@
                     <label class="control-label">Expected supply date</label>
                     @if (modalType == AppUtility.RequestModalType.Create)
                     {
-                        <input value="" class="form-control-plaintext border-bottom datepicker expected-supply-date requestPriceQuote @supplyDaysCategories " disabled type="text" name="expected-supply-days"/>
+                        <input value="" class="form-control-plaintext border-bottom datepicker expected-supply-date requestPriceQuote @supplyDaysCategories " disabled type="text" name="expected-supply-days" />
                     }
                     else
                     {
@@ -292,14 +302,27 @@
                     }
                 </div>
             </div>
-            }
-            <div class="col-md-4 @websiteCategories">
-                <label asp-for="Requests[0].URL" class="control-label"></label>
-                <input asp-for="Requests[0].URL" class="form-control-plaintext border-bottom @websiteCategories @markReadOnlyClass" />
-                <span asp-validation-for="Requests[0].URL" class="text-danger-centarix"></span>
+        }
+        <div class="col-md-4 @websiteCategories">
+            <label asp-for="Requests[0].URL" class="control-label"></label>
+            @*<a type="hidden" id="url-click" href="@AppUtility.GetUrlFromUserData(Model.Requests[0].URL)" target="_blank" />*@
+            <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="form-control-plaintext border-bottom popover-url align-wi" value="RequestsURL">
+                <input asp-for="Requests[0].URL" class="border-0 bg-transparent black-87 @websiteCategories @markReadOnlyClass url-shown" />
+            </button>
+            @*<input asp-for="Requests[0].URL" href="#" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" value="@Model.Requests[0].URL"*@
+            @*class="form-control-plaintext border-bottom @websiteCategories @markReadOnlyClass url-shown" />*@
+
+            <div style="display:none;" id="RequestsURL">
+                <div class="row px-3 accounting-popover">
+                    <a href="@AppUtility.GetUrlFromUserData(Model.Requests[0].URL)" target="_blank" class="btn-link text no-hover">
+                        <label class="m-2 text-transform-none">@Model.Requests[0].URL</label>
+                    </a>
+                </div>
             </div>
+            <span asp-validation-for="Requests[0].URL" class="text-danger-centarix"></span>
         </div>
-    @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null ||  Model.Requests[0].ParentRequest?.OrderNumber != null)
+    </div>
+    @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null || Model.Requests[0].ParentRequest?.OrderNumber != null)
     {
         <div class="row">
             @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null)
@@ -310,7 +333,7 @@
                     <span asp-validation-for="Requests[0].ParentRequest.SupplierOrderNumber" class="text-danger-centarix"></span>
                 </div>
             }
-            @if(Model.Requests[0].ParentRequest?.OrderNumber != null)
+            @if (Model.Requests[0].ParentRequest?.OrderNumber != null)
             {
                 <div class="col-md-3 ">
                     <label asp-for="Requests[0].ParentRequest.OrderNumber" class="control-label">Centarix Order #</label>
@@ -319,7 +342,7 @@
                 </div>
                 <div class="col-md-3">
                     <label asp-for="Requests[0].ParentRequest.OrderDate" class="control-label"></label>
-                    <input type="text" value="@Model.Requests[0].ParentRequest.OrderDate.GetElixirDateFormat()" class="form-control-plaintext border-bottom datepicker for-supply-date-calc"  @disabled @*asp-format="@AppUtility.AspDateFormatString"*@  />
+                    <input type="text" value="@Model.Requests[0].ParentRequest.OrderDate.GetElixirDateFormat()" class="form-control-plaintext border-bottom datepicker for-supply-date-calc" @disabled @*asp-format="@AppUtility.AspDateFormatString"*@ />
                     <span asp-validation-for="Requests[0].ParentRequest.OrderDate" class="text-danger-centarix"></span>
                 </div>
             }
@@ -343,8 +366,8 @@
             }
             @if (Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true) //todo: make this a loop for each payment
             {
-                <input type ="hidden" asp-for="Requests[0].Payments[0].InvoiceID" />
-                <input type ="hidden" asp-for="Requests[0].Payments[0].Invoice.InvoiceID" />
+                <input type="hidden" asp-for="Requests[0].Payments[0].InvoiceID" />
+                <input type="hidden" asp-for="Requests[0].Payments[0].Invoice.InvoiceID" />
                 <div class="col-md-3 ">
                     <label asp-for="Requests[0].Payments[0].Invoice.InvoiceNumber" class="control-label"></label>
                     <input asp-for="Requests[0].Payments[0].Invoice.InvoiceNumber" class="form-control-plaintext border-bottom @markReadOnlyClass" />
@@ -362,22 +385,22 @@
 else //isProprietary
 {
     @*<div class="row">
-        <div class="col-md-4 form-group">
-            <label asp-for="Requests[0].Unit" class="control-label"></label>
-            @Html.EditorFor(vm => vm.Requests[0].Unit, new { htmlAttributes = new { @class = "form-control-plaintext border-bottom " + @markReadOnlyClass, @min = "1", @id = "unit" } })
-            <span asp-validation-for="Requests[0].Unit" class="text-danger-centarix"></span>
-        </div>
-        <div class="col-md-8 form-group dropdown-select-div">
-            <label asp-for="Requests[0].UnitType" class="control-label"></label>
-            @Html.DropDownListFor(
-                vm => vm.Requests[0].UnitTypeID,
-                Model.UnitTypeList,
-                "",
-                htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @id = "unitTypeID" }
-                )
-            <span asp-validation-for="Requests[0].UnitType" class="text-danger-centarix"></span>
-        </div>
-    </div>*@
+            <div class="col-md-4 form-group">
+                <label asp-for="Requests[0].Unit" class="control-label"></label>
+                @Html.EditorFor(vm => vm.Requests[0].Unit, new { htmlAttributes = new { @class = "form-control-plaintext border-bottom " + @markReadOnlyClass, @min = "1", @id = "unit" } })
+                <span asp-validation-for="Requests[0].Unit" class="text-danger-centarix"></span>
+            </div>
+            <div class="col-md-8 form-group dropdown-select-div">
+                <label asp-for="Requests[0].UnitType" class="control-label"></label>
+                @Html.DropDownListFor(
+                    vm => vm.Requests[0].UnitTypeID,
+                    Model.UnitTypeList,
+                    "",
+                    htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @id = "unitTypeID" }
+                    )
+                <span asp-validation-for="Requests[0].UnitType" class="text-danger-centarix"></span>
+            </div>
+        </div>*@
     if (request.Product.ProductSubcategory.ProductSubcategoryDescription == "Cells")
     {
         <div class="row">
@@ -392,7 +415,57 @@ else //isProprietary
     <div class="row">
         <div class="col-md-3 ">
             <label asp-for="Requests[0].CreationDate" class="control-label @dateCreatedCategories">Creation Date</label>
-            <input asp-for="Requests[0].CreationDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass @dateCreatedCategories"  asp-format="@AppUtility.AspDateFormatString"  type="text" />
+            <input asp-for="Requests[0].CreationDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass @dateCreatedCategories" asp-format="@AppUtility.AspDateFormatString" type="text" />
         </div>
     </div>
 }
+
+<script>
+
+    $(".popover-url").off('click').click(function () {
+        if ($("#RequestsURL .accounting-popover a").attr("href") == "") {
+            $(this).popover('hide');
+        }
+        else {
+            var val = $(this).val();
+            console.log("url popover")
+            $('[data-toggle="popover"]').popover('dispose');
+            $(this).popover({
+                sanitize: false,
+                placement: 'bottom',
+                html: true,
+                content: function () {
+                    return $('#' + val).html();
+                }
+            });
+            $(this).popover('toggle');
+        }
+    });
+
+    $("#Requests_0__URL").on("focusout", function (e) {
+        var inputText = $(this).val();
+        $.ajax({
+            async: true,
+            url: "/Requests/GetUrlFromUserData?inputtedUrl=" + inputText,
+            traditional: true,
+            type: "GET",
+            cache: false,
+            success: function (data) {
+                $("#RequestsURL a").attr("href", data);
+                $("#RequestsURL a label").html(inputText);
+                return false;
+            }
+        });
+        $(".popover-url").popover('hide');
+    });
+
+
+    //$("#Requests_0__URL").on("blur", function (e) {
+    //    var inputText = $(this).val();
+    //    $.fn.ChangeUrlLink(inputText);
+    //});
+
+    $.fn.ChangeUrlLink = new function (inputText) {
+
+    }
+</script>

@@ -58,6 +58,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<FavoriteRequest> FavoriteRequests { get; set; }
         public DbSet<ShareRequest> ShareRequests { get; set; }
         public DbSet<RequestList> RequestLists { get; set; }
+        public DbSet<ShareRequestList> ShareRequestLists { get; set; }
         public DbSet<RequestListRequest> RequestListRequests { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<AuthorProtocol> AuthorProtocols { get; set; }
@@ -378,6 +379,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Request>().Ignore(e => e.TotalWithVat);
             modelBuilder.Entity<Request>().Ignore(e => e.Ignore);
             modelBuilder.Entity<Request>().Ignore(e => e.IsReceived);
+            modelBuilder.Entity<ParentQuote>().Ignore(e => e.ExpirationDate_submit);
             modelBuilder.Entity<ParentQuote>().Ignore(e => e.QuoteDate_submit);
             modelBuilder.Entity<ParentRequest>().Ignore(e => e.OrderDate_submit);
             modelBuilder.Entity<Invoice>().Ignore(e => e.InvoiceDate_submit);
@@ -389,10 +391,12 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Employee>().Ignore(e => e.StartedWorking_submit);
             modelBuilder.Entity<Employee>().Ignore(e => e.DOB_submit);
             modelBuilder.Entity<ParentCategory>().Ignore(e => e.ParentCategoryDescriptionEnum);
+            modelBuilder.Entity<Request>().Ignore(e => e.SerialNumberString);
             modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
             modelBuilder.Entity<Request>().Property(r => r.ExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Product>().Property(r => r.ProductCreationDate).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<ParentQuote>().Property(r => r.QuoteDate).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<TempLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<FunctionLineID>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<ParentRequest>().HasIndex(p => p.OrderNumber).IsUnique();
@@ -400,14 +404,19 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Product>().HasIndex(p => p.SerialNumber).IsUnique();
             modelBuilder.Entity<Product>().HasIndex(p => new { p.SerialNumber, p.VendorID }).IsUnique();
             modelBuilder.Entity<ShareRequest>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<ShareRequestList>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<ShareProtocol>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<ShareResource>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<TestHeader>().HasIndex(th => new { th.SequencePosition, th.TestGroupID }).IsUnique();
             modelBuilder.Entity<ExperimentEntry>().HasIndex(ee => new { ee.ParticipantID, ee.VisitNumber }).IsUnique();
+            modelBuilder.Entity<Request>().HasIndex(r => r.SerialNumber).IsUnique();
             modelBuilder.Entity<Participant>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<ExperimentEntry>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<Vendor>().HasIndex(v => new { v.CountryID, v.VendorBuisnessID }).IsUnique();
             modelBuilder.Entity<Participant>().HasIndex(p => new { p.ParticipantID, p.CentarixID }).IsUnique();
+            modelBuilder.HasSequence<int>("SerialNumberHelper", schema: "dbo").StartsAt(1).IncrementsBy(1);
+            modelBuilder.Entity<Request>().Property(r => r.SerialNumber).HasDefaultValueSql("NEXT VALUE FOR dbo.SerialNumberHelper");
+      
             /*PROTOCOLS*/
             ///set up composite keys
 

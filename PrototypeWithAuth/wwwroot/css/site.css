@@ -226,6 +226,11 @@ i .fas {
     -webkit-box-shadow: 0 1px 0 0 var(--order-inv-color);
     box-shadow: 0 1px 0 0 var(--order-inv-color);
 }
+.md-form input[type="text"]:not(.url-shown) {
+    border-bottom: 1px solid var(--order-inv-color);
+    -webkit-box-shadow: 0 1px 0 0 var(--order-inv-color);
+    box-shadow: 0 1px 0 0 var(--order-inv-color);
+}
 
 
 [type=checkbox]:checked + label:before {
@@ -2027,17 +2032,20 @@ td .btn {
     color: var(--order-inv-color) !important;
 }
 /*HOVER FOR EACH SECTION*/
-.order-inv-form .form-control-plaintext:not(.danger-box-shadow):focus, .order-inv-form input[type="text"]:not(.danger-box-shadow):focus {
+.order-inv-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus,
+.order-inv-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
+.order-inv-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
 }
 
-.order-inv-form .form-control-plaintext.danger-box-shadow:focus {
-    outline-width: 0px !important;
-    outline-color: none !important;
-    box-shadow: 0 2px 0 0 var(--danger-color) !important;
-}
+
+    .order-inv-form .form-control-plaintext.danger-box-shadow:focus {
+        outline-width: 0px !important;
+        outline-color: none !important;
+        box-shadow: 0 2px 0 0 var(--danger-color) !important;
+    }
 
 .order-inv-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
@@ -2057,7 +2065,9 @@ td .btn {
     box-shadow: 0 2px 0 0 var(--biomarkers-color) !important;
 }
 
-.bio-form .form-control-plaintext:not(.danger-box-shadow):focus {
+.bio-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
+.bio-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
+.bio-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--biomarkers-color) !important;
@@ -2073,7 +2083,10 @@ td .btn {
     border-bottom: none !important;
     border: 2px solid var(--biomarkers-color) !important;
 }
-.users-form .form-control-plaintext:focus, .users-form input[type="text"]:focus{
+
+.users-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
+.users-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
+.users-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--user-color) !important;
@@ -2101,7 +2114,9 @@ span.caret {
     color: #495057;
 }
 
-.supplier-form .form-control-plaintext:focus, .supplier-form input[type="text"]:focus {
+.supplier-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
+.supplier-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
+.supplier-form.form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus {
     box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
 }
 
@@ -2136,7 +2151,8 @@ span.caret {
     border: 2px solid var(--lab-man-color) !important;
 }
 
-.supplier-form .select.form-control-plaintext:focus, .supplier-form input[type="text"]:focus {
+
+.supplier-form .select.form-control-plaintext:focus, .supplier-form input[type="text"]:not(.url-shown):focus {
     border-bottom: none !important;
     border: 2px solid var(--lab-man-color) !important;
 }
@@ -2600,6 +2616,10 @@ span.caret {
 
 .elixir-modal-xl {
     width: 93.31rem;
+}
+
+.elixir-modal-lg{
+    width: 70rem;
 }
 
 .elixir-modal-md {
@@ -3125,6 +3145,9 @@ body.modal-open .popover {
         display:flex;
     }
 
+.page-num-size{
+    font-size: 1.5rem;
+}
 .gray-background {
     background-color: rgba(0, 0, 0, 0.075) !important;
 }

@@ -1,0 +1,64 @@
+﻿@model PrototypeWithAuth.ViewModels.ListSettingsViewModel;
+<div class="row">
+    <div class="col">
+
+        <label class="control-label">Share List</label>
+        <div>
+            @Html.DropDownListFor(vm => vm.ApplicationUserIDs, Model.ApplicationUsers,
+ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext float-right share-list-users", @multiple = "multiple", @onload = "ChangeCheckboxesToFilledIn()" })
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        @{var i = 0; }
+        @foreach (var l in Model.SharedUsers)
+        {
+
+            <input type="hidden" asp-for="SharedUsers[i].ShareRequestList.ToApplicationUserID" class="shared-users" />
+            <input type="hidden" asp-for="SharedUsers[i].ShareRequestList.ShareID" />
+            <input type="hidden" asp-for="SharedUsers[i].IsRemoved" class="removeShare@(i)"/>
+            <input type="hidden" asp-for="SharedUsers[i].ShareRequestList.ToApplicationUser.FirstName" />
+            <input type="hidden" asp-for="SharedUsers[i].ShareRequestList.ToApplicationUser.LastName" />
+            <input type="hidden" asp-for="SharedUsers[i].ShareRequestList.ViewOnly" class="permissions@(i)" />
+            if (!l.IsRemoved)
+            {
+            <div class="row share-permissions border-bottom">
+                <div class="col-4">
+                    <label class="font-weight-bold">@l.ShareRequestList.ToApplicationUser.FirstName @l.ShareRequestList.ToApplicationUser.LastName</label>
+                </div>
+                @{
+                    var viewOnlyChecked = "";
+                    var editChecked = "checked";
+                    if (l.ShareRequestList.ViewOnly == true)
+                    {
+                        viewOnlyChecked = "checked";
+                        editChecked = "";
+                    }
+                }
+                <div class="col-3 px-1 pb-2">
+                    <div class="custom-control custom-radio" style="font-size:.85rem;">
+                        <input class="custom-control-input list-permissions-radio " @viewOnlyChecked id="ViewOnly_@(i)" data-id="@i" name="EditList@(i)" type="radio" value="@l.ShareRequestList.ViewOnly" />
+                        <label class="radio-button custom-control-label pt-1 pl-1 include-vat-radio" for="ViewOnly_@(i)">View only</label>
+                    </div>
+                </div>
+                <div class="col-4 px-1 pb-2">
+                    <div class="custom-control custom-radio " style="font-size:.85rem;">
+                        <input class="custom-control-input list-permissions-radio" @editChecked id="ViewAndEdit_@(i)" data-id="@i" name="EditList@(i)" type="radio" value="@(!l.ShareRequestList.ViewOnly)" />
+                        <label class="radio-button custom-control-label pt-1 pl-1 include-vat-radio" for="ViewAndEdit_@(i)">View and edit</label>
+                    </div>
+                </div>
+                <div class="col-1">
+                    <a class="btn-link text no-hover requests delete-share-list float-right danger-text" value="@i">
+                        <i class="icon-highlight_off-24px" style="font-size:25px;"></i>
+                    </a>
+                </div>
+
+            </div>
+                        }
+                        i++;
+                    }
+    </div>
+</div>
+<script src="~/js/RequestLists.js"></script>

@@ -489,6 +489,24 @@
     <Compile Remove="Data\Migrations\20211104130114_addedParticipantIDUniqueValidation.Designer.cs" />
     <Compile Remove="Data\Migrations\20211109121737_Test.cs" />
     <Compile Remove="Data\Migrations\20211109121737_Test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211115194349_TestCleanUpModelExtensionData2.cs" />
+    <Compile Remove="Data\Migrations\20211115194349_TestCleanUpModelExtensionData2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211116084919_ItemSerialNumber.cs" />
+    <Compile Remove="Data\Migrations\20211116084919_ItemSerialNumber.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211116131619_ItemSerialNumber.cs" />
+    <Compile Remove="Data\Migrations\20211116131619_ItemSerialNumber.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211116132417_ItemSerialNumber.cs" />
+    <Compile Remove="Data\Migrations\20211116132417_ItemSerialNumber.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211116132846_ItemSerialNumber.cs" />
+    <Compile Remove="Data\Migrations\20211116132846_ItemSerialNumber.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211117081930_ItemSerialNumber.cs" />
+    <Compile Remove="Data\Migrations\20211117081930_ItemSerialNumber.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211117083259_ItemSerialNumber.cs" />
+    <Compile Remove="Data\Migrations\20211117083259_ItemSerialNumber.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211117091838_ItemSerialNumber.cs" />
+    <Compile Remove="Data\Migrations\20211117091838_ItemSerialNumber.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211114083811_AddShareRequestLists.cs" />
+    <Compile Remove="Data\Migrations\20211114083811_AddShareRequestLists.Designer.cs" />
   </ItemGroup>
 
 
@@ -542,7 +560,6 @@
 
 
   <ItemGroup>
-    <Folder Include="wwwroot\ExperimentEntries\" />
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />
     <Folder Include="wwwroot\FunctionResults\" />

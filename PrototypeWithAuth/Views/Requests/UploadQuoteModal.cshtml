@@ -9,7 +9,7 @@
     var form = "order-inv-form";
     var deleteDocumentClass = "";
     var sectionType = AppUtility.MenuItems.Requests.ToString();
-    
+
     //else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
     //{
 
@@ -23,7 +23,7 @@
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
 
 <script src="~/js/site.js"></script>
-<script src="~/js/InitializeDatePicker.js"></script>
+
 <script src="~/js/WarantySupplyDateCalc.js"></script>
 <div class="modal modal-document fader modalStep1 on-form-modal @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9000">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
@@ -32,8 +32,6 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
-
-                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel);}
 
                 <div>
                     <div class="modal-header modal-header-padding">
@@ -49,106 +47,58 @@
                         </div>
                     </div>
                 </div>
+                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel);}
 
                 <div class="modal-body mt-5 ">
-                    @{
-                        var urlAction = Url.Action("DocumentsModal", "Requests");
-                        var fontSize = "2rem";
-                    }
-                    <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
-                    @{
-                        var filterClass = "opac87";
-                        var hasFileClass = "";
-                        var containsFile = "";
-                        <input type="hidden" asp-for="FileStrings" />@*This is for reloading the modal on error*@
-                        if (Model.FileStrings != null && Model.FileStrings.Count > 0)
-                        {
-                            filterClass = "order-inv-filter";
-                            containsFile = "contains-file";
-                            hasFileClass = "hasFile";
-                        }
-                    }
 
-                    <div class="row">
-                        <div class=" offset-4 text-center">
-                            <div class="d-inline-block" style="max-width:150px">
-                            <input type="text" readonly id="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" name="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" class="@containsFile" 
-                                   style="pointer-events:none; background:none; border:none;" />
-                            </div>
-                            <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-id="0" id="@AppUtility.FolderNamesEnum.Quotes.ToString()" 
-                               name="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-val="@true" showSwitch="@false" parentfolder="@AppUtility.ParentFolderName.ParentQuote.ToString()">
 
-                                <div class="card document-border @hasFileClass">
-                                    <div class="document-card text-center">
-                                        <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                                    </div>
-                                </div>
-                            </a>
-                            <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
-                        </div>
-                        <div class="col-4 pl-5 pt-4">
-                            <div class="row">
-                                <div class=" col-md-6">
-                                    <div class="form-group ">
-                                        <label asp-for="@Model.ParentQuote.QuoteNumber" class=" control-label m-0 mt-2" style="width:100%;"></label>
-                                        <input asp-for="@Model.ParentQuote.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" />
-                                        <span asp-validation-for="@Model.ParentQuote.QuoteNumber" class="text-danger-centarix"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                </div>
-                            </div>
-                            @if (Model.TempRequestListViewModel.RequestIndexObject.IsReorder)
-                            {
-                                <input type="hidden" class="for-supply-date-calc" value="@DateTime.Now.GetElixirDateFormat()"/>
-                                <div class="row">
-                                    <div class=" col-md-6">
-                                        <div class="form-group ">
-                                            <label asp-for="@Model.ExpectedSupplyDays" class=" control-label m-0 mt-2" style="width:100%;"></label>
-                                            <input asp-for="@Model.ExpectedSupplyDays" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0 expected-supply-days" min="1" />
-                                            <span asp-validation-for="@Model.ExpectedSupplyDays" class="text-danger-centarix"></span>
-                                        </div>
-                                    </div>
-                                    <div class=" col-md-6">
-                                        <div class="form-group">
-                                            <label class="control-label">Expected supply date</label>
-                                            <input value="" class="form-control-plaintext border-bottom datepicker expected-supply-date" type="text" name="expected-supply-days" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                            }
-                        <div>
-                            </div>
-                            <div class="row">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="control-label">Discount</label>
-
-                                    <div class="input-group">
-                                        <input asp-for="Discount" class="form-control-plaintext border-bottom requestPriceQuote" value="" />
-                                        <div class="input-group-text">%</div>
-                                    </div>
-                                    <span asp-validation-for="Discount" />
-                                </div>
-                            </div>
-                        </div>
-                           
-                            @*<div class="row">
-                        <div class="form-group ">
-                            <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                            <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
-                            <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
-                        </div>
-                    </div>*@
-                        </div>
+                    <div class=" _UploadQuoteModal ">
+                        @{ await Html.RenderPartialAsync("_UploadQuoteModal", Model);}
                     </div>
-                </div>
-                <div class="modal-footer border-0 p-0">
-                    <div class="mx-auto modal-footer-mt">
-                        <input type="hidden" asp-for="OrderTypeEnum" />
-                        <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin submitQuote" @*asp-action="UploadQuoteModal"*@ />
-                        <button type="button" class="custom-button custom-cancel cancel-quote">Cancel</button>
+                    @if (Model.TempRequestListViewModel.RequestIndexObject.IsReorder)
+                    {
+                        <input type="hidden" class="for-supply-date-calc" value="@DateTime.Now.GetElixirDateFormat()" />
+
+
+                        <div class="container">
+
+                            <div class="row ">
+                                <div class=" offset-4 text-center">
+                                    <input type="button" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-4 pl-4 text-capitalize change-quote" value="Change Quote" />
+                                </div>
+                                <div class=" col-6 pl-5 ">
+                                    <div class="row">
+                                        <div class=" col-4 ">
+                                            <div class="form-group ">
+                                                <label asp-for="@Model.ExpectedSupplyDays" class=" control-label m-0 mt-2" style="width:100%;"></label>
+                                                <input asp-for="@Model.ExpectedSupplyDays" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0 expected-supply-days" min="1" />
+                                                <span asp-validation-for="@Model.ExpectedSupplyDays" class="text-danger-centarix"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class=" col-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Expected supply date</label>
+                                                <input value="" class="form-control-plaintext border-bottom datepicker expected-supply-date" type="text" name="expected-supply-days" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+
+                            </div>
+                    }
+
+                    <div class="modal-footer border-0 p-0">
+                        <div class="mx-auto modal-footer-mt">
+                            <input type="hidden" asp-for="OrderTypeEnum" />
+                            <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin submitQuote" @*asp-action="UploadQuoteModal"*@ />
+                            <button type="button" class="custom-button custom-cancel cancel-quote">Cancel</button>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -158,6 +108,22 @@
 <script src="~/js/DeleteDocModal.js"></script>
 <script src="~/js/validate.js"></script>
 <script src="~/js/Validation/ValidateUploadQuoteForm.js"></script>
+<script>
+    $(".change-quote").click(function () {
+        $.ajax({
+            //processData: true,
+            //contentType: true,
+            async: true,
+            url: "/Requests/_UploadQuoteModal?guid=" + $(".hidden-guid").val(),
+            type: 'GET',
+            cache: false,
+            //data: formData,
+            success: function (data) {
+                $("._UploadQuoteModal").html(data);
+            }
+        });
+    });
+</script>
 <script>
     $(".cancel-quote").on("click", function (e) {
         e.preventDefault();
@@ -176,7 +142,7 @@
             $.fn.CloseModal('step-1');
         }
     });
-    
+
     $(".submitQuote").off('click').on("click", function (e) {
         e.preventDefault();
         console.log("submit quote");
@@ -223,8 +189,8 @@
                         else {
                             $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "step-1, reorder-item");
                         }
-                         $(".save-item").removeClass("save-item").off('click')
-                    }                    
+                        $(".save-item").removeClass("save-item").off('click')
+                    }
                     else {
                         $.fn.OpenModal('termsModal', 'terms', data)
                     }

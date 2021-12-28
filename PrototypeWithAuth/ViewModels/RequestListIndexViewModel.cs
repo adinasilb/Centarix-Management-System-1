@@ -17,6 +17,7 @@ namespace PrototypeWithAuth.ViewModels
         public string ApplicationUserID { get; set; }
         public int ListID { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
+        public AppUtility.SidebarEnum SidebarType { get; set; }
         public AppUtility.MenuItems MenuType { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
         public List<RequestList> Lists { get; set; }

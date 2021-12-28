@@ -96,10 +96,14 @@
                                             <td style="width:15%; text-transform: none">
                                                 @Request.Unit @if (Request.Product.UnitType != null)
                                                 {@Request.Product.UnitType.UnitTypeDescription<br />}
-                                                @Request.Product.SubUnit @if (Request.Product.SubUnitType != null)
-                                                {@Request.Product.SubUnitType.UnitTypeDescription<br />}
-                                                @Request.Product.SubSubUnit @if (Request.Product.SubSubUnitType != null)
-                                                {@Request.Product.SubSubUnitType.UnitTypeDescription<br />}
+
+                                                @if (Request.Product.SubUnitType != null)
+                                                {@(Request.Product.SubUnit==0? "" : AppUtility.TrimZeros(Request.Product.SubUnit??0).ToString()+" ")
+                                                    @Request.Product.SubUnitType.UnitTypeDescription<br />
+                                                }
+                                                @if (Request.Product.SubSubUnitType != null)
+                                                {
+                                                    @(Request.Product.SubSubUnit==0? "" : AppUtility.TrimZeros(Request.Product.SubSubUnit??0).ToString()+" ")@Request.Product.SubSubUnitType.UnitTypeDescription<br />}
                                             </td>
                                             <td style="width:15%;">
                                                 <div class="input-group">
@@ -176,7 +180,7 @@
                                         <span asp-validation-for="InvoiceImage" class="text-danger"></span>*@
                                     @*<div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="invoice-image" /></div>
                                     *@
-                                </div>
+</div>
                                 <div class="col-2 offset-3 align-self-center">
                                     <input type="submit" class="accounting-background-color custom-button-font custom-button" asp-action="AddInvoiceModal" value="Save" />
                                 </div>

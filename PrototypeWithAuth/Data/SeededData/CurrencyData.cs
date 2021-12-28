@@ -9,7 +9,7 @@ namespace PrototypeWithAuth.Data.SeededData
 {
     public static class CurrencyData
     {
-        public static IEnumerable<Currency> GetCurrencies()
+        public static IEnumerable<Currency> Get()
         {
             var currencies = new List<Currency>()
             {

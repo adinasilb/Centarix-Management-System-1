@@ -275,8 +275,9 @@
         };
 
         $.fn.ChangeCheckboxesToFilledIn = function () {
-            console.log("in change checkboxes to be filled in");
+            console.log("in change checkboxes to be filled in with mdb");
             if ($(".setupdropdowns").val()) {
+                console.log("selt up dropdowns")
                 $.fn.SetUpDropdowns();
             }
             $('.mdb-select').materialSelect();
@@ -656,7 +657,6 @@
             var category = $("#categoryDescription").val();
             console.log(category)
             $("." + category).removeClass("d-none");
-            console.log("in detilas of case")
             $.fn.TurnToDetails("edits");
             $('.open-document-modal').attr("showSwitch", true);
             if (!$('.turn-edit-on-off').hasClass('locations')) {
@@ -773,8 +773,20 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            var $itemurl = "/Requests/ConfirmQuoteEmailModal/?id=" + $(this).val();
-            $.fn.CallPageRequest($itemurl, "confirmemail");
+
+            var itemUrl = "/Requests/ConfirmQuoteEmailModal/";
+            //var modalClass = "confirmemail";
+            var HasChecked = $(".form-check-input:checked").length > 0;
+            if (HasChecked) {
+                console.log("has checked");
+                $.fn.LoadModalForSelectedItems(e, itemUrl, "confirm-email");
+            }
+            else {
+                console.log("does not have checked");
+                var $itemurl = itemUrl + "?id=" + $(this).val();
+                $.fn.CallPageRequest($itemurl, "confirmemail");
+            }
+
             return false;
         });
         $(".confirm-quote-resend").on("click", function (e) {

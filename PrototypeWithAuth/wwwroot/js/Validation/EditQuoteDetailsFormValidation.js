@@ -4,17 +4,21 @@ $('.editQuoteDetails').validate({
     return $.trim( value );
   },
 	rules: {
-		"QuoteNumber": {
+		"ParentQuote.QuoteNumber": {
 			required: true,
 			//number: true,
 			//min: 1
 		},
+		"ParentQuote.ExpirationDate": {
+			required: true,
+			mindate: new Date()
+        },
 		//"Request.ExpectedSupplyDays": {
 		//	required: true,
 		//	min: 0,
 		//	integer: true
 		//},
-		"QuoteFileUpload": { required: true, extension: "jpg|jpeg|png|pdf" }
+		"QuoteFileUpload": { required: true, extension: "jpg|jpeg|png|pdf|doc|docx|xls|xlsx|ppt|pptx" }
 	},
 
 });

@@ -197,7 +197,8 @@
 	
 	$("select.part-type").off("change").change(function(){
 			var parentID = $(this).parents('.parent-group').prev(".form-group").find('.dropdown-main').find('span:not(.caret)').attr("parentID");
-			var nextSelect = $(this).parents('.parent-group').nextAll(".form-group").first().find('.dropdown-menu');
+		var nextSelect = $(this).parents('.parent-group').nextAll(".form-group").first().find('.dropdown-menu');
+		console.log(nextSelect)
 			$(nextSelect).html('');
 			FillNextSelect(nextSelect, parentID);
 	});
