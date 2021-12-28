@@ -40,6 +40,8 @@ using System.Drawing;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Text;
 using LinqToExcel;
+using CsvHelper;
+using CsvHelper.Configuration;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -160,8 +162,8 @@ namespace PrototypeWithAuth.Controllers
             Expression<Func<Request, DateTime>> orderby = null;
             Func<RequestPaymentsViewModel, DateTime> orderbyForPayments = null;
             //generic includes
-            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product, ThenInclude= new ComplexIncludes<ModelBase, ModelBase> { Include =p => ((Product)p).Vendor } });
-            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude= new ComplexIncludes<ModelBase, ModelBase> { Include =p => ((ProductSubcategory)p).ParentCategory } });
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).Vendor } });
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((ProductSubcategory)p).ParentCategory } });
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.UnitType });
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubUnitType });
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubSubUnitType });
@@ -209,7 +211,7 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.PageTypeEnum.AccountingNotifications:
                     wheres.Add(r => r.RequestStatusID != 7);
-                    includes.Add(new ComplexIncludes<Request, ModelBase> { Include =  r => r.ParentRequest });
+                    includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest });
                     if (notificationFilterViewModel == null)
                     {
                         notificationFilterViewModel = new NotificationFilterViewModel() { Vendors = _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Select(v => v.CategoryTypeID).Contains(1) }).ToList() };
@@ -244,7 +246,7 @@ namespace PrototypeWithAuth.Controllers
                             buttonText = "Add To All";
                             break;
                     }
-                    orderby =r => r.ParentRequest.OrderDate;
+                    orderby = r => r.ParentRequest.OrderDate;
                     select = r => new RequestIndexPartialRowViewModel
                     (AppUtility.IndexTableTypes.AccountingNotifications, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString, new Request())
@@ -278,7 +280,7 @@ namespace PrototypeWithAuth.Controllers
                         default:
                             iconList.Add(payNowIcon);
                             iconList.Add(popoverMoreIcon);
-                            orderbyForPayments =r => r.Request.ParentRequest.OrderDate;
+                            orderbyForPayments = r => r.Request.ParentRequest.OrderDate;
                             selectForPayments = r => new RequestIndexPartialRowViewModel
                              (AppUtility.IndexTableTypes.AccountingPaymentsDefault, r.Request, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
                         r.Request.Product.ProductSubcategory.ParentCategory, r.Request.Product.UnitType, r.Request.Product.SubUnitType, r.Request.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
@@ -484,7 +486,7 @@ namespace PrototypeWithAuth.Controllers
                             request.CreationDate = DateTime.Now;
                         }
 
-                        request.Product.ProductSubcategory = await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ProductSubcategoryID == request.Product.ProductSubcategoryID }, new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include =ps => ps.ParentCategory } });
+                        request.Product.ProductSubcategory = await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ProductSubcategoryID == request.Product.ProductSubcategoryID }, new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory } });
                         var isInBudget = false;
                         if (!request.Product.ProductSubcategory.ParentCategory.IsProprietary)
                         {
@@ -492,7 +494,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 request.Currency = AppUtility.CurrencyEnum.NIS.ToString();
                             }
-                            isInBudget =  await checkIfInBudgetAsync(request);
+                            isInBudget = await checkIfInBudgetAsync(request);
                         }
                         request.ExchangeRate = exchangeRate;
 
@@ -801,8 +803,8 @@ namespace PrototypeWithAuth.Controllers
             var userID = _userManager.GetUserId(User);
             if (tempRequest.Comments != null && tempRequest.Comments.Any())
             {
-                await _requestCommentsProc.UpdateAsync((List<RequestComment>)tempRequest.Comments.Where(c => c.CommentTypeID==1), tempRequest.Request.RequestID, userID);
-                await _productCommentsProc.UpdateAsync((List<ProductComment>)tempRequest.Comments.Where(c => c.CommentTypeID==2), tempRequest.Request.ProductID, userID);
+                await _requestCommentsProc.UpdateAsync((List<RequestComment>)tempRequest.Comments.Where(c => c.CommentTypeID == 1), tempRequest.Request.RequestID, userID);
+                await _productCommentsProc.UpdateAsync((List<ProductComment>)tempRequest.Comments.Where(c => c.CommentTypeID == 2), tempRequest.Request.ProductID, userID);
             }
         }
 
@@ -1784,8 +1786,8 @@ namespace PrototypeWithAuth.Controllers
 
                         if (requestItemViewModel.Comments != null)
                         {
-                            await _requestCommentsProc.UpdateAsync((List<RequestComment>)requestItemViewModel.Comments.Where(c => c.CommentTypeID==1), request.RequestID, currentUser.Id);
-                            await _productCommentsProc.UpdateAsync((List<ProductComment>)requestItemViewModel.Comments.Where(c => c.CommentTypeID==2), request.ProductID, currentUser.Id);
+                            await _requestCommentsProc.UpdateAsync((List<RequestComment>)requestItemViewModel.Comments.Where(c => c.CommentTypeID == 1), request.RequestID, currentUser.Id);
+                            await _productCommentsProc.UpdateAsync((List<ProductComment>)requestItemViewModel.Comments.Where(c => c.CommentTypeID == 2), request.ProductID, currentUser.Id);
                         }
 
                         if (receivedModalVisualViewModel.LocationInstancePlaces != null)
@@ -1892,16 +1894,16 @@ namespace PrototypeWithAuth.Controllers
 
             requestItemViewModel.Requests = new List<Request>() { request };
             requestItemViewModel.IsReorder = true;
-            requestItemViewModel.HasWarnings = _productCommentsProc.Read(new List<Expression<Func<ProductComment, bool>>> { pc => pc.ObjectID==request.ProductID && pc.CommentTypeID==2 }).Count()>0;
-            requestItemViewModel.HasQuote = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.ProductID == request.ProductID && r.ParentQuote.ExpirationDate >= DateTime.Now.Date }).Select(r => r.ParentQuote).OrderByDescending(r => r.QuoteDate).Count()>0;
+            requestItemViewModel.HasWarnings = _productCommentsProc.Read(new List<Expression<Func<ProductComment, bool>>> { pc => pc.ObjectID == request.ProductID && pc.CommentTypeID == 2 }).Count() > 0;
+            requestItemViewModel.HasQuote = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.ProductID == request.ProductID && r.ParentQuote.ExpirationDate >= DateTime.Now.Date }).Select(r => r.ParentQuote).OrderByDescending(r => r.QuoteDate).Count() > 0;
 
 
             TempRequestListViewModel trlvm = new TempRequestListViewModel
             {
                 GUID = Guid.NewGuid(),
                 RequestIndexObject = requestIndexObject,
-                SequencePosition=0,
-                TempRequestViewModels = new List<TempRequestViewModel> { new TempRequestViewModel { Request =request } },
+                SequencePosition = 0,
+                TempRequestViewModels = new List<TempRequestViewModel> { new TempRequestViewModel { Request = request } },
             };
 
             requestItemViewModel.TempRequestListViewModel = trlvm;
@@ -2313,7 +2315,7 @@ namespace PrototypeWithAuth.Controllers
                                     {
                                         if (tempRequest.Request.Product.ProductID == 0)
                                         {
-                                            tempRequest.Request.Product.SerialNumber =  await _requestsProc.GetSerialNumberAsync(false);
+                                            tempRequest.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(false);
                                             _context.Entry(tempRequest.Request.Product).State = EntityState.Added;
                                         }
                                         else
@@ -2359,8 +2361,8 @@ namespace PrototypeWithAuth.Controllers
                                     await _context.SaveChangesAsync();
                                     if (tempRequest.Comments != null)
                                     {
-                                        await _requestCommentsProc.UpdateAsync((List<RequestComment>)tempRequest.Comments.Where(c => c.CommentTypeID==1), tempRequest.Request.RequestID, currentUser.Id);
-                                        await _productCommentsProc.UpdateAsync((List<ProductComment>)tempRequest.Comments.Where(c => c.CommentTypeID==2), tempRequest.Request.ProductID, currentUser.Id);
+                                        await _requestCommentsProc.UpdateAsync((List<RequestComment>)tempRequest.Comments.Where(c => c.CommentTypeID == 1), tempRequest.Request.RequestID, currentUser.Id);
+                                        await _productCommentsProc.UpdateAsync((List<ProductComment>)tempRequest.Comments.Where(c => c.CommentTypeID == 2), tempRequest.Request.ProductID, currentUser.Id);
                                     }
 
                                     if (tempRequest.Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
@@ -2861,7 +2863,7 @@ namespace PrototypeWithAuth.Controllers
                 secondChildLi = await _locationInstancesProc.ReadOneAsync(new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceParentID == firstChildLI.LocationInstanceID }); //second child is to ensure it doesn't have any box units
             }
 
-            if (secondChildLi != null || parentLocationInstance.LocationTypeID==500)//case for 25
+            if (secondChildLi != null || parentLocationInstance.LocationTypeID == 500)//case for 25
             {
                 receivedModalVisualViewModel.DeleteTable = true;
             }
@@ -2879,7 +2881,7 @@ namespace PrototypeWithAuth.Controllers
                 if (receivedModalVisualViewModel.ParentLocationInstance != null)
                 {
                     var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == RequestID },
-                        new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.RequestLocationInstances, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include =rli => ((RequestLocationInstance)rli).LocationInstance } } });
+                        new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.RequestLocationInstances, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = rli => ((RequestLocationInstance)rli).LocationInstance } } });
 
                     if (receivedModalVisualViewModel.ParentLocationInstance.IsEmptyShelf && receivedModalVisualViewModel.ParentLocationInstance.LabPartID != null)
                     {
@@ -2891,7 +2893,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         receivedModalVisualViewModel.ChildrenLocationInstances =
                              _locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { m => m.LocationInstanceParentID == LocationInstanceID },
-                        new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include =m => m.RequestLocationInstances } })
+                        new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = m => m.RequestLocationInstances } })
                              .OrderBy(m => m.LocationNumber).ToList();
                     }
 
@@ -4260,8 +4262,8 @@ namespace PrototypeWithAuth.Controllers
                                 if (tempRequestViewModel.Comments != null)
                                 {
                                     var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id == _userManager.GetUserId(User) });
-                                    await _requestCommentsProc.UpdateAsync((List<RequestComment>)tempRequestViewModel.Comments.Where(c => c.CommentTypeID==1), tempRequestViewModel.Request.RequestID, currentUser.Id);
-                                    await _productCommentsProc.UpdateAsync((List<ProductComment>)tempRequestViewModel.Comments.Where(c => c.CommentTypeID==2), tempRequestViewModel.Request.ProductID, currentUser.Id);
+                                    await _requestCommentsProc.UpdateAsync((List<RequestComment>)tempRequestViewModel.Comments.Where(c => c.CommentTypeID == 1), tempRequestViewModel.Request.RequestID, currentUser.Id);
+                                    await _productCommentsProc.UpdateAsync((List<ProductComment>)tempRequestViewModel.Comments.Where(c => c.CommentTypeID == 2), tempRequestViewModel.Request.ProductID, currentUser.Id);
                                 }
                                 //await SaveCommentsFromSession(request);
                                 MoveDocumentsOutOfTempFolder(tempRequestViewModel.Request.RequestID, AppUtility.ParentFolderName.Requests, false, tempRequestListViewModel.GUID);
@@ -4831,7 +4833,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 foreach (var id in listSettings.ApplicationUserIDs)
                 {
-                    if (listSettings.SharedUsers!= null && listSettings.SharedUsers.Select(su => su.ShareRequestList.ToApplicationUserID).Contains(id))
+                    if (listSettings.SharedUsers != null && listSettings.SharedUsers.Select(su => su.ShareRequestList.ToApplicationUserID).Contains(id))
                     {
                         listSettings.SharedUsers.Where(su => su.ShareRequestList.ToApplicationUserID == id).FirstOrDefault().IsRemoved = false;
                     }
@@ -4926,8 +4928,8 @@ namespace PrototypeWithAuth.Controllers
             }
             // requestItemViewModel.HasQuote =_proc.Requests.Where(r => r.ProductID == request.ProductID && r.ParentQuote.ExpirationDate >= DateTime.Now.Date).Select(r => r.ParentQuote).OrderByDescending(r => r.QuoteDate).Count()>0;
 
-            var viewModel = _productCommentsProc.Read(new List<Expression<Func<ProductComment, bool>>> { p => p.ObjectID==productID && p.CommentTypeID==2 },
-                new List<ComplexIncludes<ProductComment, ModelBase>> { new ComplexIncludes<ProductComment, ModelBase> { Include = p => p.ApplicationUser }, new ComplexIncludes<ProductComment, ModelBase> { Include= p => p.CommentType } }).ToListAsync();
+            var viewModel = _productCommentsProc.Read(new List<Expression<Func<ProductComment, bool>>> { p => p.ObjectID == productID && p.CommentTypeID == 2 },
+                new List<ComplexIncludes<ProductComment, ModelBase>> { new ComplexIncludes<ProductComment, ModelBase> { Include = p => p.ApplicationUser }, new ComplexIncludes<ProductComment, ModelBase> { Include = p => p.CommentType } }).ToListAsync();
             return PartialView(viewModel);
         }
 
@@ -4944,6 +4946,61 @@ namespace PrototypeWithAuth.Controllers
             viewModel.ModalType = AppUtility.VendorModalType.SummaryFloat;
 
             return PartialView(viewModel);
+        }
+
+
+        public IActionResult DownloadRequestsToExcel()
+        {
+            var results = _requestsProc.Read().Select(r => new
+            {
+                ProductName = r.Product.ProductName,
+                CategoryName = r.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription,
+                SubCategoryName = r.Product.ProductSubcategory.ProductSubcategoryDescription,
+                Vendor = r.Product.Vendor.VendorEnName,
+                CompanyID = r.Product.Vendor.VendorBuisnessID,
+                CatalogNumber = r.Product.CatalogNumber,
+                BatchLot = r.Batch,
+                ExpirationDate = AppUtility.GetExcelDateFormat(r.BatchExpiration),
+                QuoteNumber = r.ParentQuote.QuoteNumber,
+                QuoteExpirationDate = AppUtility.GetExcelDateFormat(r.ParentQuote.ExpirationDate),
+                ExpectedSupplyDays = r.ExpectedSupplyDays,
+                ExpectedSupplyDate = r.ParentRequest.OrderDate.AddDays(Convert.ToDouble(r.ExpectedSupplyDays)),
+                URL = AppUtility.GetUrlFromUserData(r.URL),
+                CentarixOrderNumber = r.ParentRequest.OrderNumber,
+                OrderDate = AppUtility.GetExcelDateFormat(r.ParentRequest.OrderDate),
+                ArrivalDate = AppUtility.GetExcelDateFormat(r.ArrivalDate),
+                RequestedBy = r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName,
+                ReceivedBy = r.ApplicationUserReceiver.FirstName + " " + r.ApplicationUserReceiver.LastName,
+                Currency = r.Currency,
+                ExchangeRate = r.ExchangeRate,
+                Amount = r.Unit,
+                Unit = r.Product.UnitType.UnitTypeDescription,
+                SubUnitAmount = r.Product.SubUnit,
+                SubUnit = r.Product.SubUnitType.UnitTypeDescription,
+                SubSubUnitAmount = r.Product.SubSubUnit,
+                SubSubUnit = r.Product.SubSubUnitType.UnitTypeDescription,
+                //Total = "Calculate Total Later",
+                IncludeVat = r.IncludeVAT,
+                Discount = r.ParentQuote.Discount,
+                Terms = r.PaymentStatus.PaymentStatusDescription,
+                IsPaid = r.Payments.FirstOrDefault().IsPaid,
+                Partial = r.IsPartial,
+                Clarify = r.IsClarify,
+                Payments = r.Payments.Count()
+            }).ToList();
+
+            var cc = new CsvConfiguration(new System.Globalization.CultureInfo("en-US"));
+            using (var ms = new MemoryStream())
+            {
+                using (var sw = new StreamWriter(stream: ms, encoding: new UTF8Encoding(true)))
+                {
+                    using (var cw = new CsvWriter(sw, cc))
+                    {
+                        cw.WriteRecords(results);
+                    }// The stream gets flushed here.
+                    return File(ms.ToArray(), "text/csv", $"export_{DateTime.UtcNow.Ticks}.csv");
+                }
+            }
         }
     }
 }
