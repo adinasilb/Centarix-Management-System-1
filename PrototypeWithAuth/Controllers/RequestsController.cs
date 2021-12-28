@@ -3576,8 +3576,8 @@ namespace PrototypeWithAuth.Controllers
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
                 {
-                    var model6 = _context.Comments.Where(pr => pr.CommentID == ModelWithID.ID).FirstOrDefault();
-                    _context.Remove(model6);
+                    //var model6 = _context.Comments.Where(pr => pr.CommentID == ModelWithID.ID).FirstOrDefault();
+                    //_context.Remove(model6);
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Payment))
                 {
