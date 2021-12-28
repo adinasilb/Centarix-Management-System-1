@@ -1,0 +1,156 @@
+﻿@model PrototypeWithAuth.ViewModels.CreateSupplierViewModel;
+@using PrototypeWithAuth.AppData
+
+
+@{ 
+    var markReadOnlyClass = "";
+    if (Model.ModalType == AppUtility.VendorModalType.Edit || Model.ModalType == AppUtility.VendorModalType.SummaryFloat)
+    {
+        markReadOnlyClass = "mark-readonly";
+    }
+}
+<div class="row modal-tab-name">
+    <span class="heading-1 col-12 modal-tab-name">Vendor Details</span>
+</div>
+@if (Model.ModalType == AppUtility.VendorModalType.Create)
+{
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                <label asp-for="Vendor.VendorEnName" class="control-label"></label>
+                <input asp-for="Vendor.VendorEnName" class="form-control-plaintext border-bottom @markReadOnlyClass" />
+                <span asp-validation-for="Vendor.VendorEnName" class="text-danger-centarix"></span>
+            </div>
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-12">
+        <div class="form-group">
+            <label asp-for="Vendor.VendorHeName" class="control-label"></label>
+            <input asp-for="Vendor.VendorHeName" class="form-control-plaintext border-bottom @markReadOnlyClass"/>
+            <span asp-validation-for="Vendor.VendorHeName" class="text-danger-centarix"></span>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <div class="form-group">
+            <label class="control-label">Category Type</label>
+            @Html.ListBoxFor(m => m.VendorCategoryTypes,
+        Model.CategoryTypes,
+htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext "+markReadOnlyClass, @multiple = "multiple"})
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="form-group">
+            <label asp-for="Vendor.VendorBuisnessID" class="control-label"></label>
+            <input asp-for="Vendor.VendorBuisnessID" class="form-control-plaintext border-bottom @markReadOnlyClass" />
+            <span asp-validation-for="Vendor.VendorBuisnessID" class="text-danger-centarix"></span>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-3">
+        <div class="form-group">
+            <label asp-for="Vendor.CountryID" class="control-label">Country</label>
+            @Html.DropDownListFor(
+     vm => vm.Vendor.CountryID,
+     Model.Countries,
+     "Select Country",
+     htmlAttributes: new
+     {
+         @class = " mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass,
+         @id = "VendorCountries",
+         @size = 1,
+         @data_stop_refresh = "true",
+         @searchable = "default value",
+     }
+ )
+            <span asp-validation-for="Vendor.CountryID" class="text-danger-centarix"></span>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="form-group">
+            <label asp-for="Vendor.VendorCity" class="control-label"></label>
+            <input asp-for="Vendor.VendorCity" class="form-control-plaintext border-bottom @markReadOnlyClass"/>
+            <span asp-validation-for="Vendor.VendorCity" class="text-danger-centarix"></span>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="form-group">
+            <label asp-for="Vendor.VendorStreet" class="control-label"></label>
+            <input asp-for="Vendor.VendorStreet" class="form-control-plaintext border-bottom @markReadOnlyClass"/>
+            <span asp-validation-for="Vendor.VendorStreet" class="text-danger-centarix"></span>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="form-group">
+            <label asp-for="Vendor.VendorZip" class="control-label"></label>
+            <input asp-for="Vendor.VendorZip" class="form-control-plaintext border-bottom @markReadOnlyClass"/>
+            <span asp-validation-for="Vendor.VendorZip" class="text-danger-centarix"></span>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-4">
+        <div class="form-group">
+            <label asp-for="Vendor.VendorTelephone" class="control-label"></label>
+            <input asp-for="Vendor.VendorTelephone" class="form-control-plaintext border-bottom @markReadOnlyClass"/>
+            <span asp-validation-for="Vendor.VendorTelephone" class="text-danger-centarix"></span>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="form-group">
+            <label asp-for="Vendor.VendorCellPhone" class="control-label"></label>
+            <input asp-for="Vendor.VendorCellPhone" class="form-control-plaintext border-bottom @markReadOnlyClass" />
+            <span asp-validation-for="Vendor.VendorCellPhone" class="text-danger-centarix"></span>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="form-group">
+            <label asp-for="Vendor.VendorFax" class="control-label"></label>
+            <input asp-for="Vendor.VendorFax" class="form-control-plaintext border-bottom @markReadOnlyClass"/>
+            <span asp-validation-for="Vendor.VendorFax" class="text-danger-centarix"></span>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-3">
+        <div class="form-group">
+            <label asp-for="Vendor.OrdersEmail" class="control-label"></label>
+            <input asp-for="Vendor.OrdersEmail" class="form-control-plaintext border-bottom @markReadOnlyClass"/>
+            <span asp-validation-for="Vendor.OrdersEmail" class="text-danger-centarix"></span>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="form-group">
+            <label asp-for="Vendor.QuotesEmail" class="control-label"></label>
+            <input asp-for="Vendor.QuotesEmail" class="form-control-plaintext border-bottom @markReadOnlyClass" />
+            <span asp-validation-for="Vendor.QuotesEmail" class="text-danger-centarix"></span>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="form-group">
+            <label asp-for="Vendor.InfoEmail" class="control-label"></label>
+            <input asp-for="Vendor.InfoEmail" class="form-control-plaintext border-bottom @markReadOnlyClass"/>
+            <span asp-validation-for="Vendor.InfoEmail" class="text-danger-centarix"></span>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="form-group">
+            <label asp-for="Vendor.VendorWebsite" class="control-label"></label>
+            <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="form-control-plaintext border-bottom popover-url align-wi" value="VendorWebsite">
+                <input asp-for="Vendor.VendorWebsite" class="border-0 bg-transparent black-87 url-shown @markReadOnlyClass"/>
+            </button>
+            <div style="display:none;" id="VendorWebsite">
+                <div class="row px-3 accounting-popover">
+                    <a href="@AppUtility.GetUrlFromUserData(Model.Vendor?.VendorWebsite)" target="_blank" class="btn-link text no-hover">
+                        <label class="m-2 text-transform-none">@Model.Vendor?.VendorWebsite</label>
+                    </a>
+                </div>
+            </div>
+            <span asp-validation-for="Vendor.VendorWebsite" class="text-danger-centarix"></span>
+        </div>
+    </div>
+</div>

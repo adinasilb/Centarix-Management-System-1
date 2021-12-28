@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Models
 {
-    public class ParentCategory
+    public class ParentCategory : ModelBase
     {
         [Key]
         public int ParentCategoryID { get; set; }
@@ -21,7 +22,7 @@ namespace PrototypeWithAuth.Models
             } }
 
 
-        public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
+        public ListImplementsModelBase<ProductSubcategory> ProductSubcategories { get; set; }
         // public IEnumerable<Vendor> Vendors { get; set; }
 
         public int CategoryTypeID { get; set; }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class TempJson
+    public class TempJson : ModelBase
     {
        public string Json { get; set; }
     }

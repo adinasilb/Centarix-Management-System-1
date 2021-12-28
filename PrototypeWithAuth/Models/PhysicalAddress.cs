@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class PhysicalAddress
+    public class PhysicalAddress : ModelBase
     {
         public int PhysicalAddressID { get; set; }
         public string EmployeeID { get; set; }

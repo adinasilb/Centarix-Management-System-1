@@ -91,6 +91,10 @@ namespace PrototypeWithAuth.AppData
             RequestLists
         }
 
+        internal static Task<string> GetEmployeeCentarixID(IAsyncEnumerable<CentarixID> asyncEnumerable)
+        {
+            throw new NotImplementedException();
+        }
 
         public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
@@ -162,6 +166,7 @@ namespace PrototypeWithAuth.AppData
         public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusable, Equipment, Operation, Biological, Safety, General, Clinical }
         public enum RequestModalType { Create, Edit, Summary }
         public enum ProtocolModalType { None, Create, CheckListMode, Summary, Edit, SummaryFloat, CreateNewVersion }
+        public enum VendorModalType { Create, Edit, SummaryFloat }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
         public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveToList, DeleteFromList }
@@ -188,7 +193,7 @@ namespace PrototypeWithAuth.AppData
 
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
         { Request, Resource, Protocols, RequestLists, Product, ParentQuote, ParentRequest, Payment, Comment, RequestNotification }
-        public enum GlobalInfoType { ExchangeRate, LoginUpdates, LastProtocolLine }
+        public enum GlobalInfoType { ExchangeRate, TimekeeperNotificationUpdated, BirthdayNotificationUpdated, LoginUpdates, LastProtocolLine }
         public enum DataTypeEnum { String, Double, DateTime, Bool, File }
         public enum DataCalculation { None, BMI }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
@@ -310,19 +315,7 @@ namespace PrototypeWithAuth.AppData
 
         }
 
-        public static IQueryable<Request> GetRequestsListFromRequestStatusID(IQueryable<Request> FullRequestList, int RequestStatusID, int AmountToTake = 0)
-        {
-            IQueryable<Request> ReturnList = Enumerable.Empty<Request>().AsQueryable();
-            if (AmountToTake > 0)
-            {
-                ReturnList = FullRequestList.Where(r => r.RequestStatusID == RequestStatusID).Take(AmountToTake);
-            }
-            else
-            {
-                ReturnList = FullRequestList.Where(r => r.RequestStatusID == RequestStatusID);
-            }
-            return ReturnList;
-        }
+
 
         //this checks if a list is empty
         //right now used in the requestscontroller -> index
@@ -414,6 +407,11 @@ namespace PrototypeWithAuth.AppData
             }
             string newFileName = longFileName.Substring(place + 2, longFileName.Length - place - 2);
             return newFileName;
+        }
+
+        public static string GetLastElement(string String)
+        {
+            return String.Substring(String.LastIndexOf("."), String.Length - 1);
         }
 
         private static bool IsInThisMonth(DateTime dateCreated)
@@ -818,6 +816,11 @@ namespace PrototypeWithAuth.AppData
             return dateRange;
         }
 
+        public static string GetExcelDateFormat(DateTime? date)
+        {
+            return date.Equals(new DateTime()) ? "" : date?.ToString("dd/MM/yyyy").Replace(".", "") ?? "";
+        }
+
         public static string GetElixirDateFormat(this DateTime? date)
         {
             return date?.ToString("d MMM yyyy") ?? "";
@@ -949,6 +952,8 @@ namespace PrototypeWithAuth.AppData
         public static void CheckForError(StringWithBool stringWithBool,  String Message)
         {
         }
+
+
     }
 
 }

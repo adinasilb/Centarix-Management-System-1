@@ -38,7 +38,7 @@ namespace PrototypeWithAuth.ViewModels
         public string Currency { get; set; }
         [Display(Name = "Arrival Date")]
         public DateTime? ArrivalDate { get; set; }
-        public IEnumerable<ApplicationUser> ApplicationUsers { get; set; }
+        public IEnumerable<Employee> ApplicationUsers { get; set; }
         public string ApplicationUserReceiverID { get; set; }
         [Display(Name = "Quote Number")]
         public string QuoteNumber { get; set; }

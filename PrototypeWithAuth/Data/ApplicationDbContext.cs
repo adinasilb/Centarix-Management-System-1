@@ -10,6 +10,8 @@ using Abp.Domain.Entities;
 using System.Threading.Tasks;
 using System.Transactions;
 using System.Threading;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PrototypeWithAuth.Data
 {
@@ -470,8 +472,10 @@ namespace PrototypeWithAuth.Data
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
 
-        }
 
+
+
+        }
 
     }
 }

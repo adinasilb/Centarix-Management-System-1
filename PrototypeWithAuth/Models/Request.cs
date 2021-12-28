@@ -8,10 +8,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using MimeKit.Cryptography;
 using PrototypeWithAuth.AppData;
 using System.ComponentModel;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Request //WHEN YOU RETURN REQUEST MAY WANT TO DO A SELECT SO IT DOESN"T ALWAYS NEED TO CALCULATE THE DATE PAID
+    public class Request : ModelBase //WHEN YOU RETURN REQUEST MAY WANT TO DO A SELECT SO IT DOESN"T ALWAYS NEED TO CALCULATE THE DATE PAID
     {
         //IMPT: When adding in data validation make sure that you turn data-val off in the search
         [Key]
@@ -22,7 +23,7 @@ namespace PrototypeWithAuth.Models
         public ParentRequest ParentRequest { get; set; }
         public string ApplicationUserCreatorID { get; set; }
         [ForeignKey("ApplicationUserCreatorID")]
-        public ApplicationUser ApplicationUserCreator { get; set; }
+        public Employee ApplicationUserCreator { get; set; }
         public int? SubProjectID { get; set; }
         public SubProject SubProject { get; set; }
 
@@ -83,7 +84,7 @@ namespace PrototypeWithAuth.Models
 
         //payment info
         public uint? Installments { get; set; } //number of installments
-        public List<Payment> Payments { get; set; }
+        public ListImplementsModelBase<Payment> Payments { get; set; }
 
         public int? PaymentStatusID { get; set; }
         [ForeignKey("PaymentStatusID")]
@@ -171,8 +172,8 @@ namespace PrototypeWithAuth.Models
         public string ApplicationUserReceiverID { get; set; } //this is the owner of the request - do we have every received request have its own reciever?
 
         [ForeignKey("ApplicationUserReceiverID")]
-        public ApplicationUser ApplicationUserReceiver { get; set; }
-        public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
+        public Employee ApplicationUserReceiver { get; set; }
+        public ListImplementsModelBase<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public bool Ignore { get; set; }
         public bool IsReceived { get; set; }
         public bool IncludeVAT { get; set; }

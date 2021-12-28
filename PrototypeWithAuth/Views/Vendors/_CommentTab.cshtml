@@ -1,0 +1,64 @@
+﻿@model PrototypeWithAuth.ViewModels.CreateSupplierViewModel;
+@using PrototypeWithAuth.AppData
+@using PrototypeWithAuth.ViewModels;
+
+
+@{
+    string backgroundColor = "";
+    if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
+    {
+        backgroundColor = "var(--lab-man-color)";
+    }
+    else if (Model.SectionType.Equals(AppUtility.MenuItems.Requests))
+    {
+        backgroundColor = "var(--order-inv-color)";
+    }
+    else
+    {
+        backgroundColor = " var(--acc-color)";
+    }
+
+    var markReadOnlyClass = "";
+    if (Model.ModalType == AppUtility.VendorModalType.Edit || Model.ModalType == AppUtility.VendorModalType.SummaryFloat)
+    {
+        markReadOnlyClass = "mark-readonly";
+    }
+}
+<div class="p-2 row popover-div">
+    <span class="heading-1 col-10 modal-tab-name">Comments, Warnings</span>
+    <div class=" col-2 container p-0 text-right">
+        <ul class="list-unstyled">
+            <li>
+                <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 addComment @markReadOnlyClass">
+                    <i class=" icon-add_circle-24px" style="
+    font-size: 3rem; color:@backgroundColor;
+"></i>
+                </button>
+
+            </li>
+
+
+            <div style="display:none;" id="popover-content">
+                @foreach (var item in Model.CommentTypes)
+                {
+                    <div class="row px-3 comment-btn">
+                        <i class="@item.Icon" style="color: @item.Color; padding-top: .55rem; font-size: 1.25rem;"></i>
+                        <button type="button" data-val="@item.TypeID" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark add-comment" style="font-size:1rem; font-weight:400;">@item.Description</button><hr class="m-0" />
+                    </div>
+                }
+            </div>
+
+        </ul>
+    </div>
+</div>
+<div class="comment-info-div">
+    <input type="hidden" value="@Model.Comments?.Count()" id="comment-index" />
+    @for (int i = 0; i < Model.Comments?.Count(); i++)
+    {
+
+        <input type="hidden" asp-for="Comments[i].CommentID" />
+
+        await Html.RenderPartialAsync("_CommentInfoPartialView", new CommentsInfoViewModel { Comment = Model.Comments[i], Index = i, IsEdit = true });
+
+    }
+</div>

@@ -23,6 +23,7 @@ namespace PrototypeWithAuth.AppData
                 new JsonSerializerSettings()
                 {
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    
                 });
 
             return jsonstring;

@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Protocol
+    public class Protocol : ModelBase
     {
         [Key]
         public int ProtocolID { get; set; }

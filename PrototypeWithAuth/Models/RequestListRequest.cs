@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class RequestListRequest
+    public class RequestListRequest : ModelBase
     {
         [Key]
         public int ListID { get; set; }

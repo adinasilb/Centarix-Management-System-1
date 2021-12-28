@@ -1,4 +1,5 @@
 ﻿using PrototypeWithAuth.AppData.UtilityModels;
+using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,6 @@ namespace PrototypeWithAuth.ViewModels
     {
         public VendorContact VendorContact{get; set;}
         public int Index { get; set; }
-        public bool IsEdit { get; set; }
+        public AppUtility.VendorModalType ModalType { get; set; }
     }
 }

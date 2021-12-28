@@ -1251,9 +1251,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime?>("Exit2")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsBonus")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("OffDayTypeID")
                         .HasColumnType("int");
 
@@ -1316,9 +1313,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<DateTime?>("Exit2")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsBonus")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDenied")
                         .ValueGeneratedOnAdd()
@@ -5851,7 +5845,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("FromApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("ProtocolVersionID")
+                    b.Property<int>("ObjectID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
@@ -5866,7 +5860,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("FromApplicationUserID");
 
-                    b.HasIndex("ProtocolVersionID");
+                    b.HasIndex("ObjectID");
 
                     b.HasIndex("ToApplicationUserID");
 
@@ -5883,7 +5877,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("FromApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("RequestID")
+                    b.Property<int>("ObjectID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
@@ -5898,7 +5892,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("FromApplicationUserID");
 
-                    b.HasIndex("RequestID");
+                    b.HasIndex("ObjectID");
 
                     b.HasIndex("ToApplicationUserID");
 
@@ -5915,7 +5909,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("FromApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("RequestListID")
+                    b.Property<int>("ObjectID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
@@ -5933,7 +5927,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("FromApplicationUserID");
 
-                    b.HasIndex("RequestListID");
+                    b.HasIndex("ObjectID");
 
                     b.HasIndex("ToApplicationUserID");
 
@@ -5950,7 +5944,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("FromApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ResourceID")
+                    b.Property<int>("ObjectID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
@@ -5965,7 +5959,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("FromApplicationUserID");
 
-                    b.HasIndex("ResourceID");
+                    b.HasIndex("ObjectID");
 
                     b.HasIndex("ToApplicationUserID");
 
@@ -7194,12 +7188,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<double>("BonusSickDays")
-                        .HasColumnType("float");
-
-                    b.Property<double>("BonusVacationDays")
-                        .HasColumnType("float");
-
                     b.Property<int?>("CitizenshipID")
                         .HasColumnType("int");
 
@@ -7632,7 +7620,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ExperimentEntry", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -8052,7 +8040,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ProductComment", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -8096,7 +8084,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolComment", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -8174,12 +8162,12 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Request", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserCreator")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUserCreator")
                         .WithMany("RequestsCreated")
                         .HasForeignKey("ApplicationUserCreatorID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserReceiver")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUserReceiver")
                         .WithMany("RequestsReceived")
                         .HasForeignKey("ApplicationUserReceiverID")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -8229,7 +8217,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestComment", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -8378,17 +8366,18 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ShareProtocol", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "FromApplicationUser")
                         .WithMany()
                         .HasForeignKey("FromApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
                         .WithMany()
-                        .HasForeignKey("ProtocolVersionID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("ObjectID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ToApplicationUser")
                         .WithMany()
                         .HasForeignKey("ToApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -8396,18 +8385,18 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequest", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "FromApplicationUser")
                         .WithMany("ShareRequestsCreated")
                         .HasForeignKey("FromApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Request", "Request")
                         .WithMany("ShareRequests")
-                        .HasForeignKey("RequestID")
+                        .HasForeignKey("ObjectID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ToApplicationUser")
                         .WithMany("ShareRequestsReceived")
                         .HasForeignKey("ToApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -8415,18 +8404,18 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequestList", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "FromApplicationUser")
                         .WithMany()
                         .HasForeignKey("FromApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.RequestList", "RequestList")
                         .WithMany()
-                        .HasForeignKey("RequestListID")
+                        .HasForeignKey("ObjectID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ToApplicationUser")
                         .WithMany()
                         .HasForeignKey("ToApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -8434,18 +8423,18 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ShareResource", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "FromApplicationUser")
                         .WithMany("ShareResourcesCreated")
                         .HasForeignKey("FromApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Resource", "Resource")
                         .WithMany()
-                        .HasForeignKey("ResourceID")
+                        .HasForeignKey("ObjectID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ToApplicationUser")
                         .WithMany("ShareResourcesReceived")
                         .HasForeignKey("ToApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -8635,7 +8624,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.VendorComment", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);

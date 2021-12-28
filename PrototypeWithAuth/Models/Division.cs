@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Division
+    public class Division : ModelBase
     {
         [Key]
         public int DivisionID { get; set; }

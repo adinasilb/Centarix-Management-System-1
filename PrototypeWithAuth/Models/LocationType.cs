@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PrototypeWithAuth.Models
 {
-    public class LocationType
+    public class LocationType : ModelBase
     {
         [Key]
         //@FAIGE: should we add an abbreviation here (so there are no repeats in the instances abbreviations)?

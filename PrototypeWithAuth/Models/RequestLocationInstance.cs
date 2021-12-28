@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class RequestLocationInstance
+    public class RequestLocationInstance : ModelBase
     {
         public int RequestID { get; set; }
         public Request Request { get; set; }
@@ -14,5 +14,6 @@ namespace PrototypeWithAuth.Models
         public int? ParentLocationInstanceID { get; set; }
         public LocationInstance ParentLocationInstance { get; set; }
         public bool IsArchived { get; set; }
+
     }
 }

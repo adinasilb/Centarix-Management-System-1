@@ -5,11 +5,12 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 @if (AppUtility.IsAjaxRequest(this.Context.Request))
-    {
-        Layout = null;
-    }
+{
+    Layout = null;
+}
 
 <input type="hidden" id="payNowCount" value="@TempData["PayNowCount"]" />
+
 @if (Model.RequestsByVendor.Count() == 0)
 {
     <div>
@@ -29,12 +30,12 @@ else
 }
 
 @*<script type="text/javascript">
-    $(function () {
-        console.log("in fx accounting payments");
-        var payNowSidebar = $(".sidebarCount.2");
-        payNowSidebar.removeClass("hidden");
-        payNowSidebar.html("[" + @TempData["PayNowCount"] + "]");
-    });
-</script>*@
+        $(function () {
+            console.log("in fx accounting payments");
+            var payNowSidebar = $(".sidebarCount.2");
+            payNowSidebar.removeClass("hidden");
+            payNowSidebar.html("[" + @TempData["PayNowCount"] + "]");
+        });
+    </script>*@
 
 

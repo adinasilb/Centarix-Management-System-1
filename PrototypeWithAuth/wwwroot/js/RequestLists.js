@@ -174,7 +174,7 @@
             traditional: true,
             type: "POST",
             cache: false,
-            success: function (data) {
+            success: function (data1) {
                 $.fn.CloseModal('save-list-settings');
                 var listID = $(".next-list").attr("listId")
                 $.ajax({
@@ -185,9 +185,10 @@
                         $(".request-list-name.selected").removeClass("selected");
                         $("#List" + $("#SelectedList_ListID").val()).addClass("selected")
                         $.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs');
+                        $('.listSettingsModal  .error-message').html(data1);
                     },
                     error: function (jqxhr) {
-                        $('.listSettingsForms .error-message').html(jqxhr.responseText);
+                        $('.listSettingsModal .error-message').html(jqxhr.responseText);
                     },
                     processData: false,
                     contentType: false

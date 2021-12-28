@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class EmployeeInfoNotification : Notification<EmployeeInfoNotificationStatus>
+    public class EmployeeInfoNotification : Notification<EmployeeInfoNotificationStatus>, ModelBase
     {
         public string EmployeeID { get; set; }
         public Employee Employee { get; set; }

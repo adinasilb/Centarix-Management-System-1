@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Test
+    public class Test : ModelBase
     {
         [Key]
         public int TestID { get; set; }
@@ -16,6 +17,6 @@ namespace PrototypeWithAuth.Models
         //public TestCategory TestCategory { get; set; }
         public int SiteID { get; set; }
         public Site Site { get; set; }
-        public List<TestOuterGroup> TestOuterGroups { get; set; }
+        public ListImplementsModelBase<TestOuterGroup> TestOuterGroups { get; set; }
     }
 }

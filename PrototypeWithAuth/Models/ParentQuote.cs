@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class ParentQuote
+    public class ParentQuote : ModelBase
     {
         [Key]
         public int ParentQuoteID { get; set; }

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PrototypeWithAuth.Models
 {
-    public class ResourceType
+    public class ResourceType : ModelBase
     {
         [Key]
         public int ResourceTypeId { get; set; }

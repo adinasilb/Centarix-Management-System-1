@@ -12,36 +12,34 @@ using Microsoft.AspNetCore.Http;
 using PrototypeWithAuth.Models;
 using Microsoft.AspNetCore.Mvc;
 using PrototypeWithAuth.AppData.UtilityModels;
+using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.ViewModels
 {
     public class RegisterUserViewModel : ViewModelBase
     {
-        public string ApplicationUserID { get; set; } //this is used for the Edit form
-        public int UserNum { get; set; }
+        public AppUtility.SidebarEnum SidebarEnum { get; set; }
+        public Employee Employee { get; set; }
+        //public string ApplicationUserID { get; set; } //this is used for the Edit form
+        //public int UserNum { get; set; }
+
 
         //[Required]
         //[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
         //[DataType(DataType.Text)]
-        //[Display(Name = "User Name")]
-        //public string UserName { get; set; }
+        //[Display(Name = "First Name")]
+        //public string FirstName { get; set; }
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
-        [DataType(DataType.Text)]
-        [Display(Name = "First Name")]
-        public string FirstName { get; set; }
+        //[Required]
+        //[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
+        //[DataType(DataType.Text)]
+        //[Display(Name = "Last Name")]
+        //public string LastName { get; set; }
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
-        [DataType(DataType.Text)]
-        [Display(Name = "Last Name")]
-        public string LastName { get; set; }
-
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
+        //[Required]
+        //[EmailAddress]
+        //[Display(Name = "Email")]
+        //public string Email { get; set; }
 
         [DataType(DataType.Password)]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -49,29 +47,29 @@ namespace PrototypeWithAuth.ViewModels
         [Display(Name = "Password")]
         public string Password { get; set; }
 
-        //[DataType(DataType.Password), Compare(nameof(Password))]
-        //[Display(Name = "Confirm password")]
-        //// [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        //public string ConfirmPassword { get; set; }
-        public IEnumerable<IdentityRole> Roles { get; set; }
+        [DataType(DataType.Password), Compare(nameof(Password))]
+        [Display(Name = "Confirm password")]
+        // [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+        //public IEnumerable<IdentityRole> Roles { get; set; }
         [Required]
         public string CentarixID { get; set; }
 
+        ////[Required]
+        ////public string Role { get; set; }
+
+        //[DataType(DataType.Password)]
+        //[Display(Name = "Google Secure App Password")]
+        //public string SecureAppPass { get; set; }
+
+        //[DataType(DataType.PhoneNumber)]
         //[Required]
-        //public string Role { get; set; }
+        //[Display(Name = "Phone Number")]
+        //public string PhoneNumber { get; set; }
 
-        [DataType(DataType.Password)]
-        [Display(Name = "Google Secure App Password")]
-        public string SecureAppPass { get; set; }
-
-        [DataType(DataType.PhoneNumber)]
-        [Required]
-        [Display(Name = "Phone Number")]
-        public string PhoneNumber { get; set; }
-
-        [DataType(DataType.PhoneNumber)]
-        [Display(Name = "Phone Number 2")]
-        public string PhoneNumber2 { get; set; }
+        //[DataType(DataType.PhoneNumber)]
+        //[Display(Name = "Phone Number 2")]
+        //public string PhoneNumber2 { get; set; }
 
         //Permissions
         public List<UserRoleViewModel> OrderRoles { get; set; }
@@ -87,24 +85,24 @@ namespace PrototypeWithAuth.ViewModels
 
         //Budget
 
-        [Display(Name = "Monthly Limit")]
-        public decimal LabMonthlyLimit { get; set; }
+        //[Display(Name = "Monthly Limit")]
+        //public decimal LabMonthlyLimit { get; set; }
 
-        [Display(Name = "Unit Limit")]
-        public decimal LabUnitLimit { get; set; }
+        //[Display(Name = "Unit Limit")]
+        //public decimal LabUnitLimit { get; set; }
 
-        [Display(Name = "Order Limit")]
+        //[Display(Name = "Order Limit")]
 
-        public decimal LabOrderLimit { get; set; }
+        //public decimal LabOrderLimit { get; set; }
 
-        [Display(Name = "Monthly Limit")]
-        public decimal OperationMonthlyLimit { get; set; }
+        //[Display(Name = "Monthly Limit")]
+        //public decimal OperationMonthlyLimit { get; set; }
 
-        [Display(Name = "Unit Limit")]
-        public decimal OperationUnitLimit { get; set; }
+        //[Display(Name = "Unit Limit")]
+        //public decimal OperationUnitLimit { get; set; }
 
-        [Display(Name = "Order Limit")]
-        public decimal OperaitonOrderLimit { get; set; }
+        //[Display(Name = "Order Limit")]
+        //public decimal OperaitonOrderLimit { get; set; }
 
         //public IFormFile UserImage { get; set; }
         public string UserImage { get; set; }
@@ -113,10 +111,10 @@ namespace PrototypeWithAuth.ViewModels
 
 
         //Added For Employees
-        public Employee? NewEmployee { get; set; }
-        public decimal NewEmployeeWorkScope { get; set; }
-        public FormFile NewEmployeeImage { get; set; }
-        public int NewEmployeeStatus { get; set; }
+        //public Employee? NewEmployee { get; set; }
+        public decimal EmployeeWorkScope { get; set; }
+        public FormFile EmployeeImage { get; set; }
+        //public int NewEmployeeStatus { get; set; }
         public List<JobCategoryType> JobCategoryTypes { get; set; }
         public List<JobSubcategoryType> JobSubcategoryTypes { get; set; }
         public List<EmployeeStatus> EmployeeStatuses { get; set; }
