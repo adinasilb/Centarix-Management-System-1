@@ -472,11 +472,7 @@ namespace PrototypeWithAuth.Controllers
                 timekeeperNotification.NotificationDate = DateTime.Now;
                 timekeeperNotification.Controller = "Timekeeper";
                 timekeeperNotification.Action = "SummaryHours";
-                ReturnVal = _timekeeperNotificationsProc.CreateWithoutSaveChanges(timekeeperNotification);
-                if (!ReturnVal.Bool)
-                {
-                    return ReturnVal;
-                }
+                _timekeeperNotificationsProc.CreateWithoutSaveChanges(timekeeperNotification);
             }
             return ReturnVal;
         }
@@ -496,11 +492,7 @@ namespace PrototypeWithAuth.Controllers
                 BirthdayNotification.NotificationDate = new DateTime(DateTime.Today.Year, e.DOB.Month, e.DOB.Day);
                 BirthdayNotification.Controller = "";
                 BirthdayNotification.Action = "";
-                ReturnVal = _employeeInfoNotificationsProc.CreateWithoutSaveChanges(BirthdayNotification);
-                if (!ReturnVal.Bool)
-                {
-                    return ReturnVal;
-                }
+                _employeeInfoNotificationsProc.CreateWithoutSaveChanges(BirthdayNotification);
             }
             return ReturnVal;
         }
