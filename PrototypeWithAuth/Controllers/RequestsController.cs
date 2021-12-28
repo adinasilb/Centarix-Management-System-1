@@ -1705,22 +1705,8 @@ namespace PrototypeWithAuth.Controllers
                         parentQuote.QuoteDate = request.ParentQuote.QuoteDate;
                         request.ParentQuote = parentQuote;
                     }
-                    //else
-                    //{
-                    //    parentQuote = new ParentQuote();
-                    //    parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
-                    //    parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
-                    //    requestItemViewModel.Request.ParentQuote = parentQuote;
-                    //}
-                    //else if(requestItemViewModel.Request.ParentQuote?.QuoteNumber !=null || requestItemViewModel.Request.ParentQuote?.QuoteDate != null)
-                    //{ 
-                    //    parentQuote= new ParentQuote();
-                    //    parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
-                    //    parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
-                    //    requestItemViewModel.Request.ParentQuote = parentQuote;
-                    //}
 
-                    var product = _context.Products.IgnoreQueryFilters().Include(p => p.Vendor).Include(p => p.ProductSubcategory).FirstOrDefault(v => v.ProductID == request.ProductID);
+                    var product = await _productsProc.ReadOneWithIgnoreQueryFiltersAsync(new List<Expression<Func<Product, bool>>> { v => v.ProductID == request.ProductID }, new List<ComplexIncludes<Product, ModelBase>> { new ComplexIncludes<Product, ModelBase> { Include =  p => p.Vendor }, new ComplexIncludes<Product, ModelBase> { Include = p => p.ProductSubcategory } });
                     // product.ProductSubcategoryID = requestItemViewModel.Request.Product.ProductSubcategoryID;
                     product.VendorID = request.Product.VendorID;
                     product.CatalogNumber = request.Product.CatalogNumber;
@@ -1762,26 +1748,12 @@ namespace PrototypeWithAuth.Controllers
                          * only need this if using an existing product
                          */
                         request.Product = product;
-                        //request.Product.ProductSubcategoryID = request.Product.ProductSubcategory.ProductSubcategoryID;
-                        // requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
-                        request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == request.SubProjectID).FirstOrDefault();
-
-                        //_context.Update(requestItemViewModel.Request.Product.SubProject);
-                        //_context.Update(requestItemViewModel.Request.Product);
-                        /*if (request.ParentQuote != null)
-                        {
-                            _context.Update(request.ParentQuote);
-                            await _context.SaveChangesAsync();
-                            request.ParentQuoteID = request.ParentQuote.ParentQuoteID;
-                        }*/
-                        //_context.Update(request);
                         _context.Entry(request).State = EntityState.Modified;
                         _context.Entry(request.Product).State = EntityState.Modified;
                         if (request.Payments?[0].InvoiceID != null)
                         {
                             _context.Entry(request.Payments[0].Invoice).State = EntityState.Modified; //todo: make a loop
                         }
-                        //var entries = _context.ChangeTracker.Entries();
                         await _context.SaveChangesAsync();
 
 
@@ -2767,38 +2739,41 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmQuoteEmailModal(int? id = null, int[] requestIds = null, bool isResend = false)
         {
-            List<Request> requests = new List<Request>();
+            List<Expression<Func<Request, bool>>> wheres = new List<Expression<Func<Request, bool>>>();
+            List<ComplexIncludes<Request, ModelBase>> includes = new List<ComplexIncludes<Request, ModelBase>> ();
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product });
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor });
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory });
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory.ParentCategory });
+            wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
             if (isResend)
             {
-                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.RequestID == id)
-               .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-               .ToList();
+                wheres.Add(r => r.RequestID == id);
             }
             else
             {
+                includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote });
                 if (id != null)
                 {
-                    requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == id && r.QuoteStatusID == 1)
-                       .Where(r => r.RequestStatusID == 6).Include(r => r.Product).ThenInclude(p => p.Vendor)
-                       .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).ToList();
+                    wheres.Add(r => r.Product.VendorID == id && r.QuoteStatusID == 1);
+                    wheres.Add(r => r.RequestStatusID == 6);
                 }
                 else if (requestIds != null)
-                {
-                    foreach (var Rid in requestIds)
-                    {
-                        var request = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.RequestID == Rid && (r.QuoteStatusID == 1 || r.QuoteStatusID == 2))
-                           .Where(r => r.RequestStatusID == 6).Include(r => r.Product).ThenInclude(p => p.Vendor)
-                           .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).FirstOrDefault();
-                        requests.Add(request);
-                    }
+                {                    
+                    wheres.Add(r => requestIds.Contains( r.RequestID) && (r.QuoteStatusID == 1 || r.QuoteStatusID == 2));
+                    wheres.Add(r => r.RequestStatusID == 6);
                 }
 
             }
+            var requests = _requestsProc.Read(wheres, includes).AsEnumerable();
             if (requests.Count() == 0)
             {
-                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == id && r.QuoteStatusID == 2)
-                    .Where(r => r.RequestStatusID == 6).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote)
-                    .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).ToList();
+                wheres.Clear();
+                wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
+                wheres.Add(r => r.Product.VendorID == id && r.QuoteStatusID == 2);
+                wheres.Add(r => r.RequestStatusID == 6);
+                includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote });
+                requests =_requestsProc.Read(wheres, includes).AsEnumerable();
             }
             RequestIndexObject requestIndexObject = new RequestIndexObject
             {
@@ -2807,7 +2782,7 @@ namespace PrototypeWithAuth.Controllers
             };
             ConfirmEmailViewModel confirmEmail = new ConfirmEmailViewModel
             {
-                Requests = requests,
+                Requests = requests.ToList(),
                 VendorId = id,
                 RequestID = id,
                 TempRequestListViewModel = new TempRequestListViewModel() { RequestIndexObject = requestIndexObject }
