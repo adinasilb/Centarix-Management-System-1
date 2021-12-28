@@ -3103,22 +3103,19 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
-             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
-                    decimal pricePerUnit = 0;
+                    var requestReceived = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == receivedLocationViewModel.Request.RequestID },
+                        new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product } ,
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.Vendor}, new ComplexIncludes<Request, ModelBase>{ Include =r => r.Product.ProductSubcategory},
+                         new ComplexIncludes<Request, ModelBase>{ Include =r => r.Product.ProductSubcategory.ParentCategory}});
+
+                    decimal pricePerUnit;
                     if (receivedLocationViewModel.IsPartial)
                     {
-                        requestReceived.RequestID = 0;
-                        pricePerUnit = requestReceived.PricePerUnit;
-                        requestReceived.Unit = (uint)(requestReceived.Unit - receivedLocationViewModel.AmountArrived);
-                        requestReceived.Cost = pricePerUnit * requestReceived.Unit;
-                        requestReceived.IsPartial = true;
-                        _context.Entry(requestReceived).State = EntityState.Added;
-                        await _context.SaveChangesAsync();
+                        _requestsProc.CreatePartialRequest(receivedLocationViewModel, requestReceived, out pricePerUnit);
                         MoveDocumentsOutOfTempFolder(requestReceived.RequestID, AppUtility.ParentFolderName.Requests, receivedLocationViewModel.Request.RequestID, true);
 
-                        await CopyCommentsAsync(receivedLocationViewModel.Request.RequestID, requestReceived.RequestID);
-                        await CopyPaymentsAsync(receivedLocationViewModel.Request.RequestID, requestReceived.RequestID);
+                        await _requestCommentsProc.CopyCommentsAsync(receivedLocationViewModel.Request.RequestID, requestReceived.RequestID);
+                        await _paymentsProc.CopyPaymentsAsync(receivedLocationViewModel.Request.RequestID, requestReceived.RequestID);
 
                         requestReceived = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == receivedLocationViewModel.Request.RequestID },
                             new List<ComplexIncludes<Request, ModelBase>> {
@@ -3131,72 +3128,7 @@ namespace PrototypeWithAuth.Controllers
                         requestReceived.Unit = (uint)receivedLocationViewModel.AmountArrived;
                         requestReceived.Cost = pricePerUnit * requestReceived.Unit;
                     }
-                    if (receivedLocationViewModel.CategoryType == 1)
-                    {
-                        if (receivedLocationViewModel.TemporaryLocation)
-                        {
-                            await _requestLocationInstancesProc.SaveTempLocationWithoutTransactionAsync(receivedLocationViewModel, requestReceived);
-                        }
-                        else
-                        {
-                            await _requestLocationInstancesProc.SaveLocationsWithoutTransactionAsync(receivedModalVisualViewModel, requestReceived, false);
-                        }
-                    }
-
-                    requestReceived.RequestStatusID = 3;
-                    requestReceived.IsPartial = false;
-                    if (receivedLocationViewModel.Request.ArrivalDate == DateTime.Today)
-                    {
-                        requestReceived.ArrivalDate = DateTime.Now;
-                    }
-                    else
-                    {
-                        requestReceived.ArrivalDate = receivedLocationViewModel.Request.ArrivalDate;
-                    }
-                    requestReceived.ApplicationUserReceiverID = receivedLocationViewModel.Request.ApplicationUserReceiverID;
-                    requestReceived.ApplicationUserReceiver = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID });
-
-                    requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
-                    requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
-                    requestReceived.IsInInventory = true;
-                    if (requestReceived.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString())
-                    {
-                        requestReceived.Batch = receivedLocationViewModel.Request.Batch;
-                        requestReceived.BatchExpiration = receivedLocationViewModel.Request.BatchExpiration;
-                    }
-                    if (requestReceived.PaymentStatusID == 4)
-                    {
-                        requestReceived.PaymentStatusID = 3;
-                    }
-
-                    _context.Update(requestReceived);
-                    await _context.SaveChangesAsync();
-
-
-
-                    //need to do this function before save changes because if new request it should not have an id yet
-                    await _requestsProc.RemoveFromInventoryAsync(requestReceived.RequestID);
-
-                    RequestNotification requestNotification = new RequestNotification();
-                    requestNotification.RequestID = requestReceived.RequestID;
-                    requestNotification.IsRead = false;
-                    requestNotification.ApplicationUserID = requestReceived.ApplicationUserCreatorID;
-                    requestNotification.RequestName = requestReceived.Product.ProductName;
-                    requestNotification.NotificationStatusID = 4;
-                    var FName = _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == requestReceived.ApplicationUserReceiverID }).Result.FirstName;
-                    requestNotification.Description = "received by " + FName;
-                    requestNotification.NotificationDate = DateTime.Now;
-                    requestNotification.Controller = "Requests";
-                    requestNotification.Action = "NotificationsView";
-                    requestNotification.Vendor = requestReceived.Product.Vendor.VendorEnName;
-                    await _requestNotificationsProc.CreateWithoutTransactionAsync(requestNotification);
-
-                    var didntArriveNotification = await _requestNotificationsProc.ReadOneAsync( new List<Expression<Func<RequestNotification, bool>>> { r => r.RequestID == requestReceived.RequestID && r.NotificationStatusID == 1 });
-                    if (didntArriveNotification != null)
-                    {
-                         await _requestNotificationsProc.DeleteWithoutTransactionAsync(new List<RequestNotification> { didntArriveNotification });
-                    }
-
+                    await _requestsProc.ReceiveRequestWithoutTransactionAsync(receivedLocationViewModel, receivedModalVisualViewModel, requestReceived);
                     await transaction.CommitAsync();
 
                 }
@@ -3222,31 +3154,9 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        
+   
 
-        private async Task CopyCommentsAsync(int OldRequestID, int NewRequestID)
-        {
-            var comments = _context.RequestComments.Where(c => c.ObjectID == OldRequestID).AsNoTracking();
-            foreach (var c in comments)
-            {
-                c.CommentID = 0;
-                c.ObjectID = NewRequestID;
-                _context.Entry(c).State = EntityState.Added;
-            }
-            await _context.SaveChangesAsync();
-        }
 
-        private async Task CopyPaymentsAsync(int OldRequestID, int NewRequestID)
-        {
-            var payments = _context.Payments.Where(p => p.RequestID == OldRequestID).AsNoTracking();
-            foreach (var p in payments)
-            {
-                p.PaymentID = 0;
-                p.RequestID = NewRequestID;
-                _context.Entry(p).State = EntityState.Added;
-            }
-            await _context.SaveChangesAsync();
-        }
 
         [HttpPost]
         [RequestFormLimits(ValueCountLimit = int.MaxValue)]
@@ -3360,7 +3270,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet] //send a json to that the subcategory list is filered
         public JsonResult GetSubCategoryList(int ParentCategoryId)
         {
-            var subCategoryList = _context.ProductSubcategories.Where(c => c.ParentCategoryID == ParentCategoryId).ToList();
+            var subCategoryList = _productSubcategoriesProc.Read( new List<Expression<Func<ProductSubcategory, bool>>> { c => c.ParentCategoryID == ParentCategoryId }).ToList();
             return Json(subCategoryList);
 
         }
@@ -3370,13 +3280,13 @@ namespace PrototypeWithAuth.Controllers
         {
             var boolCheck = true;
             //validation for the create
-            if (VendorID != 0 && CatalogNumber != null && (ProductID == null && _context.Requests.Where(r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID).Any()))
+            if (VendorID != 0 && CatalogNumber != null && (ProductID == null && _requestsProc.Read( new List<Expression<Func<Request, bool>>> { r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID }).Any()))
             {
                 return false;
             }
             //validation for the edit
-            //var product = _context.Requests.Where(r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID);
-            if (ProductID != null && _context.Requests.Where(r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID).Any())
+            //var product = _proc.Requests.Where(r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID);
+            if (ProductID != null && _requestsProc.Read( new List<Expression<Func<Request, bool>>> { r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID }).Any())
             {
                 return false;
             }
@@ -3395,12 +3305,12 @@ namespace PrototypeWithAuth.Controllers
             List<LocationInstance> locationInstanceList = new List<LocationInstance>();
             if (labPartID != 0)
             {
-                locationInstanceList = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == locationInstanceParentId && li.LabPartID == labPartID).Include(li => li.LabPart).OrderBy(li => li.LocationNumber).ToList();
+                locationInstanceList = _locationInstancesProc.Read( new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceParentID == locationInstanceParentId && li.LabPartID == labPartID }, new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = li => li.LabPart } }).OrderBy(li => li.LocationNumber).ToList();
 
             }
             else
             {
-                locationInstanceList = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == locationInstanceParentId).Include(li => li.LabPart).OrderBy(li => li.LocationNumber).ToList();
+                locationInstanceList =_locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceParentID == locationInstanceParentId}, new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = li => li.LabPart } }).OrderBy(li => li.LocationNumber).ToList();
             }
             return Json(locationInstanceList);
         }

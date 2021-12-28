@@ -141,5 +141,17 @@ namespace PrototypeWithAuth.CRUD
             await _context.SaveChangesAsync();
         }
 
+        public async Task CopyPaymentsAsync(int OldRequestID, int NewRequestID)
+        {
+            var payments = _context.Payments.Where(p => p.RequestID == OldRequestID).AsNoTracking();
+            foreach (var p in payments)
+            {
+                p.PaymentID = 0;
+                p.RequestID = NewRequestID;
+                _context.Entry(p).State = EntityState.Added;
+            }
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

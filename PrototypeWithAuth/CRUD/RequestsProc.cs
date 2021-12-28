@@ -349,6 +349,84 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
+        public async Task ReceiveRequestWithoutTransactionAsync(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived)
+        {
+          
+            if (receivedLocationViewModel.CategoryType == 1)
+            {
+                if (receivedLocationViewModel.TemporaryLocation)
+                {
+                    await _requestLocationInstancesProc.SaveTempLocationWithoutTransactionAsync(receivedLocationViewModel, requestReceived);
+                }
+                else
+                {
+                    await _requestLocationInstancesProc.SaveLocationsWithoutTransactionAsync(receivedModalVisualViewModel, requestReceived, false);
+                }
+            }
+
+            requestReceived.RequestStatusID = 3;
+            requestReceived.IsPartial = false;
+            if (receivedLocationViewModel.Request.ArrivalDate == DateTime.Today)
+            {
+                requestReceived.ArrivalDate = DateTime.Now;
+            }
+            else
+            {
+                requestReceived.ArrivalDate = receivedLocationViewModel.Request.ArrivalDate;
+            }
+            requestReceived.ApplicationUserReceiverID = receivedLocationViewModel.Request.ApplicationUserReceiverID;
+            requestReceived.ApplicationUserReceiver = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID });
+
+            requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
+            requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
+            requestReceived.IsInInventory = true;
+            if (requestReceived.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString())
+            {
+                requestReceived.Batch = receivedLocationViewModel.Request.Batch;
+                requestReceived.BatchExpiration = receivedLocationViewModel.Request.BatchExpiration;
+            }
+            if (requestReceived.PaymentStatusID == 4)
+            {
+                requestReceived.PaymentStatusID = 3;
+            }
+
+            _context.Update(requestReceived);
+            await _context.SaveChangesAsync();
+
+            await RemoveFromInventoryAsync(requestReceived.RequestID);
+
+            RequestNotification requestNotification = new RequestNotification();
+            requestNotification.RequestID = requestReceived.RequestID;
+            requestNotification.IsRead = false;
+            requestNotification.ApplicationUserID = requestReceived.ApplicationUserCreatorID;
+            requestNotification.RequestName = requestReceived.Product.ProductName;
+            requestNotification.NotificationStatusID = 4;
+            var FName = _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == requestReceived.ApplicationUserReceiverID }).Result.FirstName;
+            requestNotification.Description = "received by " + FName;
+            requestNotification.NotificationDate = DateTime.Now;
+            requestNotification.Controller = "Requests";
+            requestNotification.Action = "NotificationsView";
+            requestNotification.Vendor = requestReceived.Product.Vendor.VendorEnName;
+            await _requestNotificationsProc.CreateWithoutTransactionAsync(requestNotification);
+
+            var didntArriveNotification = await _requestNotificationsProc.ReadOneAsync(new List<Expression<Func<RequestNotification, bool>>> { r => r.RequestID == requestReceived.RequestID && r.NotificationStatusID == 1 });
+            if (didntArriveNotification != null)
+            {
+                await _requestNotificationsProc.DeleteWithoutTransactionAsync(new List<RequestNotification> { didntArriveNotification });
+            }
+        }
+
+        public void CreatePartialRequest(ReceivedLocationViewModel receivedLocationViewModel, Request requestReceived, out decimal pricePerUnit)
+        {
+            requestReceived.RequestID = 0;
+            pricePerUnit = requestReceived.PricePerUnit;
+            requestReceived.Unit = (uint)(requestReceived.Unit - receivedLocationViewModel.AmountArrived);
+            requestReceived.Cost = pricePerUnit * requestReceived.Unit;
+            requestReceived.IsPartial = true;
+            _context.Entry(requestReceived).State = EntityState.Added;
+            _context.SaveChangesAsync();
+        }
+
         //private async Task<StringWithBool> MarkInventory()
         //{
         //    //before running this function, run the following in ssms:
