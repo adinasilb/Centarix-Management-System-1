@@ -75,8 +75,8 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("RachelLocal"));
-                options.EnableSensitiveDataLogging(true);   
+                    Configuration.GetConnectionString("DevelopersDB"), sqlServerOptions => sqlServerOptions.CommandTimeout(60));
+                    options.EnableSensitiveDataLogging(true);   
             });
 
             services.AddControllersWithViews();

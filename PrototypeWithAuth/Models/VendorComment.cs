@@ -15,9 +15,6 @@ namespace PrototypeWithAuth.Models
         
         [ForeignKey("ObjectID")]
         public Vendor Vendor { get; set; }
-        public override AppUtility.CommentModelTypeEnum ModelType
-        {
-            get { return AppUtility.CommentModelTypeEnum.Vendor; }
-        }
+     
     }
 }

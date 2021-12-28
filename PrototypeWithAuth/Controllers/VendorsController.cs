@@ -251,13 +251,13 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _CommentInfoPartialView(int typeID, int index, AppUtility.CommentModelTypeEnum modelType)
+        public async Task<IActionResult> _CommentInfoPartialView(int typeID, int index)
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
                 return PartialView("InvalidLinkPage");
             }
-            return await base._CommentInfoPartialView(typeID, index, modelType);
+            return await base._CommentInfoPartialView(typeID, index);
         }
         //[HttpGet]
         //public IActionResult AddContact()

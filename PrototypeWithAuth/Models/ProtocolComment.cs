@@ -15,6 +15,5 @@ namespace PrototypeWithAuth.Models
         [ForeignKey("ObjectID")]
         public Protocol Protocol { get; set; }
 
-        public override AppUtility.CommentModelTypeEnum ModelType { get { return AppUtility.CommentModelTypeEnum.Protocol; } }
-    }
+         }
 }

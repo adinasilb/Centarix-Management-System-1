@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211125105113_TestCommentBaseRemoveAbstract")]
+    partial class TestCommentBaseRemoveAbstract
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1385,95 +1387,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             EmployeeHoursStatusID = 3,
                             Description = "Forgot to report"
                         });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeInfoNotification", b =>
-                {
-                    b.Property<int>("NotificationID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Action")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Controller")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EmployeeID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("NotificationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("NotificationStatusID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.HasKey("NotificationID");
-
-                    b.HasIndex("ApplicationUserID");
-
-                    b.HasIndex("EmployeeID");
-
-                    b.HasIndex("NotificationStatusID");
-
-                    b.ToTable("EmployeeInfoNotifications");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeInfoNotification", b =>
-                {
-                    b.Property<int>("NotificationID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Action")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Controller")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EmployeeID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("NotificationStatusID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("NotificationID");
-
-                    b.HasIndex("ApplicationUserID");
-
-                    b.HasIndex("EmployeeID");
-
-                    b.HasIndex("NotificationStatusID");
-
-                    b.ToTable("EmployeeInfoNotifications");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeStatus", b =>
@@ -5471,9 +5384,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("NotificationDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("NotificationStatusID")
                         .HasColumnType("int");
 
@@ -5487,9 +5397,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("TimeStamp")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Vendor")
                         .HasColumnType("nvarchar(max)");
@@ -6398,16 +6306,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("NotificationDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("NotificationStatusID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("NotificationID");
 
@@ -7307,22 +7210,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeInfoNotificationStatus", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.NotificationStatus");
-
-                    b.HasDiscriminator().HasValue("EmployeeInfoNotificationStatus");
-
-                    b.HasData(
-                        new
-                        {
-                            NotificationStatusID = 6,
-                            Color = "--black-87",
-                            Description = "Happy Birthday",
-                            Icon = "icon-cake_black_24dp"
-                        });
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestNotificationStatus", b =>
                 {
                     b.HasBaseType("PrototypeWithAuth.Models.NotificationStatus");
@@ -7571,63 +7458,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("EmployeeHoursAwaitingApprovalsPartial")
                         .HasForeignKey("PartialOffDayTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeInfoNotification", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.EmployeeInfoNotificationStatus", "NotificationStatus")
-                        .WithMany("EmployeeInfoNotifications")
-                        .HasForeignKey("NotificationStatusID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeInfoNotification", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.EmployeeInfoNotificationStatus", "NotificationStatus")
-                        .WithMany("EmployeeInfoNotifications")
-                        .HasForeignKey("NotificationStatusID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeInfoNotification", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.EmployeeInfoNotificationStatus", "NotificationStatus")
-                        .WithMany("EmployeeInfoNotifications")
-                        .HasForeignKey("NotificationStatusID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ExperimentEntry", b =>
@@ -8225,26 +8055,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("Requests")
                         .HasForeignKey("SubProjectID")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestComment", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentType")
-                        .WithMany()
-                        .HasForeignKey("CommentTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
-                        .WithMany()
-                        .HasForeignKey("ObjectID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestComment", b =>

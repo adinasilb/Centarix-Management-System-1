@@ -15,6 +15,6 @@ namespace PrototypeWithAuth.Models
         {
             get { return AppUtility.CommentModelTypeEnum.Product; }
 
-        }
     }
+}
 }
