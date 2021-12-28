@@ -30,7 +30,7 @@ namespace PrototypeWithAuth.CRUD
                 var productRequests = _requestsProc.Read( new List<Expression<Func<Request, bool>>> { r => r.ProductID == product.ProductID }).ToList();
                 if (productRequests.Count() == 0)
                 {
-                    await _productCommentsProc.DeleteAsync(product.ProductID);
+                    await _productCommentsProc.DeleteWithoutTransactionAsync(product.ProductID);
                     product.IsDeleted = true;
                     _context.Update(product);
                     await _context.SaveChangesAsync();

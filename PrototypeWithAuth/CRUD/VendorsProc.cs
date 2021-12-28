@@ -51,7 +51,7 @@ namespace PrototypeWithAuth.CRUD
                         await _vendorCategoryTypesProc.UpdateAsync(createSupplierViewModel.VendorCategoryTypes, createSupplierViewModel.Vendor.VendorID);
                         await _vendorContactsProc.UpdateAsync(createSupplierViewModel.VendorContacts, createSupplierViewModel.Vendor.VendorID);
 
-                        await _vendorCommentsProc.UpdateAsync(createSupplierViewModel.Comments, createSupplierViewModel.Vendor.VendorID, UserID);
+                        await _vendorCommentsProc.UpdateWithoutTransactionAsync(createSupplierViewModel.Comments, createSupplierViewModel.Vendor.VendorID, UserID);
                         await transaction.CommitAsync();
                         ReturnVal.Bool = true;
                     }

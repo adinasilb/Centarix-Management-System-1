@@ -365,7 +365,11 @@ namespace PrototypeWithAuth.CRUD
                     user.TwoFactorEnabled = true;
                     if (UserType == 4)
                     {
-
+                        user.JobSubcategoryType = null;
+                        user.JobSubcategoryTypeID = null;
+                        user.DegreeID = null;
+                        user.MaritalStatusID = null;
+                        user.CitizenshipID = null;
                     }
                     else
                     {

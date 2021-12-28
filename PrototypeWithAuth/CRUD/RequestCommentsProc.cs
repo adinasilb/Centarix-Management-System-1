@@ -18,9 +18,23 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        public override async Task UpdateAsync(List<RequestComment> comments, int vendorID, string userID)
+        public override async Task UpdateWithoutTransactionAsync(List<RequestComment> comments, int vendorID, string userID)
         {
-            await base.UpdateAsync(comments, vendorID, userID);
+            await base.UpdateWithoutTransactionAsync(comments, vendorID, userID);
         }
+
+        public async Task CopyCommentsAsync(int OldRequestID, int NewRequestID)
+        {
+            var comments = _context.RequestComments.Where(c => c.ObjectID == OldRequestID).AsNoTracking();
+            foreach (var c in comments)
+            {
+                c.CommentID = 0;
+                c.ObjectID = NewRequestID;
+                _context.Entry(c).State = EntityState.Added;
+            }
+            await _context.SaveChangesAsync();
+        }
+
+
     }
 }

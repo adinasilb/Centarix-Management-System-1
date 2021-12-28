@@ -113,10 +113,10 @@ namespace PrototypeWithAuth.CRUD
                         //await _context.SaveChangesAsync(); //what is this for?
                         if (receivedModalVisualViewModel.LocationInstancePlaces != null)
                         {
-                            await _requestLocationInstancesProc.SaveLocationsAsync(receivedModalVisualViewModel, newRequest, false);
+                            await _requestLocationInstancesProc.SaveLocationsWithoutTransactionAsync(receivedModalVisualViewModel, newRequest, false);
                         }
-                        await _requestCommentsProc.UpdateAsync((List<RequestComment>)requestItemViewModel.Comments.Where(c => c.CommentTypeID==1), newRequest.RequestID, currentUserID);
-                        await _productCommentsProc.UpdateAsync((List<ProductComment>)requestItemViewModel.Comments.Where(c => c.CommentTypeID==2), newRequest.ProductID, currentUserID);
+                        await _requestCommentsProc.UpdateWithoutTransactionAsync((List<RequestComment>)requestItemViewModel.Comments.Where(c => c.CommentTypeID==1), newRequest.RequestID, currentUserID);
+                        await _productCommentsProc.UpdateWithoutTransactionAsync((List<ProductComment>)requestItemViewModel.Comments.Where(c => c.CommentTypeID==2), newRequest.ProductID, currentUserID);
 
                       
                         newRequest.Product = await _context.Products.Where(p => p.ProductID == newRequest.ProductID).FirstOrDefaultAsync();
@@ -131,7 +131,7 @@ namespace PrototypeWithAuth.CRUD
                         requestNotification.Controller = "Requests";
                         requestNotification.Action = "NotificationsView";
                         requestNotification.OrderDate = DateTime.Now;
-                        await _requestNotificationsProc.CreateAsync(requestNotification);
+                        await _requestNotificationsProc.CreateWithoutTransactionAsync(requestNotification);
                         await transaction.CommitAsync();
                     }
                     catch (DbUpdateException ex)
@@ -207,10 +207,10 @@ namespace PrototypeWithAuth.CRUD
                         }
                         await _productsProc.DeleteAsync(request.Product);
                         var requestLocationInstances = request.RequestLocationInstances.ToList();
-                        await _requestLocationInstancesProc.DeleteAsync(requestLocationInstances);
-                        await _requestCommentsProc.DeleteAsync(request.RequestID);
+                        await _requestLocationInstancesProc.DeleteWithoutTransactionAsync(requestLocationInstances);
+                        await _requestCommentsProc.DeleteWithoutTransactionAsync(request.RequestID);
                         var notifications = _requestNotificationsProc.Read(new List<Expression<Func<RequestNotification, bool>>> { rn => rn.RequestID == request.RequestID }).ToList();
-                        await _requestNotificationsProc.DeleteAsync(notifications);
+                        await _requestNotificationsProc.DeleteWithoutTransactionAsync(notifications);
                         //throw new Exception();
                         await transaction.CommitAsync();
                     }
@@ -347,6 +347,84 @@ namespace PrototypeWithAuth.CRUD
                 _context.Update(oldRequest);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task ReceiveRequestWithoutTransactionAsync(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived)
+        {
+          
+            if (receivedLocationViewModel.CategoryType == 1)
+            {
+                if (receivedLocationViewModel.TemporaryLocation)
+                {
+                    await _requestLocationInstancesProc.SaveTempLocationWithoutTransactionAsync(receivedLocationViewModel, requestReceived);
+                }
+                else
+                {
+                    await _requestLocationInstancesProc.SaveLocationsWithoutTransactionAsync(receivedModalVisualViewModel, requestReceived, false);
+                }
+            }
+
+            requestReceived.RequestStatusID = 3;
+            requestReceived.IsPartial = false;
+            if (receivedLocationViewModel.Request.ArrivalDate == DateTime.Today)
+            {
+                requestReceived.ArrivalDate = DateTime.Now;
+            }
+            else
+            {
+                requestReceived.ArrivalDate = receivedLocationViewModel.Request.ArrivalDate;
+            }
+            requestReceived.ApplicationUserReceiverID = receivedLocationViewModel.Request.ApplicationUserReceiverID;
+            requestReceived.ApplicationUserReceiver = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID });
+
+            requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
+            requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
+            requestReceived.IsInInventory = true;
+            if (requestReceived.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString())
+            {
+                requestReceived.Batch = receivedLocationViewModel.Request.Batch;
+                requestReceived.BatchExpiration = receivedLocationViewModel.Request.BatchExpiration;
+            }
+            if (requestReceived.PaymentStatusID == 4)
+            {
+                requestReceived.PaymentStatusID = 3;
+            }
+
+            _context.Update(requestReceived);
+            await _context.SaveChangesAsync();
+
+            await RemoveFromInventoryAsync(requestReceived.RequestID);
+
+            RequestNotification requestNotification = new RequestNotification();
+            requestNotification.RequestID = requestReceived.RequestID;
+            requestNotification.IsRead = false;
+            requestNotification.ApplicationUserID = requestReceived.ApplicationUserCreatorID;
+            requestNotification.RequestName = requestReceived.Product.ProductName;
+            requestNotification.NotificationStatusID = 4;
+            var FName = _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == requestReceived.ApplicationUserReceiverID }).Result.FirstName;
+            requestNotification.Description = "received by " + FName;
+            requestNotification.NotificationDate = DateTime.Now;
+            requestNotification.Controller = "Requests";
+            requestNotification.Action = "NotificationsView";
+            requestNotification.Vendor = requestReceived.Product.Vendor.VendorEnName;
+            await _requestNotificationsProc.CreateWithoutTransactionAsync(requestNotification);
+
+            var didntArriveNotification = await _requestNotificationsProc.ReadOneAsync(new List<Expression<Func<RequestNotification, bool>>> { r => r.RequestID == requestReceived.RequestID && r.NotificationStatusID == 1 });
+            if (didntArriveNotification != null)
+            {
+                await _requestNotificationsProc.DeleteWithoutTransactionAsync(new List<RequestNotification> { didntArriveNotification });
+            }
+        }
+
+        public void CreatePartialRequest(ReceivedLocationViewModel receivedLocationViewModel, Request requestReceived, out decimal pricePerUnit)
+        {
+            requestReceived.RequestID = 0;
+            pricePerUnit = requestReceived.PricePerUnit;
+            requestReceived.Unit = (uint)(requestReceived.Unit - receivedLocationViewModel.AmountArrived);
+            requestReceived.Cost = pricePerUnit * requestReceived.Unit;
+            requestReceived.IsPartial = true;
+            _context.Entry(requestReceived).State = EntityState.Added;
+            _context.SaveChangesAsync();
         }
 
         //private async Task<StringWithBool> MarkInventory()

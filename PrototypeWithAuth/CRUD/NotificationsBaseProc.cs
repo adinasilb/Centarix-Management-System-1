@@ -23,61 +23,25 @@ namespace PrototypeWithAuth.CRUD
         }
 
         
-        public virtual async Task<StringWithBool> CreateAsync(T1 notification)
+        public virtual async Task CreateWithoutTransactionAsync(T1 notification)
         {
-            StringWithBool ReturnVal = new StringWithBool();
-
-            try
-            {
-                _context.Entry(notification).State = EntityState.Added;
-                await _context.SaveChangesAsync();
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.Bool = false;
-                ReturnVal.String = AppUtility.GetExceptionMessage(ex);
-            }
-            return ReturnVal;
+            _context.Entry(notification).State = EntityState.Added;
+            await _context.SaveChangesAsync();
         }
 
-        public virtual async Task<StringWithBool> DeleteAsync(List<T1> notifications)
+        public virtual async Task DeleteWithoutTransactionAsync(List<T1> notifications)
         {
-            StringWithBool ReturnVal = new StringWithBool();
-
-            try
+            foreach (var notification in notifications)
             {
-                foreach (var notification in notifications)
-                {
-                    _context.Remove(notification);
-                }
-                await _context.SaveChangesAsync();
-                ReturnVal.SetStringAndBool(true, null);
+                _context.Remove(notification);
             }
-            catch (Exception ex)
-            {
-                ReturnVal.Bool = false;
-                ReturnVal.String = AppUtility.GetExceptionMessage(ex);
-            }
-            return ReturnVal;
+            await _context.SaveChangesAsync();          
         }
 
 
-        public virtual StringWithBool CreateWithoutSaveChanges(T1 notification)
-        {
-            StringWithBool ReturnVal = new StringWithBool();
-
-            try
-            {
-                _context.Entry(notification).State = EntityState.Added;
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.Bool = false;
-                ReturnVal.String = AppUtility.GetExceptionMessage(ex);
-            }
-            return ReturnVal;
+        public virtual void CreateWithoutSaveChanges(T1 notification)
+        {            
+            _context.Entry(notification).State = EntityState.Added;         
         }
     }
 }

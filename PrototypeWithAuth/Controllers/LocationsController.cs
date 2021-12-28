@@ -171,7 +171,7 @@ namespace PrototypeWithAuth.Controllers
                                     ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = r => ((Request)r).Product}
                                     }
                                 }
-                         }).ToList();
+                         }).OrderBy(li => li.LocationNumber).ToList();
                     
                 LocationType locationType = new LocationType();
                 if (visualLocationsViewModel.ChildrenLocationInstances != null && visualLocationsViewModel.ChildrenLocationInstances.Any()) //TODO: in the future handle this better

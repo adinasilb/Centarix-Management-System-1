@@ -25,7 +25,7 @@ namespace PrototypeWithAuth.CRUD
             try
             {
                 var notifications = await Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == EHID }).ToListAsync();
-                await DeleteAsync(notifications);
+                await DeleteWithoutTransactionAsync(notifications);
             }
             catch (Exception ex)
             {
@@ -57,9 +57,9 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        public override Task<StringWithBool> CreateAsync(TimekeeperNotification notification)
+        public override Task CreateWithoutTransactionAsync(TimekeeperNotification notification)
         {
-            return base.CreateAsync(notification);
+            return base.CreateWithoutTransactionAsync(notification);
         }
 
     }
