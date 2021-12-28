@@ -113,10 +113,10 @@ namespace PrototypeWithAuth.CRUD
                         //await _context.SaveChangesAsync(); //what is this for?
                         if (receivedModalVisualViewModel.LocationInstancePlaces != null)
                         {
-                            await _requestLocationInstancesProc.SaveLocationsAsync(receivedModalVisualViewModel, newRequest, false);
+                            await _requestLocationInstancesProc.SaveLocationsWithoutTransactionAsync(receivedModalVisualViewModel, newRequest, false);
                         }
-                        await _requestCommentsProc.UpdateAsync((List<RequestComment>)requestItemViewModel.Comments.Where(c => c.CommentTypeID==1), newRequest.RequestID, currentUserID);
-                        await _productCommentsProc.UpdateAsync((List<ProductComment>)requestItemViewModel.Comments.Where(c => c.CommentTypeID==2), newRequest.ProductID, currentUserID);
+                        await _requestCommentsProc.UpdateWithoutTransactionAsync((List<RequestComment>)requestItemViewModel.Comments.Where(c => c.CommentTypeID==1), newRequest.RequestID, currentUserID);
+                        await _productCommentsProc.UpdateWithoutTransactionAsync((List<ProductComment>)requestItemViewModel.Comments.Where(c => c.CommentTypeID==2), newRequest.ProductID, currentUserID);
 
                       
                         newRequest.Product = await _context.Products.Where(p => p.ProductID == newRequest.ProductID).FirstOrDefaultAsync();
@@ -131,7 +131,7 @@ namespace PrototypeWithAuth.CRUD
                         requestNotification.Controller = "Requests";
                         requestNotification.Action = "NotificationsView";
                         requestNotification.OrderDate = DateTime.Now;
-                        await _requestNotificationsProc.CreateAsync(requestNotification);
+                        await _requestNotificationsProc.CreateWithoutTransactionAsync(requestNotification);
                         await transaction.CommitAsync();
                     }
                     catch (DbUpdateException ex)
@@ -207,8 +207,8 @@ namespace PrototypeWithAuth.CRUD
                         }
                         await _productsProc.DeleteAsync(request.Product);
                         var requestLocationInstances = request.RequestLocationInstances.ToList();
-                        await _requestLocationInstancesProc.DeleteAsync(requestLocationInstances);
-                        await _requestCommentsProc.DeleteAsync(request.RequestID);
+                        await _requestLocationInstancesProc.DeleteWithoutTransactionAsync(requestLocationInstances);
+                        await _requestCommentsProc.DeleteWithoutTransactionAsync(request.RequestID);
                         var notifications = _requestNotificationsProc.Read(new List<Expression<Func<RequestNotification, bool>>> { rn => rn.RequestID == request.RequestID }).ToList();
                         await _requestNotificationsProc.DeleteAsync(notifications);
                         //throw new Exception();

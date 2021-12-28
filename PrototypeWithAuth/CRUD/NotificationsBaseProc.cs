@@ -23,22 +23,10 @@ namespace PrototypeWithAuth.CRUD
         }
 
         
-        public virtual async Task<StringWithBool> CreateAsync(T1 notification)
+        public virtual async Task CreateWithoutTransactionAsync(T1 notification)
         {
-            StringWithBool ReturnVal = new StringWithBool();
-
-            try
-            {
-                _context.Entry(notification).State = EntityState.Added;
-                await _context.SaveChangesAsync();
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.Bool = false;
-                ReturnVal.String = AppUtility.GetExceptionMessage(ex);
-            }
-            return ReturnVal;
+            _context.Entry(notification).State = EntityState.Added;
+            await _context.SaveChangesAsync();
         }
 
         public virtual async Task<StringWithBool> DeleteAsync(List<T1> notifications)

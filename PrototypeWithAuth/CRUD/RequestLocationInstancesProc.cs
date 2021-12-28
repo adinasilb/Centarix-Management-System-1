@@ -21,14 +21,22 @@ namespace PrototypeWithAuth.CRUD
             if (!FromBase) { this.InstantiateProcs(); }
         }
 
-
-        public async Task<StringWithBool> SaveLocationsAsync(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived, bool archiveOneRequest)
+        public async Task SaveTempLocationWithoutTransactionAsync(ReceivedLocationViewModel receivedLocationViewModel, Request requestReceived)
         {
-
-            StringWithBool ReturnVal = new StringWithBool();
+            var tempLocationInstance = await _temporaryLocationInstancesProc.ReadOneAsync(new List<Expression<Func<TemporaryLocationInstance, bool>>> { tli => tli.LocationTypeID == receivedLocationViewModel.LocationTypeID });
+            await _temporaryLocationInstancesProc.CreateWithoutTransactionAsync(tempLocationInstance, receivedLocationViewModel.LocationTypeID);
+            var rli = new RequestLocationInstance()
+            {
+                LocationInstanceID = tempLocationInstance.LocationInstanceID,
+                RequestID = requestReceived.RequestID,
+            };
+            _context.Add(rli);
+            await _context.SaveChangesAsync();
+        }
+        public async Task SaveLocationsWithoutTransactionAsync(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived, bool archiveOneRequest)
+        {
             try
             {
-
                 //getting the parentlocationinstanceid
                 var liParent = await _locationInstancesProc.ReadOneAsync(new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID });
                 var mayHaveParent = true;
@@ -70,13 +78,12 @@ namespace PrototypeWithAuth.CRUD
                             {
                                 await _requestsProc.ArchiveRequestAsync(requestReceived);
                                 await _locationInstancesProc.MarkLocationAvailableAsync(requestReceived.RequestID, place.LocationInstanceId);
-                                return ReturnVal;
                             }
                             await _context.SaveChangesAsync();
                         }
                         catch (Exception ex)
                         {
-                            throw ex;
+                            throw new Exception("RequestLocationInstancesProc SaveLocationsAsync in archive request catch-" + AppUtility.GetExceptionMessage(ex));
                         }
 
                         await _locationInstancesProc.MarkLocationInstanceAsFullAsync(locationInstance);
@@ -85,10 +92,8 @@ namespace PrototypeWithAuth.CRUD
             }
             catch (Exception ex)
             {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+               throw new Exception("RequestLocationInstancesProc SaveLocationsAsync-" + AppUtility.GetExceptionMessage(ex));
             }
-            return ReturnVal;
-
 
         }
 
@@ -116,7 +121,7 @@ namespace PrototypeWithAuth.CRUD
                                 await _locationInstancesProc.MarkLocationAvailableAsync(requestId, locationToDelete.LocationInstanceID);
                             }
                             await _context.SaveChangesAsync();
-                            await SaveLocationsAsync(receivedModalVisualViewModel, request, true);
+                            await SaveLocationsWithoutTransactionAsync(receivedModalVisualViewModel, request, true);
                             await transaction.CommitAsync();
                         }
                     }
@@ -135,13 +140,11 @@ namespace PrototypeWithAuth.CRUD
 
         }
 
-        public async Task<StringWithBool> DeleteAsync(List<RequestLocationInstance> requestLocationInstances)
+        public async Task DeleteWithoutTransactionAsync(List<RequestLocationInstance> requestLocationInstances)
         {
 
-            StringWithBool ReturnVal = new StringWithBool();
             try
-            {
-                
+            {                
                 foreach (var requestLocationInstance in requestLocationInstances)
                 {
 
@@ -149,14 +152,53 @@ namespace PrototypeWithAuth.CRUD
                     _context.Remove(requestLocationInstance);
                     await _context.SaveChangesAsync();
                 }
-                ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)
             {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                throw new Exception("RequestLocationInstanceProc DeleteAsync -"+ AppUtility.GetExceptionMessage(ex));
+            }
+         
+        }
+
+        public async Task<StringWithBool> UpdateAsync(ReceivedModalVisualViewModel receivedModalVisualViewModel, int requestID)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    await UpdateWithoutTransactionAsync(receivedModalVisualViewModel, requestID);
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                }
+              
             }
             return ReturnVal;
-         
+        }
+
+        public async Task UpdateWithoutTransactionAsync(ReceivedModalVisualViewModel receivedModalVisualViewModel, int requestID)
+        {
+            try
+            {
+                if (receivedModalVisualViewModel.LocationInstancePlaces != null)
+                {
+                    var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID }, new List<ComplexIncludes<Request, ModelBase>> {
+                            new ComplexIncludes<Request, ModelBase>{ Include = r => r.RequestLocationInstances } });
+                    var requestLocations = request.RequestLocationInstances;
+                    await _requestLocationInstancesProc.DeleteWithoutTransactionAsync(requestLocations);
+                    receivedModalVisualViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
+
+                    await _requestLocationInstancesProc.SaveLocationsWithoutTransactionAsync(receivedModalVisualViewModel, request, false);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception( AppUtility.GetExceptionMessage(ex));
+            }
         }
     } 
 }
