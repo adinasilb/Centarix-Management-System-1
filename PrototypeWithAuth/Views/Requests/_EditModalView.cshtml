@@ -70,7 +70,7 @@
                 <input type="hidden" asp-for="Requests[0].OrderType" />
                 <input type="hidden" asp-for="Requests[0].ArrivalDate" />
                 <input type="hidden" asp-for="Requests[0].SerialNumber" />
-                <input type="hidden" value="@Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum" id="categoryDescription" />
+
 
                 <input type="hidden" asp-for="Requests[0].IsInInventory" />
                 <input type="hidden" asp-for="Requests[0].SerialNumber" />
@@ -90,7 +90,7 @@
                     <div class="row modal-title-line justify-content-between">
                         @if (Model.Requests[0].Product.ProductSubcategory.ImageURL != null)
                         {
-                        <img src="@Model.Requests[0].Product.ProductSubcategory.ImageURL" class="top-modal-image" alt="Alternate Text" width="75" />
+                        <img src="@Model.Requests[0].Product.ProductSubcategory.ImageURL" class="sub-category-image top-modal-image" alt="Alternate Text" width="75" />
                         }
                         else
                         {

@@ -424,7 +424,7 @@ namespace PrototypeWithAuth.Controllers
 
         [Authorize(Roles = "Requests, Protocols")]
         public async Task<RequestItemViewModel> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
-            bool isEditable = true, List<string> selectedPriceSort = null, string selectedCurrency = null, bool isProprietary = false)
+            bool isEditable = true, List<string> selectedPriceSort = null, string selectedCurrency = null, bool isProprietary = false, int productSubCategoryID = 0)
         {
 
             var categoryType = 1;
@@ -470,7 +470,12 @@ namespace PrototypeWithAuth.Controllers
                     .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType).Include(r => r.ApplicationUserReceiver)
                     .OrderByDescending(r => r.CreationDate)
                     .ToList();
-
+            // if they changed category
+            if(productSubCategoryID !=0)
+            {
+                request.Product.ProductSubcategory = await _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == productSubCategoryID).Include(ps => ps.ParentCategory).FirstOrDefaultAsync();
+                request.Product.ProductSubcategoryID = productSubCategoryID;
+            }
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
             await FillRequestDropdowns(requestItemViewModel, request.Product.ProductSubcategory, categoryType);
 
@@ -1489,14 +1494,7 @@ namespace PrototypeWithAuth.Controllers
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             if (productSubcategory != null)
             {
-                if (categoryTypeId == 1)
-                {
-                    parentcategories = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == productSubcategory.ParentCategoryID).ToListAsync();
-                }
-                else
-                {
-                    parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 2).ToListAsync();
-                }
+                parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == categoryTypeId && !pc.IsProprietary).ToListAsync();
                 productsubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == productSubcategory.ParentCategoryID).ToListAsync();
                 unittypes = _context.UnitTypes.Where(ut => ut.UnitTypeParentCategory.Where(up => up.ParentCategoryID == productSubcategory.ParentCategoryID).Count() > 0).Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             }

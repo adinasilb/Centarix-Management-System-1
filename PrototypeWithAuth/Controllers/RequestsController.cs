@@ -744,7 +744,10 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 additionalRequests = false;
                             }
-                            await SaveRequestProductCommentsFunctionAsync(trvm.Comments, request);
+                            if (trvm.Comments != null)
+                            {
+                                await SaveRequestProductCommentsFunctionAsync(trvm.Comments, request);
+                            }
                             MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, trlvm.GUID);
                             if (request.ParentQuoteID != null)
                             {
@@ -2524,7 +2527,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ItemData(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
+        public async Task<IActionResult> ItemData(int? id, int productSubCategoryID=0, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
@@ -2532,10 +2535,11 @@ namespace PrototypeWithAuth.Controllers
             }
             List<string> selectedPriceSort = null;
             selectedPriceSort = new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() };
-            var requestItemViewModel = await editModalViewFunction(id, Tab, SectionType, isEditable, selectedPriceSort);
+            var requestItemViewModel = await editModalViewFunction(id, Tab, SectionType, isEditable, selectedPriceSort, productSubCategoryID: productSubCategoryID);
             return PartialView(requestItemViewModel);
         }
 
+       
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _ItemHeader(int? id, AppUtility.MenuItems SectionType)
         {
@@ -7016,6 +7020,13 @@ namespace PrototypeWithAuth.Controllers
 
             var viewModel = _context.ProductComments.Include(p=>p.ApplicationUser).Include(p=>p.CommentType).Where(p => p.ObjectID==productID && p.CommentTypeID==2).ToList();
             return PartialView(viewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public string GetCategoryImageSrc(int productSubCategoryID)
+        {
+            return _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID ==productSubCategoryID).Select(ps => ps.ImageURL).FirstOrDefault();
         }
     }
 }
