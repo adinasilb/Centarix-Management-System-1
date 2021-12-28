@@ -57,7 +57,7 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        public override Task<StringWithBool> CreateWithoutTransactionAsync(TimekeeperNotification notification)
+        public override Task CreateWithoutTransactionAsync(TimekeeperNotification notification)
         {
             return base.CreateWithoutTransactionAsync(notification);
         }

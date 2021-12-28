@@ -2265,8 +2265,8 @@ namespace PrototypeWithAuth.Controllers
                             }
                             if (tempRequest.Comments != null)
                             {
-                                await _requestCommentsProc.UpdateAsync((List<RequestComment>)tempRequest.Comments.Where(c => c.CommentTypeID == 1), tempRequest.Request.RequestID, currentUser.Id);
-                                await _productCommentsProc.UpdateAsync((List<ProductComment>)tempRequest.Comments.Where(c => c.CommentTypeID == 2), tempRequest.Request.ProductID, currentUser.Id);
+                                await _requestCommentsProc.UpdateWithoutTransactionAsync((List<RequestComment>)tempRequest.Comments.Where(c => c.CommentTypeID == 1), tempRequest.Request.RequestID, currentUser.Id);
+                                await _productCommentsProc.UpdateWithoutTransactionAsync((List<ProductComment>)tempRequest.Comments.Where(c => c.CommentTypeID == 2), tempRequest.Request.ProductID, currentUser.Id);
 
                                 foreach (var c in tempRequest.Comments)
                                 {
