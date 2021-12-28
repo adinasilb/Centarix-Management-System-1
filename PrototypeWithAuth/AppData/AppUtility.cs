@@ -818,7 +818,7 @@ namespace PrototypeWithAuth.AppData
 
         public static string GetExcelDateFormat(DateTime? date)
         {
-            return date?.ToString("dd/MM/yyyy HH:mm:ss") ?? "";
+            return date.Equals(new DateTime()) ? "" : date?.ToString("dd/MM/yyyy").Replace(".", "") ?? "";
         }
 
         public static string GetElixirDateFormat(this DateTime? date)
