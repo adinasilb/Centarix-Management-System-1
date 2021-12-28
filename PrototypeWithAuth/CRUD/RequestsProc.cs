@@ -210,7 +210,7 @@ namespace PrototypeWithAuth.CRUD
                         await _requestLocationInstancesProc.DeleteWithoutTransactionAsync(requestLocationInstances);
                         await _requestCommentsProc.DeleteWithoutTransactionAsync(request.RequestID);
                         var notifications = _requestNotificationsProc.Read(new List<Expression<Func<RequestNotification, bool>>> { rn => rn.RequestID == request.RequestID }).ToList();
-                        await _requestNotificationsProc.DeleteAsync(notifications);
+                        await _requestNotificationsProc.DeleteWithoutTransactionAsync(notifications);
                         //throw new Exception();
                         await transaction.CommitAsync();
                     }
