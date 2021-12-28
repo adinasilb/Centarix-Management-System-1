@@ -2124,626 +2124,491 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        //        [HttpPost]
-        //        [RequestFormLimits(ValueLengthLimit = int.MaxValue)]
-        //        [Authorize(Roles = "Requests")]
-        //        public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmailViewModel, TempRequestListViewModel tempRequestListViewModel)
-        //        {
-        //            var oldTempRequestJson = await _tempRequestJsonsProc.GetTempRequest(tempRequestListViewModel.GUID, _userManager.GetUserId(User)).FirstOrDefaultAsync();
+        [HttpPost]
+        [RequestFormLimits(ValueLengthLimit = int.MaxValue)]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmailViewModel, TempRequestListViewModel tempRequestListViewModel)
+        {
+            bool Success = false;
+            var oldTempRequestJson = await _tempRequestJsonsProc.GetTempRequest(tempRequestListViewModel.GUID, _userManager.GetUserId(User)).FirstOrDefaultAsync();
 
-        //            try
-        //            {
-        //                List<ModelAndID> ModelsCreated = new List<ModelAndID>();
-        //                List<ModelAndID> ModelsModified = new List<ModelAndID>();
-        //                //var isRequests = true;
-        //                //var RequestNum = 1;
-        //                //var PaymentNum = 1;
-        //                //var requests = new List<Request>();
-        //                //var payments = new List<Payment>();
-
-
-        //                var deserializedTempRequestListViewModel = new TempRequestListViewModel()
-        //                {
-        //                    TempRequestViewModels =
-        //                   oldTempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
-        //                };
-        //                //var pr = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest; //eventually(when ready to test all cases) put this in instead of next line and put it in for loop below
-        //                deserializedTempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest);
-
-        //                /*
-        //                    * SAVE THE INFORMATION HERE
-        //                    */
-        //                /**Request Rollback Start****/
-        //                //using (var transaction = _context.Database.BeginTransaction())
-        //                //{
-        //                //    try
-        //                //    {
-        //                //        //foreach (var tempRequest in deserializedTempRequestListViewModel.TempRequestViewModels)
-        //                //        for (int tr = 0; tr < deserializedTempRequestListViewModel.TempRequestViewModels.Count(); tr++)
-        //                //        {
-        //                //            var tempRequest = deserializedTempRequestListViewModel.TempRequestViewModels[tr];
-        //                //            tempRequest.Request.RequestStatusID = 2;
-        //                //            bool AddedProduct = false;
-        //                //            bool AddedRequest = false;
-        //                //            bool AddedParentQuote = false;
-        //                //            if (tempRequest.Request.RequestID == 0)
-        //                //            {
-        //                //                if (tempRequest.Request.Product.ProductID == 0)
-        //                //                {
-        //                //                    tempRequest.Request.Product.SerialNumber = GetSerialNumber(false);
-        //                //                    _context.Entry(tempRequest.Request.Product).State = EntityState.Added;
-        //                //                    AddedProduct = true;
-        //                //                }
-        //                //                else
-        //                //                {
-        //                //                    _context.Entry(tempRequest.Request.Product).State = EntityState.Modified;
-        //                //                }
-        //                //                //tempRequest.Request.ParentRequest = pr;
-        //                //                _context.Entry(tempRequest.Request).State = EntityState.Added;
-        //                //                AddedRequest = true;
-        //                //                //tempRequest.Request.ParentRequest.OrderDate = DateTime.Now;
-        //                //                if (tempRequest.Request.ParentQuote.ParentQuoteID == 0)
-        //                //                {
-        //                //                    _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Added;
-        //                //                    AddedParentQuote = true;
-        //                //                }
-        //                //                else
-        //                //                {
-        //                //                    _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Modified;
-
-        //                //                }
-        //                //            }
-        //                //            else
-        //                //            {
-        //                //                _context.Entry(tempRequest.Request).State = EntityState.Modified;
-        //                //            }
-        //                //            await _context.SaveChangesAsync();
-        //                //            if (AddedProduct)
-        //                //            {
-        //                //                ModelsCreated.Add(new ModelAndID()
-        //                //                {
-        //                //                    ID = tempRequest.Request.ProductID,
-        //                //                    ModelsEnum = AppUtility.ModelsEnum.Product
-        //                //                });
-        //                //            }
-        //                //            else
-        //                //            {
-        //                //                ModelsModified.Add(new ModelAndID()
-        //                //                {
-        //                //                    ID = tempRequest.Request.ProductID,
-        //                //                    ModelsEnum = AppUtility.ModelsEnum.Product
-        //                //                });
-
-        //                //            }
-        //                //            if (AddedRequest)
-        //                //            {
-        //                //                ModelsCreated.Add(new ModelAndID()
-        //                //                {
-        //                //                    ID = tempRequest.Request.RequestID,
-        //                //                    ModelsEnum = AppUtility.ModelsEnum.Request
-        //                //                });
-        //                //            }
-        //                //            else
-        //                //            {
-        //                //                ModelsModified.Add(new ModelAndID()
-        //                //                {
-        //                //                    ID = tempRequest.Request.RequestID,
-        //                //                    ModelsEnum = AppUtility.ModelsEnum.Request
-        //                //                });
-
-        //                //            }
-        //                //            if (AddedParentQuote)
-        //                //            {
-        //                //                ModelsCreated.Add(new ModelAndID()
-        //                //                {
-        //                //                    ID = Convert.ToInt32(tempRequest.Request.ParentQuoteID),
-        //                //                    ModelsEnum = AppUtility.ModelsEnum.ParentQuote
-        //                //                });
-        //                //            }
-        //                //            else
-        //                //            {
-        //                //                ModelsModified.Add(new ModelAndID()
-        //                //                {
-        //                //                    ID = Convert.ToInt32(tempRequest.Request.ParentQuoteID),
-        //                //                    ModelsEnum = AppUtility.ModelsEnum.ParentQuote
-        //                //                });
-        //                //            }
-        //                //            //if there are no payments it means that the payments were saved previously
-        //                //            bool AddedPayments = false;
-        //                //            if (tempRequest.Payments == null)
-        //                //            {
-        //                //                //tempRequest.Payments = new List<Payment>();
-        //                //                //foreach(var payment in _context.Payments.Where(p => p.RequestID == tempRequest.Request.RequestID))
-        //                //                //{
-        //                //                //    tempRequest.Payments.Add(payment);
-        //                //                //}
-        //                //            }
-        //                //            else
-        //                //            {
-        //                //                foreach (var p in tempRequest.Payments)
-        //                //                {
-        //                //                    //DO WE NEED THIS NEXT LINE HERE???
-        //                //                    p.RequestID = tempRequest.Request.RequestID;
-        //                //                    _context.Entry(p).State = EntityState.Added;
-        //                //                    await _context.SaveChangesAsync();
-        //                //                    ModelsCreated.Add(new ModelAndID()
-        //                //                    {
-        //                //                        ID = p.PaymentID,
-        //                //                        ModelsEnum = AppUtility.ModelsEnum.Payment
-        //                //                    });
-        //                //                }
-        //                //            }
-        //                //            if (tempRequest.Comments != null)
-        //                //            {
-        //                //                await SaveRequestProductCommentsFunctionAsync(tempRequest.Comments, tempRequest.Request);
-        //                //                foreach (var c in tempRequest.Comments)
-        //                //                {                                
-        //                //                    ModelsCreated.Add(new ModelAndID()
-        //                //                    {
-        //                //                        ID = c.CommentID,
-        //                //                        ModelsEnum = AppUtility.ModelsEnum.Comment
-        //                //                    });
-        //                //                }
-        //                //            }
-
-        //                //            if (tempRequest.Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
-        //                //            {
-        //                //                var additionalRequests = tr + 1 < deserializedTempRequestListViewModel.TempRequestViewModels.Count() ? true : false;
-        //                //                MoveDocumentsOutOfTempFolder(tempRequest.Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, tempRequestListViewModel.GUID);
-        //                //            }
-
-        //                //            /*string NewFolder = Path.Combine(uploadFolder, tempRequest.Request.ParentRequestID.ToString());
-        //                //            string folderPath = Path.Combine(NewFolder, AppUtility.FolderNamesEnum.Orders.ToString());
-        //                //            Directory.CreateDirectory(folderPath); //make sure we don't need one above also??
-
-        //                //            string uniqueFileName = 1 + "OrderEmail.pdf";
-        //                //            string filePath = Path.Combine(folderPath, uniqueFileName);
-        //                //            if (System.IO.File.Exists(filePath))
-        //                //            {
-        //                //                System.IO.File.Delete(filePath);
-        //                //            }
-
-        //                //            System.IO.File.Copy(uploadFile, filePath); //make sure this works for each of them*/
-
-        //                //            tempRequest.Request.Product = await _context.Products.Where(p => p.ProductID == tempRequest.Request.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
-        //                //            RequestNotification requestNotification = new RequestNotification();
-        //                //            requestNotification.RequestID = tempRequest.Request.RequestID;
-        //                //            requestNotification.IsRead = false;
-        //                //            requestNotification.RequestName = tempRequest.Request.Product.ProductName;
-        //                //            requestNotification.ApplicationUserID = tempRequest.Request.ApplicationUserCreatorID;
-        //                //            requestNotification.Description = "item ordered";
-        //                //            requestNotification.NotificationStatusID = 2;
-        //                //            requestNotification.TimeStamp = DateTime.Now;
-        //                //            requestNotification.Controller = "Requests";
-        //                //            requestNotification.Action = "NotificationsView";
-        //                //            requestNotification.OrderDate = DateTime.Now;
-        //                //            requestNotification.Vendor = tempRequest.Request.Product.Vendor.VendorEnName;
-        //                //            _context.Add(requestNotification);
-        //                //            await _context.SaveChangesAsync();
-        //                //            ModelsCreated.Add(new ModelAndID()
-        //                //            {
-        //                //                ID = requestNotification.NotificationID,
-        //                //                ModelsEnum = AppUtility.ModelsEnum.RequestNotification
-        //                //            });
-        //                //        }
-        //                //        string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
-        //                //        string folder2 = Path.Combine(uploadFolder, tempRequestListViewModel.GUID.ToString());
-        //                //        string fileName = Path.Combine(folder2, "Order.txt");
-        //                //        //read the text file to convert to pdf
-        //                //        string renderedView = System.IO.File.ReadAllText(fileName);
-        //                //        //delete file
-        //                //        System.IO.File.Delete(fileName);
-        //                //        //base url needs to be declared - perhaps should be getting from js?
-        //                //        //once deployed need to take base url and put in the parameter for converter.convertHtmlString
-        //                //        var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
+                List<ModelAndID> ModelsCreated = new List<ModelAndID>();
+                List<ModelAndID> ModelsModified = new List<ModelAndID>();
+                //var isRequests = true;
+                //var RequestNum = 1;
+                //var PaymentNum = 1;
+                //var requests = new List<Request>();
+                //var payments = new List<Payment>();
 
 
-        //            }
+                var deserializedTempRequestListViewModel = new TempRequestListViewModel()
+                {
+                    TempRequestViewModels =
+                   oldTempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
+                };
+                //var pr = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest; //eventually(when ready to test all cases) put this in instead of next line and put it in for loop below
+                deserializedTempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest);
+
+            var userId = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ApplicationUserCreatorID ?? _userManager.GetUserId(User); //do we need to do this? (will it ever be null?)
+                                                                                                                                                                       //var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+            var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == userId });
+            using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        //foreach (var tempRequest in deserializedTempRequestListViewModel.TempRequestViewModels)
+                        for (int tr = 0; tr < deserializedTempRequestListViewModel.TempRequestViewModels.Count(); tr++)
+                        {
+                            var tempRequest = deserializedTempRequestListViewModel.TempRequestViewModels[tr];
+                            tempRequest.Request.RequestStatusID = 2;
+                            bool AddedProduct = false;
+                            bool AddedRequest = false;
+                            bool AddedParentQuote = false;
+                            if (tempRequest.Request.RequestID == 0)
+                            {
+                                if (tempRequest.Request.Product.ProductID == 0)
+                                {
+                                    tempRequest.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(false);
+                                    _context.Entry(tempRequest.Request.Product).State = EntityState.Added;
+                                    AddedProduct = true;
+                                }
+                                else
+                                {
+                                    _context.Entry(tempRequest.Request.Product).State = EntityState.Modified;
+                                }
+                                //tempRequest.Request.ParentRequest = pr;
+                                _context.Entry(tempRequest.Request).State = EntityState.Added;
+                                AddedRequest = true;
+                                //tempRequest.Request.ParentRequest.OrderDate = DateTime.Now;
+                                if (tempRequest.Request.ParentQuote.ParentQuoteID == 0)
+                                {
+                                    _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Added;
+                                    AddedParentQuote = true;
+                                }
+                                else
+                                {
+                                    _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Modified;
+
+                                }
+                            }
+                            else
+                            {
+                                _context.Entry(tempRequest.Request).State = EntityState.Modified;
+                            }
+                            await _context.SaveChangesAsync();
+                            if (AddedProduct)
+                            {
+                                ModelsCreated.Add(new ModelAndID()
+                                {
+                                    ID = tempRequest.Request.ProductID,
+                                    ModelsEnum = AppUtility.ModelsEnum.Product
+                                });
+                            }
+                            else
+                            {
+                                ModelsModified.Add(new ModelAndID()
+                                {
+                                    ID = tempRequest.Request.ProductID,
+                                    ModelsEnum = AppUtility.ModelsEnum.Product
+                                });
+
+                            }
+                            if (AddedRequest)
+                            {
+                                ModelsCreated.Add(new ModelAndID()
+                                {
+                                    ID = tempRequest.Request.RequestID,
+                                    ModelsEnum = AppUtility.ModelsEnum.Request
+                                });
+                            }
+                            else
+                            {
+                                ModelsModified.Add(new ModelAndID()
+                                {
+                                    ID = tempRequest.Request.RequestID,
+                                    ModelsEnum = AppUtility.ModelsEnum.Request
+                                });
+
+                            }
+                            if (AddedParentQuote)
+                            {
+                                ModelsCreated.Add(new ModelAndID()
+                                {
+                                    ID = Convert.ToInt32(tempRequest.Request.ParentQuoteID),
+                                    ModelsEnum = AppUtility.ModelsEnum.ParentQuote
+                                });
+                            }
+                            else
+                            {
+                                ModelsModified.Add(new ModelAndID()
+                                {
+                                    ID = Convert.ToInt32(tempRequest.Request.ParentQuoteID),
+                                    ModelsEnum = AppUtility.ModelsEnum.ParentQuote
+                                });
+                            }
+                            //if there are no payments it means that the payments were saved previously
+                            bool AddedPayments = false;
+                            if (tempRequest.Payments != null)
+                            {
+                                foreach (var p in tempRequest.Payments)
+                                {
+                                    //DO WE NEED THIS NEXT LINE HERE???
+                                    p.RequestID = tempRequest.Request.RequestID;
+                                    _context.Entry(p).State = EntityState.Added;
+                                    await _context.SaveChangesAsync();
+                                    ModelsCreated.Add(new ModelAndID()
+                                    {
+                                        ID = p.PaymentID,
+                                        ModelsEnum = AppUtility.ModelsEnum.Payment
+                                    });
+                                }
+                            }
+                            if (tempRequest.Comments != null)
+                            {
+                                await _requestCommentsProc.UpdateAsync((List<RequestComment>)tempRequest.Comments.Where(c => c.CommentTypeID == 1), tempRequest.Request.RequestID, currentUser.Id);
+                                await _productCommentsProc.UpdateAsync((List<ProductComment>)tempRequest.Comments.Where(c => c.CommentTypeID == 2), tempRequest.Request.ProductID, currentUser.Id);
+
+                                foreach (var c in tempRequest.Comments)
+                                {
+                                    ModelsCreated.Add(new ModelAndID()
+                                    {
+                                        ID = c.CommentID,
+                                        ModelsEnum = AppUtility.ModelsEnum.Comment
+                                    });
+                                }
+                            }
+
+                            if (tempRequest.Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
+                            {
+                                var additionalRequests = tr + 1 < deserializedTempRequestListViewModel.TempRequestViewModels.Count() ? true : false;
+                                MoveDocumentsOutOfTempFolder(tempRequest.Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, tempRequestListViewModel.GUID);
+                            }
+
+                            /*string NewFolder = Path.Combine(uploadFolder, tempRequest.Request.ParentRequestID.ToString());
+                            string folderPath = Path.Combine(NewFolder, AppUtility.FolderNamesEnum.Orders.ToString());
+                            Directory.CreateDirectory(folderPath); //make sure we don't need one above also??
+
+                            string uniqueFileName = 1 + "OrderEmail.pdf";
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            if (System.IO.File.Exists(filePath))
+                            {
+                                System.IO.File.Delete(filePath);
+                            }
+
+                            System.IO.File.Copy(uploadFile, filePath); //make sure this works for each of them*/
+
+                            tempRequest.Request.Product = await _context.Products.Where(p => p.ProductID == tempRequest.Request.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
+                            RequestNotification requestNotification = new RequestNotification();
+                            requestNotification.RequestID = tempRequest.Request.RequestID;
+                            requestNotification.IsRead = false;
+                            requestNotification.RequestName = tempRequest.Request.Product.ProductName;
+                            requestNotification.ApplicationUserID = tempRequest.Request.ApplicationUserCreatorID;
+                            requestNotification.Description = "item ordered";
+                            requestNotification.NotificationStatusID = 2;
+                            requestNotification.TimeStamp = DateTime.Now;
+                            requestNotification.Controller = "Requests";
+                            requestNotification.Action = "NotificationsView";
+                            requestNotification.OrderDate = DateTime.Now;
+                            requestNotification.Vendor = tempRequest.Request.Product.Vendor.VendorEnName;
+                            _context.Add(requestNotification);
+                            await _context.SaveChangesAsync();
+                            ModelsCreated.Add(new ModelAndID()
+                            {
+                                ID = requestNotification.NotificationID,
+                                ModelsEnum = AppUtility.ModelsEnum.RequestNotification
+                            });
+                        }
+                        string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
+                        string folder2 = Path.Combine(uploadFolder, tempRequestListViewModel.GUID.ToString());
+                        string fileName = Path.Combine(folder2, "Order.txt");
+                        //read the text file to convert to pdf
+                        string renderedView = System.IO.File.ReadAllText(fileName);
+                        //delete file
+                        System.IO.File.Delete(fileName);
+                        //base url needs to be declared - perhaps should be getting from js?
+                        //once deployed need to take base url and put in the parameter for converter.convertHtmlString
+                        var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
+                        //instantiate a html to pdf converter object
+                        HtmlToPdf converter = new HtmlToPdf();
+
+                        PdfDocument doc = new PdfDocument();
+                        // create a new pdf document converting an url
+                        doc = converter.ConvertHtmlString(renderedView, baseUrl);
+
+                        //save this as orderform
+                        string id;
+                        if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentRequestID != null)
+                        {
+                            id = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentRequestID.ToString();
+                        }
+                        else
+                        {
+                            id = tempRequestListViewModel.GUID.ToString();
+                        }
+                        string NewFolder = Path.Combine(uploadFolder, id);
+                        //string NewFolder = Path.Combine(uploadFolder, deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentRequestID.ToString());
+                        string folderPath = Path.Combine(NewFolder, AppUtility.FolderNamesEnum.Orders.ToString());
+                        Directory.CreateDirectory(folderPath); //make sure we don't need one above also??
+                        string filePath = Path.Combine(folderPath, "CentarixOrder" + deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentRequest.OrderNumber + ".pdf");
+
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            System.IO.File.Delete(filePath);
+                        }
+                        doc.Save(filePath);
+                        doc.Close();
+
+                        /*string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
+                        string uploadFile = Path.Combine(uploadFolder, "CentarixOrder" + requests.FirstOrDefault().ParentRequest.OrderNumber + ".pdf");
+                        */
 
 
+                        //instatiate mimemessage
+                        var message = new MimeMessage();
 
-        //            tempRequestListViewModel.RequestIndexObject.RequestStatusID = 2;
-        //            tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
+                        //instantiate the body builder
+                        var builder = new BodyBuilder();
+                        //var users = _context.Users.ToList();
+                        //currentUser = _context.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
+                        string ownerEmail = currentUser.Email;
+                        string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
+                        string ownerPassword = currentUser.SecureAppPass;
+                        deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.VendorID).FirstOrDefault();
+                        string vendorEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.OrdersEmail;
+                        //string vendorEmail = /*firstRequest.Product.Vendor.OrdersEmail;*/ emails.Count() < 1 ? requests.FirstOrDefault().Product.Vendor.OrdersEmail : emails[0];
+                        string vendorName = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.VendorEnName;
 
-        //            if (!Success)
-        //            {
+                        //add a "From" Email
+                        message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
 
-        //                await RollbackRequest(ModelsCreated, ModelsModified, tempRequestListViewModel.GUID);
-        //                tempRequestListViewModel.RequestIndexObject.RequestStatusID = 6;
-        //                return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
-        //            }
-        //            return new EmptyResult();
-        //            //}
-        //            //catch (Exception ex)
-        //            //{
-        //            //    await RollbackCurrentTempAsync(tempRequestListViewModel.GUID);
-        //            //    tempRequestListViewModel.RequestIndexObject.ErrorMessage += AppUtility.GetExceptionMessage(ex);
-        //            //    Response.StatusCode = 500;
-        //            //    await Response.WriteAsync(tempRequestListViewModel.RequestIndexObject.ErrorMessage);
-        //            //    if (!success)
-        //            //    {
+                        // add a "To" Email
+                        message.To.Add(new MailboxAddress(vendorName, vendorEmail));
 
-        //            //    }
-        //            //    return new EmptyResult();
-        //            //}
+                        //add CC's to email
+                        //TEST THIS STATEMENT IF VENDOR IS MISSING AN ORDERS EMAIL
+                        if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails != null)
+                        {
+                            for (int e = 0; e < deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.Count(); e++)
+                            {
+                                message.Cc.Add(new MailboxAddress(deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails[e]));
+                            }
+                        }
 
+                        //subject
+                        message.Subject = "Order from Centarix to " + vendorName;
 
-        //        }
+                        List<string> quoteNumbers = new List<string>();
+                        ParentQuote quoteNumberFromJson = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentQuote;
+                        if (quoteNumberFromJson != null)
+                        {
+                            quoteNumbers = deserializedTempRequestListViewModel.TempRequestViewModels.Select(trvm => trvm.Request.ParentQuote.QuoteNumber).ToList();
+                        }
+                        else
+                        {
+                            var parentQuoteIDs = deserializedTempRequestListViewModel.TempRequestViewModels.Select(trvm => trvm.Request.ParentQuoteID);
+                            quoteNumbers = _context.ParentQuotes.Where(pq => parentQuoteIDs.Contains(pq.ParentQuoteID)).Select(pq => pq.QuoteNumber).ToList();
+                        }
 
-        //        public async Task<StringWithBool> RollbackRequest(List<ModelAndID> ModelsCreated, List<ModelAndID> ModelModified, Guid guid)
-        //        {
-        //            StringWithBool ReturnVal = new StringWithBool();
-        //            try
-        //            {
-        //                var entries = _context.ChangeTracker.Entries();
-        //                foreach (var entry in entries)
-        //                {
-        //                    entry.State = EntityState.Detached;
-        //                }
-        //                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
-        //                {
-        //                    //var model6 = _context.Comments.Where(pr => pr.CommentID == ModelWithID.ID).FirstOrDefault();
-        //                    //_context.Remove(model6);
-        //                }
-        //                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Payment))
-        //                {
-        //                    var model5 = _context.Payments.Where(pr => pr.PaymentID == ModelWithID.ID).FirstOrDefault();
-        //                    _context.Remove(model5);
-        //                }
-        //                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.RequestNotification))
-        //                {
-        //                    var model7 = _context.RequestNotifications.Where(pr => pr.NotificationID == ModelWithID.ID).FirstOrDefault();
-        //                    _context.Remove(model7);
-        //                }
-        //                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Request))
-        //                {
-        //                    var model = _context.Requests.Where(r => r.RequestID == ModelWithID.ID).FirstOrDefault();
-        //                    _context.Remove(model);
-        //                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentRequest, guid.ToString(), false, true);
+                        //body
+                        builder.TextBody = @"Hello," + "\n\n" + "Please see the attached order for quote number(s) " + string.Join(", ", quoteNumbers) +
+                            ". \n\nPlease confirm that you received the order. \n\nThank you.\n"
+                            + ownerUsername + "\nCentarix";
+                        builder.Attachments.Add(filePath);
 
-        //                    /**Request Rollback End****/
+                        message.Body = builder.ToMessageBody();
 
-        //                    //instantiate a html to pdf converter object
-        //                    HtmlToPdf converter = new HtmlToPdf();
+                        //move docs before sending message - sending message should be last thing done
+                        if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
+                        {
+                            MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID == null ? 0 : Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, false, tempRequestListViewModel.GUID);
+                        }
+                        bool moveOrderDoc = false;
+                        if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID == 0)
+                        {
+                            _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Added;
+                            await _context.SaveChangesAsync();
+                            ModelsCreated.Add(new ModelAndID()
+                            {
+                                ID = Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID),
+                                ModelsEnum = AppUtility.ModelsEnum.ParentRequest
+                            });
+                            moveOrderDoc = true;
+                        }
+                        else //if coming from approve order
+                        {
+                            _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Modified;
+                            ModelsModified.Add(new ModelAndID()
+                            {
+                                ID = Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID),
+                                ModelsEnum = AppUtility.ModelsEnum.ParentRequest
+                            });
+                            await _context.SaveChangesAsync();
+                        }
+                        if (moveOrderDoc)
+                        {
+                            MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID,
+                                 AppUtility.ParentFolderName.ParentRequest, false, tempRequestListViewModel.GUID);     //make sure has an id here.
+                        }
 
-        //                    PdfDocument doc = new PdfDocument();
-        //                    // create a new pdf document converting an url
-        //                    doc = converter.ConvertHtmlString(renderedView, baseUrl);
+                        await transaction.CommitAsync();
 
-        //                    //save this as orderform
-        //                    string id;
-        //                    if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentRequestID != null)
-        //                    {
-        //                        id = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentRequestID.ToString();
-        //                    }
-        //                    else
-        //                    {
-        //                        id = tempRequestListViewModel.GUID.ToString();
-        //                    }
-        //                    string NewFolder = Path.Combine(uploadFolder, id);
-        //                    //string NewFolder = Path.Combine(uploadFolder, deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentRequestID.ToString());
-        //                    string folderPath = Path.Combine(NewFolder, AppUtility.FolderNamesEnum.Orders.ToString());
-        //                    Directory.CreateDirectory(folderPath); //make sure we don't need one above also??
-        //                    string filePath = Path.Combine(folderPath, "CentarixOrder" + deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentRequest.OrderNumber + ".pdf");
+                        using (var client = new SmtpClient())
+                        {
 
-        //                    if (System.IO.File.Exists(filePath))
-        //                    {
-        //                        System.IO.File.Delete(filePath);
-        //                    }
-        //                    doc.Save(filePath);
-        //                    doc.Close();
+                            client.Connect("smtp.gmail.com", 587, false);
+                            //var SecureAppPass = _context.Users.Where(u => u.Id == confirmEmail.ParentRequest.ApplicationUserID).FirstOrDefault().SecureAppPass;
+                            client.Authenticate(ownerEmail, ownerPassword);// ownerPassword);//
+                            client.Timeout = 500000; // 500 seconds
+                            try
+                            {
+                                client.Send(message);
+                                Success = true;
+                            }
+                            catch (Exception ex)
+                            {
+                                ViewBag.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                                transaction.Rollback();
 
-        //                    /*string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-        //                    string uploadFile = Path.Combine(uploadFolder, "CentarixOrder" + requests.FirstOrDefault().ParentRequest.OrderNumber + ".pdf");
-        //                    */
+                                await RollbackRequest(ModelsCreated, ModelsModified, tempRequestListViewModel.GUID, oldTempRequestJson.SequencePosition);
 
-
-        //                    //instatiate mimemessage
-        //                    var message = new MimeMessage();
-
-        //                    //instantiate the body builder
-        //                    var builder = new BodyBuilder();
-
-        //                var userId = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ApplicationUserCreatorID ?? _userManager.GetUserId(User); //do we need to do this? (will it ever be null?)
-        //                                                                                                                                                                           //var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-        //                var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == userId });
-        //                string ownerEmail = currentUser.Email;
-        //                string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
-        //                string ownerPassword = currentUser.SecureAppPass;
-        //                deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.VendorID).FirstOrDefault();
-        //                string vendorEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.OrdersEmail;
-        //                //string vendorEmail = /*firstRequest.Product.Vendor.OrdersEmail;*/ emails.Count() < 1 ? requests.FirstOrDefault().Product.Vendor.OrdersEmail : emails[0];
-        //                string vendorName = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.VendorEnName;
-
-        //                    //add a "From" Email
-        //                    message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
-
-        //                    // add a "To" Email
-        //                    message.To.Add(new MailboxAddress(vendorName, vendorEmail));
-
-        //                    //add CC's to email
-        //                    //TEST THIS STATEMENT IF VENDOR IS MISSING AN ORDERS EMAIL
-        //                    if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails != null)
-        //                    {
-        //                        for (int e = 0; e < deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.Count(); e++)
-        //                        {
-        //                            message.Cc.Add(new MailboxAddress(deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails[e]));
-        //                        }
-        //                    }
-
-        //                    //subject
-        //                    message.Subject = "Order from Centarix to " + vendorName;
-
-        //                    List<string> quoteNumbers = new List<string>();
-        //                    ParentQuote quoteNumberFromJson = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentQuote;
-        //                    if (quoteNumberFromJson != null)
-        //                    {
-        //                        quoteNumbers = deserializedTempRequestListViewModel.TempRequestViewModels.Select(trvm => trvm.Request.ParentQuote.QuoteNumber).ToList();
-        //                    }
-        //                    else
-        //                    {
-        //                        var parentQuoteIDs = deserializedTempRequestListViewModel.TempRequestViewModels.Select(trvm => trvm.Request.ParentQuoteID);
-        //                        quoteNumbers = _context.ParentQuotes.Where(pq => parentQuoteIDs.Contains(pq.ParentQuoteID)).Select(pq => pq.QuoteNumber).ToList();
-        //                    }
-
-        //                    //body
-        //                    builder.TextBody = @"Hello," + "\n\n" + "Please see the attached order for quote number(s) " + string.Join(", ", quoteNumbers) +
-        //                        ". \n\nPlease confirm that you received the order. \n\nThank you.\n"
-        //                        + ownerUsername + "\nCentarix";
-        //                    builder.Attachments.Add(filePath);
-
-        //                    message.Body = builder.ToMessageBody();
-
-        //                    //move docs before sending message - sending message should be last thing done
-        //                    if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
-        //                    {
-        //                        MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID == null ? 0 : Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, false, tempRequestListViewModel.GUID);
-        //                    }
-        //                    bool moveOrderDoc = false;
-        //                    if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID == 0)
-        //                    {
-        //                        _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Added;
-        //                        await _context.SaveChangesAsync();
-        //                        ModelsCreated.Add(new ModelAndID()
-        //                        {
-        //                            ID = Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID),
-        //                            ModelsEnum = AppUtility.ModelsEnum.ParentRequest
-        //                        });
-        //                        moveOrderDoc = true;
-        //                    }
-        //                    else //if coming from approve order
-        //                    {
-        //                        _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Modified;
-        //                        ModelsModified.Add(new ModelAndID()
-        //                        {
-        //                            ID = Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID),
-        //                            ModelsEnum = AppUtility.ModelsEnum.ParentRequest
-        //                        });
-        //                        await _context.SaveChangesAsync();
-        //                    }
-        //                    if (moveOrderDoc)
-        //                    {
-        //                        MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID,
-        //                             AppUtility.ParentFolderName.ParentRequest, false, tempRequestListViewModel.GUID);     //make sure has an id here.
-        //                    }
-
-        //                    await transaction.CommitAsync();
-
-        //                    using (var client = new SmtpClient())
-        //                    {
-
-        //                        client.Connect("smtp.gmail.com", 587, false);
-        //                        //var SecureAppPass = _context.Users.Where(u => u.Id == confirmEmail.ParentRequest.ApplicationUserID).FirstOrDefault().SecureAppPass;
-        //                        client.Authenticate(ownerEmail, ownerPassword);// ownerPassword);//
-        //                        client.Timeout = 500000; // 500 seconds
-        //                        try
-        //                        {
-        //                            client.Send(message);
-        //                            Success = true;
-        //                        }
-        //                        catch (Exception ex)
-        //                        {
-        //                            ViewBag.ErrorMessage = AppUtility.GetExceptionMessage(ex);
-        //                            transaction.Rollback();
-
-        //                            await RollbackRequest(ModelsCreated, ModelsModified, tempRequestListViewModel.GUID);
-
-        //                            //base.RemoveRequestWithCommentsAndEmailSessions();
-        //                            return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
-        //                        }
-        //                        client.Disconnect(true);
-        //                    }
+                                //base.RemoveRequestWithCommentsAndEmailSessions();
+                                return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
+                            }
+                            client.Disconnect(true);
+                        }
 
 
-        //                    //throw new Exception();
-        //                    //base.RemoveRequestWithCommentsAndEmailSessions();
-        //                    if (Success)
-        //                    {
-        //                        await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
-        //                    }
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    transaction.Rollback();
-        //                    await RollbackRequest(ModelsCreated, ModelsModified, tempRequestListViewModel.GUID);
-        //                    //base.RemoveRequestWithCommentsAndEmailSessions();
-        //                    return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
-        //                }
-        //            /***Roll back Request order end***/
-        //            /***Old order flow but with proc start****/
-        //            if (wasSent)
-        //                            {
-        //                                //foreach (var tempRequest in deserializedTempRequestListViewModel.TempRequestViewModels)
-        //                                for (int tr = 0; tr < deserializedTempRequestListViewModel.TempRequestViewModels.Count(); tr++)
-        //                                {
-        //                                    var tempRequest = deserializedTempRequestListViewModel.TempRequestViewModels[tr];
-        //                                    tempRequest.Request.RequestStatusID = 2;
-        //                                    if (tempRequest.Request.RequestID == 0)
-        //                                    {
-        //                                        if (tempRequest.Request.Product.ProductID == 0)
-        //                                        {
-        //                                            tempRequest.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(false);
-        //                                            _context.Entry(tempRequest.Request.Product).State = EntityState.Added;
-        //                                        }
-        //                                        else
-        //                                        {
-        //                                            _context.Entry(tempRequest.Request.Product).State = EntityState.Modified;
-        //                                        }
-        //                                        //tempRequest.Request.ParentRequest = pr;
-        //                                        _context.Entry(tempRequest.Request).State = EntityState.Added;
-        //                                        //tempRequest.Request.ParentRequest.OrderDate = DateTime.Now;
-        //                                        if (tempRequest.Request.ParentQuote.ParentQuoteID == 0)
-        //                                        {
-        //                                            _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Added;
-        //                                        }
-        //                                        else
-        //                                        {
-        //                                            _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Modified;
+                        //throw new Exception();
+                        //base.RemoveRequestWithCommentsAndEmailSessions();
+                        if (Success)
+                        {
+                            await _tempRequestJsonsProc.RemoveAllAsync(tempRequestListViewModel.GUID, userId);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        await RollbackRequest(ModelsCreated, ModelsModified, tempRequestListViewModel.GUID, oldTempRequestJson.SequencePosition);
+                        //base.RemoveRequestWithCommentsAndEmailSessions();
+                        return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
+                    }
+
+                }
 
 
 
-        //                                        }
-        //                                    }
-        //                                    else
-        //                                    {
-        //                                        _context.Entry(tempRequest.Request).State = EntityState.Modified;
-        //                                    }
-        //                                    await _context.SaveChangesAsync();
-        //                                    //if there are no payments it means that the payments were saved previously
-        //                                    if (tempRequest.Payments == null)
-        //                                    {
-        //                                        //tempRequest.Payments = new List<Payment>();
-        //                                        //foreach(var payment in _context.Payments.Where(p => p.RequestID == tempRequest.Request.RequestID))
-        //                                        //{
-        //                                        //    tempRequest.Payments.Add(payment);
-        //                                        //}
-        //                                    }
-        //                                    else
-        //                                    {
-        //                                        foreach (var p in tempRequest.Payments)
-        //                                        {
-        //                                            //DO WE NEED THIS NEXT LINE HERE???
-        //                                            p.RequestID = tempRequest.Request.RequestID;
-        //                                            _context.Entry(p).State = EntityState.Added;
-        //                                        }
-        //                                    }
-        //                                    await _context.SaveChangesAsync();
-        //                                    if (tempRequest.Comments != null)
-        //                                    {
-        //                                        await _requestCommentsProc.UpdateAsync((List<RequestComment>)tempRequest.Comments.Where(c => c.CommentTypeID == 1), tempRequest.Request.RequestID, currentUser.Id);
-        //                                        await _productCommentsProc.UpdateAsync((List<ProductComment>)tempRequest.Comments.Where(c => c.CommentTypeID == 2), tempRequest.Request.ProductID, currentUser.Id);
-        //                                    }
+                tempRequestListViewModel.RequestIndexObject.RequestStatusID = 2;
+                tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
 
-        //                                    if (tempRequest.Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
-        //                                    {
-        //                                        var additionalRequests = tr + 1 < deserializedTempRequestListViewModel.TempRequestViewModels.Count() ? true : false;
-        //                                        MoveDocumentsOutOfTempFolder(tempRequest.Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, tempRequestListViewModel.GUID);
-        //                                    }
+                if (!Success)
+                {
+                    await RollbackRequest(ModelsCreated, ModelsModified, tempRequestListViewModel.GUID, oldTempRequestJson.SequencePosition);
+                    tempRequestListViewModel.RequestIndexObject.RequestStatusID = 6;
+                    Response.StatusCode = 500;
+                    return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
+                    
+                }
+            return new EmptyResult();
+         }
 
-        //                    /*string NewFolder = Path.Combine(uploadFolder, tempRequest.Request.ParentRequestID.ToString());
-        //                    string folderPath = Path.Combine(NewFolder, AppUtility.FolderNamesEnum.Orders.ToString());
-        //                    Directory.CreateDirectory(folderPath); //make sure we don't need one above also??
+        public async Task<StringWithBool> RollbackRequest(List<ModelAndID> ModelsCreated, List<ModelAndID> ModelModified, Guid guid, int sequencePosition)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                var entries = _context.ChangeTracker.Entries();
+                foreach (var entry in entries)
+                {
+                    entry.State = EntityState.Detached;
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
+                {
+                    var model6 = _context.RequestComments.Where(pr => pr.CommentID == ModelWithID.ID).FirstOrDefault();
+                    _context.Remove(model6);
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Payment))
+                {
+                    var model5 = _context.Payments.Where(pr => pr.PaymentID == ModelWithID.ID).FirstOrDefault();
+                    _context.Remove(model5);
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.RequestNotification))
+                {
+                    var model7 = _context.RequestNotifications.Where(pr => pr.NotificationID == ModelWithID.ID).FirstOrDefault();
+                    _context.Remove(model7);
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Request))
+                {
+                    var model = _context.Requests.Where(r => r.RequestID == ModelWithID.ID).FirstOrDefault();
+                    _context.Remove(model);
+                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentRequest, guid.ToString(), false, true);
 
-        //                    string uniqueFileName = 1 + "OrderEmail.pdf";
-        //                    string filePath = Path.Combine(folderPath, uniqueFileName);
-        //                    if (System.IO.File.Exists(filePath))
-        //                    {
-        //                        System.IO.File.Delete(filePath);
-        //                    }
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentQuote))
+                {
+                    var model2 = _context.ParentQuotes.Where(pr => pr.ParentQuoteID == ModelWithID.ID).FirstOrDefault();
+                    _context.Remove(model2);
+                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentQuote, guid.ToString(), false, true);
 
-        //                    System.IO.File.Copy(uploadFile, filePath); //make sure this works for each of them*/
-        //                    /***Old order flow but with proc end****/
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentRequest))
+                {
+                    var model3 = _context.ParentRequests.Where(pr => pr.ParentRequestID == ModelWithID.ID).FirstOrDefault();
+                    _context.Remove(model3);
+                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.Requests, guid.ToString(), true, true);
 
-        //                    tempRequest.Request.Product = await _context.Products.Where(p => p.ProductID == tempRequest.Request.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
-        //                                    RequestNotification requestNotification = new RequestNotification();
-        //                                    requestNotification.RequestID = tempRequest.Request.RequestID;
-        //                                    requestNotification.IsRead = false;
-        //                                    requestNotification.RequestName = tempRequest.Request.Product.ProductName;
-        //                                    requestNotification.ApplicationUserID = tempRequest.Request.ApplicationUserCreatorID;
-        //                                    requestNotification.Description = "item ordered";
-        //                                    requestNotification.NotificationStatusID = 2;
-        //                                    requestNotification.NotificationDate = DateTime.Now;
-        //                                    requestNotification.Controller = "Requests";
-        //                                    requestNotification.Action = "NotificationsView";
-        //                                    requestNotification.OrderDate = DateTime.Now;
-        //                                    requestNotification.Vendor = tempRequest.Request.Product.Vendor.VendorEnName;
-        //                                    _context.Add(requestNotification);
-        //                                    await _context.SaveChangesAsync();
-        //                                }
-        //                                if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
-        //                                {
-        //                                    MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID == null ? 0 : Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, false, tempRequestListViewModel.GUID);
-        //                                }
-        //                                bool moveOrderDoc = false;
-        //                                if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID == 0)
-        //                                {
-        //                                    _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Added;
-        //                                    moveOrderDoc = true;
-        //                                }
-        //                                else //if coming from approve order
-        //                                {
-        //                                    _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest).State = EntityState.Modified;
-        //                                }
-        //                                await _context.SaveChangesAsync();
-        //                                if (moveOrderDoc)
-        //                                {
-        //                                    MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID,
-        //                                         AppUtility.ParentFolderName.ParentRequest, false, tempRequestListViewModel.GUID);     //make sure has an id here.
-        //                                }
-        //                                //throw new Exception();
-        //                                await transaction.CommitAsync();
-        //                                //base.RemoveRequestWithCommentsAndEmailSessions();
-        //                                await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
-        //                            }
-        //                        }
-        //                        catch (Exception ex)
-        //                        {
-        //                            transaction.Rollback();
-        //                            //base.RemoveRequestWithCommentsAndEmailSessions();
-        //                            await RollbackCurrentTempAsync(tempRequestListViewModel.GUID);
-        //                            throw new Exception(AppUtility.GetExceptionMessage(ex));
-        //    }
-        //    /***Old order flow but with proc start****/
-        //          foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentRequest))
-        //                {
-        //                    var parentRequest = deTLVM.TempRequestViewModels.Where(c => c.Request.ParentRequestID== ModelWithID.ID).Select(r => r.Request.ParentRequest).FirstOrDefault();
-        //    _context.Entry(parentRequest).State = EntityState.Modified;
-        //                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentRequest, guid.ToString(), false, true);
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Product))
+                {
+                    var model4 = _context.Products.Where(pr => pr.ProductID == ModelWithID.ID).FirstOrDefault();
+                    _context.Remove(model4);
+                }
 
-        //}
-        //foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Product))
-        //{
-        //    var product = deTLVM.TempRequestViewModels.Where(c => c.Request.ProductID== ModelWithID.ID).Select(r => r.Request.Product).FirstOrDefault();
-        //    _context.Entry(product).State = EntityState.Modified;
-        //}
-        //await _context.SaveChangesAsync();
-        //ReturnVal.SetStringAndBool(true, null);
-        //            }
-        //            catch (Exception e)
-        //{
-        //    ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(e));
-        //}
-        //return ReturnVal;
-        //        }
-        ///***Old order flow but with proc end****/
-        //                  /***old order flow but with proc start***/  }
+                await _context.SaveChangesAsync();
 
-        //                }
-        //                tempRequestListViewModel.RequestIndexObject.RequestStatusID = 2;
-        //                return new EmptyResult();
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                await _tempRequestJsonsProc.RollbackAsync(tempRequestListViewModel.GUID, oldTempRequestJson.SequencePosition);
-        //                tempRequestListViewModel.RequestIndexObject.ErrorMessage += AppUtility.GetExceptionMessage(ex);
-        //                Response.StatusCode = 500;
-        //                await Response.WriteAsync(tempRequestListViewModel.RequestIndexObject.ErrorMessage);
-        //                return new EmptyResult();
-        //}
-        //  /***old order flow but with proc end***/ 
-        //        }
+                //Move parentquote docs back to parentquote:
+                await _tempRequestJsonsProc.RollbackAsync(guid, sequencePosition);
+                var oldTempRequestJson = await _tempRequestJsonsProc.GetTempRequest(guid, _userManager.GetUserId(User)).FirstOrDefaultAsync();
 
+                var deTLVM = new TempRequestListViewModel()
+                {
+                    TempRequestViewModels = oldTempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
+                };
+                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
+                {
+                    var comment = deTLVM.TempRequestViewModels.Select(t => t.Comments.Where(c => c.CommentID == ModelWithID.ID).FirstOrDefault()).FirstOrDefault();
+                    _context.Entry(comment).State = EntityState.Modified;
+                }
+                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Payment))
+                {
+                    var payment = deTLVM.TempRequestViewModels.Select(t => t.Payments.Where(c => c.PaymentID == ModelWithID.ID).FirstOrDefault()).FirstOrDefault();
+                    _context.Entry(payment).State = EntityState.Modified;
+                }
+                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Request))
+                {
+                    var request = deTLVM.TempRequestViewModels.Where(c => c.Request.RequestID == ModelWithID.ID).Select(r => r.Request).FirstOrDefault();
+                    _context.Entry(request).State = EntityState.Modified;
+                }
+                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentRequest))
+                {
+                    var parentRequest = deTLVM.TempRequestViewModels.Where(c => c.Request.ParentRequestID == ModelWithID.ID).Select(r => r.Request.ParentRequest).FirstOrDefault();
+                    _context.Entry(parentRequest).State = EntityState.Modified;
+                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentRequest, guid.ToString(), false, true);
 
+                }
+                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Product))
+                {
+                    var product = deTLVM.TempRequestViewModels.Where(c => c.Request.ProductID == ModelWithID.ID).Select(r => r.Request.Product).FirstOrDefault();
+                    _context.Entry(product).State = EntityState.Modified;
+                }
+                await _context.SaveChangesAsync();
+                ReturnVal.SetStringAndBool(true, null);
+            }
+            catch (Exception e)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(e));
+            }
+            return ReturnVal;
+        }
 
 
         [HttpPost]
