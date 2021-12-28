@@ -3584,49 +3584,62 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            if (requestIds != null)
+            List<Expression<Func<Request, bool>>> Wheres = new List<Expression<Func<Request, bool>>>();
+            List<ComplexIncludes<Request, ModelBase>> Includes = new List<ComplexIncludes<Request, ModelBase>>();
+            Wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
+            Wheres.Add(r => requestIds.Contains(r.RequestID));
+            Includes.Add(new ComplexIncludes<Request, ModelBase>
             {
-                //user wants to edit only one quote, or for selected requests
-                var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => requestIds.Contains(r.RequestID))
-                    .Include(r => r.Product).ThenInclude(p => p.Vendor).ThenInclude(v => v.Country)
-                    .Include(r => r.Product.ProductSubcategory)
-                    .Include(r => r.ParentQuote)
-                    .Include(r => r.Product.UnitType).Include(r => r.Product.SubUnitType).Include(r => r.Product.SubSubUnitType).ToList();
-                var exchangeRate = await GetExchangeRateAsync();
-
-                var VendorID = requests.FirstOrDefault().Product.VendorID;
-
-                foreach (var request in requests)
+                Include = r => r.Product,
+                ThenInclude = new ComplexIncludes<ModelBase, ModelBase>
                 {
-                    request.ExchangeRate = exchangeRate;
-                    request.IncludeVAT = true;
-                    if (request.Product.VendorID != VendorID)
-                    {
-                        Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
-                    }
+                    Include = p => ((Product)p).Vendor,
+                    ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = v => ((Vendor)v).Country }
                 }
-                EditQuoteDetailsViewModel editQuoteDetailsViewModel = new EditQuoteDetailsViewModel()
-                {
-                    Requests = requests,
-                    ParentQuote = new ParentQuote() { QuoteDate = DateTime.Now },
-                    Error = Error
-                };
-
-                return PartialView(editQuoteDetailsViewModel);
-            }
-            //add one quote for vendor
-            //needs testing 
-            //not implemented at all on the client side
-            //just here for now for future implmentation
-            else
+            });
+            Includes.Add(new ComplexIncludes<Request, ModelBase>
             {
-                var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
-              .Where(r => r.Product.VendorID == id && (r.QuoteStatusID == 2 || r.QuoteStatusID == 1))
-              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product).ThenInclude(p => p.ProductSubcategory)
-              .Include(r => r.ParentQuote).Include(r => r.Product.UnitType).Include(r => r.Product.SubSubUnitType).Include(r => r.Product.SubUnitType).ToList();
+                Include = r => r.Product,
+                ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).ProductSubcategory }
+            });
+            Includes.Add(new ComplexIncludes<Request, ModelBase>
+            {
+                Include = r => r.Product,
+                ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).UnitType }
+            });
+            Includes.Add(new ComplexIncludes<Request, ModelBase>
+            {
+                Include = r => r.Product,
+                ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).SubUnitType }
+            });
+            Includes.Add(new ComplexIncludes<Request, ModelBase>
+            {
+                Include = r => r.Product,
+                ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).SubSubUnitType }
+            });
 
-                return PartialView(requests);
+            var requests = await _requestsProc.Read(Wheres, Includes).ToListAsync();
+
+            var exchangeRate = await GetExchangeRateAsync();
+
+            var VendorID = requests.FirstOrDefault().Product.VendorID;
+
+            foreach (var request in requests)
+            {
+                request.ExchangeRate = exchangeRate;
+                request.IncludeVAT = true;
+                if (request.Product.VendorID != VendorID)
+                {
+                    Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
+                }
             }
+            EditQuoteDetailsViewModel editQuoteDetailsViewModel = new EditQuoteDetailsViewModel()
+            {
+                Requests = requests,
+                ParentQuote = new ParentQuote() { QuoteDate = DateTime.Now },
+                Error = Error
+            };
+            return PartialView(editQuoteDetailsViewModel);
         }
         [HttpPost]
         [Authorize(Roles = "LabManagement")]
