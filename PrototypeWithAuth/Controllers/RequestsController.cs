@@ -1574,57 +1574,22 @@ namespace PrototypeWithAuth.Controllers
             var userID = _userManager.GetUserId(User);
             if (FavType == "favorite")
             {
-                var favoriteRequest = _context.FavoriteRequests.Where(fr => fr.RequestID == requestID && fr.ApplicationUserID == userID).FirstOrDefault();
+                var favoriteRequest = await _favoriteRequestsProc.ReadOneAsync( new List<Expression<Func<FavoriteRequest, bool>>> { fr => fr.RequestID == requestID && fr.ApplicationUserID == userID });
                 if (favoriteRequest == null)
                 {
-                    using (var transaction = _context.Database.BeginTransaction())
-                    {
-                        try
-                        {
-                            favoriteRequest = new FavoriteRequest()
-                            {
-                                RequestID = requestID,
-                                ApplicationUserID = userID
-                            };
-                            _context.Add(favoriteRequest);
-                            await _context.SaveChangesAsync();
-                            await transaction.CommitAsync();
-                        }
-                        //throw new Exception(); //check this after!
-                        catch (Exception e)
-                        {
-                            await transaction.RollbackAsync();
-                            await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
-                        }
-                    }
+                    await _favoriteRequestsProc.CreateAsync(requestID, userID);
                 }
             }
             else if (FavType == "unlike")
             {
-                using (var transaction = _context.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        var favoriteRequest = _context.FavoriteRequests
-                            .Where(fr => fr.ApplicationUserID == userID)
-                            .Where(fr => fr.RequestID == requestID).FirstOrDefault();
-                        _context.Remove(favoriteRequest);
-                        await _context.SaveChangesAsync();
-                        await transaction.CommitAsync();
-                    }
-                    //throw new Exception(); //check this after!
-                    catch (Exception e)
-                    {
-                        await transaction.RollbackAsync();
-                        await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
-                    }
-                }
+                var success = await _favoriteRequestsProc.DeleteAsync(requestID, userID);
                 if (sidebarType == AppUtility.SidebarEnum.Favorites)
                 {
                     RequestIndexObject requestIndexObject = new RequestIndexObject()
                     {
                         PageType = AppUtility.PageTypeEnum.RequestCart,
-                        SidebarType = sidebarType
+                        SidebarType = sidebarType,
+                        ErrorMessage = success.String
                     };
                     return await RedirectRequestsToShared("_IndexTable", requestIndexObject);
                 }
@@ -1640,19 +1605,6 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            //var shareRequestViewModel = new ShareRequestViewModel()
-            //{
-            //    Request = _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault(),
-            //    ApplicationUsers = _context.Users
-            //                  .Where(u => u.Id != _userManager.GetUserId(User))
-            //                  .Select(
-            //                      u => new SelectListItem
-            //                      {
-            //                          Text = u.FirstName + " " + u.LastName,
-            //                          Value = u.Id
-            //                      }
-            //                  ).ToList()
-            //};
             var shareViewModel = base.GetShareModalViewModel(ID, ModelsEnum);
             switch (ModelsEnum)
             {
@@ -3691,8 +3643,13 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> OrderLateModal(Request requestFromView)
         {
-            var request = _context.Requests.Where(r => r.RequestID == requestFromView.RequestID).Include(r => r.ApplicationUserCreator).Include(r => r.ParentRequest).Include(r => r.Product)
-                .ThenInclude(p => p.Vendor).FirstOrDefault();
+            var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestFromView.RequestID },
+                new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include =  r => r.ApplicationUserCreator },
+                new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest},
+                new ComplexIncludes<Request, ModelBase> { Include =  r => r.Product },
+                new ComplexIncludes<Request, ModelBase> { Include =  r => r.Product.Vendor }
+                }
+             );
             //instatiate mimemessage
             var message = new MimeMessage();
 
@@ -4026,8 +3983,9 @@ namespace PrototypeWithAuth.Controllers
                     Response.StatusCode = 500;
                     for (int i = 0; i < paymentsInvoiceViewModel.Requests.Count; i++)
                     {
-                        paymentsInvoiceViewModel.Requests[i] = _context.Requests.Where(r => r.RequestID == paymentsInvoiceViewModel.Requests[i].RequestID).Include(r => r.Product)
-                            .ThenInclude(p => p.Vendor).FirstOrDefault();
+                        paymentsInvoiceViewModel.Requests[i] = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == paymentsInvoiceViewModel.Requests[i].RequestID },
+                            new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product }, new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor } }
+                            );
                     }
                     paymentsInvoiceViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     return PartialView(paymentsInvoiceViewModel);
