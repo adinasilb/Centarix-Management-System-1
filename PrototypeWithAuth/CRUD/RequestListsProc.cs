@@ -140,6 +140,7 @@ namespace PrototypeWithAuth.CRUD
                             new List<ComplexIncludes<RequestList, ModelBase>> { new ComplexIncludes<RequestList, ModelBase> { Include = l => l.RequestListRequests } });
                         _requestListRequestsProc.DeleteByRequestListWithoutSaveChanges(list);
                         _shareRequestListsProc.DeleteByListIDWithoutSaveChanges(deleteList.ListID);
+                        await _context.SaveChangesAsync();
                         _context.Remove(list);
                         await _context.SaveChangesAsync();
                         await transaction.CommitAsync();

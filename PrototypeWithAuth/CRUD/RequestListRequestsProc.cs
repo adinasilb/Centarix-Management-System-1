@@ -22,22 +22,12 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        public StringWithBool DeleteByRequestListWithoutSaveChanges(RequestList list)
+        public void DeleteByRequestListWithoutSaveChanges(RequestList list)
         {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
+            foreach (var rlr in list.RequestListRequests)
             {
-                foreach (var rlr in list.RequestListRequests)
-                {
-                    _context.Remove(rlr);
-                }
+                _context.Remove(rlr);
             }
-            catch (Exception ex)
-            {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-            }
-            return ReturnVal;
-         
         }
 
         public async Task<StringWithBool> DeleteByListIDAndRequestIDsAsync(int listID, int requestID)
@@ -45,7 +35,6 @@ namespace PrototypeWithAuth.CRUD
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
-
                 using (var transaction = _context.Database.BeginTransaction())
                 {
                 
@@ -70,32 +59,20 @@ namespace PrototypeWithAuth.CRUD
 
         }
 
-        public async Task<StringWithBool> DeleteByListIDAndRequestIDsWithoutTransactionAsync(int listID, int requestID)
+        public async Task DeleteByListIDAndRequestIDsWithoutTransactionAsync(int listID, int requestID)
         {
-            StringWithBool ReturnVal = new StringWithBool();
+            var list = _context.RequestLists.Where(l => l.ListID == listID)
+                .Include(l => l.RequestListRequests).FirstOrDefault();
+            var requestListRequest = list.RequestListRequests.Where(rlr => rlr.RequestID == requestID).FirstOrDefault();
             try
             {
-
-                var list = _context.RequestLists.Where(l => l.ListID == listID)
-                    .Include(l => l.RequestListRequests).FirstOrDefault();
-                var requestListRequest = list.RequestListRequests.Where(rlr => rlr.RequestID == requestID).FirstOrDefault();
-                try
-                {
-                    _context.Remove(requestListRequest);
-                    await _context.SaveChangesAsync();
-                    ReturnVal.SetStringAndBool(true, null);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(AppUtility.GetExceptionMessage(ex));
-                }
+                _context.Remove(requestListRequest);
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                throw new Exception(AppUtility.GetExceptionMessage(ex));
             }
-            return ReturnVal;
-
         }
 
         public async Task MoveListWithoutTransactionAsync(int requestToMoveId, int newListID, int prevListID = 0)
