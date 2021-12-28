@@ -12,9 +12,9 @@ using PrototypeWithAuth.ViewModels;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class ShareRequestListsProc : ApplicationDbContextProc<ShareRequestList>
+    public class ShareRequestListsProc : ShareBasesProc<ShareRequestList>
     {
-        public ShareRequestListsProc(ApplicationDbContext context, bool FromBase = false) : base(context)
+        public ShareRequestListsProc(ApplicationDbContext context, bool FromBase = false) : base(context, FromBase)
         {
             if (!FromBase)
             {
@@ -56,10 +56,9 @@ namespace PrototypeWithAuth.CRUD
                         {
                             if (user.ShareRequestList.ShareID == 0)
                             {
-                                user.ShareRequestList.ToApplicationUser = null;
                                 user.ShareRequestList.ObjectID = listSettings.SelectedList.ListID;
                                 user.ShareRequestList.FromApplicationUserID = userID;
-                                _context.Add(user.ShareRequestList);
+                                _context.Entry(user.ShareRequestList).State = EntityState.Added;
                             }
                             else
                             {
