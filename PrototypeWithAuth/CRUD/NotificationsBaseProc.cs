@@ -29,7 +29,7 @@ namespace PrototypeWithAuth.CRUD
             await _context.SaveChangesAsync();
         }
 
-        public virtual async Task DeleteAsync(List<T1> notifications)
+        public virtual async Task DeleteWithoutTransactionAsync(List<T1> notifications)
         {
             foreach (var notification in notifications)
             {
