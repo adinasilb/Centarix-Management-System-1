@@ -39,21 +39,9 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        public virtual StringWithBool CreateWithoutSaveChanges(T1 notification)
-        {
-            StringWithBool ReturnVal = new StringWithBool();
-
-            try
-            {
-                _context.Entry(notification).State = EntityState.Added;
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.Bool = false;
-                ReturnVal.String = AppUtility.GetExceptionMessage(ex);
-            }
-            return ReturnVal;
+        public virtual void CreateWithoutSaveChanges(T1 notification)
+        {            
+            _context.Entry(notification).State = EntityState.Added;         
         }
     }
 }
