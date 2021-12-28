@@ -36,11 +36,8 @@ namespace PrototypeWithAuth.CRUD
                     requestNotification.Action = "NotificationsView";
                     requestNotification.OrderDate = request.ParentRequest.OrderDate;
                     requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                    ReturnVal = CreateWithoutSaveChanges(requestNotification);
-                    if (!ReturnVal.Bool)
-                    {
-                        return ReturnVal;
-                    }
+                    CreateWithoutSaveChanges(requestNotification);
+                    
                 }
                 ReturnVal = await SaveDbChangesAsync();
             }
