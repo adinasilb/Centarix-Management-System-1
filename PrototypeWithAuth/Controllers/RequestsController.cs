@@ -1611,10 +1611,10 @@ namespace PrototypeWithAuth.Controllers
             switch (ModelsEnum)
             {
                 case AppUtility.ModelsEnum.Request:
-                    shareViewModel.ObjectDescription = _context.Requests.Where(r => r.RequestID == ID).Include(r => r.Product).FirstOrDefault().Product.ProductName;
+                    shareViewModel.ObjectDescription = _requestsProc.ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == ID }, new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product } }).Result.Product.ProductName;
                     break;
                 case AppUtility.ModelsEnum.RequestLists:
-                    shareViewModel.ObjectDescription = _context.RequestLists.Where(rl => rl.ListID == ID).FirstOrDefault().Title;
+                    shareViewModel.ObjectDescription = _requestListsProc.ReadOneAsync( new List<Expression<Func<RequestList, bool>>> { rl => rl.ListID == ID }).Result.Title;
                     break;
             }
 
@@ -2954,6 +2954,7 @@ namespace PrototypeWithAuth.Controllers
                         requestReceived.Unit = (uint)(requestReceived.Unit - receivedLocationViewModel.AmountArrived);
                         requestReceived.Cost = pricePerUnit * requestReceived.Unit;
                         requestReceived.IsPartial = true;
+                        requestReceived.SerialNumber = 0;
                         _context.Entry(requestReceived).State = EntityState.Added;
                         await _context.SaveChangesAsync();
                         MoveDocumentsOutOfTempFolder(requestReceived.RequestID, AppUtility.ParentFolderName.Requests, receivedLocationViewModel.Request.RequestID, true);
@@ -2961,8 +2962,13 @@ namespace PrototypeWithAuth.Controllers
                         await CopyCommentsAsync(receivedLocationViewModel.Request.RequestID, requestReceived.RequestID);
                         await CopyPaymentsAsync(receivedLocationViewModel.Request.RequestID, requestReceived.RequestID);
 
-                        requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
-.Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
+                        requestReceived = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == receivedLocationViewModel.Request.RequestID },
+                            new List<ComplexIncludes<Request, ModelBase>> {
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product },
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor },
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory },
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory.ParentCategory }
+                        });
                         pricePerUnit = requestReceived.PricePerUnit;
                         requestReceived.Unit = (uint)receivedLocationViewModel.AmountArrived;
                         requestReceived.Cost = pricePerUnit * requestReceived.Unit;
@@ -2971,10 +2977,10 @@ namespace PrototypeWithAuth.Controllers
                     {
                         if (receivedLocationViewModel.TemporaryLocation)
                         {
-                            var tempLocationInstance = _context.TemporaryLocationInstances.Where(tli => tli.LocationTypeID == receivedLocationViewModel.LocationTypeID).FirstOrDefault();
+                            var tempLocationInstance = await _temporaryLocationInstancesProc.ReadOneAsync( new List<Expression<Func<TemporaryLocationInstance, bool>>> { tli => tli.LocationTypeID == receivedLocationViewModel.LocationTypeID });
                             if (tempLocationInstance == null)
                             {
-                                var locationTypeName = _context.LocationTypes.Where(lt => lt.LocationTypeID == receivedLocationViewModel.LocationTypeID).Select(lt => lt.LocationTypeName).FirstOrDefault();
+                                var locationTypeName = _locationTypesProc.ReadOneAsync( new List<Expression<Func<LocationType, bool>>> { lt => lt.LocationTypeID == receivedLocationViewModel.LocationTypeID }).Result.LocationTypeName;
                                 tempLocationInstance = new TemporaryLocationInstance()
                                 {
                                     LocationTypeID = receivedLocationViewModel.LocationTypeID,
@@ -3024,7 +3030,6 @@ namespace PrototypeWithAuth.Controllers
                         requestReceived.PaymentStatusID = 3;
                     }
 
-
                     _context.Update(requestReceived);
                     await _context.SaveChangesAsync();
 
@@ -3040,7 +3045,7 @@ namespace PrototypeWithAuth.Controllers
                     requestNotification.ApplicationUserID = requestReceived.ApplicationUserCreatorID;
                     requestNotification.RequestName = requestReceived.Product.ProductName;
                     requestNotification.NotificationStatusID = 4;
-                    var FName = _context.Users.Where(u => u.Id == requestReceived.ApplicationUserReceiverID).FirstOrDefault().FirstName;
+                    var FName = _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { u => u.Id == requestReceived.ApplicationUserReceiverID }).Result.FirstName;
                     requestNotification.Description = "received by " + FName;
                     requestNotification.NotificationDate = DateTime.Now;
                     requestNotification.Controller = "Requests";
@@ -4619,7 +4624,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> MoveToListModal(MoveListViewModel moveListViewModel)
         {
-            var error = await _requestListRequestsProc.MoveList(moveListViewModel.Request.RequestID, moveListViewModel.NewListID, moveListViewModel.PreviousListID);
+            var success = await _requestListRequestsProc.MoveList(moveListViewModel.Request.RequestID, moveListViewModel.NewListID, moveListViewModel.PreviousListID);
             if (moveListViewModel.PageType == AppUtility.PageTypeEnum.RequestCart)
             {
                 return RedirectToAction("_IndexTableWithListTabs", new
@@ -4627,11 +4632,17 @@ namespace PrototypeWithAuth.Controllers
                     PageType = AppUtility.PageTypeEnum.RequestCart,
                     SidebarType = AppUtility.SidebarEnum.MyLists,
                     ListID = moveListViewModel.PreviousListID,
-                    errorMessage = error.String
+                    errorMessage = success.String
                 });
             }
             else
             {
+                if(!success.Bool)
+                {
+                    Response.StatusCode =500;
+                    await Response.WriteAsync(success.String);
+           
+                }
                 return new EmptyResult();
             }
         }
@@ -4680,14 +4691,13 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> DeleteListRequestModal(DeleteListRequestViewModel viewModel)
         {
-            await _requestListRequestsProc.DeleteByListIDAndRequestIDsAsync(viewModel.List.ListID, viewModel.Request.RequestID);
-            RequestIndexObject indexObject = new RequestIndexObject()
-            {
+            var success = await _requestListRequestsProc.DeleteByListIDAndRequestIDsAsync(viewModel.List.ListID, viewModel.Request.RequestID);
+            return RedirectToAction("_IndexTableWithListTabs", new {
                 PageType = AppUtility.PageTypeEnum.RequestCart,
                 SidebarType = AppUtility.SidebarEnum.MyLists,
-                ListID = viewModel.List.ListID
-            };
-            return RedirectToAction("_IndexTableWithListTabs", indexObject);
+                ListID = viewModel.List.ListID,
+                ErrorMessage= success.String
+            });
         }
 
 
@@ -4702,7 +4712,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ListSettingsModal(ListSettingsViewModel listSettings, int selectedIndexListID)
+        public async Task<IActionResult> ListSettingsModal(ListSettingsViewModel listSettings, int selectedIndexListID, string errorMessage)
         {
             var error = await _requestListsProc.UpdateAsync(listSettings, _userManager.GetUserId(User));
             return RedirectToAction("_IndexTableWithListTabs", new
@@ -4710,7 +4720,7 @@ namespace PrototypeWithAuth.Controllers
                 PageType = AppUtility.PageTypeEnum.RequestCart,
                 SidebarType = listSettings.SidebarType,
                 ListID = selectedIndexListID,
-                errorMessage = error.String
+                errorMessage = errorMessage + error.String
             });
         }
 
@@ -4881,7 +4891,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> DeleteListModal(RequestList deleteList)
         {
             var error = await _requestListsProc.DeleteAsync(deleteList);
-            return RedirectToAction("ListSettingsModal", error.String);
+            return RedirectToAction("ListSettingsModal", new { ErrorMessage = "From delete list: " +error.String });
         }
 
         [HttpGet]

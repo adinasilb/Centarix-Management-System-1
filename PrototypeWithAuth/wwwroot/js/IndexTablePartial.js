@@ -543,7 +543,9 @@ $(function () {
                 return true;
             },
             error: function (jqxhr) {
+                $('.error-message').addClass("d-none");
                 $('.error-message').html(jqxhr.responseText);
+                $('.error-message:first').removeClass("d-none");
             }
         });
 
