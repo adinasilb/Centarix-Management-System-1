@@ -509,6 +509,14 @@
     <Compile Remove="Data\Migrations\20211114083811_AddShareRequestLists.Designer.cs" />
     <Compile Remove="Data\Migrations\20211123075054_RenameRequestComments.cs" />
     <Compile Remove="Data\Migrations\20211123075054_RenameRequestComments.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211123084231_RequestCommentInheritsBase.cs" />
+    <Compile Remove="Data\Migrations\20211123084231_RequestCommentInheritsBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211123084944_RenameRequestIDToObjectID.cs" />
+    <Compile Remove="Data\Migrations\20211123084944_RenameRequestIDToObjectID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211123085459_RenameRequestIDToObjectID.cs" />
+    <Compile Remove="Data\Migrations\20211123085459_RenameRequestIDToObjectID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211123094009_RequestCommentInheritsBase.cs" />
+    <Compile Remove="Data\Migrations\20211123094009_RequestCommentInheritsBase.Designer.cs" />
   </ItemGroup>
 
 

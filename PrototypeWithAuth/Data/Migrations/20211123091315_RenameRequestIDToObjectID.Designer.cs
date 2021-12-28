@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211123091315_RenameRequestIDToObjectID")]
+    partial class RenameRequestIDToObjectID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -513,51 +515,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             CitizenshipID = 2,
                             Description = "USA"
-                        });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.CommentType", b =>
-                {
-                    b.Property<int>("TypeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DescriptionEnum")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Icon")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IconActionClass")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("TypeID");
-
-                    b.ToTable("CommentTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            TypeID = 1,
-                            Color = "#30BCC9",
-                            Description = "Comment",
-                            DescriptionEnum = "Comment",
-                            Icon = "icon-comment-24px"
-                        },
-                        new
-                        {
-                            TypeID = 2,
-                            Color = " var(--danger-color)",
-                            Description = "Warning",
-                            DescriptionEnum = "Warning",
-                            Icon = "icon-report_problem-24px"
                         });
                 });
 
@@ -5230,9 +5187,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("CommentType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CommentTypeFKID")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -5242,10 +5196,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("CommentID");
 
                     b.HasIndex("ApplicationUserID");
-
-                    b.HasIndex("CommentTypeFKID");
-
-                    b.HasIndex("ObjectID");
 
                     b.ToTable("RequestComments");
                 });
@@ -7981,18 +7931,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany()
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentTypeFK")
-                        .WithMany()
-                        .HasForeignKey("CommentTypeFKID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
-                        .WithMany()
-                        .HasForeignKey("ObjectID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestList", b =>

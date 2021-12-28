@@ -28,7 +28,6 @@ namespace PrototypeWithAuth.Models
 
         public int CommentTypeFKID { get; set; }
         public CommentType CommentTypeFK { get; set; }
-        public string CommentType { get; set; }
         public bool IsDeleted { get; set; }
         public int ObjectID { get; set; }
     }
