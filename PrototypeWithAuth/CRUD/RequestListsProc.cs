@@ -68,7 +68,7 @@ namespace PrototypeWithAuth.CRUD
 
                         if (newListViewModel.RequestToAddID != 0)
                         {
-                            await _requestListRequestsProc.MoveListWithoutSaveChanges(newListViewModel.RequestToAddID, newList.ListID, newListViewModel.RequestPreviousListID);
+                            await _requestListRequestsProc.MoveListWithoutTransactionAsync(newListViewModel.RequestToAddID, newList.ListID, newListViewModel.RequestPreviousListID);
 
                             await _context.SaveChangesAsync();
                         }

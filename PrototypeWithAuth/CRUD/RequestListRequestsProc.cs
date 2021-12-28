@@ -51,7 +51,7 @@ namespace PrototypeWithAuth.CRUD
                 
                     try
                     {
-                        await DeleteByListIDAndRequestIDsWithoutSaveChangesAsync(listID, requestID);
+                        await DeleteByListIDAndRequestIDsWithoutTransactionAsync(listID, requestID);
                         await transaction.CommitAsync();
                         ReturnVal.SetStringAndBool(true, null);
                     }
@@ -70,7 +70,7 @@ namespace PrototypeWithAuth.CRUD
 
         }
 
-        public async Task<StringWithBool> DeleteByListIDAndRequestIDsWithoutSaveChangesAsync(int listID, int requestID)
+        public async Task<StringWithBool> DeleteByListIDAndRequestIDsWithoutTransactionAsync(int listID, int requestID)
         {
             StringWithBool ReturnVal = new StringWithBool();
             try
@@ -98,7 +98,7 @@ namespace PrototypeWithAuth.CRUD
 
         }
 
-        public async Task MoveListWithoutSaveChanges(int requestToMoveId, int newListID, int prevListID = 0)
+        public async Task MoveListWithoutTransactionAsync(int requestToMoveId, int newListID, int prevListID = 0)
         {
             var existingListRequest = _context.RequestListRequests.Where(l => l.RequestID == requestToMoveId && l.ListID == newListID).FirstOrDefault();
             if (existingListRequest != null)
@@ -118,8 +118,9 @@ namespace PrototypeWithAuth.CRUD
             }
             if (prevListID != 0)
             {
-                await _requestListRequestsProc.DeleteByListIDAndRequestIDsWithoutSaveChangesAsync(prevListID, requestToMoveId);
+                await _requestListRequestsProc.DeleteByListIDAndRequestIDsWithoutTransactionAsync(prevListID, requestToMoveId);
             }
+            await _context.SaveChangesAsync();
         }
 
         public async Task<StringWithBool> MoveList(int requestToMoveId, int newListID, int prevListID = 0)
@@ -127,13 +128,13 @@ namespace PrototypeWithAuth.CRUD
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
-                throw new Exception();
                 using (var transaction = _context.Database.BeginTransaction())
                 {
 
                     try
                     {
-                        await MoveListWithoutSaveChanges(requestToMoveId, newListID, prevListID);
+                        await MoveListWithoutTransactionAsync(requestToMoveId, newListID, prevListID);
+
                         await transaction.CommitAsync();
                     }
                     catch (Exception ex)
