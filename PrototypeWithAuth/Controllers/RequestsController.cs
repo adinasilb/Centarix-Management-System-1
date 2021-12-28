@@ -1611,10 +1611,10 @@ namespace PrototypeWithAuth.Controllers
             switch (ModelsEnum)
             {
                 case AppUtility.ModelsEnum.Request:
-                    shareViewModel.ObjectDescription = _context.Requests.Where(r => r.RequestID == ID).Include(r => r.Product).FirstOrDefault().Product.ProductName;
+                    shareViewModel.ObjectDescription = _requestsProc.ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == ID }, new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product } }).Result.Product.ProductName;
                     break;
                 case AppUtility.ModelsEnum.RequestLists:
-                    shareViewModel.ObjectDescription = _context.RequestLists.Where(rl => rl.ListID == ID).FirstOrDefault().Title;
+                    shareViewModel.ObjectDescription = _requestListsProc.ReadOneAsync( new List<Expression<Func<RequestList, bool>>> { rl => rl.ListID == ID }).Result.Title;
                     break;
             }
 
@@ -2954,6 +2954,7 @@ namespace PrototypeWithAuth.Controllers
                         requestReceived.Unit = (uint)(requestReceived.Unit - receivedLocationViewModel.AmountArrived);
                         requestReceived.Cost = pricePerUnit * requestReceived.Unit;
                         requestReceived.IsPartial = true;
+                        requestReceived.SerialNumber = 0;
                         _context.Entry(requestReceived).State = EntityState.Added;
                         await _context.SaveChangesAsync();
                         MoveDocumentsOutOfTempFolder(requestReceived.RequestID, AppUtility.ParentFolderName.Requests, receivedLocationViewModel.Request.RequestID, true);
@@ -2961,8 +2962,13 @@ namespace PrototypeWithAuth.Controllers
                         await CopyCommentsAsync(receivedLocationViewModel.Request.RequestID, requestReceived.RequestID);
                         await CopyPaymentsAsync(receivedLocationViewModel.Request.RequestID, requestReceived.RequestID);
 
-                        requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
-.Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).AsNoTracking().FirstOrDefault();
+                        requestReceived = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == receivedLocationViewModel.Request.RequestID },
+                            new List<ComplexIncludes<Request, ModelBase>> {
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product },
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor },
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory },
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory.ParentCategory }
+                        });
                         pricePerUnit = requestReceived.PricePerUnit;
                         requestReceived.Unit = (uint)receivedLocationViewModel.AmountArrived;
                         requestReceived.Cost = pricePerUnit * requestReceived.Unit;
@@ -2971,10 +2977,10 @@ namespace PrototypeWithAuth.Controllers
                     {
                         if (receivedLocationViewModel.TemporaryLocation)
                         {
-                            var tempLocationInstance = _context.TemporaryLocationInstances.Where(tli => tli.LocationTypeID == receivedLocationViewModel.LocationTypeID).FirstOrDefault();
+                            var tempLocationInstance = await _temporaryLocationInstancesProc.ReadOneAsync( new List<Expression<Func<TemporaryLocationInstance, bool>>> { tli => tli.LocationTypeID == receivedLocationViewModel.LocationTypeID });
                             if (tempLocationInstance == null)
                             {
-                                var locationTypeName = _context.LocationTypes.Where(lt => lt.LocationTypeID == receivedLocationViewModel.LocationTypeID).Select(lt => lt.LocationTypeName).FirstOrDefault();
+                                var locationTypeName = _locationTypesProc.ReadOneAsync( new List<Expression<Func<LocationType, bool>>> { lt => lt.LocationTypeID == receivedLocationViewModel.LocationTypeID }).Result.LocationTypeName;
                                 tempLocationInstance = new TemporaryLocationInstance()
                                 {
                                     LocationTypeID = receivedLocationViewModel.LocationTypeID,
@@ -3024,7 +3030,6 @@ namespace PrototypeWithAuth.Controllers
                         requestReceived.PaymentStatusID = 3;
                     }
 
-
                     _context.Update(requestReceived);
                     await _context.SaveChangesAsync();
 
@@ -3040,7 +3045,7 @@ namespace PrototypeWithAuth.Controllers
                     requestNotification.ApplicationUserID = requestReceived.ApplicationUserCreatorID;
                     requestNotification.RequestName = requestReceived.Product.ProductName;
                     requestNotification.NotificationStatusID = 4;
-                    var FName = _context.Users.Where(u => u.Id == requestReceived.ApplicationUserReceiverID).FirstOrDefault().FirstName;
+                    var FName = _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { u => u.Id == requestReceived.ApplicationUserReceiverID }).Result.FirstName;
                     requestNotification.Description = "received by " + FName;
                     requestNotification.NotificationDate = DateTime.Now;
                     requestNotification.Controller = "Requests";
