@@ -64,6 +64,7 @@ namespace PrototypeWithAuth.CRUD
         protected ParentQuotesProc _parentQuotesProc;
         protected RequestNotificationsProc _requestNotificationsProc;
         protected EmployeeInfoNotificationsProc _employeeInfoNotificationsProc;
+        protected TemporaryLocationInstancesProc _temporaryLocationInstancesProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context)
         {
@@ -114,7 +115,7 @@ namespace PrototypeWithAuth.CRUD
             _parentQuotesProc = new ParentQuotesProc(_context, true);
             _requestNotificationsProc  = new RequestNotificationsProc(_context, true);
             _employeeInfoNotificationsProc = new EmployeeInfoNotificationsProc(_context, true);
-
+            _temporaryLocationInstancesProc = new TemporaryLocationInstancesProc(_context, true);
         }
 
         //protected void InstantiateProcs(List<String> Types)

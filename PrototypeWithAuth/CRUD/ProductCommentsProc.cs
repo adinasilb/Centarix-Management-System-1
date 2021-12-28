@@ -17,9 +17,9 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        public override async Task UpdateAsync(List<ProductComment> comments, int vendorID, string userID)
+        public override async Task UpdateWithoutTransactionAsync(List<ProductComment> comments, int vendorID, string userID)
         {
-            await base.UpdateAsync(comments, vendorID, userID);
+            await base.UpdateWithoutTransactionAsync(comments, vendorID, userID);
         }
     }
 }

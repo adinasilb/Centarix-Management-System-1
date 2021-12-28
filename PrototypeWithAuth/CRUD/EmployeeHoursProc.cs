@@ -184,7 +184,7 @@ namespace PrototypeWithAuth.CRUD
                                 Controller = "Timekeeper",
                                 Action = "SummaryHours"
                             };
-                            await _timekeeperNotificationsProc.CreateAsync(newNotification);
+                            await _timekeeperNotificationsProc.CreateWithoutTransactionAsync(newNotification);
                         }
                     }
                     else
