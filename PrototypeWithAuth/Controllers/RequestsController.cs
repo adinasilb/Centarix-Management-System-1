@@ -1582,13 +1582,14 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (FavType == "unlike")
             {
-                await _favoriteRequestsProc.DeleteAsync(requestID, userID);
+                var success = await _favoriteRequestsProc.DeleteAsync(requestID, userID);
                 if (sidebarType == AppUtility.SidebarEnum.Favorites)
                 {
                     RequestIndexObject requestIndexObject = new RequestIndexObject()
                     {
                         PageType = AppUtility.PageTypeEnum.RequestCart,
-                        SidebarType = sidebarType
+                        SidebarType = sidebarType,
+                        ErrorMessage = success.String
                     };
                     return await RedirectRequestsToShared("_IndexTable", requestIndexObject);
                 }
@@ -3642,8 +3643,13 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> OrderLateModal(Request requestFromView)
         {
-            var request = _context.Requests.Where(r => r.RequestID == requestFromView.RequestID).Include(r => r.ApplicationUserCreator).Include(r => r.ParentRequest).Include(r => r.Product)
-                .ThenInclude(p => p.Vendor).FirstOrDefault();
+            var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestFromView.RequestID },
+                new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include =  r => r.ApplicationUserCreator },
+                new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest},
+                new ComplexIncludes<Request, ModelBase> { Include =  r => r.Product },
+                new ComplexIncludes<Request, ModelBase> { Include =  r => r.Product.Vendor }
+                }
+             );
             //instatiate mimemessage
             var message = new MimeMessage();
 
@@ -3977,8 +3983,9 @@ namespace PrototypeWithAuth.Controllers
                     Response.StatusCode = 500;
                     for (int i = 0; i < paymentsInvoiceViewModel.Requests.Count; i++)
                     {
-                        paymentsInvoiceViewModel.Requests[i] = _context.Requests.Where(r => r.RequestID == paymentsInvoiceViewModel.Requests[i].RequestID).Include(r => r.Product)
-                            .ThenInclude(p => p.Vendor).FirstOrDefault();
+                        paymentsInvoiceViewModel.Requests[i] = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == paymentsInvoiceViewModel.Requests[i].RequestID },
+                            new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product }, new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor } }
+                            );
                     }
                     paymentsInvoiceViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     return PartialView(paymentsInvoiceViewModel);
