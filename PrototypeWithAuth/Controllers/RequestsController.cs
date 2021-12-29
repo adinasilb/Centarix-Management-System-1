@@ -2181,168 +2181,180 @@ namespace PrototypeWithAuth.Controllers
             bool Success = false;
             var oldTempRequestJson = await _tempRequestJsonsProc.GetTempRequest(tempRequestListViewModel.GUID, _userManager.GetUserId(User)).FirstOrDefaultAsync();
 
-                List<ModelAndID> ModelsCreated = new List<ModelAndID>(); //for rollback
-                List<ModelAndID> ModelsModified = new List<ModelAndID>(); //for rollback
-                //var isRequests = true;
-                //var RequestNum = 1;
-                //var PaymentNum = 1;
-                //var requests = new List<Request>();
-                //var payments = new List<Payment>();
+            List<ModelAndID> ModelsCreated = new List<ModelAndID>(); //for rollback
+            List<ModelAndID> ModelsModified = new List<ModelAndID>(); //for rollback
+            //var isRequests = true;
+            //var RequestNum = 1;
+            //var PaymentNum = 1;
+            //var requests = new List<Request>();
+            //var payments = new List<Payment>();
 
 
-                var deserializedTempRequestListViewModel = new TempRequestListViewModel()
-                {
-                    TempRequestViewModels =
-                   oldTempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
-                };
-                //var pr = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest; //eventually(when ready to test all cases) put this in instead of next line and put it in for loop below
-                deserializedTempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest);
+            var deserializedTempRequestListViewModel = new TempRequestListViewModel()
+            {
+                TempRequestViewModels =
+                oldTempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
+            };
+            //var pr = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest; //eventually(when ready to test all cases) put this in instead of next line and put it in for loop below
+            deserializedTempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest);
 
             var userId = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ApplicationUserCreatorID ?? _userManager.GetUserId(User); //do we need to do this? (will it ever be null?)
                                                                                                                                                                        //var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
             var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == userId });
-            using (var transaction = _context.Database.BeginTransaction())
+            try
             {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+
+
+                        for (int tr = 0; tr < deserializedTempRequestListViewModel.TempRequestViewModels.Count(); tr++)
+                        {
+                            var tempRequest = deserializedTempRequestListViewModel.TempRequestViewModels[tr];
+                            tempRequest.Request.RequestStatusID = 2;
+                            var ProductRollbackList = ModelsModified;
+                            var RequestRollbackList = ModelsModified;
+                            var ParentQuoteRollbackList = ModelsModified;
+                            var ModelStates = new List<ModelAndState>();
+                            ModelStates.Add(new ModelAndState
+                            {
+                                Model = tempRequest.Request,
+                                StateEnum = tempRequest.Request.RequestID == 0 ? EntityState.Added : EntityState.Modified
+                            });
+
+                            if (tempRequest.Request.RequestID == 0)
+                            {
+                                RequestRollbackList = ModelsCreated;
+                                if (tempRequest.Request.Product.ProductID == 0)
+                                {
+                                    tempRequest.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(false);
+                                    ProductRollbackList = ModelsCreated;
+                                }
+
+                                ModelStates.Add(new ModelAndState
+                                {
+                                    Model = tempRequest.Request.Product,
+                                    StateEnum = tempRequest.Request.Product.ProductID == 0 ? EntityState.Added : EntityState.Modified
+                                });
+
+                                ModelStates.Add(new ModelAndState
+                                {
+                                    Model = tempRequest.Request.ParentQuote,
+                                    StateEnum = tempRequest.Request.ParentQuote.ParentQuoteID == 0 ? EntityState.Added : EntityState.Modified
+                                });
+                                if (tempRequest.Request.ParentQuote.ParentQuoteID == 0)
+                                {
+                                    ParentQuoteRollbackList = ModelsCreated;
+                                }
+                            }
+                            await _requestsProc.UpdateModelsAsync(ModelStates);
+
+                            //set up rollback lists in case of exception
+                            ProductRollbackList.Add(new ModelAndID()
+                            {
+                                ID = Convert.ToInt32(tempRequest.Request.ProductID),
+                                ModelsEnum = AppUtility.ModelsEnum.Product
+                            });
+                            RequestRollbackList.Add(new ModelAndID()
+                            {
+                                ID = Convert.ToInt32(tempRequest.Request.RequestID),
+                                ModelsEnum = AppUtility.ModelsEnum.Request
+                            });
+                            ParentQuoteRollbackList.Add(new ModelAndID()
+                            {
+                                ID = Convert.ToInt32(tempRequest.Request.ParentQuoteID),
+                                ModelsEnum = AppUtility.ModelsEnum.ParentQuote
+                            });
+                            //if there are no payments it means that the payments were saved previously
+                            //bool AddedPayments = false;
+                            if (tempRequest.Payments != null)
+                            {
+                                foreach (var p in tempRequest.Payments)
+                                {
+                                    p.RequestID = tempRequest.Request.RequestID;
+                                    _paymentsProc.CreateWithoutSaveChanges(p);
+                                    await _paymentsProc.SaveDbChangesAsync();
+                                    ModelsCreated.Add(new ModelAndID()
+                                    {
+                                        ID = p.PaymentID,
+                                        ModelsEnum = AppUtility.ModelsEnum.Payment
+                                    });
+                                }
+                            }
+                            if (tempRequest.Comments != null)
+                            {
+                                await _requestCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<RequestComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 1))), tempRequest.Request.RequestID, currentUser.Id);
+                                await _productCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<ProductComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 2))), tempRequest.Request.ProductID, currentUser.Id);
+
+                                foreach (var c in tempRequest.Comments)
+                                {
+                                    ModelsCreated.Add(new ModelAndID()
+                                    {
+                                        ID = c.CommentID,
+                                        ModelsEnum = AppUtility.ModelsEnum.Comment
+                                    });
+                                }
+                            }
+
+                            if (tempRequest.Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
+                            {
+                                var additionalRequests = tr + 1 < deserializedTempRequestListViewModel.TempRequestViewModels.Count() ? true : false;
+                                MoveDocumentsOutOfTempFolder(tempRequest.Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, tempRequestListViewModel.GUID);
+                            }
+
+                            tempRequest.Request.Product = await _context.Products.Where(p => p.ProductID == tempRequest.Request.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
+                            RequestNotification requestNotification = new RequestNotification();
+                            requestNotification.RequestID = tempRequest.Request.RequestID;
+                            requestNotification.IsRead = false;
+                            requestNotification.RequestName = tempRequest.Request.Product.ProductName;
+                            requestNotification.ApplicationUserID = tempRequest.Request.ApplicationUserCreatorID;
+                            requestNotification.Description = "item ordered";
+                            requestNotification.NotificationStatusID = 2;
+                            requestNotification.TimeStamp = DateTime.Now;
+                            requestNotification.Controller = "Requests";
+                            requestNotification.Action = "NotificationsView";
+                            requestNotification.OrderDate = DateTime.Now;
+                            requestNotification.Vendor = tempRequest.Request.Product.Vendor.VendorEnName;
+                            await _requestNotificationsProc.CreateWithoutTransactionAsync(requestNotification);
+                            ModelsCreated.Add(new ModelAndID()
+                            {
+                                ID = requestNotification.NotificationID,
+                                ModelsEnum = AppUtility.ModelsEnum.RequestNotification
+                            });
+                        }
+                        var parentRequestModelState = new ModelAndState
+                        {
+                            Model = deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest,
+                        };
+                        var ParentRequestRollbackList = ModelsModified;
+                        if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID == 0)
+                        {
+                            parentRequestModelState.StateEnum = EntityState.Added;
+
+                            ParentRequestRollbackList = ModelsCreated;
+                        }
+                        else //if coming from approve order
+                        {
+                            parentRequestModelState.StateEnum = EntityState.Modified;
+                        }
+                        await _requestsProc.UpdateModelsAsync(new List<ModelAndState> { parentRequestModelState });
+                        ParentRequestRollbackList.Add(new ModelAndID()
+                        {
+                            ID = Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID),
+                            ModelsEnum = AppUtility.ModelsEnum.ParentRequest
+                        });
+
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        throw new Exception("Adding request to db failed-"+AppUtility.GetExceptionMessage(ex));
+                    }
+                }
                 try
                 {
-                    for (int tr = 0; tr < deserializedTempRequestListViewModel.TempRequestViewModels.Count(); tr++)
-                    {
-                        var tempRequest = deserializedTempRequestListViewModel.TempRequestViewModels[tr];
-                        tempRequest.Request.RequestStatusID = 2;
-                        var ProductRollbackList = ModelsModified;
-                        var RequestRollbackList = ModelsModified;
-                        var ParentQuoteRollbackList = ModelsModified;
-                        var ModelStates = new List<ModelAndState>();
-                        ModelStates.Add(new ModelAndState
-                        {
-                            Model = tempRequest.Request,
-                            StateEnum = tempRequest.Request.RequestID == 0 ? EntityState.Added : EntityState.Modified
-                        });
-
-                        if (tempRequest.Request.RequestID == 0)
-                        {
-                            RequestRollbackList = ModelsCreated;
-                            if (tempRequest.Request.Product.ProductID == 0)
-                            {
-                                tempRequest.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(false);
-                                ProductRollbackList = ModelsCreated;
-                            }
-
-                            ModelStates.Add(new ModelAndState
-                            {
-                                Model = tempRequest.Request.Product,
-                                StateEnum = tempRequest.Request.Product.ProductID == 0 ? EntityState.Added : EntityState.Modified
-                            });
-                            
-                            ModelStates.Add(new ModelAndState
-                            {
-                                Model = tempRequest.Request.ParentQuote,
-                                StateEnum = tempRequest.Request.ParentQuote.ParentQuoteID == 0 ? EntityState.Added : EntityState.Modified
-                            });
-                            if (tempRequest.Request.ParentQuote.ParentQuoteID == 0)
-                            {
-                                ParentQuoteRollbackList = ModelsCreated;
-                            }
-                        }
-                        await _requestsProc.UpdateModelsAsync(ModelStates);
-
-                        //set up rollback lists in case of exception
-                        ProductRollbackList.Add(new ModelAndID()
-                        {
-                            ID = Convert.ToInt32(tempRequest.Request.ProductID),
-                            ModelsEnum = AppUtility.ModelsEnum.Product
-                        });
-                        RequestRollbackList.Add(new ModelAndID()
-                        {
-                            ID = Convert.ToInt32(tempRequest.Request.RequestID),
-                            ModelsEnum = AppUtility.ModelsEnum.Request
-                        });
-                        ParentQuoteRollbackList.Add(new ModelAndID()
-                        {
-                            ID = Convert.ToInt32(tempRequest.Request.ParentQuoteID),
-                            ModelsEnum = AppUtility.ModelsEnum.ParentQuote
-                        });
-                        //if there are no payments it means that the payments were saved previously
-                        //bool AddedPayments = false;
-                        if (tempRequest.Payments != null)
-                        {
-                            foreach (var p in tempRequest.Payments)
-                            {
-                                p.RequestID = tempRequest.Request.RequestID;
-                                _paymentsProc.CreateWithoutSaveChanges(p);
-                                await _paymentsProc.SaveDbChangesAsync();
-                                ModelsCreated.Add(new ModelAndID()
-                                {
-                                    ID = p.PaymentID,
-                                    ModelsEnum = AppUtility.ModelsEnum.Payment
-                                });
-                            }
-                        }
-                        if (tempRequest.Comments != null)
-                        {
-                            await _requestCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<RequestComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 1))), tempRequest.Request.RequestID, currentUser.Id);
-                            await _productCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<ProductComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 2))), tempRequest.Request.ProductID, currentUser.Id);
-
-                            foreach (var c in tempRequest.Comments)
-                            {
-                                ModelsCreated.Add(new ModelAndID()
-                                {
-                                    ID = c.CommentID,
-                                    ModelsEnum = AppUtility.ModelsEnum.Comment
-                                });
-                            }
-                        }
-
-                        if (tempRequest.Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
-                        {
-                            var additionalRequests = tr + 1 < deserializedTempRequestListViewModel.TempRequestViewModels.Count() ? true : false;
-                            MoveDocumentsOutOfTempFolder(tempRequest.Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, tempRequestListViewModel.GUID);
-                        }
-
-                        tempRequest.Request.Product = await _context.Products.Where(p => p.ProductID == tempRequest.Request.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
-                        RequestNotification requestNotification = new RequestNotification();
-                        requestNotification.RequestID = tempRequest.Request.RequestID;
-                        requestNotification.IsRead = false;
-                        requestNotification.RequestName = tempRequest.Request.Product.ProductName;
-                        requestNotification.ApplicationUserID = tempRequest.Request.ApplicationUserCreatorID;
-                        requestNotification.Description = "item ordered";
-                        requestNotification.NotificationStatusID = 2;
-                        requestNotification.TimeStamp = DateTime.Now;
-                        requestNotification.Controller = "Requests";
-                        requestNotification.Action = "NotificationsView";
-                        requestNotification.OrderDate = DateTime.Now;
-                        requestNotification.Vendor = tempRequest.Request.Product.Vendor.VendorEnName;
-                        await _requestNotificationsProc.CreateWithoutTransactionAsync(requestNotification);
-                        ModelsCreated.Add(new ModelAndID()
-                        {
-                            ID = requestNotification.NotificationID,
-                            ModelsEnum = AppUtility.ModelsEnum.RequestNotification
-                        });
-                    }
-                    var parentRequestModelState = new ModelAndState
-                    {
-                        Model = deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest,
-                    };
-                    var ParentRequestRollbackList = ModelsModified;
-                    if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID == 0)
-                    {
-                        parentRequestModelState.StateEnum = EntityState.Added;
-
-                        ParentRequestRollbackList = ModelsCreated;
-                    }
-                    else //if coming from approve order
-                    {
-                        parentRequestModelState.StateEnum = EntityState.Modified;
-                    }
-                    await _requestsProc.UpdateModelsAsync(new List<ModelAndState> { parentRequestModelState });
-                    ParentRequestRollbackList.Add(new ModelAndID()
-                    {
-                        ID = Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID),
-                        ModelsEnum = AppUtility.ModelsEnum.ParentRequest
-                    });
-
-                    await transaction.CommitAsync();
-
                     string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
                     string folder2 = Path.Combine(uploadFolder, tempRequestListViewModel.GUID.ToString());
                     string fileName = Path.Combine(folder2, "Order.txt");
@@ -2392,7 +2404,7 @@ namespace PrototypeWithAuth.Controllers
                     string ownerEmail = currentUser.Email;
                     string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
                     string ownerPassword = currentUser.SecureAppPass;
-                    deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor = await _vendorsProc.ReadOneAsync( new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.VendorID });
+                    deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor = await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.VendorID });
                     string vendorEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.OrdersEmail;
                     //string vendorEmail = /*firstRequest.Product.Vendor.OrdersEmail;*/ emails.Count() < 1 ? requests.FirstOrDefault().Product.Vendor.OrdersEmail : emails[0];
                     string vendorName = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.VendorEnName;
@@ -2451,54 +2463,34 @@ namespace PrototypeWithAuth.Controllers
                         try
                         {
                             client.Send(message);
-                            Success = true;
                         }
                         catch (Exception ex)
                         {
-                            ViewBag.ErrorMessage = AppUtility.GetExceptionMessage(ex);
-                            transaction.Rollback();
-
-                            await RollbackRequest(ModelsCreated, ModelsModified, tempRequestListViewModel.GUID, oldTempRequestJson.SequencePosition);
-
-                            //base.RemoveRequestWithCommentsAndEmailSessions();
-                            return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
+                            throw new Exception("Failed to send email - "+AppUtility.GetExceptionMessage(ex));
                         }
                         client.Disconnect(true);
                     }
 
-
-                    //throw new Exception();
-                    //base.RemoveRequestWithCommentsAndEmailSessions();
-                    if (Success)
-                    {
-                        await _tempRequestJsonsProc.RemoveAllAsync(tempRequestListViewModel.GUID, userId);
-                    }
+                    await _tempRequestJsonsProc.RemoveAllAsync(tempRequestListViewModel.GUID, userId);
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback();
                     await RollbackRequest(ModelsCreated, ModelsModified, tempRequestListViewModel.GUID, oldTempRequestJson.SequencePosition);
                     //base.RemoveRequestWithCommentsAndEmailSessions();
                     return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
                 }
 
-            }
-
-
-
                 tempRequestListViewModel.RequestIndexObject.RequestStatusID = 2;
                 tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
-
-                if (!Success)
-                {
-                    await RollbackRequest(ModelsCreated, ModelsModified, tempRequestListViewModel.GUID, oldTempRequestJson.SequencePosition);
-                    tempRequestListViewModel.RequestIndexObject.RequestStatusID = 6;
-                    Response.StatusCode = 500;
-                    return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
-                    
-                }
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = 500;
+                tempRequestListViewModel.RequestIndexObject.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
+            }
             return new EmptyResult();
-         }
+        }
 
         public async Task<StringWithBool> RollbackRequest(List<ModelAndID> ModelsCreated, List<ModelAndID> ModelModified, Guid guid, int sequencePosition)
         {
