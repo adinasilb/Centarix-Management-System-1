@@ -3417,7 +3417,8 @@ namespace PrototypeWithAuth.Controllers
                             try
                             {
                                 request.RequestStatusID = 6; //approved
-                                _context.Update(request);
+                                var requestModelState = new ModelAndState { Model = request, StateEnum = EntityState.Modified };
+                                await _requestsProc.UpdateModelsAsync(new List<ModelAndState> { requestModelState });
                                 await _context.SaveChangesAsync();
                                 RequestNotification requestNotification = new RequestNotification();
                                 requestNotification.RequestID = request.RequestID;
@@ -3430,8 +3431,7 @@ namespace PrototypeWithAuth.Controllers
                                 requestNotification.Controller = "Requests";
                                 requestNotification.Action = "NotificationsView";
                                 requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                                _context.Update(requestNotification);
-                                await _context.SaveChangesAsync();
+                                await _requestNotificationsProc.CreateWithoutTransactionAsync(requestNotification);
                                 //throw new Exception();
                                 await transaction.CommitAsync();
                             }
