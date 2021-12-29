@@ -421,7 +421,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<EmployeeHours>().Ignore(e => e.Date_submit);
             modelBuilder.Entity<Employee>().Ignore(e => e.StartedWorking_submit);
             modelBuilder.Entity<Employee>().Ignore(e => e.DOB_submit);
-            modelBuilder.Entity<ParentCategory>().Ignore(e => e.Description);
+            modelBuilder.Entity<ParentCategory>().Ignore(e => e.ParentCategoryDescriptionEnum);
             modelBuilder.Entity<Request>().Ignore(e => e.SerialNumberString);
             modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
