@@ -2615,8 +2615,7 @@ namespace PrototypeWithAuth.Controllers
                     ModelStates.Add(new ModelAndState { Model = model4, StateEnum = EntityState.Deleted });
                 }
                 await _requestsProc.UpdateModelsAsync(ModelStates);
-                await _context.SaveChangesAsync();
-
+                ModelState.Clear();
                 //Move parentquote docs back to parentquote:
                 await _tempRequestJsonsProc.RollbackAsync(guid, sequencePosition);
                 var oldTempRequestJson = await _tempRequestJsonsProc.GetTempRequest(guid, _userManager.GetUserId(User)).FirstOrDefaultAsync();
@@ -2628,31 +2627,31 @@ namespace PrototypeWithAuth.Controllers
                 foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
                 {
                     var comment = deTLVM.TempRequestViewModels.Select(t => t.Comments.Where(c => c.CommentID == ModelWithID.ID).FirstOrDefault()).FirstOrDefault();
-                    _context.Entry(comment).State = EntityState.Modified;
+                    ModelStates.Add(new ModelAndState { Model = comment, StateEnum = EntityState.Modified });
                 }
                 foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Payment))
                 {
                     var payment = deTLVM.TempRequestViewModels.Select(t => t.Payments.Where(c => c.PaymentID == ModelWithID.ID).FirstOrDefault()).FirstOrDefault();
-                    _context.Entry(payment).State = EntityState.Modified;
+                    ModelStates.Add(new ModelAndState { Model = payment, StateEnum = EntityState.Modified });
                 }
                 foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Request))
                 {
                     var request = deTLVM.TempRequestViewModels.Where(c => c.Request.RequestID == ModelWithID.ID).Select(r => r.Request).FirstOrDefault();
-                    _context.Entry(request).State = EntityState.Modified;
+                    ModelStates.Add(new ModelAndState { Model = request, StateEnum = EntityState.Modified });
                 }
                 foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentRequest))
                 {
                     var parentRequest = deTLVM.TempRequestViewModels.Where(c => c.Request.ParentRequestID == ModelWithID.ID).Select(r => r.Request.ParentRequest).FirstOrDefault();
-                    _context.Entry(parentRequest).State = EntityState.Modified;
+                    ModelStates.Add(new ModelAndState { Model = parentRequest, StateEnum = EntityState.Modified });
                     MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentRequest, guid.ToString(), false, true);
 
                 }
                 foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Product))
                 {
                     var product = deTLVM.TempRequestViewModels.Where(c => c.Request.ProductID == ModelWithID.ID).Select(r => r.Request.Product).FirstOrDefault();
-                    _context.Entry(product).State = EntityState.Modified;
+                    ModelStates.Add(new ModelAndState { Model = product, StateEnum = EntityState.Modified });
                 }
-                await _context.SaveChangesAsync();
+                await _requestsProc.UpdateModelsAsync(ModelStates);
                 ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception e)
