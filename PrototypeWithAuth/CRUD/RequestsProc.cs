@@ -227,6 +227,31 @@ namespace PrototypeWithAuth.CRUD
 
         }
 
+        public async Task UpdateQuoteDetailsAsync(List<Request> requests, ParentQuote parentQuote)
+        {
+            try
+            {
+                foreach (var req in requests)
+                {
+                    //throw new Exception();
+                    var request = requests.Where(r => r.RequestID == r.RequestID).FirstOrDefault();
+                    request.ParentQuote = parentQuote;
+                    request.QuoteStatusID = 4;
+                    request.Cost = req.Cost;
+                    request.Currency = requests[0].Currency;
+                    request.ExchangeRate = requests[0].ExchangeRate;
+                    request.IncludeVAT = requests[0].IncludeVAT;
+                    request.ExpectedSupplyDays = req.ExpectedSupplyDays;
+                    _context.Update(request);
+                }
+                await _context.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         public async Task<StringWithBool> UpdatePaymentStatusAsync(AppUtility.PaymentsPopoverEnum newStatus, int requestID)
         {

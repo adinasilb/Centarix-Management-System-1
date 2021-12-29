@@ -3462,13 +3462,18 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "LabManagement")]
-        public IActionResult EditQuoteDetails(EditQuoteDetailsViewModel editQuoteDetailsViewModel)
+        public async Task<IActionResult> EditQuoteDetails(EditQuoteDetailsViewModel editQuoteDetailsViewModel)
         {
             try
             {
-                using (var transaction = _context.Database.BeginTransaction())
+                using (var transaction = _applicationDbContextTransaction.Transaction)
                 {
-                    var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Include(x => x.ParentQuote).Select(r => r);
+                    var requests = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString() },
+                        new List<ComplexIncludes<Request, ModelBase>>
+                        {
+                            new ComplexIncludes<Request, ModelBase>{ Include = x => x.ParentQuote}
+                        }
+                    );
                     /*var firstRequest = requests.Where(r => r.RequestID == editQuoteDetailsViewModel.Requests[0].RequestID).FirstOrDefault();
                     int? parentQuoteId = firstRequest.ParentQuoteID;*/
                     try
@@ -3476,24 +3481,16 @@ namespace PrototypeWithAuth.Controllers
                         //var quoteDate = editQuoteDetailsViewModel.QuoteDate;
                         //var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
                         //firstRequest.ParentQuote.QuoteDate = quoteDate;
-
-                        _context.Entry(editQuoteDetailsViewModel.ParentQuote).State = EntityState.Added;
-                        _context.SaveChanges();
-
-                        foreach (var quote in editQuoteDetailsViewModel.Requests)
+                        var parentQuoteModelState = new ModelAndState
                         {
-                            //throw new Exception();
-                            var request = requests.Where(r => r.RequestID == quote.RequestID).FirstOrDefault();
-                            request.ParentQuote = editQuoteDetailsViewModel.ParentQuote;
-                            request.QuoteStatusID = 4;
-                            request.Cost = quote.Cost;
-                            request.Currency = editQuoteDetailsViewModel.Requests[0].Currency;
-                            request.ExchangeRate = editQuoteDetailsViewModel.Requests[0].ExchangeRate;
-                            request.IncludeVAT = editQuoteDetailsViewModel.Requests[0].IncludeVAT;
-                            request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
-                            _context.Update(request);
-                            _context.SaveChanges();
-                        }
+                            Model = editQuoteDetailsViewModel.ParentQuote,
+                            StateEnum = EntityState.Added
+                        };
+
+                        await _requestsProc.UpdateModelsAsync(new List<ModelAndState> { parentQuoteModelState });
+
+                        await _requestsProc.UpdateQuoteDetailsAsync(editQuoteDetailsViewModel.Requests, editQuoteDetailsViewModel.ParentQuote);
+
                         //save file
                         string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
                         string requestFolder = Path.Combine(uploadFolder, requests.Where(r => r.RequestID == editQuoteDetailsViewModel.Requests[0].RequestID).FirstOrDefault().ParentQuoteID.ToString());
@@ -3504,11 +3501,11 @@ namespace PrototypeWithAuth.Controllers
                         var fileStream = new FileStream(filePath, FileMode.Create);
                         editQuoteDetailsViewModel.QuoteFileUpload.CopyTo(fileStream);
                         fileStream.Close();
-                        transaction.CommitAsync();
+                        await transaction.CommitAsync();
                     }
                     catch (Exception ex)
                     {
-                        transaction.RollbackAsync();
+                        await transaction.RollbackAsync();
                         DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, Guid.Empty, (int)requests.FirstOrDefault().ParentQuoteID);
                         throw new Exception(AppUtility.GetExceptionMessage(ex));
                     }
@@ -3518,9 +3515,41 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                var previousRequest = _context.Requests.Where(r => r.RequestID == editQuoteDetailsViewModel.Requests.FirstOrDefault().RequestID)
-              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product).ThenInclude(p => p.ProductSubcategory)
-              .Include(r => r.ParentQuote).Include(r => r.Product.UnitType).Include(r => r.Product.SubSubUnitType).Include(r => r.Product.SubUnitType).FirstOrDefault();
+                var previousRequest = await _requestsProc.ReadOneAsync(
+                    new List<Expression<Func<Request, bool>>> 
+                    {
+                        r => r.RequestID == editQuoteDetailsViewModel.Requests.FirstOrDefault().RequestID,
+                    },
+                    new List<ComplexIncludes<Request, ModelBase>>
+                    {
+                        new ComplexIncludes<Request, ModelBase>
+                        {
+                            Include = r => r.Product,
+                            ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).Vendor }
+                        },
+                        new ComplexIncludes<Request, ModelBase>
+                        {
+                            Include = r => r.Product,
+                            ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).ProductSubcategory }
+                        },
+                        new ComplexIncludes<Request, ModelBase>
+                        {
+                            Include = r => r.Product,
+                            ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).UnitType }
+                        },
+                        new ComplexIncludes<Request, ModelBase>
+                        {
+                            Include = r => r.Product,
+                            ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).SubUnitType }
+                        },
+                        new ComplexIncludes<Request, ModelBase>
+                        {
+                            Include = r => r.Product,
+                            ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).SubSubUnitType }
+                        },
+                        new ComplexIncludes<Request, ModelBase>{Include = r => r.ParentQuote}
+                    }
+                );
                 var newRequest = editQuoteDetailsViewModel.Requests.FirstOrDefault();
                 previousRequest.Cost = newRequest.Cost;
                 previousRequest.Currency = newRequest.Currency;
