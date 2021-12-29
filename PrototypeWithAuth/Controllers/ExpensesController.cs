@@ -161,14 +161,14 @@ namespace PrototypeWithAuth.Controllers
             {
                 count = 0;
 
-                var subCategories = _context.ProductSubcategories.Where(ps => summaryChartsViewModel.SelectedProductSubcategories.Contains(ps.ProductSubcategoryID));
+                var subCategories = _context.ProductSubcategories.Where(ps => summaryChartsViewModel.SelectedProductSubcategories.Contains(ps.ID));
                 foreach (var ps in subCategories)
                 {
                     if (count > 18)
                     {
                         count = 0;
                     }
-                    requestList = requests.Where(r => r.Product.ProductSubcategoryID == ps.ProductSubcategoryID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory);
+                    requestList = requests.Where(r => r.Product.ProductSubcategoryID == ps.ID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory);
                     decimal cost = 0;
                     if (isDollars)
                     {
@@ -179,7 +179,7 @@ namespace PrototypeWithAuth.Controllers
                         cost = requestList.Sum(r => r.Cost??0);
                     }
 
-                    pieChartViewModel.SectionName.Add(ps.ProductSubcategoryDescription);
+                    pieChartViewModel.SectionName.Add(ps.Description);
                     if (cost > 0)
                     {
                         pieChartViewModel.SectionColor.Add(colors[count]);
@@ -195,7 +195,7 @@ namespace PrototypeWithAuth.Controllers
             else if (summaryChartsViewModel.SelectedParentCategories != null)
             {
                 count = 0;
-                var parentCategories = _context.ParentCategories.Where(pc => summaryChartsViewModel.SelectedParentCategories.Contains(pc.ParentCategoryID));
+                var parentCategories = _context.ParentCategories.Where(pc => summaryChartsViewModel.SelectedParentCategories.Contains(pc.ID));
 
                 foreach (var pc in parentCategories)
                 {
@@ -203,7 +203,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         count = 0;
                     }
-                    requestList = requests.Where(r => r.Product.ProductSubcategory.ParentCategoryID == pc.ParentCategoryID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
+                    requestList = requests.Where(r => r.Product.ProductSubcategory.ParentCategoryID == pc.ID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
                     decimal cost = 0;
                     if (isDollars)
                     {
@@ -214,7 +214,7 @@ namespace PrototypeWithAuth.Controllers
                         cost = requestList.Sum(r => r.Cost??0);
                     }
 
-                    pieChartViewModel.SectionName.Add(pc.ParentCategoryDescription);
+                    pieChartViewModel.SectionName.Add(pc.Description);
                     if (cost > 0)
                     {
                         pieChartViewModel.SectionColor.Add(colors[count]);
@@ -673,7 +673,7 @@ namespace PrototypeWithAuth.Controllers
             Dictionary<ParentCategory, List<Request>> ParentCategories = new Dictionary<ParentCategory, List<Request>>();
             foreach (var pc in parentCategories)
             {
-                var pcRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategoryID == pc.ParentCategoryID)
+                var pcRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategoryID == pc.ID)
                     .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
                     .Where(r => categoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID))
                     .Where(r => r.Payments.FirstOrDefault().Invoice != null)
@@ -700,7 +700,7 @@ namespace PrototypeWithAuth.Controllers
             Dictionary<ProductSubcategory, List<Request>> productSubs = new Dictionary<ProductSubcategory, List<Request>>();
             foreach (var sc in subCategories)
             {
-                var scRequests = _context.Requests.Where(r => r.Product.ProductSubcategoryID == sc.ProductSubcategoryID)
+                var scRequests = _context.Requests.Where(r => r.Product.ProductSubcategoryID == sc.ID)
                     .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
                     .Where(r => categoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID))
                     .Where(r => r.Payments.FirstOrDefault().Invoice != null)
@@ -711,7 +711,7 @@ namespace PrototypeWithAuth.Controllers
             StatisticsSubCategoryViewModel statisticsSubCategoryViewModel = new StatisticsSubCategoryViewModel()
             {
                 ProductSubcategories = productSubs,
-                ParentCategoryName = _context.ParentCategories.Where(pc => pc.ParentCategoryID == ParentCategoryId).FirstOrDefault().ParentCategoryDescription
+                ParentCategoryName = _context.ParentCategories.Where(pc => pc.ID == ParentCategoryId).FirstOrDefault().Description
             };
 
             return PartialView(statisticsSubCategoryViewModel);

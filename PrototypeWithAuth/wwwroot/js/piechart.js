@@ -77,7 +77,7 @@
 				$("#parentlistMulitple").destroyMaterialSelect()				
 				$("#parentlistMulitple").empty();
 				$.each(data.parentCategories, function (i, category) {
-					$("#parentlistMulitple").append('<option value="' + category.parentCategoryID + '">' + category.parentCategoryDescription + '</option>');
+					$("#parentlistMulitple").append('<option value="' + category.ID + '">' + category.Description + '</option>');
 				});				
 				$("#parentlistMulitple").after('<button type="button" onclick="$.fn.filterByParentCategoryType();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow  ">Save</button>');			
 				$("#parentlistMulitple").materialSelect();

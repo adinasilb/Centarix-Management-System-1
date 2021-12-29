@@ -486,7 +486,7 @@ namespace PrototypeWithAuth.Controllers
                             request.CreationDate = DateTime.Now;
                         }
 
-                        request.Product.ProductSubcategory = await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ProductSubcategoryID == request.Product.ProductSubcategoryID }, new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory } });
+                        request.Product.ProductSubcategory = await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == request.Product.ProductSubcategoryID }, new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory } });
                         var isInBudget = false;
                         if (!request.Product.ProductSubcategory.ParentCategory.IsProprietary)
                         {
@@ -1487,7 +1487,7 @@ namespace PrototypeWithAuth.Controllers
         }
         private async Task<RequestItemViewModel> FillRequestItemViewModel(RequestItemViewModel requestItemViewModel, int categoryTypeId, int productSubcategoryId = 0)
         {
-            var productSubcategory = await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ProductSubcategoryID == productSubcategoryId }, new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = p => p.ParentCategory } });
+            var productSubcategory = await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == productSubcategoryId }, new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = p => p.ParentCategory } });
             requestItemViewModel = await FillRequestDropdowns(requestItemViewModel, productSubcategory, categoryTypeId);
 
             if (productSubcategory == null)
@@ -1495,7 +1495,7 @@ namespace PrototypeWithAuth.Controllers
                 ParentCategory parentCategory = new ParentCategory();
                 if (requestItemViewModel.IsProprietary)
                 {
-                    parentCategory = await _parentCategoriesProc.ReadOneAsync(new List<Expression<Func<ParentCategory, bool>>> { pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Samples.ToString() });
+                    parentCategory = await _parentCategoriesProc.ReadOneAsync(new List<Expression<Func<ParentCategory, bool>>> { pc => pc.Description == AppUtility.ParentCategoryEnum.Samples.ToString() });
                 }
 
                 productSubcategory = new ProductSubcategory()
@@ -1503,7 +1503,7 @@ namespace PrototypeWithAuth.Controllers
                     ParentCategory = parentCategory
                 };
             }
-            else if (productSubcategory.ParentCategory.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Samples.ToString())
+            else if (productSubcategory.ParentCategory.Description == AppUtility.ParentCategoryEnum.Samples.ToString())
             {
                 requestItemViewModel.IsProprietary = true;
             }
@@ -1562,7 +1562,7 @@ namespace PrototypeWithAuth.Controllers
                 operationsItemViewModel.Request.Product = new Product();
                 operationsItemViewModel.Request.Product.ProductSubcategoryID = subcategoryID;
                 operationsItemViewModel.Request.Product.ProductSubcategory =
-                  await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ProductSubcategoryID == subcategoryID });
+                  await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == subcategoryID });
                 operationsItemViewModel.ProductSubcategories =
                     _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ParentCategoryID == operationsItemViewModel.Request.Product.ProductSubcategory.ParentCategoryID }).AsEnumerable();
             }
@@ -2036,7 +2036,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 else
                 {
-                    request.Product.ProductSubcategory.ParentCategory = await _parentCategoriesProc.ReadOneAsync(new List<Expression<Func<ParentCategory, bool>>> { pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID });
+                    request.Product.ProductSubcategory.ParentCategory = await _parentCategoriesProc.ReadOneAsync(new List<Expression<Func<ParentCategory, bool>>> { pc => pc.ID == request.Product.ProductSubcategory.ParentCategoryID });
                     request.Product.Vendor = await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == request.Product.VendorID });
                 }
                 newTRLVM.TempRequestViewModels = new List<TempRequestViewModel>()
@@ -2084,7 +2084,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     else
                     {
-                        tempRequest.Request.Product.ProductSubcategory = await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ProductSubcategoryID == tempRequest.Request.Product.ProductSubcategoryID }, new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory } });
+                        tempRequest.Request.Product.ProductSubcategory = await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == tempRequest.Request.Product.ProductSubcategoryID }, new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory } });
                         tempRequest.Request.Product.Vendor = await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == tempRequest.Request.Product.VendorID });
                     }
                     allRequests.Add(tempRequest.Request);
@@ -5063,8 +5063,8 @@ namespace PrototypeWithAuth.Controllers
             var results = _requestsProc.Read().Select(r => new
             {
                 ProductName = r.Product.ProductName,
-                CategoryName = r.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription,
-                SubCategoryName = r.Product.ProductSubcategory.ProductSubcategoryDescription,
+                CategoryName = r.Product.ProductSubcategory.ParentCategory.Description,
+                SubCategoryName = r.Product.ProductSubcategory.Description,
                 Vendor = r.Product.Vendor.VendorEnName,
                 CompanyID = r.Product.Vendor.VendorBuisnessID,
                 CatalogNumber = r.Product.CatalogNumber,
@@ -5117,7 +5117,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public string GetCategoryImageSrc(int productSubCategoryID)
         {
-            return _productSubcategoriesProc.ReadOneAsync( new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ProductSubcategoryID ==productSubCategoryID }).Result.ImageURL;
+            return _productSubcategoriesProc.ReadOneAsync( new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID ==productSubCategoryID }).Result.ImageURL;
         }
 
         [HttpGet]

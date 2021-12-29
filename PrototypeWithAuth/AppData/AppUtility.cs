@@ -549,8 +549,8 @@ namespace PrototypeWithAuth.AppData
             {
 
                 List<StringWithBool> categoryColumn = new List<StringWithBool>();
-                var category = p.ProductSubcategory.ParentCategory.ParentCategoryDescription;
-                var subcategory = p.ProductSubcategory.ProductSubcategoryDescription;
+                var category = p.ProductSubcategory.ParentCategory.Description;
+                var subcategory = p.ProductSubcategory.Description;
                 if (categorySelected)
                 {
                     categoryColumn.Add(new StringWithBool { String = category, Bool = false });

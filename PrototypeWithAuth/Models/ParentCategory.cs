@@ -8,17 +8,17 @@ using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Models
 {
-    public class ParentCategory : ModelBase
+    public class ParentCategory : CategoryBase
     {
-        [Key]
-        public int ParentCategoryID { get; set; }
+        //[Key]
+        //public int ID { get; set; }
 
-        [Required]
-        [Display(Name = "Category")]
-        public string ParentCategoryDescription { get; set; }
+        //[Required]
+        //[Display(Name = "Category")]
+        //public string Description { get; set; }
         public string ParentCategoryDescriptionEnum { get
             {
-                return ParentCategoryDescription?.Replace(" ", "");
+                return Description?.Replace(" ", "");
             } }
 
 

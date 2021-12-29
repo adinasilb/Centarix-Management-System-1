@@ -122,18 +122,18 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
-            <label asp-for="Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+            <label asp-for="Requests[0].Product.ProductSubcategory.ParentCategory.Description" class="control-label"></label>
             @if (Model.IsProprietary)
             {
-                <input asp-for="Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="form-control-plaintext border-bottom" type="text" readonly />
+                <input asp-for="Requests[0].Product.ProductSubcategory.ParentCategory.Description" class="form-control-plaintext border-bottom" type="text" readonly />
             }
             else
             {
                 @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategory.ParentCategoryID,
              new SelectList(
              Model.ParentCategories,
-             "ParentCategoryID",
-             "ParentCategoryDescription"
+             "ID",
+             "Description"
              ), "Select Category",
              new
                   {
@@ -149,12 +149,12 @@
     </div>
     <div class="col-md-6 px-4">
         <div class="form-group sublist">
-            <label asp-for="Requests[0].Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
+            <label asp-for="Requests[0].Product.ProductSubcategory.Description" class="control-label"></label>
             @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategoryID,
                 new SelectList(
                 Model.ProductSubcategories,
-                "ProductSubcategoryID",
-                "ProductSubcategoryDescription"
+                "ID",
+                "Description"
                 ), "Select Sub Category",
                 new
                      {
@@ -410,7 +410,7 @@ else //isProprietary
                 <span asp-validation-for="Requests[0].UnitType" class="text-danger-centarix"></span>
             </div>
         </div>*@
-    if (request.Product.ProductSubcategory.ProductSubcategoryDescription == "Cells")
+    if (request.Product.ProductSubcategory.Description == "Cells")
     {
         <div class="row">
             <div class="col-md-4 @passageCategories @hiddenSummaryClass">

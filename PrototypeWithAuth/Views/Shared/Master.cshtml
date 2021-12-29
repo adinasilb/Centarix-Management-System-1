@@ -724,7 +724,7 @@
             $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
                 var item = "";
                 $.each(data, function (i, subCategory) {
-                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                    item += '<option value="' + subCategory.ID + '">' + subCategory.Description + '</option>'
                 });
                 $("#sublist").html(item);
                 $("#sublist").val(subcategoryId1).change();

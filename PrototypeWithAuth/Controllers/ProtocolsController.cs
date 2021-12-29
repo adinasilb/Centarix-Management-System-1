@@ -282,7 +282,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 reportsIndexObject.Months.Add(DateTime.Now.Month);
             }
-            reportsIndexObject.ReportCategory = _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == reportsIndexObject.ReportCategoryID).FirstOrDefault();
+            reportsIndexObject.ReportCategory = _context.ResourceCategories.Where(rc => rc.ID == reportsIndexObject.ReportCategoryID).FirstOrDefault();
             IQueryable<Report> ReportsPassedIn = Enumerable.Empty<Report>().AsQueryable();
             IQueryable<Report> ReportsPassedInWithInclude = _context.Reports
                 .Include(r => r.ReportType);
@@ -1772,7 +1772,7 @@ namespace PrototypeWithAuth.Controllers
                 products = products.Where(p => p.VendorID == vendorID);
             }
             var productsJson = await products.Select(p => new { productID = p.ProductID, name = p.ProductName }).ToListAsync();
-            var subCategoryList = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == parentCategoryID).Select(ps => new { subCategoryID = ps.ProductSubcategoryID, subCategoryDescription = ps.ProductSubcategoryDescription }).ToListAsync();
+            var subCategoryList = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == parentCategoryID).Select(ps => new { subCategoryID = ps.ID, subCategoryDescription = ps.Description }).ToListAsync();
             return Json(new { ProductSubCategories = subCategoryList, Products = productsJson });
         }
 
@@ -2226,7 +2226,7 @@ namespace PrototypeWithAuth.Controllers
                 PageType = AppUtility.PageTypeEnum.ProtocolsReports.ToString(),
                 SidebarType = AppUtility.SidebarEnum.WeeklyReports.ToString(),
                 ReportCategories = _context.ResourceCategories.Where(rc => rc.IsReportsCategory &&
-                userRoles.Contains("Protocols" + rc.ResourceCategoryDescription.Replace(" ", ""))).ToList(),
+                userRoles.Contains("Protocols" + rc.Description.Replace(" ", ""))).ToList(),
             };
             return View(viewModel);
         }
@@ -2378,7 +2378,7 @@ namespace PrototypeWithAuth.Controllers
             ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel()
             {
                 ResourcesListIndexViewModel = ResourcesListIndexViewModel,
-                PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription }
+                PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ID == ResourceCategoryID).FirstOrDefault().Description }
             };
             if (IsPersonal)
             {

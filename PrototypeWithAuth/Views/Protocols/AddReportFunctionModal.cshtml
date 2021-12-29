@@ -53,8 +53,8 @@
                                     @Html.DropDownListFor(vm => vm.FunctionLine.Product.ProductSubcategory.ParentCategoryID,
                                  new SelectList(
                                  Model.ParentCategories,
-                                 "ParentCategoryID",
-                                 "ParentCategoryDescription"
+                                 "ID",
+                                 "Description"
                                  ), "Select Category",
                                  new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "parentlist", @searchable = "Select Category" })
                                 </div>
