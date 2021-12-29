@@ -2333,6 +2333,30 @@ namespace PrototypeWithAuth.Controllers
                             ModelsEnum = AppUtility.ModelsEnum.RequestNotification
                         });
                     }
+                    var parentRequestModelState = new ModelAndState
+                    {
+                        Model = deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest,
+                    };
+                    var ParentRequestRollbackList = ModelsModified;
+                    if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID == 0)
+                    {
+                        parentRequestModelState.StateEnum = EntityState.Added;
+
+                        ParentRequestRollbackList = ModelsCreated;
+                    }
+                    else //if coming from approve order
+                    {
+                        parentRequestModelState.StateEnum = EntityState.Modified;
+                    }
+                    await _requestsProc.UpdateModelsAsync(new List<ModelAndState> { parentRequestModelState });
+                    ParentRequestRollbackList.Add(new ModelAndID()
+                    {
+                        ID = Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID),
+                        ModelsEnum = AppUtility.ModelsEnum.ParentRequest
+                    });
+
+                    await transaction.CommitAsync();
+
                     string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
                     string folder2 = Path.Combine(uploadFolder, tempRequestListViewModel.GUID.ToString());
                     string fileName = Path.Combine(folder2, "Order.txt");
@@ -2431,38 +2455,6 @@ namespace PrototypeWithAuth.Controllers
                     {
                         MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID == null ? 0 : Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, false, tempRequestListViewModel.GUID);
                     }
-                    bool moveOrderDoc = false;
-                    var parentRequestModelState = new ModelAndState
-                    {
-                        Model = deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest,
-                    };
-                    var ParentRequestRollbackList = ModelsModified;
-                    if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID == 0)
-                    {
-                        parentRequestModelState.StateEnum = EntityState.Added;
-
-                        ParentRequestRollbackList = ModelsCreated;
-                        
-                        moveOrderDoc = true;
-                    }
-                    else //if coming from approve order
-                    {
-                        parentRequestModelState.StateEnum = EntityState.Modified;
-                    }
-                    await _requestsProc.UpdateModelsAsync(new List<ModelAndState> { parentRequestModelState });
-                    ParentRequestRollbackList.Add(new ModelAndID()
-                    {
-                        ID = Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID),
-                        ModelsEnum = AppUtility.ModelsEnum.ParentRequest
-                    });
-
-                    if (moveOrderDoc)
-                    {
-                        MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID,
-                                AppUtility.ParentFolderName.ParentRequest, false, tempRequestListViewModel.GUID);     //make sure has an id here.
-                    }
-
-                    await transaction.CommitAsync();
 
                     using (var client = new SmtpClient())
                     {
