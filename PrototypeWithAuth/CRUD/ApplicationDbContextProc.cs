@@ -225,9 +225,37 @@ namespace PrototypeWithAuth.CRUD
             }
             return ReturnVal;
         }
+        public async Task UpdateModels(List<ModelAndState> modelsAndStates)
+        {
+            try
+            {
+                UpdateModelsWithoutSaveChanges(modelsAndStates);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
+        public void UpdateModelsWithoutSaveChanges(List<ModelAndState> modelsAndStates)
+        {
+            try
+            {
+                foreach (var ms in modelsAndStates)
+                {
+                    if (ms.Model != null)
+                    {
+                        _context.Entry(ms.Model).State = ms.StateEnum;
+                    }
 
-
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
 
     }
 }
