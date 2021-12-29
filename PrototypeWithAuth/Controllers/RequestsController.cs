@@ -3412,13 +3412,13 @@ namespace PrototypeWithAuth.Controllers
                         break;
                     case AppUtility.OrderTypeEnum.RequestPriceQuote:
                     case AppUtility.OrderTypeEnum.AddToCart:
-                        using (var transaction = await _context.Database.BeginTransactionAsync())
+                        using (var transaction = _applicationDbContextTransaction.Transaction)
                         {
                             try
                             {
                                 request.RequestStatusID = 6; //approved
-                                _context.Update(request);
-                                await _context.SaveChangesAsync();
+                                var requestModelState = new ModelAndState { Model = request, StateEnum = EntityState.Modified };
+                                await _requestsProc.UpdateModelsAsync(new List<ModelAndState> { requestModelState });
                                 RequestNotification requestNotification = new RequestNotification();
                                 requestNotification.RequestID = request.RequestID;
                                 requestNotification.IsRead = false;
@@ -3430,8 +3430,7 @@ namespace PrototypeWithAuth.Controllers
                                 requestNotification.Controller = "Requests";
                                 requestNotification.Action = "NotificationsView";
                                 requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                                _context.Update(requestNotification);
-                                await _context.SaveChangesAsync();
+                                await _requestNotificationsProc.CreateWithoutTransactionAsync(requestNotification);
                                 //throw new Exception();
                                 await transaction.CommitAsync();
                             }
