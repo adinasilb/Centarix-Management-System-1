@@ -2488,50 +2488,50 @@ namespace PrototypeWithAuth.Controllers
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
-                var entries = _context.ChangeTracker.Entries();
+                var entries = _applicationDbContextEntries.Entries;
                 foreach (var entry in entries)
                 {
                     entry.State = EntityState.Detached;
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
                 {
-                    var model6 = _context.RequestComments.Where(pr => pr.CommentID == ModelWithID.ID).FirstOrDefault();
+                    var model6 = await _requestCommentsProc.ReadOneAsync( new List<Expression<Func<RequestComment, bool>>> { pr => pr.CommentID == ModelWithID.ID });
                     _context.Remove(model6);
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Payment))
                 {
-                    var model5 = _context.Payments.Where(pr => pr.PaymentID == ModelWithID.ID).FirstOrDefault();
+                    var model5 = await _paymentsProc.ReadOneAsync( new List<Expression<Func<Payment, bool>>> { pr => pr.PaymentID == ModelWithID.ID });
                     _context.Remove(model5);
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.RequestNotification))
                 {
-                    var model7 = _context.RequestNotifications.Where(pr => pr.NotificationID == ModelWithID.ID).FirstOrDefault();
+                    var model7 = await _requestNotificationsProc.ReadOneAsync( new List<Expression<Func<RequestNotification, bool>>> { pr => pr.NotificationID == ModelWithID.ID });
                     _context.Remove(model7);
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Request))
                 {
-                    var model = _context.Requests.Where(r => r.RequestID == ModelWithID.ID).FirstOrDefault();
+                    var model = _requestsProc.ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == ModelWithID.ID });
                     _context.Remove(model);
                     MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentRequest, guid.ToString(), false, true);
 
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentQuote))
                 {
-                    var model2 = _context.ParentQuotes.Where(pr => pr.ParentQuoteID == ModelWithID.ID).FirstOrDefault();
+                    var model2 = await _parentQuotesProc.ReadOneAsync( new List<Expression<Func<ParentQuote, bool>>> { pr => pr.ParentQuoteID == ModelWithID.ID });
                     _context.Remove(model2);
                     MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentQuote, guid.ToString(), false, true);
 
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentRequest))
                 {
-                    var model3 = _context.ParentRequests.Where(pr => pr.ParentRequestID == ModelWithID.ID).FirstOrDefault();
+                    var model3 = _parentRequestsProc.ReadOneAsync(new List<Expression<Func<ParentRequest, bool>>> { pr => pr.ParentRequestID == ModelWithID.ID });
                     _context.Remove(model3);
                     MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.Requests, guid.ToString(), true, true);
 
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Product))
                 {
-                    var model4 = _context.Products.Where(pr => pr.ProductID == ModelWithID.ID).FirstOrDefault();
+                    var model4 = _productsProc.ReadOneAsync( new List<Expression<Func<Product, bool>>> { pr => pr.ProductID == ModelWithID.ID });
                     _context.Remove(model4);
                 }
 
