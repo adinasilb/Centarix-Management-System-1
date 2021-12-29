@@ -758,8 +758,6 @@ namespace PrototypeWithAuth.Controllers
                         new ModelAndState(){ Model = newRequest.Product, StateEnum = EntityState.Modified }
                     };
                     await _requestsProc.UpdateModelsAsync(ModelStates);
-                    //_context.Entry(request).State = EntityState.Added;
-                    //_context.Entry(request.Product).State = EntityState.Modified;
                     await transaction.CommitAsync();
                 }
                 catch (DbUpdateException ex)
@@ -795,7 +793,6 @@ namespace PrototypeWithAuth.Controllers
                         new ModelAndState(){Model = newRequest, StateEnum = EntityState.Added},
                     };
                     await _requestsProc.UpdateModelsAsync(ModelStates);
-                    //_context.Add(newRequest);
 
                     if (receivedModalVisualViewModel.LocationInstancePlaces != null)
                     {
@@ -866,15 +863,6 @@ namespace PrototypeWithAuth.Controllers
                 Model = tempRequest.Request.Product,
                 StateEnum = tempRequest.Request.Product.ProductID == 0 ? EntityState.Added : EntityState.Modified
             });
-
-            //if (tempRequest.Request.Product.ProductID == 0)
-            //{
-            //    _context.Entry(tempRequest.Request.Product).State = EntityState.Added;
-            //}
-            //else
-            //{
-            //    _context.Entry(tempRequest.Request.Product).State = EntityState.Modified;
-            //}
             var parentQuoteState = new ModelAndState() { Model= tempRequest.Request.ParentQuote };
             if ((tempRequest.Request.ParentQuoteID == 0 || tempRequest.Request.ParentQuoteID == null) && (tempRequest.Request.ParentQuote != null && tempRequest.Request.ParentQuote?.ParentQuoteID==0))
             {
@@ -886,9 +874,7 @@ namespace PrototypeWithAuth.Controllers
             }
             ModelStates.Add(parentQuoteState);
             ModelStates.Add(new ModelAndState { Model = tempRequest.Request, StateEnum = EntityState.Added });
-            //_context.Entry(tempRequest.Request).State = EntityState.Added;
             ModelStates.Add(new ModelAndState { Model = tempRequest.Request.ParentRequest, StateEnum = EntityState.Added });
-            //_context.Entry(tempRequest.Request.ParentRequest).State = EntityState.Added;
             await _requestsProc.UpdateModelsAsync(ModelStates);
 
             var userID = _userManager.GetUserId(User);
