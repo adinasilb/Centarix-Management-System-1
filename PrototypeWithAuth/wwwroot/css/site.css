@@ -3181,9 +3181,9 @@ body.modal-open .popover {
     left: 25% !important;
 }
 
-.error-message {
+.error-message, error-msg {
     display: block;
-    max-height: 45px;
+    max-height: 50px;
     overflow: hidden;
     color: var(--danger-color);
 }
