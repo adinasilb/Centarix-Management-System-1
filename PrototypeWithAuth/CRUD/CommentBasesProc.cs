@@ -24,36 +24,36 @@ namespace PrototypeWithAuth.CRUD
 
         public virtual async Task UpdateWithoutTransactionAsync(List<T> comments, int objectID, string userID)
         {
-                if (comments != null)
+            if (comments != null)
+            {
+                foreach (var c in comments)
                 {
-                    foreach (var c in comments)
+                    if (!c.IsDeleted)
                     {
-                        if (!c.IsDeleted)
+                        c.ObjectID = objectID;
+                        if (c.CommentID == 0)
                         {
-                            c.ObjectID = objectID;
-                            if (c.CommentID == 0)
-                            {
-                                c.ApplicationUserID = userID;
-                                c.CommentTimeStamp = DateTime.Now;
-                                _context.Add(c);
-                            }
-                            else
-                            {
-                                _context.Update(c);
-                            }
+                            c.ApplicationUserID = userID;
+                            c.CommentTimeStamp = DateTime.Now;
+                            _context.Add(c);
                         }
                         else
                         {
-                            var commentDB = _context.Set<T>().Where(c => c.CommentID == c.CommentID).FirstOrDefault();
-                            if (commentDB != null)
-                            {
-                                commentDB.IsDeleted = true;
-                                _context.Update(commentDB);
-                            }
+                            _context.Update(c);
                         }
                     }
-                    await _context.SaveChangesAsync();
+                    else
+                    {
+                        var commentDB = _context.Set<T>().Where(c => c.CommentID == c.CommentID).FirstOrDefault();
+                        if (commentDB != null)
+                        {
+                            commentDB.IsDeleted = true;
+                            _context.Update(commentDB);
+                        }
+                    }
                 }
+                await _context.SaveChangesAsync();
+            }
 
         }
 
