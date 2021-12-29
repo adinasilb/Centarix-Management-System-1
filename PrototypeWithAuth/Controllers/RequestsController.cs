@@ -5084,7 +5084,16 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSettings;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Inventory;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
+
+            SettingsInventory settings = new SettingsInventory()
+            {
+                Categories = _parentCategoriesProc.Read()
+            };
+
             return View();
         }
+
+
+
     }
 }

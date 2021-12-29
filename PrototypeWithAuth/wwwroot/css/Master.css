@@ -220,9 +220,6 @@
     text-decoration: underline;
 }
 
-.lm-top{
-    color: var(--lab-man-color) !important;
-}
 
 .lab-man-filter {
     filter: var(--lab-man-filter) !important;
