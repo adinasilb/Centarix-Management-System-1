@@ -33,6 +33,9 @@
                 <div class="row error-message">
                     @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
                 </div>
+                <input type="hidden" asp-for="TempRequestListViewModel.GUID" id="GUID" class="hidden-guid" />
+                <input type="hidden" asp-for="TempRequestListViewModel.SequencePosition" id="SequencePosition" class="hidden-guid" />
+
                 <input type="hidden" asp-for="TempRequestListViewModel.GUID" class="hidden-guid" />
                 @Html.HiddenFor(model => model.TempRequestListViewModel.RequestIndexObject.PageType)
                 @Html.HiddenFor(model => model.TempRequestListViewModel.RequestIndexObject.PageNumber)
@@ -127,12 +130,13 @@
                 return true;
             },
             error: function (jqxhr) {
-                console.log('confirm email modal error')
-                /*if (jqxhr.status == 500) {
-                    $.fn.OpenModal('termsModal', 'terms', jqxhr.responseText);
-                }*/
-                $('.confirmEmailModalForm .error-message').html(jqxhr.responseText)
-                $(".submitConfirmEmail").prop('disabled', false)
+                var guid = $('#GUID').val();
+                var sequencePosition = $("#SequencePosition").val();
+                $.fn.CloseModal('confirm-email');
+
+                var e = $.fn.AddTempRequestHiddenFors(guid, sequencePosition, '.termsModal .temprequesthiddenfors', false);
+                $('.termsModal .error-message').html(jqxhr.responseText)
+
                 $("#loading").hide();
                 return true;
             }
@@ -145,7 +149,7 @@
         console.log("in cancel email");
         var guid = $('#GUID').val();
         var sequence = $("#SequencePosition").val();
-        var e = $.fn.AddTempRequestHiddenFors(guid, sequence, '.termsModal .temprequesthiddenfors');
+        var e = $.fn.AddTempRequestHiddenFors(guid, sequence, '.termsModal .temprequesthiddenfors', true);
         if (!e) {
             $.fn.CloseModal('confirm-email');
         }

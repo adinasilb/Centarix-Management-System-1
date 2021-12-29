@@ -885,7 +885,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        public async Task<RedirectToActionResult> RollbackTempRequestHiddenFors(Guid Guid, int SequencePosition)
+        public async Task<RedirectToActionResult> RollbackTempRequestHiddenFors(Guid Guid, int SequencePosition, bool isRollBack = true)
         {
             try
             {
@@ -893,8 +893,16 @@ namespace PrototypeWithAuth.Controllers
                 {
                     throw new Exception();
                 }
-                var onStepBack = await _tempRequestJsonsProc.RollbackAsync(Guid, SequencePosition);
-                return RedirectToAction("_TempRequestHiddenFors", new { ID = onStepBack.TempRequestJsonID });
+                int jsonID = 0;
+                if(isRollBack)
+                {
+                   jsonID = _tempRequestJsonsProc.RollbackAsync(Guid, SequencePosition).Result.TempRequestJsonID;
+                }
+                else
+                {
+                    jsonID = _tempRequestJsonsProc.GetTempRequest(Guid, _userManager.GetUserId(User)).FirstOrDefault().TempRequestJsonID;
+                }
+                return RedirectToAction("_TempRequestHiddenFors", new { ID = jsonID });
             }
             catch (Exception ex)
             {
@@ -2178,7 +2186,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmailViewModel, TempRequestListViewModel tempRequestListViewModel)
         {
-            bool Success = false;
+            bool rolledBackTempRequest = false;
             var oldTempRequestJson = await _tempRequestJsonsProc.GetTempRequest(tempRequestListViewModel.GUID, _userManager.GetUserId(User)).FirstOrDefaultAsync();
 
             List<ModelAndID> ModelsCreated = new List<ModelAndID>(); //for rollback
@@ -2476,8 +2484,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await RollbackRequest(ModelsCreated, ModelsModified, tempRequestListViewModel.GUID, oldTempRequestJson.SequencePosition);
-                    //base.RemoveRequestWithCommentsAndEmailSessions();
-                    return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
+                    rolledBackTempRequest = true;
                 }
 
                 tempRequestListViewModel.RequestIndexObject.RequestStatusID = 2;
@@ -2486,8 +2493,12 @@ namespace PrototypeWithAuth.Controllers
             catch (Exception ex)
             {
                 Response.StatusCode = 500;
-                tempRequestListViewModel.RequestIndexObject.ErrorMessage = AppUtility.GetExceptionMessage(ex);
-                return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
+                if(!rolledBackTempRequest)
+                {
+                    await _tempRequestJsonsProc.RollbackAsync(tempRequestListViewModel.GUID, oldTempRequestJson.SequencePosition);
+                }
+                await Response.WriteAsync( AppUtility.GetExceptionMessage(ex));
+                return new EmptyResult();
             }
             return new EmptyResult();
         }

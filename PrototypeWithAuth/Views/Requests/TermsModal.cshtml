@@ -64,7 +64,7 @@
             });
         }
         else if ($('#masterSidebarType').val() != 'Cart') {
-            var e = $.fn.AddTempRequestHiddenFors(guid, sequencePosition, '.modal .temprequesthiddenfors');
+            var e = $.fn.AddTempRequestHiddenFors(guid, sequencePosition, '.modal .temprequesthiddenfors', true);
             console.log("error: " + e);
             if (!e) {
                 $.fn.CloseModal('terms');

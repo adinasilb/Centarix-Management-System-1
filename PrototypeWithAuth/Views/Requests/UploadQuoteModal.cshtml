@@ -137,7 +137,7 @@
             selector = '.modal .temprequesthiddenfors';
         }
         console.log(selector)
-        var e = $.fn.AddTempRequestHiddenFors(guid, sequence, selector);
+        var e = $.fn.AddTempRequestHiddenFors(guid, sequence, selector, true);
         if (!e) {
             $.fn.CloseModal('step-1');
         }
