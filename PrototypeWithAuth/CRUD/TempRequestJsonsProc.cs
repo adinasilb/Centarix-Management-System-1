@@ -80,6 +80,7 @@ namespace PrototypeWithAuth.CRUD
 
         private async Task SetTempRequestAsync(TempRequestJson tempRequestJson, TempRequestListViewModel tempRequestListViewModel, RequestIndexObject requestIndexObject)
         {
+            tempRequestListViewModel.SequencePosition = tempRequestJson.SequencePosition;           
             var fullRequestJson = new FullRequestJson()
             {
                 TempRequestViewModels = tempRequestListViewModel.TempRequestViewModels,
@@ -96,6 +97,11 @@ namespace PrototypeWithAuth.CRUD
         //remove the one that is current if it is NOT the original
         {
             var current = await ReadOneAsync( new List<Expression<Func<TempRequestJson, bool>>> { t => t.GuidID == GUID && t.SequencePosition == sequencePosition });
+            var tempRequestJson = _context.ChangeTracker.Entries<TempRequestJson>().FirstOrDefault();
+            if(tempRequestJson !=null)
+            {
+                tempRequestJson.State = EntityState.Detached;
+            };
             _context.Remove(current);
             await _context.SaveChangesAsync();
             var oneStepBack = await ReadOneAsync( new List<Expression<Func<TempRequestJson, bool>>> { t => t.GuidID == GUID && t.SequencePosition == sequencePosition - 1 });

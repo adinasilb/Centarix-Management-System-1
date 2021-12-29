@@ -2311,7 +2311,7 @@ namespace PrototypeWithAuth.Controllers
                                 MoveDocumentsOutOfTempFolder(tempRequest.Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, tempRequestListViewModel.GUID);
                             }
 
-                            tempRequest.Request.Product = await _productsProc.ReadOneAsync( new List<Expression<Func<Product, bool>>> { p => p.ProductID == tempRequest.Request.ProductID }, new List<ComplexIncludes<Product, ModelBase>> { new ComplexIncludes<Product, ModelBase> { Include =p => p.Vendor } });
+                            //tempRequest.Request.Product = await _productsProc.ReadOneAsync( new List<Expression<Func<Product, bool>>> { p => p.ProductID == tempRequest.Request.ProductID }, new List<ComplexIncludes<Product, ModelBase>> { new ComplexIncludes<Product, ModelBase> { Include =p => p.Vendor } });
                             RequestNotification requestNotification = new RequestNotification();
                             requestNotification.RequestID = tempRequest.Request.RequestID;
                             requestNotification.IsRead = false;
@@ -2485,6 +2485,8 @@ namespace PrototypeWithAuth.Controllers
                 {
                     await RollbackRequest(ModelsCreated, ModelsModified, tempRequestListViewModel.GUID, oldTempRequestJson.SequencePosition);
                     rolledBackTempRequest = true;
+                    throw new Exception(AppUtility.GetExceptionMessage(ex));
+
                 }
 
                 tempRequestListViewModel.RequestIndexObject.RequestStatusID = 2;
@@ -2514,49 +2516,7 @@ namespace PrototypeWithAuth.Controllers
                     entry.State = EntityState.Detached;
                 }
                 var ModelStates = new List<ModelAndState>();
-                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
-                {
-                    var model6 = await _requestCommentsProc.ReadOneAsync( new List<Expression<Func<RequestComment, bool>>> { pr => pr.CommentID == ModelWithID.ID });
-                    ModelStates.Add(new ModelAndState { Model = model6, StateEnum = EntityState.Deleted });
-                }
-                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Payment))
-                {
-                    var model5 = await _paymentsProc.ReadOneAsync( new List<Expression<Func<Payment, bool>>> { pr => pr.PaymentID == ModelWithID.ID });
-                    ModelStates.Add(new ModelAndState { Model = model5, StateEnum = EntityState.Deleted });
-                }
-                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.RequestNotification))
-                {
-                    var model7 = await _requestNotificationsProc.ReadOneAsync( new List<Expression<Func<RequestNotification, bool>>> { pr => pr.NotificationID == ModelWithID.ID });
-                    ModelStates.Add(new ModelAndState { Model = model7, StateEnum = EntityState.Deleted });
-                }
-                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Request))
-                {
-                    var model = await _requestsProc.ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == ModelWithID.ID });
-                    ModelStates.Add(new ModelAndState { Model = model, StateEnum = EntityState.Deleted });
-                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentRequest, guid.ToString(), false, true);
-
-                }
-                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentQuote))
-                {
-                    var model2 = await _parentQuotesProc.ReadOneAsync( new List<Expression<Func<ParentQuote, bool>>> { pr => pr.ParentQuoteID == ModelWithID.ID });
-                    ModelStates.Add(new ModelAndState { Model = model2, StateEnum = EntityState.Deleted });
-                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentQuote, guid.ToString(), false, true);
-
-                }
-                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentRequest))
-                {
-                    var model3 = await _parentRequestsProc.ReadOneAsync(new List<Expression<Func<ParentRequest, bool>>> { pr => pr.ParentRequestID == ModelWithID.ID });
-                    ModelStates.Add(new ModelAndState { Model = model3, StateEnum = EntityState.Deleted });
-                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.Requests, guid.ToString(), true, true);
-
-                }
-                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Product))
-                {
-                    var model4 = await _productsProc.ReadOneAsync( new List<Expression<Func<Product, bool>>> { pr => pr.ProductID == ModelWithID.ID });
-                    ModelStates.Add(new ModelAndState { Model = model4, StateEnum = EntityState.Deleted });
-                }
-                await _requestsProc.UpdateModelsAsync(ModelStates);
-                ModelState.Clear();
+               
                 //Move parentquote docs back to parentquote:
                 await _tempRequestJsonsProc.RollbackAsync(guid, sequencePosition);
                 var oldTempRequestJson = await _tempRequestJsonsProc.GetTempRequest(guid, _userManager.GetUserId(User)).FirstOrDefaultAsync();
@@ -2591,6 +2551,47 @@ namespace PrototypeWithAuth.Controllers
                 {
                     var product = deTLVM.TempRequestViewModels.Where(c => c.Request.ProductID == ModelWithID.ID).Select(r => r.Request.Product).FirstOrDefault();
                     ModelStates.Add(new ModelAndState { Model = product, StateEnum = EntityState.Modified });
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
+                {
+                    var model6 = await _requestCommentsProc.ReadOneAsync(new List<Expression<Func<RequestComment, bool>>> { pr => pr.CommentID == ModelWithID.ID });
+                    ModelStates.Add(new ModelAndState { Model = model6, StateEnum = EntityState.Deleted });
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Payment))
+                {
+                    var model5 = await _paymentsProc.ReadOneAsync(new List<Expression<Func<Payment, bool>>> { pr => pr.PaymentID == ModelWithID.ID });
+                    ModelStates.Add(new ModelAndState { Model = model5, StateEnum = EntityState.Deleted });
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.RequestNotification))
+                {
+                    var model7 = await _requestNotificationsProc.ReadOneAsync(new List<Expression<Func<RequestNotification, bool>>> { pr => pr.NotificationID == ModelWithID.ID });
+                    ModelStates.Add(new ModelAndState { Model = model7, StateEnum = EntityState.Deleted });
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Request))
+                {
+                    var model = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == ModelWithID.ID });
+                    ModelStates.Add(new ModelAndState { Model = model, StateEnum = EntityState.Deleted });
+                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentRequest, guid.ToString(), false, true);
+
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentQuote))
+                {
+                    var model2 = await _parentQuotesProc.ReadOneAsync(new List<Expression<Func<ParentQuote, bool>>> { pr => pr.ParentQuoteID == ModelWithID.ID });
+                    ModelStates.Add(new ModelAndState { Model = model2, StateEnum = EntityState.Deleted });
+                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentQuote, guid.ToString(), false, true);
+
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentRequest))
+                {
+                    var model3 = await _parentRequestsProc.ReadOneAsync(new List<Expression<Func<ParentRequest, bool>>> { pr => pr.ParentRequestID == ModelWithID.ID });
+                    ModelStates.Add(new ModelAndState { Model = model3, StateEnum = EntityState.Deleted });
+                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.Requests, guid.ToString(), true, true);
+
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Product))
+                {
+                    var model4 = await _productsProc.ReadOneAsync(new List<Expression<Func<Product, bool>>> { pr => pr.ProductID == ModelWithID.ID });
+                    ModelStates.Add(new ModelAndState { Model = model4, StateEnum = EntityState.Deleted });
                 }
                 await _requestsProc.UpdateModelsAsync(ModelStates);
                 ReturnVal.SetStringAndBool(true, null);
