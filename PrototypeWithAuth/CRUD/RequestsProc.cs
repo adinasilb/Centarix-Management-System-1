@@ -194,6 +194,40 @@ namespace PrototypeWithAuth.CRUD
 
         }
 
+        public async Task<StringWithBool> UpdateQuoteStatusAsync(IEnumerable<Request> requests, int statusNumber)
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach (var request in requests)
+                        {
+                            request.QuoteStatusID = statusNumber;
+                            _context.Update(request);
+                            _context.SaveChanges();
+                        }
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        throw new Exception(AppUtility.GetExceptionMessage(e));
+                    }
+                    ReturnVal.SetStringAndBool(true, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+
+        }
+
+
         public async Task<StringWithBool> UpdatePaymentStatusAsync(AppUtility.PaymentsPopoverEnum newStatus, int requestID)
         {
             StringWithBool ReturnVal = new StringWithBool();

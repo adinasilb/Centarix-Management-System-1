@@ -1796,22 +1796,8 @@ namespace PrototypeWithAuth.Controllers
                         parentQuote.QuoteDate = request.ParentQuote.QuoteDate;
                         request.ParentQuote = parentQuote;
                     }
-                    //else
-                    //{
-                    //    parentQuote = new ParentQuote();
-                    //    parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
-                    //    parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
-                    //    requestItemViewModel.Request.ParentQuote = parentQuote;
-                    //}
-                    //else if(requestItemViewModel.Request.ParentQuote?.QuoteNumber !=null || requestItemViewModel.Request.ParentQuote?.QuoteDate != null)
-                    //{ 
-                    //    parentQuote= new ParentQuote();
-                    //    parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
-                    //    parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
-                    //    requestItemViewModel.Request.ParentQuote = parentQuote;
-                    //}
 
-                    var product = _context.Products.IgnoreQueryFilters().Include(p => p.Vendor).Include(p => p.ProductSubcategory).FirstOrDefault(v => v.ProductID == request.ProductID);
+                    var product = await _productsProc.ReadOneWithIgnoreQueryFiltersAsync(new List<Expression<Func<Product, bool>>> { v => v.ProductID == request.ProductID }, new List<ComplexIncludes<Product, ModelBase>> { new ComplexIncludes<Product, ModelBase> { Include =  p => p.Vendor }, new ComplexIncludes<Product, ModelBase> { Include = p => p.ProductSubcategory } });
                     // product.ProductSubcategoryID = requestItemViewModel.Request.Product.ProductSubcategoryID;
                     product.VendorID = request.Product.VendorID;
                     product.CatalogNumber = request.Product.CatalogNumber;
@@ -1853,26 +1839,12 @@ namespace PrototypeWithAuth.Controllers
                          * only need this if using an existing product
                          */
                         request.Product = product;
-                        //request.Product.ProductSubcategoryID = request.Product.ProductSubcategory.ProductSubcategoryID;
-                        // requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
-                        request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == request.SubProjectID).FirstOrDefault();
-
-                        //_context.Update(requestItemViewModel.Request.Product.SubProject);
-                        //_context.Update(requestItemViewModel.Request.Product);
-                        /*if (request.ParentQuote != null)
-                        {
-                            _context.Update(request.ParentQuote);
-                            await _context.SaveChangesAsync();
-                            request.ParentQuoteID = request.ParentQuote.ParentQuoteID;
-                        }*/
-                        //_context.Update(request);
                         _context.Entry(request).State = EntityState.Modified;
                         _context.Entry(request.Product).State = EntityState.Modified;
                         if (request.Payments?[0].InvoiceID != null)
                         {
                             _context.Entry(request.Payments[0].Invoice).State = EntityState.Modified; //todo: make a loop
                         }
-                        //var entries = _context.ChangeTracker.Entries();
                         await _context.SaveChangesAsync();
 
 
@@ -2595,50 +2567,50 @@ namespace PrototypeWithAuth.Controllers
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
-                var entries = _context.ChangeTracker.Entries();
+                var entries = _applicationDbContextEntries.Entries;
                 foreach (var entry in entries)
                 {
                     entry.State = EntityState.Detached;
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
                 {
-                    var model6 = _context.RequestComments.Where(pr => pr.CommentID == ModelWithID.ID).FirstOrDefault();
+                    var model6 = await _requestCommentsProc.ReadOneAsync( new List<Expression<Func<RequestComment, bool>>> { pr => pr.CommentID == ModelWithID.ID });
                     _context.Remove(model6);
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Payment))
                 {
-                    var model5 = _context.Payments.Where(pr => pr.PaymentID == ModelWithID.ID).FirstOrDefault();
+                    var model5 = await _paymentsProc.ReadOneAsync( new List<Expression<Func<Payment, bool>>> { pr => pr.PaymentID == ModelWithID.ID });
                     _context.Remove(model5);
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.RequestNotification))
                 {
-                    var model7 = _context.RequestNotifications.Where(pr => pr.NotificationID == ModelWithID.ID).FirstOrDefault();
+                    var model7 = await _requestNotificationsProc.ReadOneAsync( new List<Expression<Func<RequestNotification, bool>>> { pr => pr.NotificationID == ModelWithID.ID });
                     _context.Remove(model7);
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Request))
                 {
-                    var model = _context.Requests.Where(r => r.RequestID == ModelWithID.ID).FirstOrDefault();
+                    var model = _requestsProc.ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == ModelWithID.ID });
                     _context.Remove(model);
                     MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentRequest, guid.ToString(), false, true);
 
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentQuote))
                 {
-                    var model2 = _context.ParentQuotes.Where(pr => pr.ParentQuoteID == ModelWithID.ID).FirstOrDefault();
+                    var model2 = await _parentQuotesProc.ReadOneAsync( new List<Expression<Func<ParentQuote, bool>>> { pr => pr.ParentQuoteID == ModelWithID.ID });
                     _context.Remove(model2);
                     MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentQuote, guid.ToString(), false, true);
 
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentRequest))
                 {
-                    var model3 = _context.ParentRequests.Where(pr => pr.ParentRequestID == ModelWithID.ID).FirstOrDefault();
+                    var model3 = _parentRequestsProc.ReadOneAsync(new List<Expression<Func<ParentRequest, bool>>> { pr => pr.ParentRequestID == ModelWithID.ID });
                     _context.Remove(model3);
                     MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.Requests, guid.ToString(), true, true);
 
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Product))
                 {
-                    var model4 = _context.Products.Where(pr => pr.ProductID == ModelWithID.ID).FirstOrDefault();
+                    var model4 = _productsProc.ReadOneAsync( new List<Expression<Func<Product, bool>>> { pr => pr.ProductID == ModelWithID.ID });
                     _context.Remove(model4);
                 }
 
@@ -2696,40 +2668,43 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-                List<Request> requests;
+                List<Expression<Func<Request, bool>>> wheres = new List<Expression<Func<Request, bool>>>();
+                List<ComplexIncludes<Request, ModelBase>> includes = new List<ComplexIncludes<Request, ModelBase>>();
+                includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product });
+                includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor });
+                includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory });
+                includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory.ParentCategory });
+                includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote });
+                wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
+
                 if (confirmQuoteEmail.IsResend)
                 {
-                    requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.RequestID == confirmQuoteEmail.RequestID)
-                        .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-                        .Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
+                    wheres.Add(r => r.RequestID == confirmQuoteEmail.RequestID);
                 }
                 else if (confirmQuoteEmail.VendorId != null)
                 {
-                    requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
-                        .Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.QuoteStatusID == 1).Where(r => r.RequestStatusID == 6)
-                         .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor)
-                         .Include(r => r.ParentQuote).ToList();
+                    wheres.Add(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.QuoteStatusID == 1);
+                    wheres.Add(r => r.RequestStatusID == 6);
                 }
                 else
                 {
-                    requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
-                        .Where(r => confirmQuoteEmail.Requests.Select(rid => rid.RequestID).Contains(r.RequestID) && (r.QuoteStatusID == 1 || r.QuoteStatusID == 2)).Where(r => r.RequestStatusID == 6)
-                         .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor)
-                         .Include(r => r.ParentQuote).ToList();
+                    wheres.Add(r => confirmQuoteEmail.Requests.Select(rid => rid.RequestID).Contains(r.RequestID) && (r.QuoteStatusID == 1 || r.QuoteStatusID == 2));
+                    wheres.Add(r => r.RequestStatusID == 6);
                 }
+                var requests = _requestsProc.Read(wheres, includes).AsEnumerable();
                 if (requests.Count() == 0)
                 {
-                    requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
-                        .Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.QuoteStatusID == 2).Where(r => r.RequestStatusID == 6)
-                         .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-                         .Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
+                    wheres.Clear();
+                    wheres.Add(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.QuoteStatusID == 2);
+                    wheres.Add(r => r.RequestStatusID == 6);
+                    requests = _requestsProc.Read(wheres, includes).AsEnumerable();
                 }
                 //base url needs to be declared - perhaps should be getting from js?
                 //once deployed need to take base url and put in the parameter for converter.convertHtmlString
                 var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
 
 
-                confirmQuoteEmail.Requests = requests;
+                confirmQuoteEmail.Requests = requests.ToList();
                 confirmQuoteEmail.TempRequestListViewModel = new TempRequestListViewModel()
                 {
                     RequestIndexObject = requestIndexObject
@@ -2766,8 +2741,8 @@ namespace PrototypeWithAuth.Controllers
                     //instantiate the body builder
                     var builder = new BodyBuilder();
 
-                    var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-                    //   currentUser = _context.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
+                    var currentUser = await  _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
+                    //   currentUser = _proc.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
                     string ownerEmail = currentUser.Email;
                     string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
                     string ownerPassword = currentUser.SecureAppPass;
@@ -2812,16 +2787,11 @@ namespace PrototypeWithAuth.Controllers
                         client.Disconnect(true);
                         if (wasSent)
                         {
-                            foreach (var quote in requests)
+                            var success = await _requestsProc.UpdateQuoteStatusAsync(requests, 2);
+                            if (!success.Bool)
                             {
-                                quote.QuoteStatusID = 2;
-                                //quote.ParentQuote.ApplicationUserID = currentUser.Id;
-                                //_context.Update(quote.ParentQuote);
-                                //_context.SaveChanges();
-                                _context.Update(quote);
-                                _context.SaveChanges();
+                                throw new Exception(success.String);
                             }
-
                         }
 
                     }
@@ -2842,42 +2812,46 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
+    
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmQuoteEmailModal(int? id = null, int[] requestIds = null, bool isResend = false)
         {
-            List<Request> requests = new List<Request>();
+            List<Expression<Func<Request, bool>>> wheres = new List<Expression<Func<Request, bool>>>();
+            List<ComplexIncludes<Request, ModelBase>> includes = new List<ComplexIncludes<Request, ModelBase>> ();
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product });
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor });
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory });
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory.ParentCategory });
+            wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
             if (isResend)
             {
-                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.RequestID == id)
-               .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-               .ToList();
+                wheres.Add(r => r.RequestID == id);
             }
             else
             {
+                includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote });
                 if (id != null)
                 {
-                    requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == id && r.QuoteStatusID == 1)
-                       .Where(r => r.RequestStatusID == 6).Include(r => r.Product).ThenInclude(p => p.Vendor)
-                       .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).ToList();
+                    wheres.Add(r => r.Product.VendorID == id && r.QuoteStatusID == 1);
+                    wheres.Add(r => r.RequestStatusID == 6);
                 }
                 else if (requestIds != null)
-                {
-                    foreach (var Rid in requestIds)
-                    {
-                        var request = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.RequestID == Rid && (r.QuoteStatusID == 1 || r.QuoteStatusID == 2))
-                           .Where(r => r.RequestStatusID == 6).Include(r => r.Product).ThenInclude(p => p.Vendor)
-                           .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).FirstOrDefault();
-                        requests.Add(request);
-                    }
+                {                    
+                    wheres.Add(r => requestIds.Contains( r.RequestID) && (r.QuoteStatusID == 1 || r.QuoteStatusID == 2));
+                    wheres.Add(r => r.RequestStatusID == 6);
                 }
 
             }
+            var requests = _requestsProc.Read(wheres, includes).AsEnumerable();
             if (requests.Count() == 0)
             {
-                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == id && r.QuoteStatusID == 2)
-                    .Where(r => r.RequestStatusID == 6).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote)
-                    .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).ToList();
+                wheres.Clear();
+                wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
+                wheres.Add(r => r.Product.VendorID == id && r.QuoteStatusID == 2);
+                wheres.Add(r => r.RequestStatusID == 6);
+                includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote });
+                requests =_requestsProc.Read(wheres, includes).AsEnumerable();
             }
             RequestIndexObject requestIndexObject = new RequestIndexObject
             {
@@ -2886,7 +2860,7 @@ namespace PrototypeWithAuth.Controllers
             };
             ConfirmEmailViewModel confirmEmail = new ConfirmEmailViewModel
             {
-                Requests = requests,
+                Requests = requests.ToList(),
                 VendorId = id,
                 RequestID = id,
                 TempRequestListViewModel = new TempRequestListViewModel() { RequestIndexObject = requestIndexObject }
@@ -3639,15 +3613,13 @@ namespace PrototypeWithAuth.Controllers
             }
             if (requestID != 0)
             {
-                var notification = _context.RequestNotifications.Where(rn => rn.NotificationID == requestID).FirstOrDefault();
-                notification.IsRead = true;
-                _context.Update(notification);
-                await _context.SaveChangesAsync();
+                var notification = await _requestNotificationsProc.ReadOneAsync(new List<Expression<Func<RequestNotification, bool>>> { rn => rn.NotificationID == requestID });
+                await _requestNotificationsProc.MarkNotficationAsReadAsync(notification);
             }
 
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            ApplicationUser currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+            ApplicationUser currentUser = await  _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
             var requests = requestNotifications.Where(n => n.ApplicationUserID == currentUser.Id).OrderByDescending(n => n.TimeStamp).ToList();
             return View(requests);
         }
