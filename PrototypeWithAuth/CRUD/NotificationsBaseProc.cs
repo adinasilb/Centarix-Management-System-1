@@ -43,5 +43,12 @@ namespace PrototypeWithAuth.CRUD
         {            
             _context.Entry(notification).State = EntityState.Added;         
         }
+
+        public virtual async Task MarkNotficationAsReadAsync(T1 notification)
+        {
+            notification.IsRead = true;
+            _context.Update(notification);
+            await _context.SaveChangesAsync();
+        }
     }
 }
