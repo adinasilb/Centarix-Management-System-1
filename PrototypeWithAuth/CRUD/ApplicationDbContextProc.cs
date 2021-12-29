@@ -225,7 +225,7 @@ namespace PrototypeWithAuth.CRUD
             }
             return ReturnVal;
         }
-        public async Task UpdateModels(List<ModelAndState> modelsAndStates)
+        public async Task UpdateModelsAsync(List<ModelAndState> modelsAndStates)
         {
             try
             {
