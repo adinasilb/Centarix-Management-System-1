@@ -1,6 +1,6 @@
 ﻿$(function () {
 
-    $('.partial-div').off('change', 'select.subcategory').on('change', 'select.subcategory', function (e) {
+    $('.partial-div, body').off('change', 'select.subcategory').on('change', 'select.subcategory', function (e) {
         if ($('#masterSectionType').val() != "Operations") {
             console.log("subcategory change")
             var subcategoryID = $("#sublist").val()
