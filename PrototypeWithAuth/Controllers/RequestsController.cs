@@ -2219,7 +2219,6 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    //foreach (var tempRequest in deserializedTempRequestListViewModel.TempRequestViewModels)
                     for (int tr = 0; tr < deserializedTempRequestListViewModel.TempRequestViewModels.Count(); tr++)
                     {
                         var tempRequest = deserializedTempRequestListViewModel.TempRequestViewModels[tr];
@@ -2240,22 +2239,14 @@ namespace PrototypeWithAuth.Controllers
                             if (tempRequest.Request.Product.ProductID == 0)
                             {
                                 tempRequest.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(false);
-                                //_context.Entry(tempRequest.Request.Product).State = EntityState.Added;
                                 ProductRollbackList = ModelsCreated;
                             }
-                            //else
-                            //{
-                            //    _context.Entry(tempRequest.Request.Product).State = EntityState.Modified;
-                            //}
-                            //tempRequest.Request.ParentRequest = pr;
+
                             ModelStates.Add(new ModelAndState
                             {
                                 Model = tempRequest.Request.Product,
                                 StateEnum = tempRequest.Request.Product.ProductID == 0 ? EntityState.Added : EntityState.Modified
                             });
-                           // _context.Entry(tempRequest.Request).State = EntityState.Added;
-                            
-                            //tempRequest.Request.ParentRequest.OrderDate = DateTime.Now;
                             
                             ModelStates.Add(new ModelAndState
                             {
@@ -2264,20 +2255,9 @@ namespace PrototypeWithAuth.Controllers
                             });
                             if (tempRequest.Request.ParentQuote.ParentQuoteID == 0)
                             {
-                                //_context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Added;
                                 ParentQuoteRollbackList = ModelsCreated;
                             }
-                            //else
-                            //{
-                            //    _context.Entry(tempRequest.Request.ParentQuote).State = EntityState.Modified;
-
-                            //}
                         }
-                        //else
-                        //{
-                        //    _context.Entry(tempRequest.Request).State = EntityState.Modified;
-
-                        //}
                         await _requestsProc.UpdateModelsAsync(ModelStates);
 
                         //set up rollback lists in case of exception
@@ -2332,19 +2312,6 @@ namespace PrototypeWithAuth.Controllers
                             var additionalRequests = tr + 1 < deserializedTempRequestListViewModel.TempRequestViewModels.Count() ? true : false;
                             MoveDocumentsOutOfTempFolder(tempRequest.Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, tempRequestListViewModel.GUID);
                         }
-
-                        /*string NewFolder = Path.Combine(uploadFolder, tempRequest.Request.ParentRequestID.ToString());
-                        string folderPath = Path.Combine(NewFolder, AppUtility.FolderNamesEnum.Orders.ToString());
-                        Directory.CreateDirectory(folderPath); //make sure we don't need one above also??
-
-                        string uniqueFileName = 1 + "OrderEmail.pdf";
-                        string filePath = Path.Combine(folderPath, uniqueFileName);
-                        if (System.IO.File.Exists(filePath))
-                        {
-                            System.IO.File.Delete(filePath);
-                        }
-
-                        System.IO.File.Copy(uploadFile, filePath); //make sure this works for each of them*/
 
                         tempRequest.Request.Product = await _context.Products.Where(p => p.ProductID == tempRequest.Request.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
                         RequestNotification requestNotification = new RequestNotification();
@@ -2406,22 +2373,16 @@ namespace PrototypeWithAuth.Controllers
                     doc.Save(filePath);
                     doc.Close();
 
-                    /*string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-                    string uploadFile = Path.Combine(uploadFolder, "CentarixOrder" + requests.FirstOrDefault().ParentRequest.OrderNumber + ".pdf");
-                    */
-
 
                     //instatiate mimemessage
                     var message = new MimeMessage();
 
                     //instantiate the body builder
                     var builder = new BodyBuilder();
-                    //var users = _context.Users.ToList();
-                    //currentUser = _context.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
                     string ownerEmail = currentUser.Email;
                     string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
                     string ownerPassword = currentUser.SecureAppPass;
-                    deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.VendorID).FirstOrDefault();
+                    deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor = await _vendorsProc.ReadOneAsync( new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.VendorID });
                     string vendorEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.OrdersEmail;
                     //string vendorEmail = /*firstRequest.Product.Vendor.OrdersEmail;*/ emails.Count() < 1 ? requests.FirstOrDefault().Product.Vendor.OrdersEmail : emails[0];
                     string vendorName = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.VendorEnName;
@@ -2507,7 +2468,6 @@ namespace PrototypeWithAuth.Controllers
                     {
 
                         client.Connect("smtp.gmail.com", 587, false);
-                        //var SecureAppPass = _context.Users.Where(u => u.Id == confirmEmail.ParentRequest.ApplicationUserID).FirstOrDefault().SecureAppPass;
                         client.Authenticate(ownerEmail, ownerPassword);// ownerPassword);//
                         client.Timeout = 500000; // 500 seconds
                         try
@@ -4331,33 +4291,19 @@ namespace PrototypeWithAuth.Controllers
                                     Model = tempRequestViewModel.Request.ParentQuote,
                                     StateEnum = tempRequestViewModel.Request.ParentQuote.ParentQuoteID == 0 ? EntityState.Added : EntityState.Modified
                                 });
-                                //if (tempRequestViewModel.Request.ParentQuote.ParentQuoteID == 0)
-                                //{
-                                //    _context.Entry(tempRequestViewModel.Request.ParentQuote).State = EntityState.Added;
-
-                                //}
-                                //else
-                                //{
-                                //    _context.Entry(tempRequestViewModel.Request.ParentQuote).State = EntityState.Modified;
-
-                                //}
+                             
                                 ModelStates.Add(new ModelAndState
                                 {
                                     Model = tempRequestViewModel.Request.Product,
                                     StateEnum = tempRequestViewModel.Request.Product.ProductID == 0 ? EntityState.Added : EntityState.Modified
                                 });
-                                //if (tempRequestViewModel.Request.Product.ProductID == 0)
-                                //{
-                                //    tempRequestViewModel.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(false);
-                                //    _context.Entry(tempRequestViewModel.Request.Product).State = EntityState.Added;
-                                //}
-                                //else
-                                //{
-                                //    _context.Entry(tempRequestViewModel.Request.Product).State = EntityState.Modified;
-                                //}
+                                if (tempRequestViewModel.Request.Product.ProductID == 0)
+                                {
+                                    tempRequestViewModel.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(false);                                
+                                }                        
                                 ModelStates.Add( new ModelAndState{ Model = tempRequestViewModel.Request, StateEnum = EntityState.Added });
 
-                                // _context.Entry(tempRequestViewModel.Request).State = EntityState.Added;
+                    
                                 await _requestsProc.UpdateModelsAsync(ModelStates);
 
                                 if (tempRequestViewModel.Comments != null)
