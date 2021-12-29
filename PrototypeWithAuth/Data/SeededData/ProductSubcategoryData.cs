@@ -13,715 +13,715 @@ namespace PrototypeWithAuth.Data.SeededData
             List<ProductSubcategory> list = new List<ProductSubcategory>();
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 101,
+                ID = 101,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "PCR",
+                Description = "PCR",
                 ImageURL = "/images/css/CategoryImages/consumables/pcr_consumables.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 102,
+                ID = 102,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "Cell Culture Plates",
+                Description = "Cell Culture Plates",
                 ImageURL = "/images/css/CategoryImages/consumables/culture_plates.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 103,
+                ID = 103,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "Petri Dish",
+                Description = "Petri Dish",
                 ImageURL = "/images/css/CategoryImages/consumables/petri_dish.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 104,
+                ID = 104,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "Tips",
+                Description = "Tips",
                 ImageURL = "/images/css/CategoryImages/consumables/tips2.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 105,
+                ID = 105,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "Pipets",
+                Description = "Pipets",
                 ImageURL = "/images/css/CategoryImages/consumables/pipettes.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 106,
+                ID = 106,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "Tubes",
+                Description = "Tubes",
                 ImageURL = "/images/css/CategoryImages/consumables/tubes.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 107,
+                ID = 107,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "Robot Consumables",
+                Description = "Robot Consumables",
                 ImageURL = "/images/css/CategoryImages/consumables/robot_consumables_tips.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 108,
+                ID = 108,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "DD-PCR Plastics",
+                Description = "DD-PCR Plastics",
                 ImageURL = "/images/css/CategoryImages/consumables/ddpcr_consumables.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 109,
+                ID = 109,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "Q-PCR Plastics",
+                Description = "Q-PCR Plastics",
                 ImageURL = "/images/css/CategoryImages/consumables/rtpcr_consumables.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 110,
+                ID = 110,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "FPLC Consumables",
+                Description = "FPLC Consumables",
                 ImageURL = "/images/css/CategoryImages/consumables/fplc_consumables.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 111,
+                ID = 111,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "TFF Consumables",
+                Description = "TFF Consumables",
                 ImageURL = "/images/css/CategoryImages/consumables/tff_consumables.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 112,
+                ID = 112,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "Column",
+                Description = "Column",
                 ImageURL = "/images/css/CategoryImages/consumables/column.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 113,
+                ID = 113,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "Filtration system",
+                Description = "Filtration system",
                 ImageURL = "/images/css/CategoryImages/consumables/filteration_system.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 114,
+                ID = 114,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "Flasks",
+                Description = "Flasks",
                 ImageURL = "/images/css/CategoryImages/consumables/flasks.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 115,
+                ID = 115,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "Bags",
+                Description = "Bags",
                 ImageURL = "/images/css/CategoryImages/consumables/bags.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 116,
+                ID = 116,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "Syringes",
+                Description = "Syringes",
                 ImageURL = "/images/css/CategoryImages/consumables/syringes.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 117,
+                ID = 117,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "Covaris Consumables",
+                Description = "Covaris Consumables",
                 ImageURL = "/images/css/CategoryImages/consumables/covaris_consumables.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 118,
+                ID = 118,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "Tapestation consumables",
+                Description = "Tapestation consumables",
                 ImageURL = "/images/css/CategoryImages/consumables/tapestation_consumables.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 119,
+                ID = 119,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "Sequencing",
+                Description = "Sequencing",
                 ImageURL = "/images/css/CategoryImages/consumables/sequencing.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 120,
+                ID = 120,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "General Consumables",
+                Description = "General Consumables",
                 ImageURL = "/images/css/CategoryImages/consumables/general.png" // update
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 201,
+                ID = 201,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "Chemical Powder",
+                Description = "Chemical Powder",
                 ImageURL = "/images/css/CategoryImages/reagents/chemical_powder.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 202,
+                ID = 202,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "Antibody",
+                Description = "Antibody",
                 ImageURL = "/images/css/CategoryImages/reagents/antibody.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 203,
+                ID = 203,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "Cell Media",
+                Description = "Cell Media",
                 ImageURL = "/images/css/CategoryImages/reagents/cell_media.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 204,
+                ID = 204,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "",
+                Description = "",
                 ImageURL = "/images/css/CategoryImages/reagents/chemical_solution2.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 205,
+                ID = 205,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "Kit",
+                Description = "Kit",
                 ImageURL = "/images/css/CategoryImages/reagents/kit.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 206,
+                ID = 206,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "PCR Reagents",
+                Description = "PCR Reagents",
                 ImageURL = "/images/css/CategoryImages/reagents/PCR_reagent.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 207,
+                ID = 207,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "Q-PCR Reagents",
+                Description = "Q-PCR Reagents",
                 ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent2.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 208,
+                ID = 208,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "Probes",
+                Description = "Probes",
                 ImageURL = "/images/css/CategoryImages/reagents/dna_probes2.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 209,
+                ID = 209,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "Primers and Oligos",
+                Description = "Primers and Oligos",
                 ImageURL = "/images/css/CategoryImages/reagents/primer.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 210,
+                ID = 210,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "Cell Media Supplements",
+                Description = "Cell Media Supplements",
                 ImageURL = "/images/css/CategoryImages/reagents/media_supplement.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 211,
+                ID = 211,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "Antibiotics",
+                Description = "Antibiotics",
                 ImageURL = "/images/css/CategoryImages/reagents/antibiotics.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 212,
+                ID = 212,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "Restriction Enzyme",
+                Description = "Restriction Enzyme",
                 ImageURL = "/images/css/CategoryImages/reagents/restriction_enzyme.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 213,
+                ID = 213,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "RNA Enzyme",
+                Description = "RNA Enzyme",
                 ImageURL = "/images/css/CategoryImages/reagents/rna_enzyme.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 214,
+                ID = 214,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "FPLC Reagent",
+                Description = "FPLC Reagent",
                 ImageURL = "/images/css/CategoryImages/reagents/fplc_reagent.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 215,
+                ID = 215,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "TFF Reagent",
+                Description = "TFF Reagent",
                 ImageURL = "/images/css/CategoryImages/reagents/TFF_reagent.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 216,
+                ID = 216,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "Nucleic Acid Quantitation (DNA/RNA qubit assay, Picogreen assay)",
+                Description = "Nucleic Acid Quantitation (DNA/RNA qubit assay, Picogreen assay)",
                 ImageURL = "/images/css/CategoryImages/reagents/nucleic_acid_quantitation.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 217,
+                ID = 217,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "General Reagents and Chemicals",
+                Description = "General Reagents and Chemicals",
                 ImageURL = "/images/css/CategoryImages/reagents/general_reagents.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 218,
+                ID = 218,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "DNA Enzymes",
+                Description = "DNA Enzymes",
                 ImageURL = "/images/css/CategoryImages/reagents/dna_enzyme.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 219,
+                ID = 219,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "Gas Refilling",
+                Description = "Gas Refilling",
                 ImageURL = "/images/css/CategoryImages/reagents/gas_refilling2.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 220,
+                ID = 220,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "DD-PCR Reagents",
+                Description = "DD-PCR Reagents",
                 ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent3.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 301,
+                ID = 301,
                 ParentCategoryID = 3,
-                ProductSubcategoryDescription = "Cells",
+                Description = "Cells",
                 ImageURL = "/images/css/CategoryImages/biological/cell1.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 302,
+                ID = 302,
                 ParentCategoryID = 3,
-                ProductSubcategoryDescription = "Virus",
+                Description = "Virus",
                 ImageURL = "/images/css/CategoryImages/biological/virus.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 303,
+                ID = 303,
                 ParentCategoryID = 3,
-                ProductSubcategoryDescription = "Plasmid",
+                Description = "Plasmid",
                 ImageURL = "/images/css/CategoryImages/biological/plasmid2.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 304,
+                ID = 304,
                 ParentCategoryID = 3,
-                ProductSubcategoryDescription = "Bacterial Stock",
+                Description = "Bacterial Stock",
                 ImageURL = "/images/css/CategoryImages/biological/bacteria.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 305,
+                ID = 305,
                 ParentCategoryID = 3,
-                ProductSubcategoryDescription = "General Biological",
+                Description = "General Biological",
                 ImageURL = "/images/css/CategoryImages/biological/general.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 401,
+                ID = 401,
                 ParentCategoryID = 4,
-                ProductSubcategoryDescription = "Reusable",
+                Description = "Reusable",
                 ImageURL = "/images/css/CategoryImages/reusable/all_reusables.png"
 
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 501,
+                ID = 501,
                 ParentCategoryID = 5,
-                ProductSubcategoryDescription = "PPE (Personal Protective Equipment)",
+                Description = "PPE (Personal Protective Equipment)",
                 ImageURL = "/images/css/CategoryImages/safety/protective_wear.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 502,
+                ID = 502,
                 ParentCategoryID = 5,
-                ProductSubcategoryDescription = "Lab Safety",
+                Description = "Lab Safety",
                 ImageURL = "/images/css/CategoryImages/safety/safety.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 601,
+                ID = 601,
                 ParentCategoryID = 6,
-                ProductSubcategoryDescription = "General",
+                Description = "General",
                 ImageURL = "/images/css/CategoryImages/general/general.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 701,
+                ID = 701,
                 ParentCategoryID = 7,
-                ProductSubcategoryDescription = "EDTA Tubes",
+                Description = "EDTA Tubes",
                 ImageURL = "/images/css/CategoryImages/clinical/edta_tubes3.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 702,
+                ID = 702,
                 ParentCategoryID = 7,
-                ProductSubcategoryDescription = "Serum Tubes",
+                Description = "Serum Tubes",
                 ImageURL = "/images/css/CategoryImages/clinical/serum_tubes.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 703,
+                ID = 703,
                 ParentCategoryID = 7,
-                ProductSubcategoryDescription = "Sample Collection and Processing (Blood, Saliva Collection, Swabsticks, Sepmate, and Ficoll for PBMC, Extraction kits for DNA/RNA)",
+                Description = "Sample Collection and Processing (Blood, Saliva Collection, Swabsticks, Sepmate, and Ficoll for PBMC, Extraction kits for DNA/RNA)",
                 ImageURL = "/images/css/CategoryImages/clinical/sample_collection.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 801,
+                ID = 801,
                 ParentCategoryID = 8,
-                ProductSubcategoryDescription = "Communications",
+                Description = "Communications",
                 ImageURL = "/images/css/CategoryImages/it/communications.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 802,
+                ID = 802,
                 ParentCategoryID = 8,
-                ProductSubcategoryDescription = "Cybersecurity",
+                Description = "Cybersecurity",
                 ImageURL = "/images/css/CategoryImages/it/cybersecurity.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 803,
+                ID = 803,
                 ParentCategoryID = 8,
-                ProductSubcategoryDescription = "Hardware",
+                Description = "Hardware",
                 ImageURL = "/images/css/CategoryImages/it/hardware3.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 804,
+                ID = 804,
                 ParentCategoryID = 8,
-                ProductSubcategoryDescription = "General",
+                Description = "General",
                 ImageURL = "/images/css/CategoryImages/it/general.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 901,
+                ID = 901,
                 ParentCategoryID = 9,
-                ProductSubcategoryDescription = "Bookeeping",
+                Description = "Bookeeping",
                 ImageURL = "/images/css/CategoryImages/daytoday/taxes2.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 902,
+                ID = 902,
                 ParentCategoryID = 9,
-                ProductSubcategoryDescription = "Books",
+                Description = "Books",
                 ImageURL = "/images/css/CategoryImages/daytoday/books.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 903,
+                ID = 903,
                 ParentCategoryID = 9,
-                ProductSubcategoryDescription = "Branding",
+                Description = "Branding",
                 ImageURL = "/images/css/CategoryImages/daytoday/branding.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 904,
+                ID = 904,
                 ParentCategoryID = 9,
-                ProductSubcategoryDescription = "Company Events",
+                Description = "Company Events",
                 ImageURL = "/images/css/CategoryImages/daytoday/company_events.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 905,
+                ID = 905,
                 ParentCategoryID = 9,
-                ProductSubcategoryDescription = "Electricity",
+                Description = "Electricity",
                 ImageURL = "/images/css/CategoryImages/daytoday/electricity2.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 906,
+                ID = 906,
                 ParentCategoryID = 9,
-                ProductSubcategoryDescription = "Fees",
+                Description = "Fees",
                 ImageURL = "/images/css/CategoryImages/daytoday/fees.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 907,
+                ID = 907,
                 ParentCategoryID = 9,
-                ProductSubcategoryDescription = "Food",
+                Description = "Food",
                 ImageURL = "/images/css/CategoryImages/daytoday/food.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 908,
+                ID = 908,
                 ParentCategoryID = 9,
-                ProductSubcategoryDescription = "Furniture",
+                Description = "Furniture",
                 ImageURL = "/images/css/CategoryImages/daytoday/furniture2.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 909,
+                ID = 909,
                 ParentCategoryID = 9,
-                ProductSubcategoryDescription = "General Day To Day",
+                Description = "General Day To Day",
                 ImageURL = "/images/css/CategoryImages/daytoday/general.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 910,
+                ID = 910,
                 ParentCategoryID = 9,
-                ProductSubcategoryDescription = "Graphic",
+                Description = "Graphic",
                 ImageURL = "/images/css/CategoryImages/daytoday/graphics.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 911,
+                ID = 911,
                 ParentCategoryID = 9,
-                ProductSubcategoryDescription = "Insurance",
+                Description = "Insurance",
                 ImageURL = "/images/css/CategoryImages/daytoday/insurance.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 912,
+                ID = 912,
                 ParentCategoryID = 9,
-                ProductSubcategoryDescription = "Parking",
+                Description = "Parking",
                 ImageURL = "/images/css/CategoryImages/daytoday/parking2.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 913,
+                ID = 913,
                 ParentCategoryID = 9,
-                ProductSubcategoryDescription = "Renovation",
+                Description = "Renovation",
                 ImageURL = "/images/css/CategoryImages/daytoday/renovation.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 914,
+                ID = 914,
                 ParentCategoryID = 9,
-                ProductSubcategoryDescription = "Rent",
+                Description = "Rent",
                 ImageURL = "/images/css/CategoryImages/daytoday/rent2.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 915,
+                ID = 915,
                 ParentCategoryID = 9,
-                ProductSubcategoryDescription = "Shipment",
+                Description = "Shipment",
                 ImageURL = "/images/css/CategoryImages/daytoday/shippment.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1001,
+                ID = 1001,
                 ParentCategoryID = 10,
-                ProductSubcategoryDescription = "Conference",
+                Description = "Conference",
                 ImageURL = "/images/css/CategoryImages/travel/conference3.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1002,
+                ID = 1002,
                 ParentCategoryID = 10,
-                ProductSubcategoryDescription = "Flight Tickets",
+                Description = "Flight Tickets",
                 ImageURL = "/images/css/CategoryImages/travel/flight_tickets.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1003,
+                ID = 1003,
                 ParentCategoryID = 10,
-                ProductSubcategoryDescription = "Food",
+                Description = "Food",
                 ImageURL = "/images/css/CategoryImages/travel/food.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1004,
+                ID = 1004,
                 ParentCategoryID = 10,
-                ProductSubcategoryDescription = "Hotels",
+                Description = "Hotels",
                 ImageURL = "/images/css/CategoryImages/travel/hotels3.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1005,
+                ID = 1005,
                 ParentCategoryID = 10,
-                ProductSubcategoryDescription = "General Travel",
+                Description = "General Travel",
                 ImageURL = "/images/css/CategoryImages/travel/travel.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1006,
+                ID = 1006,
                 ParentCategoryID = 10,
-                ProductSubcategoryDescription = "General",
+                Description = "General",
                 ImageURL = "/images/css/CategoryImages/travel/general.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1101,
+                ID = 1101,
                 ParentCategoryID = 11,
-                ProductSubcategoryDescription = "Business Advice",
+                Description = "Business Advice",
                 ImageURL = "/images/css/CategoryImages/advice/business_advice.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1102,
+                ID = 1102,
                 ParentCategoryID = 11,
-                ProductSubcategoryDescription = "Clinical Regulations",
+                Description = "Clinical Regulations",
                 ImageURL = "/images/css/CategoryImages/advice/clinical_regulation2.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1103,
+                ID = 1103,
                 ParentCategoryID = 11,
-                ProductSubcategoryDescription = "General",
+                Description = "General",
                 ImageURL = "/images/css/CategoryImages/advice/general.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1104,
+                ID = 1104,
                 ParentCategoryID = 11,
-                ProductSubcategoryDescription = "Legal",
+                Description = "Legal",
                 ImageURL = "/images/css/CategoryImages/advice/legal.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1105,
+                ID = 1105,
                 ParentCategoryID = 11,
-                ProductSubcategoryDescription = "Scientific Advice",
+                Description = "Scientific Advice",
                 ImageURL = "/images/css/CategoryImages/advice/scientific_advice3.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1201,
+                ID = 1201,
                 ParentCategoryID = 12,
-                ProductSubcategoryDescription = "Regulations",
+                Description = "Regulations",
                 ImageURL = "/images/css/CategoryImages/regulations/regulations.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1202,
+                ID = 1202,
                 ParentCategoryID = 12,
-                ProductSubcategoryDescription = "Safety",
+                Description = "Safety",
                 ImageURL = "/images/css/CategoryImages/regulations/safety.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1203,
+                ID = 1203,
                 ParentCategoryID = 12,
-                ProductSubcategoryDescription = "General",
+                Description = "General",
                 ImageURL = "/images/css/CategoryImages/regulations/general.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1301,
+                ID = 1301,
                 ParentCategoryID = 13,
-                ProductSubcategoryDescription = "Taxes",
+                Description = "Taxes",
                 ImageURL = "/images/css/CategoryImages/government/taxes4.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1302,
+                ID = 1302,
                 ParentCategoryID = 13,
-                ProductSubcategoryDescription = "General",
+                Description = "General",
                 ImageURL = "/images/css/CategoryImages/government/general.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1401,
+                ID = 1401,
                 ParentCategoryID = 14,
-                ProductSubcategoryDescription = "Virus",
+                Description = "Virus",
                 ImageURL = "/images/css/CategoryImages/samples/virus.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1402,
+                ID = 1402,
                 ParentCategoryID = 14,
-                ProductSubcategoryDescription = "Plasmid",
+                Description = "Plasmid",
                 ImageURL = "/images/css/CategoryImages/samples/plasmid.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1403,
+                ID = 1403,
                 ParentCategoryID = 14,
-                ProductSubcategoryDescription = "Probes",
+                Description = "Probes",
                 ImageURL = "/images/css/CategoryImages/samples/dna_probes2.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1404,
+                ID = 1404,
                 ParentCategoryID = 14,
-                ProductSubcategoryDescription = "Cells",
+                Description = "Cells",
                 ImageURL = "/images/css/CategoryImages/samples/cell1.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1405,
+                ID = 1405,
                 ParentCategoryID = 14,
-                ProductSubcategoryDescription = "Bacteria with Plasmids",
+                Description = "Bacteria with Plasmids",
                 ImageURL = "/images/css/CategoryImages/samples/bacteria2.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1406,
+                ID = 1406,
                 ParentCategoryID = 14,
-                ProductSubcategoryDescription = "Blood",
+                Description = "Blood",
                 ImageURL = "/images/css/CategoryImages/samples/blood.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1407,
+                ID = 1407,
                 ParentCategoryID = 14,
-                ProductSubcategoryDescription = "Serum",
+                Description = "Serum",
                 ImageURL = "/images/css/CategoryImages/samples/serum.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1408,
+                ID = 1408,
                 ParentCategoryID = 14,
-                ProductSubcategoryDescription = "Buffer",
+                Description = "Buffer",
                 ImageURL = "/images/css/CategoryImages/samples/buffer2.png"
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1409,
+                ID = 1409,
                 ParentCategoryID = 14,
-                ProductSubcategoryDescription = "Media",
+                Description = "Media",
                 ImageURL = "/images/css/CategoryImages/samples/media2.png"
             });
 
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1501,
+                ID = 1501,
                 ParentCategoryID = 1,
-                ProductSubcategoryDescription = "Old Sub category",
+                Description = "Old Sub category",
                 ImageURL = "/images/css/CategoryImages/consumables/general.png",
                 IsOldSubCategory = true
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1502,
+                ID = 1502,
                 ParentCategoryID = 2,
-                ProductSubcategoryDescription = "Old Sub category",
+                Description = "Old Sub category",
                 ImageURL = "/images/css/CategoryImages/reagents/general_reagents.png",
                 IsOldSubCategory = true
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1503,
+                ID = 1503,
                 ParentCategoryID = 3,
-                ProductSubcategoryDescription = "Old Sub category",
+                Description = "Old Sub category",
                 ImageURL = "/images/css/CategoryImages/biological/general.png",
                 IsOldSubCategory = true
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1504,
+                ID = 1504,
                 ParentCategoryID = 4,
-                ProductSubcategoryDescription = "Old Sub category",
+                Description = "Old Sub category",
                 ImageURL = "/images/css/CategoryImages/reusable/all_reusables.png",
                 IsOldSubCategory = true
             });
             list.Add(new ProductSubcategory
             {
-                ProductSubcategoryID = 1505,
+                ID = 1505,
                 ParentCategoryID = 5,
-                ProductSubcategoryDescription = "Old Sub category",
+                Description = "Old Sub category",
                 ImageURL = "/images/css/CategoryImages/safety/safety.png",
                 IsOldSubCategory = true
             });

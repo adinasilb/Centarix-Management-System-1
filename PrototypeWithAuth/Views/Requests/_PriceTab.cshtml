@@ -5,7 +5,7 @@
 @using PrototypeWithAuth.AppData
 
 @{
-    var Category = Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescription;
+    var Category = Model.Requests[0].Product.ProductSubcategory.ParentCategory.Description;
     var modalType = Model.ModalType;
     var markReadOnlyClass = "";
     var disabledDollarProperty = "disabled";

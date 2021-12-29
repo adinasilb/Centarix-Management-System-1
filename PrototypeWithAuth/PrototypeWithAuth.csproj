@@ -521,6 +521,24 @@
     <Compile Remove="Data\Migrations\20211123085459_RenameRequestIDToObjectID.Designer.cs" />
     <Compile Remove="Data\Migrations\20211123094009_RequestCommentInheritsBase.cs" />
     <Compile Remove="Data\Migrations\20211123094009_RequestCommentInheritsBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229080541_addedCategoryBase.cs" />
+    <Compile Remove="Data\Migrations\20211229080541_addedCategoryBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229081223_addedCategoryBase.cs" />
+    <Compile Remove="Data\Migrations\20211229081223_addedCategoryBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229082742_RenamePCPSPKToID.cs" />
+    <Compile Remove="Data\Migrations\20211229082742_RenamePCPSPKToID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229084123_RenamePCPSPKToID.cs" />
+    <Compile Remove="Data\Migrations\20211229084123_RenamePCPSPKToID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229092511_migrateCategories1.cs" />
+    <Compile Remove="Data\Migrations\20211229092511_migrateCategories1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229093643_extendedCategoryBase.cs" />
+    <Compile Remove="Data\Migrations\20211229093643_extendedCategoryBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229094231_extendedCategoryBase.cs" />
+    <Compile Remove="Data\Migrations\20211229094231_extendedCategoryBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229100342_updateFKFluentAPIsResourceCategory.cs" />
+    <Compile Remove="Data\Migrations\20211229100342_updateFKFluentAPIsResourceCategory.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229115306_updateFKFluentAPIsResourceCategory.cs" />
+    <Compile Remove="Data\Migrations\20211229115306_updateFKFluentAPIsResourceCategory.Designer.cs" />
   </ItemGroup>
 
 

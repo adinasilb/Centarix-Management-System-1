@@ -40,7 +40,7 @@
                 link = "ItemTableEquipmentType";
             }
                         <div class="type-div">
-                            <a href="@Url.ActionLink("ItemTableType", "Requests", new { PageType = PageType, SectionType = SectionType, SidebarType = AppUtility.SidebarEnum.Type, SidebarFilterID = Model.ElementAt(i).ProductSubcategoryID + "" , 
+                            <a href="@Url.ActionLink("ItemTableType", "Requests", new { PageType = PageType, SectionType = SectionType, SidebarType = AppUtility.SidebarEnum.Type, SidebarFilterID = Model.ElementAt(i).ID + "" , 
                                 RequestStatusID = Model.ElementAt(i).ParentCategory.IsProprietary ? 7 : 3} )" class="text text-dark">
                                 <fieldset class=" type-fieldset">
                                     @if (Model.ElementAt(i).ImageURL != null)
@@ -52,7 +52,7 @@
 
                                         <img class=" type-img" src="~/images/css/CategoryImages/placeholder.png" alt="Type Bottle" />
                                     }
-                                    <label class="type-label d-block text-truncate p-1"> @Model.ElementAt(i).ProductSubcategoryDescription</label>
+                                    <label class="type-label d-block text-truncate p-1"> @Model.ElementAt(i).Description</label>
                                 </fieldset>
                             </a>
                         </div>
