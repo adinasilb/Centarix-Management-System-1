@@ -758,8 +758,6 @@ namespace PrototypeWithAuth.Controllers
                         new ModelAndState(){ Model = newRequest.Product, StateEnum = EntityState.Modified }
                     };
                     await _requestsProc.UpdateModelsAsync(ModelStates);
-                    //_context.Entry(request).State = EntityState.Added;
-                    //_context.Entry(request.Product).State = EntityState.Modified;
                     await transaction.CommitAsync();
                 }
                 catch (DbUpdateException ex)
@@ -795,7 +793,6 @@ namespace PrototypeWithAuth.Controllers
                         new ModelAndState(){Model = newRequest, StateEnum = EntityState.Added},
                     };
                     await _requestsProc.UpdateModelsAsync(ModelStates);
-                    //_context.Add(newRequest);
 
                     if (receivedModalVisualViewModel.LocationInstancePlaces != null)
                     {
