@@ -864,7 +864,7 @@ namespace PrototypeWithAuth.Controllers
                 StateEnum = tempRequest.Request.ProductID == 0 ? EntityState.Added : EntityState.Modified
             });
             var parentQuoteState = new ModelAndState() { Model= tempRequest.Request.ParentQuote };
-            if ((tempRequest.Request.ParentQuoteID == 0 || tempRequest.Request.ParentQuoteID == null) && (tempRequest.Request.ParentQuote != null && (tempRequest.Request.ParentQuote?.ParentQuoteID==0 || tempRequest.Request.ParentQuote?.ParentQuoteID==null)))
+            if ((tempRequest.Request.ParentQuoteID == 0 || tempRequest.Request.ParentQuoteID == null) && (tempRequest.Request.ParentQuote != null && (tempRequest.Request.ParentQuote?.ParentQuoteID==0 ))
             {
                 parentQuoteState.StateEnum = EntityState.Added;
             }
@@ -4281,15 +4281,15 @@ namespace PrototypeWithAuth.Controllers
                                 ModelStates.Add(new ModelAndState
                                 {
                                     Model = tempRequestViewModel.Request.ParentQuote,
-                                    StateEnum = tempRequestViewModel.Request.ParentQuote.ParentQuoteID == 0 ? EntityState.Added : EntityState.Modified
+                                    StateEnum = tempRequestViewModel.Request.ParentQuoteID ==null ? EntityState.Added : EntityState.Modified
                                 });
                              
                                 ModelStates.Add(new ModelAndState
                                 {
                                     Model = tempRequestViewModel.Request.Product,
-                                    StateEnum = tempRequestViewModel.Request.Product.ProductID == 0 ? EntityState.Added : EntityState.Modified
+                                    StateEnum = tempRequestViewModel.Request.ProductID == 0 ? EntityState.Added : EntityState.Modified
                                 });
-                                if (tempRequestViewModel.Request.Product.ProductID == 0)
+                                if (tempRequestViewModel.Request.ProductID == 0)
                                 {
                                     tempRequestViewModel.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(false);                                
                                 }                        
