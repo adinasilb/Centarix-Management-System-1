@@ -13,87 +13,87 @@ namespace PrototypeWithAuth.Data.SeededData
             List<ParentCategory> list = new List<ParentCategory>();
             list.Add(new ParentCategory
             {
-                ParentCategoryID = 1,
-                ParentCategoryDescription = "Consumables",
+                ID = 1,
+                Description = "Consumables",
                 CategoryTypeID = 1
             });
             list.Add(new ParentCategory
             {
-                ParentCategoryID = 2,
-                ParentCategoryDescription = "Reagents And Chemicals",
+                ID = 2,
+                Description = "Reagents And Chemicals",
                 CategoryTypeID = 1
             });
             list.Add(new ParentCategory
             {
-                ParentCategoryID = 3,
-                ParentCategoryDescription = "Biological",
+                ID = 3,
+                Description = "Biological",
                 CategoryTypeID = 1
             });
             list.Add(new ParentCategory
             {
-                ParentCategoryID = 4,
-                ParentCategoryDescription = "Reusable",
+                ID = 4,
+                Description = "Reusable",
                 CategoryTypeID = 1
             });
             list.Add(new ParentCategory
             {
-                ParentCategoryID = 5,
-                ParentCategoryDescription = "Safety",
+                ID = 5,
+                Description = "Safety",
                 CategoryTypeID = 1
             });
             list.Add(new ParentCategory
             {
-                ParentCategoryID = 6,
-                ParentCategoryDescription = "General",
+                ID = 6,
+                Description = "General",
                 CategoryTypeID = 1
             });
             list.Add(new ParentCategory
             {
-                ParentCategoryID = 7,
-                ParentCategoryDescription = "Clinical",
+                ID = 7,
+                Description = "Clinical",
                 CategoryTypeID = 1
             });
             list.Add(new ParentCategory
             {
-                ParentCategoryID = 14,
-                ParentCategoryDescription = "Samples",
+                ID = 14,
+                Description = "Samples",
                 CategoryTypeID = 1,
                 IsProprietary = true
             });
             list.Add(new ParentCategory
             {
-                ParentCategoryID = 8,
-                ParentCategoryDescription = "IT",
+                ID = 8,
+                Description = "IT",
                 CategoryTypeID = 2
             });
             list.Add(new ParentCategory
             {
-                ParentCategoryID = 9,
-                ParentCategoryDescription = "Day To Day",
+                ID = 9,
+                Description = "Day To Day",
                 CategoryTypeID = 2
             });
             list.Add(new ParentCategory
             {
-                ParentCategoryID = 10,
-                ParentCategoryDescription = "Travel",
+                ID = 10,
+                Description = "Travel",
                 CategoryTypeID = 2
             });
             list.Add(new ParentCategory
             {
-                ParentCategoryID = 11,
-                ParentCategoryDescription = "Advice",
+                ID = 11,
+                Description = "Advice",
                 CategoryTypeID = 2
             });
             list.Add(new ParentCategory
             {
-                ParentCategoryID = 12,
-                ParentCategoryDescription = "Regulations",
+                ID = 12,
+                Description = "Regulations",
                 CategoryTypeID = 2
             });
             list.Add(new ParentCategory
             {
-                ParentCategoryID = 13,
-                ParentCategoryDescription = "Government",
+                ID = 13,
+                Description = "Government",
                 CategoryTypeID = 2
             });
             return list;

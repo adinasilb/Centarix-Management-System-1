@@ -41,7 +41,7 @@ namespace PrototypeWithAuth.AppData
         {
             None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary, RequestFavorite,
             AccountingNotifications, AccountingGeneral, AccountingExpenses, AccountingSuppliers, AccountingPayments,
-            LabManagementSuppliers, LabManagementLocations, LabManagementEquipment, LabManagementQuotes, LabManagementSearch,
+            LabManagementSuppliers, LabManagementLocations, LabManagementEquipment, LabManagementQuotes, LabManagementSearch, LabManagementSettings,
             TimeKeeperReport, TimekeeperSummary,
             UsersUser, UsersWorkers,
             OperationsRequest, OperationsInventory, OperationsSearch,
@@ -78,7 +78,7 @@ namespace PrototypeWithAuth.AppData
             CurrentProtocols, Projects, SharedProjects, Calendar, MyProtocols, ResearchProtocol, KitProtocol,
             SOPProtocol, BufferCreating, RoboticProtocol, MaintenanceProtocol, DailyReports, WeeklyReports, MonthlyReports,
             Library, Personal, SharedWithMe, Active, Done, LastProtocol, SharedRequests,
-            HumanTrials
+            HumanTrials, Inventory
         }
         public enum IndexTableTypes
         {
@@ -549,8 +549,8 @@ namespace PrototypeWithAuth.AppData
             {
 
                 List<StringWithBool> categoryColumn = new List<StringWithBool>();
-                var category = p.ProductSubcategory.ParentCategory.ParentCategoryDescription;
-                var subcategory = p.ProductSubcategory.ProductSubcategoryDescription;
+                var category = p.ProductSubcategory.ParentCategory.Description;
+                var subcategory = p.ProductSubcategory.Description;
                 if (categorySelected)
                 {
                     categoryColumn.Add(new StringWithBool { String = category, Bool = false });

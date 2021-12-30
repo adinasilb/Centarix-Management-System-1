@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211229085219_RenameFKProductSubcategoryParentCategory")]
+    partial class RenameFKProductSubcategoryParentCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5550,14 +5552,10 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ResourceCategory", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("ResourceCategoryID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
@@ -5571,154 +5569,157 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsResourceType")
                         .HasColumnType("bit");
 
-                    b.HasKey("ID");
+                    b.Property<string>("ResourceCategoryDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ResourceCategoryID");
 
                     b.ToTable("ResourceCategories");
 
                     b.HasData(
                         new
                         {
-                            ID = 1,
-                            Description = "Rejuvenation",
+                            ResourceCategoryID = 1,
                             ImageUrl = "rejuvenation_image.svg",
                             IsMain = true,
                             IsReportsCategory = true,
-                            IsResourceType = false
+                            IsResourceType = false,
+                            ResourceCategoryDescription = "Rejuvenation"
                         },
                         new
                         {
-                            ID = 2,
-                            Description = "Biomarkers",
+                            ResourceCategoryID = 2,
                             ImageUrl = "biomarkers_image.svg",
                             IsMain = true,
                             IsReportsCategory = true,
-                            IsResourceType = false
+                            IsResourceType = false,
+                            ResourceCategoryDescription = "Biomarkers"
                         },
                         new
                         {
-                            ID = 3,
-                            Description = "Delivery Systems",
+                            ResourceCategoryID = 3,
                             ImageUrl = "delivery_systems_image.svg",
                             IsMain = true,
                             IsReportsCategory = true,
-                            IsResourceType = false
+                            IsResourceType = false,
+                            ResourceCategoryDescription = "Delivery Systems"
                         },
                         new
                         {
-                            ID = 4,
-                            Description = "Clinical Trials",
+                            ResourceCategoryID = 4,
                             ImageUrl = "clinical_trials_image.svg",
                             IsMain = true,
                             IsReportsCategory = false,
-                            IsResourceType = false
+                            IsResourceType = false,
+                            ResourceCategoryDescription = "Clinical Trials"
                         },
                         new
                         {
-                            ID = 5,
-                            Description = "AAV",
+                            ResourceCategoryID = 5,
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false
+                            IsResourceType = false,
+                            ResourceCategoryDescription = "AAV"
                         },
                         new
                         {
-                            ID = 6,
-                            Description = "Telomere Rejuvenation",
+                            ResourceCategoryID = 6,
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false
+                            IsResourceType = false,
+                            ResourceCategoryDescription = "Telomere Rejuvenation"
                         },
                         new
                         {
-                            ID = 7,
-                            Description = "Telomere Measurement",
+                            ResourceCategoryID = 7,
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false
+                            IsResourceType = false,
+                            ResourceCategoryDescription = "Telomere Measurement"
                         },
                         new
                         {
-                            ID = 8,
-                            Description = "Methylation Biomarker",
+                            ResourceCategoryID = 8,
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false
+                            IsResourceType = false,
+                            ResourceCategoryDescription = "Methylation Biomarker"
                         },
                         new
                         {
-                            ID = 9,
-                            Description = "Transcriptome",
+                            ResourceCategoryID = 9,
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false
+                            IsResourceType = false,
+                            ResourceCategoryDescription = "Transcriptome"
                         },
                         new
                         {
-                            ID = 10,
-                            Description = "Serum Rejuvenation",
+                            ResourceCategoryID = 10,
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false
+                            IsResourceType = false,
+                            ResourceCategoryDescription = "Serum Rejuvenation"
                         },
                         new
                         {
-                            ID = 11,
-                            Description = "Reprogramming",
+                            ResourceCategoryID = 11,
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false
+                            IsResourceType = false,
+                            ResourceCategoryDescription = "Reprogramming"
                         },
                         new
                         {
-                            ID = 12,
-                            Description = "Methylation Rejuvenation",
+                            ResourceCategoryID = 12,
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false
+                            IsResourceType = false,
+                            ResourceCategoryDescription = "Methylation Rejuvenation"
                         },
                         new
                         {
-                            ID = 13,
-                            Description = "New Methods",
+                            ResourceCategoryID = 13,
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false
+                            IsResourceType = false,
+                            ResourceCategoryDescription = "New Methods"
                         },
                         new
                         {
-                            ID = 14,
-                            Description = "Software",
+                            ResourceCategoryID = 14,
                             ImageUrl = "software_image.svg",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = true
+                            IsResourceType = true,
+                            ResourceCategoryDescription = "Software"
                         },
                         new
                         {
-                            ID = 15,
-                            Description = "Learning",
+                            ResourceCategoryID = 15,
                             ImageUrl = "learning_image.svg",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = true
+                            IsResourceType = true,
+                            ResourceCategoryDescription = "Learning"
                         },
                         new
                         {
-                            ID = 16,
-                            Description = "Companies",
+                            ResourceCategoryID = 16,
                             ImageUrl = "companies_image.svg",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = true
+                            IsResourceType = true,
+                            ResourceCategoryDescription = "Companies"
                         },
                         new
                         {
-                            ID = 17,
-                            Description = "News",
+                            ResourceCategoryID = 17,
                             ImageUrl = "news_image.svg",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = true
+                            IsResourceType = true,
+                            ResourceCategoryDescription = "News"
                         });
                 });
 
@@ -8071,9 +8072,8 @@ namespace PrototypeWithAuth.Data.Migrations
             modelBuilder.Entity("PrototypeWithAuth.Models.Report", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.ResourceCategory", "ReportCategory")
-                        .WithMany("Reports")
+                        .WithMany()
                         .HasForeignKey("ReportCategoryID")
-                        .HasConstraintName("FK_Reports_ResourceCategories_ReportCategoryID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -8250,7 +8250,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.ResourceCategory", "ResourceCategory")
                         .WithMany("ResourceResourceCategories")
                         .HasForeignKey("ResourceCategoryID")
-                        .HasConstraintName("FK_ResourceResourceCategory_ResourceCategories_ResourceCategoryID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

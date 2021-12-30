@@ -33,17 +33,17 @@
                 {
                     <div class="type-div">
                         @*<a href='@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID = maincategory.ResourceCategoryID, IsPersonal = @sectionType })' class="text text-dark">*@
-                        <a class="text text-dark open-resources-list" main-category-id="@maincategory.ResourceCategoryID">
+                        <a class="text text-dark open-resources-list" main-category-id="@maincategory.ID">
                             <fieldset class=" main-type-fieldset">
                                 @{
                                     var imageUrl = "/images/protocol_images/" + maincategory.ImageUrl;
-                                    var altImage = maincategory.ResourceCategoryDescription;
+                                    var altImage = maincategory.Description;
                                 }
 
                                 @*<img class=" main-type-img" src="@imageUrl" alt="@altImage" />*@
                                 <img class=" main-type-img" src="@imageUrl" alt="@altImage" />
                                 @*  }*@
-                                <label class="main-type-label top-menu protocols-filter text-center"> @maincategory.ResourceCategoryDescription</label>
+                                <label class="main-type-label top-menu protocols-filter text-center"> @maincategory.Description</label>
                             </fieldset>
                         </a>
                     </div>
@@ -51,10 +51,10 @@
                 @foreach (var category in Model.ResourceCategories.Where(rc => !rc.IsMain && !rc.IsResourceType))
                 {
                     <div class="type-div">
-                        <a class="text text-dark open-resources-list" main-category-id="@category.ResourceCategoryID">
+                        <a class="text text-dark open-resources-list" main-category-id="@category.ID">
                             <fieldset class="small-type-fieldset">
                                 <label class="small-type-label top-menu protocols-filter text-center">
-                                    @category.ResourceCategoryDescription
+                                    @category.Description
                                 </label>
                             </fieldset>
                         </a>
@@ -70,17 +70,17 @@
                 @foreach (var maincategory in Model.ResourceCategories.Where(rc => rc.IsResourceType))
                 {
                     <div class="type-div">
-                        <a href='@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID = maincategory.ResourceCategoryID })' class="text text-dark">
+                        <a href='@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID = maincategory.ID })' class="text text-dark">
                             <fieldset class=" main-type-fieldset">
                                 @{
                                     var imageUrl = "/images/protocol_images/" + maincategory.ImageUrl;
-                                    var altImage = maincategory.ResourceCategoryDescription;
+                                    var altImage = maincategory.Description;
                                 }
 
                                 @*<img class=" main-type-img" src="@imageUrl" alt="@altImage" />*@
                                 <img class=" main-type-img" src="@imageUrl" alt="@altImage" />
                                 @*  }*@
-                                <label class="main-type-label top-menu protocols-filter text-center"> @maincategory.ResourceCategoryDescription</label>
+                                <label class="main-type-label top-menu protocols-filter text-center"> @maincategory.Description</label>
                             </fieldset>
                         </a>
                     </div>
