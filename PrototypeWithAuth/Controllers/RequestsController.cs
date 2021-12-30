@@ -664,7 +664,6 @@ namespace PrototypeWithAuth.Controllers
                             trvm = await SaveOperationsItem(newRequest, requestNum, requestItemViewModel.TempRequestListViewModel);
                             break;
                     }
-
                 }
                 catch (DbUpdateException ex)
                 {
