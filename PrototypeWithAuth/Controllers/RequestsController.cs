@@ -860,10 +860,10 @@ namespace PrototypeWithAuth.Controllers
             ModelStates.Add(new ModelAndState
             {
                 Model = tempRequest.Request.Product,
-                StateEnum = tempRequest.Request.Product.ProductID == 0 ? EntityState.Added : EntityState.Modified
+                StateEnum = tempRequest.Request.ProductID == 0 ? EntityState.Added : EntityState.Modified
             });
             var parentQuoteState = new ModelAndState() { Model= tempRequest.Request.ParentQuote };
-            if ((tempRequest.Request.ParentQuoteID == 0 || tempRequest.Request.ParentQuoteID == null) && (tempRequest.Request.ParentQuote != null && tempRequest.Request.ParentQuote?.ParentQuoteID==0))
+            if ((tempRequest.Request.ParentQuoteID == 0 || tempRequest.Request.ParentQuoteID == null) && (tempRequest.Request.ParentQuote != null && (tempRequest.Request.ParentQuote?.ParentQuoteID==0 || tempRequest.Request.ParentQuote?.ParentQuoteID==null)))
             {
                 parentQuoteState.StateEnum = EntityState.Added;
             }
