@@ -68,9 +68,11 @@ $(function () {
 
             $(sublistSelector).append(firstitem1);
 
+            console.log(data);
             $.each(data, function (i, subCategory) {
-                console.log(subCategory.Description)
-                var newitem1 = '<option value="' + subCategory.ID + '">' + subCategory.Description + '</option>';
+                console.log(subCategory.description)
+                var newitem1 = '<option value="' + subCategory.id + '">' + subCategory.description + '</option>';
+                console.log("newitem1: " + newitem1);
                 $(sublistSelector).append(newitem1);
             });
             $(sublistSelector).materialSelect();
