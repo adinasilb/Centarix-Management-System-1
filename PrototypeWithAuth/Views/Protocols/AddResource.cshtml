@@ -101,12 +101,12 @@
                     @foreach (var mainCategory in Model.ResourceCategories.Where(rc => rc.IsMain))
                     {
                         counter++;
-                        var hiddenElementClass = hec + mainCategory.ResourceCategoryID;
+                        var hiddenElementClass = hec + mainCategory.ID;
                         <div class="col-3">
-                            <span class="resources-tags-big light-gray-background-color add-padding w-100" id="@mainCategory.ResourceCategoryID">
-                                @mainCategory.ResourceCategoryDescription
+                            <span class="resources-tags-big light-gray-background-color add-padding w-100" id="@mainCategory.ID">
+                                @mainCategory.Description
                             </span>
-                            <input type="hidden" asp-for="ResourceCategoriesToAdd[counter].ResourceCategoryID" value="@mainCategory.ResourceCategoryID" />
+                            <input type="hidden" asp-for="ResourceCategoriesToAdd[counter].ResourceCategoryID" value="@mainCategory.ID" />
                             <input type="hidden" asp-for="ResourceCategoriesToAdd[counter].Added" class="@hiddenElementClass" value="false" />
                         </div>
                     }
@@ -116,11 +116,11 @@
                         @foreach (var category in Model.ResourceCategories.Where(rc => !rc.IsMain))
                         {
                             counter++;
-                            var hiddenElementClass = hec + category.ResourceCategoryID;
-                            <span class="resources-tags-big light-gray-background-color mx-2 my-1" id="@category.ResourceCategoryID">
-                                @category.ResourceCategoryDescription
+                            var hiddenElementClass = hec + category.ID;
+                            <span class="resources-tags-big light-gray-background-color mx-2 my-1" id="@category.ID">
+                                @category.Description
                             </span>
-                            <input type="hidden" asp-for="ResourceCategoriesToAdd[counter].ResourceCategoryID" class="resourceCategoryIDHidden" value="@category.ResourceCategoryID" />
+                            <input type="hidden" asp-for="ResourceCategoriesToAdd[counter].ResourceCategoryID" class="resourceCategoryIDHidden" value="@category.ID" />
                             <input type="hidden" asp-for="ResourceCategoriesToAdd[counter].Added" class="@hiddenElementClass" value="false" />
                         }
                     </div>

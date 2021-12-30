@@ -270,11 +270,32 @@ namespace PrototypeWithAuth.Data
                 .WithMany(au => au.ShareResourcesReceived)
                 .HasForeignKey(sr => sr.ToApplicationUserID);
 
+            //naming the constraints so they won't be droppped and readded
+
             // configures one-to-many relationship between Inventory and InventorySubcategories
             modelBuilder.Entity<ProductSubcategory>()
             .HasOne<ParentCategory>(ps => ps.ParentCategory)
             .WithMany(pc => pc.ProductSubcategories)
-            .HasForeignKey(ps => ps.ParentCategoryID);
+            .HasForeignKey(ps => ps.ParentCategoryID)
+            .HasConstraintName("FK_ProductSubcategories_ParentCategory");
+
+            modelBuilder.Entity<Product>()
+                .HasOne<ProductSubcategory>(p => p.ProductSubcategory)
+                .WithMany(ps => ps.Products)
+                .HasForeignKey(p => p.ProductSubcategoryID)
+                .HasConstraintName("FK_Products_ProductSubcategory");
+
+            modelBuilder.Entity<ResourceResourceCategory>()
+                .HasOne<ResourceCategory>(rrc => rrc.ResourceCategory)
+                .WithMany(rc => rc.ResourceResourceCategories)
+                .HasForeignKey(rrc => rrc.ResourceCategoryID)
+                .HasConstraintName("FK_ResourceResourceCategory_ResourceCategories_ResourceCategoryID");
+
+            modelBuilder.Entity<Report>()
+                .HasOne<ResourceCategory>(r => r.ReportCategory)
+                .WithMany(rc => rc.Reports)
+                .HasForeignKey(r => r.ReportCategoryID)
+                .HasConstraintName("FK_Reports_ResourceCategories_ReportCategoryID");
 
             modelBuilder.Entity<SubProject>()
             .HasOne<Project>(sp => sp.Project)

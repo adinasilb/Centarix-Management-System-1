@@ -565,7 +565,7 @@ var requestsByProduct = _requestsProc.ReadWithIgnoreQueryFilters( new List<Expre
 
             if (productSubCategoryID !=0)
             {
-                request.Product.ProductSubcategory = await _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == productSubCategoryID).Include(ps => ps.ParentCategory).FirstOrDefaultAsync();
+                request.Product.ProductSubcategory = await _context.ProductSubcategories.Where(ps => ps.ID == productSubCategoryID).Include(ps => ps.ParentCategory).FirstOrDefaultAsync();
                 request.Product.ProductSubcategoryID = productSubCategoryID;
             }
 
@@ -856,11 +856,11 @@ protected void FillDocumentsInfo(RequestItemViewModel requestItemViewModel, Prod
     if (productSubcategory.ParentCategory.IsProprietary)
     {
         GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, requestParentFolderName, requestFolder, requestId);
-        if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
+        if (productSubcategory.Description == "Blood" || productSubcategory.Description == "Serum")
         {
             GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.S, requestParentFolderName, requestFolder, requestId);
         }
-        else if (new List<string>() { "Virus", "Plasmid", "Bacteria with Plasmids" }.Contains(productSubcategory.ProductSubcategoryDescription))
+        else if (new List<string>() { "Virus", "Plasmid", "Bacteria with Plasmids" }.Contains(productSubcategory.Description))
         {
             GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Map, requestParentFolderName, requestFolder, requestId);
         }
@@ -999,7 +999,7 @@ protected async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestInde
             wheres.Add(r => r.Product.VendorID == sideBarID);
             break;
         case AppUtility.SidebarEnum.Type:
-            sidebarFilterDescription = await _productSubcategoriesProc.ReadOne( new List<Expression<Func<ProductSubcategory, bool>>> { p => p.ProductSubcategoryID == sideBarID }).Select(p => p.ProductSubcategoryDescription).FirstOrDefaultAsync();
+            sidebarFilterDescription = await _productSubcategoriesProc.ReadOne( new List<Expression<Func<ProductSubcategory, bool>>> { p => p.ID == sideBarID }).Select(p => p.Description).FirstOrDefaultAsync();
             wheres.Add(r => r.Product.ProductSubcategoryID == sideBarID);
             break;
         case AppUtility.SidebarEnum.Owner:
@@ -1129,7 +1129,7 @@ protected static void ApplySearchToRequestList(RequestsSearchViewModel requestsS
     {
         wheres.Add(r =>
             (requestsSearchViewModel.ParentCategoryID == null || r.Product.ProductSubcategory.ParentCategoryID == requestsSearchViewModel.ParentCategoryID)
-            && (requestsSearchViewModel.ProductSubcategoryID == null || r.Product.ProductSubcategory.ProductSubcategoryID == requestsSearchViewModel.ProductSubcategoryID)
+            && (requestsSearchViewModel.ProductSubcategoryID == null || r.Product.ProductSubcategory.ID == requestsSearchViewModel.ProductSubcategoryID)
             && (requestsSearchViewModel.VendorID == null || r.Product.VendorID == requestsSearchViewModel.VendorID)
             && (String.IsNullOrEmpty(requestsSearchViewModel.ItemName) || r.Product.ProductName.ToLower().Contains(requestsSearchViewModel.ItemName.ToLower()))
             && (String.IsNullOrEmpty(requestsSearchViewModel.ProductHebrewName) || r.Product.ProductHebrewName.ToLower().Contains(requestsSearchViewModel.ProductHebrewName.ToLower()))
@@ -1391,14 +1391,14 @@ protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFi
         {
             Owners = _employeesProc.Read( new List<Expression<Func<Employee, bool>>> { o => !selectedFilters.SelectedOwnersIDs.Contains(o.Id) }).ToList(),
             Locations = _locationTypesProc.Read( new List<Expression<Func<LocationType, bool>>> { l => l.Depth == 0, l => !selectedFilters.SelectedLocationsIDs.Contains(l.LocationTypeID) }).ToList(),
-            Categories = _parentCategoriesProc.Read( new List<Expression<Func<ParentCategory, bool>>> { c => c.CategoryTypeID == categoryType && c.IsProprietary == isProprietary, c => !selectedFilters.SelectedCategoriesIDs.Contains(c.ParentCategoryID) }).ToList(),
-            Subcategories = _productSubcategoriesProc.Read( new List<Expression<Func<ProductSubcategory, bool>>> { sc => sc.ParentCategory.CategoryTypeID == categoryType && sc.ParentCategory.IsProprietary == isProprietary, v => !selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProductSubcategoryID) }).Distinct().ToList(),
+            Categories = _parentCategoriesProc.Read( new List<Expression<Func<ParentCategory, bool>>> { c => c.CategoryTypeID == categoryType && c.IsProprietary == isProprietary, c => !selectedFilters.SelectedCategoriesIDs.Contains(c.ID) }).ToList(),
+            Subcategories = _productSubcategoriesProc.Read( new List<Expression<Func<ProductSubcategory, bool>>> { sc => sc.ParentCategory.CategoryTypeID == categoryType && sc.ParentCategory.IsProprietary == isProprietary, v => !selectedFilters.SelectedSubcategoriesIDs.Contains(v.ID) }).Distinct().ToList(),
             Vendors = _vendorsProc.Read( new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).Contains(categoryType), v => !selectedFilters.SelectedVendorsIDs.Contains(v.VendorID) }).ToList(),
             SelectedVendors = _vendorsProc.Read( new List<Expression<Func<Vendor, bool>>> { v => selectedFilters.SelectedVendorsIDs.Contains(v.VendorID) }).ToList(),
             SelectedOwners = _employeesProc.Read( new List<Expression<Func<Employee, bool>>> { o => selectedFilters.SelectedOwnersIDs.Contains(o.Id) }).ToList(),
             SelectedLocations = _locationTypesProc.Read( new List<Expression<Func<LocationType, bool>>> { l => l.Depth == 0, l => selectedFilters.SelectedLocationsIDs.Contains(l.LocationTypeID) }).ToList(),
-            SelectedCategories = _parentCategoriesProc.Read( new List<Expression<Func<ParentCategory, bool>>> { c => selectedFilters.SelectedCategoriesIDs.Contains(c.ParentCategoryID) }).ToList(),
-            SelectedSubcategories = _productSubcategoriesProc.Read( new List<Expression<Func<ProductSubcategory, bool>>> { v => selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProductSubcategoryID) }).Distinct().ToList(),
+            SelectedCategories = _parentCategoriesProc.Read( new List<Expression<Func<ParentCategory, bool>>> { c => selectedFilters.SelectedCategoriesIDs.Contains(c.ID) }).ToList(),
+            SelectedSubcategories = _productSubcategoriesProc.Read( new List<Expression<Func<ProductSubcategory, bool>>> { v => selectedFilters.SelectedSubcategoriesIDs.Contains(v.ID) }).Distinct().ToList(),
             NumFilters = numFilters,
             SectionType = sectionType,
             Archive = selectedFilters.Archived,
@@ -1582,8 +1582,8 @@ protected async Task<RequestItemViewModel> FillRequestDropdowns(RequestItemViewM
     {
         if (requestItemViewModel.IsProprietary)
         {
-            var proprietarycategory = await _parentCategoriesProc.Read( new List<Expression<Func<ParentCategory, bool>>> { pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Samples.ToString() }).FirstOrDefaultAsync();
-            productsubcategories = await _productSubcategoriesProc.Read( new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ParentCategoryID == proprietarycategory.ParentCategoryID }).ToListAsync();
+            var proprietarycategory = await _parentCategoriesProc.Read( new List<Expression<Func<ParentCategory, bool>>> { pc => pc.Description == AppUtility.ParentCategoryEnum.Samples.ToString() }).FirstOrDefaultAsync();
+            productsubcategories = await _productSubcategoriesProc.Read( new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == proprietarycategory.ID }).ToListAsync();
         }
         else
         {

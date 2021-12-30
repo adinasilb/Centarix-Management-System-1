@@ -92,13 +92,13 @@
 
                     @foreach (var category in Model.ParentCategories)
                     {
-                        if (category.ParentCategoryID == Model.Request.Product?.ProductSubcategory.ParentCategoryID)
+                        if (category.ID == Model.Request.Product?.ProductSubcategory.ParentCategoryID)
                         {
-                            <option value="@category.ParentCategoryID" selected>@category.ParentCategoryDescription</option>
+                            <option value="@category.ID" selected>@category.Description</option>
                         }
                         else
                         {
-                            <option value="@category.ParentCategoryID">@category.ParentCategoryDescription</option>
+                            <option value="@category.ID">@category.Description</option>
                         }
 
                     }
@@ -107,8 +107,8 @@
                 @*@Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID,
                     new SelectList(
                     Model.ParentCategories,
-                    "ParentCategoryID",
-                    "ParentCategoryDescription"
+                    "ID",
+                    "Description"
                     ), "Select Category",
                     new { @id = parentCategoryID, @name = dynamicName + "Product.ProductSubcategory.ParentCategory.ParentCategoryID", @class = "mdb-select custom select-dropdown form-control-plaintext parentlist parent-category " + @parentSelect + " " + @markReadOnlyClass, @dataVal = Model.RequestIndex, @searchable = "Select Category" })*@
 
@@ -141,13 +141,13 @@
                     }
                     @foreach (var category in Model.ProductSubcategories)
                     {
-                        if (category.ProductSubcategoryID == Model.Request.Product?.ProductSubcategoryID)
+                        if (category.ID == Model.Request.Product?.ProductSubcategoryID)
                         {
-                            <option value="@category.ProductSubcategoryID" selected>@category.ProductSubcategoryDescription</option>
+                            <option value="@category.ID" selected>@category.Description</option>
                         }
                         else
                         {
-                            <option value="@category.ProductSubcategoryID">@category.ProductSubcategoryDescription</option>
+                            <option value="@category.ID">@category.Description</option>
                         }
 
                     }
