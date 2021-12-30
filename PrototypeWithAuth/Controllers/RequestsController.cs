@@ -2494,7 +2494,6 @@ namespace PrototypeWithAuth.Controllers
                         client.Timeout = 500000; // 500 seconds
                         try
                         {
-                            throw new Exception();
                             client.Send(message);
                         }
                         catch (Exception ex)
