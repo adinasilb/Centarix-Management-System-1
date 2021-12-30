@@ -230,7 +230,7 @@ namespace PrototypeWithAuth.CRUD
             try
             {
                 UpdateModelsWithoutSaveChanges(modelsAndStates);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
