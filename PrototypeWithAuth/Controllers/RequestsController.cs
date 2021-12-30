@@ -1774,25 +1774,23 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> EditModalView(RequestItemViewModel requestItemViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var transaction = _applicationDbContextTransaction.Transaction)
             {
                 try
                 {
                     var request = requestItemViewModel.Requests.FirstOrDefault();
                     //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
                     request.ParentRequest = null;
-                    //requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentQuoteID;
-                    var parentQuote = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == request.ParentQuoteID).FirstOrDefault();
+                    var parentQuote = await _parentQuotesProc.ReadOneAsync(new List<Expression<Func<ParentQuote, bool>>> { pq => pq.ParentQuoteID == request.ParentQuoteID });
+                    
                     if (parentQuote != null && request.ParentQuote != null)
                     {
-
                         parentQuote.QuoteNumber = request.ParentQuote.QuoteNumber;
                         parentQuote.QuoteDate = request.ParentQuote.QuoteDate;
                         request.ParentQuote = parentQuote;
                     }
 
                     var product = await _productsProc.ReadOneWithIgnoreQueryFiltersAsync(new List<Expression<Func<Product, bool>>> { v => v.ProductID == request.ProductID }, new List<ComplexIncludes<Product, ModelBase>> { new ComplexIncludes<Product, ModelBase> { Include =  p => p.Vendor }, new ComplexIncludes<Product, ModelBase> { Include = p => p.ProductSubcategory } });
-                    // product.ProductSubcategoryID = requestItemViewModel.Request.Product.ProductSubcategoryID;
                     product.VendorID = request.Product.VendorID;
                     product.CatalogNumber = request.Product.CatalogNumber;
                     //in case we need to return to the modal view
@@ -1805,21 +1803,20 @@ namespace PrototypeWithAuth.Controllers
                     product.SubSubUnitTypeID = request.Product.SubSubUnitTypeID;
 
                     var parentCategoryId = request.Product.ProductSubcategory.ParentCategoryID;
-                    requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).Where(ps => ps.ParentCategoryID == parentCategoryId).ToListAsync();
-                    requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
+                    requestItemViewModel.ProductSubcategories = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> {
+                        ps => ps.ParentCategory.CategoryTypeID == 1,
+                        ps => ps.ParentCategoryID == parentCategoryId
+                    });
+                    requestItemViewModel.Vendors = _vendorsProc.Read();
                     //redo the unit types when seeded
-                    var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+                    var unittypes = _unitTypesProc.Read(includes:new List<ComplexIncludes<UnitType, ModelBase>> {
+                            new ComplexIncludes<UnitType, ModelBase>{ Include = u => u.UnitParentType} })
+                       .OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+                       
                     requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
 
                     //declared outside the if b/c it's used farther down to (for parent request the new comment too)
                     var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
-
-                    //todo figure out payments
-                    //if (requestItemViewModel.Request.Terms == -1)
-                    //{
-                    //    requestItemViewModel.Request.Payed = true;
-                    //}
-
 
                     var context = new ValidationContext(request, null, null);
                     var results = new List<ValidationResult>();
@@ -1833,13 +1830,16 @@ namespace PrototypeWithAuth.Controllers
                          * only need this if using an existing product
                          */
                         request.Product = product;
-                        _context.Entry(request).State = EntityState.Modified;
-                        _context.Entry(request.Product).State = EntityState.Modified;
+                        List<ModelAndState> UpdateModelStates = new List<ModelAndState>();
+                        UpdateModelStates.Add(new ModelAndState { Model = request, StateEnum = EntityState.Modified });
+                        UpdateModelStates.Add(new ModelAndState { Model = request.Product, StateEnum = EntityState.Modified });
+
                         if (request.Payments?[0].InvoiceID != null)
                         {
-                            _context.Entry(request.Payments[0].Invoice).State = EntityState.Modified; //todo: make a loop
+                            UpdateModelStates.Add(new ModelAndState { Model = request.Payments[0].Invoice, StateEnum = EntityState.Modified });
                         }
-                        await _context.SaveChangesAsync();
+
+                        await _requestsProc.UpdateModelsAsync(UpdateModelStates);
 
 
                         if (requestItemViewModel.Comments != null)
@@ -1858,9 +1858,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         throw new ModelStateInvalidException(requestItemViewModel.ErrorMessage);
                     }
-                    //return RedirectToAction("Index");
                     AppUtility.PageTypeEnum requestPageTypeEnum = (AppUtility.PageTypeEnum)requestItemViewModel.PageType;
-                    //throw new Exception();
                     await transaction.CommitAsync();
                     requestItemViewModel.Requests[0] = request;
                     return RedirectToAction("Index", new
@@ -1871,16 +1869,35 @@ namespace PrototypeWithAuth.Controllers
                 }
                 catch (Exception ex)
                 {
-                    requestItemViewModel.Requests[0] = _context.Requests.Include(r => r.Product)
-                    .Include(r => r.ParentQuote)
-                    .Include(r => r.ParentRequest)
-                    .Include(r => r.Product.ProductSubcategory)
-                    .Include(r => r.Product.ProductSubcategory.ParentCategory)
-                         .Include(r => r.Product.Vendor)
-                    .Include(r => r.RequestStatus)
-                    .Include(r => r.ApplicationUserCreator)
-                    //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
-                    .SingleOrDefault(x => x.RequestID == requestItemViewModel.Requests[0].RequestID);
+                    requestItemViewModel.Requests[0] = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { x => x.RequestID == requestItemViewModel.Requests[0].RequestID }, 
+                        new List<ComplexIncludes<Request, ModelBase>>
+                        {
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product },
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote },
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest },
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory },
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory.ParentCategory },
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor},
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.RequestStatus},
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator}
+                            //new ComplexIncludes<Request, ModelBase>
+                            //{
+                            //    Include = r => r.Payments,
+                            //    ThenInclude= new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Payment)p).CompanyAccount }
+                            //},
+                            //new ComplexIncludes<Request, ModelBase>
+                            //{
+                            //    Include = r => r.Payments,
+                            //    ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Payment)p).CreditCard}
+                            //},
+                            //new ComplexIncludes<Request, ModelBase>
+                            //{
+                            //    Include = r => r.Payments,
+                            //    ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Payment)p).Invoice}
+                            //},
+                            //new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserReceiver }
+                        }
+                    );
                     requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     await transaction.RollbackAsync();
                     var categoryTypeId = requestItemViewModel.SectionType == AppUtility.MenuItems.Requests ? 1 : 2;
@@ -1889,8 +1906,18 @@ namespace PrototypeWithAuth.Controllers
                     string requestId = requestItemViewModel.Requests[0].RequestID.ToString();
                     string parentQuoteId = requestItemViewModel.Requests[0].ParentQuoteID.ToString();
                     FillDocumentsInfo(requestItemViewModel, productSubcategory, requestId, parentQuoteId);
-                    var requestComments = await _context.RequestComments.Include(r => r.ApplicationUser).Include(r => r.CommentType).Where(r => r.ObjectID == requestItemViewModel.Requests[0].RequestID).ToListAsync();
-                    var productComments = await _context.ProductComments.Include(r => r.ApplicationUser).Include(r => r.CommentType).Where(r => r.ObjectID == requestItemViewModel.Requests[0].ProductID).ToListAsync();
+                    var requestComments = _requestCommentsProc.Read(new List<Expression<Func<RequestComment, bool>>> { r => r.ObjectID == requestItemViewModel.Requests[0].RequestID },
+                        new List<ComplexIncludes<RequestComment, ModelBase>> 
+                        { 
+                            new ComplexIncludes<RequestComment, ModelBase>{Include = r => r.ApplicationUser},
+                            new ComplexIncludes<RequestComment, ModelBase>{Include = r => r.CommentType}
+                        });
+                    var productComments = _productCommentsProc.Read(new List<Expression<Func<ProductComment, bool>>> { r => r.ObjectID == requestItemViewModel.Requests[0].ProductID },
+                        new List<ComplexIncludes<ProductComment, ModelBase>>
+                        {
+                            new ComplexIncludes<ProductComment, ModelBase>{Include = r => r.ApplicationUser},
+                            new ComplexIncludes<ProductComment, ModelBase>{Include = r => r.CommentType}
+                        });
                     requestItemViewModel.Comments = requestComments.Concat<CommentBase>(productComments).ToList();
                     requestItemViewModel.ModalType = AppUtility.RequestModalType.Edit;
                     Response.StatusCode = 50;
