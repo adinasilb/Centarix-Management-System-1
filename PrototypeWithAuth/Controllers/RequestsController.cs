@@ -1872,12 +1872,10 @@ namespace PrototypeWithAuth.Controllers
                     requestItemViewModel.Requests[0] = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { x => x.RequestID == requestItemViewModel.Requests[0].RequestID }, 
                         new List<ComplexIncludes<Request, ModelBase>>
                         {
-                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product },
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = p => ((Product)p).Vendor } },
                             new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote },
                             new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest },
-                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory },
-                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory.ParentCategory },
-                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor},
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory ,  ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = ps => ((ProductSubcategory)ps).ParentCategory } },
                             new ComplexIncludes<Request, ModelBase> { Include = r => r.RequestStatus},
                             new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator}
                             //new ComplexIncludes<Request, ModelBase>
@@ -3353,10 +3351,7 @@ namespace PrototypeWithAuth.Controllers
                             ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = ps => ((ProductSubcategory)ps).ParentCategory}
                         }
                     },
-                    new ComplexIncludes<Request, ModelBase> {
-                        Include = r => r.Product,
-                        ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = p => ((Product)p).Vendor}
-                    }
+                    new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.Vendor }
                 });
             try
             {
@@ -3438,35 +3433,12 @@ namespace PrototypeWithAuth.Controllers
             List<ComplexIncludes<Request, ModelBase>> Includes = new List<ComplexIncludes<Request, ModelBase>>();
             Wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
             Wheres.Add(r => requestIds.Contains(r.RequestID));
-            Includes.Add(new ComplexIncludes<Request, ModelBase>
-            {
-                Include = r => r.Product,
-                ThenInclude = new ComplexIncludes<ModelBase, ModelBase>
-                {
-                    Include = p => ((Product)p).Vendor,
-                    ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = v => ((Vendor)v).Country }
-                }
-            });
-            Includes.Add(new ComplexIncludes<Request, ModelBase>
-            {
-                Include = r => r.Product,
-                ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).ProductSubcategory }
-            });
-            Includes.Add(new ComplexIncludes<Request, ModelBase>
-            {
-                Include = r => r.Product,
-                ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).UnitType }
-            });
-            Includes.Add(new ComplexIncludes<Request, ModelBase>
-            {
-                Include = r => r.Product,
-                ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).SubUnitType }
-            });
-            Includes.Add(new ComplexIncludes<Request, ModelBase>
-            {
-                Include = r => r.Product,
-                ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).SubSubUnitType }
-            });
+            Includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product });
+            Includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = v => ((Vendor)v).Country } });
+            Includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory });
+            Includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.UnitType });
+            Includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubUnitType });
+            Includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubSubUnitType });
 
             var requests = await _requestsProc.Read(Wheres, Includes).ToListAsync();
 
@@ -3553,32 +3525,12 @@ namespace PrototypeWithAuth.Controllers
                     },
                     new List<ComplexIncludes<Request, ModelBase>>
                     {
-                        new ComplexIncludes<Request, ModelBase>
-                        {
-                            Include = r => r.Product,
-                            ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).Vendor }
-                        },
-                        new ComplexIncludes<Request, ModelBase>
-                        {
-                            Include = r => r.Product,
-                            ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).ProductSubcategory }
-                        },
-                        new ComplexIncludes<Request, ModelBase>
-                        {
-                            Include = r => r.Product,
-                            ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).UnitType }
-                        },
-                        new ComplexIncludes<Request, ModelBase>
-                        {
-                            Include = r => r.Product,
-                            ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).SubUnitType }
-                        },
-                        new ComplexIncludes<Request, ModelBase>
-                        {
-                            Include = r => r.Product,
-                            ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).SubSubUnitType }
-                        },
-                        new ComplexIncludes<Request, ModelBase>{Include = r => r.ParentQuote}
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = p => ((Product)p).Vendor } },
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.ProductSubcategory },
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.UnitType },
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.SubUnitType },
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.SubSubUnitType },
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.ParentQuote}
                     }
                 );
                 var newRequest = editQuoteDetailsViewModel.Requests.FirstOrDefault();
