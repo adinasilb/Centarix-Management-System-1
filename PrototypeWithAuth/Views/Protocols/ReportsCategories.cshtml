@@ -21,17 +21,17 @@
         @foreach (var category in Model.ReportCategories)
         {
             <div class="type-div">
-                <a href='@Url.Action("IndexReports", "Protocols", new { ReportCategoryID = category.ResourceCategoryID, SidebarType = Model.SidebarType })' class="text text-dark">
+                <a href='@Url.Action("IndexReports", "Protocols", new { ReportCategoryID = category.ID, SidebarType = Model.SidebarType })' class="text text-dark">
                     <fieldset class=" main-type-fieldset">
                         @{
                             var imageUrl = "/images/protocol_images/" + category.ImageUrl;
-                            var altImage = category.ResourceCategoryDescription;
+                            var altImage = category.Description;
                         }
 
                         @*<img class=" main-type-img" src="@imageUrl" alt="@altImage" />*@
                         <img class=" main-type-img" src="@imageUrl" alt="@altImage" />
                         @*  }*@
-                        <label class="main-type-label top-menu protocols-filter text-center"> @category.ResourceCategoryDescription</label>
+                        <label class="main-type-label top-menu protocols-filter text-center"> @category.Description</label>
                     </fieldset>
                 </a>
             </div>

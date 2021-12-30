@@ -220,6 +220,7 @@
     text-decoration: underline;
 }
 
+
 .lab-man-filter {
     filter: var(--lab-man-filter) !important;
 }
@@ -356,6 +357,10 @@ table.visual-locations td .content {
     padding-left: 2.25rem !important;
 }
 
+
+.lm-top.active {
+    color: var(--lab-man-color) !important;
+}
 
 body {
   /*  overflow: hidden;*/

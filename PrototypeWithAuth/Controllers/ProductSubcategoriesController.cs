@@ -102,13 +102,13 @@ namespace PrototypeWithAuth.Controllers
             var parentCategories = _parentCategoriesProc.Read(new List<System.Linq.Expressions.Expression<Func<ParentCategory, bool>>>
                 { pc => SelectedCategoryTypes.Contains(pc.CategoryTypeID) }, new List<ComplexIncludes<ParentCategory, ModelBase>>
                 { new ComplexIncludes<ParentCategory, ModelBase>{ Include = pc => pc.ProductSubcategories } });
-            var parentCategoriesJson = parentCategories.Select(pc => new { parentCategoryID = pc.ParentCategoryID, parentCategoryDescription = pc.ParentCategoryDescription });
+            var parentCategoriesJson = parentCategories.Select(pc => new { parentCategoryID = pc.ID, parentCategoryDescription = pc.Description });
             var vendors = _vendorsProc.Read(new List<System.Linq.Expressions.Expression<Func<Vendor, bool>>>
             {
                 v => v.VendorCategoryTypes.Select(vct=>vct.CategoryTypeID).Where(cti=> SelectedCategoryTypes.Contains(cti)).Any()
             }).Select(v => new { vendorID = v.VendorID, vendorName = v.VendorEnName });
             var subCategoryList = parentCategories.SelectMany(pc => pc.ProductSubcategories)
-                .Select(ps => new { subCategoryID = ps.ProductSubcategoryID, subCategoryDescription = ps.ProductSubcategoryDescription });
+                .Select(ps => new { subCategoryID = ps.ID, subCategoryDescription = ps.Description });
             var workers = requests.Select(r => r.ApplicationUserCreator).Select(e => new { workerID = e.Id, workerName = e.FirstName + " " + e.LastName }).Distinct();
             return Json(new { Vendors = vendors, ProductSubcategories = subCategoryList, ParentCategories = parentCategoriesJson, Employees = workers });
 
@@ -132,7 +132,7 @@ namespace PrototypeWithAuth.Controllers
             var vendors = requests.Select(r => r.Product.Vendor).Distinct().Select(v => new { vendorID = v.VendorID, vendorName = v.VendorEnName });
             var subCategoryList = _productSubcategoriesProc.Read(new List<System.Linq.Expressions.Expression<Func<ProductSubcategory, bool>>>
                 { ps=>ParentCategoryIds.Contains(ps.ParentCategoryID) })
-                .Select(ps => new { subCategoryID = ps.ProductSubcategoryID, subCategoryDescription = ps.ProductSubcategoryDescription });
+                .Select(ps => new { subCategoryID = ps.ID, subCategoryDescription = ps.Description });
             var workers = requests.Select(r => r.ApplicationUserCreator).Select(e => new { workerID = e.Id, workerName = e.FirstName + " " + e.LastName }).Distinct();
             return Json(new { Vendors = vendors, ProductSubcategories = subCategoryList, Employees = workers });
 

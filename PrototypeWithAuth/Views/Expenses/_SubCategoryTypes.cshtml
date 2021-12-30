@@ -34,22 +34,22 @@
                 var buttonClasses = "text-left btn btn-block clicked-outer-button clicked-button overflow-hidden no-box-shadow parent-project-button";
             <tr class="location-index-border text-left">
                 <td class="p-0" width="30%">
-                    <button class="@buttonClasses" value="@subcategory.Key.ProductSubcategoryID">
-                        @subcategory.Key.ProductSubcategoryDescription
+                    <button class="@buttonClasses" value="@subcategory.Key.ID">
+                        @subcategory.Key.Description
                     </button>
                 </td>
                 <td class="p-0" width="20%">
-                    <button class="@buttonClasses" value="@subcategory.Key.ProductSubcategoryID">
+                    <button class="@buttonClasses" value="@subcategory.Key.ID">
                         @subcategory.Value.Count()
                     </button>
                 </td>
                 <td class="p-0" width="20%">
-                    <button class="@buttonClasses" value="@subcategory.Key.ProductSubcategoryID">
+                    <button class="@buttonClasses" value="@subcategory.Key.ID">
                         @subcategory.Value.Select(r => r.ProductID).Distinct().Count()
                     </button>
                 </td>
                 <td class="p-0" width="30%">
-                    <button class="@buttonClasses" value="@subcategory.Key.ProductSubcategoryID">
+                    <button class="@buttonClasses" value="@subcategory.Key.ID">
                         &#8362; @string.Format("{0:n0}", Convert.ToInt32(subcategory.Value.Sum(r => r.Cost)))
                     </button>
                 </td>

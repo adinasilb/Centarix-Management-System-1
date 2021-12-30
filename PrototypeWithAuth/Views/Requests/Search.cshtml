@@ -77,7 +77,7 @@
                                             <option value="">Select Category</option>
                                             @foreach (var parentCategory in Model.ParentCategories)
                                             {
-                                                <option value="@parentCategory.ParentCategoryID">@parentCategory.ParentCategoryDescription</option>
+                                                <option value="@parentCategory.ID">@parentCategory.Description</option>
                                             }
                                         </select>
                                     </div>
@@ -89,7 +89,7 @@
                                             <option value="">Select Subcategory</option>
                                             @foreach (var productSubcategory in Model.ProductSubcategories)
                                             {
-                                                <option value="@productSubcategory.ProductSubcategoryID">@productSubcategory.ProductSubcategoryDescription</option>
+                                                <option value="@productSubcategory.ID">@productSubcategory.Description</option>
                                             }
                                         </select>
                                     </div>

@@ -565,7 +565,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (productSubCategoryID != 0)
             {
-                request.Product.ProductSubcategory = await _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == productSubCategoryID).Include(ps => ps.ParentCategory).FirstOrDefaultAsync();
+                request.Product.ProductSubcategory = await _context.ProductSubcategories.Where(ps => ps.ID == productSubCategoryID).Include(ps => ps.ParentCategory).FirstOrDefaultAsync();
                 request.Product.ProductSubcategoryID = productSubCategoryID;
             }
 
@@ -838,35 +838,35 @@ namespace PrototypeWithAuth.Controllers
             AppUtility.ParentFolderName requestParentFolderName = AppUtility.ParentFolderName.Requests;
             AppUtility.ParentFolderName parentRequestFolderName = AppUtility.ParentFolderName.ParentRequest;
 
-            if (parentQuoteId != null)
-            {
-                string quoteParentFolder = Path.Combine(_hostingEnvironment.WebRootPath, quoteParentFolderName.ToString());
-                quoteFolder = Path.Combine(quoteParentFolder, parentQuoteId.ToString());
-            }
-            if (requestItemViewModel.Requests.FirstOrDefault().ParentRequestID != null)
-            {
-                string parentRequestFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentRequestFolderName.ToString());
-                ordersFolder = Path.Combine(parentRequestFolder, requestItemViewModel.Requests.FirstOrDefault().ParentRequestID.ToString());
-            }
-            if (requestId != null) //eventually change to/add? parent request...
-            {
-                string requestParentFolder = Path.Combine(_hostingEnvironment.WebRootPath, requestParentFolderName.ToString());
-                requestFolder = Path.Combine(requestParentFolder, requestId.ToString());
-            }
-            if (productSubcategory.ParentCategory.IsProprietary)
-            {
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, requestParentFolderName, requestFolder, requestId);
-                if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
-                {
-                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.S, requestParentFolderName, requestFolder, requestId);
-                }
-                else if (new List<string>() { "Virus", "Plasmid", "Bacteria with Plasmids" }.Contains(productSubcategory.ProductSubcategoryDescription))
-                {
-                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Map, requestParentFolderName, requestFolder, requestId);
-                }
-            }
-            else if (requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID == 2)
-            {
+    if (parentQuoteId != null)
+    {
+        string quoteParentFolder = Path.Combine(_hostingEnvironment.WebRootPath, quoteParentFolderName.ToString());
+        quoteFolder = Path.Combine(quoteParentFolder, parentQuoteId.ToString());
+    }
+    if (requestItemViewModel.Requests.FirstOrDefault().ParentRequestID != null)
+    {
+        string parentRequestFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentRequestFolderName.ToString());
+        ordersFolder = Path.Combine(parentRequestFolder, requestItemViewModel.Requests.FirstOrDefault().ParentRequestID.ToString());
+    }
+    if (requestId != null) //eventually change to/add? parent request...
+    {
+        string requestParentFolder = Path.Combine(_hostingEnvironment.WebRootPath, requestParentFolderName.ToString());
+        requestFolder = Path.Combine(requestParentFolder, requestId.ToString());
+    }
+    if (productSubcategory.ParentCategory.IsProprietary)
+    {
+        GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, requestParentFolderName, requestFolder, requestId);
+        if (productSubcategory.Description == "Blood" || productSubcategory.Description == "Serum")
+        {
+            GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.S, requestParentFolderName, requestFolder, requestId);
+        }
+        else if (new List<string>() { "Virus", "Plasmid", "Bacteria with Plasmids" }.Contains(productSubcategory.Description))
+        {
+            GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Map, requestParentFolderName, requestFolder, requestId);
+        }
+    }
+    else if (requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID == 2)
+    {
 
                 if (requestItemViewModel.Requests.FirstOrDefault().ParentRequestID != null)
                 {
@@ -975,39 +975,39 @@ namespace PrototypeWithAuth.Controllers
             {
                 var usersFavoriteRequests = _favoriteRequestsProc.Read(new List<Expression<Func<FavoriteRequest, bool>>> { fr => fr.ApplicationUserID == _userManager.GetUserId(User) })
             .Select(fr => fr.RequestID).ToList();
-                wheres.Add(frl => usersFavoriteRequests.Contains(frl.RequestID));
-            }
-            else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart && requestIndexObject.SidebarType == AppUtility.SidebarEnum.SharedRequests)
-            {
-                var sharedWithMe = _shareRequestsProc.Read(new List<Expression<Func<ShareRequest, bool>>> { fr => fr.ToApplicationUserID == _userManager.GetUserId(User) })
-                    .Select(sr => sr.ObjectID).ToList();
-                wheres.Add(frl => sharedWithMe.Contains(frl.RequestID));
-            }
-            else
-            {
-                //do not think it is ever supposed to get here
-                //wheres.Add(r => r.RequestStatus.RequestStatusID == 3);              
-                //wheres.Add(r => r.IsInInventory);
-            }
-            AppUtility.SidebarEnum SidebarTitle = AppUtility.SidebarEnum.List;
-            //now that the lists are created sort by vendor or subcategory
-            var sidebarFilterDescription = "";
-            switch (requestIndexObject.SidebarType)
-            {
-                case AppUtility.SidebarEnum.Vendors:
-                    sidebarFilterDescription = await _vendorsProc.ReadOne(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == sideBarID }).Select(v => v.VendorEnName).FirstOrDefaultAsync();
-                    wheres.Add(r => r.Product.VendorID == sideBarID);
-                    break;
-                case AppUtility.SidebarEnum.Type:
-                    sidebarFilterDescription = await _productSubcategoriesProc.ReadOne(new List<Expression<Func<ProductSubcategory, bool>>> { p => p.ProductSubcategoryID == sideBarID }).Select(p => p.ProductSubcategoryDescription).FirstOrDefaultAsync();
-                    wheres.Add(r => r.Product.ProductSubcategoryID == sideBarID);
-                    break;
-                case AppUtility.SidebarEnum.Owner:
-                    var owner = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id.Equals(requestIndexObject.SidebarFilterID) });
-                    sidebarFilterDescription = owner.FirstName + " " + owner.LastName;
-                    wheres.Add(r => r.ApplicationUserCreatorID == requestIndexObject.SidebarFilterID);
-                    break;
-            }
+        wheres.Add(frl => usersFavoriteRequests.Contains(frl.RequestID));
+    }
+    else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart && requestIndexObject.SidebarType == AppUtility.SidebarEnum.SharedRequests)
+    {
+        var sharedWithMe = _shareRequestsProc.Read( new List<Expression<Func<ShareRequest, bool>>> { fr => fr.ToApplicationUserID == _userManager.GetUserId(User) })
+            .Select(sr => sr.ObjectID).ToList();
+        wheres.Add(frl => sharedWithMe.Contains(frl.RequestID));
+    }
+    else
+    {
+        //do not think it is ever supposed to get here
+        //wheres.Add(r => r.RequestStatus.RequestStatusID == 3);              
+        //wheres.Add(r => r.IsInInventory);
+    }
+    AppUtility.SidebarEnum SidebarTitle = AppUtility.SidebarEnum.List;
+    //now that the lists are created sort by vendor or subcategory
+    var sidebarFilterDescription = "";
+    switch (requestIndexObject.SidebarType)
+    {
+        case AppUtility.SidebarEnum.Vendors:
+            sidebarFilterDescription = await _vendorsProc.ReadOne( new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == sideBarID }).Select(v => v.VendorEnName).FirstOrDefaultAsync();
+            wheres.Add(r => r.Product.VendorID == sideBarID);
+            break;
+        case AppUtility.SidebarEnum.Type:
+            sidebarFilterDescription = await _productSubcategoriesProc.ReadOne( new List<Expression<Func<ProductSubcategory, bool>>> { p => p.ID == sideBarID }).Select(p => p.Description).FirstOrDefaultAsync();
+            wheres.Add(r => r.Product.ProductSubcategoryID == sideBarID);
+            break;
+        case AppUtility.SidebarEnum.Owner:
+            var owner = await _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { e => e.Id.Equals(requestIndexObject.SidebarFilterID) });
+            sidebarFilterDescription = owner.FirstName + " " + owner.LastName;
+            wheres.Add(r => r.ApplicationUserCreatorID == requestIndexObject.SidebarFilterID);
+            break;
+    }
 
 
 
@@ -1113,48 +1113,48 @@ namespace PrototypeWithAuth.Controllers
                     wheres.Add(r => r.Product.CatalogNumber.ToUpper().Contains(selectedFilters.CatalogNumber.ToUpper()));
                 }
 
-            }
-            if (selectedFilters?.Archived == true)
-            {
-                wheres.Add(r => r.IsArchived == true);
-            }
-            else
-            {
-                wheres.Add(r => r.IsArchived == false);
-            }
-        }
-        protected static void ApplySearchToRequestList(RequestsSearchViewModel requestsSearchViewModel, List<Expression<Func<Request, bool>>> wheres)
-        {
-            if (requestsSearchViewModel != null)
-            {
-                wheres.Add(r =>
-                    (requestsSearchViewModel.ParentCategoryID == null || r.Product.ProductSubcategory.ParentCategoryID == requestsSearchViewModel.ParentCategoryID)
-                    && (requestsSearchViewModel.ProductSubcategoryID == null || r.Product.ProductSubcategory.ProductSubcategoryID == requestsSearchViewModel.ProductSubcategoryID)
-                    && (requestsSearchViewModel.VendorID == null || r.Product.VendorID == requestsSearchViewModel.VendorID)
-                    && (String.IsNullOrEmpty(requestsSearchViewModel.ItemName) || r.Product.ProductName.ToLower().Contains(requestsSearchViewModel.ItemName.ToLower()))
-                    && (String.IsNullOrEmpty(requestsSearchViewModel.ProductHebrewName) || r.Product.ProductHebrewName.ToLower().Contains(requestsSearchViewModel.ProductHebrewName.ToLower()))
-                    && (requestsSearchViewModel.InvoiceDate == null || r.Payments.Where(p => p.Invoice.InvoiceDate.Date == requestsSearchViewModel.InvoiceDate.GetJustDateOnNullableDateTime()).Any())
-                    && (requestsSearchViewModel.Batch == null || r.Batch == requestsSearchViewModel.Batch)
-                    && (requestsSearchViewModel.ExpirationDate == null || r.BatchExpiration.Equals(requestsSearchViewModel.ExpirationDate.GetJustDateOnNullableDateTime()))
-                    && (requestsSearchViewModel.CreationDate == null || r.CreationDate.Date.Equals(requestsSearchViewModel.CreationDate.GetJustDateOnNullableDateTime()))
-                    && (requestsSearchViewModel.ArrivalDate == null || r.ArrivalDate.Date.Equals(requestsSearchViewModel.ArrivalDate.GetJustDateOnNullableDateTime()))
-                    && (requestsSearchViewModel.ApplicationUserReceiverID == null || r.ApplicationUserReceiverID == requestsSearchViewModel.ApplicationUserReceiverID)
-                    && (requestsSearchViewModel.ApplicationUserOwnerID == null || r.ApplicationUserCreatorID == requestsSearchViewModel.ApplicationUserOwnerID)
-                    && (String.IsNullOrEmpty(requestsSearchViewModel.QuoteNumber) || r.ParentQuote.QuoteNumber.ToLower().Contains(requestsSearchViewModel.QuoteNumber.ToLower()))
-                    && (String.IsNullOrEmpty(requestsSearchViewModel.CatalogNumber) || r.Product.CatalogNumber.ToLower().Contains(requestsSearchViewModel.CatalogNumber.ToLower()))
-                    && (String.IsNullOrEmpty(requestsSearchViewModel.SerialNumber) || r.Product.SerialNumber.ToLower().Contains(requestsSearchViewModel.SerialNumber.ToLower()))
-                    && (requestsSearchViewModel.OrderDate == null || r.ParentRequest.OrderDate.Date.Equals(requestsSearchViewModel.OrderDate.GetJustDateOnNullableDateTime()))
-                    && (requestsSearchViewModel.OrderNumber == null || r.ParentRequest.OrderNumber == requestsSearchViewModel.OrderNumber)
-                    && (String.IsNullOrEmpty(requestsSearchViewModel.Currency) || r.Currency.Equals(requestsSearchViewModel.Currency))
-                    && (String.IsNullOrEmpty(requestsSearchViewModel.SupplierOrderNumber) || r.ParentRequest.SupplierOrderNumber.ToLower().Contains(requestsSearchViewModel.SupplierOrderNumber.ToLower()))
-                    && (String.IsNullOrEmpty(requestsSearchViewModel.InvoiceNumber) || r.Payments.Where(p => p.Invoice.InvoiceNumber.ToLower() == requestsSearchViewModel.InvoiceNumber.ToLower()).Any())
-                    && (requestsSearchViewModel.Payment.CompanyAccountID == null || r.Payments.Where(p => p.CompanyAccountID.Equals(requestsSearchViewModel.Payment.CompanyAccountID)).Any())
-                    && (requestsSearchViewModel.Payment.PaymentTypeID == null || r.Payments.Where(p => p.PaymentTypeID.Equals(requestsSearchViewModel.Payment.PaymentTypeID)).Any())
-                    && (requestsSearchViewModel.Payment.CreditCardID == null || r.Payments.Where(p => p.CreditCardID.Equals(requestsSearchViewModel.Payment.CreditCardID)).Any())
-                    && (requestsSearchViewModel.Payment.PaymentReferenceDate == new DateTime() || r.Payments.Where(p => p.PaymentReferenceDate.Equals(requestsSearchViewModel.Payment.PaymentReferenceDate.Date)).Any())
-                    && (String.IsNullOrEmpty(requestsSearchViewModel.Payment.CheckNumber) || r.Payments.Where(p => p.CheckNumber.ToLower().Contains(requestsSearchViewModel.Payment.CheckNumber.ToLower())).Any())
-                    && (String.IsNullOrEmpty(requestsSearchViewModel.Payment.Reference) || r.Payments.Where(p => p.Reference.ToLower().Contains(requestsSearchViewModel.Payment.Reference.ToLower())).Any())
-                    );
+    }
+    if (selectedFilters?.Archived == true)
+    {
+        wheres.Add(r => r.IsArchived == true);
+    }
+    else
+    {
+        wheres.Add(r => r.IsArchived == false);
+    }
+}
+protected static void ApplySearchToRequestList(RequestsSearchViewModel requestsSearchViewModel, List<Expression<Func<Request, bool>>> wheres)
+{
+    if (requestsSearchViewModel != null)
+    {
+        wheres.Add(r =>
+            (requestsSearchViewModel.ParentCategoryID == null || r.Product.ProductSubcategory.ParentCategoryID == requestsSearchViewModel.ParentCategoryID)
+            && (requestsSearchViewModel.ProductSubcategoryID == null || r.Product.ProductSubcategory.ID == requestsSearchViewModel.ProductSubcategoryID)
+            && (requestsSearchViewModel.VendorID == null || r.Product.VendorID == requestsSearchViewModel.VendorID)
+            && (String.IsNullOrEmpty(requestsSearchViewModel.ItemName) || r.Product.ProductName.ToLower().Contains(requestsSearchViewModel.ItemName.ToLower()))
+            && (String.IsNullOrEmpty(requestsSearchViewModel.ProductHebrewName) || r.Product.ProductHebrewName.ToLower().Contains(requestsSearchViewModel.ProductHebrewName.ToLower()))
+            && (requestsSearchViewModel.InvoiceDate == null || r.Payments.Where(p => p.Invoice.InvoiceDate.Date == requestsSearchViewModel.InvoiceDate.GetJustDateOnNullableDateTime()).Any())
+            && (requestsSearchViewModel.Batch == null || r.Batch == requestsSearchViewModel.Batch)
+            && (requestsSearchViewModel.ExpirationDate == null || r.BatchExpiration.Equals(requestsSearchViewModel.ExpirationDate.GetJustDateOnNullableDateTime()))
+            && (requestsSearchViewModel.CreationDate == null || r.CreationDate.Date.Equals(requestsSearchViewModel.CreationDate.GetJustDateOnNullableDateTime()))
+            && (requestsSearchViewModel.ArrivalDate == null || r.ArrivalDate.Date.Equals(requestsSearchViewModel.ArrivalDate.GetJustDateOnNullableDateTime()))
+            && (requestsSearchViewModel.ApplicationUserReceiverID == null || r.ApplicationUserReceiverID == requestsSearchViewModel.ApplicationUserReceiverID)
+            && (requestsSearchViewModel.ApplicationUserOwnerID == null || r.ApplicationUserCreatorID == requestsSearchViewModel.ApplicationUserOwnerID)
+            && (String.IsNullOrEmpty(requestsSearchViewModel.QuoteNumber) || r.ParentQuote.QuoteNumber.ToLower().Contains(requestsSearchViewModel.QuoteNumber.ToLower()))
+            && (String.IsNullOrEmpty(requestsSearchViewModel.CatalogNumber) || r.Product.CatalogNumber.ToLower().Contains(requestsSearchViewModel.CatalogNumber.ToLower()))
+            && (String.IsNullOrEmpty(requestsSearchViewModel.SerialNumber) || r.Product.SerialNumber.ToLower().Contains(requestsSearchViewModel.SerialNumber.ToLower()))
+            && (requestsSearchViewModel.OrderDate == null || r.ParentRequest.OrderDate.Date.Equals(requestsSearchViewModel.OrderDate.GetJustDateOnNullableDateTime()))
+            && (requestsSearchViewModel.OrderNumber == null || r.ParentRequest.OrderNumber == requestsSearchViewModel.OrderNumber)
+            && (String.IsNullOrEmpty(requestsSearchViewModel.Currency) || r.Currency.Equals(requestsSearchViewModel.Currency))
+            && (String.IsNullOrEmpty(requestsSearchViewModel.SupplierOrderNumber) || r.ParentRequest.SupplierOrderNumber.ToLower().Contains(requestsSearchViewModel.SupplierOrderNumber.ToLower()))
+            && (String.IsNullOrEmpty(requestsSearchViewModel.InvoiceNumber) || r.Payments.Where(p => p.Invoice.InvoiceNumber.ToLower() == requestsSearchViewModel.InvoiceNumber.ToLower()).Any())
+            && (requestsSearchViewModel.Payment.CompanyAccountID == null || r.Payments.Where(p => p.CompanyAccountID.Equals(requestsSearchViewModel.Payment.CompanyAccountID)).Any())
+            && (requestsSearchViewModel.Payment.PaymentTypeID == null || r.Payments.Where(p => p.PaymentTypeID.Equals(requestsSearchViewModel.Payment.PaymentTypeID)).Any())
+            && (requestsSearchViewModel.Payment.CreditCardID == null || r.Payments.Where(p => p.CreditCardID.Equals(requestsSearchViewModel.Payment.CreditCardID)).Any())
+            && (requestsSearchViewModel.Payment.PaymentReferenceDate == new DateTime() || r.Payments.Where(p => p.PaymentReferenceDate.Equals(requestsSearchViewModel.Payment.PaymentReferenceDate.Date)).Any())
+            && (String.IsNullOrEmpty(requestsSearchViewModel.Payment.CheckNumber) || r.Payments.Where(p => p.CheckNumber.ToLower().Contains(requestsSearchViewModel.Payment.CheckNumber.ToLower())).Any())
+            && (String.IsNullOrEmpty(requestsSearchViewModel.Payment.Reference) || r.Payments.Where(p => p.Reference.ToLower().Contains(requestsSearchViewModel.Payment.Reference.ToLower())).Any())
+            );
 
             }
         }
@@ -1382,33 +1382,33 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFilters selectedFilters = null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests, bool isProprietary = false)
+protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFilters selectedFilters = null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests, bool isProprietary = false)
+{
+    int categoryType = sectionType == AppUtility.MenuItems.Requests ? 1 : 2;
+    if (selectedFilters != null)
+    {
+        InventoryFilterViewModel inventoryFilterViewModel = new InventoryFilterViewModel()
         {
-            int categoryType = sectionType == AppUtility.MenuItems.Requests ? 1 : 2;
-            if (selectedFilters != null)
-            {
-                InventoryFilterViewModel inventoryFilterViewModel = new InventoryFilterViewModel()
-                {
-                    Owners = _employeesProc.Read(new List<Expression<Func<Employee, bool>>> { o => !selectedFilters.SelectedOwnersIDs.Contains(o.Id) }).ToList(),
-                    Locations = _locationTypesProc.Read(new List<Expression<Func<LocationType, bool>>> { l => l.Depth == 0, l => !selectedFilters.SelectedLocationsIDs.Contains(l.LocationTypeID) }).ToList(),
-                    Categories = _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { c => c.CategoryTypeID == categoryType && c.IsProprietary == isProprietary, c => !selectedFilters.SelectedCategoriesIDs.Contains(c.ParentCategoryID) }).ToList(),
-                    Subcategories = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { sc => sc.ParentCategory.CategoryTypeID == categoryType && sc.ParentCategory.IsProprietary == isProprietary, v => !selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProductSubcategoryID) }).Distinct().ToList(),
-                    Vendors = _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).Contains(categoryType), v => !selectedFilters.SelectedVendorsIDs.Contains(v.VendorID) }).ToList(),
-                    SelectedVendors = _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> { v => selectedFilters.SelectedVendorsIDs.Contains(v.VendorID) }).ToList(),
-                    SelectedOwners = _employeesProc.Read(new List<Expression<Func<Employee, bool>>> { o => selectedFilters.SelectedOwnersIDs.Contains(o.Id) }).ToList(),
-                    SelectedLocations = _locationTypesProc.Read(new List<Expression<Func<LocationType, bool>>> { l => l.Depth == 0, l => selectedFilters.SelectedLocationsIDs.Contains(l.LocationTypeID) }).ToList(),
-                    SelectedCategories = _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { c => selectedFilters.SelectedCategoriesIDs.Contains(c.ParentCategoryID) }).ToList(),
-                    SelectedSubcategories = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { v => selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProductSubcategoryID) }).Distinct().ToList(),
-                    NumFilters = numFilters,
-                    SectionType = sectionType,
-                    Archive = selectedFilters.Archived,
-                    IsProprietary = isProprietary,
-                    CatalogNumber = selectedFilters.CatalogNumber
-                };
-                if (inventoryFilterViewModel.SelectedCategories.Count() > 0)
-                {
-                    inventoryFilterViewModel.Subcategories = inventoryFilterViewModel.Subcategories.Where(ps => inventoryFilterViewModel.SelectedCategories.Contains(ps.ParentCategory)).ToList();
-                }
+            Owners = _employeesProc.Read( new List<Expression<Func<Employee, bool>>> { o => !selectedFilters.SelectedOwnersIDs.Contains(o.Id) }).ToList(),
+            Locations = _locationTypesProc.Read( new List<Expression<Func<LocationType, bool>>> { l => l.Depth == 0, l => !selectedFilters.SelectedLocationsIDs.Contains(l.LocationTypeID) }).ToList(),
+            Categories = _parentCategoriesProc.Read( new List<Expression<Func<ParentCategory, bool>>> { c => c.CategoryTypeID == categoryType && c.IsProprietary == isProprietary, c => !selectedFilters.SelectedCategoriesIDs.Contains(c.ID) }).ToList(),
+            Subcategories = _productSubcategoriesProc.Read( new List<Expression<Func<ProductSubcategory, bool>>> { sc => sc.ParentCategory.CategoryTypeID == categoryType && sc.ParentCategory.IsProprietary == isProprietary, v => !selectedFilters.SelectedSubcategoriesIDs.Contains(v.ID) }).Distinct().ToList(),
+            Vendors = _vendorsProc.Read( new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).Contains(categoryType), v => !selectedFilters.SelectedVendorsIDs.Contains(v.VendorID) }).ToList(),
+            SelectedVendors = _vendorsProc.Read( new List<Expression<Func<Vendor, bool>>> { v => selectedFilters.SelectedVendorsIDs.Contains(v.VendorID) }).ToList(),
+            SelectedOwners = _employeesProc.Read( new List<Expression<Func<Employee, bool>>> { o => selectedFilters.SelectedOwnersIDs.Contains(o.Id) }).ToList(),
+            SelectedLocations = _locationTypesProc.Read( new List<Expression<Func<LocationType, bool>>> { l => l.Depth == 0, l => selectedFilters.SelectedLocationsIDs.Contains(l.LocationTypeID) }).ToList(),
+            SelectedCategories = _parentCategoriesProc.Read( new List<Expression<Func<ParentCategory, bool>>> { c => selectedFilters.SelectedCategoriesIDs.Contains(c.ID) }).ToList(),
+            SelectedSubcategories = _productSubcategoriesProc.Read( new List<Expression<Func<ProductSubcategory, bool>>> { v => selectedFilters.SelectedSubcategoriesIDs.Contains(v.ID) }).Distinct().ToList(),
+            NumFilters = numFilters,
+            SectionType = sectionType,
+            Archive = selectedFilters.Archived,
+            IsProprietary = isProprietary,
+            CatalogNumber = selectedFilters.CatalogNumber
+        };
+        if (inventoryFilterViewModel.SelectedCategories.Count() > 0)
+        {
+            inventoryFilterViewModel.Subcategories = inventoryFilterViewModel.Subcategories.Where(ps => inventoryFilterViewModel.SelectedCategories.Contains(ps.ParentCategory)).ToList();
+        }
 
                 return inventoryFilterViewModel;
             }
@@ -1577,25 +1577,25 @@ namespace PrototypeWithAuth.Controllers
                 unittypes = _unitTypesProc.Read(new List<Expression<Func<UnitType, bool>>> { ut => ut.UnitTypeParentCategory.Where(up => up.ParentCategoryID == productSubcategory.ParentCategoryID).Count() > 0 },
                     new List<ComplexIncludes<UnitType, ModelBase>>{
             new ComplexIncludes<UnitType, ModelBase> { Include = u => u.UnitParentType } }).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-            }
-            else
-            {
-                if (requestItemViewModel.IsProprietary)
-                {
-                    var proprietarycategory = await _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Samples.ToString() }).FirstOrDefaultAsync();
-                    productsubcategories = await _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ParentCategoryID == proprietarycategory.ParentCategoryID }).ToListAsync();
-                }
-                else
-                {
-                    parentcategories = await _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { pc => pc.CategoryTypeID == categoryTypeId && !pc.IsProprietary }).ToListAsync();
-                }
-            }
-            var vendors = await _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryTypeId).Count() > 0 }).ToListAsync();
-            var projects = await _projectsProc.Read().ToListAsync();
-            var subprojects = await _subProjectsProc.Read().ToListAsync();
-            var unittypeslookup = unittypes.ToLookup(u => u.UnitParentType);
-            var paymenttypes = await _paymentTypesProc.Read().ToListAsync();
-            var companyaccounts = await _companyAccountsProc.Read().ToListAsync();
+    }
+    else
+    {
+        if (requestItemViewModel.IsProprietary)
+        {
+            var proprietarycategory = await _parentCategoriesProc.Read( new List<Expression<Func<ParentCategory, bool>>> { pc => pc.Description == AppUtility.ParentCategoryEnum.Samples.ToString() }).FirstOrDefaultAsync();
+            productsubcategories = await _productSubcategoriesProc.Read( new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == proprietarycategory.ID }).ToListAsync();
+        }
+        else
+        {
+            parentcategories = await _parentCategoriesProc.Read( new List<Expression<Func<ParentCategory, bool>>> { pc => pc.CategoryTypeID == categoryTypeId && !pc.IsProprietary }).ToListAsync();
+        }
+    }
+    var vendors = await _vendorsProc.Read( new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryTypeId).Count() > 0 }).ToListAsync();
+    var projects = await _projectsProc.Read().ToListAsync();
+    var subprojects = await _subProjectsProc.Read().ToListAsync();
+    var unittypeslookup = unittypes.ToLookup(u => u.UnitParentType);
+    var paymenttypes = await _paymentTypesProc.Read().ToListAsync();
+    var companyaccounts = await _companyAccountsProc.Read().ToListAsync();
 
             requestItemViewModel.ParentCategories = parentcategories;
             requestItemViewModel.ProductSubcategories = productsubcategories;
