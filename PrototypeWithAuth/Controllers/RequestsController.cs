@@ -4402,16 +4402,16 @@ namespace PrototypeWithAuth.Controllers
                 {
                     TempRequestViewModels = oldTempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
                 };
-
+                if (uploadOrderViewModel.ParentRequest.OrderDate == DateTime.Today) //if it's today, add seconds to be now so it shows up on top
+                {
+                    uploadOrderViewModel.ParentRequest.OrderDate = DateTime.Now;
+                }
+                uploadOrderViewModel.ParentRequest.ApplicationUserID = _userManager.GetUserId(User);
                 foreach (var tempRequest in deserializedTempRequestListViewModel.TempRequestViewModels)
                 {
                     if (uploadOrderViewModel.ExpectedSupplyDays != null)
                     {
                         tempRequest.Request.ExpectedSupplyDays = uploadOrderViewModel.ExpectedSupplyDays;
-                    }
-                    if (uploadOrderViewModel.ParentRequest.OrderDate == DateTime.Today) //if it's today, add seconds to be now so it shows up on top
-                    {
-                        uploadOrderViewModel.ParentRequest.OrderDate = DateTime.Now;
                     }
                     tempRequest.Request.ParentRequest = uploadOrderViewModel.ParentRequest;
                 }
