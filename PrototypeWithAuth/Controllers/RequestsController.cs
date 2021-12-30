@@ -2069,8 +2069,7 @@ namespace PrototypeWithAuth.Controllers
                 OrderDate = DateTime.Now
             };
 
-            TempRequestListViewModel newTRLVM = new TempRequestListViewModel() { RequestIndexObject = requestIndexObject };
-            TempRequestJson updatedTempRequestJson = new TempRequestJson();
+            TempRequestListViewModel newTRLVM = new TempRequestListViewModel() { RequestIndexObject = requestIndexObject, GUID = requestIndexObject.GUID };
             var allRequests = new List<Request>();
             if (id != 0) //already has terms, being sent from approve order button -- not in a temprequestjson
             {
@@ -2103,8 +2102,8 @@ namespace PrototypeWithAuth.Controllers
                     }
                 };
                 newTRLVM.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
-                newTRLVM.GUID = updatedTempRequestJson.GuidID;
-                newTRLVM.SequencePosition = updatedTempRequestJson.SequencePosition;
+                newTRLVM.GUID = tempRequestListViewModel.GUID;
+                newTRLVM.SequencePosition = tempRequestListViewModel.SequencePosition;
 
                 await _tempRequestJsonsProc.UpdateAsync(newTRLVM.GUID, requestIndexObject, newTRLVM, userID, true);
                 var payments = _paymentsProc.Read(new List<Expression<Func<Payment, bool>>> { p => p.RequestID == id }).AsEnumerable();
@@ -2234,7 +2233,7 @@ namespace PrototypeWithAuth.Controllers
                             if (tempRequest.Request.RequestID == 0)
                             {
                                 RequestRollbackList = ModelsCreated;
-                                if (tempRequest.Request.Product.ProductID == 0)
+                                if (tempRequest.Request.ProductID == 0)
                                 {
                                     tempRequest.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(false);
                                     ProductRollbackList = ModelsCreated;
@@ -2243,15 +2242,15 @@ namespace PrototypeWithAuth.Controllers
                                 ModelStates.Add(new ModelAndState
                                 {
                                     Model = tempRequest.Request.Product,
-                                    StateEnum = tempRequest.Request.Product.ProductID == 0 ? EntityState.Added : EntityState.Modified
+                                    StateEnum = tempRequest.Request.ProductID == 0 ? EntityState.Added : EntityState.Modified
                                 });
 
                                 ModelStates.Add(new ModelAndState
                                 {
                                     Model = tempRequest.Request.ParentQuote,
-                                    StateEnum = tempRequest.Request.ParentQuote.ParentQuoteID == 0 ? EntityState.Added : EntityState.Modified
+                                    StateEnum = tempRequest.Request.ParentQuoteID == null ? EntityState.Added : EntityState.Modified
                                 });
-                                if (tempRequest.Request.ParentQuote.ParentQuoteID == 0)
+                                if (tempRequest.Request.ParentQuoteID == null)
                                 {
                                     ParentQuoteRollbackList = ModelsCreated;
                                 }
@@ -2470,6 +2469,7 @@ namespace PrototypeWithAuth.Controllers
                         client.Timeout = 500000; // 500 seconds
                         try
                         {
+                            throw new Exception();
                             client.Send(message);
                         }
                         catch (Exception ex)
@@ -2520,10 +2520,10 @@ namespace PrototypeWithAuth.Controllers
                 //Move parentquote docs back to parentquote:
                 await _tempRequestJsonsProc.RollbackAsync(guid, sequencePosition);
                 var oldTempRequestJson = await _tempRequestJsonsProc.GetTempRequest(guid, _userManager.GetUserId(User)).FirstOrDefaultAsync();
-
+                var originalJson = await _tempRequestJsonsProc.GetTempRequest(guid, _userManager.GetUserId(User), 0).FirstOrDefaultAsync();
                 var deTLVM = new TempRequestListViewModel()
                 {
-                    TempRequestViewModels = oldTempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
+                    TempRequestViewModels = originalJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
                 };
                 foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
                 {
@@ -2552,6 +2552,9 @@ namespace PrototypeWithAuth.Controllers
                     var product = deTLVM.TempRequestViewModels.Where(c => c.Request.ProductID == ModelWithID.ID).Select(r => r.Request.Product).FirstOrDefault();
                     ModelStates.Add(new ModelAndState { Model = product, StateEnum = EntityState.Modified });
                 }
+
+                await _requestsProc.UpdateModelsAsync(ModelStates);
+                ModelState.Clear();
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
                 {
                     var model6 = await _requestCommentsProc.ReadOneAsync(new List<Expression<Func<RequestComment, bool>>> { pr => pr.CommentID == ModelWithID.ID });

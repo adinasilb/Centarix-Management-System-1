@@ -41,7 +41,7 @@ namespace PrototypeWithAuth.CRUD
         {
             try
             {
-                TempRequestJson trj = CreateTempRequestJson(guid, userID, updateSequenceNumber);
+                TempRequestJson trj = await CreateTempRequestJson(guid, userID, updateSequenceNumber, trlvm, requestIndexObject);
 
                 await SetTempRequestAsync(trj, trlvm, requestIndexObject);
 
@@ -56,9 +56,22 @@ namespace PrototypeWithAuth.CRUD
 
 
 
-        private TempRequestJson CreateTempRequestJson(Guid guid, string userID, bool updateSequenceNumber) //NEW!! --check after
+        private async Task<TempRequestJson> CreateTempRequestJson(Guid guid, string userID, bool updateSequenceNumber, TempRequestListViewModel trlvm, RequestIndexObject requestIndexObject)
         {
             var tempRequest = GetTempRequest(guid, userID);
+            if(tempRequest.Count()==0)
+            {
+
+                var baseTrj = new TempRequestJson()
+                {
+                    GuidID = guid,
+                    ApplicationUserID = userID,
+                    SequencePosition = 0,
+                    IsCurrent = false,
+                    IsOriginal = true
+                };
+                await SetTempRequestAsync(baseTrj, trlvm, requestIndexObject);
+            }
             var sequencePosition = tempRequest.Select(t => t.SequencePosition).FirstOrDefault();
             if(updateSequenceNumber)
             {
@@ -66,9 +79,9 @@ namespace PrototypeWithAuth.CRUD
                 {
                     GuidID = guid,
                     ApplicationUserID = userID,
-                    SequencePosition =  sequencePosition== null ? 0 : sequencePosition+1,
+                    SequencePosition = sequencePosition+1,
                     IsCurrent = true,
-                    IsOriginal = sequencePosition==0
+                    IsOriginal = false
                 };
             }
             else
@@ -80,7 +93,7 @@ namespace PrototypeWithAuth.CRUD
 
         private async Task SetTempRequestAsync(TempRequestJson tempRequestJson, TempRequestListViewModel tempRequestListViewModel, RequestIndexObject requestIndexObject)
         {
-            tempRequestListViewModel.SequencePosition = tempRequestJson.SequencePosition;           
+            tempRequestListViewModel.SequencePosition = tempRequestJson.SequencePosition;
             var fullRequestJson = new FullRequestJson()
             {
                 TempRequestViewModels = tempRequestListViewModel.TempRequestViewModels,
@@ -134,6 +147,10 @@ namespace PrototypeWithAuth.CRUD
                 .Take(1);
         }
 
-
+        public IQueryable<TempRequestJson> GetTempRequest(Guid cookieID, string userID, int sequencePosition)
+        {
+            return _context.TempRequestJsons
+                .Where(t => t.GuidID == cookieID && t.ApplicationUserID == userID && t.SequencePosition==sequencePosition).Take(1);
+        }
     }
 }

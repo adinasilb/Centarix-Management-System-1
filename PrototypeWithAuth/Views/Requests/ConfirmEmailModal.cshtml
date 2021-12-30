@@ -33,7 +33,7 @@
                 <div class="row error-message">
                     @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
                 </div>
-                <input type="hidden" asp-for="TempRequestListViewModel.GUID" id="GUID" class="hidden-guid" />
+                <input type="hidden" value="@Model.TempRequestListViewModel.GUID" id="GUID" class="hidden-guid" />
                 <input type="hidden" asp-for="TempRequestListViewModel.SequencePosition" id="SequencePosition" class="hidden-guid" />
 
                 <input type="hidden" asp-for="TempRequestListViewModel.GUID" class="hidden-guid" />
