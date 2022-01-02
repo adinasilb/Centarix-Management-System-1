@@ -561,6 +561,9 @@ namespace PrototypeWithAuth.Controllers
             new ComplexIncludes<Request, ModelBase>{Include = r => r.ApplicationUserCreator },
             new ComplexIncludes<Request, ModelBase>{Include = r => r.ParentRequest },
             new ComplexIncludes<Request, ModelBase>{Include = r => r.ApplicationUserReceiver },
+            new ComplexIncludes<Request, ModelBase>{Include = r => r.Product.UnitType },
+            new ComplexIncludes<Request, ModelBase>{Include = r => r.Product.SubUnitType },
+            new ComplexIncludes<Request, ModelBase>{Include = r => r.Product.SubSubUnitType },
                 }).OrderByDescending(r => r.CreationDate).ToList();
 
             if (productSubCategoryID != 0)

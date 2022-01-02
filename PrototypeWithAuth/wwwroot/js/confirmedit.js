@@ -158,7 +158,7 @@ $(function () {
 
                     }
                 }
-
+                $.fn.TurnToDetails("edits");
                 //sets up error message if it has the setup in the view
                 //if ($(".hasErrorMessage").length > 0) {
                 //	alert("error message: " + $(".hasErrorMessage").val());
@@ -166,20 +166,26 @@ $(function () {
                 //}
             },
             error: function (xhr) {
-                $.fn.OpenModal("modal", "edits", xhr.responseText)
+                
                 if ($('.turn-edit-on-off').hasClass('operations') || $('.turn-edit-on-off').hasClass('orders')) {
+                    console.log(xhr.responseText);
+                    $(".editModal").html(xhr.responseText);
                     $.fn.LoadEditModalDetails();
+                    $('.modal-content a:first').tab('show');
+                    $("[data-toggle='tooltip']").tooltip();
                 }
-                if ($('.turn-edit-on-off').hasClass('protocols')) {
+                else if ($('.turn-edit-on-off').hasClass('protocols')) {
+                    $.fn.OpenModal("modal", "edits", xhr.responseText)
                     $("._CreateProtocol").html(jqxhr.responseText);
                     $(".mdb-select").materialSelect();
                 }
                 else {
-                    $.fn.OnOpenModal();
+                    $.fn.OpenModal("modal", "edits", xhr.responseText)
+                   // $.fn.OnOpenModal();
                 }
             }
         });
-        $.fn.TurnToDetails("edits");
+
     });
 
 

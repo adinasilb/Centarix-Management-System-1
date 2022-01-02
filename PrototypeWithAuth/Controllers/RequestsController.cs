@@ -863,7 +863,7 @@ namespace PrototypeWithAuth.Controllers
                 StateEnum = tempRequest.Request.ProductID == 0 ? EntityState.Added : EntityState.Modified
             });
             var parentQuoteState = new ModelAndState() { Model= tempRequest.Request.ParentQuote };
-            if ((tempRequest.Request.ParentQuoteID == 0 || tempRequest.Request.ParentQuoteID == null) && (tempRequest.Request.ParentQuote != null && (tempRequest.Request.ParentQuote?.ParentQuoteID==0 ))
+            if ((tempRequest.Request.ParentQuoteID == 0 || tempRequest.Request.ParentQuoteID == null) && tempRequest.Request.ParentQuote != null && (tempRequest.Request.ParentQuote?.ParentQuoteID==0 ))
             {
                 parentQuoteState.StateEnum = EntityState.Added;
             }
@@ -1756,7 +1756,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> EditModalView(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true, List<string> selectedPriceSort = null, bool isProprietary = false, int? Tab = 0)
+        public async Task<IActionResult> EditModalView(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true, List<string> selectedPriceSort = null, bool isProprietary = false, int? Tab = 0, string ErrorMessage =null)
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
@@ -1764,6 +1764,7 @@ namespace PrototypeWithAuth.Controllers
             }
             selectedPriceSort = selectedPriceSort.Count == 0 ? new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() } : selectedPriceSort;
             var requestItemViewModel = await editModalViewFunction(id, Tab, SectionType, isEditable, selectedPriceSort, isProprietary: isProprietary);
+            requestItemViewModel.ErrorMessage = ErrorMessage;
             return PartialView(requestItemViewModel);
         }
 
@@ -1867,58 +1868,11 @@ namespace PrototypeWithAuth.Controllers
                     });
                 }
                 catch (Exception ex)
-                {
-                    requestItemViewModel.Requests[0] = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { x => x.RequestID == requestItemViewModel.Requests[0].RequestID }, 
-                        new List<ComplexIncludes<Request, ModelBase>>
-                        {
-                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = p => ((Product)p).Vendor } },
-                            new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote },
-                            new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest },
-                            new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory ,  ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = ps => ((ProductSubcategory)ps).ParentCategory } },
-                            new ComplexIncludes<Request, ModelBase> { Include = r => r.RequestStatus},
-                            new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator}
-                            //new ComplexIncludes<Request, ModelBase>
-                            //{
-                            //    Include = r => r.Payments,
-                            //    ThenInclude= new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Payment)p).CompanyAccount }
-                            //},
-                            //new ComplexIncludes<Request, ModelBase>
-                            //{
-                            //    Include = r => r.Payments,
-                            //    ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Payment)p).CreditCard}
-                            //},
-                            //new ComplexIncludes<Request, ModelBase>
-                            //{
-                            //    Include = r => r.Payments,
-                            //    ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Payment)p).Invoice}
-                            //},
-                            //new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserReceiver }
-                        }
-                    );
-                    requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
-                    await transaction.RollbackAsync();
-                    var categoryTypeId = requestItemViewModel.SectionType == AppUtility.MenuItems.Requests ? 1 : 2;
-                    var productSubcategory = requestItemViewModel.Requests[0].Product.ProductSubcategory;
-                    requestItemViewModel = await FillRequestDropdowns(requestItemViewModel, productSubcategory, categoryTypeId);
-                    string requestId = requestItemViewModel.Requests[0].RequestID.ToString();
-                    string parentQuoteId = requestItemViewModel.Requests[0].ParentQuoteID.ToString();
-                    FillDocumentsInfo(requestItemViewModel, productSubcategory, requestId, parentQuoteId);
-                    var requestComments = _requestCommentsProc.Read(new List<Expression<Func<RequestComment, bool>>> { r => r.ObjectID == requestItemViewModel.Requests[0].RequestID },
-                        new List<ComplexIncludes<RequestComment, ModelBase>> 
-                        { 
-                            new ComplexIncludes<RequestComment, ModelBase>{Include = r => r.ApplicationUser},
-                            new ComplexIncludes<RequestComment, ModelBase>{Include = r => r.CommentType}
-                        });
-                    var productComments = _productCommentsProc.Read(new List<Expression<Func<ProductComment, bool>>> { r => r.ObjectID == requestItemViewModel.Requests[0].ProductID },
-                        new List<ComplexIncludes<ProductComment, ModelBase>>
-                        {
-                            new ComplexIncludes<ProductComment, ModelBase>{Include = r => r.ApplicationUser},
-                            new ComplexIncludes<ProductComment, ModelBase>{Include = r => r.CommentType}
-                        });
-                    requestItemViewModel.Comments = requestComments.Concat<CommentBase>(productComments).ToList();
-                    requestItemViewModel.ModalType = AppUtility.RequestModalType.Edit;
-                    Response.StatusCode = 50;
-                    return PartialView(requestItemViewModel);
+                {                  
+                    Response.StatusCode = 500;
+                    var viewModel = await editModalViewFunction(id : requestItemViewModel.Requests.FirstOrDefault().RequestID, Tab:1,  SectionType: requestItemViewModel.SectionType, selectedPriceSort: new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() });
+                    viewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                    return PartialView("_EditModalView", viewModel);
                 }
             }
         }

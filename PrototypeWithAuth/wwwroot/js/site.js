@@ -1449,6 +1449,7 @@ $(function () {
         //	return false;
         //}
         //else {
+       
         var type = $(this).attr('name');
         console.log(type);
         var url = '';
@@ -1504,6 +1505,7 @@ $(function () {
 
         }
         else if (type == 'details') {
+
             if ($(this).hasClass('locations')) {
                 $.fn.MakeLocationsEditable();
             }
