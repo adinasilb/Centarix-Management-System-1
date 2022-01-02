@@ -84,14 +84,7 @@ namespace PrototypeWithAuth.Controllers
 
             var updateEmployeeHours = await _employeeHoursProc.ReportHoursAsync(entryExitViewModel, _userManager.GetUserId(User));
 
-            if (updateEmployeeHours.Bool)
-            {
-                return RedirectToAction();
-            }
-            else
-            {
-                return RedirectToAction("ReportHours", new { errorMessage = updateEmployeeHours.String });
-            }
+            return RedirectToAction("ReportHours", new { errorMessage = updateEmployeeHours.String });
 
         }
         [HttpGet]
@@ -476,24 +469,37 @@ namespace PrototypeWithAuth.Controllers
             var userID = _userManager.GetUserId(User);
             var todaysEntry = await _employeeHoursProc.ReadOneAsync( new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.Date.Date == DateTime.Now.Date && eh.EmployeeID == userID });
             var success = new StringWithBool();
-            if (todaysEntry.Exit1 == null)
+            using (var transaction = _applicationDbContextTransaction.Transaction)
             {
-                todaysEntry.Exit1 = DateTime.Now;
-                success = await _employeeHoursProc.UpdateAsync(todaysEntry);
-            }
+                try
+                {
+                    if (todaysEntry.Exit1 == null)
+                    {
+                        todaysEntry.Exit1 = DateTime.Now;
+                        success = await _employeeHoursProc.UpdateAsync(todaysEntry);
+                    }
 
-            else if (todaysEntry.Exit2 == null)
-            {
-                todaysEntry.Exit2 = DateTime.Now;
-                 success = await _employeeHoursProc.UpdateAsync(todaysEntry);
+                    else if (todaysEntry.Exit2 == null)
+                    {
+                        todaysEntry.Exit2 = DateTime.Now;
+                        success = await _employeeHoursProc.UpdateAsync(todaysEntry);
+                    }
+                    await transaction.CommitAsync();
+                }
+                catch(Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    success.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                }
             }
+            
             if (success.Bool)
             {
                 return PartialView(todaysEntry);
             }
             else
             {
-                string errorMessage = success.Bool ? null : success.String;
+                string errorMessage = success.String;
                 return RedirectToAction("ReportHours", new { errorMessage });
             }
         }
@@ -575,23 +581,12 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> DeleteHourModal(DeleteHourViewModel deleteHourViewModel) //remove ehaa too
         {
             var success = await _employeeHoursProc.DeleteAsync(deleteHourViewModel);
-            if (success.Bool)
+            if (!success.Bool)
             {
-                return RedirectToAction("SummaryHours",
-                    new { Month = deleteHourViewModel.EmployeeHour.Date.Month, Year = deleteHourViewModel.EmployeeHour.Date.Year });
-            }
-            else
-            {
-                //deleteHourViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
-                return RedirectToAction("SummaryHours",
-                    new
-                    {
-                        Month = deleteHourViewModel.EmployeeHour.Date.Month,
-                        Year = deleteHourViewModel.EmployeeHour.Date.Year,
-                        errorMessage = success.String
-                    }); ;
             }
+            return RedirectToAction("SummaryHours",
+                   new { Month = deleteHourViewModel.EmployeeHour.Date.Month, Year = deleteHourViewModel.EmployeeHour.Date.Year, errorMessage = success.String});
         }
         [HttpPost]
         [Authorize(Roles = "TimeKeeper")]
