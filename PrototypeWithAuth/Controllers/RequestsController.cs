@@ -1021,6 +1021,20 @@ namespace PrototypeWithAuth.Controllers
                 newTRLVM.RequestIndexObject = tempRequestListViewModel.RequestIndexObject;
                 newTRLVM.SequencePosition = tempRequestJson.SequencePosition;
 
+                long lastParentRequestOrderNum = 0;
+                //var prs = _proc.ParentRequests;
+                if (_parentRequestsProc.Read().Any())
+                {
+                    lastParentRequestOrderNum = _parentRequestsProc.ReadWithIgnoreQueryFilters().OrderByDescending(x => x.OrderNumber).Select(pr => pr.OrderNumber).FirstOrDefault() ?? 0;
+                }
+                //ParentRequest pr = new ParentRequest()
+                //{
+                //    ApplicationUserID = userID,
+                //    OrderNumber = lastParentRequestOrderNum + 1,
+                //    OrderDate = DateTime.Now
+                //};
+
+                termsViewModel.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
                 var SaveUsingTempRequest = true;
                 bool hasShippingOnPayment;
                 if (termsViewModel.ParentRequest.Shipping == 0)
@@ -1121,7 +1135,9 @@ namespace PrototypeWithAuth.Controllers
                         await _requestsProc.SaveDbChangesAsync();
                         if (SaveUsingTempRequest)
                         {
+                            //this should be false, setting to true for testing purposes
                             await _tempRequestJsonsProc.UpdateWithoutTransactionAsync(tempRequestListViewModel.GUID, tempRequestListViewModel.RequestIndexObject, newTRLVM, userID, false);
+                            await transaction.CommitAsync();
                         }
                         if (!SaveUsingTempRequest)
                         {
@@ -1779,7 +1795,6 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    throw new Exception();
                     var request = requestItemViewModel.Requests.FirstOrDefault();
                     //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
                     request.ParentRequest = null;
@@ -2035,19 +2050,9 @@ namespace PrototypeWithAuth.Controllers
             //var allRequests = new List<Request>();
             //var isRequests = true;
             //var RequestNum = 1;
-            long lastParentRequestOrderNum = 0;
-            //var prs = _proc.ParentRequests;
-            if (_parentRequestsProc.Read().Any())
-            {
-                lastParentRequestOrderNum = _parentRequestsProc.ReadWithIgnoreQueryFilters().OrderByDescending(x => x.OrderNumber).Select(pr => pr.OrderNumber).FirstOrDefault() ?? 0;
-            }
-            var userID = _userManager.GetUserId(User);
-            ParentRequest pr = new ParentRequest()
-            {
-                ApplicationUserID = userID,
-                OrderNumber = lastParentRequestOrderNum + 1,
-                OrderDate = DateTime.Now
-            };
+
+            var pr = new ParentRequest();
+            
 
             TempRequestListViewModel newTRLVM = new TempRequestListViewModel() { RequestIndexObject = requestIndexObject, GUID = requestIndexObject.GUID };
             var allRequests = new List<Request>();
@@ -2058,7 +2063,7 @@ namespace PrototypeWithAuth.Controllers
                 if (parentRequest != null)
                 {
                     pr = parentRequest;
-                    pr.OrderNumber = lastParentRequestOrderNum + 1;
+                    //pr.OrderNumber = lastParentRequestOrderNum + 1;
                     pr.OrderDate = DateTime.Now;
                 }
                 request.ParentRequest = pr;
@@ -2188,7 +2193,7 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     //var pr = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest; //eventually(when ready to test all cases) put this in instead of next line and put it in for loop below
-                    deserializedTempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest);
+                    //deserializedTempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = confirmEmailViewModel.ParentRequest);
 
                     var userId = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ApplicationUserCreatorID ?? _userManager.GetUserId(User); //do we need to do this? (will it ever be null?)
 
@@ -2319,7 +2324,7 @@ namespace PrototypeWithAuth.Controllers
                                 Model = deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest,
                             };
                             var ParentRequestRollbackList = ModelsModified;
-                            if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID == 0)
+                            if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID == 0)
                             {
                                 parentRequestModelState.StateEnum = EntityState.Added;
 

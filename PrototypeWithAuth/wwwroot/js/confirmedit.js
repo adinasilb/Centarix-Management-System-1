@@ -166,7 +166,6 @@ $(function () {
                 //}
             },
             error: function (xhr) {
-                
                 if ($('.turn-edit-on-off').hasClass('operations') || $('.turn-edit-on-off').hasClass('orders')) {
                     console.log(xhr.responseText);
                     $(".editModal").html(xhr.responseText);
