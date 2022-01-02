@@ -71,7 +71,6 @@ namespace PrototypeWithAuth.CRUD
                     };
                     await _timekeeperNotificationsProc.CreateWithoutTransactionAsync(notification);
 
-                    throw new Exception();
                     await transaction.CommitAsync();
                     ReturnVal.SetStringAndBool(true, null);
                 }
