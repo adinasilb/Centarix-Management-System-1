@@ -67,12 +67,13 @@
                             $("#loading").hide();
                             var category = $("#categoryDescription").val();
                             console.log("category " + category)
-                            $('.turn-edit-on-off').attr("checked", true);
                             $('.turn-edit-on-off').prop("checked", true);
                             $(".ordersItemForm .edit-mode-switch-description").text("Edit Mode On");
                             $(".ordersItemForm .turn-edit-on-off").attr('name', 'edit');
                             $("." + category).removeClass("d-none");
                             $("." + category).prop("disabled", false);
+                            enableMarkReadonly($('.turn-edit-on-off'));
+                            $(".proprietryHidenCategory").attr("disabled", false);
                             $(".proprietryHidenCategory").attr("disabled", false);               
                             $.ajax({
                                 //processData: true,

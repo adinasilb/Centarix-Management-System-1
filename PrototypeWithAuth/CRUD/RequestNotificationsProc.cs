@@ -39,7 +39,7 @@ namespace PrototypeWithAuth.CRUD
                     CreateWithoutSaveChanges(requestNotification);
                     
                 }
-                ReturnVal = await SaveDbChangesAsync();
+                await SaveDbChangesAsync();
             }
             catch (Exception ex)
             {

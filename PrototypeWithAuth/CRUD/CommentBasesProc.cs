@@ -24,6 +24,7 @@ namespace PrototypeWithAuth.CRUD
 
         public virtual async Task UpdateWithoutTransactionAsync(List<T> comments, int objectID, string userID)
         {
+            throw new Exception();
             if (comments != null)
             {
                 foreach (var c in comments)

@@ -155,7 +155,7 @@ namespace PrototypeWithAuth.Controllers
                         if (orderLatesUpdated.Bool)
                         {
                             _employeesProc.UpdateLastLoginWithoutSaving(user.Id);
-                            orderLatesUpdated = await _employeesProc.SaveDbChangesAsync();
+                            await _employeesProc.SaveDbChangesAsync();
                         }
                         else
                         {
