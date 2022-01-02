@@ -19,9 +19,8 @@ namespace PrototypeWithAuth.CRUD
 
         }
 
-        public async Task<StringWithBool> DeleteByEHIDAsync(int EHID)
+        public async Task DeleteByEHIDAsync(int EHID)
         {
-            StringWithBool ReturnVal = new StringWithBool();
             try
             {
                 var notifications = await Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == EHID }).ToListAsync();
@@ -29,10 +28,8 @@ namespace PrototypeWithAuth.CRUD
             }
             catch (Exception ex)
             {
-                ReturnVal.Bool = false;
-                ReturnVal.String = AppUtility.GetExceptionMessage(ex);
+                throw ex;
             }
-            return ReturnVal;
         }
 
         public async Task<StringWithBool> DeleteByPKAsync(int id)
