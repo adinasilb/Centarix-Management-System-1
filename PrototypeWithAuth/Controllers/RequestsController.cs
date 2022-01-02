@@ -440,7 +440,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<RequestListIndexViewModel> GetSharedRequestListIndexObjectAsync(RequestIndexObject requestIndexObject)
         {
-            var userLists = _shareRequestListsProc.Read(new List<Expression<Func<ShareRequestList, bool>>> { l => l.ToApplicationUserID == _userManager.GetUserId(User) }, new List<ComplexIncludes<ShareRequestList, ModelBase>> { new ComplexIncludes<ShareRequestList, ModelBase> { Include =l => l.RequestList } }).OrderBy(l => l.TimeStamp).Select(l => l.RequestList).ToList();
+            var userLists = _shareRequestListsProc.Read(new List<Expression<Func<ShareRequestList, bool>>> { l => l.ToApplicationUserID == _userManager.GetUserId(User) }, new List<ComplexIncludes<ShareRequestList, ModelBase>> { new ComplexIncludes<ShareRequestList, ModelBase> { Include = l => l.RequestList } }).OrderBy(l => l.TimeStamp).Select(l => l.RequestList).ToList();
             if (userLists.Count > 0 && requestIndexObject.ListID == 0)
             {
                 requestIndexObject.ListID = userLists.FirstOrDefault().ListID;
@@ -770,7 +770,7 @@ namespace PrototypeWithAuth.Controllers
                     throw ex;
                 }
             }
-         return new TempRequestViewModel(){ Request = newRequest };
+            return new TempRequestViewModel() { Request = newRequest };
         }
         private async Task<TempRequestViewModel> SaveItem(Request newRequest, RequestItemViewModel requestItemViewModel, Guid guid, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
@@ -893,9 +893,9 @@ namespace PrototypeWithAuth.Controllers
                     throw new Exception();
                 }
                 int jsonID = 0;
-                if(isRollBack)
+                if (isRollBack)
                 {
-                   jsonID = _tempRequestJsonsProc.RollbackAsync(Guid, SequencePosition).Result.TempRequestJsonID;
+                    jsonID = _tempRequestJsonsProc.RollbackAsync(Guid, SequencePosition).Result.TempRequestJsonID;
                 }
                 else
                 {
@@ -1782,7 +1782,7 @@ namespace PrototypeWithAuth.Controllers
                     //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
                     request.ParentRequest = null;
                     var parentQuote = await _parentQuotesProc.ReadOneAsync(new List<Expression<Func<ParentQuote, bool>>> { pq => pq.ParentQuoteID == request.ParentQuoteID });
-                    
+
                     if (parentQuote != null && request.ParentQuote != null)
                     {
                         parentQuote.QuoteNumber = request.ParentQuote.QuoteNumber;
@@ -1790,7 +1790,7 @@ namespace PrototypeWithAuth.Controllers
                         request.ParentQuote = parentQuote;
                     }
 
-                    var product = await _productsProc.ReadOneWithIgnoreQueryFiltersAsync(new List<Expression<Func<Product, bool>>> { v => v.ProductID == request.ProductID }, new List<ComplexIncludes<Product, ModelBase>> { new ComplexIncludes<Product, ModelBase> { Include =  p => p.Vendor }, new ComplexIncludes<Product, ModelBase> { Include = p => p.ProductSubcategory } });
+                    var product = await _productsProc.ReadOneWithIgnoreQueryFiltersAsync(new List<Expression<Func<Product, bool>>> { v => v.ProductID == request.ProductID }, new List<ComplexIncludes<Product, ModelBase>> { new ComplexIncludes<Product, ModelBase> { Include = p => p.Vendor }, new ComplexIncludes<Product, ModelBase> { Include = p => p.ProductSubcategory } });
                     product.VendorID = request.Product.VendorID;
                     product.CatalogNumber = request.Product.CatalogNumber;
                     //in case we need to return to the modal view
@@ -1809,10 +1809,10 @@ namespace PrototypeWithAuth.Controllers
                     });
                     requestItemViewModel.Vendors = _vendorsProc.Read();
                     //redo the unit types when seeded
-                    var unittypes = _unitTypesProc.Read(includes:new List<ComplexIncludes<UnitType, ModelBase>> {
+                    var unittypes = _unitTypesProc.Read(includes: new List<ComplexIncludes<UnitType, ModelBase>> {
                             new ComplexIncludes<UnitType, ModelBase>{ Include = u => u.UnitParentType} })
                        .OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-                       
+
                     requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
 
                     //declared outside the if b/c it's used farther down to (for parent request the new comment too)
@@ -2110,7 +2110,7 @@ namespace PrototypeWithAuth.Controllers
                     tempRequest.Request.ParentRequest = pr;
                     if (tempRequest.Request.Product == null)
                     {
-                        tempRequest.Request.Product =  await _productsProc.ReadOneAsync(new List<Expression<Func<Product, bool>>> { p => p.ProductID == tempRequest.Request.ProductID }, new List<ComplexIncludes<Product, ModelBase>>{
+                        tempRequest.Request.Product = await _productsProc.ReadOneAsync(new List<Expression<Func<Product, bool>>> { p => p.ProductID == tempRequest.Request.ProductID }, new List<ComplexIncludes<Product, ModelBase>>{
                         new ComplexIncludes<Product, ModelBase> { Include = p => p.Vendor },
                         new ComplexIncludes<Product, ModelBase> { Include = p => p.ProductSubcategory },
                         new ComplexIncludes<Product, ModelBase> { Include = p => p.ProductSubcategory.ParentCategory },
@@ -2184,7 +2184,7 @@ namespace PrototypeWithAuth.Controllers
             deserializedTempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest);
 
             var userId = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ApplicationUserCreatorID ?? _userManager.GetUserId(User); //do we need to do this? (will it ever be null?)
-                                                                                                                                                                       
+
             var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == userId });
             try
             {
@@ -2335,7 +2335,7 @@ namespace PrototypeWithAuth.Controllers
                     catch (Exception ex)
                     {
                         await transaction.RollbackAsync();
-                        throw new Exception("Adding request to db failed-"+AppUtility.GetExceptionMessage(ex));
+                        throw new Exception("Adding request to db failed-" + AppUtility.GetExceptionMessage(ex));
                     }
                 }
                 try
@@ -2451,7 +2451,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception("Failed to send email - "+AppUtility.GetExceptionMessage(ex));
+                            throw new Exception("Failed to send email - " + AppUtility.GetExceptionMessage(ex));
                         }
                         client.Disconnect(true);
                     }
@@ -2472,11 +2472,11 @@ namespace PrototypeWithAuth.Controllers
             catch (Exception ex)
             {
                 Response.StatusCode = 500;
-                if(!rolledBackTempRequest)
+                if (!rolledBackTempRequest)
                 {
                     await _tempRequestJsonsProc.RollbackAsync(tempRequestListViewModel.GUID, oldTempRequestJson.SequencePosition);
                 }
-                await Response.WriteAsync( AppUtility.GetExceptionMessage(ex));
+                await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                 return new EmptyResult();
             }
             return new EmptyResult();
@@ -2493,7 +2493,7 @@ namespace PrototypeWithAuth.Controllers
                     entry.State = EntityState.Detached;
                 }
                 var ModelStates = new List<ModelAndState>();
-               
+
                 //Move parentquote docs back to parentquote:
                 await _tempRequestJsonsProc.RollbackAsync(guid, sequencePosition);
                 var oldTempRequestJson = await _tempRequestJsonsProc.GetTempRequest(guid, _userManager.GetUserId(User)).FirstOrDefaultAsync();
@@ -2663,7 +2663,7 @@ namespace PrototypeWithAuth.Controllers
                     //instantiate the body builder
                     var builder = new BodyBuilder();
 
-                    var currentUser = await  _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
+                    var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
                     //   currentUser = _proc.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
                     string ownerEmail = currentUser.Email;
                     string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
@@ -2734,13 +2734,13 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-    
+
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmQuoteEmailModal(int? id = null, int[] requestIds = null, bool isResend = false)
         {
             List<Expression<Func<Request, bool>>> wheres = new List<Expression<Func<Request, bool>>>();
-            List<ComplexIncludes<Request, ModelBase>> includes = new List<ComplexIncludes<Request, ModelBase>> ();
+            List<ComplexIncludes<Request, ModelBase>> includes = new List<ComplexIncludes<Request, ModelBase>>();
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product });
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor });
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory });
@@ -2759,8 +2759,8 @@ namespace PrototypeWithAuth.Controllers
                     wheres.Add(r => r.RequestStatusID == 6);
                 }
                 else if (requestIds != null)
-                {                    
-                    wheres.Add(r => requestIds.Contains( r.RequestID) && (r.QuoteStatusID == 1 || r.QuoteStatusID == 2));
+                {
+                    wheres.Add(r => requestIds.Contains(r.RequestID) && (r.QuoteStatusID == 1 || r.QuoteStatusID == 2));
                     wheres.Add(r => r.RequestStatusID == 6);
                 }
 
@@ -2773,7 +2773,7 @@ namespace PrototypeWithAuth.Controllers
                 wheres.Add(r => r.Product.VendorID == id && r.QuoteStatusID == 2);
                 wheres.Add(r => r.RequestStatusID == 6);
                 includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote });
-                requests =_requestsProc.Read(wheres, includes).AsEnumerable();
+                requests = _requestsProc.Read(wheres, includes).AsEnumerable();
             }
             RequestIndexObject requestIndexObject = new RequestIndexObject
             {
@@ -2943,7 +2943,7 @@ namespace PrototypeWithAuth.Controllers
             ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
             {
                 locationInstancesDepthZero = _locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationTypeID == LocationTypeID && !(li is TemporaryLocationInstance) },
-                new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include =li => li.LocationRoomInstance }, new ComplexIncludes<LocationInstance, ModelBase> { Include =li => li.LabPart } })
+                new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = li => li.LocationRoomInstance }, new ComplexIncludes<LocationInstance, ModelBase> { Include = li => li.LabPart } })
                 .OrderBy(li => li.LocationNumber),
                 locationTypeNames = new List<string>(),
                 locationInstancesSelected = new List<LocationInstance>(),
@@ -3021,7 +3021,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         receivedModalVisualViewModel.ChildrenLocationInstances =
                         _locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { m => m.LocationInstanceID == LocationInstanceID },
-                        new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include =m => m.RequestLocationInstances } }).OrderBy(m => m.LocationNumber).ToList();
+                        new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = m => m.RequestLocationInstances } }).OrderBy(m => m.LocationNumber).ToList();
                     }
                     else
                     {
@@ -3037,7 +3037,7 @@ namespace PrototypeWithAuth.Controllers
                         var requestLocationInstances = request.RequestLocationInstances.ToList();
                         receivedModalVisualViewModel.RequestChildrenLocationInstances =
                                 _locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { m => m.LocationInstanceParentID == parentLocationInstance.LocationInstanceID },
-                        new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include =m => m.RequestLocationInstances } })
+                        new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = m => m.RequestLocationInstances } })
                                    .Select(li => new RequestChildrenLocationInstances()
                                    {
                                        LocationInstance = li,
@@ -3129,7 +3129,7 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-   
+
 
 
 
@@ -3138,10 +3138,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReceivedModalVisual(ReceivedModalVisualViewModel receivedModalVisualViewModel, List<Request> Requests)
         {
-            var  success = await _requestLocationInstancesProc.UpdateAsync(receivedModalVisualViewModel, Requests.FirstOrDefault().RequestID);
+            var success = await _requestLocationInstancesProc.UpdateAsync(receivedModalVisualViewModel, Requests.FirstOrDefault().RequestID);
             //return PartialView(receivedModalVisualViewModel);
             return new EmptyResult();
-        }        
+        }
 
         /*
          * END RECEIVED MODAL
@@ -3245,7 +3245,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet] //send a json to that the subcategory list is filered
         public JsonResult GetSubCategoryList(int ParentCategoryId)
         {
-            var subCategoryList = _productSubcategoriesProc.Read( new List<Expression<Func<ProductSubcategory, bool>>> { c => c.ParentCategoryID == ParentCategoryId }).ToList();
+            var subCategoryList = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { c => c.ParentCategoryID == ParentCategoryId }).ToList();
             return Json(subCategoryList);
 
         }
@@ -3255,13 +3255,13 @@ namespace PrototypeWithAuth.Controllers
         {
             var boolCheck = true;
             //validation for the create
-            if (VendorID != 0 && CatalogNumber != null && (ProductID == null && _requestsProc.Read( new List<Expression<Func<Request, bool>>> { r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID }).Any()))
+            if (VendorID != 0 && CatalogNumber != null && (ProductID == null && _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID }).Any()))
             {
                 return false;
             }
             //validation for the edit
             //var product = _proc.Requests.Where(r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID);
-            if (ProductID != null && _requestsProc.Read( new List<Expression<Func<Request, bool>>> { r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID }).Any())
+            if (ProductID != null && _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID }).Any())
             {
                 return false;
             }
@@ -3280,12 +3280,12 @@ namespace PrototypeWithAuth.Controllers
             List<LocationInstance> locationInstanceList = new List<LocationInstance>();
             if (labPartID != 0)
             {
-                locationInstanceList = _locationInstancesProc.Read( new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceParentID == locationInstanceParentId && li.LabPartID == labPartID }, new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = li => li.LabPart } }).OrderBy(li => li.LocationNumber).ToList();
+                locationInstanceList = _locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceParentID == locationInstanceParentId && li.LabPartID == labPartID }, new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = li => li.LabPart } }).OrderBy(li => li.LocationNumber).ToList();
 
             }
             else
             {
-                locationInstanceList =_locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceParentID == locationInstanceParentId}, new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = li => li.LabPart } }).OrderBy(li => li.LocationNumber).ToList();
+                locationInstanceList = _locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceParentID == locationInstanceParentId }, new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = li => li.LabPart } }).OrderBy(li => li.LocationNumber).ToList();
             }
             return Json(locationInstanceList);
         }
@@ -3295,10 +3295,10 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Approve(int id, RequestIndexObject requestIndex)
         {
             var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == id },
-                new List<ComplexIncludes<Request, ModelBase>> 
-                { 
+                new List<ComplexIncludes<Request, ModelBase>>
+                {
                     new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote },
-                    new ComplexIncludes<Request, ModelBase> { 
+                    new ComplexIncludes<Request, ModelBase> {
                         Include = r => r.Product,
                         ThenInclude = new ComplexIncludes<ModelBase, ModelBase>
                         {
@@ -3474,7 +3474,7 @@ namespace PrototypeWithAuth.Controllers
             catch (Exception ex)
             {
                 var previousRequest = await _requestsProc.ReadOneAsync(
-                    new List<Expression<Func<Request, bool>>> 
+                    new List<Expression<Func<Request, bool>>>
                     {
                         r => r.RequestID == editQuoteDetailsViewModel.Requests.FirstOrDefault().RequestID,
                     },
@@ -3507,12 +3507,12 @@ namespace PrototypeWithAuth.Controllers
             IEnumerable<RequestNotification> requestNotifications = null;
             if (DidntArrive)
             {
-                requestNotifications = _requestNotificationsProc.Read( new List<Expression<Func<RequestNotification, bool>>> { rn => rn.NotificationStatusID == 1 }, new List<ComplexIncludes<RequestNotification, ModelBase>> { new ComplexIncludes<RequestNotification, ModelBase> {  Include = n => n.NotificationStatus }, new ComplexIncludes<RequestNotification, ModelBase> { Include = r => r.Request } }).AsEnumerable();
+                requestNotifications = _requestNotificationsProc.Read(new List<Expression<Func<RequestNotification, bool>>> { rn => rn.NotificationStatusID == 1 }, new List<ComplexIncludes<RequestNotification, ModelBase>> { new ComplexIncludes<RequestNotification, ModelBase> { Include = n => n.NotificationStatus }, new ComplexIncludes<RequestNotification, ModelBase> { Include = r => r.Request } }).AsEnumerable();
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.DidntArrive;
             }
             else
             {
-                requestNotifications =_requestNotificationsProc.Read(new List<Expression<Func<RequestNotification, bool>>> { rn => rn.NotificationStatusID != 1 }, new List<ComplexIncludes<RequestNotification, ModelBase>> { new ComplexIncludes<RequestNotification, ModelBase> { Include = n => n.NotificationStatus }, new ComplexIncludes<RequestNotification, ModelBase> { Include = r => r.Request } }).AsEnumerable();
+                requestNotifications = _requestNotificationsProc.Read(new List<Expression<Func<RequestNotification, bool>>> { rn => rn.NotificationStatusID != 1 }, new List<ComplexIncludes<RequestNotification, ModelBase>> { new ComplexIncludes<RequestNotification, ModelBase> { Include = n => n.NotificationStatus }, new ComplexIncludes<RequestNotification, ModelBase> { Include = r => r.Request } }).AsEnumerable();
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Notifications;
             }
             if (requestID != 0)
@@ -3523,7 +3523,7 @@ namespace PrototypeWithAuth.Controllers
 
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            ApplicationUser currentUser = await  _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
+            ApplicationUser currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
             var requests = requestNotifications.Where(n => n.ApplicationUserID == currentUser.Id).OrderByDescending(n => n.TimeStamp).ToList();
             return View(requests);
         }
@@ -4089,7 +4089,10 @@ namespace PrototypeWithAuth.Controllers
         {
             var oldJsonSequenceNumber = _tempRequestJsonsProc.Read(new List<Expression<Func<TempRequestJson, bool>>> { trj => trj.GuidID == requestIndexObject.GUID }).Select(trj => trj.SequencePosition)
                 .OrderByDescending(p => p).FirstOrDefault();
-            var oldJson = _tempRequestJsonsProc.Read(new List<Expression<Func<TempRequestJson, bool>>> { trj => trj.GuidID == requestIndexObject.GUID && trj.SequencePosition==oldJsonSequenceNumber }).FirstOrDefault();
+
+            var oldJson = _tempRequestJsonsProc.Read(new List<Expression<Func<TempRequestJson, bool>>>
+            { trj => trj.GuidID == requestIndexObject.GUID && trj.SequencePosition==oldJsonSequenceNumber })
+                .FirstOrDefault();
 
             var deSerializedJson = oldJson.DeserializeJson<FullRequestJson>().TempRequestViewModels;
             return new TempRequestListViewModel()
@@ -4234,9 +4237,9 @@ namespace PrototypeWithAuth.Controllers
                                 ModelStates.Add(new ModelAndState
                                 {
                                     Model = tempRequestViewModel.Request.ParentQuote,
-                                    StateEnum = tempRequestViewModel.Request.ParentQuoteID ==null ? EntityState.Added : EntityState.Modified
+                                    StateEnum = tempRequestViewModel.Request.ParentQuoteID == null ? EntityState.Added : EntityState.Modified
                                 });
-                             
+
                                 ModelStates.Add(new ModelAndState
                                 {
                                     Model = tempRequestViewModel.Request.Product,
@@ -4244,11 +4247,11 @@ namespace PrototypeWithAuth.Controllers
                                 });
                                 if (tempRequestViewModel.Request.ProductID == 0)
                                 {
-                                    tempRequestViewModel.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(false);                                
-                                }                        
-                                ModelStates.Add( new ModelAndState{ Model = tempRequestViewModel.Request, StateEnum = EntityState.Added });
+                                    tempRequestViewModel.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(false);
+                                }
+                                ModelStates.Add(new ModelAndState { Model = tempRequestViewModel.Request, StateEnum = EntityState.Added });
 
-                    
+
                                 await _requestsProc.UpdateModelsAsync(ModelStates);
 
                                 if (tempRequestViewModel.Comments != null)
@@ -4626,7 +4629,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (!success.Bool)
                 {
-                    Response.StatusCode =500;
+                    Response.StatusCode = 500;
                     await Response.WriteAsync(success.String);
 
                 }
@@ -4694,7 +4697,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ListSettingsModal(AppUtility.SidebarEnum SidebarType, int selectedListID = 0, string errorMessage = null)
         {
             var listSettings = await GetListSettingsInfoAsync(selectedListID, SidebarType);
-            listSettings.ErrorMessage=errorMessage;
+            listSettings.ErrorMessage = errorMessage;
             return PartialView(listSettings);
         }
 
@@ -4792,8 +4795,8 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         private List<SelectListItem> GetListUsersDropdown(ListSettingsViewModel listSettings)
         {
-            var selectedList = listSettings.SidebarType==AppUtility.SidebarEnum.MyLists ? listSettings.SelectedList : listSettings.SelectedSharedList.RequestList;
-            listSettings.ApplicationUsers =  _employeesProc.Read(new List<Expression<Func<Employee, bool>>> { u => u.Id != _userManager.GetUserId(User)
+            var selectedList = listSettings.SidebarType == AppUtility.SidebarEnum.MyLists ? listSettings.SelectedList : listSettings.SelectedSharedList.RequestList;
+            listSettings.ApplicationUsers = _employeesProc.Read(new List<Expression<Func<Employee, bool>>> { u => u.Id != _userManager.GetUserId(User)
                               && (!listSettings.SharedUsers.Select(su => su.ShareRequestList.ToApplicationUserID).Contains(u.Id))
                               && u.Id != selectedList.ApplicationUserOwnerID})
                               .Select(
@@ -4879,7 +4882,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> DeleteListModal(RequestList deleteList)
         {
             var error = await _requestListsProc.DeleteAsync(deleteList);
-            return RedirectToAction("ListSettingsModal", new { ErrorMessage = "From delete list: " +error.String });
+            return RedirectToAction("ListSettingsModal", new { ErrorMessage = "From delete list: " + error.String });
         }
 
         [HttpGet]
@@ -5008,7 +5011,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public string GetCategoryImageSrc(int productSubCategoryID)
         {
-            return _productSubcategoriesProc.ReadOneAsync( new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID ==productSubCategoryID }).Result.ImageURL;
+            return _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == productSubCategoryID }).Result.ImageURL;
         }
 
         [HttpGet]

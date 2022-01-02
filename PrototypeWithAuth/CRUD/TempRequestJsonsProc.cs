@@ -44,6 +44,7 @@ namespace PrototypeWithAuth.CRUD
                 TempRequestJson trj = await CreateTempRequestJson(guid, userID, updateSequenceNumber, trlvm, requestIndexObject);
 
                 await SetTempRequestAsync(trj, trlvm, requestIndexObject);
+                throw new Exception("Test exception from terms");
 
             }
             catch (Exception ex)
