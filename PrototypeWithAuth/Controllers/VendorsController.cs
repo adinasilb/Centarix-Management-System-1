@@ -293,9 +293,9 @@ namespace PrototypeWithAuth.Controllers
                     TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
                 }
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.NewSupplier;
-                createSupplierViewModel.ErrorMessage += vendorCreated.String;
                 createSupplierViewModel = await GetCreateSupplierViewModel(createSupplierViewModel.SectionType, 0, createSupplierViewModel.Tab);
                 createSupplierViewModel.ModalType = AppUtility.VendorModalType.Create;
+                createSupplierViewModel.ErrorMessage += vendorCreated.String;
 
                 return View(createSupplierViewModel);
 

@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="modal-body" style=" min-height:500px;">
-
+                            <span class="text error-message">@Model.ErrorMessage</span>
                         <div class="row">
                             <div class="form-group col-12">
                                 @*<label asp-for="LocationTypesDepthOfZero" class="control-label">Type of storage</label>*@
@@ -59,17 +59,17 @@
                         <br />
                         <div class="modal-footer-no">
                             <div class="text-center modal-footer-mt">
-                                <input id="submitAddLocation" type="submit" value="Save" @*asp-action="AddLocation"*@ class="lab-man-background-color 
+                                <input id="submitAddLocation" type="submit" value="Save" @*asp-action="AddLocation"*@ class="lab-man-background-color
                                        custom-button custom-button-font  between-button-margin activeSubmit" />@*style="margin-right:11rem;"*@
-                                @*@if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
-                                    {
-                                        <button class="btn btn-link load-add-location-type float-none" style="color: #2196F3;">[Add Location Type]</button>
-                                    }*@
-                                <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button " onclick="$.fn.CloseModal('add-location');" />
+                                    @*@if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
+                    {
+                        <button class="btn btn-link load-add-location-type float-none" style="color: #2196F3;">[Add Location Type]</button>
+                    }*@
+                                    <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button " onclick="$.fn.CloseModal('add-location');" />
+                                </div>
+                                <br />
                             </div>
-                            <br />
                         </div>
-                    </div>
             </form>
         </div>
     </div>
@@ -132,10 +132,13 @@
                 },
                 error: function (x, t, m) {
                     if (t === "timeout") {
-                        alert ("browser timed out. you may not see location for another couple of minutes")
+                        alert("browser timed out. you may not see location for another couple of minutes")
                         $.fn.CloseModal('add-location');
                     }
-                    $('#submitAddLocation').prop('disabled', false)
+                    else {
+                        $(".error-message").html(x.responseText)
+                    }
+                    //$('#submitAddLocation').prop('disabled', false)
                 }
             })
         }

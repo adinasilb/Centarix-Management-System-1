@@ -33,6 +33,7 @@ namespace PrototypeWithAuth.Controllers
         protected string AccessDeniedPath = "~/Identity/Account/AccessDenied";
         protected ICompositeViewEngine _viewEngine;
         protected readonly CRUD.VendorsProc _vendorsProc;
+        protected readonly CRUD.VendorCategoryTypesProc _vendorCategoryTypesProc;
         protected readonly CRUD.CategoryTypesProc _categoryType;
         protected readonly CRUD.CountriesProc _country;
         protected readonly CRUD.CommentTypesProc _commentType;
@@ -102,6 +103,7 @@ namespace PrototypeWithAuth.Controllers
             _viewEngine = viewEngine;
             _httpContextAccessor = httpContextAccessor;
             _vendorsProc = new CRUD.VendorsProc(context);
+            _vendorCategoryTypesProc = new CRUD.VendorCategoryTypesProc(context);
             _categoryType = new CRUD.CategoryTypesProc(context);
             _country = new CRUD.CountriesProc(context);
             _commentType = new CRUD.CommentTypesProc(context);
@@ -1692,10 +1694,11 @@ protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFi
                 createSupplierViewModel.Vendor = await _vendorsProc.ReadOneAsync(
                    new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == VendorID },
                    new List<ComplexIncludes<Vendor, ModelBase>> {
-                            new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorCategoryTypes },
-                            new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorComments, ThenInclude  = new ComplexIncludes<ModelBase, ModelBase>{ Include = c=>((VendorComment)c).CommentType } },
-                            new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorComments, ThenInclude  = new ComplexIncludes<ModelBase, ModelBase>{ Include = c=>((VendorComment)c).ApplicationUser } },
-                            new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorContacts}
+                        new ComplexIncludes<Vendor, ModelBase> {Include = v => v.Country },
+                        new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorCategoryTypes },
+                        new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorComments, ThenInclude  = new ComplexIncludes<ModelBase, ModelBase>{ Include = c=>((VendorComment)c).CommentType } },
+                        new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorComments, ThenInclude  = new ComplexIncludes<ModelBase, ModelBase>{ Include = c=>((VendorComment)c).ApplicationUser } },
+                        new ComplexIncludes<Vendor, ModelBase> {Include = v => v.VendorContacts}
                    });
                 createSupplierViewModel.Comments = createSupplierViewModel.Vendor.VendorComments;
                 createSupplierViewModel.VendorContacts = createSupplierViewModel.Vendor.VendorContacts.Select(c => new VendorContactWithDeleteViewModel()
