@@ -66,7 +66,7 @@ namespace PrototypeWithAuth.CRUD
                         var locationInstance = await _locationInstancesProc.ReadOneAsync(new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceID == place.LocationInstanceId });
                         if (locationInstance.IsFull == false)
                         {
-                            _context.Add(rli);
+                            _context.Entry(rli).State = EntityState.Added;
                         }
                         else
                         {
@@ -79,6 +79,10 @@ namespace PrototypeWithAuth.CRUD
                                 await _requestsProc.ArchiveRequestAsync(requestReceived);
                                 await _locationInstancesProc.MarkLocationAvailableAsync(requestReceived.RequestID, place.LocationInstanceId);
                             }
+                            else
+                            {
+                               await _locationInstancesProc.MarkLocationInstanceAsFullAsync(locationInstance);
+                            }
                             await _context.SaveChangesAsync();
                         }
                         catch (Exception ex)
@@ -86,8 +90,7 @@ namespace PrototypeWithAuth.CRUD
                             throw new Exception("RequestLocationInstancesProc SaveLocationsAsync in archive request catch-" + AppUtility.GetExceptionMessage(ex));
                         }
 
-                        await _locationInstancesProc.MarkLocationInstanceAsFullAsync(locationInstance);
-                    }
+                           }
                 }
             }
             catch (Exception ex)
@@ -117,7 +120,7 @@ namespace PrototypeWithAuth.CRUD
                             while (iterator.MoveNext())
                             {
                                 var locationToDelete = iterator.Current;
-                                _context.Remove(locationToDelete);
+                                _context.Entry(locationToDelete).State = EntityState.Deleted;
                                 await _locationInstancesProc.MarkLocationAvailableAsync(requestId, locationToDelete.LocationInstanceID);
                             }
                             await _context.SaveChangesAsync();
@@ -149,7 +152,7 @@ namespace PrototypeWithAuth.CRUD
                 {
 
                     await _locationInstancesProc.MarkLocationAvailableAsync(requestLocationInstance.RequestID, requestLocationInstance.LocationInstanceID);
-                    _context.Remove(requestLocationInstance);
+                    _context.Entry(requestLocationInstance).State = EntityState.Deleted;
                     await _context.SaveChangesAsync();
                 }
             }
@@ -188,10 +191,10 @@ namespace PrototypeWithAuth.CRUD
                     var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID }, new List<ComplexIncludes<Request, ModelBase>> {
                             new ComplexIncludes<Request, ModelBase>{ Include = r => r.RequestLocationInstances } });
                     var requestLocations = request.RequestLocationInstances;
-                    await _requestLocationInstancesProc.DeleteWithoutTransactionAsync(requestLocations);
+                    await DeleteWithoutTransactionAsync(requestLocations);
                     receivedModalVisualViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
 
-                    await _requestLocationInstancesProc.SaveLocationsWithoutTransactionAsync(receivedModalVisualViewModel, request, false);
+                    await SaveLocationsWithoutTransactionAsync(receivedModalVisualViewModel, request, false);
                 }
 
             }

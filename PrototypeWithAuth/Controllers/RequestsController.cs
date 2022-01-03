@@ -1889,6 +1889,7 @@ namespace PrototypeWithAuth.Controllers
                     Response.StatusCode = 500;
                     var viewModel = await editModalViewFunction(id: requestItemViewModel.Requests.FirstOrDefault().RequestID, Tab: 1, SectionType: requestItemViewModel.SectionType, selectedPriceSort: new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() });
                     viewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                    ControllerContext.ModelState.Clear();
                     return PartialView("_EditModalView", viewModel);
                 }
             }
@@ -3161,8 +3162,17 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ReceivedModalVisual(ReceivedModalVisualViewModel receivedModalVisualViewModel, List<Request> Requests)
         {
             var success = await _requestLocationInstancesProc.UpdateAsync(receivedModalVisualViewModel, Requests.FirstOrDefault().RequestID);
-            //return PartialView(receivedModalVisualViewModel);
-            return new EmptyResult();
+            if (!success.Bool)
+            {
+                var requestItemViewModel = await editModalViewFunction(Requests.FirstOrDefault().RequestID, isEditable: false);
+                requestItemViewModel.ErrorMessage = success.String;
+                Response.StatusCode = 500;
+                return PartialView("_LocationTab", requestItemViewModel);
+            }
+            else
+            {
+                return new EmptyResult();
+            }
         }
 
         /*
@@ -4591,7 +4601,14 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ArchiveRequest(int requestId, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
-            await _requestLocationInstancesProc.ArchiveAsync(requestId, receivedModalVisualViewModel);
+            var success = await _requestLocationInstancesProc.ArchiveAsync(requestId, receivedModalVisualViewModel);
+            if(!success.Bool)
+            {
+                var requestItemViewModel = await editModalViewFunction(requestId, isEditable: false);
+                requestItemViewModel.ErrorMessage = success.String;
+                Response.StatusCode = 500;
+                return PartialView("_LocationTab", requestItemViewModel);
+            }
             return RedirectToAction("_LocationTab", new { id = requestId });
         }
 

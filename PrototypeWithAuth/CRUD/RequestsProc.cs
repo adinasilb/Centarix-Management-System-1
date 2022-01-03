@@ -46,22 +46,11 @@ namespace PrototypeWithAuth.CRUD
             return await base.ReadOneWithIgnoreQueryFiltersAsync(wheres, includes);
         }
 
-        public async Task<StringWithBool> ArchiveRequestAsync(Request request)
+        public async Task ArchiveRequestAsync(Request request)
         {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
-            {
-                request.IsArchived = true;
-                _context.Update(request);
-                await _context.SaveChangesAsync();
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-            }
-            return ReturnVal;
-
+            request.IsArchived = true;
+            _context.Entry(request).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
 

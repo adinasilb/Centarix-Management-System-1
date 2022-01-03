@@ -21,6 +21,10 @@ namespace PrototypeWithAuth.CRUD
             {
                 base.InstantiateProcs();
             }
+            else
+            {
+                _requestLocationInstancesProc = new RequestLocationInstancesProc(context, true);
+            }
         }
 
         public async Task<StringWithBool> UpdateAsync(AddLocationViewModel addLocationViewModel, SubLocationViewModel subLocationViewModel)
@@ -462,16 +466,15 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        public async Task<StringWithBool> MarkLocationAvailableAsync(int requestId, int locationInstanceID)
+        public async Task MarkLocationAvailableAsync(int requestId, int locationInstanceID)
         {
-            StringWithBool ReturnVal = new StringWithBool();
             try
             {
                 var locationInstance = await ReadOneAsync( new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceID == locationInstanceID });
                 if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
                 {
                     locationInstance.IsFull = false;
-                    _context.Update(locationInstance);
+                    _context.Entry(locationInstance).State = EntityState.Modified;
                 }
                 else if (locationInstance.IsEmptyShelf)
                 {
@@ -480,23 +483,21 @@ namespace PrototypeWithAuth.CRUD
                     if (duplicateLocations.Count() == 0)
                     {
                         locationInstance.ContainsItems = false;
-                        _context.Update(locationInstance);
+                        _context.Entry(locationInstance).State = EntityState.Modified;
                     }
                 }
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                throw new Exception("Location instance proc in mark location available - "+AppUtility.GetExceptionMessage(ex));
             }
-            return ReturnVal;
             
         }
 
 
-        public async Task<StringWithBool> MarkLocationInstanceAsFullAsync(LocationInstance locationInstance)
+        public async Task MarkLocationInstanceAsFullAsync(LocationInstance locationInstance)
         {
-            StringWithBool ReturnVal = new StringWithBool();
             try
             {
                 //updating the locationinstance
@@ -509,16 +510,14 @@ namespace PrototypeWithAuth.CRUD
                 {
                     locationInstance.ContainsItems = true;
                 }
-                _context.Update(locationInstance);           
+                _context.Entry(locationInstance).State = EntityState.Modified;           
                 await _context.SaveChangesAsync();
        
             }
             catch (Exception ex)
             {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                throw new Exception("Location instance proc mark locations full"+ AppUtility.GetExceptionMessage(ex));
             }
-            return ReturnVal;
-
         }
     }
 }
