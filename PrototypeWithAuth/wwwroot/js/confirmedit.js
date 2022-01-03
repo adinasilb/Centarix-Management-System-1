@@ -188,6 +188,7 @@ $(function () {
                 }
                 else {
                     $.fn.OpenModal("modal", "edits", xhr.responseText)
+                    $(".mdb-select").materialSelect();
                    // $.fn.OnOpenModal();
                 }
             }

@@ -23,9 +23,8 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        private async Task<StringWithBool> RemoveAsync(List<VendorCategoryType> items)
+        private async Task RemoveAsync(List<VendorCategoryType> items)
         {
-            StringWithBool ReturnVal = new StringWithBool();
             try
             {
                 foreach(var item in items)
@@ -33,37 +32,31 @@ namespace PrototypeWithAuth.CRUD
                     _context.Remove(item);
                 }
                 await _context.SaveChangesAsync();
-                ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)
             {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                throw ex;
             }
-            return ReturnVal;
         }
 
-        public async Task<StringWithBool> UpdateAsync(List<int> newVendorCategoryTypes, int vendorID)
+        public async Task UpdateAsync(List<int> newVendorCategoryTypes, int vendorID)
         {
-            StringWithBool ReturnVal = new StringWithBool();
             try
             {
-                var vendor = await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == vendorID },
-                         new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include= v => v.VendorCategoryTypes } });
+                var oldVendorCategoryTypes = await Read(new List<Expression<Func<VendorCategoryType, bool>>> { v => v.VendorID == vendorID } ).ToListAsync();
 
-                await _vendorCategoryTypesProc.RemoveAsync(vendor.VendorCategoryTypes);
-                await _vendorCategoryTypesProc.CreateAsync(newVendorCategoryTypes, vendor.VendorID);
+                await RemoveAsync(oldVendorCategoryTypes);
+                await CreateAsync(newVendorCategoryTypes, vendorID);
             }
             catch (Exception ex)
             {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-            }
-            return ReturnVal;          
+                throw new Exception("Failed to update vendor category types - " + AppUtility.GetExceptionMessage(ex));
+            }         
 
         }
 
-        private async Task<StringWithBool> CreateAsync(List<int> types, int vendorID)
+        private async Task CreateAsync(List<int> types, int vendorID)
         {
-            StringWithBool ReturnVal = new StringWithBool();
             try
             {
                 foreach(var t in types)
@@ -71,13 +64,11 @@ namespace PrototypeWithAuth.CRUD
                     _context.Entry(new VendorCategoryType {CategoryTypeID = t, VendorID = vendorID }).State = EntityState.Added;
                 }
                 await _context.SaveChangesAsync();
-                ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)
             {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                throw ex;
             }
-            return ReturnVal;
         }
 
     }

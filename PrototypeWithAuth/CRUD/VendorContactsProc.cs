@@ -23,9 +23,8 @@ namespace PrototypeWithAuth.CRUD
             }
          }
 
-        public async Task<StringWithBool> UpdateAsync(List<VendorContactWithDeleteViewModel> vendorContacts, int vendorID)
+        public async Task UpdateAsync(List<VendorContactWithDeleteViewModel> vendorContacts, int vendorID)
         {
-            StringWithBool ReturnVal = new StringWithBool();
             try
             {
                 foreach (var vendorContact in vendorContacts)
@@ -42,13 +41,11 @@ namespace PrototypeWithAuth.CRUD
                     }
                 }
                 await _context.SaveChangesAsync();
-                ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)
             {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                throw new Exception("Failed to update vendor contacts - " + AppUtility.GetExceptionMessage(ex));
             }
-            return ReturnVal;
         }
 
     }
