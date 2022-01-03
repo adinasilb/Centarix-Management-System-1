@@ -862,8 +862,8 @@ namespace PrototypeWithAuth.Controllers
                 Model = tempRequest.Request.Product,
                 StateEnum = tempRequest.Request.ProductID == 0 ? EntityState.Added : EntityState.Modified
             });
-            var parentQuoteState = new ModelAndState() { Model= tempRequest.Request.ParentQuote };
-            if ((tempRequest.Request.ParentQuoteID == 0 || tempRequest.Request.ParentQuoteID == null) && tempRequest.Request.ParentQuote != null && (tempRequest.Request.ParentQuote?.ParentQuoteID==0 ))
+            var parentQuoteState = new ModelAndState() { Model = tempRequest.Request.ParentQuote };
+            if ((tempRequest.Request.ParentQuoteID == 0 || tempRequest.Request.ParentQuoteID == null) && tempRequest.Request.ParentQuote != null && (tempRequest.Request.ParentQuote?.ParentQuoteID == 0))
             {
                 parentQuoteState.StateEnum = EntityState.Added;
             }
@@ -1773,7 +1773,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> EditModalView(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true, List<string> selectedPriceSort = null, bool isProprietary = false, int? Tab = 0, string ErrorMessage =null)
+        public async Task<IActionResult> EditModalView(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true, List<string> selectedPriceSort = null, bool isProprietary = false, int? Tab = 0, string ErrorMessage = null)
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
@@ -1885,9 +1885,9 @@ namespace PrototypeWithAuth.Controllers
                     });
                 }
                 catch (Exception ex)
-                {                  
+                {
                     Response.StatusCode = 500;
-                    var viewModel = await editModalViewFunction(id : requestItemViewModel.Requests.FirstOrDefault().RequestID, Tab:1,  SectionType: requestItemViewModel.SectionType, selectedPriceSort: new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() });
+                    var viewModel = await editModalViewFunction(id: requestItemViewModel.Requests.FirstOrDefault().RequestID, Tab: 1, SectionType: requestItemViewModel.SectionType, selectedPriceSort: new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() });
                     viewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     return PartialView("_EditModalView", viewModel);
                 }
@@ -2045,6 +2045,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
+
             TempRequestListViewModel tempRequestListViewModel =
                 await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
             //var allRequests = new List<Request>();
@@ -2052,13 +2053,20 @@ namespace PrototypeWithAuth.Controllers
             //var RequestNum = 1;
 
             var pr = new ParentRequest();
-            
+
 
             TempRequestListViewModel newTRLVM = new TempRequestListViewModel() { RequestIndexObject = requestIndexObject, GUID = requestIndexObject.GUID };
             var allRequests = new List<Request>();
             if (id != 0) //already has terms, being sent from approve order button -- not in a temprequestjson
             {
-                var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == id });
+                var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == id }, new
+                    List<ComplexIncludes<Request, ModelBase>>
+                    {
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product },
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.Vendor },
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.ProductSubcategory },
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.ProductSubcategory.ParentCategory }
+                    });
                 var parentRequest = await _parentRequestsProc.ReadOneAsync(new List<Expression<Func<ParentRequest, bool>>> { pr => pr.ParentRequestID == request.ParentRequestID });
                 if (parentRequest != null)
                 {
@@ -2066,20 +2074,11 @@ namespace PrototypeWithAuth.Controllers
                     //pr.OrderNumber = lastParentRequestOrderNum + 1;
                     pr.OrderDate = DateTime.Now;
                 }
-                request.ParentRequest = pr;
-                if (request.Product == null)
-                {
-                    request.Product = await _productsProc.ReadOneAsync(new List<Expression<Func<Product, bool>>> { p => p.ProductID == request.ProductID }, new List<ComplexIncludes<Product, ModelBase>>{
-                        new ComplexIncludes<Product, ModelBase> { Include = p => p.Vendor },
-                        new ComplexIncludes<Product, ModelBase> { Include = p => p.ProductSubcategory },
-                        new ComplexIncludes<Product, ModelBase> { Include = p => p.ProductSubcategory.ParentCategory },
-                    });
-                }
                 else
                 {
-                    request.Product.ProductSubcategory.ParentCategory = await _parentCategoriesProc.ReadOneAsync(new List<Expression<Func<ParentCategory, bool>>> { pc => pc.ID == request.Product.ProductSubcategory.ParentCategoryID });
-                    request.Product.Vendor = await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == request.Product.VendorID });
+                    throw new Exception("Parent Request is null");
                 }
+                request.ParentRequest = pr;
                 newTRLVM.TempRequestViewModels = new List<TempRequestViewModel>()
                 {
                     new TempRequestViewModel(){
@@ -2090,17 +2089,17 @@ namespace PrototypeWithAuth.Controllers
                 newTRLVM.GUID = tempRequestListViewModel.GUID;
                 newTRLVM.SequencePosition = tempRequestListViewModel.SequencePosition;
 
-                await _tempRequestJsonsProc.UpdateAsync(newTRLVM.GUID, requestIndexObject, newTRLVM, userID, true);
+                //await _tempRequestJsonsProc.UpdateAsync(newTRLVM.GUID, requestIndexObject, newTRLVM, userID, true);
                 var payments = _paymentsProc.Read(new List<Expression<Func<Payment, bool>>> { p => p.RequestID == id }).AsEnumerable();
 
                 allRequests.Add(request);
             }
             else
             {
-                var oldTempRequestJson = await _tempRequestJsonsProc.GetTempRequest(tempRequestListViewModel.GUID, userID).FirstOrDefaultAsync();
+                //var oldTempRequestJson = await _tempRequestJsonsProc.GetTempRequest(tempRequestListViewModel.GUID, userID).FirstOrDefaultAsync();
                 //var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
 
-                newTRLVM.TempRequestViewModels = oldTempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels;
+                //newTRLVM.TempRequestViewModels = oldTempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels;
                 newTRLVM.GUID = tempRequestListViewModel.GUID;
                 newTRLVM.SequencePosition = tempRequestListViewModel.SequencePosition;
 
@@ -2134,7 +2133,7 @@ namespace PrototypeWithAuth.Controllers
                 //updatedTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson, 3);
                 newTRLVM.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
 
-                await _tempRequestJsonsProc.UpdateAsync(newTRLVM.GUID, requestIndexObject, newTRLVM, userID, true);
+                //await _tempRequestJsonsProc.UpdateAsync(newTRLVM.GUID, requestIndexObject, newTRLVM, userID, true);
             }
 
             //IMPORTANT!!! Check that payments and comments are coming in
@@ -2491,7 +2490,7 @@ namespace PrototypeWithAuth.Controllers
                     return new EmptyResult();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
                 Response.StatusCode = 500;
