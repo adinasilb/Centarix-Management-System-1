@@ -35,11 +35,11 @@ namespace PrototypeWithAuth.CRUD
                         {
                             c.ApplicationUserID = userID;
                             c.CommentTimeStamp = DateTime.Now;
-                            _context.Add(c);
+                            _context.Entry(c).State = EntityState.Added;
                         }
                         else
                         {
-                            _context.Update(c);
+                            _context.Entry(c).State = EntityState.Modified;
                         }
                     }
                     else
@@ -48,7 +48,7 @@ namespace PrototypeWithAuth.CRUD
                         if (commentDB != null)
                         {
                             commentDB.IsDeleted = true;
-                            _context.Update(commentDB);
+                            _context.Entry(commentDB).State = EntityState.Modified;
                         }
                     }
                 }
