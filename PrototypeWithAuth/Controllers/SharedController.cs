@@ -699,12 +699,14 @@ namespace PrototypeWithAuth.Controllers
                         var parent = parentLocationInstance;
                         receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
                         requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
-                        requestItemViewModel.ChildrenLocationInstances.Add(_locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { l => l.LocationInstanceParentID == parent.LocationInstanceParentID }).OrderBy(l => l.LocationNumber).ToList());
+                        requestItemViewModel.ChildrenLocationInstances.Add(_locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { l => l.LocationInstanceParentID == parent.LocationInstanceParentID },
+                              new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = l => l.LabPart } }).OrderBy(l => l.LocationNumber).ToList());
 
                         while (parent.LocationInstanceParentID != null)
                         {
                             parent = await _locationInstancesProc.ReadOneAsync(new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceID == parent.LocationInstanceParentID });
-                            requestItemViewModel.ChildrenLocationInstances.Add(_locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { l => l.LocationInstanceParentID == parent.LocationInstanceParentID }).OrderBy(l => l.LocationNumber).ToList());
+                            requestItemViewModel.ChildrenLocationInstances.Add(_locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { l => l.LocationInstanceParentID == parent.LocationInstanceParentID },
+                                new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = l=>l.LabPart } }).OrderBy(l => l.LocationNumber).ToList());
                             receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
                         }
                         if (parent.LocationTypeID == 500)
@@ -714,7 +716,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 receivedModalSublocationsViewModel.locationInstancesSelected.Insert(0, requestLocationInstances[0].LocationInstance);
                                 requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
-                                requestItemViewModel.ChildrenLocationInstances.Add(_locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { l => l.LocationInstanceParentID == parent.LocationInstanceID }).Include(l => l.LabPart).OrderBy(l => l.LocationNumber).ToList());
+                                requestItemViewModel.ChildrenLocationInstances.Add(_locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { l => l.LocationInstanceParentID == parent.LocationInstanceID }, new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = l=>l.LabPart} }).OrderBy(l => l.LocationNumber).ToList());
                             }
                             receivedModalSublocationsViewModel.locationInstancesSelected.First().LabPart = await _labPartsProc.ReadOneAsync(new List<Expression<Func<LabPart, bool>>> { lp => lp.LabPartID == receivedModalSublocationsViewModel.locationInstancesSelected.First().LabPartID });
                             receivedModalSublocationsViewModel.LabPartTypes = _labPartsProc.Read().AsEnumerable();
@@ -1628,7 +1630,6 @@ protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFi
             {
                 ViewEngineResult viewResult =
                     _viewEngine.FindView(ControllerContext, viewName, false);
-
                 ViewContext viewContext = new ViewContext(
                     ControllerContext,
                     viewResult.View,

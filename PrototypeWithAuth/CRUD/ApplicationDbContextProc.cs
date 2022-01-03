@@ -232,7 +232,6 @@ namespace PrototypeWithAuth.CRUD
         {
             try
             {
-                throw new Exception();
                 foreach (var ms in modelsAndStates)
                 {
                     if (ms.Model != null)
