@@ -119,6 +119,7 @@ $(function () {
                     }
                     else if ($('.turn-edit-on-off').hasClass('users')) {
                         var url = "";
+                        var errorMessage = data;
                         var pageType = $('#PageType').val();
                         if (pageType == "UsersWorkers") {
                             url = "/ApplicationUsers/_Details"
@@ -139,6 +140,9 @@ $(function () {
                                 else {
                                     $('#usersTable').html(data);
                                     $("#OriginalStatusID").attr("CentarixID", $("#CentarixID").val());
+                                    if (errorMessage.length > 0) {
+                                        $(".error-message").html(errorMessage);
+                                    }
                                 }
                             }
                         });
@@ -166,7 +170,6 @@ $(function () {
                 //}
             },
             error: function (xhr) {
-                
                 if ($('.turn-edit-on-off').hasClass('operations') || $('.turn-edit-on-off').hasClass('orders')) {
                     console.log(xhr.responseText);
                     $(".editModal").html(xhr.responseText);

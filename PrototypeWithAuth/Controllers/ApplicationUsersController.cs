@@ -376,11 +376,8 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ApproveHours(int id)
         {
             var hoursApproved = await _employeeHoursProc.UpdateApprovedHoursAsync(id);
-            if (!hoursApproved.Bool)
-            {
-                return RedirectToAction("_AwaitingApproval", new { ErrorMessage = hoursApproved.String });
-            }
-            return RedirectToAction("_AwaitingApproval");
+            return RedirectToAction("_AwaitingApproval", new { ErrorMessage = hoursApproved.String });
+            
         }
 
 
@@ -404,12 +401,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> DenyApprovalRequestModal(EmployeeHoursAwaitingApproval employeeHoursAwaitingApproval)
         {
             var deniedHours = await _employeeHoursAwaitingApprovalProc.DenyHoursAsync(employeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID);
-            if(!deniedHours.Bool)
-            {
-                return RedirectToAction("_AwaitingApproval", new { ErrorMessage = deniedHours.String });
-            }
-
-            return RedirectToAction("_AwaitingApproval");
+            return RedirectToAction("_AwaitingApproval", new { ErrorMessage = deniedHours.String });
         }
 
 

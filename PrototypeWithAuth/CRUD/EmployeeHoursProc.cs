@@ -28,8 +28,9 @@ namespace PrototypeWithAuth.CRUD
             var ReturnVal = new StringWithBool();
             try
             {
-                _context.Update(EmployeeHour);
+                _context.Update(EmployeeHour);;
                 await _context.SaveChangesAsync();
+               
                 ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)
@@ -195,7 +196,6 @@ namespace PrototypeWithAuth.CRUD
 
                     }
                     await _employeeHoursAwaitingApprovalProc.DeleteAsync(employeeHoursID);
-
                     await transaction.CommitAsync();
                     ReturnVal.SetStringAndBool(true, null);
 
@@ -203,7 +203,7 @@ namespace PrototypeWithAuth.CRUD
                 catch (Exception e)
                 {
                     transaction.Rollback();
-                    ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(e));
+                    ReturnVal.SetStringAndBool(false, "Failed to delete hours - "+AppUtility.GetExceptionMessage(e));
                     //throw e;
                 }
                 return ReturnVal;
@@ -294,12 +294,12 @@ namespace PrototypeWithAuth.CRUD
                                     {
                                         //employeeHour.Employee = user;
                                         //employeeHour.Employee.SpecialDays -= 1;
-                                        await _employeesProc.AddSpecialDays(UserID, -1);
+                                       await _employeesProc.AddSpecialDays(UserID, -1);
                                         //user.SpecialDays -= 1;
                                     }
                                     else if (employeeHour?.OffDayTypeID == 4 && OffDayTypeID != 4)
                                     {
-                                        await _employeesProc.AddSpecialDays(UserID, 1);
+                                         await _employeesProc.AddSpecialDays(UserID, 1);
                                         //user.SpecialDays += 1;
                                     }
                                     if (employeeHour == null)
@@ -344,7 +344,6 @@ namespace PrototypeWithAuth.CRUD
                             DateFrom = DateFrom.AddDays(1);
                             _context.SaveChanges();
                         }
-                        //throw new Exception();
                         await transaction.CommitAsync();
                     }
 
@@ -352,7 +351,7 @@ namespace PrototypeWithAuth.CRUD
                 }
                 catch (Exception ex)
                 {
-                    ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                    ReturnVal.SetStringAndBool(false, "Failed to save off day - " +AppUtility.GetExceptionMessage(ex));
                 }
             }
             return ReturnVal;
@@ -455,7 +454,6 @@ namespace PrototypeWithAuth.CRUD
                         _context.Update(updateHoursViewModel.EmployeeHour);
                         await _context.SaveChangesAsync();
                     }
-
                     var employeeHoursID = updateHoursViewModel.EmployeeHour.EmployeeHoursID;
                     ehaa.EmployeeHoursID = employeeHoursID;
                     int Month = ehaa.Date.Month;
@@ -471,7 +469,6 @@ namespace PrototypeWithAuth.CRUD
                     }
                     await _context.SaveChangesAsync();
 
-                    //throw new Exception();
                     await transaction.CommitAsync();
                     ReturnVal.SetStringAndBool(true, null);
                 }
@@ -479,8 +476,6 @@ namespace PrototypeWithAuth.CRUD
                 {
                     await transaction.RollbackAsync();
                     ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-
-
                 }
             }
             return ReturnVal;
@@ -548,12 +543,8 @@ namespace PrototypeWithAuth.CRUD
                     }
                     _context.Update(employeeHours);
                     await _context.SaveChangesAsync();
-                    var ehaaDeleted  = await _employeeHoursAwaitingApprovalProc.DeleteAsync(employeeHoursBeingApproved.EmployeeHoursAwaitingApprovalID);
-                    if (!ehaaDeleted.Bool)
-                    {
-                        ReturnVal.SetStringAndBool(false, "Failed to Delete hours awaiting approval"); ;
-                        return ReturnVal;
-                    }
+                    await _employeeHoursAwaitingApprovalProc.DeleteAsync(employeeHoursBeingApproved.EmployeeHoursAwaitingApprovalID);
+                    
                     await transaction.CommitAsync();
                     ReturnVal.SetStringAndBool(true, null);
                 }
