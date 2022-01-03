@@ -77,7 +77,7 @@ namespace PrototypeWithAuth.CRUD
                             if (archiveOneRequest)
                             {
                                 await _requestsProc.ArchiveRequestAsync(requestReceived);
-                                await _locationInstancesProc.MarkLocationAvailableAsync(requestReceived.RequestID, place.LocationInstanceId);
+                                await _locationInstancesProc.MarkLocationAvailableWithoutSaveChangesAsync(requestReceived.RequestID, place.LocationInstanceId);
                             }
                             else
                             {
@@ -121,7 +121,7 @@ namespace PrototypeWithAuth.CRUD
                             {
                                 var locationToDelete = iterator.Current;
                                 _context.Entry(locationToDelete).State = EntityState.Deleted;
-                                await _locationInstancesProc.MarkLocationAvailableAsync(requestId, locationToDelete.LocationInstanceID);
+                                await _locationInstancesProc.MarkLocationAvailableWithoutSaveChangesAsync(requestId, locationToDelete.LocationInstanceID);
                             }
                             await _context.SaveChangesAsync();
                             await SaveLocationsWithoutTransactionAsync(receivedModalVisualViewModel, request, true);
@@ -133,6 +133,7 @@ namespace PrototypeWithAuth.CRUD
                         await transaction.RollbackAsync();
                         throw new Exception(AppUtility.GetExceptionMessage(ex));
                     }
+                    ReturnVal.SetStringAndBool(true, null);
                 }
             }
             catch (Exception ex)
@@ -151,7 +152,7 @@ namespace PrototypeWithAuth.CRUD
                 foreach (var requestLocationInstance in requestLocationInstances)
                 {
 
-                    await _locationInstancesProc.MarkLocationAvailableAsync(requestLocationInstance.RequestID, requestLocationInstance.LocationInstanceID);
+                    await _locationInstancesProc.MarkLocationAvailableWithoutSaveChangesAsync(requestLocationInstance.RequestID, requestLocationInstance.LocationInstanceID);
                     _context.Entry(requestLocationInstance).State = EntityState.Deleted;
                     await _context.SaveChangesAsync();
                 }
@@ -172,6 +173,7 @@ namespace PrototypeWithAuth.CRUD
                 {
                     await UpdateWithoutTransactionAsync(receivedModalVisualViewModel, requestID);
                     await transaction.CommitAsync();
+                    ReturnVal.SetStringAndBool(true, null);
                 }
                 catch (Exception ex)
                 {

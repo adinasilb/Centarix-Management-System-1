@@ -466,15 +466,24 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        public async Task MarkLocationAvailableAsync(int requestId, int locationInstanceID)
+        public async Task MarkLocationAvailableWithoutSaveChangesAsync(int requestId, int locationInstanceID)
         {
             try
             {
-                var locationInstance = await ReadOneAsync( new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceID == locationInstanceID });
+                var locationInstance = await ReadOneWithIgnoreQueryFiltersAsync( new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceID == locationInstanceID });
                 if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
                 {
                     locationInstance.IsFull = false;
-                    _context.Entry(locationInstance).State = EntityState.Modified;
+                    var entity = _context.ChangeTracker.Entries<LocationInstance>().Where(e => e.Entity.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault();
+                    if (entity !=null)
+                    {
+                        entity.State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        _context.Entry(locationInstance).State = EntityState.Modified;
+                    }
+               
                 }
                 else if (locationInstance.IsEmptyShelf)
                 {
@@ -483,10 +492,17 @@ namespace PrototypeWithAuth.CRUD
                     if (duplicateLocations.Count() == 0)
                     {
                         locationInstance.ContainsItems = false;
-                        _context.Entry(locationInstance).State = EntityState.Modified;
+                        var entity = _context.ChangeTracker.Entries<LocationInstance>().Where(e => e.Entity.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault();
+                        if (entity !=null)
+                        {
+                            entity.State = EntityState.Modified;
+                        }
+                        else
+                        {
+                            _context.Entry(locationInstance).State = EntityState.Modified;
+                        }
                     }
-                }
-                await _context.SaveChangesAsync();
+                }              
             }
             catch (Exception ex)
             {
@@ -510,7 +526,16 @@ namespace PrototypeWithAuth.CRUD
                 {
                     locationInstance.ContainsItems = true;
                 }
-                _context.Entry(locationInstance).State = EntityState.Modified;           
+                var entity = _context.ChangeTracker.Entries<LocationInstance>().Where(e => e.Entity.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault();
+                if(entity !=null)
+                {
+                   entity.State = EntityState.Modified;
+                }
+                else
+                {
+                    _context.Entry(locationInstance).State = EntityState.Modified;
+                }
+                    
                 await _context.SaveChangesAsync();
        
             }
