@@ -2065,7 +2065,7 @@ namespace PrototypeWithAuth.Controllers
 
             List<Request> allRequests = new List<Request>();
             var pr = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest; //will never come into here with more than one parent request
-            pr.OrderDate = DateTime.Now; 
+            pr.OrderDate = DateTime.Now;
             tempRequestListViewModel.TempRequestViewModels.ForEach(trvm => allRequests.Add(trvm.Request));
             newTRLVM.TempRequestViewModels = tempRequestListViewModel.TempRequestViewModels;
 
@@ -2079,7 +2079,7 @@ namespace PrototypeWithAuth.Controllers
                 foreach (var tempRequest in newTRLVM.TempRequestViewModels)
                 {
                     tempRequest.Request.PaymentStatus = await _paymentStatusesProc.ReadOneAsync(new List<Expression<Func<PaymentStatus, bool>>> { ps => ps.PaymentStatusID == tempRequest.Request.PaymentStatusID });
-                   
+
                     if (tempRequest.Request.Product == null)
                     {
                         tempRequest.Request.Product = await _productsProc.ReadOneAsync(new List<Expression<Func<Product, bool>>> { p => p.ProductID == tempRequest.Request.ProductID }, new List<ComplexIncludes<Product, ModelBase>>{
@@ -4190,13 +4190,11 @@ namespace PrototypeWithAuth.Controllers
             {
                 var deserializedTempRequestListViewModel = new TempRequestListViewModel()
                 {
-                    TempRequestViewModels = tempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
+                    TempRequestViewModels = tempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels,
+                    GUID = tempRequestListViewModel.GUID,
+                    RequestIndexObject = tempRequestListViewModel.RequestIndexObject,
+                    SequencePosition = tempRequestJson.SequencePosition
                 };
-
-                deserializedTempRequestListViewModel.GUID = tempRequestListViewModel.GUID;
-                deserializedTempRequestListViewModel.RequestIndexObject = tempRequestListViewModel.RequestIndexObject;
-                deserializedTempRequestListViewModel.SequencePosition = tempRequestJson.SequencePosition;
-
 
                 foreach (var tempRequestViewModel in deserializedTempRequestListViewModel.TempRequestViewModels)
                 {
@@ -4218,7 +4216,7 @@ namespace PrototypeWithAuth.Controllers
                 if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderType != AppUtility.OrderTypeEnum.AddToCart.ToString())
                 {
                     tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
-                    await _tempRequestJsonsProc.UpdateAsync(tempRequestListViewModel.GUID, tempRequestListViewModel.RequestIndexObject, tempRequestListViewModel, _userManager.GetUserId(User), false);
+                    await _tempRequestJsonsProc.UpdateAsync(tempRequestListViewModel.GUID, tempRequestListViewModel.RequestIndexObject, deserializedTempRequestListViewModel, _userManager.GetUserId(User), false);
                     return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
                 }
                 else
@@ -4976,6 +4974,7 @@ namespace PrototypeWithAuth.Controllers
                 OrderDate = AppUtility.GetExcelDateFormat(r.ParentRequest.OrderDate),
                 ArrivalDate = AppUtility.GetExcelDateFormat(r.ArrivalDate),
                 RequestedBy = r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName,
+                OrderedBy = r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName,
                 ReceivedBy = r.ApplicationUserReceiver.FirstName + " " + r.ApplicationUserReceiver.LastName,
                 Currency = r.Currency,
                 ExchangeRate = r.ExchangeRate,
@@ -4985,7 +4984,7 @@ namespace PrototypeWithAuth.Controllers
                 SubUnit = r.Product.SubUnitType.UnitTypeDescription,
                 SubSubUnitAmount = r.Product.SubSubUnit,
                 SubSubUnit = r.Product.SubSubUnitType.UnitTypeDescription,
-                //Total = "Calculate Total Later",
+                Total = r.Cost,
                 IncludeVat = r.IncludeVAT,
                 Discount = r.ParentQuote.Discount,
                 Terms = r.PaymentStatus.PaymentStatusDescription,
