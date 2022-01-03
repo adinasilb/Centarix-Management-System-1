@@ -2049,72 +2049,37 @@ namespace PrototypeWithAuth.Controllers
 
             TempRequestListViewModel tempRequestListViewModel =
                 await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
+            string userID = _userManager.GetUserId(User);
             //var allRequests = new List<Request>();
             //var isRequests = true;
             //var RequestNum = 1;
 
-            var pr = new ParentRequest();
 
 
-            TempRequestListViewModel newTRLVM = new TempRequestListViewModel() { RequestIndexObject = requestIndexObject, GUID = requestIndexObject.GUID };
-            var allRequests = new List<Request>();
+            TempRequestListViewModel newTRLVM = new TempRequestListViewModel()
+            {
+                RequestIndexObject = requestIndexObject,
+                GUID = requestIndexObject.GUID,
+                SequencePosition = tempRequestListViewModel.SequencePosition
+            };
+
+            List<Request> allRequests = new List<Request>();
+            var pr = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest; //will never come into here with more than one parent request
+            pr.OrderDate = DateTime.Now; 
+            tempRequestListViewModel.TempRequestViewModels.ForEach(trvm => allRequests.Add(trvm.Request));
+            newTRLVM.TempRequestViewModels = tempRequestListViewModel.TempRequestViewModels;
+
+
             if (id != 0) //already has terms, being sent from approve order button -- not in a temprequestjson
             {
-                var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == id }, new
-                    List<ComplexIncludes<Request, ModelBase>>
-                    {
-                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product },
-                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.Vendor },
-                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.ProductSubcategory },
-                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.ProductSubcategory.ParentCategory }
-                    });
-                var parentRequest = await _parentRequestsProc.ReadOneAsync(new List<Expression<Func<ParentRequest, bool>>> { pr => pr.ParentRequestID == request.ParentRequestID });
-                if (parentRequest != null)
-                {
-                    pr = parentRequest;
-                    //pr.OrderNumber = lastParentRequestOrderNum + 1;
-                    pr.OrderDate = DateTime.Now;
-                }
-                else
-                {
-                    throw new Exception("Parent Request is null");
-                }
-                request.ParentRequest = pr;
-                newTRLVM.TempRequestViewModels = new List<TempRequestViewModel>()
-                {
-                    new TempRequestViewModel(){
-                        Request = request
-                    }
-                };
-                newTRLVM.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
-                newTRLVM.GUID = tempRequestListViewModel.GUID;
-                newTRLVM.SequencePosition = tempRequestListViewModel.SequencePosition;
 
-                //await _tempRequestJsonsProc.UpdateAsync(newTRLVM.GUID, requestIndexObject, newTRLVM, userID, true);
-                var payments = _paymentsProc.Read(new List<Expression<Func<Payment, bool>>> { p => p.RequestID == id }).AsEnumerable();
-
-                allRequests.Add(request);
             }
             else
             {
-                //var oldTempRequestJson = await _tempRequestJsonsProc.GetTempRequest(tempRequestListViewModel.GUID, userID).FirstOrDefaultAsync();
-                //var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
-
-                //newTRLVM.TempRequestViewModels = oldTempRequestJson.DeserializeJson<FullRequestJson>().TempRequestViewModels;
-                newTRLVM.GUID = tempRequestListViewModel.GUID;
-                newTRLVM.SequencePosition = tempRequestListViewModel.SequencePosition;
-
-
-
                 foreach (var tempRequest in newTRLVM.TempRequestViewModels)
                 {
                     tempRequest.Request.PaymentStatus = await _paymentStatusesProc.ReadOneAsync(new List<Expression<Func<PaymentStatus, bool>>> { ps => ps.PaymentStatusID == tempRequest.Request.PaymentStatusID });
-                    if (tempRequest.Request.ParentRequest != null)
-                    {
-                        pr.Shipping = tempRequest.Request.ParentRequest.Shipping;
-                        pr.NoteToSupplier = tempRequest.Request.ParentRequest.NoteToSupplier;
-                    }
-                    tempRequest.Request.ParentRequest = pr;
+                   
                     if (tempRequest.Request.Product == null)
                     {
                         tempRequest.Request.Product = await _productsProc.ReadOneAsync(new List<Expression<Func<Product, bool>>> { p => p.ProductID == tempRequest.Request.ProductID }, new List<ComplexIncludes<Product, ModelBase>>{
@@ -2128,14 +2093,12 @@ namespace PrototypeWithAuth.Controllers
                         tempRequest.Request.Product.ProductSubcategory = await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == tempRequest.Request.Product.ProductSubcategoryID }, new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory } });
                         tempRequest.Request.Product.Vendor = await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == tempRequest.Request.Product.VendorID });
                     }
-                    allRequests.Add(tempRequest.Request);
                 }
 
-                //updatedTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson, 3);
-                newTRLVM.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
-
-                //await _tempRequestJsonsProc.UpdateAsync(newTRLVM.GUID, requestIndexObject, newTRLVM, userID, true);
             }
+
+
+            await _tempRequestJsonsProc.UpdateAsync(newTRLVM.GUID, requestIndexObject, newTRLVM, userID, true);
 
             //IMPORTANT!!! Check that payments and comments are coming in
             ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
@@ -3338,7 +3301,8 @@ namespace PrototypeWithAuth.Controllers
                             ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = ps => ((ProductSubcategory)ps).ParentCategory}
                         }
                     },
-                    new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.Vendor }
+                    new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.Vendor },
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.ParentRequest }
                 });
             try
             {
@@ -4602,7 +4566,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ArchiveRequest(int requestId, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
             var success = await _requestLocationInstancesProc.ArchiveAsync(requestId, receivedModalVisualViewModel);
-            if(!success.Bool)
+            if (!success.Bool)
             {
                 var requestItemViewModel = await editModalViewFunction(requestId, isEditable: false);
                 requestItemViewModel.ErrorMessage = success.String;
