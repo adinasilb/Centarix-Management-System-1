@@ -15,15 +15,15 @@ namespace PrototypeWithAuth.CRUD
 {
     public class LocationInstancesProc : ApplicationDbContextProc<LocationInstance>
     {
-        public LocationInstancesProc(ApplicationDbContext context, bool FromBase = false) : base(context)
+        public LocationInstancesProc(ApplicationDbContext context, bool FromBase = false, bool flag =false) : base(context)
         {
             if (!FromBase)
             {
                 base.InstantiateProcs();
             }
-            else
+            else if (!flag)
             {
-                _requestLocationInstancesProc = new RequestLocationInstancesProc(context, true);
+                _requestLocationInstancesProc = new RequestLocationInstancesProc(context, true, true);
             }
         }
 
@@ -495,12 +495,11 @@ namespace PrototypeWithAuth.CRUD
                         var entity = _context.ChangeTracker.Entries<LocationInstance>().Where(e => e.Entity.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault();
                         if (entity !=null)
                         {
-                            entity.State = EntityState.Modified;
+                            entity.State = EntityState.Detached;
                         }
-                        else
-                        {
-                            _context.Entry(locationInstance).State = EntityState.Modified;
-                        }
+
+                        _context.Entry(locationInstance).State = EntityState.Modified;
+                        
                     }
                 }              
             }
@@ -529,12 +528,10 @@ namespace PrototypeWithAuth.CRUD
                 var entity = _context.ChangeTracker.Entries<LocationInstance>().Where(e => e.Entity.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault();
                 if(entity !=null)
                 {
-                   entity.State = EntityState.Modified;
+                   entity.State = EntityState.Detached;
                 }
-                else
-                {
-                    _context.Entry(locationInstance).State = EntityState.Modified;
-                }
+
+                _context.Entry(locationInstance).State = EntityState.Modified;
                     
                 await _context.SaveChangesAsync();
        

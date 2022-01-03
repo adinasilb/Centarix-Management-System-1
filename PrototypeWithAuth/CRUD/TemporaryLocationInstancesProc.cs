@@ -19,6 +19,10 @@ namespace PrototypeWithAuth.CRUD
             {
                 base.InstantiateProcs();
             }
+            else
+            {
+                _locationTypesProc = new LocationTypesProc(context, true);
+            }
         }
 
         public async Task CreateWithoutTransactionAsync(TemporaryLocationInstance temporaryLocationInstance, int locationTypeID)
