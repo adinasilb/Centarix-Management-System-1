@@ -803,8 +803,6 @@ namespace PrototypeWithAuth.Controllers
                     await _productCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<ProductComment>>(AppData.Json.Serialize(requestItemViewModel.Comments.Where(c => c.CommentTypeID == 2))), newRequest.ProductID, currentUserID);
 
                     MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests, false, guid);
-
-                    throw new Exception();
                      
                     RequestNotification requestNotification = new RequestNotification();
                     requestNotification.RequestID = newRequest.RequestID;
