@@ -174,6 +174,10 @@ $(function () {
                     $('.modal-content a:first').tab('show');
                     $("[data-toggle='tooltip']").tooltip();
                 }
+                if ($('.turn-edit-on-off').hasClass('locations')) {
+                    $("#location").html(xhr.responseText);
+                    $(".error-message").removeClass("d-none");
+                }
                 else if ($('.turn-edit-on-off').hasClass('protocols')) {
                     $.fn.OpenModal("modal", "edits", xhr.responseText)
                     $("._CreateProtocol").html(jqxhr.responseText);
