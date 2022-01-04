@@ -5049,7 +5049,11 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
 
-
+        [HttpPost]
+        public string UploadFile(DocumentsModalViewModel documentsModalViewModel)
+        {
+            return base.UploadFile(documentsModalViewModel);
+        }
 
     }
 }
