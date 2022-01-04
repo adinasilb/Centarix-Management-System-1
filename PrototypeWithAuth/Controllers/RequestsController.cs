@@ -530,12 +530,12 @@ namespace PrototypeWithAuth.Controllers
                 Response.StatusCode = 500;
                 await _tempRequestJsonsProc.RemoveAllAsync(requestItemViewModel.TempRequestListViewModel.GUID, _userManager.GetUserId(User));
                 //Response.WriteAsync(ex.Message?.ToString());
-                /*if (requestItemViewModel.RequestStatusID == 7)
+                if (requestItemViewModel.RequestStatusID == 7)
                 {
-                    return new RedirectToActionResult(actionName: "CreateItemTabs", controllerName: "Requests", routeValues: requestItemViewModel );
+                    return RedirectToAction("IndexInventory",  new { ErrorMessage = AppUtility.GetExceptionMessage(ex)});
                 }
-                return new RedirectToActionResult(actionName: "_OrderTab", controllerName: "Requests", routeValues: requestItemViewModel );*/
-                throw ex;
+               /* return new RedirectToActionResult(actionName: "_OrderTab", controllerName: "Requests", routeValues: requestItemViewModel );*/
+        
 
             }
             requestItemViewModel.TempRequestListViewModel.RequestIndexObject = new RequestIndexObject()
@@ -789,6 +789,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     var ModelStates = new List<ModelAndState>()
                     {
+                        new ModelAndState(){Model = newRequest.Product, StateEnum = EntityState.Added},
                         new ModelAndState(){Model = newRequest, StateEnum = EntityState.Added},
                     };
                     await _requestsProc.UpdateModelsAsync(ModelStates);
@@ -802,8 +803,7 @@ namespace PrototypeWithAuth.Controllers
                     await _productCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<ProductComment>>(AppData.Json.Serialize(requestItemViewModel.Comments.Where(c => c.CommentTypeID == 2))), newRequest.ProductID, currentUserID);
 
                     MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests, false, guid);
-
-                    newRequest.Product = await _productsProc.ReadOneAsync(new List<Expression<Func<Product, bool>>> { p => p.ProductID == newRequest.ProductID });
+                     
                     RequestNotification requestNotification = new RequestNotification();
                     requestNotification.RequestID = newRequest.RequestID;
                     requestNotification.IsRead = false;
@@ -1431,17 +1431,18 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-                var error = await _requestsProc.DeleteAsync(deleteRequestViewModel.Request.RequestID);
-                if (error.Bool)
+                var sucess = await _requestsProc.DeleteAsync(deleteRequestViewModel.Request.RequestID);
+                if (!sucess.Bool)
                 {
-                    throw new Exception(error.String);
+                    throw new Exception(sucess.String);
                 }
             }
 
             catch (Exception ex)
             {
-                deleteRequestViewModel.RequestIndexObject.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
+                await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
+                return new EmptyResult();
             }
             switch (deleteRequestViewModel.RequestIndexObject.SidebarType)
             {

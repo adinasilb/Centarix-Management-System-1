@@ -1566,6 +1566,7 @@ protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFi
 
 
         protected async Task<RequestItemViewModel> FillRequestDropdowns(RequestItemViewModel requestItemViewModel, ProductSubcategory productSubcategory, int categoryTypeId)
+        
         {
             var parentcategories = new List<ParentCategory>();
             var productsubcategories = new List<ProductSubcategory>();
@@ -1581,28 +1582,29 @@ protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFi
                     parentcategories = await _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { pc => pc.CategoryTypeID == 2 }).ToListAsync();
                 }
                 productsubcategories = await _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ParentCategoryID == productSubcategory.ParentCategoryID }).ToListAsync();
+
                 unittypes = _unitTypesProc.Read(new List<Expression<Func<UnitType, bool>>> { ut => ut.UnitTypeParentCategory.Where(up => up.ParentCategoryID == productSubcategory.ParentCategoryID).Count() > 0 },
                     new List<ComplexIncludes<UnitType, ModelBase>>{
             new ComplexIncludes<UnitType, ModelBase> { Include = u => u.UnitParentType } }).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-    }
-    else
-    {
-        if (requestItemViewModel.IsProprietary)
-        {
-            var proprietarycategory = await _parentCategoriesProc.Read( new List<Expression<Func<ParentCategory, bool>>> { pc => pc.Description == AppUtility.ParentCategoryEnum.Samples.ToString() }).FirstOrDefaultAsync();
-            productsubcategories = await _productSubcategoriesProc.Read( new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == proprietarycategory.ID }).ToListAsync();
-        }
-        else
-        {
-            parentcategories = await _parentCategoriesProc.Read( new List<Expression<Func<ParentCategory, bool>>> { pc => pc.CategoryTypeID == categoryTypeId && !pc.IsProprietary }).ToListAsync();
-        }
-    }
-    var vendors = await _vendorsProc.Read( new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryTypeId).Count() > 0 }).ToListAsync();
-    var projects = await _projectsProc.Read().ToListAsync();
-    var subprojects = await _subProjectsProc.Read().ToListAsync();
-    var unittypeslookup = unittypes.ToLookup(u => u.UnitParentType);
-    var paymenttypes = await _paymentTypesProc.Read().ToListAsync();
-    var companyaccounts = await _companyAccountsProc.Read().ToListAsync();
+            }
+            else
+            {
+                if (requestItemViewModel.IsProprietary)
+                {
+                    var proprietarycategory = await _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { pc => pc.Description == AppUtility.ParentCategoryEnum.Samples.ToString() }).FirstOrDefaultAsync();
+                    productsubcategories = await _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ParentCategoryID == proprietarycategory.ID }).ToListAsync();
+                }
+                else
+                {
+                    parentcategories = await _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { pc => pc.CategoryTypeID == categoryTypeId && !pc.IsProprietary }).ToListAsync();
+                }
+            }
+            var vendors = await _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryTypeId).Count() > 0 }).ToListAsync();
+            var projects = await _projectsProc.Read().ToListAsync();
+            var subprojects = await _subProjectsProc.Read().ToListAsync();
+            var unittypeslookup = unittypes.ToLookup(u => u.UnitParentType);
+            var paymenttypes = await _paymentTypesProc.Read().ToListAsync();
+            var companyaccounts = await _companyAccountsProc.Read().ToListAsync();
 
             requestItemViewModel.ParentCategories = parentcategories;
             requestItemViewModel.ProductSubcategories = productsubcategories;
