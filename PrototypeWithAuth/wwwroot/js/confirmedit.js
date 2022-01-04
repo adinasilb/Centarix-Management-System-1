@@ -68,11 +68,18 @@ $(function () {
             cache: false,
             success: function (data) {
                 $("#loading").hide();
+                if ($('.turn-edit-on-off').hasClass('operations') || $('.turn-edit-on-off').hasClass('orders')) {
+                    $(".editModal").html(data);
+                    //$.fn.OnOpenModalView();
+                    $.fn.LoadEditModalDetails();
+                    $("[data-toggle='tooltip']").tooltip();
+                }
                 if ($('.turn-edit-on-off').hasClass('locations')) {
                     //alert("got data for locations");
                     //console.log(data)
                     var pageType = $('#masterPageType').val();
                     console.log(pageType)
+                 
                     if (pageType == "LabManagementLocations" || pageType == 'RequestLocation') {
                         console.log('reload location ')
                         //Reload visual of locations box
@@ -90,6 +97,7 @@ $(function () {
                         });
                     }
                     else if ($('.turn-edit-on-off').attr("section-type") == "Requests") {
+
                         console.log("reloading ajax partial view...");
                         $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
 
