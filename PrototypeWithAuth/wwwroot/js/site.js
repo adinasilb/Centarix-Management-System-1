@@ -1651,7 +1651,7 @@ $(function () {
         });
     })
 
-    $('.load-delete-hour-modal').click(function (e) {
+    $('.load-delete-hour-modal').off("click").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         $itemurl = "/Timekeeper/DeleteHourModal/?id=" + $(this).attr('value') + "&sectionType=" + $('#masterSectionType').val();
