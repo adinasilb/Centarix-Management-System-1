@@ -292,7 +292,8 @@ namespace PrototypeWithAuth.ViewModels
         }
         private static int GetOrderTypeEnum(string orderType)
         {
-            return (int)Enum.Parse(typeof(AppUtility.OrderTypeEnum), orderType);
+            var id = (int)Enum.Parse(typeof(AppUtility.OrderTypeEnum), orderType);
+            return id;
         }
         private String GetSharedBy(Request request, ShareRequest shareRequest)
         {

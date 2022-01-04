@@ -248,7 +248,7 @@ $(function () {
         $("#loading").show();
         console.log("a tag: " + $(".order-type" + val))
         console.log("order type: " + $(".order-type" + val).attr("value"))
-        if ($(".order-type" + val).attr("value") == "1") {
+        if ($(".order-type" + val).attr("value") == "2") {
             console.log("confirm email")
             $.ajax({
                 async: true,
@@ -263,7 +263,7 @@ $(function () {
                 }
             })
         }
-        else if ($(".order-type" + val).attr("value") == "2") {
+        else if ($(".order-type" + val).attr("value") == "3") {
             console.log("cart")
             $.ajax({
                 async: true,
@@ -318,6 +318,12 @@ $(function () {
                             $('[data-toggle="tooltip"]').tooltip('dispose'); //is this the right syntax?
                             $('._IndexTable').html(data);
                         }
+                    },
+                    error: function (jqxhr) {
+                        $("#loading").hide();
+                        $('.error-message').addClass("d-none");
+                        $('.error-message').html(jqxhr.responseText);
+                        $('.error-message:first').removeClass("d-none");
                     }
                 })
             }
@@ -337,6 +343,12 @@ $(function () {
                         requestFavorite.addClass(unfav);
                         $("#loading").hide();
 
+                    },
+                    error: function (jqxhr) {
+                        $("#loading").hide();
+                        $('.error-message').addClass("d-none");
+                        $('.error-message').html(jqxhr.responseText);
+                        $('.error-message:first').removeClass("d-none");
                     }
                 })
             }

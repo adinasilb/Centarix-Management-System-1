@@ -12,10 +12,10 @@
 			data: formData,
 			success: (e) => {
 				$(this).prop('disabled', false)
-				if (!e) {
-					$.fn.CloseModal("share-modal");
-				}
-				//find error here!
+				$.fn.CloseModal("share-modal");
+			},
+			error: ()=>{
+				$.fn.CloseModal("share-modal");
 			},
 			processData: false,
 			contentType: false
