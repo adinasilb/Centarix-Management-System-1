@@ -1035,6 +1035,7 @@ namespace PrototypeWithAuth.Controllers
                 //};
 
                 termsViewModel.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
+                termsViewModel.ParentRequest.OrderDate = DateTime.Now;
                 var SaveUsingTempRequest = true;
                 bool hasShippingOnPayment;
                 if (termsViewModel.ParentRequest.Shipping == 0)
@@ -2300,7 +2301,7 @@ namespace PrototypeWithAuth.Controllers
                                 Model = deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest,
                             };
                             var ParentRequestRollbackList = ModelsModified;
-                            if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID == 0)
+                            if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID == 0 || deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID == null)
                             {
                                 parentRequestModelState.StateEnum = EntityState.Added;
 
