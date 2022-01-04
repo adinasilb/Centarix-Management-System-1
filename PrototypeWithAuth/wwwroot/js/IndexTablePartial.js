@@ -248,7 +248,7 @@ $(function () {
         $("#loading").show();
         console.log("a tag: " + $(".order-type" + val))
         console.log("order type: " + $(".order-type" + val).attr("value"))
-        if ($(".order-type" + val).attr("value") == "1") {
+        if ($(".order-type" + val).attr("value") == "2") {
             console.log("confirm email")
             $.ajax({
                 async: true,
@@ -263,7 +263,7 @@ $(function () {
                 }
             })
         }
-        else if ($(".order-type" + val).attr("value") == "2") {
+        else if ($(".order-type" + val).attr("value") == "3") {
             console.log("cart")
             $.ajax({
                 async: true,
