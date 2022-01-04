@@ -120,6 +120,7 @@ namespace PrototypeWithAuth.Controllers
                 FreelancerCount = employees.Where(e => e.EmployeeStatusID == 2).Count(),
                 AdvisorCount = employees.Where(e => e.EmployeeStatusID == 3).Count(),
             };
+            //using user image from db(there is one that is wrong in db...) - maybe make add to vm directly from file
             return employeeDetailsViewModel;
         }
 
