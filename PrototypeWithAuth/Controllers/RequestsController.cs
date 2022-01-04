@@ -3642,6 +3642,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> OrderLateModal(Request requestFromView)
         {
+           
             var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestFromView.RequestID },
                 new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include =  r => r.ApplicationUserCreator },
                 new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest},
@@ -3694,7 +3695,8 @@ namespace PrototypeWithAuth.Controllers
                 }
                 catch (Exception ex)
                 {
-
+                    Response.StatusCode = 500;
+                    await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                 }
 
                 client.Disconnect(true);
