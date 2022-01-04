@@ -51,11 +51,12 @@
                                 var backgroundClass = "thick-border";
                                 @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                                 {
-                                    if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any() )
+                                    if (Model.ChildrenLocationInstances[z].IsFull)
                                     {
                                         backgroundClass += bcColor;
-                                        var innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
-                                        var requestID = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID;
+                                        var rli = Model.ChildrenLocationInstances[z].RequestLocationInstances.Where(rli => rli.Request.IsArchived ==false).FirstOrDefault();
+                                        var innerHtml = rli.Request.Product.ProductName;
+                                        var requestID = rli.RequestID;
                                         <td class="@backgroundClass">
 
                                             @*@Html.ActionLink(innerHtml, "DetailsModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-block text-light" })*@

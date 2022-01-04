@@ -1,14 +1,16 @@
 ﻿$(function () {
 
-    $("#listSettings").click(function (e) {
+    $("#listSettings").off("click").on("click", function (e) {
+        var listID = $("#ListID").val();
         $.ajax({
             async: true,
-            url: "/Requests/ListSettingsModal",
+            url: "/Requests/ListSettingsModal/?SidebarType=" + $("#masterSidebarType").val() + "&selectedListID=" + listID,
             traditional: true,
             type: "GET",
             cache: false,
             success: function (data) {
                 $.fn.OpenModal("listSettingsModal", "list-settings", data)
+                $.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs');
                 return true;
             },
             error: function (jqxhr) {
@@ -72,6 +74,8 @@
                 url = url + "/?listID=" + $(this).attr("listId");
                 
             }
+            url = url + "&SidebarType=" + $("#masterSidebarType").val()
+            console.log(url)
             $.ajax({
                 url: url,
                 method: 'GET',
@@ -84,6 +88,7 @@
                         newList.addClass("selected")
                         $("#SelectedList_ListID").val(newList.attr("listId"))
                         $(".listInfo").html(data)
+                        $.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs');
                     }
                 },
                 error: function (jqxhr) {
@@ -112,7 +117,7 @@
         })
     })
 
-    $("#Title").on('input', function (e) {
+    $(".title").on('input', function (e) {
         if (!$(".request-list-name").hasClass("changed")) {
             $(".request-list-name").addClass("changed")
         }
@@ -138,6 +143,7 @@
     })
 
     $(".close-settings").off("click").on("click", function (e) {
+        console.log("close settings")
         var viewClass = "._IndexTableListTabs"
         var url = "/Requests/_IndexTableWithListTabs/?"+ $.fn.getRequestIndexString()
         $.fn.ajaxPartialIndexTable(-1, url, viewClass, "GET", null, "list-settings");
@@ -152,23 +158,23 @@
         e.preventDefault();
         $(".request-list-name").removeClass("changed")
         var formData = new FormData($(".listSettingsForm")[0]);
-        var listFormData = new FormData();
-        for (var pair of formData.entries()) {
-            if (pair[0].startsWith("SelectedList")) {
-                listFormData.append(pair[0], pair[1])
-            }
-        }
-        console.log(...listFormData)
+        //var listFormData = new FormData();
+        //for (var pair of formData.entries()) {
+        //    if (pair[0].startsWith("SelectedList")) {
+        //        listFormData.append(pair[0], pair[1])
+        //    }
+        //}
+        //console.log(...listFormData)
         $.ajax({
             contentType: false,
             processData: false,
             async: true,
             url: "/Requests/SaveListModal",
-            data: listFormData,
+            data: formData,
             traditional: true,
             type: "POST",
             cache: false,
-            success: function (data) {
+            success: function (data1) {
                 $.fn.CloseModal('save-list-settings');
                 var listID = $(".next-list").attr("listId")
                 $.ajax({
@@ -178,15 +184,15 @@
                         $.fn.OpenModal("listSettingsModal", "list-settings", data)
                         $(".request-list-name.selected").removeClass("selected");
                         $("#List" + $("#SelectedList_ListID").val()).addClass("selected")
+                        $.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs');
+                        $('.listSettingsModal  .error-message').html(data1);
                     },
                     error: function (jqxhr) {
-                        $('.listSettingsForms .error-message').html(jqxhr.responseText);
+                        $('.listSettingsModal .error-message').html(jqxhr.responseText);
                     },
                     processData: false,
                     contentType: false
                 })
-                
-                
             },
             error: function (jqxhr) {
                 $('.listSettingsForms .error-message').html(jqxhr.responseText);
@@ -233,4 +239,57 @@
         $.fn.ajaxPartialIndexTable(-1, "/Requests/DeleteListRequestModal", viewClass, "POST", formData, "delete-list-request");
         return false;
     });
+
+    $(".share-list-users").off('focusout').on('focusout', function (e) {
+        if (!$(".request-list-name").hasClass("changed")) {
+            $(".request-list-name").addClass("changed")
+        }
+        var formData = new FormData($(".listSettingsForm")[0])
+        $.ajax({
+            url: "/Requests/_ListUsers",
+            method: 'POST',
+            data: formData,
+            success: function (data) {
+                $(".list-users").html(data)
+                $.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs');
+                return true;
+            },
+            error: function (jqxhr) {
+                $('.deleteListForm .error-message').html(jqxhr.responseText);
+            },
+            processData: false,
+            contentType: false
+        })
+    })
+    $(".list-permissions-radio").off("click").on("click", function (e) {
+        console.log("radio click")
+        if (!$(".request-list-name").hasClass("changed")) {
+            $(".request-list-name").addClass("changed")
+        }
+        var index = $(this).attr("data-id");
+        var permissionsClass = ".permissions" + index;
+        var ViewOnlyId = "ViewOnly_" + index;
+        console.log(ViewOnlyId)
+        if ($(this).attr("id") == ViewOnlyId) {
+            $(permissionsClass).val("true");
+        }
+        else {
+            $(permissionsClass).val("false");
+        }
+    })
+
+    $(".delete-comment").off("click").on("click", function (e) {
+        var index = $(this).attr("value");
+        console.log("delete share " + index)
+        $(".removeShare" + index).val(true)
+        $(this).closest(".comment-info").remove();
+    });
+
+    $(".close-settings").off("click").on("click", function (e) {
+        e.preventDefault();
+        console.log("close settings")
+        var viewClass = "._IndexTableListTabs"
+        var url = "/Requests/_IndexTableWithListTabs/?" + $.fn.getRequestIndexString()
+        $.fn.ajaxPartialIndexTable(-1, url, viewClass, "GET", null, "list-settings");
+    })
 })

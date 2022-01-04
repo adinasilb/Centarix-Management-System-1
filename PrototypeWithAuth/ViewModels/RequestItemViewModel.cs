@@ -56,8 +56,6 @@ namespace PrototypeWithAuth.ViewModels
         //public List<IFormFile> CreditFiles { get; set; }
 
         public FileInfo[] OrderFilesFound { get; set; }
-        public IEnumerable<Comment> OldComments { get; set; }
-        public Comment NewComment { get; set; }
 
         public List<Payment> NewPayments { get; set; }
         public double Debt { get; set; } //shekel
@@ -78,8 +76,8 @@ namespace PrototypeWithAuth.ViewModels
         public ReceivedModalVisualViewModel ReceivedModalVisualViewModel { get; set; }
         public LocationType ParentDepthZeroOfSelected { get; set; }
         public int Tab { get; set; } = 1;
-        public List<AppUtility.CommentTypeEnum> CommentTypes { get; set; }
-        public List<Comment> Comments { get; set; }
+        public IEnumerable<CommentType> CommentTypes { get; set; }
+        public List<CommentBase> Comments { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
         public AppUtility.RequestModalType ModalType { get; set; }
         public bool IsProprietary { get; set; }
@@ -88,5 +86,7 @@ namespace PrototypeWithAuth.ViewModels
         public PricePopoverViewModel PricePopoverViewModel { get; set; }
         public TempRequestListViewModel TempRequestListViewModel { get; set; }
         public List<string> LastUrls { get; set; }
+        public bool HasQuote { get; set; }
+        public bool HasWarnings { get; set; }
     }
 }

@@ -13,10 +13,10 @@
     @*<link rel="stylesheet" href="~/lib/bootstrap/originalDist/css/bootstrap.min.css" />*@
 
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/jquery/dist/popper.min.js"></script>
-    <script src="~/lib/jquery/dist/popper.min.js"></script>
-    <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
-    <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
+        <script src="~/lib/jquery/dist/popper.min.js"></script>
+        <script src="~/lib/jquery/dist/popper.min.js"></script>
+        <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
+        <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Master.css" asp-append-version="true" />
@@ -275,8 +275,9 @@
         };
 
         $.fn.ChangeCheckboxesToFilledIn = function () {
-            console.log("in change checkboxes to be filled in");
+            console.log("in change checkboxes to be filled in with mdb");
             if ($(".setupdropdowns").val()) {
+                console.log("selt up dropdowns")
                 $.fn.SetUpDropdowns();
             }
             $('.mdb-select').materialSelect();
@@ -402,6 +403,32 @@
 
         };*@
 
+        $.fn.enableUsersMarkReadonly = function () {
+            console.log("in enable users mark readonly");
+            if ($("#EmployeeStatusID4:checked").length > 0) {
+                console.log("is a user");
+                $('.mark-readonly:not(.only-employee)').attr("disabled", false);
+                $('.mark-readonly.only-employee').attr("disabled", "disabled");
+                $('.mark-readonly:not(.only-employee)').removeClass("disabled");
+                $('.mark-readonly.only-employee:not(.disabled)').addClass("disabled");
+            }
+            else {
+                console.log("is NOT a user");
+                $('.mark-readonly').attr("disabled", false);
+                $('.mark-readonly').removeClass("disabled");
+            }
+            //$('.row:not(.only-employee) .mark-edditable').data("val", true);
+            $('.edit-mode-switch-description').text("Edit Mode On");
+            $('.turn-edit-on-off').attr('name', 'edit');
+
+                $.fn.EnableMaterialSelect('#job-subcategory', 'select-options-job-subcategory');
+                $.fn.EnableMaterialSelect('#Employee_JobSubcategoryType_JobCategoryTypeID', 'select-options-Employee_JobSubcategoryType_JobCategoryTypeID');
+                $.fn.EnableMaterialSelect('#Employee_DegreeID', 'select-options-Employee_DegreeID');
+                $.fn.EnableMaterialSelect('#Employee_MaritalStatusID', 'select-options-Employee_MaritalStatusID');
+                $.fn.EnableMaterialSelect('#Employee_CitizenshipID', 'select-options-Employee_CitizenshipID');
+
+        }
+
         function enableMarkReadonly(element) {
             console.log("in if details");
             $('.mark-readonly').attr("disabled", false);
@@ -413,12 +440,12 @@
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
             $('.location-icon').removeClass('d-none');
-            
+
 
             //turn off document modals
             if ($(element).hasClass('operations') || $(element).hasClass('orders')) {
                 console.log("orders operations");
-               // $.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist');
+                $.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist');
                 $.fn.EnableMaterialSelect('#sublist', 'select-options-sublist');
                 $.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList');
                 $.fn.EnableMaterialSelect('#currency', 'select-options-currency');
@@ -453,13 +480,6 @@
             if ($(element).hasClass('suppliers') || $(element).hasClass('accounting')) {
                 $.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
                 $.fn.EnableMaterialSelect('#VendorCountries', 'select-options-VendorCountries');
-            }
-            if ($(element).hasClass('users')) {
-                $.fn.EnableMaterialSelect('#job-subcategory', 'select-options-job-subcategory');
-                $.fn.EnableMaterialSelect('#NewEmployee_JobSubcategoryType_JobCategoryTypeID', 'select-options-NewEmployee_JobSubcategoryType_JobCategoryTypeID');
-                $.fn.EnableMaterialSelect('#NewEmployee_DegreeID', 'select-options-NewEmployee_DegreeID');
-                $.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
-                $.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
             }
             if ($(element).hasClass('protocols')) {
 
@@ -545,7 +565,7 @@
                             $.fn.LoadSummaryModal('edits');
                             $('.modal-content a:first').tab('show');
                             break;
-                        case "summaryProtocolsParital":    
+                        case "summaryProtocolsParital":
                             $("._ProtocolsDetailsFloatModal").html(data);
                             $.fn.LoadSummaryModal('_ProtocolsDetailsFloatModal');
                             $('.modal-content a:first').tab('show');
@@ -656,7 +676,6 @@
             var category = $("#categoryDescription").val();
             console.log(category)
             $("." + category).removeClass("d-none");
-            console.log("in detilas of case")
             $.fn.TurnToDetails("edits");
             $('.open-document-modal').attr("showSwitch", true);
             if (!$('.turn-edit-on-off').hasClass('locations')) {
@@ -705,7 +724,7 @@
             $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
                 var item = "";
                 $.each(data, function (i, subCategory) {
-                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                    item += '<option value="' + subCategory.ID + '">' + subCategory.Description + '</option>'
                 });
                 $("#sublist").html(item);
                 $("#sublist").val(subcategoryId1).change();
@@ -773,8 +792,20 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            var $itemurl = "/Requests/ConfirmQuoteEmailModal/?id=" + $(this).val();
-            $.fn.CallPageRequest($itemurl, "confirmemail");
+
+            var itemUrl = "/Requests/ConfirmQuoteEmailModal/";
+            //var modalClass = "confirmemail";
+            var HasChecked = $(".form-check-input:checked").length > 0;
+            if (HasChecked) {
+                console.log("has checked");
+                $.fn.LoadModalForSelectedItems(e, itemUrl, "confirm-email");
+            }
+            else {
+                console.log("does not have checked");
+                var $itemurl = itemUrl + "?id=" + $(this).val();
+                $.fn.CallPageRequest($itemurl, "confirmemail");
+            }
+
             return false;
         });
         $(".confirm-quote-resend").on("click", function (e) {
@@ -833,9 +864,14 @@
                 cache: true,
                 success: function (data) {
                     $("#loading").hide();
-                    $.fn.OpenModal('users-form', 'edits', data)
-                    $.fn.CalculateAge();
-                    $.fn.OnOpenModal();
+                    if (data.includes("Invalid")) {
+                        $.fn.OpenModal('invalid-right-modal', 'right-invalid', data);
+                    }
+                    else {
+                        $.fn.OpenModal('users-form', 'edits', data)
+                        $.fn.CalculateAge();
+                        $.fn.OnOpenModal();
+                    }
                 }
             });
         };
@@ -1061,17 +1097,22 @@
             //delete existing modals
             $.getJSON("/Home/GetLatestNotifications", function (data) {
                 $.each(data, function (i, notification) {
-                    var timestamp = new Date(notification.timeStamp)
-                    var link = '/-1/-2?requestID=-3&didntArrive=-4';
+                    var date = new Date(notification.date)
+
                     var isOrderLate = false;
-                    if(notification.status=="1")
-                    {
+                    var link = '/-1/-2?requestID=-3&didntArrive=-4';
+                    if (notification.controller == "") {
+                        link = '#'
+                    }
+                    else {
+                        link = link.replace("-4", isOrderLate);
+                        link = link.replace("-3", notification.id);
+                        link = link.replace("-2", notification.action);
+                        link = link.replace("-1", notification.controller);
+                    }
+                    if (notification.status == "1") {
                         isOrderLate = true;
                     }
-                    link = link.replace("-4", isOrderLate);
-                    link = link.replace("-3", notification.id);
-                    link = link.replace("-2", notification.action);
-                    link = link.replace("-1", notification.controller);
                     var bold = "";
                     console.log( notification.isRead);
                     if (notification.isRead == false) {
@@ -1085,8 +1126,8 @@
                         '<i class="' + notification.icon + ' rounded-circle p-1" style="font-size: 1.75rem; color:var(' + notification.color + '); border: .125rem solid var(' + notification.color + ');"></i>' +
                         '</div>' +
                         '<div class=" col-10">' +
-                        '<label class="m-0 mr-5" id="notificationTimestamp">' + timestamp.getDate() + '/' + (timestamp.getMonth()+1) + '/' + timestamp.getFullYear() +  ' </label>' +
-                        '<label class="m-0 " id="notificationDescription" style="color:var('+notification.color+');">' + notification.description + '</label> </br>' +
+                        '<label class="m-0 mr-5" id="notificationTimestamp">' + date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear() +  ' </label>' +
+                        '<br><label class="m-0 " id="notificationDescription" style="color:var('+notification.color+');">' + notification.description + '</label> </br>' +
                         '<label class="m-0" id="requestName" >' + notification.requestName + '</label>' +
                         '</div>' +
 
@@ -1183,7 +1224,7 @@
             if (status === undefined) {
                 requestStatusId = $(".request-status-id").val();
             }
-     
+
             var queryString =
                 "PageNumber=" + $('.page-number').val() +
                 "&RequestStatusID=" + requestStatusId +
@@ -1349,13 +1390,13 @@
             $("body, .modal").bind("click");
         }
 
-        $.fn.AddTempRequestHiddenFors = function (guid, sequence, selector) {
+        $.fn.AddTempRequestHiddenFors = function (guid, sequence, selector, isRollBack) {
             //var guid = $('.hidden-guid').val();
             var error = "";
             //alert("in $.fn.AddTempRequestHiddenFors : " + guid);
             $.ajax({
                 async: false,
-                url: "/Requests/RollbackTempRequestHiddenFors?GUID=" + guid + "&SequencePosition=" + sequence,
+                url: "/Requests/RollbackTempRequestHiddenFors?GUID=" + guid + "&SequencePosition=" + sequence + "&isRollBack=" + isRollBack,
                 traditional: true,
                 type: "GET",
                 cache: false,
@@ -1478,12 +1519,12 @@
             }
         }
 
- 
+
 
         $.fn.ButtonFilterClick =function(id , col, parent)
         {
             var data = $.fn.BindSelectedFilters('.popover');
-       
+
             var arr;
             if (col.hasClass('vendor-col')) {
                 arr = data.SelectedVendorsIDs;
@@ -1511,7 +1552,7 @@
             $.fn.ReloadFilterDiv(numFilters, data);
         }
 
-    
+
         $.fn.ApplyFilterClick = function()
         {
             console.log('clicked!')
@@ -1625,7 +1666,7 @@
             var url = "";
             if(sectionType == "Protocols")
             {
-                url = "/Protocols/_ProtocolFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType   
+                url = "/Protocols/_ProtocolFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType
                 contentID = "protocolFilterContent";
                 contentDivID ="protocolFilterContentDiv";
             }

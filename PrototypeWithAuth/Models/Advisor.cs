@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Advisor
+    public class Advisor : ModelBase
     {
         [Key]
         public int AdvisorID { get; set; }

@@ -59,9 +59,11 @@
                 //$('.render-body').html(data);
                 //$('.order-late').bind('click');
             },
-            error: function (data) {
-                console.log('in error of send email')
-                $('.send-order-late-email').prop('disabled', false);
+            error: function (jqxhr) {
+                $.fn.CloseModal('late-order');
+                $('.error-message').addClass("d-none");
+                $('.error-message').html(jqxhr.responseText);
+                $('.error-message:first').removeClass("d-none");
             }
         })
     })

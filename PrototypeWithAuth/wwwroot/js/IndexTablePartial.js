@@ -248,7 +248,7 @@ $(function () {
         $("#loading").show();
         console.log("a tag: " + $(".order-type" + val))
         console.log("order type: " + $(".order-type" + val).attr("value"))
-        if ($(".order-type" + val).attr("value") == "1") {
+        if ($(".order-type" + val).attr("value") == "2") {
             console.log("confirm email")
             $.ajax({
                 async: true,
@@ -263,7 +263,7 @@ $(function () {
                 }
             })
         }
-        else if ($(".order-type" + val).attr("value") == "2") {
+        else if ($(".order-type" + val).attr("value") == "3") {
             console.log("cart")
             $.ajax({
                 async: true,
@@ -318,6 +318,12 @@ $(function () {
                             $('[data-toggle="tooltip"]').tooltip('dispose'); //is this the right syntax?
                             $('._IndexTable').html(data);
                         }
+                    },
+                    error: function (jqxhr) {
+                        $("#loading").hide();
+                        $('.error-message').addClass("d-none");
+                        $('.error-message').html(jqxhr.responseText);
+                        $('.error-message:first').removeClass("d-none");
                     }
                 })
             }
@@ -337,6 +343,12 @@ $(function () {
                         requestFavorite.addClass(unfav);
                         $("#loading").hide();
 
+                    },
+                    error: function (jqxhr) {
+                        $("#loading").hide();
+                        $('.error-message').addClass("d-none");
+                        $('.error-message').html(jqxhr.responseText);
+                        $('.error-message:first').removeClass("d-none");
                     }
                 })
             }
@@ -525,7 +537,7 @@ $(function () {
             data: formdata,
             traditional: true,
             type: type,
-            cache: false,
+            cache: true,
             success: function (data) {
                 $(viewClass).html(data);
                 $(".tooltip").remove();
@@ -543,13 +555,23 @@ $(function () {
                 return true;
             },
             error: function (jqxhr) {
+                $('.error-message').addClass("d-none");
                 $('.error-message').html(jqxhr.responseText);
+                $('.error-message:first').removeClass("d-none");
             }
         });
 
         return false;
     }
-    
 
+    $(".load-confirm-delete").off("click").click(function (e) {
+        console.log("in confirm delete");
+        e.preventDefault();
+        e.stopPropagation();
+        $("#loading").show();
+        var $itemurl = "/Requests/DeleteModal/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString();
+        $.fn.CallPageRequest($itemurl, "delete");
+        return false;
+    });
     
 });

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Employee : ApplicationUser
+    public class Employee : ApplicationUser, ModelBase
     {
         [Display(Name = "Started Working")]
         [DataType(DataType.Date)]
@@ -83,10 +83,7 @@ namespace PrototypeWithAuth.Models
         public double RollOverSickDays { get; set; }
         [Display(Name = "Roll Over Vacation Days")]
         public double RollOverVacationDays { get; set; }
-        [Display(Name = "Bonus Sick Days")]
-        public double BonusSickDays { get { return 0; } set {; } }
-        [Display(Name = "Bonus Vacation Days")]
-        public double BonusVacationDays { get { return 0; } set {; } }
+
         [Display(Name = "Special Days")]
         public double SpecialDays { get; set; }
         private double _VacationDaysPerMonth;

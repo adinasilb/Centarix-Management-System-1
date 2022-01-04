@@ -68,9 +68,11 @@ $(function () {
 
             $(sublistSelector).append(firstitem1);
 
+            console.log(data);
             $.each(data, function (i, subCategory) {
-                console.log(subCategory.productSubcategoryDescription)
-                var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
+                console.log(subCategory.description)
+                var newitem1 = '<option value="' + subCategory.id + '">' + subCategory.description + '</option>';
+                console.log("newitem1: " + newitem1);
                 $(sublistSelector).append(newitem1);
             });
             $(sublistSelector).materialSelect();
@@ -652,7 +654,8 @@ $(function () {
             success: (result) => {
                 console.log("result: " + result);
                 if (result) {
-                    if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+                    if (/*( extn == "png" || extn == "jpg" || extn == "jpeg") && */result > '') {
+                        alert("empty string");
                         console.log("inside the if statement");
                         if (typeof (FileReader) != "undefined") {
                             console.log("file reader does not equal undefined");
@@ -669,7 +672,7 @@ $(function () {
                         $("#UserImagePath").val(result);
                     }
                     else {
-                        //alert("Please only select images");
+                        alert("Please only select images");
                     }
 
                 }
@@ -692,6 +695,7 @@ $(function () {
         var imgPath = $("#UserImagePath").val();
         //$(".user-image").html('<img src="~/' + imgPath + '" class="user-image" />');
         $("#user-image").attr("src", "/" + imgPath);
+        alert("img path: " + imgPath);
         $(".userImage i").hide();
 
         $.fn.CloseModal('user-picture');
@@ -1022,26 +1026,13 @@ $(function () {
             type: 'GET',
             cache: false,
             success: function (data) {
-                $("#comment-info").append(data);
+                $(".comment-info-div").append(data);
                 $('#comment-index').val(++index);
             }
         });
     }
 
-    $.fn.addRequestComment = function (type) {
-        console.log(type);
-        var index = $('#index').val();
-        $.ajax({
-            async: false,
-            url: '/Requests/CommentInfoPartialView?type=' + type + '&index=' + index,
-            type: 'GET',
-            cache: false,
-            success: function (data) {
-                $("#comment-info").append(data);
-                $('#index').val(++index);
-            }
-        });
-    }
+   
 
     $.fn.OpenUserImageModal = function (url) {
         console.log("in call modal2, url: " + url);
@@ -1446,6 +1437,7 @@ $(function () {
         else {
             console.log('close edit')
             $.fn.CloseModal("edits");
+            $.fn.CloseModal('invalid-right-modal');
         }
     })
 
@@ -1457,6 +1449,7 @@ $(function () {
         //	return false;
         //}
         //else {
+       
         var type = $(this).attr('name');
         console.log(type);
         var url = '';
@@ -1474,7 +1467,8 @@ $(function () {
         else if ($(this).hasClass('users')) {
             url = "/Admin/EditUser";
             section = "Users";
-        } else if ($(this).hasClass('orders')) {
+        }
+        else if ($(this).hasClass('orders')) {
             url = "/Requests/EditModalView";
             section = "Requests";
         }
@@ -1511,8 +1505,12 @@ $(function () {
 
         }
         else if (type == 'details') {
+
             if ($(this).hasClass('locations')) {
                 $.fn.MakeLocationsEditable();
+            }
+            else if ($(this).hasClass('users')) {
+                $.fn.enableUsersMarkReadonly();
             }
             else {
                 enableMarkReadonly($(this));
@@ -1589,21 +1587,6 @@ $(function () {
         $.fn.ChangeCheckboxesToFilledInWithoutMDB();
         $('.open-document-modal').attr("data-val", true);
     }
-    $("#addSupplierComment").click(function () {
-        $('[data-toggle="popover"]').popover('dispose');
-        $('#addSupplierComment').popover({
-            sanitize: false,
-            placement: 'bottom',
-            html: true,
-            content: function () {
-                return $('#popover-content').html();
-            }
-        });
-        $('#addSupplierComment').popover('toggle');
-
-    });
-
-
 
     $("#home-btn").off('click').on('click', function () {
         $('[data-toggle="popover"]').popover('dispose');
@@ -1627,17 +1610,17 @@ $(function () {
         $('#ExternalCalibrations_0__IsRepeat').val(val)
     });
 
-    $('.modal #FirstName').off('change').change(function () {
-        $('.userName').val($(this).val() + " " + $('#LastName').val())
+    $('.modal #Employee_FirstName').off('change').change(function () {
+        $('.userName').val($(this).val() + " " + $('#Employee_LastName').val())
     });
-    $('.modal #LastName').off('change').change(function () {
-        $('.userName').val($('#FirstName').val() + " " + $(this).val())
+    $('.modal #Employee_LastName').off('change').change(function () {
+        $('.userName').val($('#Employee_FirstName').val() + " " + $(this).val())
     });
-    $('#FirstName').off('change').change(function () {
-        $('.userName').val($(this).val() + " " + $('#LastName').val())
+    $('#Employee_FirstName').off('change').change(function () {
+        $('.userName').val($(this).val() + " " + $('#Employee_LastName').val())
     });
-    $('#LastName').off('change').change(function () {
-        $('.userName').val($('#FirstName').val() + " " + $(this).val())
+    $('#Employee_LastName').off('change').change(function () {
+        $('.userName').val($('#Employee_FirstName').val() + " " + $(this).val())
     });
     $.fn.CallPageTimekeeper = function (url) {
         $.ajax({

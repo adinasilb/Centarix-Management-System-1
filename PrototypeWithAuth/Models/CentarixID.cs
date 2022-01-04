@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class CentarixID
+    public class CentarixID : ModelBase
     {
         private int _EmployeeStatusID;
         private Employee _Employee;

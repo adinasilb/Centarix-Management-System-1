@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class VendorContact
+    public class VendorContact : ModelBase
     {
         [Key]
         public int VendorContactID { get; set; }

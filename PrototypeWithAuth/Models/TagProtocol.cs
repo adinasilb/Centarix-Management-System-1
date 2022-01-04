@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrototypeWithAuth.Models
 {
-    public class TagProtocol
+    public class TagProtocol : ModelBase
     {
         [Key, Column(Order = 1)]
         public int ProtocolID { get; set; }

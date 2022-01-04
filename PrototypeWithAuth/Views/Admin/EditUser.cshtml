@@ -17,21 +17,19 @@
             @*<div class="card col-8 offset-2 edit-user" style="width:100%; box-shadow: 0px 2px 6px #5656567A;">
                 <div class="card-body">*@
             <form action="" id="myForm" method="post" class="usersForm editUser" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-                @* HIDDEN INPUTS TO DISABLE AUTOFILLS *@
-                <input type="email" class="hidden" />
-                <input type="password" class="hidden" />
-                <input type="hidden" class="hidden" asp-for="ApplicationUserID" />
-                <input type="hidden" asp-for="UserNum" />
+
+                <input type="hidden" class="hidden" asp-for="Employee.Id" />
+                <input type="hidden" asp-for="Employee.UserNum" />
 
                 <input type="hidden" text="close" class="modal-open-state" />
-                <input type="hidden" asp-for="NewEmployeeImage" />
+                <input type="hidden" asp-for="EmployeeImage" />
                 <input type="hidden" asp-for="UserImageSaved" value="false" />
                 <input type="hidden" id="UserImagePath" value="" />
 
                 <div class="new-modal-header modal-line-1-header-with-back modal-sides" style="padding: 0.5em 6em">
-                 
+
                     <div class="back-button">
-                        <button class ="back-button" type="button" @*data-dismiss="modal"*@ style="border-width: 0; background: transparent"  @*onclick="$(this).closest('.modal').modal('hide');*@>
+                        <button class="back-button" type="button" @*data-dismiss="modal"*@ style="border-width: 0; background: transparent" @*onclick="$(this).closest('.modal').modal('hide');*@>
                             <img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" />
                         </button>
                     </div>
@@ -55,14 +53,14 @@
                                 </div>
                             </button>
                         </div>
-                        <input class="modal-product-title heading-1 userName form-control-plaintext border-0" disabled value="@Model.FirstName @Model.LastName" />
+                        <input class="modal-product-title heading-1 userName form-control-plaintext border-0" disabled value="@Model.Employee.FirstName @Model.Employee.LastName" />
                     </div>
 
-                 
+
                     <div class="row">
                         <div class="col-12 px-0">
                             <div class="container-fluid div-tabs text-center pl-0">
-                               
+
                                 <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 nav-tabs-icons">
                                     <li class="nav-item icon">
                                         <a data-toggle="tab" href="#details" id="user-details-tab" class="nav-link user-nav-link next-tab">
@@ -96,7 +94,7 @@
                     </div>
                 </div>
                 <div class="new-modal-body edit-modal-outer-body partial-div" style="background: #F6F7F8; padding: 1em">
-                    @Html.Partial("EditUserPartial")
+                    @{ await Html.RenderPartialAsync("EditUserPartial"); }
                 </div>
             </form>
             @*</div>
@@ -105,7 +103,14 @@
     </div>
 </div>
 <script src="~/js/CreateUser.js"></script>
+<script src="~/js/validate.js"></script>
+<script src="~/js/Validation/UsersFormValidation.js"></script>
 <script>
+    $(document).ready(function () {
+        console.log("in doc ready of edit user");
+        $(".mark-readonly").attr("disabled", true);
+        $('#FirstName').trigger('change');
+    });
     $(".upload-image").off("click").on("click", function (e) {
         console.log("in upload image 2");
         $.fn.OpenUserImageModal("/Admin/UserImageModal");

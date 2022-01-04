@@ -1,0 +1,33 @@
+﻿@model PrototypeWithAuth.ViewModels.CreateSupplierViewModel
+@using PrototypeWithAuth.AppData
+
+@{string formClass = "";
+}
+@if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
+{
+    formClass = "supplier-form";
+
+}
+else if (Model.SectionType.Equals(AppUtility.MenuItems.Requests))
+{
+    formClass = "order-inv-form";
+
+}
+else
+{
+    formClass = "accounting-form";
+}
+<div class="modal modal-view fader on-form-modal vendorFloatModal @formClass" id="myModal" data-backdrop="false">
+    <div class=" modal-dialog-centered mx-auto" style="width:52%">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow my-5 ">
+
+            <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('vendor-float-modal')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="__VendorFloatDetails p-4">
+
+                @{ await Html.RenderPartialAsync("_VendorFloatDetails", Model);}
+            </div>
+        </div>
+    </div>
+</div>

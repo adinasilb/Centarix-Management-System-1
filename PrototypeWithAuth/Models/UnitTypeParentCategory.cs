@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class UnitTypeParentCategory
+    public class UnitTypeParentCategory : ModelBase
     {
         [Key, Column(Order = 1)]
         public int UnitTypeID { get; set; }

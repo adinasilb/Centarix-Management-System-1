@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 namespace PrototypeWithAuth.Models
 {
     public class ShareResource :ShareBase
-    {        
-        public int ResourceID { get; set; }
+    {
+
+        [ForeignKey("ObjectID")]
         public Resource Resource { get; set; }
     }
 }

@@ -38,24 +38,24 @@
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
-                    <label asp-for="Function.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+                    <label asp-for="Function.Product.ProductSubcategory.ParentCategory.Description" class="control-label"></label>
                     @Html.DropDownListFor(vm => vm.Function.Product.ProductSubcategory.ParentCategoryID,
                  new SelectList(
                  Model.ParentCategories,
-                 "ParentCategoryID",
-                 "ParentCategoryDescription"
+                 "ID",
+                 "Description"
                  ), "Select Category",
                  new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext parentCategory link-product-dropdown" + disabled, @searchable = "Select Category", @data_stop_refresh = "true" })
                 </div>
             </div>
             <div class="col-6">
                 <div class="form-group sublist">
-                    <label asp-for="Function.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
-                    @Html.DropDownListFor(vm => vm.Function.Product.ProductSubcategory.ProductSubcategoryID,
+                    <label asp-for="Function.Product.ProductSubcategory.Description" class="control-label"></label>
+                    @Html.DropDownListFor(vm => vm.Function.Product.ProductSubcategory.ID,
                         new SelectList(
                         Model.ProductSubcategories,
-                        dataValueField: "ProductSubcategoryID",
-                        dataTextField: "ProductSubcategoryDescription"
+                        dataValueField: "ID",
+                        dataTextField: "Description"
                         ), "Select Sub Category",
                         new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext subCategory link-product-dropdown" + disabled, @searchable = "Select Sub Category", @data_stop_refresh = "true" })
                 </div>

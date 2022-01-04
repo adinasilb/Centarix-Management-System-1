@@ -41,7 +41,7 @@ namespace PrototypeWithAuth.AppData
         {
             None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary, RequestFavorite,
             AccountingNotifications, AccountingGeneral, AccountingExpenses, AccountingSuppliers, AccountingPayments,
-            LabManagementSuppliers, LabManagementLocations, LabManagementEquipment, LabManagementQuotes, LabManagementSearch,
+            LabManagementSuppliers, LabManagementLocations, LabManagementEquipment, LabManagementQuotes, LabManagementSearch, LabManagementSettings,
             TimeKeeperReport, TimekeeperSummary,
             UsersUser, UsersWorkers,
             OperationsRequest, OperationsInventory, OperationsSearch,
@@ -52,7 +52,7 @@ namespace PrototypeWithAuth.AppData
         public enum SidebarEnum
         {
             None, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
-            Quotes, List, Calibrate, Location, Cart, Favorites, Notifications, MyLists,
+            Quotes, List, Calibrate, Location, Cart, Favorites, Notifications, MyLists, SharedLists,
             ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences,
             PieCharts, Tables, Graphs, Project, Item, Worker,
             Category, Details, Hours, Salary,
@@ -78,7 +78,7 @@ namespace PrototypeWithAuth.AppData
             CurrentProtocols, Projects, SharedProjects, Calendar, MyProtocols, ResearchProtocol, KitProtocol,
             SOPProtocol, BufferCreating, RoboticProtocol, MaintenanceProtocol, DailyReports, WeeklyReports, MonthlyReports,
             Library, Personal, SharedWithMe, Active, Done, LastProtocol, SharedRequests,
-            HumanTrials
+            HumanTrials, Inventory
         }
         public enum IndexTableTypes
         {
@@ -91,6 +91,10 @@ namespace PrototypeWithAuth.AppData
             RequestLists
         }
 
+        internal static Task<string> GetEmployeeCentarixID(IAsyncEnumerable<CentarixID> asyncEnumerable)
+        {
+            throw new NotImplementedException();
+        }
 
         public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
@@ -98,7 +102,7 @@ namespace PrototypeWithAuth.AppData
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
         public enum FolderNamesEnum { Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details, Custom } //Listed in the site.js (if you change here must change there)
-        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote, ExperimentEntries, ParentRequest, FunctionResults }
+        public enum ParentFolderName { None, Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote, ExperimentEntries, ParentRequest, FunctionResults }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum ModalType { None, Terms, UploadOrder, UploadQuote, ConfirmEmail, Reorder }
         public enum VendorCountries
@@ -162,9 +166,10 @@ namespace PrototypeWithAuth.AppData
         public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusable, Equipment, Operation, Biological, Safety, General, Clinical }
         public enum RequestModalType { Create, Edit, Summary }
         public enum ProtocolModalType { None, Create, CheckListMode, Summary, Edit, SummaryFloat, CreateNewVersion }
-        public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
+        public enum VendorModalType { Create, Edit, SummaryFloat }
+        public enum OrderTypeEnum { None, RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
-        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveList, DeleteFromList }
+        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveToList, DeleteFromList }
         public enum PopoverEnum { None }
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
@@ -187,8 +192,8 @@ namespace PrototypeWithAuth.AppData
         public enum IconNamesEnum { Share, Favorite, MorePopover, Edit, RemoveShare }
 
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
-        { Request, Resource, Protocols }
-        public enum GlobalInfoType { ExchangeRate, LoginUpdates, LastProtocolLine }
+        { Request, Resource, Protocols, RequestLists, Product, ParentQuote, ParentRequest, Payment, Comment, RequestNotification }
+        public enum GlobalInfoType { ExchangeRate, TimekeeperNotificationUpdated, BirthdayNotificationUpdated, LoginUpdates, LastProtocolLine }
         public enum DataTypeEnum { String, Double, DateTime, Bool, File }
         public enum DataCalculation { None, BMI }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
@@ -310,19 +315,7 @@ namespace PrototypeWithAuth.AppData
 
         }
 
-        public static IQueryable<Request> GetRequestsListFromRequestStatusID(IQueryable<Request> FullRequestList, int RequestStatusID, int AmountToTake = 0)
-        {
-            IQueryable<Request> ReturnList = Enumerable.Empty<Request>().AsQueryable();
-            if (AmountToTake > 0)
-            {
-                ReturnList = FullRequestList.Where(r => r.RequestStatusID == RequestStatusID).Take(AmountToTake);
-            }
-            else
-            {
-                ReturnList = FullRequestList.Where(r => r.RequestStatusID == RequestStatusID);
-            }
-            return ReturnList;
-        }
+
 
         //this checks if a list is empty
         //right now used in the requestscontroller -> index
@@ -414,6 +407,11 @@ namespace PrototypeWithAuth.AppData
             }
             string newFileName = longFileName.Substring(place + 2, longFileName.Length - place - 2);
             return newFileName;
+        }
+
+        public static string GetLastElement(string String)
+        {
+            return String.Substring(String.LastIndexOf("."), String.Length - 1);
         }
 
         private static bool IsInThisMonth(DateTime dateCreated)
@@ -551,8 +549,8 @@ namespace PrototypeWithAuth.AppData
             {
 
                 List<StringWithBool> categoryColumn = new List<StringWithBool>();
-                var category = p.ProductSubcategory.ParentCategory.ParentCategoryDescription;
-                var subcategory = p.ProductSubcategory.ProductSubcategoryDescription;
+                var category = p.ProductSubcategory.ParentCategory.Description;
+                var subcategory = p.ProductSubcategory.Description;
                 if (categorySelected)
                 {
                     categoryColumn.Add(new StringWithBool { String = category, Bool = false });
@@ -818,6 +816,11 @@ namespace PrototypeWithAuth.AppData
             return dateRange;
         }
 
+        public static string GetExcelDateFormat(DateTime? date)
+        {
+            return date.Equals(new DateTime()) ? "" : date?.ToString("dd/MM/yyyy").Replace(".", "") ?? "";
+        }
+
         public static string GetElixirDateFormat(this DateTime? date)
         {
             return date?.ToString("d MMM yyyy") ?? "";
@@ -862,6 +865,30 @@ namespace PrototypeWithAuth.AppData
             return string.Join(" ", data.Select(byt => Convert.ToString(byt, 2).PadLeft(8, '0')));
         }
 
+        public static String GetUrlFromUserData(String UserUrl)
+        {
+            var returnUrl = "";
+            if (!UserUrl.IsNullOrEmpty())
+            {
+                if (UserUrl.StartsWith("http://") || UserUrl.StartsWith("https://"))
+                {
+                    returnUrl = UserUrl;
+                }
+                else if (UserUrl.StartsWith("://"))
+                {
+                    returnUrl = "http" + UserUrl;
+                }
+                else if (UserUrl.StartsWith("//"))
+                {
+                    returnUrl = "http:" + UserUrl;
+                }
+                else
+                {
+                    returnUrl = "http://" + UserUrl;
+                }
+            }
+            return returnUrl;
+        }
         public static decimal GetExchangeRateByDate(DateTime date)
         {
             var dateString = date.ToString("yyyy-MM-dd");
@@ -925,6 +952,8 @@ namespace PrototypeWithAuth.AppData
         public static void CheckForError(StringWithBool stringWithBool,  String Message)
         {
         }
+
+
     }
 
 }

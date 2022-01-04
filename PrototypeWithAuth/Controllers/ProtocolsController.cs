@@ -163,7 +163,7 @@ namespace PrototypeWithAuth.Controllers
                             break;
                         case AppUtility.SidebarEnum.SharedWithMe:
                             var shareProtocols = _context.ShareProtocols.Where(fr => fr.ToApplicationUserID == _userManager.GetUserId(User))
-                    .Select(fr => fr.ProtocolVersionID);
+                    .Select(fr => fr.ObjectID);
                             fullProtocolsList = fullProtocolsList.Where(frl => shareProtocols.Contains(frl.ProtocolVersionID));
                             break;
                         case AppUtility.SidebarEnum.LastProtocol:
@@ -231,7 +231,7 @@ namespace PrototypeWithAuth.Controllers
                             onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate)
    .Select(p => new ProtocolsIndexPartialRowViewModel(p, p.Protocol, p.Protocol.ProtocolType, p.Protocol.ProtocolSubCategory, p.ApplicationUserCreator, protocolsIndexObject, iconList,
                                                  _context.ShareProtocols
-                .Where(fr => fr.ProtocolVersionID == p.ProtocolVersionID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(),
+                .Where(fr => fr.ObjectID == p.ProtocolVersionID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(),
                                                   _context.FavoriteProtocols.Where(fr => fr.ProtocolVersionID == p.ProtocolVersionID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(), user,
                                                           _context.ProtocolInstances.Where(pi => pi.ProtocolVersionID == p.ProtocolVersionID && pi.ApplicationUserID == user.Id && !pi.IsFinished).OrderByDescending(pi => pi.StartDate).FirstOrDefault()
                                         )).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 20);
@@ -242,7 +242,7 @@ namespace PrototypeWithAuth.Controllers
                             onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate)
 .Select(p => new ProtocolsIndexPartialRowViewModel(p, p.Protocol, p.Protocol.ProtocolType, p.Protocol.ProtocolSubCategory, protocolsIndexObject, iconList, p.ApplicationUserCreator,
                                               _context.ShareProtocols
-             .Where(fr => fr.ProtocolVersionID == p.ProtocolVersionID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user, _context.ProtocolInstances.Where(pi => pi.ProtocolVersionID == p.ProtocolVersionID && pi.ApplicationUserID == user.Id && !pi.IsFinished).OrderByDescending(pi => pi.StartDate).FirstOrDefault()
+             .Where(fr => fr.ObjectID == p.ProtocolVersionID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user, _context.ProtocolInstances.Where(pi => pi.ProtocolVersionID == p.ProtocolVersionID && pi.ApplicationUserID == user.Id && !pi.IsFinished).OrderByDescending(pi => pi.StartDate).FirstOrDefault()
                                      )).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 20);
                             break;
                         case AppUtility.SidebarEnum.LastProtocol:
@@ -282,7 +282,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 reportsIndexObject.Months.Add(DateTime.Now.Month);
             }
-            reportsIndexObject.ReportCategory = _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == reportsIndexObject.ReportCategoryID).FirstOrDefault();
+            reportsIndexObject.ReportCategory = _context.ResourceCategories.Where(rc => rc.ID == reportsIndexObject.ReportCategoryID).FirstOrDefault();
             IQueryable<Report> ReportsPassedIn = Enumerable.Empty<Report>().AsQueryable();
             IQueryable<Report> ReportsPassedInWithInclude = _context.Reports
                 .Include(r => r.ReportType);
@@ -1772,7 +1772,7 @@ namespace PrototypeWithAuth.Controllers
                 products = products.Where(p => p.VendorID == vendorID);
             }
             var productsJson = await products.Select(p => new { productID = p.ProductID, name = p.ProductName }).ToListAsync();
-            var subCategoryList = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == parentCategoryID).Select(ps => new { subCategoryID = ps.ProductSubcategoryID, subCategoryDescription = ps.ProductSubcategoryDescription }).ToListAsync();
+            var subCategoryList = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == parentCategoryID).Select(ps => new { subCategoryID = ps.ID, subCategoryDescription = ps.Description }).ToListAsync();
             return Json(new { ProductSubCategories = subCategoryList, Products = productsJson });
         }
 
@@ -2226,7 +2226,7 @@ namespace PrototypeWithAuth.Controllers
                 PageType = AppUtility.PageTypeEnum.ProtocolsReports.ToString(),
                 SidebarType = AppUtility.SidebarEnum.WeeklyReports.ToString(),
                 ReportCategories = _context.ResourceCategories.Where(rc => rc.IsReportsCategory &&
-                userRoles.Contains("Protocols" + rc.ResourceCategoryDescription.Replace(" ", ""))).ToList(),
+                userRoles.Contains("Protocols" + rc.Description.Replace(" ", ""))).ToList(),
             };
             return View(viewModel);
         }
@@ -2378,7 +2378,7 @@ namespace PrototypeWithAuth.Controllers
             ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel()
             {
                 ResourcesListIndexViewModel = ResourcesListIndexViewModel,
-                PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription }
+                PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ID == ResourceCategoryID).FirstOrDefault().Description }
             };
             if (IsPersonal)
             {
@@ -2608,7 +2608,7 @@ namespace PrototypeWithAuth.Controllers
             }).ToList();
 
             var tempResourcesWithFavorites = from r in _context.Resources
-                                             join sr in _context.ShareResources on r.ResourceID equals sr.ResourceID
+                                             join sr in _context.ShareResources on r.ResourceID equals sr.ObjectID
                                              join fr in _context.FavoriteResources on r.ResourceID equals fr.ResourceID into g
                                              from fr in g.DefaultIfEmpty()
                                              where sr.ToApplicationUserID == _userManager.GetUserId(User)
@@ -2782,7 +2782,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Remove(sharedResource);
                             break;
                         case AppUtility.ModelsEnum.Protocols:
-                            var sharedProtocols = _context.ShareProtocols.Where(sr => sr.ProtocolVersionID == ShareID && sr.ToApplicationUserID == _userManager.GetUserId(User));
+                            var sharedProtocols = _context.ShareProtocols.Where(sr => sr.ObjectID == ShareID && sr.ToApplicationUserID == _userManager.GetUserId(User));
                             foreach (var sr in sharedProtocols)
                             {
                                 _context.Remove(sr);
@@ -2841,7 +2841,7 @@ namespace PrototypeWithAuth.Controllers
                         {
                             case AppUtility.ModelsEnum.Resource:
                                 var PrevSharedResource = _context.ShareResources
-                                    .Where(sr => sr.ResourceID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == userID).FirstOrDefault();
+                                    .Where(sr => sr.ObjectID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == userID).FirstOrDefault();
                                 if (PrevSharedResource != null)
                                 {
                                     //PrevSharedResource.TimeStamp = DateTime.Now;
@@ -2851,7 +2851,7 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     var shareResource = new ShareResource()
                                     {
-                                        ResourceID = shareModalViewModel.ID,
+                                        ObjectID = shareModalViewModel.ID,
                                         FromApplicationUserID = currentUserID,
                                         ToApplicationUserID = userID,
                                         //TimeStamp = DateTime.Now
@@ -2861,7 +2861,7 @@ namespace PrototypeWithAuth.Controllers
                                 break;
                             case AppUtility.ModelsEnum.Protocols:
                                 var PrevSharedProtocol = _context.ShareProtocols
-                                    .Where(sr => sr.ProtocolVersionID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == userID).FirstOrDefault();
+                                    .Where(sr => sr.ObjectID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == userID).FirstOrDefault();
                                 if (PrevSharedProtocol != null)
                                 {
                                     //PrevSharedProtocol.TimeStamp = DateTime.Now;
@@ -2871,7 +2871,7 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     var shareProtocol = new ShareProtocol()
                                     {
-                                        ProtocolVersionID = shareModalViewModel.ID,
+                                        ObjectID = shareModalViewModel.ID,
                                         FromApplicationUserID = currentUserID,
                                         ToApplicationUserID = userID,
                                         //TimeStamp = DateTime.Now
@@ -3485,6 +3485,12 @@ namespace PrototypeWithAuth.Controllers
             var serialnumberList = _context.Protocols.IgnoreQueryFilters().Select(p => int.Parse(p.UniqueCode.Substring(1))).ToList();
             var lastSerialNumberInt = serialnumberList.OrderBy(s => s).LastOrDefault();
             return serialLetter + (lastSerialNumberInt + 1);
+        }
+
+        [HttpPost]
+        public string UploadFile(DocumentsModalViewModel documentsModalViewModel)
+        {
+            return base.UploadFile(documentsModalViewModel);
         }
     }
 

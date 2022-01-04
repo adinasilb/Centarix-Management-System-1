@@ -1,4 +1,76 @@
-﻿$(function () {
+﻿
+var MaxFileSizeMB = 1;
+var BufferChunkSize = MaxFileSizeMB * (1024 *1024)*2;
+
+function UploadFile(TargetFile, formData)
+{
+    // create array to store the buffer chunks
+    var FileChunk = [];
+    // the file object itself that we will work with
+    var file = TargetFile;
+    // set up other initial vars
+
+    var ReadBuffer_Size = 1024;
+    var FileStreamPos = 0;
+    // set the initial chunk length
+    var EndPos = BufferChunkSize;
+    var Size = file.size;
+
+    // add to the FileChunk array until we get to the end of the file
+    while (FileStreamPos < Size)
+    {
+        // "slice" the file from the starting position/offset, to  the required length
+        FileChunk.push(file.slice(FileStreamPos, EndPos));
+        FileStreamPos = EndPos; // jump by the amount read
+        EndPos = FileStreamPos + BufferChunkSize; // set next chunk length
+    }
+    // get total number of "files" we will be sending
+    var TotalParts = FileChunk.length;
+    var PartCount = 0;
+    // loop through, pulling the first item from the array each time and sending it
+    var FilePartName = file.name;
+    while (chunk = FileChunk.shift())
+    {
+        if (PartCount == 0) {
+            formData.set("IsFirstPart", true);
+        }
+        else {
+            formData.set("IsFirstPart", false);
+        }
+        PartCount++;
+        FilePartName = UploadFileChunk(chunk, FilePartName, formData);
+    }
+
+}
+
+function UploadFileChunk(Chunk, FileName,  formData)
+{
+    formData.set('FilesToSave', Chunk, FileName);
+    var fileName = FileName;
+    var section = $("#masterSectionType").val();
+    var urlbeginning = "/Requests/"
+    if (section === "Protocols") {
+        urlbeginning = "/Protocols/"
+    }
+    else if (section == "Biomarkers") {
+        urlbeginning = "/Biomarkers/"
+    }
+    $.ajax({
+        type: "POST",
+        url: urlbeginning+'UploadFile/',
+        async: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (data) { 
+            console.log(data);
+            fileName = data;
+        }
+    });
+
+    return fileName;
+}
+$(function () {
 
     $(".upload-file").on("click", function (e) {
         e.preventDefault();
@@ -44,73 +116,37 @@
 		console.log("url : " + url);
         var formData = new FormData($(".documentModalForm")[0]);
         var $CustomMainObjectID = $("#CustomMainObjectID").val();
-		//for(var i=0; i< $(this).get(0).files.length; i++)
-		//{
-		//	formData.append("FilesToSave", $(this).get(0).files[i])
-		//}
-		//var files = [];
-		//var fileInput =		formData.get("FilesToSave");
-		// $.each(e.target.files, function(i, file) {
-		//	 console.log(file)
-		//	files.push(file);
-		// });
+        console.log(...formData)
+        var targetFile = formData.getAll("FilesToSave")
+        console.log(targetFile)
+        for (var i = 0; i < targetFile.length; i++) {
+            console.log(targetFile[i])
+            UploadFile(targetFile[i], formData);
+        }
 
-		//var zip = new JSZip();
-		//	function addFileToZip(n) {
-		//		if(n >= files.length) {
-		//			zip.generateAsync({type:"blob", compression:"DEFLATE", compressionOptions: { level: 9    },}).then(function(content) {
-		//					formData.set("FilesToSave", content)
-		//	console.log(...formData)
-
-			$.ajax({
-				url: url,
-				method: 'POST',
-				data: formData,
-				success: (partialResult) => {
-		
-					//this.options.noteModalElement.modal('hide');
-					$(".carousel-item").remove();
-				
-
-					var $enumString =  $('.folderName').val();
-					var $requestId =  $('.objectID').val();
-					var section = $("#masterSectionType").val();
-					var guid = $("#Guid").val();
-                    var $CustomMainObjectID = $("#CustomMainObjectID").val();
+        $(".carousel-item").remove();
 
 
-					if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
-						section = "Operations"
-					} else if ($(".open-document-modal.active-document-modal").hasClass('labManagement')|| $(".open-document-modal.active-document-modal").hasClass('LabManagement')) {
-						section = "LabManagement"
-					}
-					$.fn.ChangeColorsOfModal($enumString, section);
-					var parentFolder =  $('.parentFolderName').val();
-                    $.fn.OpenDocumentsModal(true, $enumString, $requestId, guid, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
-					return true;
-				},
-				processData: false,
-				contentType: false
-            });
+        var $enumString = $('.folderName').val();
+        var $requestId = $('.objectID').val();
+        var section = $("#masterSectionType").val();
+        var guid = $("#Guid").val();
+        var $CustomMainObjectID = $("#CustomMainObjectID").val();
+
+
+        if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
+            section = "Operations"
+        } else if ($(".open-document-modal.active-document-modal").hasClass('labManagement') || $(".open-document-modal.active-document-modal").hasClass('LabManagement')) {
+            section = "LabManagement"
+        }
+        $.fn.ChangeColorsOfModal($enumString, section);
+        var parentFolder = $('.parentFolderName').val();
+        $.fn.OpenDocumentsModal(true, $enumString, $requestId, guid, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
         return true;
-		//			});
-				
-		//			return;
-		//		}
-		//		var file = files[n]; 
-		//		console.log(file);
-		//		var arrayBuffer;
-		//		var fileReader = new FileReader();
-		//		fileReader.onload = function(e) {
-		//			arrayBuffer = this.result;
-		//			zip.file(file.name, arrayBuffer,{ binary:true});
-		//			addFileToZip(n + 1);
-		//		};
-		//		fileReader.readAsArrayBuffer(file);
-		//	}
-		//addFileToZip(0);
 
-	})
+        return true;
+					});
+
 
     $(".file-select").on("change", function (e) {
         console.log("file was changed");
@@ -160,7 +196,7 @@
     };
 
 	$("body, .modal").off("click", ".delete-document").on("click",".delete-document", function (e) {
-		e.preventDefault();
+        e.preventDefault();
 		var hasClass = $(this).hasClass("delete-file-document");
 		var reportFile = $(this).hasClass("report-file");
 		console.log(reportFile)
@@ -179,6 +215,7 @@
                 cache: false,
                 success: function (data) {
                     $.fn.OpenModal('modal-document-delete', "documents-delete", data)
+                    $("#loading").show()
                 }
             });
         }
@@ -266,3 +303,4 @@
     //};
 
 });
+

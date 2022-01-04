@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrototypeWithAuth.Models
 {
-    public class PaymentType
+    public class PaymentType : ModelBase
     {
         [Key]
         public int PaymentTypeID { get; set; }

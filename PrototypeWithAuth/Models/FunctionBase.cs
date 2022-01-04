@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public  class FunctionBase
+    public  class FunctionBase : ModelBase
     {
         [Key]
         public int ID { get; set; }

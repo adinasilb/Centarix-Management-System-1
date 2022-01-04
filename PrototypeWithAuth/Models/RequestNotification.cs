@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class RequestNotification : Notification<RequestNotificationStatus>
+    public class RequestNotification : Notification<RequestNotificationStatus>, ModelBase
     {
         public int RequestID { get; set; }
         public Request Request { get; set; }

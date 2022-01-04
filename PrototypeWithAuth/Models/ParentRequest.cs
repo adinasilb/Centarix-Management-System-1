@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace PrototypeWithAuth.Models
 {
     //currently
-    public class ParentRequest
+    public class ParentRequest : ModelBase
     {
         [Key]
         public int ParentRequestID { get; set; }
@@ -39,7 +39,6 @@ namespace PrototypeWithAuth.Models
         public string SupplierOrderNumber { get; set; }
         public IEnumerable<Payment> Payments { get; set; }
         public bool IsDeleted { get; set; } //this is set to true if all the requests under this parentrequest are deleted
-        public double Discount { get; set; }
         public double Taxes { get; set; }
         public double Credit { get; set; }
         public double Shipping { get; set; }

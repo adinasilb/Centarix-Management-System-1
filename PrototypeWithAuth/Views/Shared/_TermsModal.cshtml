@@ -38,7 +38,7 @@
 </div>
 <div class="modal-body">
     <div class="container">
-        <div class="row error-message">
+        <div class="row error-message text-danger-centarix">
             @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
         </div>
         <div class="row">
@@ -134,7 +134,8 @@
                 data: formData,
                 traditional: true,
                 type: "POST",
-                cache: false,
+                cache: true,
+                timeout:7200000,
                 success: function (data) {
                     $(".submitTerms").prop('disabled', false)
 

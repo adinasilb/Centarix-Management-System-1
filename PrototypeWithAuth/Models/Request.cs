@@ -8,10 +8,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using MimeKit.Cryptography;
 using PrototypeWithAuth.AppData;
 using System.ComponentModel;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Request //WHEN YOU RETURN REQUEST MAY WANT TO DO A SELECT SO IT DOESN"T ALWAYS NEED TO CALCULATE THE DATE PAID
+    public class Request : ModelBase //WHEN YOU RETURN REQUEST MAY WANT TO DO A SELECT SO IT DOESN"T ALWAYS NEED TO CALCULATE THE DATE PAID
     {
         //IMPT: When adding in data validation make sure that you turn data-val off in the search
         [Key]
@@ -22,7 +23,7 @@ namespace PrototypeWithAuth.Models
         public ParentRequest ParentRequest { get; set; }
         public string ApplicationUserCreatorID { get; set; }
         [ForeignKey("ApplicationUserCreatorID")]
-        public ApplicationUser ApplicationUserCreator { get; set; }
+        public Employee ApplicationUserCreator { get; set; }
         public int? SubProjectID { get; set; }
         public SubProject SubProject { get; set; }
 
@@ -83,7 +84,7 @@ namespace PrototypeWithAuth.Models
 
         //payment info
         public uint? Installments { get; set; } //number of installments
-        public List<Payment> Payments { get; set; }
+        public ListImplementsModelBase<Payment> Payments { get; set; }
 
         public int? PaymentStatusID { get; set; }
         [ForeignKey("PaymentStatusID")]
@@ -162,9 +163,6 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Exchange Rate")]
         public decimal ExchangeRate { get; set; } // holding the rate of exchange for this specific request
         public int? Terms { get; set; } // if terms is selected, keep decremtnting, when = zero, gets status of pay now
-        public decimal Discount { get; set; }
-
-
 
         /// received fields
         [DataType(DataType.Date)]
@@ -174,8 +172,8 @@ namespace PrototypeWithAuth.Models
         public string ApplicationUserReceiverID { get; set; } //this is the owner of the request - do we have every received request have its own reciever?
 
         [ForeignKey("ApplicationUserReceiverID")]
-        public ApplicationUser ApplicationUserReceiver { get; set; }
-        public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
+        public Employee ApplicationUserReceiver { get; set; }
+        public ListImplementsModelBase<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public bool Ignore { get; set; }
         public bool IsReceived { get; set; }
         public bool IncludeVAT { get; set; }
@@ -188,6 +186,10 @@ namespace PrototypeWithAuth.Models
         public QuoteStatus QuoteStatus { get; set; }
         public bool IsInInventory { get; set; }
         public bool DevelopersBoolean { get; set; }
+        public int SerialNumber { get; set; }
         public IEnumerable<RequestListRequest> RequestListRequests { get; set; }
+        private const string SerialNumberPefix = "IL";
+
+        public string SerialNumberString { get { return SerialNumberPefix+SerialNumber; } }
     }
 }

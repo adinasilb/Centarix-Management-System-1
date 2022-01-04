@@ -17,5 +17,6 @@ namespace PrototypeWithAuth.Models
         public string InvoiceImageSaved { get; set; }
         public Guid Guid { get; set; }
         public StringWithBool Error { get; set; }
+        public Vendor Vendor { get; set; }
     }
 }

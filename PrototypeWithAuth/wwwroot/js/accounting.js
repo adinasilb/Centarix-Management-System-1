@@ -6,12 +6,10 @@
 			$(this).closest("tr").attr("class", "text-center");
 		}
 		else {
-			//alert("is checked")
 			$.fn.AddBorderBySectionType(this);
 		}
 		var activeVendor = $(".activeVendor").val();
 		if (activeVendor == "" && $(this).is(":checked")) {
-			//	alert("reset vendor")
 			$(".activeVendor").val($(this).attr("vendorid"))
 		}
 		var selectedButton = $(this).closest("tbody").find(".button-for-selected-items");
@@ -249,6 +247,43 @@
 				}
 			});
 		});
+	});
+	$(".save-invoice").click(function (e) {
+		e.preventDefault();
+		$("#myForm").data("validator").settings.ignore = "";
+		var valid = $("#myForm").valid();
+		console.log("valid form: " + valid)
+		if (!valid) {
+			e.preventDefault();
+			if (!$('.activeSubmit').hasClass('disabled-submit')) {
+				$('.activeSubmit').addClass('disabled-submit')
+			}
+
+		}
+		else {
+			var formData = new FormData($(".addInvoiceForm")[0]);
+			$.ajax({
+				contentType: false,
+				processData: false,
+				async: true,
+				url: "/Requests/AddInvoiceModal",
+				data: formData,
+				traditional: true,
+				type: "POST",
+				cache: false,
+				success: function (data) {
+					$.fn.CloseModal("add-invoice");
+					$("._IndexTableDataByVendor").html(data);
+					return true;
+				},
+				error: function (jqxhr) {
+					console.log("Error")
+					//$.fn.OpenModal("modal", "payments-pay", jqxhr.responseText);
+					$('.accounting-form .error-message').html(jqxhr.responseText);
+				}
+			})
+		}
+		$("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';
 	});
 });
 

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Author
+    public class Author : ModelBase
     {
         [Key]
         public int AuthorID { get; set; }

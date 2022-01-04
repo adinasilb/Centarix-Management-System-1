@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrototypeWithAuth.Models
 {
-    public class UnitParentType
+    public class UnitParentType : ModelBase
     {
         [Key]
         public int UnitParentTypeID { get; set; }

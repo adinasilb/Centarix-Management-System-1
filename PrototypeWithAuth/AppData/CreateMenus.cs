@@ -271,6 +271,15 @@ namespace PrototypeWithAuth.AppData
                         RouteValues = new RouteValueDictionary(),
                         Classes = AllClasses
                     });
+                    if (pageType == AppUtility.PageTypeEnum.LabManagementSettings) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Settings",
+                        Controller = "Requests",
+                        Action = "SettingsInventory",
+                        RouteValues = new RouteValueDictionary(),
+                        Classes = AllClasses
+                    });
                     //    if (pageType == AppUtility.PageTypeEnum.LabManagementSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     //    MainMenuItems.Add(new MenuItems()
                     //    {
@@ -749,6 +758,15 @@ namespace PrototypeWithAuth.AppData
                 Controller = "Requests",
                 Action = "IndexLists",
                 Classes = menuClass,
+                IconName = "icon-library_books-24px"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.SharedLists) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Shared Lists",
+                Controller = "Requests",
+                Action = "IndexSharedLists",
+                Classes = menuClass,
                 IconName = "icon-centarix-icons-04"
             });
             return SidebarMenuItems;
@@ -880,6 +898,24 @@ namespace PrototypeWithAuth.AppData
                 },
                 IconName = "icon-zoom_in-24px-01",
                 Classes = Classes
+            });
+
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateLabManageSettingsSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+
+            string Classes = OrigClasses;
+            if (SidebarTitle == AppUtility.SidebarEnum.Inventory) { Classes += ActiveClasses; } else { Classes += OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Inventory",
+                Controller = "Requests",
+                Action = "SettingsInventory",
+                Classes = Classes,
+                IconName = "icon-centarix-icons-05"
             });
 
             return SidebarMenuItems;

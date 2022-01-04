@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Site
+    public class Site : ModelBase
     {
         [Key]
         public int SiteID { get; set; }

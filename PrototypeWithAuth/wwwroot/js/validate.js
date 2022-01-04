@@ -68,6 +68,7 @@ $(function () {
 			error.insertAfter(element);
 		}
 		if (element.hasClass('employee-status')) {
+			alert("has class employee status");
 			$("#validation-EmployeeStatus").removeClass("hidden");
 		}
 	}
@@ -224,12 +225,13 @@ $(function () {
 	});
 
 	$('.next-tab').off("click").click(function () {
+		console.log("in next tab of validate.js");
 		var clickedElement= $(this);
 		var currentTab = $(".current-tab")
 
 		if(!$(this).hasClass("current-tab"))
 		{
-
+			console.log("has current-tab");
 			if ($(this).hasClass('order-tab-link') ) {
 				$('.activeSubmit').removeClass('disabled-submit')
 			}
@@ -237,7 +239,7 @@ $(function () {
 			//change previous tabs to accessible --> only adding prev-tab in case we need to somehow get it after
 
 			if (!$(this).hasClass("prev-tab")) {
-
+				console.log("has prev tab");
 				if ($(this).parent("li").index() <= $('.request-price').parent("li").index()) {
 					$('#unitTypeID').rules("remove", "selectRequired");
 					console.log('removed price selects');
@@ -253,7 +255,7 @@ $(function () {
 				console.log('this index ' + $(this).parent("li").index());
 				console.log('location index ' + $('.request-location').parent("li").index())
 				var valid = $("#myForm").valid();
-
+				console.log("validated form...");
 				console.log("valid tab" + valid)
 				if (!valid) {
 					$(this).prop("disabled", true);

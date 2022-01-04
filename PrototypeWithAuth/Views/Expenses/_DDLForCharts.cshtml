@@ -83,15 +83,15 @@
                 <option disabled selected class="d-none" value="">Select Category</option>
                 @foreach (var p in Model.ParentCategories)
                 {
-                    <option value="@p.ParentCategoryID">@p.ParentCategoryDescription</option>
+                    <option value="@p.ID">@p.Description</option>
                 }
             </select>
             @*@Html.DropDownListFor(
              vm => vm.SelectedParentCategories,
              new SelectList(
                  Model.ParentCategories,
-                 "ParentCategoryID",
-                 "ParentCategoryDescription"),
+                 "ID",
+                 "Description"),
 
              new { @class = "mdb-select custom select-dropdown form-control-plaintext parentlistMulitple", @searchable = "Search Category", @multiple = "multiple", @id = "parentlistMulitple" }
             )*@
@@ -102,7 +102,7 @@
                 <option disabled selected class="d-none" value="">Select Sub Category</option>
                 @foreach (var p in Model.ProductSubcategories)
                 {
-                    <option value="@p.ProductSubcategoryID">@p.ProductSubcategoryDescription</option>
+                    <option value="@p.ID">@p.Description</option>
                 }
             </select>
             @*@Html.DropDownListFor(

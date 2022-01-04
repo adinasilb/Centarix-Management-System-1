@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class VendorCategoryType
+    public class VendorCategoryType : ModelBase
     {
         [Key, Column(Order = 1)]
         public int VendorID { get; set; }

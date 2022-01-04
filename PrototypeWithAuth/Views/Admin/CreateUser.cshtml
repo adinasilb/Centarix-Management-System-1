@@ -5,18 +5,26 @@
 @{
     ViewData["Title"] = "CreateUser";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
-}
 
+}
+@*<script src="~/js/validate.js"></script>*@
 <div class="col-12 create-user mx-auto on-form-modal users-form add-item-box scroll-page" style="width: 60%">
     <div class="on-form-modal-border">
-        <form action="" id="myForm" method="post" class="usersForm" enctype="multipart/form-data" style="height: 100%; ">
+        <form action="" id="myForm" method="post" class="usersForm createUser" enctype="multipart/form-data" style="height: 100%; ">
+
             @* HIDDEN INPUTS TO DISABLE AUTOFILLS *@
-            <input type="email" class="hidden" />
-            <input type="password" class="hidden" />
+            @*<input type="email" class="hidden" />
+            <input type="password" class="hidden" />*@
+            <input type="hidden" class="hidden" asp-for="Employee.Id" />
+            <input type="hidden" asp-for="Employee.UserNum" />
+
+            <input type="hidden" text="close" class="modal-open-state" />
+            <input type="hidden" asp-for="EmployeeImage" />
             <input type="hidden" asp-for="UserImageSaved" value="false" />
             <input type="hidden" id="UserImagePath" value="" />
-            <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
-                <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessage</label>
+
+            <div class="new-modal-header modal-line-1-header-with-back modal-sides" style="padding: 0.5em 6em">
+
                 <div class="row modal-sides">
                     <div class="col-2 form-group modal-line-1-header pl-0  d-table">
                         <button type="button" class="btn no-box-shadow  upload-image border-0 p-0 m-0">
@@ -25,633 +33,97 @@
                             </div>
                         </button>
                     </div>
-                    <div class="col-6 form-group modal-line-1-header " style="display:grid;"><input class=" heading-1 name userName form-control-plaintext border-0 d-table-cell align-middle" disabled value="@Model.FirstName @Model.LastName" /></div>
+                    <div class="col-6 form-group modal-line-1-header " style="display:grid;"><input class=" heading-1 name userName form-control-plaintext border-0 d-table-cell align-middle" disabled value="@Model.Employee.FirstName @Model.Employee.LastName" /></div>
                     <div class=" modal-line-1-header">
 
                         <input type="submit" id="addUser" value="Add User" asp-action="CreateUser" class="custom-button custom-button-font  disabled-submit users-background-color activeSubmit" style="float: right;" />
                     </div>
                 </div>
+                <!--<div class="row modal-sides">
+                <div class="col-2 form-group  pl-0  d-table">
+                    <button type="button" class="btn no-box-shadow  upload-image border-0 rounded-circle p-0 m-0 mark-readonly" disabled>
+                        <div class="userImage upload-image ">
+                            @{
+                                var src = "src=" + "/images/user-image-placeholder.png";
+                                var hiddenIcon = "";
+                                if (Model.UserImage != null)
+                                {
+                                    src = "src=/" + AppUtility.GetLastFiles(Model.UserImage, 2);
+                                    hiddenIcon = "display: none;";
+                                }
+
+                            }
+
+                            <img id="user-image" class=" circular-profile-img circular-profile-img-89" @src />
+                        </div>
+                    </button>
+                </div>
+                <div class="col-6 form-group modal-line-1-header " style="display:grid;">
+                    <input class="modal-product-title heading-1 userName form-control-plaintext border-0" disabled value="@Model.Employee.FirstName @Model.Employee.LastName" />-->
+                @*<input class=" heading-1 name userName form-control-plaintext border-0 d-table-cell align-middle" disabled value="@Model.Employee.FirstName @Model.Employee.LastName" />*@
+                <!--</div>
+                    <div class=" modal-line-1-header">
+
+                        <input type="submit" id="addUser" value="Add User" asp-action="CreateUser" class="custom-button custom-button-font  disabled-submit users-background-color activeSubmit" style="float: right;" />
+                    </div>
+
+                </div>-->
+                @*<div class="col-6 form-group modal-line-1-header " style="display:grid;"><input class=" heading-1 name userName form-control-plaintext border-0 d-table-cell align-middle" disabled value="@Model.Employee.FirstName @Model.Employee.LastName" /></div>
+                    <div class=" modal-line-1-header">
+
+                    </div>*@
+
                 <div class="row">
                     <div class="col-12 px-0">
-                        <div class="container-fluid div-tabs text-center modal-sides">
-                            <ul class="nav nav-tabs container-fluid p-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
-                                <li class="nav-item">
-                                    <a data-toggle="tab" href="#details" id="user-details-tab" class="nav-link next-tab user-nav-link">
+                        <div class="container-fluid div-tabs text-center pl-0">
+
+                            <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 nav-tabs-icons">
+                                <li class="nav-item icon">
+                                    <a data-toggle="tab" href="#details" id="user-details-tab" class="nav-link user-nav-link next-tab">
                                         <i class="icon-face-24px" style="font-size: 2rem;"></i><br />Details
                                     </a>
                                 </li>
-                                <li class="nav-item only-employee">
-                                    <a data-toggle="tab" href="#salary" id="user-salary-tab" class="nav-link user-nav-link  next-tab salary-tab ">
+                                <li class="nav-item icon only-employee">
+                                    <a data-toggle="tab" href="#salary" id="user-salary-tab" class="nav-link user-nav-link salary-tab next-tab">
                                         <i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Salary
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a data-toggle="tab" href="#security" id="user-security-tab" class="nav-link user-nav-link  next-tab security-tab">
+                                <li class="nav-item icon">
+                                    <a data-toggle="tab" href="#security" id="user-security-tab" class="nav-link user-nav-link security-tab next-tab">
                                         <i class="icon-security-24px" style="font-size: 2rem;"></i><br />Security
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a data-toggle="tab" href="#permissions" id="user-permissions-tab" class="nav-link user-nav-link next-tab permissions-tab">
+                                <li class="nav-item icon">
+                                    <a data-toggle="tab" href="#permissions" id="user-permissions-tab" class="nav-link user-nav-link permissions-tab  next-tab">
                                         <i class="icon-https-24px" style="font-size: 2rem;"></i><br />Permissions
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a data-toggle="tab" href="#budget" id="user-budget-tab" class="nav-link user-nav-link next-tab">
+                                <li class="nav-item icon">
+                                    <a data-toggle="tab" href="#budget" id="user-budget-tab" class="nav-link user-nav-link  next-tab">
                                         <i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Budget
                                     </a>
                                 </li>
+
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="new-modal-body">
-                <div class="" style="background: #FFF; " @*border: 2px solid #EAEAEB;"*@>
-                    <div class="tab-content">
-                        <div id="details" class="tab-pane fade">
-                            <div class="row modal-sides top-radio-buttons">
-                                <input type="hidden" asp-for="NewEmployee.EmployeeStatusID" class="employee-status" />
-                                @*@{ var first = true; }*@
-                                @foreach (var status in Model.EmployeeStatuses)
-                                {
-                                    var id = "EmployeeStatusID" + status.EmployeeStatusID + " custom-control-input";
-                                    <div class="custom-control custom-radio mr-4 ml-4 employee-type">
-                                        <input class="custom-control-input employee-status  employee-status-radio" asp-for="NewEmployee.EmployeeStatusID" id="@id" type="radio" value="@status.EmployeeStatusID">
-                                        @*@Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = "custom-control-input", @id = id, @checked = "checked" })*@
-                                        @*<input type="radio" asp-for="NewEmployee.EmployeeStatusID" value="@status.EmployeeStatusID" class="id" />*@
-                                        @*@Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = id })*@
-                                        <label class="radio-button custom-control-label pt-1 pl-2" for="@id">@status.Description</label>
-                                    </div>
-                                }
-                                <br /><span id="validation-EmployeeStatus" class="hidden text-danger-centarix">Please choose a valid Employee Status</span>
-                            </div>
-                            <hr />
-                            <div class="div-tabs modal-sides">
-                                <div class="row">
-                                    <div class="col-6 p-0">
-                                        <label asp-for="FirstName" class="control-label"></label>
-                                        <input asp-for="FirstName" class="form-control-plaintext border-bottom" />
-                                        <span asp-validation-for="FirstName" class="text-danger-centarix"></span>
-                                    </div>
-                                    <div class="col-6">
-                                        <label asp-for="LastName" class="control-label"></label>
-                                        <input asp-for="LastName" class="form-control-plaintext border-bottom" />
-                                        <span asp-validation-for="LastName" class="text-danger-centarix"></span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6  p-0">
-                                        <label asp-for="CentarixID" class="control-label"></label>
-                                        <input asp-for="CentarixID" class="form-control-plaintext border-bottom" readonly/>
-                                        <span asp-validation-for="CentarixID" class="text-danger-centarix"></span>
-                                    </div>
-                                    <div class="col-6 only-employee">
-                                        <label asp-for="NewEmployee.IDNumber" class="control-label only-employee"></label>
-                                        <input asp-for="NewEmployee.IDNumber" class="form-control-plaintext border-bottom only-employee" value="" />
-                                        <span asp-validation-for="NewEmployee.IDNumber" class="text-danger-centarix"></span>
-                                    </div>
-
-                                </div>
-                                <div class="row only-employee">
-                                    <div class="col-6  p-0 only-employee">
-                                        <label asp-for="NewEmployee.DOB" class="control-label only-employee"></label>
-                                        <input asp-for="NewEmployee.DOB" type="text" class="form-control-plaintext border-bottom only-employee datepicker" />
-                                        <span asp-validation-for="NewEmployee.DOB" class="text-danger-centarix"></span>
-                                    </div>
-                                    <div class="col-6 only-employee">
-                                        <label asp-for="NewEmployee.Age" class="control-label "></label>
-                                        <input id="Age" name="Age" class="form-control-plaintext border-bottom" disabled />
-                                    </div>
-                                </div>
-                                <div class="row only-employee">
-                                    <div class="col-6 p-0  only-employee">
-                                        <label class="control-label only-employee">Job Category</label>
-                                        @Html.DropDownListFor(
-                                            vm => vm.NewEmployee.JobSubcategoryType.JobCategoryTypeID,
-                                            new SelectList(
-                                            Model.JobCategoryTypes,
-                                            dataValueField: "JobCategoryTypeID",
-                                            dataTextField: "Description"),
-                                            optionLabel: "Select A Category",
-                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee job-category", @searchable = "default value", }
-                                            )
-                                        @*<span asp-validation-for="NewEmployee.JobSubcategoryType.JobCategoryTypeID" class="text-danger-centarix"></span>*@
-                                    </div>
-                                    <div class="col-6  only-employee">
-                                        <label class="control-label only-employee">Job Subcategory</label>
-                                        <select asp-for="NewEmployee.JobSubcategoryTypeID" class="mdb-select custom select-dropdown form-control-plaintext only-employee job-subcategory remove-extra-border" id="job-subcategory" searchable="default value">
-                                        </select>
-                                        @*<span asp-validation-for="NewEmployee.JobSubcategoryTypeID" class="text-danger-centarix"></span>*@
-                                    </div>
-                                </div>
-                                <div class="row ">
-                                    <div class="col-6 p-0">
-                                        <label asp-for="Email" class="control-label"></label>
-                                        <input asp-for="Email" class="form-control-plaintext border-bottom" autocomplete="nope" type="text" />
-                                        <span asp-validation-for="Email" class="text-danger-centarix"></span>
-                                    </div>
-                                    <div class="col-6">
-                                        <label asp-for="PhoneNumber" class="control-label"></label>
-                                        <input asp-for="PhoneNumber" class="form-control-plaintext border-bottom" required />
-                                        <span asp-validation-for="PhoneNumber" class="text-danger-centarix"></span>
-                                    </div>
-                                </div>
-                                <div class="row only-employee">
-                                    <div class="col-4  p-0 only-employee">
-                                        <label asp-for="PhoneNumber2" class="control-label"></label>
-                                        <input asp-for="PhoneNumber2" class="form-control-plaintext border-bottom" />
-                                        <span asp-validation-for="PhoneNumber2" class="text-danger-centarix"></span>
-                                    </div>
-                                    <div class="col-4 only-employee">
-                                        <label class="control-label only-employee">Degree</label>
-                                        @Html.DropDownListFor(
-                                            vm => vm.NewEmployee.DegreeID,
-                                            new SelectList(
-                                            Model.Degrees,
-                                            dataValueField: "DegreeID",
-                                            dataTextField: "Description"),
-                                            optionLabel: "Select A Degree",
-                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee", @searchable = "default value" }
-                                            )
-                                        @*<span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>*@
-                                    </div>
-                                    <div class="col-4 only-employee">
-                                        <label asp-for="NewEmployee.StartedWorking" class="control-label only-employee"></label>
-                                        <input asp-for="NewEmployee.StartedWorking" type="text" class="form-control-plaintext border-bottom only-employee datepicker" />
-                                        <span asp-validation-for="NewEmployee.StartedWorking" class="text-danger-centarix"></span>
-                                    </div>
-                                </div>
-                                <div class="row only-employee">
-                                    <div class="col-4  p-0 only-employee">
-                                        <label class="control-label only-employee">Relationship Status</label>
-                                        @Html.DropDownListFor(
-                                            vm => vm.NewEmployee.MaritalStatusID,
-                                            new SelectList(
-                                            Model.MaritalStatuses,
-                                            dataValueField: "MaritalStatusID",
-                                            dataTextField: "Description"),
-                                            optionLabel: "Select A Status",
-                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee", @searchable = "default value" }
-                                            )
-                                        @*<span asp-validation-for="NewEmployee.MaritalStatusID" class="text-danger-centarix"></span>*@
-                                    </div>
-                                    <div class="col-4 only-employee">
-                                        <label class="control-label only-employee">Citizenship</label>
-                                        @Html.DropDownListFor(
-                                            vm => vm.NewEmployee.CitizenshipID,
-                                            new SelectList(
-                                            Model.Citizenships,
-                                            dataValueField: "CitizenshipID",
-                                            dataTextField: "Description"),
-                                            optionLabel: "Select A Country",
-                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee", @searchable = "default value" }
-                                            )
-                                        @*<span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>*@
-                                    </div>
-                                    <div class="col-4 only-employee">
-                                        <label asp-for="NewEmployee.TaxCredits" class="control-label only-employee"></label>
-                                        <input asp-for="NewEmployee.TaxCredits" class="form-control-plaintext border-bottom only-employee" />
-                                        <span asp-validation-for="NewEmployee.TaxCredits" class="text-danger-centarix"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="salary" class="tab-pane fade">
-                            <div class="div-tabs modal-sides">
-                                <div class="row">
-                                    <div class="col-4  p-0">
-                                        <label class="control-label" asp-for="NewEmployee.SalariedEmployee.WorkScope"></label>
-                                        <div class="input-group">
-                                            <input class="form-control-plaintext border-bottom" asp-for="NewEmployeeWorkScope" />
-                                            <div class="input-group-text">%</div>
-                                        </div>
-                                        <span asp-validation-for="NewEmployee.SalariedEmployee.WorkScope" class="text-danger-centarix"></span>
-                                    </div>
-                                    <div class="col-4">
-                                        <label class="control-label" asp-for="NewEmployee.SalariedEmployee.HoursPerDay"></label>
-                                        <input type="hidden" asp-for="NewEmployee.SalariedEmployee.HoursPerDay" />
-                                        <input type="text" id="TimeSpan-HoursPerDay" name="TimeSpan-HoursPerDay" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="NewEmployee.SalariedEmployee.HoursPerDay" class="text-danger-centarix"></span>
-                                    </div>
-                                    <div class="col-4">
-                                        <label class="control-label" asp-for="NewEmployee.VacationDays"></label>
-                                        <input class="form-control-plaintext border-bottom" asp-for="NewEmployee.VacationDays" />
-                                        <span class="text-danger-centarix" asp-validation-for="NewEmployee.VacationDays"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="security" class="tab-pane fade">
-                            <div class="div-tabs modal-sides">
-                                <div class="row">
-                                    <div class="col-6  p-0">
-                                        <label asp-for="Password" class="control-label"></label> &nbsp;&nbsp;&nbsp;&nbsp;
-
-
-                                        <div class="input-group">
-                                            <input asp-for="Password" class="form-control-plaintext border-bottom" autocomplete="off" readonly />
-                                            <span class="input-group-text">
-                                                <i type="button" class="icon-remove_red_eye-24px float-right users-filter" style="color: var(--users-color); padding-top: .55rem; font-size: 1.25rem;" id="ViewPassword"></i>
-                                                @*<input type="button" class="custom-button custom-button-small-font users-background-color px-1 py-0" id="ViewPassword" value="View" />*@
-                                            </span>
-                                        </div>
-                                        @*<input asp-for="Password" class="form-control-plaintext border-bottom" autocomplete="off" />*@
-                                        <span asp-validation-for="Password" class="text-danger-centarix"></span>
-                                    </div>
-                                    <div class="col-6">
-                                        @*<label asp-for="ConfirmPassword" class="control-label"></label>
-                                                    <input asp-for="ConfirmPassword" class="form-control-plaintext border-bottom" autocomplete="off" readonly />
-                                                    <span asp-validation-for="ConfirmPassword" class="text-danger-centarix"></span>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-6 p-0">*@
-                                        <label asp-for="SecureAppPass" class="control-label"></label>
-                                        <input asp-for="SecureAppPass" class="form-control-plaintext border-bottom" autocomplete="off" />
-                                        <span asp-validation-for="SecureAppPass" class="text-danger-centarix"></span>
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <input type="button" id="GeneratePassword" class="black-text py-2 mr-6 btn text rounded-pill yearly-monthly  text-center  px-5  border border-dark black-text" value="Generate Password" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="permissions" class="tab-pane fade">
-                            <div class="div-tabs modal-sides">
-                                <div class="main-permissions row">
-                                    <div class="col-12 text-center">
-                                        <div class="row ">
-                                            <div class="col-2 text-center p-0 mr-3">
-                                                <a href="" class="open-orders-list text-center opac87">
-                                                    <img src="~/images/css/main_menu_icons/inventory.png" class="orders-main" width="115" style="display: none;" />
-                                                    <img src="~/images/css/main_menu_icons/inventory_grey.png" class="orders-grey" width="115" />
-                                                    <br />
-                                                    <span class="text-center">Orders &amp; Inventory</span>
-                                                </a>
-                                            </div>
-                                            <div class="col-2 text-center p-0 mx-3">
-                                                <a href="" class="open-protocols-list opac87">
-                                                    <img src="~/images/css/main_menu_icons/protocols.png" class="protocols-main" width="115" style="display: none;" />
-                                                    <img src="~/images/css/main_menu_icons/protocols_grey.png" class="protocols-grey" width="115" />
-                                                    <br />
-                                                    <span>Protocols</span>
-                                                </a>
-                                            </div>
-                                            <div class="col-2 text-center p-0 mx-3">
-                                                <a href="" class="open-operations-list opac87">
-                                                    <img src="~/images/css/main_menu_icons/operation.png" class="operations-main" width="115" style="display: none;" />
-                                                    <img src="~/images/css/main_menu_icons/operation_grey.png" class="operations-grey" width="115" />
-                                                    <br />
-                                                    <span>Operations</span>
-                                                </a>
-                                            </div>
-                                            <div class="col-2 text-center p-0 mx-3">
-                                                <a href="" class="open-biomarkers-list opac87">
-                                                    <img src="~/images/css/main_menu_icons/biomarkers.png" class="biomarkers-main" width="115" style="display: none;" />
-                                                    <img src="~/images/css/main_menu_icons/biomarkers_grey.png" class="biomarkers-grey" width="115" />
-                                                    <br />
-                                                    <span>Biomarkers</span>
-                                                </a>
-                                            </div>
-                                            <div class="col-2 text-center p-0 ml-3">
-                                                <a href="" class="open-timekeepers-list opac87">
-                                                    <img src="~/images/css/main_menu_icons/timekeeper.png" class="timekeeper-main" width="115" style="display: none;" />
-                                                    <img src="~/images/css/main_menu_icons/timekeeper_grey.png" class="timekeeper-grey" width="115" />
-                                                    <br />
-                                                    <span>Timekeeper</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 text-center">
-                                        <div class="row ">
-                                            <div class="col-2 text-center p-0 mr-3">
-                                                <a href="" class="open-lab-list text-center opac87">
-                                                    <img src="~/images/css/main_menu_icons/lab.png" class="lab-main" width="115" style="display: none;" />
-                                                    <img src="~/images/css/main_menu_icons/lab_grey.png" class="lab-grey" width="115" />
-                                                    <br />
-                                                    <span class="text-center">Lab Management</span>
-                                                </a>
-                                            </div>
-                                            <div class="col-2 text-center p-0 mx-3">
-                                                <a href="" class="open-accounting-list opac87">
-                                                    <img src="~/images/css/main_menu_icons/accounting.png" class="accounting-main" width="115" style="display: none;" />
-                                                    <img src="~/images/css/main_menu_icons/accounting_grey.png" class="accounting-grey" width="115" />
-                                                    <br />
-                                                    <span>Accounting</span>
-                                                </a>
-                                            </div>
-                                            <div class="col-2 text-center p-0 mx-3">
-                                                <a href="" class="open-expenses-list opac87">
-                                                    <img src="~/images/css/main_menu_icons/expenses.png" class="expenses-main" width="115" style="display: none;" />
-                                                    <img src="~/images/css/main_menu_icons/expenses_grey.png" class="expenses-grey" width="115" />
-                                                    <br />
-                                                    <span>Expenses</span>
-                                                </a>
-                                            </div>
-                                            <div class="col-2 text-center p-0 mx-3">
-                                                <a href="" class="open-income-list opac87">
-                                                    <img src="~/images/css/main_menu_icons/income.png" class="income-main" width="115" style="display: none;" />
-                                                    <img src="~/images/css/main_menu_icons/income_grey.png" class="income-grey" width="115" />
-                                                    <br />
-                                                    <span>Income</span>
-                                                </a>
-                                            </div>
-                                            <div class="col-2 text-center p-0 ml-3">
-                                                <a href="" class="open-users-list opac87">
-                                                    <img src="~/images/css/main_menu_icons/users.png" class="users-main" width="115" style="display: none;" />
-                                                    <img src="~/images/css/main_menu_icons/users_grey.png" class="users-grey" width="115" />
-                                                    <br />
-                                                    <span>Users</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="orders-list">
-                                    <div class="row h-100 ">
-                                        <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions orders mr-5 my-auto opac87"><i class="icon-arrow_back_ios-24px-1"></i></a>
-                                            <img src="~/images/css/usericons/inventory_dropdown@2x.png" class="my-auto" width="40" />
-                                            <span class="my-auto" style="font-size: 1.2em;"> Orders &amp; Inventory</span>
-                                        </div>
-                                        <div class="col-3 offset-1 mt-4">
-                                            @for (var i = 0; i < Model.OrderRoles.Count(); i++)
-                                            {
-                                                @Html.HiddenFor(model => model.OrderRoles[i].MenuItemsID)
-                                                @Html.HiddenFor(model => model.OrderRoles[i].StringWithName.StringDefinition)
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="OrderRoles[i].Selected" />
-                                                    <label class="form-check-label " asp-for="OrderRoles[i].Selected">@Model.OrderRoles[i].StringWithName.StringName</label>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="protocols-list">
-                                    <div class="row h-100">
-                                        <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"><i class="icon-arrow_back_ios-24px-1"></i></a>
-                                            <img src="~/images/css/usericons/protocols_dropdown@2x.png" class="my-auto" width="40" />
-                                            <span class="my-auto" style="font-size: 1.2em;">Protocols</span>
-                                        </div>
-                                        <div class="col-3 offset-1 mt-4">
-                                            @for (var i = 0; i < Model.ProtocolRoles.Count(); i++)
-                                            {
-                                                @Html.HiddenFor(model => model.ProtocolRoles[i].MenuItemsID)
-                                                @Html.HiddenFor(model => model.ProtocolRoles[i].StringWithName.StringDefinition)
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="ProtocolRoles[i].Selected" />
-                                                    <label class="form-check-label" asp-for="ProtocolRoles[i].Selected">@Model.ProtocolRoles[i].StringWithName.StringName</label>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="operations-list">
-                                    <div class="row h-100">
-                                        <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"><i class="icon-arrow_back_ios-24px-1"></i></a>
-                                            <img src="~/images/css/usericons/operation_dropdown@2x.png" class="my-auto" width="40" />
-                                            <span class="my-auto" style="font-size:1.2em;">Operations</span>
-                                        </div>
-                                        <div class="col-3 offset-1 mt-4">
-                                            @for (var i = 0; i < Model.OperationRoles.Count(); i++)
-                                            {
-                                                @Html.HiddenFor(model => model.OperationRoles[i].MenuItemsID)
-                                                @Html.HiddenFor(model => model.OperationRoles[i].StringWithName.StringDefinition)
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in " asp-for="OperationRoles[i].Selected" />
-                                                    <label class="form-check-label" asp-for="OperationRoles[i].Selected">@Model.OperationRoles[i].StringWithName.StringName</label>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="biomarkers-list">
-                                    <div class="row h-100">
-                                        <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"><i class="icon-arrow_back_ios-24px-1"></i></a>
-                                            <img src="~/images/css/usericons/biomarkers_dropdown@2x.png" class="my-auto" width="40" />
-                                            <span class="my-auto" style="font-size:1.2em;">Biomarkers</span>
-                                        </div>
-                                        <div class="col-3 offset-1 mt-4">
-                                            @for (var i = 0; i < Model.BiomarkerRoles.Count(); i++)
-                                            {
-                                                @Html.HiddenFor(model => model.BiomarkerRoles[i].MenuItemsID)
-                                                @Html.HiddenFor(model => model.BiomarkerRoles[i].StringWithName.StringDefinition)
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="BiomarkerRoles[i].Selected" />
-                                                    <label class="form-check-label" asp-for="BiomarkerRoles[i].Selected">@Model.BiomarkerRoles[i].StringWithName.StringName</label>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="timekeeper-list">
-                                    <div class="row h-100">
-                                        <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"><i class="icon-arrow_back_ios-24px-1"></i></a>
-                                            <img src="~/images/css/usericons/timekeeper_dropdown@2x.png" class="my-auto" width="40" />
-                                            <span class="my-auto" style="font-size:1.2em;">Timekeeper</span>
-                                        </div>
-                                        <div class="col-3 offset-1 mt-4">
-                                            @for (var i = 0; i < Model.TimekeeperRoles.Count(); i++)
-                                            {
-                                                @Html.HiddenFor(model => model.TimekeeperRoles[i].MenuItemsID)
-                                                @Html.HiddenFor(model => model.TimekeeperRoles[i].StringWithName.StringDefinition)
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="TimekeeperRoles[i].Selected" />
-                                                    <label class="form-check-label" asp-for="TimekeeperRoles[i].Selected">@Model.TimekeeperRoles[i].StringWithName.StringName</label>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="lab-list">
-                                    <div class="row h-100">
-                                        <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"><i class="icon-arrow_back_ios-24px-1"></i></a>
-                                            <img src="~/images/css/usericons/labmanagments_dropdown@2x.png" class="my-auto" width="40" />
-                                            <span class="my-auto" style="font-size:1.2em;">Lab Management</span>
-                                        </div>
-                                        <div class="col-3 offset-1 mt-4">
-                                            @for (var i = 0; i < Model.LabManagementRoles.Count(); i++)
-                                            {
-                                                @Html.HiddenFor(model => model.LabManagementRoles[i].MenuItemsID)
-                                                @Html.HiddenFor(model => model.LabManagementRoles[i].StringWithName.StringDefinition)
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="LabManagementRoles[i].Selected" />
-                                                    <label class="form-check-label" asp-for="LabManagementRoles[i].Selected">@Model.LabManagementRoles[i].StringWithName.StringName</label>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="accounting-list">
-                                    <div class="row h-100">
-                                        <div class="col-12 my-auto p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"><i class="icon-arrow_back_ios-24px-1"></i></a>
-                                            <img src="~/images/css/usericons/accounting_dropdown@2x.png" class="my-auto" width="40" />
-                                            <span class="my-auto" style="font-size:1.2em;">Accounting</span>
-                                        </div>
-                                        <div class="col-3 offset-1 mt-4">
-                                            @for (var i = 0; i < Model.AccountingRoles.Count(); i++)
-                                            {
-                                                @Html.HiddenFor(model => model.AccountingRoles[i].MenuItemsID)
-                                                @Html.HiddenFor(model => model.AccountingRoles[i].StringWithName.StringDefinition)
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="AccountingRoles[i].Selected" />
-                                                    <label class="form-check-label" asp-for="AccountingRoles[i].Selected">@Model.AccountingRoles[i].StringWithName.StringName</label>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="expenses-list">
-                                    <div class="row h-100">
-                                        <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"><i class="icon-arrow_back_ios-24px-1"></i></a>
-                                            <img src="~/images/css/usericons/expenses_dropdown@2x.png" class="my-auto" width="40" />
-                                            <span class="my-auto" style="font-size: 1.2em;">Reports</span>
-                                        </div>
-                                        <div class="col-3 offset-1 mt-4">
-                                            @for (var i = 0; i < Model.ExpenseesRoles.Count(); i++)
-                                            {
-                                                @Html.HiddenFor(model => model.ExpenseesRoles[i].MenuItemsID)
-                                                @Html.HiddenFor(model => model.ExpenseesRoles[i].StringWithName.StringDefinition)
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="ExpenseesRoles[i].Selected" />
-                                                    <label class="form-check-label" asp-for="ExpenseesRoles[i].Selected">@Model.ExpenseesRoles[i].StringWithName.StringName</label>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="income-list">
-                                    <div class="row h-100">
-                                        <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"><i class="icon-arrow_back_ios-24px-1"></i></a>
-                                            <img src="~/images/css/usericons/income_dropdown@2x.png" class="my-auto" width="40" />
-                                            <span class="my-auto" style="font-size: 1.2em;">Income</span>
-                                        </div>
-                                        <div class="col-3 offset-1 mt-4">
-                                            @for (var i = 0; i < Model.IncomeRoles.Count(); i++)
-                                            {
-                                                @Html.HiddenFor(model => model.IncomeRoles[i].MenuItemsID)
-                                                @Html.HiddenFor(model => model.IncomeRoles[i].StringWithName.StringDefinition)
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="IncomeRoles[i].Selected" />
-                                                    <label class="form-check-label" asp-for="IncomeRoles[i].Selected">@Model.IncomeRoles[i].StringWithName.StringName</label>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="users-list">
-                                    <div class="row h-100">
-                                        <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"><i class="icon-arrow_back_ios-24px-1"></i></a>
-                                            <img src="~/images/css/usericons/users_dropdown@2x.png" class="my-auto" width="40" />
-                                            <span class="my-auto" style="font-size: 1.2em;">Users</span>
-                                        </div>
-                                        <div class="col-3 offset-1 mt-4">
-                                            @for (var i = 0; i < Model.UserRoles.Count(); i++)
-                                            {
-                                                @Html.HiddenFor(model => model.UserRoles[i].MenuItemsID)
-                                                @Html.HiddenFor(model => model.UserRoles[i].StringWithName.StringDefinition)
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="UserRoles[i].Selected" />
-                                                    <label class="form-check-label" asp-for="UserRoles[i].Selected">@Model.UserRoles[i].StringWithName.StringName</label>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="budget" class="tab-pane fade">
-                            <div class="div-tabs modal-sides">
-                                <div class="row pb-3"><strong>Lab</strong></div>
-                                <div class="row pb-5">
-                                    <div class="col-4 pl-0 pr-5">
-                                        <label asp-for="LabMonthlyLimit" class="control-label"></label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">&#x20aa;</span>
-                                            <input asp-for="LabMonthlyLimit" class="form-control-plaintext border-bottom " />
-                                        </div>
-                                        <span asp-validation-for="LabMonthlyLimit" class="text-danger-centarix"></span>
-                                    </div>
-                                    <div class="col-4 pl-0 pr-5">
-                                        <label asp-for="LabUnitLimit" class="control-label"></label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">&#x20aa;</span>
-                                            <input asp-for="LabUnitLimit" class="form-control-plaintext border-bottom " />
-                                        </div>
-                                        <span asp-validation-for="LabUnitLimit" class="text-danger-centarix"></span>
-                                    </div>
-                                    <div class="col-4 pl-0 pr-5">
-                                        <label asp-for="LabOrderLimit" class="control-label"></label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">&#x20aa;</span>
-                                            <input asp-for="LabOrderLimit" class="form-control-plaintext border-bottom " />
-                                        </div>
-                                        <span asp-validation-for="LabOrderLimit" class="text-danger-centarix"></span>
-                                    </div>
-                                </div>
-                                <div class="row pb-3"><strong>Operation</strong></div>
-                                <div class="row">
-                                    <div class="col-4 pl-0 pr-5">
-                                        <label asp-for="OperationMonthlyLimit" class="control-label"></label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">&#x20aa;</span>
-                                            <input asp-for="OperationMonthlyLimit" class="form-control-plaintext border-bottom " />
-                                        </div>
-                                        <span asp-validation-for="OperationMonthlyLimit" class="text-danger-centarix"></span>
-                                    </div>
-                                    <div class="col-4 pl-0 pr-5">
-                                        <label asp-for="OperationUnitLimit" class="control-label"></label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">&#x20aa;</span>
-                                            <input asp-for="OperationUnitLimit" class="form-control-plaintext border-bottom " />
-                                        </div>
-                                        <span asp-validation-for="OperationUnitLimit" class="text-danger-centarix"></span>
-                                    </div>
-                                    <div class="col-4 pl-0 pr-5">
-                                        <label asp-for="OperaitonOrderLimit" class="control-label"></label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">&#x20aa;</span>
-                                            <input asp-for="OperaitonOrderLimit" class="form-control-plaintext border-bottom " />
-                                        </div>
-                                        <span asp-validation-for="OperaitonOrderLimit" class="text-danger-centarix"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+            <div class="new-modal-body edit-modal-outer-body partial-div" style="background: #F6F7F8; padding: 1em">
+                @{ await Html.RenderPartialAsync("EditUserPartial"); }
             </div>
-
         </form>
+        @*</div>
+            </div>*@
     </div>
 </div>
-@section Scripts{
+@*<script src="~/js/CreateUser.js"></script>
+<script src="~/js/Validation/UsersFormValidation.js"></script>*@
+<script>
+    $(".upload-image").off("click").on("click", function (e) {
+        console.log("in upload image 2");
+        $.fn.OpenUserImageModal("/Admin/UserImageModal");
+        return false;
+    });
 
-
-    <script src="~/js/Validation/UsersFormValidation.js"></script>
-    <script src="~/js/validate.js"></script>
-    <script src="~/js/CreateUser.js"></script>
-    <script>
-        $(".upload-image").off("click").on("click", function (e) {
-            console.log("in upload image 2");
-            $.fn.OpenUserImageModal("/Admin/UserImageModal");
-            return false;
-        });
-
-    </script>
-
-}
+</script>

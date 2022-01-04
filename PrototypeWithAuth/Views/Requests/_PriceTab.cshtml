@@ -5,7 +5,7 @@
 @using PrototypeWithAuth.AppData
 
 @{
-    var Category = Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescription;
+    var Category = Model.Requests[0].Product.ProductSubcategory.ParentCategory.Description;
     var modalType = Model.ModalType;
     var markReadOnlyClass = "";
     var disabledDollarProperty = "disabled";
@@ -85,10 +85,10 @@
             <label class="control-label">Discount</label>
 
             <div class="input-group">
-                <input asp-for="Requests[0].Discount" value="@(AppUtility.ConvertIntToString(Model.Requests[0].Discount))" class="form-control-plaintext border-bottom requestPriceQuote @markReadOnlyClass" />
+                <input asp-for="Requests[0].ParentQuote.Discount" value="@(AppUtility.ConvertIntToString(Model.Requests[0]?.ParentQuote?.Discount??0))" class="form-control-plaintext border-bottom requestPriceQuote @markReadOnlyClass" />
                 <div class="input-group-text">%</div>
             </div>
-            <span asp-validation-for="Requests[0].Discount" />
+            <span asp-validation-for="Requests[0].ParentQuote.Discount" />
         </div>
     </div>
     }
