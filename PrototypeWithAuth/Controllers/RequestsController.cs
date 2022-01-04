@@ -4961,6 +4961,7 @@ namespace PrototypeWithAuth.Controllers
             var results = _requestsProc.Read().Select(r => new
             {
                 ProductName = r.Product.ProductName,
+                InvoiceID = r.Payments.FirstOrDefault().InvoiceID,
                 CategoryName = r.Product.ProductSubcategory.ParentCategory.Description,
                 SubCategoryName = r.Product.ProductSubcategory.Description,
                 Vendor = r.Product.Vendor.VendorEnName,
@@ -5005,7 +5006,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         cw.WriteRecords(results);
                     }// The stream gets flushed here.
-                    return File(ms.ToArray(), "text/csv", $"export_{DateTime.UtcNow.Ticks}.csv");
+                    return File(ms.ToArray(), "text/csv", $"ElixirRequestsDownload_{DateTime.UtcNow.Ticks}.csv");
                 }
             }
         }
