@@ -44,7 +44,7 @@ namespace PrototypeWithAuth.CRUD
                     }
                     else
                     {
-                        var commentDB = _context.Set<T>().Where(c => c.CommentID == c.CommentID).FirstOrDefault();
+                        var commentDB = _context.Set<T>().Where(c1 => c1.CommentID == c.CommentID).FirstOrDefault();
                         if (commentDB != null)
                         {
                             commentDB.IsDeleted = true;

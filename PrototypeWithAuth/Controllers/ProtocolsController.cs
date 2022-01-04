@@ -3486,6 +3486,12 @@ namespace PrototypeWithAuth.Controllers
             var lastSerialNumberInt = serialnumberList.OrderBy(s => s).LastOrDefault();
             return serialLetter + (lastSerialNumberInt + 1);
         }
+
+        [HttpPost]
+        public string UploadFile(DocumentsModalViewModel documentsModalViewModel)
+        {
+            return base.UploadFile(documentsModalViewModel);
+        }
     }
 
 }

@@ -31,7 +31,7 @@ namespace PrototypeWithAuth.CRUD
                 {
                     if (vendorContact.Delete && vendorContact.VendorContact.VendorContactID != 0)
                     {
-                        var dvc = await _vendorContactsProc.ReadOneAsync(new List<Expression<Func<VendorContact, bool>>> { vc => vc.VendorContactID == vendorContact.VendorContact.VendorContactID });
+                        var dvc = await ReadOneAsync(new List<Expression<Func<VendorContact, bool>>> { vc => vc.VendorContactID == vendorContact.VendorContact.VendorContactID });
                         _context.Remove(dvc);
                     }
                     else if (!vendorContact.Delete)

@@ -94,7 +94,7 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.InvoicesProc _invoicesProc;
 
 
-        public SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
+        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
 
         {
             _context = context;
@@ -354,7 +354,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        public string UploadFile(DocumentsModalViewModel documentsModalViewModel)
+        protected string UploadFile(DocumentsModalViewModel documentsModalViewModel)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
             var MiddleFolderName = "";
@@ -498,7 +498,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Requests, Protocols")]
-        public async Task<RequestItemViewModel> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
+        protected async Task<RequestItemViewModel> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
             bool isEditable = true, List<string> selectedPriceSort = null, string selectedCurrency = null, bool isProprietary = false, int productSubCategoryID = 0)
         {
 
@@ -815,7 +815,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         }
-        public ShareModalViewModel GetShareModalViewModel(int ID, AppUtility.ModelsEnum ModelsEnum)
+        protected ShareModalViewModel GetShareModalViewModel(int ID, AppUtility.ModelsEnum ModelsEnum)
         {
             ShareModalViewModel shareModalViewModel = new ShareModalViewModel()
             {
@@ -1440,13 +1440,13 @@ protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFi
             }
         }
 
-        public static double GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, List<CompanyDayOff> companyDayOffs)
+        protected static double GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, List<CompanyDayOff> companyDayOffs)
         {
             DateTime endOfTheMonth = firstOfTheMonth.AddMonths(1);
             return GetTotalWorkingDaysByInterval(firstOfTheMonth, companyDayOffs, endOfTheMonth);
         }
 
-        public static double GetTotalWorkingDaysThisYear(DateTime firstOfTheYear, List<CompanyDayOff> companyDayOffs)
+        protected static double GetTotalWorkingDaysThisYear(DateTime firstOfTheYear, List<CompanyDayOff> companyDayOffs)
         {
             DateTime endOfTheYear = firstOfTheYear.AddYears(1);
             return GetTotalWorkingDaysByInterval(firstOfTheYear, companyDayOffs, endOfTheYear);

@@ -1894,11 +1894,7 @@ namespace PrototypeWithAuth.Controllers
                     AppUtility.PageTypeEnum requestPageTypeEnum = (AppUtility.PageTypeEnum)requestItemViewModel.PageType;
                     await transaction.CommitAsync();
                     requestItemViewModel.Requests[0] = request;
-                    return RedirectToAction("Index", new
-                    {
-                        requestStatusID = requestItemViewModel.RequestStatusID,
-                        PageType = requestPageTypeEnum
-                    });
+              
                 }
                 catch (Exception ex)
                 {
@@ -1909,6 +1905,8 @@ namespace PrototypeWithAuth.Controllers
                     return PartialView("_EditModalView", viewModel);
                 }
             }
+            requestItemViewModel = await editModalViewFunction(id: requestItemViewModel.Requests.FirstOrDefault().RequestID, Tab: requestItemViewModel.Tab, SectionType: requestItemViewModel.SectionType, selectedPriceSort: new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() });
+            return PartialView("_EditModalView", requestItemViewModel);
         }
 
         [Authorize(Roles = "Requests")]
@@ -5052,7 +5050,11 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
 
-
+        [HttpPost]
+        public string UploadFile(DocumentsModalViewModel documentsModalViewModel)
+        {
+            return base.UploadFile(documentsModalViewModel);
+        }
 
     }
 }

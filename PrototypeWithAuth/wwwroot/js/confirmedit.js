@@ -18,6 +18,8 @@ $(function () {
         if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
             console.log("has class suppliers or accounting");
             url = "/Vendors/Edit";
+            var selectedTab = $('.nav-tabs .active').parent().index() + 1;
+            formData.set("Tab", selectedTab)
         }
         else if ($('.turn-edit-on-off').hasClass('users')) {
             console.log("has class users");
@@ -68,11 +70,18 @@ $(function () {
             cache: false,
             success: function (data) {
                 $("#loading").hide();
+                if ($('.turn-edit-on-off').hasClass('operations') || $('.turn-edit-on-off').hasClass('orders')) {
+                    $(".editModal").html(data);
+                    //$.fn.OnOpenModalView();
+                    $.fn.LoadEditModalDetails();
+                    $("[data-toggle='tooltip']").tooltip();
+                }
                 if ($('.turn-edit-on-off').hasClass('locations')) {
                     //alert("got data for locations");
                     //console.log(data)
                     var pageType = $('#masterPageType').val();
                     console.log(pageType)
+                 
                     if (pageType == "LabManagementLocations" || pageType == 'RequestLocation') {
                         console.log('reload location ')
                         //Reload visual of locations box
@@ -90,6 +99,7 @@ $(function () {
                         });
                     }
                     else if ($('.turn-edit-on-off').attr("section-type") == "Requests") {
+
                         console.log("reloading ajax partial view...");
                         $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
 
@@ -106,7 +116,9 @@ $(function () {
                         $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
                     }
                     else if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
-
+                        $(".VendorData").html(data);
+                        $.fn.LoadEditModalDetails();
+                        $("[data-toggle='tooltip']").tooltip();
                         $.ajax({
                             async: true,
                             url: '/Vendors/_IndexForPayment?SectionType=' + $('#SectionType').val(),
@@ -211,13 +223,13 @@ $(function () {
 
         if ($('.turn-edit-on-off').hasClass('suppliers')) {
             section = "LabManagement";
-            url = "/Vendors/EditPartial?id=" + id + "&SectionType=" + section + "&Tab=" + selectedTab;
+            url = "/Vendors/VendorData?id=" + id + "&SectionType=" + section + "&Tab=" + selectedTab;
             viewClass = "_VendorHeader";
             controller = "/Vendors/";
 
         } else if ($('.turn-edit-on-off').hasClass('accounting')) {
             section = "Accounting";
-            url = "/Vendors/EditPartial?id=" + id + "&SectionType=" + section + "&Tab=" + selectedTab;
+            url = "/Vendors/VendorData?id=" + id + "&SectionType=" + section + "&Tab=" + selectedTab;
             viewClass = "_VendorHeader";
             controller = "/Vendors/";
 
@@ -276,7 +288,12 @@ $(function () {
                             $('.' + viewClass).html(data);
                             if ($('.turn-edit-on-off').hasClass('orders') || $('.turn-edit-on-off').hasClass('locations')) {
                                 $.fn.LoadEditModalDetails();
+                                $("[data-toggle='tooltip']").tooltip();
                             }
+                            else if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
+                                $.fn.LoadEditModalDetails();
+                            }
+
                         }
                     })
                 }

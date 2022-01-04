@@ -352,8 +352,11 @@ namespace PrototypeWithAuth.Controllers
             var vendorUpdated = await _vendorsProc.UpdateAsync(createSupplierViewModel, _userManager.GetUserId(User));
             if (vendorUpdated.Bool)
             {
-                return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
-            }
+                ControllerContext.ModelState.Clear();
+                createSupplierViewModel = await GetCreateSupplierViewModel(createSupplierViewModel.SectionType, createSupplierViewModel.Vendor.VendorID, createSupplierViewModel.Tab);
+                createSupplierViewModel.ModalType = AppUtility.VendorModalType.Edit;
+                return PartialView("VendorData", createSupplierViewModel);
+             }
             else
             {
                 createSupplierViewModel = await GetCreateSupplierViewModel(createSupplierViewModel.SectionType, createSupplierViewModel.Vendor.VendorID, createSupplierViewModel.Tab);
