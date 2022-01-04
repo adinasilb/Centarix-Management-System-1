@@ -35,6 +35,7 @@ namespace PrototypeWithAuth.CRUD
                     _context.Add(favoriteRequest);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
+                    ReturnVal.SetStringAndBool(true, null);
                 }
                 catch (Exception ex)
                 {
@@ -59,6 +60,7 @@ namespace PrototypeWithAuth.CRUD
                     _context.Remove(favoriteRequest);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
+                    ReturnVal.SetStringAndBool(true, null);
                 }
                 catch (Exception ex)
                 {
