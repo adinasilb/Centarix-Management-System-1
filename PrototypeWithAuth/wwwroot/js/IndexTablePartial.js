@@ -318,6 +318,12 @@ $(function () {
                             $('[data-toggle="tooltip"]').tooltip('dispose'); //is this the right syntax?
                             $('._IndexTable').html(data);
                         }
+                    },
+                    error: function (jqxhr) {
+                        $("#loading").hide();
+                        $('.error-message').addClass("d-none");
+                        $('.error-message').html(jqxhr.responseText);
+                        $('.error-message:first').removeClass("d-none");
                     }
                 })
             }
@@ -337,6 +343,12 @@ $(function () {
                         requestFavorite.addClass(unfav);
                         $("#loading").hide();
 
+                    },
+                    error: function (jqxhr) {
+                        $("#loading").hide();
+                        $('.error-message').addClass("d-none");
+                        $('.error-message').html(jqxhr.responseText);
+                        $('.error-message:first').removeClass("d-none");
                     }
                 })
             }

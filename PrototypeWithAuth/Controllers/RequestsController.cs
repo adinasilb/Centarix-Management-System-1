@@ -1681,19 +1681,28 @@ namespace PrototypeWithAuth.Controllers
                 var favoriteRequest = await _favoriteRequestsProc.ReadOneAsync(new List<Expression<Func<FavoriteRequest, bool>>> { fr => fr.RequestID == requestID && fr.ApplicationUserID == userID });
                 if (favoriteRequest == null)
                 {
-                    await _favoriteRequestsProc.CreateAsync(requestID, userID);
+                    var success = await _favoriteRequestsProc.CreateAsync(requestID, userID);
+                    if(!success.Bool)
+                    {
+                        Response.StatusCode = 500;
+                        await Response.WriteAsync(success.String);
+                    }
                 }
             }
             else if (FavType == "unlike")
             {
                 var success = await _favoriteRequestsProc.DeleteAsync(requestID, userID);
+                if (!success.Bool){
+                    Response.StatusCode = 500;
+                    await Response.WriteAsync(success.String);
+                    return new EmptyResult();
+                }
                 if (sidebarType == AppUtility.SidebarEnum.Favorites)
                 {
                     RequestIndexObject requestIndexObject = new RequestIndexObject()
                     {
                         PageType = AppUtility.PageTypeEnum.RequestCart,
                         SidebarType = sidebarType,
-                        ErrorMessage = success.String
                     };
                     return await RedirectRequestsToShared("_IndexTable", requestIndexObject);
                 }
@@ -1728,8 +1737,13 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<bool> ShareModal(ShareModalViewModel shareModalViewModel)
         {
-            var error = await _shareRequestsProc.UpdateAsync(shareModalViewModel.ID, _userManager.GetUserId(User), shareModalViewModel.ApplicationUserIDs);
-            return error.Bool;
+            var success = await _shareRequestsProc.UpdateAsync(shareModalViewModel.ID, _userManager.GetUserId(User), shareModalViewModel.ApplicationUserIDs);
+            if(!success.Bool)
+            {
+                Response.StatusCode = 500;
+                await Response.WriteAsync(success.String);
+            }
+            return success.Bool;
         }
 
         [Authorize(Roles = "Requests")]
@@ -3628,6 +3642,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> OrderLateModal(Request requestFromView)
         {
+           
             var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestFromView.RequestID },
                 new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include =  r => r.ApplicationUserCreator },
                 new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest},
@@ -3680,7 +3695,8 @@ namespace PrototypeWithAuth.Controllers
                 }
                 catch (Exception ex)
                 {
-
+                    Response.StatusCode = 500;
+                    await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                 }
 
                 client.Disconnect(true);
