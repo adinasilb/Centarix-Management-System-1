@@ -909,6 +909,12 @@ namespace PrototypeWithAuth.AppData
             }
         }
 
+        public static string GetExcelDateFormat(DateTime? date)
+        {
+            return date.Equals(new DateTime()) ? "" : date?.ToString("dd/MM/yyyy").Replace(".", "") ?? "";
+        }
+
+       
         public static StringWithBool GetDateOrderedString(ParentRequest parentRequest)
         {
             try

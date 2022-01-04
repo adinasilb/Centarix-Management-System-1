@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Extensions;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
@@ -270,6 +271,8 @@ namespace PrototypeWithAuth.ViewModels
             }
             return newIconList;
         }
+
+
         private static int GetOrderTypeEnum(string orderType)
         {
             return (int)Enum.Parse(typeof(AppUtility.OrderTypeEnum), orderType);

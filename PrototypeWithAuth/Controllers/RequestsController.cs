@@ -40,6 +40,8 @@ using System.Drawing;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Text;
 using LinqToExcel;
+using CsvHelper.Configuration;
+using CsvHelper;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -6942,5 +6944,61 @@ namespace PrototypeWithAuth.Controllers
         //    }
         //    await _context.SaveChangesAsync();
         //}
+        public IActionResult DownloadRequestsToExcel()
+        {
+            var results = _context.Requests.Select(r => new
+            {
+                ProductName = r.Product.ProductName,
+                InvoiceID = r.Payments.FirstOrDefault().InvoiceID,
+                CategoryName = r.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription,
+                SubCategoryName = r.Product.ProductSubcategory.ProductSubcategoryDescription,
+                Vendor = r.Product.Vendor.VendorEnName,
+                CompanyID = r.Product.Vendor.VendorBuisnessID,
+                CatalogNumber = r.Product.CatalogNumber,
+                BatchLot = r.Batch,
+                ExpirationDate = AppUtility.GetExcelDateFormat(r.BatchExpiration),
+                QuoteNumber = r.ParentQuote.QuoteNumber,
+                QuoteExpirationDate = AppUtility.GetExcelDateFormat(r.ParentQuote.ExpirationDate),
+                ExpectedSupplyDays = r.ExpectedSupplyDays,
+                ExpectedSupplyDate = r.ParentRequest.OrderDate.AddDays(Convert.ToDouble(r.ExpectedSupplyDays)),
+                URL = AppUtility.GetUrlFromUserData(r.URL),
+                CentarixOrderNumber = r.ParentRequest.OrderNumber,
+                OrderDate = AppUtility.GetExcelDateFormat(r.ParentRequest.OrderDate),
+                ArrivalDate = AppUtility.GetExcelDateFormat(r.ArrivalDate),
+                RequestedBy = r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName,
+                OrderedBy = r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName,
+                ReceivedBy = r.ApplicationUserReceiver.FirstName + " " + r.ApplicationUserReceiver.LastName,
+                Currency = r.Currency,
+                ExchangeRate = r.ExchangeRate,
+                Amount = r.Unit,
+                Unit = r.Product.UnitType.UnitTypeDescription,
+                SubUnitAmount = r.Product.SubUnit,
+                SubUnit = r.Product.SubUnitType.UnitTypeDescription,
+                SubSubUnitAmount = r.Product.SubSubUnit,
+                SubSubUnit = r.Product.SubSubUnitType.UnitTypeDescription,
+                Total = r.Cost,
+                IncludeVat = r.IncludeVAT,
+                Discount = r.ParentQuote.Discount,
+                Terms = r.PaymentStatus.PaymentStatusDescription,
+                IsPaid = r.Payments.FirstOrDefault().IsPaid,
+                Partial = r.IsPartial,
+                Clarify = r.IsClarify,
+                Payments = r.Payments.Count()
+            }).ToList();
+
+            var cc = new CsvConfiguration(new System.Globalization.CultureInfo("en-US"));
+            using (var ms = new MemoryStream())
+            {
+                using (var sw = new StreamWriter(stream: ms, encoding: new UTF8Encoding(true)))
+                {
+                    using (var cw = new CsvWriter(sw, cc))
+                    {
+                        cw.WriteRecords(results);
+                    }// The stream gets flushed here.
+                    return File(ms.ToArray(), "text/csv", $"ElixirRequestsDownload_{DateTime.UtcNow.Ticks}.csv");
+                }
+            }
+        }
+
     }
 }
