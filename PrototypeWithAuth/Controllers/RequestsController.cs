@@ -2155,11 +2155,11 @@ namespace PrototypeWithAuth.Controllers
 
                 List<ModelAndID> ModelsCreated = new List<ModelAndID>(); //for rollback
                 List<ModelAndID> ModelsModified = new List<ModelAndID>(); //for rollback
-                                                                          //var isRequests = true;
-                                                                          //var RequestNum = 1;
-                                                                          //var PaymentNum = 1;
-                                                                          //var requests = new List<Request>();
-                                                                          //var payments = new List<Payment>();
+                //var isRequests = true;
+                //var RequestNum = 1;
+                //var PaymentNum = 1;
+                //var requests = new List<Request>();
+                //var payments = new List<Payment>();
 
 
                 var deserializedTempRequestListViewModel = new TempRequestListViewModel()
@@ -2180,12 +2180,33 @@ namespace PrototypeWithAuth.Controllers
                     {
                         try
                         {
+                            var parentRequestModelState = new ModelAndState
+                            {
+                                Model = deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest,
+                            };
+                            var ParentRequestRollbackList = ModelsModified;
+                            if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID == 0 || deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID == null)
+                            {
+                                parentRequestModelState.StateEnum = EntityState.Added;
 
+                                ParentRequestRollbackList = ModelsCreated;
+                            }
+                            else //if coming from approve order
+                            {
+                                parentRequestModelState.StateEnum = EntityState.Modified;
+                            }
+                            await _requestsProc.UpdateModelsAsync(new List<ModelAndState> { parentRequestModelState });
+                            ParentRequestRollbackList.Add(new ModelAndID()
+                            {
+                                ID = Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID),
+                                ModelsEnum = AppUtility.ModelsEnum.ParentRequest
+                            });
 
                             for (int tr = 0; tr < deserializedTempRequestListViewModel.TempRequestViewModels.Count(); tr++)
                             {
                                 var tempRequest = deserializedTempRequestListViewModel.TempRequestViewModels[tr];
                                 tempRequest.Request.RequestStatusID = 2;
+                                tempRequest.Request.ParentRequestID = deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID;
                                 var ProductRollbackList = ModelsModified;
                                 var RequestRollbackList = ModelsModified;
                                 var ParentQuoteRollbackList = ModelsModified;
@@ -2296,27 +2317,7 @@ namespace PrototypeWithAuth.Controllers
                                     ModelsEnum = AppUtility.ModelsEnum.RequestNotification
                                 });
                             }
-                            var parentRequestModelState = new ModelAndState
-                            {
-                                Model = deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest,
-                            };
-                            var ParentRequestRollbackList = ModelsModified;
-                            if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID == 0 || deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID == null)
-                            {
-                                parentRequestModelState.StateEnum = EntityState.Added;
-
-                                ParentRequestRollbackList = ModelsCreated;
-                            }
-                            else //if coming from approve order
-                            {
-                                parentRequestModelState.StateEnum = EntityState.Modified;
-                            }
-                            await _requestsProc.UpdateModelsAsync(new List<ModelAndState> { parentRequestModelState });
-                            ParentRequestRollbackList.Add(new ModelAndID()
-                            {
-                                ID = Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID),
-                                ModelsEnum = AppUtility.ModelsEnum.ParentRequest
-                            });
+                            
 
                             await transaction.CommitAsync();
                         }
@@ -4216,6 +4217,7 @@ namespace PrototypeWithAuth.Controllers
                 {
 
                     tempRequestViewModel.Request.QuoteStatusID = 4;
+                    tempRequestViewModel.Request.ParentQuoteID = uploadQuoteOrderViewModel.ParentQuote.ParentQuoteID;
                     tempRequestViewModel.Request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
 
 
