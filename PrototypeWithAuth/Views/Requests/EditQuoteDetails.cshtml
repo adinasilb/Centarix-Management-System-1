@@ -192,7 +192,7 @@
                                                     <div class="form-group @hideShekel shekel-group">
                                                         <div class="input-group ">
                                                             <span class="input-group-text pr-1">P: &#x20aa;</span>
-                                                            <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom cost cost-validation @i" index="@i" />
+                                                            <input asp-for="@Model.Requests[i].Cost" value="@((Model.Requests[i].Cost != 0&& Model.Requests[i].Cost != null) ? Math.Round( (Model.Requests[i].Cost??0),2).ToString():"")" class="form-control-plaintext border-bottom cost cost-validation @i" index="@i" />
                                                             <span class="text-danger-centarix" asp-validation-for="Requests[i].Cost"></span>
                                                         </div>
                                                         <div class="input-group ">
@@ -204,7 +204,7 @@
                                                     <div class="form-group @hideDollar dollar-group">
                                                         <div class="input-group ">
                                                             <span class="input-group-text pr-1">P: &#36;</span>
-                                                            <input class="form-control-plaintext border-bottom sum-dollars @i" value="@(Model.Requests[i].Cost != null ? Math.Round( Model.Requests[i].Cost??0 * Model.Requests[i].ExchangeRate,2).ToString():"")" id="sum-dollars" index="@i" name="sum-dollars" />
+                                                            <input class="form-control-plaintext border-bottom sum-dollars @i" value="@((Model.Requests[i].Cost != 0&& Model.Requests[i].Cost != null) ? Math.Round( (Model.Requests[i].Cost??0) / Model.Requests[i].ExchangeRate,2).ToString():"")" id="sum-dollars" index="@i" name="sum-dollars" />
                                                             <span class="text-danger-centarix" asp-validation-for="Requests[i].Cost"></span>
                                                         </div>
                                                         <div class="input-group ">

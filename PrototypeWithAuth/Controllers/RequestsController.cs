@@ -1432,10 +1432,10 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-                var sucess = await _requestsProc.DeleteAsync(deleteRequestViewModel.Request.RequestID);
-                if (!sucess.Bool)
+                var success = await _requestsProc.DeleteAsync(deleteRequestViewModel.Request.RequestID);
+                if (!success.Bool)
                 {
-                    throw new Exception(sucess.String);
+                    throw new Exception(success.String);
                 }
             }
 
@@ -3470,6 +3470,7 @@ namespace PrototypeWithAuth.Controllers
                         var fileStream = new FileStream(filePath, FileMode.Create);
                         editQuoteDetailsViewModel.QuoteFileUpload.CopyTo(fileStream);
                         fileStream.Close();
+                        throw new Exception();
                         await transaction.CommitAsync();
                     }
                     catch (Exception ex)
@@ -3484,13 +3485,15 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                var previousRequest = await _requestsProc.ReadOneAsync(
-                    new List<Expression<Func<Request, bool>>>
-                    {
-                        r => r.RequestID == editQuoteDetailsViewModel.Requests.FirstOrDefault().RequestID,
-                    },
-                    new List<ComplexIncludes<Request, ModelBase>>
-                    {
+                for (int i = 0; i < editQuoteDetailsViewModel.Requests.Count(); i++)
+                {
+                    var previousRequest = await _requestsProc.ReadOneAsync(
+                        new List<Expression<Func<Request, bool>>>
+                        {
+                        r => r.RequestID == editQuoteDetailsViewModel.Requests[i].RequestID,
+                        },
+                        new List<ComplexIncludes<Request, ModelBase>>
+                        {
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = p => ((Product)p).Vendor } },
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.Vendor.Country },
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.ProductSubcategory },
@@ -3498,13 +3501,14 @@ namespace PrototypeWithAuth.Controllers
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.SubUnitType },
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.SubSubUnitType },
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.ParentQuote}
-                    }
-                );
-                var newRequest = editQuoteDetailsViewModel.Requests.FirstOrDefault();
-                previousRequest.Cost = newRequest.Cost;
-                previousRequest.Currency = newRequest.Currency;
-                previousRequest.ExpectedSupplyDays = newRequest.ExpectedSupplyDays;
-                editQuoteDetailsViewModel.Requests[0] = previousRequest;
+                        }
+                    );
+                    var newRequest = editQuoteDetailsViewModel.Requests[i];
+                    previousRequest.Cost = newRequest.Cost;
+                    previousRequest.Currency = newRequest.Currency;
+                    previousRequest.ExpectedSupplyDays = newRequest.ExpectedSupplyDays;
+                    editQuoteDetailsViewModel.Requests[i] = previousRequest;
+                }
                 editQuoteDetailsViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 return PartialView(editQuoteDetailsViewModel);
