@@ -3474,7 +3474,6 @@ namespace PrototypeWithAuth.Controllers
                         var fileStream = new FileStream(filePath, FileMode.Create);
                         editQuoteDetailsViewModel.QuoteFileUpload.CopyTo(fileStream);
                         fileStream.Close();
-                        throw new Exception();
                         await transaction.CommitAsync();
                     }
                     catch (Exception ex)
