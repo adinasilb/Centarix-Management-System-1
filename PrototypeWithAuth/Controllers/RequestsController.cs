@@ -3496,6 +3496,7 @@ namespace PrototypeWithAuth.Controllers
                     new List<ComplexIncludes<Request, ModelBase>>
                     {
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = p => ((Product)p).Vendor } },
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.Vendor.Country },
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.ProductSubcategory },
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.UnitType },
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.SubUnitType },
