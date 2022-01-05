@@ -195,7 +195,7 @@ namespace PrototypeWithAuth.CRUD
                         foreach (var request in requests)
                         {
                             request.QuoteStatusID = statusNumber;
-                            _context.Update(request);
+                            _context.Entry(request).State = EntityState.Modified;
                             _context.SaveChanges();
                         }
                         await transaction.CommitAsync();
@@ -210,7 +210,7 @@ namespace PrototypeWithAuth.CRUD
             }
             catch (Exception ex)
             {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                ReturnVal.SetStringAndBool(false,"Failed to update quote status- "+ AppUtility.GetExceptionMessage(ex));
             }
             return ReturnVal;
 
