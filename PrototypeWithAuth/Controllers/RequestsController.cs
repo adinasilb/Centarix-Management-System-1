@@ -4249,7 +4249,7 @@ namespace PrototypeWithAuth.Controllers
                                 ModelStates.Add(new ModelAndState
                                 {
                                     Model = tempRequestViewModel.Request.ParentQuote,
-                                    StateEnum = tempRequestViewModel.Request.ParentQuoteID == null ? EntityState.Added : EntityState.Modified
+                                    StateEnum = tempRequestViewModel.Request.ParentQuoteID == null || tempRequestViewModel.Request.ParentQuoteID == 0 ? EntityState.Added : EntityState.Modified
                                 });
 
                                 ModelStates.Add(new ModelAndState
