@@ -1,6 +1,7 @@
 ﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
+
 // Write your JavaScript code.
 
 //global Exchange Rate variable (usd --> nis)
@@ -178,14 +179,14 @@ $(function () {
 
 
 
-    $('.modal').on('change', '#vendorList', function () {
+    $('.modal').off('change', '#vendorList').on('change', '#vendorList', function () {
         console.log('in on change vendor')
         var vendorid = $(this).val();
         $.fn.ChangeVendorBusinessId(vendorid);
         $.fn.AddVendorCurrencyType(vendorid);
         //$.fn.CheckVendorAndCatalogNumbers();
     });
-    $("#vendorList").change(function () {
+    $("#vendorList").off("change").change(function () {
         var vendorid = $("#vendorList").val();
         $.fn.ChangeVendorBusinessId(vendorid);
         $.fn.AddVendorCurrencyType(vendorid);
@@ -1505,7 +1506,7 @@ $(function () {
 
         }
         else if (type == 'details') {
-
+  
             if ($(this).hasClass('locations')) {
                 $.fn.MakeLocationsEditable();
             }
@@ -1650,7 +1651,7 @@ $(function () {
         });
     })
 
-    $('.load-delete-hour-modal').click(function (e) {
+    $('.load-delete-hour-modal').off("click").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         $itemurl = "/Timekeeper/DeleteHourModal/?id=" + $(this).attr('value') + "&sectionType=" + $('#masterSectionType').val();

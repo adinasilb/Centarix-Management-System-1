@@ -358,12 +358,13 @@ namespace PrototypeWithAuth.CRUD
         public void CreatePartialRequest(ReceivedLocationViewModel receivedLocationViewModel, Request requestReceived, out decimal pricePerUnit)
         {
             requestReceived.RequestID = 0;
+            requestReceived.SerialNumber =0;
             pricePerUnit = requestReceived.PricePerUnit;
             requestReceived.Unit = (uint)(requestReceived.Unit - receivedLocationViewModel.AmountArrived);
             requestReceived.Cost = pricePerUnit * requestReceived.Unit;
             requestReceived.IsPartial = true;
             _context.Entry(requestReceived).State = EntityState.Added;
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         //private async Task<StringWithBool> MarkInventory()

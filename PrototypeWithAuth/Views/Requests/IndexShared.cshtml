@@ -5,20 +5,9 @@
 @inject SignInManager<ApplicationUser> SignInManager
 
 @{
-    TempData.Keep();
     ViewData["Title"] = "Index";
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
-
-
-    bool search = false;
-    if (TempData["Search"] != null)
-    {
-        if (TempData["Search"].ToString() == "True")
-        {
-            search = true;
-        }
-    }
 
 }
 @if (Model.ErrorMessage != null)

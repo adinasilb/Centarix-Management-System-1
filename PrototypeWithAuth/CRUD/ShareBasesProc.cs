@@ -65,16 +65,19 @@ namespace PrototypeWithAuth.CRUD
                             sharedObject.ObjectID = objectID;
                             sharedObject.FromApplicationUserID = currentUserID;
                             sharedObject.ToApplicationUserID = userID;
+                            _context.Entry(sharedObject).State = EntityState.Added;
                         }
                         else
                         {
-                            //sharedRequest.TimeStamp = DateTime.Now;
+                            sharedObjectDB.TimeStamp = DateTime.Now;
+                            _context.Entry(sharedObjectDB).State = EntityState.Modified;
                         }
-                        _context.Update(sharedObject);
+                       
                     }
 
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
+                    ReturnVal.SetStringAndBool(true, null);
                 }
                 catch (Exception ex)
                 {

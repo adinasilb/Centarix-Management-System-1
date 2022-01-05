@@ -47,9 +47,17 @@ function UploadFileChunk(Chunk, FileName,  formData)
 {
     formData.set('FilesToSave', Chunk, FileName);
     var fileName = FileName;
+    var section = $("#masterSectionType").val();
+    var urlbeginning = "/Requests/"
+    if (section === "Protocols") {
+        urlbeginning = "/Protocols/"
+    }
+    else if (section == "Biomarkers") {
+        urlbeginning = "/Biomarkers/"
+    }
     $.ajax({
         type: "POST",
-        url: '/Shared/UploadFile/',
+        url: urlbeginning+'UploadFile/',
         async: false,
         contentType: false,
         processData: false,

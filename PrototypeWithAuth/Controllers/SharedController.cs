@@ -94,7 +94,7 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.InvoicesProc _invoicesProc;
 
 
-        public SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
+        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
 
         {
             _context = context;
@@ -354,7 +354,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        public string UploadFile(DocumentsModalViewModel documentsModalViewModel)
+        protected string UploadFile(DocumentsModalViewModel documentsModalViewModel)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
             var MiddleFolderName = "";
@@ -498,7 +498,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Requests, Protocols")]
-        public async Task<RequestItemViewModel> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
+        protected async Task<RequestItemViewModel> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
             bool isEditable = true, List<string> selectedPriceSort = null, string selectedCurrency = null, bool isProprietary = false, int productSubCategoryID = 0)
         {
 
@@ -815,7 +815,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         }
-        public ShareModalViewModel GetShareModalViewModel(int ID, AppUtility.ModelsEnum ModelsEnum)
+        protected ShareModalViewModel GetShareModalViewModel(int ID, AppUtility.ModelsEnum ModelsEnum)
         {
             ShareModalViewModel shareModalViewModel = new ShareModalViewModel()
             {
@@ -1440,13 +1440,13 @@ protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFi
             }
         }
 
-        public static double GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, List<CompanyDayOff> companyDayOffs)
+        protected static double GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, List<CompanyDayOff> companyDayOffs)
         {
             DateTime endOfTheMonth = firstOfTheMonth.AddMonths(1);
             return GetTotalWorkingDaysByInterval(firstOfTheMonth, companyDayOffs, endOfTheMonth);
         }
 
-        public static double GetTotalWorkingDaysThisYear(DateTime firstOfTheYear, List<CompanyDayOff> companyDayOffs)
+        protected static double GetTotalWorkingDaysThisYear(DateTime firstOfTheYear, List<CompanyDayOff> companyDayOffs)
         {
             DateTime endOfTheYear = firstOfTheYear.AddYears(1);
             return GetTotalWorkingDaysByInterval(firstOfTheYear, companyDayOffs, endOfTheYear);
@@ -1566,6 +1566,7 @@ protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFi
 
 
         protected async Task<RequestItemViewModel> FillRequestDropdowns(RequestItemViewModel requestItemViewModel, ProductSubcategory productSubcategory, int categoryTypeId)
+        
         {
             var parentcategories = new List<ParentCategory>();
             var productsubcategories = new List<ProductSubcategory>();
@@ -1581,28 +1582,29 @@ protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFi
                     parentcategories = await _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { pc => pc.CategoryTypeID == 2 }).ToListAsync();
                 }
                 productsubcategories = await _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ParentCategoryID == productSubcategory.ParentCategoryID }).ToListAsync();
+
                 unittypes = _unitTypesProc.Read(new List<Expression<Func<UnitType, bool>>> { ut => ut.UnitTypeParentCategory.Where(up => up.ParentCategoryID == productSubcategory.ParentCategoryID).Count() > 0 },
                     new List<ComplexIncludes<UnitType, ModelBase>>{
             new ComplexIncludes<UnitType, ModelBase> { Include = u => u.UnitParentType } }).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-    }
-    else
-    {
-        if (requestItemViewModel.IsProprietary)
-        {
-            var proprietarycategory = await _parentCategoriesProc.Read( new List<Expression<Func<ParentCategory, bool>>> { pc => pc.Description == AppUtility.ParentCategoryEnum.Samples.ToString() }).FirstOrDefaultAsync();
-            productsubcategories = await _productSubcategoriesProc.Read( new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == proprietarycategory.ID }).ToListAsync();
-        }
-        else
-        {
-            parentcategories = await _parentCategoriesProc.Read( new List<Expression<Func<ParentCategory, bool>>> { pc => pc.CategoryTypeID == categoryTypeId && !pc.IsProprietary }).ToListAsync();
-        }
-    }
-    var vendors = await _vendorsProc.Read( new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryTypeId).Count() > 0 }).ToListAsync();
-    var projects = await _projectsProc.Read().ToListAsync();
-    var subprojects = await _subProjectsProc.Read().ToListAsync();
-    var unittypeslookup = unittypes.ToLookup(u => u.UnitParentType);
-    var paymenttypes = await _paymentTypesProc.Read().ToListAsync();
-    var companyaccounts = await _companyAccountsProc.Read().ToListAsync();
+            }
+            else
+            {
+                if (requestItemViewModel.IsProprietary)
+                {
+                    var proprietarycategory = await _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { pc => pc.Description == AppUtility.ParentCategoryEnum.Samples.ToString() }).FirstOrDefaultAsync();
+                    productsubcategories = await _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ParentCategoryID == proprietarycategory.ID }).ToListAsync();
+                }
+                else
+                {
+                    parentcategories = await _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { pc => pc.CategoryTypeID == categoryTypeId && !pc.IsProprietary }).ToListAsync();
+                }
+            }
+            var vendors = await _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryTypeId).Count() > 0 }).ToListAsync();
+            var projects = await _projectsProc.Read().ToListAsync();
+            var subprojects = await _subProjectsProc.Read().ToListAsync();
+            var unittypeslookup = unittypes.ToLookup(u => u.UnitParentType);
+            var paymenttypes = await _paymentTypesProc.Read().ToListAsync();
+            var companyaccounts = await _companyAccountsProc.Read().ToListAsync();
 
             requestItemViewModel.ParentCategories = parentcategories;
             requestItemViewModel.ProductSubcategories = productsubcategories;

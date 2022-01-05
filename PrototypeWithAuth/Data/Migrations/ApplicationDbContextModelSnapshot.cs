@@ -2826,6 +2826,20 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationRoomInstanceAbbrev = "BL5",
                             LocationRoomInstanceName = "Biomarker Lab 5",
                             LocationRoomTypeID = 1
+                        },
+                        new
+                        {
+                            LocationRoomInstanceID = 14,
+                            LocationRoomInstanceAbbrev = "S2",
+                            LocationRoomInstanceName = "Storage Room 2",
+                            LocationRoomTypeID = 6
+                        },
+                        new
+                        {
+                            LocationRoomInstanceID = 15,
+                            LocationRoomInstanceAbbrev = "S3",
+                            LocationRoomInstanceName = "Storage Room 3",
+                            LocationRoomTypeID = 6
                         });
                 });
 
