@@ -223,7 +223,7 @@ namespace PrototypeWithAuth.CRUD
                 foreach (var req in requests)
                 {
                     //throw new Exception();
-                    var request = requests.Where(r => r.RequestID == r.RequestID).FirstOrDefault();
+                    var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == req.RequestID });
                     request.ParentQuote = parentQuote;
                     request.QuoteStatusID = 4;
                     request.Cost = req.Cost;
@@ -231,7 +231,7 @@ namespace PrototypeWithAuth.CRUD
                     request.ExchangeRate = requests[0].ExchangeRate;
                     request.IncludeVAT = requests[0].IncludeVAT;
                     request.ExpectedSupplyDays = req.ExpectedSupplyDays;
-                    _context.Update(request);
+                    _context.Entry(request).State = EntityState.Modified;
                 }
                 await _context.SaveChangesAsync();
             }

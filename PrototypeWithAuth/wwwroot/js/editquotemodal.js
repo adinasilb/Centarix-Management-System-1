@@ -28,7 +28,7 @@
                 $('._IndexTableDataByVendor').html(data);
             },
             error: function (jqxhr) {
-                $(this).prop('disabled', false);
+                //$(this).prop('disabled', false);
                 $.fn.OpenModal('modal', 'edit-quote', jqxhr.responseText)
                 $('.mdb-select').materialSelect();
             }

@@ -23,7 +23,7 @@
                 @{
                     var vendorcurrencyid = "";
                 }
-                @if (Model.Error.Bool == true)
+                @if (Model.Error?.Bool == true)
                 {
                     <span class="text-danger-centarix">@Model.Error.String</span>
                 }
@@ -79,7 +79,8 @@
                                 <div class="col-3">
                                     <div class="form-group d-inline-flex">
                                         <label asp-for="ParentQuote.ExpirationDate" class=" control-label m-0 mt-2" style="width:90%;">Expiration Date</label>
-                                        <input asp-for="ParentQuote.ExpirationDate" value="" type="text" class="datepicker form-control-plaintext border-bottom p-0 m-0" />
+                                        <input asp-for="ParentQuote.ExpirationDate" value="@(Model.ParentQuote.ExpirationDate != new DateTime() ? Model.ParentQuote.ExpirationDate : null)" type="text" asp-format="@AppUtility.AspDateFormatString
+                                               " class="datepicker form-control-plaintext border-bottom p-0 m-0" />
                                         <span asp-validation-for="ParentQuote.ExpirationDate" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
