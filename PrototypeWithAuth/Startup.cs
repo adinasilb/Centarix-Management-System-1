@@ -74,7 +74,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("ElixirCopy"), sqlServerOptions => sqlServerOptions.CommandTimeout(120));
+                    Configuration.GetConnectionString("DeveloperDB"), sqlServerOptions => sqlServerOptions.CommandTimeout(120));
                     options.EnableSensitiveDataLogging(true);   
             });
 
