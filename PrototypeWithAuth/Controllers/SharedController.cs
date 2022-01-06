@@ -1163,6 +1163,7 @@ protected static void ApplySearchToRequestList(RequestsSearchViewModel requestsS
             && (String.IsNullOrEmpty(requestsSearchViewModel.Payment.Reference) || r.Payments.Where(p => p.Reference.ToLower().Contains(requestsSearchViewModel.Payment.Reference.ToLower())).Any())
             );
 
+            
             }
         }
 
