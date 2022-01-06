@@ -23,7 +23,7 @@
                 @{
                     var vendorcurrencyid = "";
                 }
-                @if (Model.Error.Bool == true)
+                @if (Model.Error?.Bool == true)
                 {
                     <span class="text-danger-centarix">@Model.Error.String</span>
                 }
@@ -79,7 +79,8 @@
                                 <div class="col-3">
                                     <div class="form-group d-inline-flex">
                                         <label asp-for="ParentQuote.ExpirationDate" class=" control-label m-0 mt-2" style="width:90%;">Expiration Date</label>
-                                        <input asp-for="ParentQuote.ExpirationDate" value="" type="text" class="datepicker form-control-plaintext border-bottom p-0 m-0" />
+                                        <input asp-for="ParentQuote.ExpirationDate" value="@(Model.ParentQuote.ExpirationDate != new DateTime() ? Model.ParentQuote.ExpirationDate.ToString("dd MMM yyyy") : null)" type="text" asp-format="@AppUtility.AspDateFormatString
+                                               " class="datepicker form-control-plaintext border-bottom p-0 m-0" />
                                         <span asp-validation-for="ParentQuote.ExpirationDate" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
@@ -191,7 +192,7 @@
                                                     <div class="form-group @hideShekel shekel-group">
                                                         <div class="input-group ">
                                                             <span class="input-group-text pr-1">P: &#x20aa;</span>
-                                                            <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom cost cost-validation @i" index="@i" />
+                                                            <input asp-for="@Model.Requests[i].Cost" value="@((Model.Requests[i].Cost != 0&& Model.Requests[i].Cost != null) ? Math.Round( (Model.Requests[i].Cost??0),2).ToString():"")" class="form-control-plaintext border-bottom cost cost-validation @i" index="@i" />
                                                             <span class="text-danger-centarix" asp-validation-for="Requests[i].Cost"></span>
                                                         </div>
                                                         <div class="input-group ">
@@ -203,7 +204,7 @@
                                                     <div class="form-group @hideDollar dollar-group">
                                                         <div class="input-group ">
                                                             <span class="input-group-text pr-1">P: &#36;</span>
-                                                            <input class="form-control-plaintext border-bottom sum-dollars @i" id="sum-dollars" index="@i" name="sum-dollars" />
+                                                            <input class="form-control-plaintext border-bottom sum-dollars @i" value="@((Model.Requests[i].Cost != 0&& Model.Requests[i].Cost != null) ? Math.Round( (Model.Requests[i].Cost??0) / Model.Requests[i].ExchangeRate,2).ToString():"")" id="sum-dollars" index="@i" name="sum-dollars" />
                                                             <span class="text-danger-centarix" asp-validation-for="Requests[i].Cost"></span>
                                                         </div>
                                                         <div class="input-group ">

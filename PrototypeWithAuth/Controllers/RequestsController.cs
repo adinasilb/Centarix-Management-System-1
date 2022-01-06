@@ -532,10 +532,10 @@ namespace PrototypeWithAuth.Controllers
                 //Response.WriteAsync(ex.Message?.ToString());
                 if (requestItemViewModel.RequestStatusID == 7)
                 {
-                    return RedirectToAction("IndexInventory",  new { ErrorMessage = AppUtility.GetExceptionMessage(ex)});
+                    return RedirectToAction("IndexInventory", new { ErrorMessage = AppUtility.GetExceptionMessage(ex) });
                 }
-               /* return new RedirectToActionResult(actionName: "_OrderTab", controllerName: "Requests", routeValues: requestItemViewModel );*/
-        
+                /* return new RedirectToActionResult(actionName: "_OrderTab", controllerName: "Requests", routeValues: requestItemViewModel );*/
+
 
             }
             requestItemViewModel.TempRequestListViewModel.RequestIndexObject = new RequestIndexObject()
@@ -803,7 +803,7 @@ namespace PrototypeWithAuth.Controllers
                     await _productCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<ProductComment>>(AppData.Json.Serialize(requestItemViewModel.Comments.Where(c => c.CommentTypeID == 2))), newRequest.ProductID, currentUserID);
 
                     MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests, false, guid);
-                     
+
                     RequestNotification requestNotification = new RequestNotification();
                     requestNotification.RequestID = newRequest.RequestID;
                     requestNotification.IsRead = false;
@@ -1432,10 +1432,10 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-                var sucess = await _requestsProc.DeleteAsync(deleteRequestViewModel.Request.RequestID);
-                if (!sucess.Bool)
+                var success = await _requestsProc.DeleteAsync(deleteRequestViewModel.Request.RequestID);
+                if (!success.Bool)
                 {
-                    throw new Exception(sucess.String);
+                    throw new Exception(success.String);
                 }
             }
 
@@ -1683,7 +1683,7 @@ namespace PrototypeWithAuth.Controllers
                 if (favoriteRequest == null)
                 {
                     var success = await _favoriteRequestsProc.CreateAsync(requestID, userID);
-                    if(!success.Bool)
+                    if (!success.Bool)
                     {
                         Response.StatusCode = 500;
                         await Response.WriteAsync(success.String);
@@ -1693,7 +1693,8 @@ namespace PrototypeWithAuth.Controllers
             else if (FavType == "unlike")
             {
                 var success = await _favoriteRequestsProc.DeleteAsync(requestID, userID);
-                if (!success.Bool){
+                if (!success.Bool)
+                {
                     Response.StatusCode = 500;
                     await Response.WriteAsync(success.String);
                     return new EmptyResult();
@@ -1739,7 +1740,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<bool> ShareModal(ShareModalViewModel shareModalViewModel)
         {
             var success = await _shareRequestsProc.UpdateAsync(shareModalViewModel.ID, _userManager.GetUserId(User), shareModalViewModel.ApplicationUserIDs);
-            if(!success.Bool)
+            if (!success.Bool)
             {
                 Response.StatusCode = 500;
                 await Response.WriteAsync(success.String);
@@ -1894,7 +1895,7 @@ namespace PrototypeWithAuth.Controllers
                     AppUtility.PageTypeEnum requestPageTypeEnum = (AppUtility.PageTypeEnum)requestItemViewModel.PageType;
                     await transaction.CommitAsync();
                     requestItemViewModel.Requests[0] = request;
-              
+
                 }
                 catch (Exception ex)
                 {
@@ -2155,11 +2156,11 @@ namespace PrototypeWithAuth.Controllers
 
                 List<ModelAndID> ModelsCreated = new List<ModelAndID>(); //for rollback
                 List<ModelAndID> ModelsModified = new List<ModelAndID>(); //for rollback
-                                                                          //var isRequests = true;
-                                                                          //var RequestNum = 1;
-                                                                          //var PaymentNum = 1;
-                                                                          //var requests = new List<Request>();
-                                                                          //var payments = new List<Payment>();
+                //var isRequests = true;
+                //var RequestNum = 1;
+                //var PaymentNum = 1;
+                //var requests = new List<Request>();
+                //var payments = new List<Payment>();
 
 
                 var deserializedTempRequestListViewModel = new TempRequestListViewModel()
@@ -2180,22 +2181,44 @@ namespace PrototypeWithAuth.Controllers
                     {
                         try
                         {
+                            var parentRequestModelState = new ModelAndState
+                            {
+                                Model = deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest,
+                            };
+                            var ParentRequestRollbackList = ModelsModified;
+                            if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID == 0 || deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID == null)
+                            {
+                                parentRequestModelState.StateEnum = EntityState.Added;
 
+                                ParentRequestRollbackList = ModelsCreated;
+                            }
+                            else //if coming from approve order
+                            {
+                                parentRequestModelState.StateEnum = EntityState.Modified;
+                            }
+                            await _requestsProc.UpdateModelsAsync(new List<ModelAndState> { parentRequestModelState });
+                            ParentRequestRollbackList.Add(new ModelAndID()
+                            {
+                                ID = Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID),
+                                ModelsEnum = AppUtility.ModelsEnum.ParentRequest
+                            });
 
                             for (int tr = 0; tr < deserializedTempRequestListViewModel.TempRequestViewModels.Count(); tr++)
                             {
                                 var tempRequest = deserializedTempRequestListViewModel.TempRequestViewModels[tr];
                                 tempRequest.Request.RequestStatusID = 2;
+                                tempRequest.Request.ParentRequestID = deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID;
                                 var ProductRollbackList = ModelsModified;
                                 var RequestRollbackList = ModelsModified;
                                 var ParentQuoteRollbackList = ModelsModified;
                                 var ModelStates = new List<ModelAndState>();
-                                ModelStates.Add(new ModelAndState
+
+                                var requestModelState = new ModelAndState
                                 {
                                     Model = tempRequest.Request,
                                     StateEnum = tempRequest.Request.RequestID == 0 ? EntityState.Added : EntityState.Modified
-                                });
-
+                                };
+                                ModelStates.Add(requestModelState);
                                 if (tempRequest.Request.RequestID == 0)
                                 {
                                     RequestRollbackList = ModelsCreated;
@@ -2204,24 +2227,26 @@ namespace PrototypeWithAuth.Controllers
                                         tempRequest.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(false);
                                         ProductRollbackList = ModelsCreated;
                                     }
-
-                                    ModelStates.Add(new ModelAndState
+                                    var productModelState = new ModelAndState
                                     {
                                         Model = tempRequest.Request.Product,
                                         StateEnum = tempRequest.Request.ProductID == 0 ? EntityState.Added : EntityState.Modified
-                                    });
+                                    };
+                                    await _requestsProc.UpdateModelsAsync(new List<ModelAndState> { productModelState });
 
-                                    ModelStates.Add(new ModelAndState
+                                    var parentQuoteModelState = new ModelAndState
                                     {
                                         Model = tempRequest.Request.ParentQuote,
-                                        StateEnum = tempRequest.Request.ParentQuoteID == null ? EntityState.Added : EntityState.Modified
-                                    });
+                                        StateEnum = tempRequest.Request.ParentQuoteID == null || tempRequest.Request.ParentQuoteID == 0 ? EntityState.Added : EntityState.Modified
+                                    };
+                                    ModelStates.Add(parentQuoteModelState);
                                     if (tempRequest.Request.ParentQuoteID == null)
                                     {
                                         ParentQuoteRollbackList = ModelsCreated;
                                     }
                                 }
                                 await _requestsProc.UpdateModelsAsync(ModelStates);
+                                //await _requestsProc.UpdateModelsAsync(ModelStates);
 
                                 //set up rollback lists in case of exception
                                 ProductRollbackList.Add(new ModelAndID()
@@ -2296,27 +2321,7 @@ namespace PrototypeWithAuth.Controllers
                                     ModelsEnum = AppUtility.ModelsEnum.RequestNotification
                                 });
                             }
-                            var parentRequestModelState = new ModelAndState
-                            {
-                                Model = deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest,
-                            };
-                            var ParentRequestRollbackList = ModelsModified;
-                            if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID == 0 || deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID == null)
-                            {
-                                parentRequestModelState.StateEnum = EntityState.Added;
 
-                                ParentRequestRollbackList = ModelsCreated;
-                            }
-                            else //if coming from approve order
-                            {
-                                parentRequestModelState.StateEnum = EntityState.Modified;
-                            }
-                            await _requestsProc.UpdateModelsAsync(new List<ModelAndState> { parentRequestModelState });
-                            ParentRequestRollbackList.Add(new ModelAndID()
-                            {
-                                ID = Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID),
-                                ModelsEnum = AppUtility.ModelsEnum.ParentRequest
-                            });
 
                             await transaction.CommitAsync();
                         }
@@ -2613,13 +2618,18 @@ namespace PrototypeWithAuth.Controllers
                     wheres.Add(r => confirmQuoteEmail.Requests.Select(rid => rid.RequestID).Contains(r.RequestID) && (r.QuoteStatusID == 1 || r.QuoteStatusID == 2));
                     wheres.Add(r => r.RequestStatusID == 6);
                 }
-                var requests = _requestsProc.Read(wheres, includes).AsEnumerable();
+                var requests = _requestsProc.Read(wheres, includes).ToList();
                 if (requests.Count() == 0)
                 {
                     wheres.Clear();
                     wheres.Add(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.QuoteStatusID == 2);
                     wheres.Add(r => r.RequestStatusID == 6);
-                    requests = _requestsProc.Read(wheres, includes).AsEnumerable();
+                    requests = _requestsProc.Read(wheres, includes).ToList();
+                }
+                var success = await _requestsProc.UpdateQuoteStatusAsync(requests, 2);
+                if (!success.Bool)
+                {
+                    throw new Exception(success.String);
                 }
                 //base url needs to be declared - perhaps should be getting from js?
                 //once deployed need to take base url and put in the parameter for converter.convertHtmlString
@@ -2687,8 +2697,6 @@ namespace PrototypeWithAuth.Controllers
 
                     message.Body = builder.ToMessageBody();
 
-                    bool wasSent = false;
-
                     using (var client = new SmtpClient())
                     {
 
@@ -2699,22 +2707,13 @@ namespace PrototypeWithAuth.Controllers
                         try
                         {
                             client.Send(message);
-                            wasSent = true;
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception(AppUtility.GetExceptionMessage(ex));
+                            throw new Exception("Failed to send quote request- "+AppUtility.GetExceptionMessage(ex));
                         }
 
                         client.Disconnect(true);
-                        if (wasSent)
-                        {
-                            var success = await _requestsProc.UpdateQuoteStatusAsync(requests, 2);
-                            if (!success.Bool)
-                            {
-                                throw new Exception(success.String);
-                            }
-                        }
 
                     }
                     return RedirectToAction("LabManageQuotes");
@@ -3483,26 +3482,30 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                var previousRequest = await _requestsProc.ReadOneAsync(
-                    new List<Expression<Func<Request, bool>>>
-                    {
-                        r => r.RequestID == editQuoteDetailsViewModel.Requests.FirstOrDefault().RequestID,
-                    },
-                    new List<ComplexIncludes<Request, ModelBase>>
-                    {
+                for (int i = 0; i < editQuoteDetailsViewModel.Requests.Count(); i++)
+                {
+                    var previousRequest = await _requestsProc.ReadOneAsync(
+                        new List<Expression<Func<Request, bool>>>
+                        {
+                        r => r.RequestID == editQuoteDetailsViewModel.Requests[i].RequestID,
+                        },
+                        new List<ComplexIncludes<Request, ModelBase>>
+                        {
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = p => ((Product)p).Vendor } },
+                        new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.Vendor.Country },
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.ProductSubcategory },
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.UnitType },
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.SubUnitType },
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.SubSubUnitType },
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.ParentQuote}
-                    }
-                );
-                var newRequest = editQuoteDetailsViewModel.Requests.FirstOrDefault();
-                previousRequest.Cost = newRequest.Cost;
-                previousRequest.Currency = newRequest.Currency;
-                previousRequest.ExpectedSupplyDays = newRequest.ExpectedSupplyDays;
-                editQuoteDetailsViewModel.Requests[0] = previousRequest;
+                        }
+                    );
+                    var newRequest = editQuoteDetailsViewModel.Requests[i];
+                    previousRequest.Cost = newRequest.Cost;
+                    previousRequest.Currency = newRequest.Currency;
+                    previousRequest.ExpectedSupplyDays = newRequest.ExpectedSupplyDays;
+                    editQuoteDetailsViewModel.Requests[i] = previousRequest;
+                }
                 editQuoteDetailsViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 return PartialView(editQuoteDetailsViewModel);
@@ -3641,7 +3644,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> OrderLateModal(Request requestFromView)
         {
-           
+
             var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestFromView.RequestID },
                 new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include =  r => r.ApplicationUserCreator },
                 new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest},
@@ -4216,6 +4219,7 @@ namespace PrototypeWithAuth.Controllers
                 {
 
                     tempRequestViewModel.Request.QuoteStatusID = 4;
+                    tempRequestViewModel.Request.ParentQuoteID = uploadQuoteOrderViewModel.ParentQuote.ParentQuoteID;
                     tempRequestViewModel.Request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
 
 
@@ -4247,7 +4251,7 @@ namespace PrototypeWithAuth.Controllers
                                 ModelStates.Add(new ModelAndState
                                 {
                                     Model = tempRequestViewModel.Request.ParentQuote,
-                                    StateEnum = tempRequestViewModel.Request.ParentQuoteID == null ? EntityState.Added : EntityState.Modified
+                                    StateEnum = tempRequestViewModel.Request.ParentQuoteID == null || tempRequestViewModel.Request.ParentQuoteID == 0 ? EntityState.Added : EntityState.Modified
                                 });
 
                                 ModelStates.Add(new ModelAndState
@@ -4500,7 +4504,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var request = await _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID }, new List<ComplexIncludes<Request, ModelBase>> 
+            var request = await _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID }, new List<ComplexIncludes<Request, ModelBase>>
                 { new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator },
                 new ComplexIncludes<Request, ModelBase>{ Include = r=>r.Product.Vendor } }).FirstOrDefaultAsync();
             var vendor = request.Product.Vendor;
