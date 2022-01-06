@@ -137,55 +137,55 @@ namespace PrototypeWithAuth.ViewModels
             switch (indexTableTypes)
             {
                 case AppUtility.IndexTableTypes.Approved:
-                    Columns = GetApproveColumns();
+                    Columns = GetApproveColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.ReceivedInventoryFavorites:
-                    Columns = GetReceivedInventoryFavoriteColumns();
+                    Columns = GetReceivedInventoryFavoriteColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.Ordered:
-                    Columns = GetOrderedColumns();
+                    Columns = GetOrderedColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.ReceivedInventoryShared:
-                    Columns = GetReceivedInventorySharedColumns();
+                    Columns = GetReceivedInventorySharedColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.ReceivedInventory:
-                    Columns = GetReceivedInventoryColumns();
+                    Columns = GetReceivedInventoryColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.Summary:
-                    Columns = GetSummaryColumns();
+                    Columns = GetSummaryColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.SummaryProprietary:
-                    Columns = GetSummaryProprietaryColumns();
+                    Columns = GetSummaryProprietaryColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.OrderedOperations:
-                    Columns = GetOrderedOperationsColumns();
+                    Columns = GetOrderedOperationsColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.ReceivedInventoryOperations:
-                    Columns = GetReceivedInventoryOperationsColumns();
+                    Columns = GetReceivedInventoryOperationsColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.AccountingGeneral:
-                    Columns = GetAccountingGeneralColumns();
+                    Columns = GetAccountingGeneralColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.Cart:
-                    Columns = GetCartColumns();
+                    Columns = GetCartColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.AccountingNotifications:
-                    Columns = GetAccountingNotificationsColumns();
+                    Columns = GetAccountingNotificationsColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.AccountingPaymentsDefault:
-                    Columns = GetAccountingPaymentsDefaultColumns();
+                    Columns = GetAccountingPaymentsDefaultColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.AccountingPaymentsInstallments:
-                    Columns = GetAccountingPaymentsInstallmentsColumns();
+                    Columns = GetAccountingPaymentsInstallmentsColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.LabQuotes:
-                    Columns = GetLabQuotesColumns();
+                    Columns = GetLabQuotesColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.LabOrders:
-                    Columns = GetLabOrdersColumns();
+                    Columns = GetLabOrdersColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.RequestLists:
-                    Columns = GetRequestListColumns();
+                    Columns = GetRequestListColumns().ToList();
                     break;
             }
 
@@ -215,7 +215,7 @@ namespace PrototypeWithAuth.ViewModels
         {          
         }
 
-        public IEnumerable<RequestIndexPartialColumnViewModel> Columns { get; set; }
+        public List<RequestIndexPartialColumnViewModel> Columns { get; set; }
         public Vendor Vendor { get; set; }
         public decimal TotalCost { get; set; }
         [Column(TypeName = "decimal(18, 3)")]

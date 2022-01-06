@@ -376,7 +376,7 @@ $(function () {
         return false;
     });
 
-    $(".page-item a").off('click').on("click", function (e) {
+    $(".page-item.not-active span").off('click').on("click", function (e) {
         console.log("next page");
         e.preventDefault();
         $("#loading").show();

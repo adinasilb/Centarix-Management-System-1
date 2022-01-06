@@ -5056,5 +5056,11 @@ namespace PrototypeWithAuth.Controllers
             return base.UploadFile(documentsModalViewModel);
         }
 
+
+        public async Task<bool> UpdateExchangeRate()
+        {
+            return _requestsProc.UpdateExchangeRateByHistory().Result.Bool;
+        }
     }
 }
+
