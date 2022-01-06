@@ -1432,10 +1432,10 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-                var sucess = await _requestsProc.DeleteAsync(deleteRequestViewModel.Request.RequestID);
-                if (!sucess.Bool)
+                var success = await _requestsProc.DeleteAsync(deleteRequestViewModel.Request.RequestID);
+                if (!success.Bool)
                 {
-                    throw new Exception(sucess.String);
+                    throw new Exception(success.String);
                 }
             }
 
@@ -2618,13 +2618,18 @@ namespace PrototypeWithAuth.Controllers
                     wheres.Add(r => confirmQuoteEmail.Requests.Select(rid => rid.RequestID).Contains(r.RequestID) && (r.QuoteStatusID == 1 || r.QuoteStatusID == 2));
                     wheres.Add(r => r.RequestStatusID == 6);
                 }
-                var requests = _requestsProc.Read(wheres, includes).AsEnumerable();
+                var requests = _requestsProc.Read(wheres, includes).ToList();
                 if (requests.Count() == 0)
                 {
                     wheres.Clear();
                     wheres.Add(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.QuoteStatusID == 2);
                     wheres.Add(r => r.RequestStatusID == 6);
-                    requests = _requestsProc.Read(wheres, includes).AsEnumerable();
+                    requests = _requestsProc.Read(wheres, includes).ToList();
+                }
+                var success = await _requestsProc.UpdateQuoteStatusAsync(requests, 2);
+                if (!success.Bool)
+                {
+                    throw new Exception(success.String);
                 }
                 //base url needs to be declared - perhaps should be getting from js?
                 //once deployed need to take base url and put in the parameter for converter.convertHtmlString
@@ -2692,8 +2697,6 @@ namespace PrototypeWithAuth.Controllers
 
                     message.Body = builder.ToMessageBody();
 
-                    bool wasSent = false;
-
                     using (var client = new SmtpClient())
                     {
 
@@ -2704,22 +2707,13 @@ namespace PrototypeWithAuth.Controllers
                         try
                         {
                             client.Send(message);
-                            wasSent = true;
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception(AppUtility.GetExceptionMessage(ex));
+                            throw new Exception("Failed to send quote request- "+AppUtility.GetExceptionMessage(ex));
                         }
 
                         client.Disconnect(true);
-                        if (wasSent)
-                        {
-                            var success = await _requestsProc.UpdateQuoteStatusAsync(requests, 2);
-                            if (!success.Bool)
-                            {
-                                throw new Exception(success.String);
-                            }
-                        }
 
                     }
                     return RedirectToAction("LabManageQuotes");
@@ -3488,13 +3482,15 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                var previousRequest = await _requestsProc.ReadOneAsync(
-                    new List<Expression<Func<Request, bool>>>
-                    {
-                        r => r.RequestID == editQuoteDetailsViewModel.Requests.FirstOrDefault().RequestID,
-                    },
-                    new List<ComplexIncludes<Request, ModelBase>>
-                    {
+                for (int i = 0; i < editQuoteDetailsViewModel.Requests.Count(); i++)
+                {
+                    var previousRequest = await _requestsProc.ReadOneAsync(
+                        new List<Expression<Func<Request, bool>>>
+                        {
+                        r => r.RequestID == editQuoteDetailsViewModel.Requests[i].RequestID,
+                        },
+                        new List<ComplexIncludes<Request, ModelBase>>
+                        {
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = p => ((Product)p).Vendor } },
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.Vendor.Country },
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.ProductSubcategory },
@@ -3502,13 +3498,14 @@ namespace PrototypeWithAuth.Controllers
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.SubUnitType },
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.SubSubUnitType },
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.ParentQuote}
-                    }
-                );
-                var newRequest = editQuoteDetailsViewModel.Requests.FirstOrDefault();
-                previousRequest.Cost = newRequest.Cost;
-                previousRequest.Currency = newRequest.Currency;
-                previousRequest.ExpectedSupplyDays = newRequest.ExpectedSupplyDays;
-                editQuoteDetailsViewModel.Requests[0] = previousRequest;
+                        }
+                    );
+                    var newRequest = editQuoteDetailsViewModel.Requests[i];
+                    previousRequest.Cost = newRequest.Cost;
+                    previousRequest.Currency = newRequest.Currency;
+                    previousRequest.ExpectedSupplyDays = newRequest.ExpectedSupplyDays;
+                    editQuoteDetailsViewModel.Requests[i] = previousRequest;
+                }
                 editQuoteDetailsViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 return PartialView(editQuoteDetailsViewModel);
