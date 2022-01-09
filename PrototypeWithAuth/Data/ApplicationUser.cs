@@ -43,9 +43,9 @@ namespace PrototypeWithAuth.Data
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
-        [DataType(DataType.PhoneNumber)]
+        /*[DataType(DataType.PhoneNumber)]
         [Display(Name = "Phone Number 2")]
-        public string PhoneNumber2 { get; set; }
+        public string PhoneNumber2 { get; set; }*/
         public bool NeedsToResetPassword { get; set; }
         public bool RememberTwoFactor { get; set; }
         public DateTime DateLastReadNotifications { get; set; }
