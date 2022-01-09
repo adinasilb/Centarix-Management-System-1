@@ -59,7 +59,7 @@ namespace PrototypeWithAuth.Models
         [ForeignKey("MaritalStatusID")]
         public MaritalStatus MaritalStatus { get; set; }
         //public string RelationshipStatus {get; set;}
-        [Display(Name = "Phone Number")]
+        [Display(Name = "Phone Number 2")]
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber2 { get; set; }
         //public string Citizenship { get; set; }
