@@ -45,7 +45,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
     <div class="col-6">
         <div class="form-group">
             <label asp-for="Vendor.VendorBuisnessID" class="control-label"></label>
-            <input asp-for="Vendor.VendorBuisnessID" class="form-control-plaintext border-bottom @markReadOnlyClass" />
+            <input asp-for="Vendor.VendorBuisnessID"  class="form-control-plaintext border-bottom @markReadOnlyClass" />
             <span asp-validation-for="Vendor.VendorBuisnessID" class="text-danger-centarix"></span>
         </div>
     </div>
@@ -53,13 +53,13 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
 <div class="row">
     <div class="col-3">
         <div class="form-group">
-            <label asp-for="Vendor.CountryID" class="control-label">Country</label>
+            <label asp-for="Vendor.CountryID"  class="control-label">Country</label>
             @Html.DropDownListFor(
      vm => vm.Vendor.CountryID,
      Model.Countries,
      "Select Country",
      htmlAttributes: new
-     {
+     {         
          @class = " mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass,
          @id = "VendorCountries",
          @size = 1,

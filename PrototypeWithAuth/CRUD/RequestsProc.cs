@@ -367,6 +367,42 @@ namespace PrototypeWithAuth.CRUD
             _context.SaveChanges();
         }
 
+        public async Task<StringWithBool> UpdateExchangeRateByHistory()
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        await Read(new List<Expression<Func<Request, bool>>> { r => r.OrderType == AppUtility.OrderTypeEnum.ExcelUpload.ToString() })
+                            .ForEachAsync(r => { 
+                                var rate = AppUtility.GetExchangeRateByDate(r.CreationDate);
+                                r.ExchangeRate = rate;
+                                r.Cost = (r.Cost/3.2m)*rate;
+                                _context.Entry(r).State = EntityState.Modified;
+                        });          
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        throw new Exception(AppUtility.GetExceptionMessage(e));
+                    }
+                    ReturnVal.SetStringAndBool(true, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
+
+
         //private async Task<StringWithBool> MarkInventory()
         //{
         //    //before running this function, run the following in ssms:
@@ -720,6 +756,7 @@ namespace PrototypeWithAuth.CRUD
         //    sw.Close();
         //}
     }
+
 
 
 }

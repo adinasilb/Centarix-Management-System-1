@@ -987,7 +987,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 var selected = false;
                 if (ps.PaymentStatusID == 2) { selected = true; }
-                if (ps.PaymentStatusID != 4 && ps.PaymentStatusID != 7)
+                if (ps.PaymentStatusID != 4 /*pay upon arrival*/ && ps.PaymentStatusID != 7 /*standing order*/)
                 {
                     termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription, Selected = selected });
                 }
@@ -2323,7 +2323,6 @@ namespace PrototypeWithAuth.Controllers
                                 });
                             }
 
-
                             await transaction.CommitAsync();
                         }
                         catch (Exception ex)
@@ -2711,6 +2710,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         catch (Exception ex)
                         {
+                            await _requestsProc.UpdateQuoteStatusAsync(requests, 1);
                             throw new Exception("Failed to send quote request- "+AppUtility.GetExceptionMessage(ex));
                         }
 
@@ -2722,6 +2722,7 @@ namespace PrototypeWithAuth.Controllers
 
                 else
                 {
+                    await _requestsProc.UpdateQuoteStatusAsync(requests, 1);
                     throw new FileNotFoundException();
                     //return RedirectToAction("Error");
                 }
@@ -5061,5 +5062,11 @@ namespace PrototypeWithAuth.Controllers
             return base.UploadFile(documentsModalViewModel);
         }
 
+
+        public async Task<bool> UpdateExchangeRate()
+        {
+            return _requestsProc.UpdateExchangeRateByHistory().Result.Bool;
+        }
     }
 }
+
