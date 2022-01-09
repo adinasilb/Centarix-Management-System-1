@@ -188,9 +188,12 @@ namespace PrototypeWithAuth.Controllers
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorRoutingNum) || fv.VendorRoutingNum.ToLower().Contains(vendorSearchViewModel.VendorRoutingNum.ToLower())));
 
-            wheres.Add(fv => (orderedVendorCategoryTypes == null || orderedVendorCategoryTypes.All(fv.VendorCategoryTypes.Select(ct => ct.CategoryTypeID).Contains))); //if choose lab, will include vendors that have both lab and operations
+            foreach (var ovct in orderedVendorCategoryTypes)
+            {
+                wheres.Add(fv => fv.VendorCategoryTypes.Select(ct => ct.CategoryTypeID).Contains(ovct));
+            }
             
-            var listfilteredVendors = _vendorsProc.Read(wheres, new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include = v=>v.VendorCategoryTypes} });
+            var listfilteredVendors = await _vendorsProc.Read(wheres, new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include = v=>v.VendorCategoryTypes} }).ToListAsync();
 
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = vendorSearchViewModel.SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
