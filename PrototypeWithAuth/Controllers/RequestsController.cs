@@ -2322,7 +2322,6 @@ namespace PrototypeWithAuth.Controllers
                                 });
                             }
 
-
                             await transaction.CommitAsync();
                         }
                         catch (Exception ex)
@@ -2710,6 +2709,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         catch (Exception ex)
                         {
+                            await _requestsProc.UpdateQuoteStatusAsync(requests, 1);
                             throw new Exception("Failed to send quote request- "+AppUtility.GetExceptionMessage(ex));
                         }
 
@@ -2721,6 +2721,7 @@ namespace PrototypeWithAuth.Controllers
 
                 else
                 {
+                    await _requestsProc.UpdateQuoteStatusAsync(requests, 1);
                     throw new FileNotFoundException();
                     //return RedirectToAction("Error");
                 }
@@ -5060,5 +5061,11 @@ namespace PrototypeWithAuth.Controllers
             return base.UploadFile(documentsModalViewModel);
         }
 
+
+        public async Task<bool> UpdateExchangeRate()
+        {
+            return _requestsProc.UpdateExchangeRateByHistory().Result.Bool;
+        }
     }
 }
+
