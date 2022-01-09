@@ -6945,40 +6945,40 @@ namespace PrototypeWithAuth.Controllers
         //    await _context.SaveChangesAsync();
         //}
 
-        public async Task<bool> UpdateExchangeRate()
-        {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
-            {
+        //public async Task<bool> UpdateExchangeRate()
+        //{
+        //    StringWithBool ReturnVal = new StringWithBool();
+        //    try
+        //    {
 
-                using (var transaction = _context.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        await _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.ExcelUpload.ToString())
-                            .ForEachAsync(r => {
-                                var rate = AppUtility.GetExchangeRateByDate(r.CreationDate);
-                                r.ExchangeRate = rate;
-                                r.Cost = (r.Cost/3.2m)*rate;
-                                _context.Entry(r).State = EntityState.Modified;
-                            });
-                        await _context.SaveChangesAsync();
-                        await transaction.CommitAsync();
-                    }
-                    catch (Exception e)
-                    {
-                        transaction.Rollback();
-                        throw new Exception(AppUtility.GetExceptionMessage(e));
-                    }
-                    ReturnVal.SetStringAndBool(true, null);
-                }
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-            }
-            return ReturnVal.Bool;
-        }
+        //        using (var transaction = _context.Database.BeginTransaction())
+        //        {
+        //            try
+        //            {
+        //                await _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.ExcelUpload.ToString())
+        //                    .ForEachAsync(r => {
+        //                        var rate = AppUtility.GetExchangeRateByDate(r.CreationDate);
+        //                        r.ExchangeRate = rate;
+        //                        r.Cost = (r.Cost/3.2m)*rate;
+        //                        _context.Entry(r).State = EntityState.Modified;
+        //                    });
+        //                await _context.SaveChangesAsync();
+        //                await transaction.CommitAsync();
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                transaction.Rollback();
+        //                throw new Exception(AppUtility.GetExceptionMessage(e));
+        //            }
+        //            ReturnVal.SetStringAndBool(true, null);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+        //    }
+        //    return ReturnVal.Bool;
+        //}
         public IActionResult DownloadRequestsToExcel()
         {
             var results = _context.Requests.Select(r => new
