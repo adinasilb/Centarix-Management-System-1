@@ -499,6 +499,7 @@ namespace PrototypeWithAuth.Controllers
                         request.ExchangeRate = exchangeRate;
 
 
+                        request.Product.ProductName = AppUtility.TrimNewLines(request.Product.ProductName);
                         TempRequestViewModel trvm = await AddItemAccordingToOrderType(request, OrderType, isInBudget, requestItemViewModel, requestNum: RequestNum, receivedModalVisualViewModel);
                         if (requestItemViewModel.Comments != null)
                         {

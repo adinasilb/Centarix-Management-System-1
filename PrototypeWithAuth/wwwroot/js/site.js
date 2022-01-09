@@ -656,7 +656,7 @@ $(function () {
                 console.log("result: " + result);
                 if (result) {
                     if (/*( extn == "png" || extn == "jpg" || extn == "jpeg") && */result > '') {
-                        alert("empty string");
+                        //alert("empty string");
                         console.log("inside the if statement");
                         if (typeof (FileReader) != "undefined") {
                             console.log("file reader does not equal undefined");
@@ -696,7 +696,7 @@ $(function () {
         var imgPath = $("#UserImagePath").val();
         //$(".user-image").html('<img src="~/' + imgPath + '" class="user-image" />');
         $("#user-image").attr("src", "/" + imgPath);
-        alert("img path: " + imgPath);
+        //alert("img path: " + imgPath);
         $(".userImage i").hide();
 
         $.fn.CloseModal('user-picture');
