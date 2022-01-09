@@ -24,7 +24,7 @@
 
             <div class="modal-content d-inline-block">
 
-                <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="createVendorForm">
+                <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="createVendorForm" autocomplete="off">
 
                     @{ await Html.RenderPartialAsync("~/Views/Vendors/_VendorTabs.cshtml", Model);}
                 </form>
