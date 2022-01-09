@@ -193,7 +193,7 @@ namespace PrototypeWithAuth.Controllers
                 wheres.Add(fv => fv.VendorCategoryTypes.Select(ct => ct.CategoryTypeID).Contains(ovct));
             }
             
-            var listfilteredVendors = await _vendorsProc.Read(wheres, new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include = v=>v.VendorCategoryTypes} }).ToListAsync();
+            var listfilteredVendors = _vendorsProc.Read(wheres, new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include = v=>v.VendorCategoryTypes} }).AsEnumerable();
 
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = vendorSearchViewModel.SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
