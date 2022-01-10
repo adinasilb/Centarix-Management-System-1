@@ -32,7 +32,32 @@ namespace PrototypeWithAuth.CRUD
                 {
                     _context.Remove(ehaa);
                     await _context.SaveChangesAsync();
-                };
+                }
+                else
+                {
+                    throw new Exception("Delete of employee hours awaiting approval did not go through");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to Delete hours awaiting approval- "+AppUtility.GetExceptionMessage(ex));
+            }
+        }
+
+        public async Task DeleteByEHIDAsync(int ID)
+        {
+            try
+            {
+                var ehaa = await ReadOneAsync(new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { ehaa => ehaa.EmployeeHoursID == ID });
+                if (ehaa != null)
+                {
+                    _context.Remove(ehaa);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("Delete of employee hours awaiting approval did not go through");
+                }
             }
             catch (Exception ex)
             {

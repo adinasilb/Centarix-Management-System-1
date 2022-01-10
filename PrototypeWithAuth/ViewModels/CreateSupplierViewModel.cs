@@ -21,6 +21,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<SelectListItem> Countries { get; set; }
         public int Tab { get; set; } = 1;
         public AppUtility.VendorModalType ModalType { get; set; }
+        public bool IsReadOnly { get; set; }
 
     }
 }

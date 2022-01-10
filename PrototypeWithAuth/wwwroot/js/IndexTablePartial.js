@@ -198,7 +198,7 @@ $(function () {
     $(".load-product-details").off('click').on("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        $(".tooltip").remove();
+        $(".tooltip").hide();
         $("#loading").show();
         var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr('value') + "&SectionType=" + $("#masterSectionType").val();
         $.fn.CallPageRequest($itemurl, "details");
@@ -211,7 +211,7 @@ $(function () {
 
         e.preventDefault();
         e.stopPropagation();
-        $(".tooltip").remove();
+        $(".tooltip").hide();
         $("#loading").show();
         console.log('in load products details summary');
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside

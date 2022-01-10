@@ -40,7 +40,12 @@ namespace PrototypeWithAuth.CRUD
             try
             {
                 var employee = this.Read(new List<Expression<Func<Employee, bool>>> { u => u.Id == UserID }).FirstOrDefault();
+                if (employee.SpecialDays + SpecialDays<0)
+                {
+                    throw new Exception("special days selected went over limit.");
+                }
                 employee.SpecialDays += SpecialDays;
+             
                 _context.Update(employee);
                 await _context.SaveChangesAsync();
             }

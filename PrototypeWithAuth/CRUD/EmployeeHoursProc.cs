@@ -187,15 +187,17 @@ namespace PrototypeWithAuth.CRUD
                             };
                             await _timekeeperNotificationsProc.CreateWithoutTransactionAsync(newNotification);
                         }
+                        await _employeeHoursAwaitingApprovalProc.DeleteByEHIDAsync(employeeHoursID);
                     }
                     else
                     {
+                        await _employeeHoursAwaitingApprovalProc.DeleteByEHIDAsync(employeeHoursID);
                         await _timekeeperNotificationsProc.DeleteByEHIDAsync(employeeHoursID);
                         _context.Remove(employeeHour);
                         await _context.SaveChangesAsync();
 
                     }
-                    await _employeeHoursAwaitingApprovalProc.DeleteAsync(employeeHoursID);
+                 
                     await transaction.CommitAsync();
                     ReturnVal.SetStringAndBool(true, null);
 
@@ -221,7 +223,7 @@ namespace PrototypeWithAuth.CRUD
                     bool alreadyOffDay = false;
                     EmployeeHours employeeHour = null;
                     //var user = await _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { e => e.Id== UserID });
-
+                    var specialDays = 0;
                     if (DateTo == new DateTime()) //just one date
                     {
                         var newone = await _companyDaysOffProc.ReadOneAsync(new List<Expression<Func<CompanyDayOff, bool>>> { companyDaysOff => companyDaysOff.Date.Date == DateFrom.Date });
@@ -233,18 +235,12 @@ namespace PrototypeWithAuth.CRUD
 
                             if (OffDayTypeID == 4 && employeeHour?.OffDayTypeID != 4)
                             {
-                                //employeeHour.Employee = user;
-                                //employeeHour.Employee.SpecialDays -= 1;
-                                await _employeesProc.AddSpecialDays(UserID, -1);
-                                //user.SpecialDays -= 1;
-
+                                specialDays+=-1;
                             }
                             else if (employeeHour?.OffDayTypeID == 4 && OffDayTypeID != 4)
                             {
-                                await _employeesProc.AddSpecialDays(UserID, 1);
-                                //user.SpecialDays += 1;
+                                specialDays+=1;
                             }
-                            //await _employeesProc.UpdateAsync(user);
                             if (employeeHour == null)
                             {
                                 employeeHour = new EmployeeHours
@@ -275,6 +271,11 @@ namespace PrototypeWithAuth.CRUD
                                 _context.SaveChanges();
                             }
                         }
+                        if (specialDays!=0)
+                        {
+                            await _employeesProc.AddSpecialDays(UserID, specialDays);
+                        }
+
                         await transaction.CommitAsync();
                     }
                     else
@@ -292,15 +293,11 @@ namespace PrototypeWithAuth.CRUD
                                     employeeHour = employeeHours.Where(eh => eh.Date == DateFrom).FirstOrDefault();
                                     if (OffDayTypeID == 4 && employeeHour?.OffDayTypeID != 4)
                                     {
-                                        //employeeHour.Employee = user;
-                                        //employeeHour.Employee.SpecialDays -= 1;
-                                       await _employeesProc.AddSpecialDays(UserID, -1);
-                                        //user.SpecialDays -= 1;
+                                        specialDays+=-1;
                                     }
                                     else if (employeeHour?.OffDayTypeID == 4 && OffDayTypeID != 4)
                                     {
-                                         await _employeesProc.AddSpecialDays(UserID, 1);
-                                        //user.SpecialDays += 1;
+                                        specialDays+=1;
                                     }
                                     if (employeeHour == null)
                                     {
@@ -343,6 +340,10 @@ namespace PrototypeWithAuth.CRUD
                             }
                             DateFrom = DateFrom.AddDays(1);
                             _context.SaveChanges();
+                        }
+                        if (specialDays!=0)
+                        {
+                            await _employeesProc.AddSpecialDays(UserID, specialDays);
                         }
                         await transaction.CommitAsync();
                     }

@@ -91,5 +91,12 @@ $('.UpdateHoursForm').validate({
 			required: "total hours must be greater than 0"
 		},
 		}
-
+		
 });
+//$.validator.addMethod("validTimeLessThanNow", function (value, element) {
+
+//	var time = moment().format("hh:mm");
+//	var beginningTime = moment(time, "hh:mm");
+//	var endTime = moment(value, "hh:mm");
+//	return endTime.isSameOrBefore(beginningTime);
+//}, "Time must be less than now");
