@@ -27,7 +27,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="datepicker-here" data-range="false" id="vacation-dates"
+                @{ 
+                    bool dataRange = true;
+                    if (Model.OffDayType == AppUtility.OffDayTypeEnum.SpecialDay)
+                    {
+                        dataRange = false;
+                    }
+                }
+                <div class="datepicker-here" data-range="@dataRange.ToString().ToLower()" id="vacation-dates"
                      data-multiple-dates-separator=" - " data-language='en'></div>
                 <div class="modal-footer mt-4 border-0 ">
                     <div class="text-center m-auto">
