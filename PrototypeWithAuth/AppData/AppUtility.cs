@@ -912,6 +912,11 @@ namespace PrototypeWithAuth.AppData
             }
         }
 
+        public static String TrimNewLines(String Item)
+        {
+            return Item.Replace("/r/n", " ").Replace("/r", " ").Replace("/n", " ");
+        }
+
         public static StringWithBool GetDateOrderedString(ParentRequest parentRequest)
         {
             try
