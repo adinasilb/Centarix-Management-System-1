@@ -276,8 +276,8 @@
                 <span asp-validation-for="Requests[0].ParentQuote.QuoteNumber" class="text-danger-centarix" />
             </div>
             <div class="col-md-6">
-                <label asp-for="Requests[0].ParentQuote.ExpirationDate" class="control-label"></label>
-                <input asp-for="Requests[0].ParentQuote.ExpirationDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories @markReadOnlyClass" disabled value="@Model.Requests[0].ParentQuote.ExpirationDate.GetElixirDateFormat()" />
+                <label asp-for="Requests[0].ParentQuote.ExpirationDate" class="control-label">Quote Expiration Date</label>
+                <input asp-for="Requests[0].ParentQuote.ExpirationDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories @markReadOnlyClass" disabled value="@(Model.Requests[0].ParentQuote.ExpirationDate == new DateTime() ? "": Model.Requests[0].ParentQuote.ExpirationDate.GetElixirDateFormat())" />
                 <span asp-validation-for="Requests[0].ParentQuote.ExpirationDate" class="text-danger-centarix quote-date" />
             </div>
         </div>
