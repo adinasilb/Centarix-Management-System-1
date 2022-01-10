@@ -1284,7 +1284,7 @@ protected static void ApplySearchToRequestList(RequestsSearchViewModel requestsS
                             var requests2 = requests.Skip(20*(requestIndexObject.PageNumber-1)).Take(20);
                             onePageOfProducts = await requests2.Select(r =>
                            new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
-                            r, r.ApplicationUserReceiver, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
+                            r, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                          r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
                                            userSharedRequests.Where(sr => sr.ObjectID == r.RequestID).FirstOrDefault(), user,
                                            r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToListAsync();
