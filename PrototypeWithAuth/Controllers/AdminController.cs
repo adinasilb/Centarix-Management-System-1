@@ -109,17 +109,13 @@ namespace PrototypeWithAuth.Controllers
                 counter++;
             }
             registerUserViewModel.ProtocolRoles = new List<UserRoleViewModel>();
-            registerUserViewModel.ProtocolRoles.Add(new UserRoleViewModel()
+
+            counter = 0;
+            foreach (var role in AppUtility.ProtocolRoleEnums())
             {
-                MenuItemsID = counter,
-                StringWithName = new StringWithName()
-                {
-                    StringName = AppUtility.MenuItems.Protocols.ToString(),
-                    StringDefinition = AppUtility.MenuItems.Protocols.ToString()
-                },
-                Selected = false
+                registerUserViewModel.ProtocolRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, StringWithName = role, Selected = false });
+                counter++;
             }
-            );
             counter++;
             registerUserViewModel.OperationRoles = new List<UserRoleViewModel>();
             foreach (var role in AppUtility.OperationRoleEnums())
