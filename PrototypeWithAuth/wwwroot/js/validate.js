@@ -344,6 +344,7 @@ $(function () {
 	return result;
 	}, "Invalid time");
 
+
 	$.validator.addMethod("validTimeWithSeconds", function (value, element) {
 	var t = value.split(':');
 	if (t[0].length == 1) {

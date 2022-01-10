@@ -187,15 +187,17 @@ namespace PrototypeWithAuth.CRUD
                             };
                             await _timekeeperNotificationsProc.CreateWithoutTransactionAsync(newNotification);
                         }
+                        await _employeeHoursAwaitingApprovalProc.DeleteByEHIDAsync(employeeHoursID);
                     }
                     else
                     {
+                        await _employeeHoursAwaitingApprovalProc.DeleteByEHIDAsync(employeeHoursID);
                         await _timekeeperNotificationsProc.DeleteByEHIDAsync(employeeHoursID);
                         _context.Remove(employeeHour);
                         await _context.SaveChangesAsync();
 
                     }
-                    await _employeeHoursAwaitingApprovalProc.DeleteAsync(employeeHoursID);
+                 
                     await transaction.CommitAsync();
                     ReturnVal.SetStringAndBool(true, null);
 
