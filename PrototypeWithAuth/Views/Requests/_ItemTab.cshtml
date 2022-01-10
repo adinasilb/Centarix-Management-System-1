@@ -226,13 +226,13 @@
             <div class="form-group">
                 @* IN MIDDLE *@
                 <label asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="control-label"></label>
-                <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " disabled />
+                <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " />
                 @*don't need a validation here because you it's not saving*@
             </div>
         </div>
         <div class="col-md-2 @vendorCategories">
             <div class="form-group h-100 d-flex" style="flex-direction: column;text-align: center;justify-content: center;">
-                <a href="#" class="open-vendor-float-details btn-link text no-hover" value="@Model.Requests[0].Product.VendorID">
+                <a href="#" class="open-vendor-float-details btn-link text no-hover" value="@Model.Requests[0].Product.VendorID" disabled>
                     <i class="icon-account_box-24px1 heading-1"></i>
                 </a>
             </div>
@@ -472,20 +472,22 @@ else //isProprietary
     $(".open-vendor-float-details").on("click", function (e) {
         e.preventDefault();
         var vendorID = $("select.vendorList").val();
-        $.ajax({
-            async: true,
-            url: "/Requests/VendorFloatDetails?vendorID=" + vendorID + "&SectionType=" + $("#masterSectionType").val(),
-            type: "GET",
-            cache: true,
-            success: function (data) {
-                $.fn.OpenModal("vendorFloatModal", "vendor-float-modal", data);
-                $(".vendorFloatModal .mdb-select").materialSelect();
-                $.fn.TurnToDetails("vendorFloatModal");
-                $('.vendorFloatModal a:first').tab('show');
-                return false;
-            }
-        });
-        $(".popover-url").popover('hide');
+        if (vendorID > 0) {
+            $.ajax({
+                async: true,
+                url: "/Requests/VendorFloatDetails?vendorID=" + vendorID + "&SectionType=" + $("#masterSectionType").val(),
+                type: "GET",
+                cache: true,
+                success: function (data) {
+                    $.fn.OpenModal("vendorFloatModal", "vendor-float-modal", data);
+                    $(".vendorFloatModal .mdb-select").materialSelect();
+                    $.fn.TurnToDetails("vendorFloatModal");
+                    $('.vendorFloatModal a:first').tab('show');
+                    return false;
+                }
+            });
+            $(".popover-url").popover('hide');
+        }
     });
 
     //$("#Requests_0__URL").on("blur", function (e) {
