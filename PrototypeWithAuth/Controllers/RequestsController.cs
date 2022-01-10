@@ -4970,6 +4970,7 @@ namespace PrototypeWithAuth.Controllers
                 return PartialView("InvalidLinkPage");
             }
             CreateSupplierViewModel viewModel = await GetCreateSupplierViewModel(SectionType, vendorID);
+            viewModel.IsReadOnly = true;
             viewModel.ModalType = AppUtility.VendorModalType.SummaryFloat;
 
             return PartialView(viewModel);
