@@ -119,10 +119,10 @@ $(function () {
             return false;
         });
     });
-    $('._IndexTableData [data-toggle = "tooltip"], ._IndexTableDataByVendor [data-toggle = "tooltip"]' ).off('click').on("click", function (e) {
-        e.preventDefault();
-        console.log('prevent default')
-    });
+    //$('._IndexTableData [data-toggle = "tooltip"], ._IndexTableDataByVendor [data-toggle = "tooltip"]' ).off('click').on("click", function (e) {
+    //    e.preventDefault();
+    //    console.log('prevent default')
+    //});
     //$("body").off("click", ".share-request").on("click", ".share-request", function (e) {
     //	alert("share request");
     //	var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");

@@ -12,7 +12,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class PaymentsInvoiceViewModel : ViewModelBase
     {
-        public List<Request> Requests { get; set; }
+        public Request Request { get; set; }
         public Payment Payment { get; set; }
         public List<CompanyAccount> CompanyAccounts {get; set;}
         public AppUtility.SidebarEnum AccountingEnum { get; set; }
