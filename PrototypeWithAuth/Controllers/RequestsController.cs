@@ -265,7 +265,6 @@ namespace PrototypeWithAuth.Controllers
                             payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-invoice-one", "Pay");
                             checkboxString = "";
                             iconList.Add(payNowIcon);
-                            iconList.Add(popoverMoreIcon);
 
                             orderbyForPayments = r => r.Request.ParentRequest.OrderDate;
                             selectForPayments = r => new RequestIndexPartialRowViewModel
@@ -3909,7 +3908,7 @@ namespace PrototypeWithAuth.Controllers
                 return PartialView("InvalidLinkPage");
             }
             var payment = await _paymentsProc.ReadOneAsync(new List<Expression<Func<Payment, bool>>> { p => p.PaymentID == paymentid });
-            var requestToPay = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.RequestID == payment.RequestID },
+            var requestToPay = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == payment.RequestID },
                 new List<ComplexIncludes<Request, ModelBase>>
                 {
                     new ComplexIncludes<Request, ModelBase>{ Include =  r => r.ParentRequest},
@@ -3919,10 +3918,10 @@ namespace PrototypeWithAuth.Controllers
                     new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.SubUnitType},
                     new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.SubSubUnitType},
                     new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Payments}
-                }).ToList();
+                });
 
-            var paidSum = requestToPay.FirstOrDefault().Payments.Where(p => p.IsPaid).Select(p => p.Sum).Sum();
-            var amtLeftToFullPayment = (decimal)requestToPay.FirstOrDefault().Cost - paidSum;
+            var paidSum = requestToPay.Payments.Where(p => p.IsPaid).Select(p => p.Sum).Sum();
+            var amtLeftToFullPayment = (decimal)requestToPay.Cost - paidSum;
             /*            if (payment.InstallmentNumber == requestToPay.FirstOrDefault().Installments)
             */
             if (payment.Sum > amtLeftToFullPayment)
@@ -3931,7 +3930,7 @@ namespace PrototypeWithAuth.Controllers
             }
             PaymentsInvoiceViewModel paymentsInvoiceViewModel = new PaymentsInvoiceViewModel()
             {
-                Requests = requestToPay,
+                Request = requestToPay,
                 AccountingEnum = accountingPaymentsEnum,
                 Payment = payment,
                 PaymentTypes = _paymentTypesProc.Read().Select(pt => pt).ToList(),
@@ -3941,7 +3940,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     InvoiceDate = DateTime.Today
                 },
-                ShippingToPay = await GetShippingsToPay(requestToPay)
+                ShippingToPay = await GetShippingsToPay(new List<Request> { requestToPay })
             };
 
 
@@ -3958,7 +3957,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     await _paymentsProc.UpdateWithoutTransactionAsync(paymentsInvoiceViewModel);
                     string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-                    string requestFolder = Path.Combine(uploadFolder, paymentsInvoiceViewModel.Requests.FirstOrDefault().RequestID.ToString());
+                    string requestFolder = Path.Combine(uploadFolder, paymentsInvoiceViewModel.Request.RequestID.ToString());
                     Directory.CreateDirectory(requestFolder);
                     if (paymentsInvoiceViewModel.InvoiceImage != null)
                     {
@@ -3986,12 +3985,9 @@ namespace PrototypeWithAuth.Controllers
                 {
                     await transaction.RollbackAsync();
                     Response.StatusCode = 500;
-                    for (int i = 0; i < paymentsInvoiceViewModel.Requests.Count; i++)
-                    {
-                        paymentsInvoiceViewModel.Requests[i] = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == paymentsInvoiceViewModel.Requests[i].RequestID },
+                        paymentsInvoiceViewModel.Request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == paymentsInvoiceViewModel.Request.RequestID },
                             new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product }, new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor } }
                             );
-                    }
                     paymentsInvoiceViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     return PartialView(paymentsInvoiceViewModel);
                 }
@@ -4191,12 +4187,10 @@ namespace PrototypeWithAuth.Controllers
                 return PartialView("InvalidLinkPage");
             }
             var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now } };
-            //uploadQuoteViewModel.TempRequestListViewModel = new TempRequestListViewModel()
-            //{
-            //    GUID = requestIndexObject.GUID,
-            //    RequestIndexObject = requestIndexObject,
-            //    TempRequestViewModels = oldJson.DeserializeJson<List<TempRequestViewModel>>()
-            //};
+            uploadQuoteViewModel.TempRequestListViewModel = new TempRequestListViewModel()
+            {
+                GUID = guid
+            };
 
 
             return PartialView(uploadQuoteViewModel);
