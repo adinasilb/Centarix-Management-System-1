@@ -445,7 +445,7 @@ $(function () {
 
 
     $(".load-sublocation-view").off("click").on("click", function (e) {
-        //this is to prevent double loading/ double clicking of same thing
+        //this is to prevent double loading double clicking of same thing
         if ($(".location-type-selected").hasClass("in-middle-of-action")) { e.preventDefault(); return true; }
         $("#loading1")/*.delay(1000)*/.show(0);
 
@@ -532,12 +532,6 @@ $(function () {
                 $("#loading1").hide();
                 $("#loading1")/*.delay(1000)*/.hide(0);
                 myDiv.append(result);
-                if ($(parentLocation).hasClass("parent-location")) {
-                    //$(".second-col .li-name").html($(".col.sublocation-index").attr("parentName"));
-                    //$("table td.li-name").html($(parentLocation).attr("name"));
-                    //$("table td.li-name").removeClass("filled-location-class-color")
-                    $(".second-col").addClass("filled-location-class");
-                }
                 //this.html(result);
                 //add heading name
                 $(".location-type-selected").removeClass("in-middle-of-action");
@@ -579,6 +573,10 @@ $(function () {
 
                     $(".li-name-container").addClass("d-none");
                     $(".second-col").removeClass("filled-location-class");
+
+                }
+                else {
+                    $(".second-col").addClass("filled-location-class");
 
                 }
 
