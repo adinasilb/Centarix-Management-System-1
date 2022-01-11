@@ -6998,6 +6998,8 @@ namespace PrototypeWithAuth.Controllers
                 ExpectedSupplyDate = r.ParentRequest.OrderDate.AddDays(Convert.ToDouble(r.ExpectedSupplyDays)),
                 URL = AppUtility.GetUrlFromUserData(r.URL),
                 CentarixOrderNumber = r.ParentRequest.OrderNumber,
+                QuartzyOrderNumber = r.ParentRequest.QuartzyOrderNumber,
+                OrderType = r.OrderType,
                 RequestDate = AppUtility.GetExcelDateFormat(r.CreationDate),
                 OrderDate = AppUtility.GetExcelDateFormat(r.ParentRequest.OrderDate),
                 ArrivalDate = AppUtility.GetExcelDateFormat(r.ArrivalDate),
