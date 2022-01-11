@@ -195,12 +195,14 @@
 	};
 
 	
-	$("select.part-type").off("change").change(function(){
+	$("select.part-type").off("change").change(function () {
+		$(".visualView").html("")
 			var parentID = $(this).parents('.parent-group').prev(".form-group").find('.dropdown-main').find('span:not(.caret)').attr("parentID");
 		var nextSelect = $(this).parents('.parent-group').nextAll(".form-group").first().find('.dropdown-menu');
 		console.log(nextSelect)
 			$(nextSelect).html('');
-			FillNextSelect(nextSelect, parentID);
+		FillNextSelect(nextSelect, parentID);
+		
 	});
 
 	function FillNextSelect(nextSelect, locationInstanceParentId) {
