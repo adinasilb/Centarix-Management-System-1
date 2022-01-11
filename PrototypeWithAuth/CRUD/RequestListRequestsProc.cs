@@ -95,7 +95,7 @@ namespace PrototypeWithAuth.CRUD
             }
             if (prevListID != 0)
             {
-                await _requestListRequestsProc.DeleteByListIDAndRequestIDsWithoutTransactionAsync(prevListID, requestToMoveId);
+                await this.DeleteByListIDAndRequestIDsWithoutTransactionAsync(prevListID, requestToMoveId);
             }
             await _context.SaveChangesAsync();
         }
