@@ -19,8 +19,11 @@ namespace PrototypeWithAuth.CRUD
             {
                 base.InstantiateProcs();
             }
+            else
+            {
+                _requestListsProc = new RequestListsProc(context, true);
+            }
         }
-
 
         public void DeleteByRequestListWithoutSaveChanges(RequestList list)
         {
@@ -61,8 +64,9 @@ namespace PrototypeWithAuth.CRUD
 
         public async Task DeleteByListIDAndRequestIDsWithoutTransactionAsync(int listID, int requestID)
         {
-            var list = _context.RequestLists.Where(l => l.ListID == listID)
-                .Include(l => l.RequestListRequests).FirstOrDefault();
+            var list = _requestListsProc.Read(new List<Expression<Func<RequestList, bool>>> { l => l.ListID == listID },
+                new List<ComplexIncludes<RequestList, ModelBase>> { new ComplexIncludes<RequestList, ModelBase> { Include = l => l.RequestListRequests } })
+                .FirstOrDefault();
             var requestListRequest = list.RequestListRequests.Where(rlr => rlr.RequestID == requestID).FirstOrDefault();
             try
             {
