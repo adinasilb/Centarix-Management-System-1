@@ -241,7 +241,6 @@ namespace PrototypeWithAuth.CRUD
                     {
                         _context.Entry(ms.Model).State = ms.StateEnum;
                     }
-                    var changetracker = _context.ChangeTracker.Entries();
 
                 }
             }
