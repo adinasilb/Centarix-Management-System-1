@@ -6984,7 +6984,7 @@ namespace PrototypeWithAuth.Controllers
             var results = _context.Requests.Select(r => new
             {
                 ProductName = r.Product.ProductName,
-                InvoiceID = r.Payments.FirstOrDefault().InvoiceID,
+                InvoiceID = r.Payments.FirstOrDefault().Invoice.InvoiceNumber,
                 CategoryName = r.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription,
                 SubCategoryName = r.Product.ProductSubcategory.ProductSubcategoryDescription,
                 Vendor = r.Product.Vendor.VendorEnName,
