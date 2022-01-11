@@ -222,6 +222,7 @@ namespace PrototypeWithAuth.CRUD
             try
             {
                 UpdateModelsWithoutSaveChanges(modelsAndStates);
+                var changetracker = _context.ChangeTracker.Entries();
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -240,6 +241,7 @@ namespace PrototypeWithAuth.CRUD
                     {
                         _context.Entry(ms.Model).State = ms.StateEnum;
                     }
+                    var changetracker = _context.ChangeTracker.Entries();
 
                 }
             }
