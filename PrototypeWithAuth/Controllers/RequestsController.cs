@@ -3643,9 +3643,8 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> OrderLateModal(Request requestFromView)
+        public async Task OrderLateModal(Request requestFromView)
         {
-
             var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestFromView.RequestID },
                 new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include =  r => r.ApplicationUserCreator },
                 new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest},
@@ -3706,7 +3705,7 @@ namespace PrototypeWithAuth.Controllers
 
             }
             //return RedirectToAction("NotificationsView", new { DidntArrive = true });
-            return new EmptyResult();
+
         }
 
 
@@ -4976,7 +4975,7 @@ namespace PrototypeWithAuth.Controllers
             var results = _requestsProc.Read().Select(r => new
             {
                 ProductName = r.Product.ProductName,
-                InvoiceID = r.Payments.FirstOrDefault().InvoiceID,
+                InvoiceNumber = r.Payments.FirstOrDefault().Invoice.InvoiceNumber,
                 CategoryName = r.Product.ProductSubcategory.ParentCategory.Description,
                 SubCategoryName = r.Product.ProductSubcategory.Description,
                 Vendor = r.Product.Vendor.VendorEnName,

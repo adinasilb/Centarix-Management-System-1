@@ -445,67 +445,27 @@ $(function () {
 
 
     $(".load-sublocation-view").off("click").on("click", function (e) {
-
-        //e.preventDefault();
-        //e.stopPropagation();
-        //add or remove the background class in col 1
-        //$(".load-sublocation-view").parent().removeClass("td-selected");
-        //$(this).parent().addClass("td-selected");
+        //this is to prevent double loading/ double clicking of same thing
+        if ($(".location-type-selected").hasClass("in-middle-of-action")) { e.preventDefault(); return true; }
         $("#loading1")/*.delay(1000)*/.show(0);
 
-        //delete all prev tables:
-        //var tableVal = $(this).val();
-        //console.log("-------------------------------------------------------------");
-        //console.log("table val: " + tableVal);
-        //$('div[id^="table"]').each(function () {
-        //	var tableID = $(this).attr("id");
-        //	var tableNum = tableID.substr(5, tableID.length);
-        //	console.log("tableID: " + tableID);
-        //	console.log("tableNum: " + tableNum);
-        //	if (parseInt(tableVal) < parseInt(tableNum)) {
-        //		console.log(tableVal + " < " + tableNum);
-        //		$(this).hide();
-        //	}
-        //	else {
-        //		console.log(tableVal + " > " + tableNum);
-        //	}
-        //});
 
         var myDiv = $(".colTwoSublocations");
         var table = $(this).closest('table');
 
-        ////delete all children tables
-        //var div = $(this).closest('div');
-        //var divid = $(this).closest('div').prop("id");
-        //console.log("div: " + div);
-        //console.log("divid: " + divid);
-
-        //if (divid != "") {
-        //	var nextDiv = div.nextAll(".sublocation-index");
-        //	var nextDivID = nextDiv.prop("id");
-        //	console.log("nextdiv: " + nextDiv);
-        //	console.log("nextdivid: " + nextDivID);
-
-        //	nextDiv.html("");
-        //	//while (nextDiv != null) {
-        //	//	nextDiv = div.next(".sublocation-index");
-        //	//	//nextDiv.html("");
-        //	//}
-        //}
+        $(".location-type-selected").addClass("in-middle-of-action")
+     
 
         //Begin CSS Styling
         var stylingClass = "filled-location-class";
         var trstylingClass = "filled-location-tr";
-        //$("body td").removeClass(stylingClass);
-
-        //$(table + " td").removeClass(stylingClass);
-        //$(table + " td").removeClass(stylingClass);
+      
         table.children('tbody').children('tr').children('td').removeClass(stylingClass);
         table.children('tbody').children('tr').removeClass(trstylingClass);
         $(this).parent().addClass(stylingClass);
         $(this).parent().parent().addClass(trstylingClass);
 
-        //$("." + stylingClass).addClass(stylingClass);
+        
 
         var parentStylingClass = "parent-location-selected-outer-lab-man  location-open-border-right";
         var isParent = false;
@@ -580,7 +540,7 @@ $(function () {
                 }
                 //this.html(result);
                 //add heading name
-
+                $(".location-type-selected").removeClass("in-middle-of-action");
 
 
             }
