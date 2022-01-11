@@ -1070,7 +1070,7 @@ namespace PrototypeWithAuth.Controllers
 
             requestIndexViewModel.PagedList = onePageOfProducts;
             var amountPages = (int)Math.Ceiling((RequestPassedInWithInclude.Count()/20.0));
-            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart && (requestIndexObject.SidebarType == AppUtility.SidebarEnum.MyLists ||requestIndexObject.SidebarType == AppUtility.SidebarEnum.MyLists))
+            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart && (requestIndexObject.SidebarType == AppUtility.SidebarEnum.MyLists ||requestIndexObject.SidebarType == AppUtility.SidebarEnum.SharedLists))
             {
                 amountPages =(int)Math.Ceiling((_requestListRequestsProc.Read(new List<Expression<Func<RequestListRequest, bool>>> { rlr => rlr.ListID == requestIndexObject.ListID }).OrderByDescending(rlr => rlr.TimeStamp)
                                .Select(rlr => rlr.Request).Count()/20.0));
