@@ -59,6 +59,7 @@ namespace PrototypeWithAuth.CRUD
         protected ProductCommentsProc _productCommentsProc;
         protected ShareRequestListsProc _shareRequestListsProc;
         protected RequestListRequestsProc _requestListRequestsProc;
+        protected RequestListsProc _requestListsProc;
         protected PaymentsProc _paymentsProc;
         protected ParentRequestsProc _parentRequestsProc;
         protected ParentQuotesProc _parentQuotesProc;
@@ -110,6 +111,7 @@ namespace PrototypeWithAuth.CRUD
             _productCommentsProc = new ProductCommentsProc(_context, true);
             _shareRequestListsProc = new ShareRequestListsProc(_context, true);
             _requestListRequestsProc = new RequestListRequestsProc(_context, true);
+            _requestListsProc = new RequestListsProc(_context, true);
             _paymentsProc = new PaymentsProc(_context, true);
             _parentRequestsProc = new ParentRequestsProc(_context, true);
             _parentQuotesProc = new ParentQuotesProc(_context, true);
@@ -220,6 +222,7 @@ namespace PrototypeWithAuth.CRUD
             try
             {
                 UpdateModelsWithoutSaveChanges(modelsAndStates);
+                var changetracker = _context.ChangeTracker.Entries();
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)

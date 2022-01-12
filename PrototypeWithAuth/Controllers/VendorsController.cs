@@ -80,7 +80,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
 
-            return View(_vendorsProc.Read());
+            return View(_vendorsProc.Read().OrderBy(v=>v.VendorEnName));
 
         }
         // GET: Vendors
@@ -98,7 +98,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
             }
 
-            return PartialView(_vendorsProc.Read());
+            return PartialView(_vendorsProc.Read().OrderBy(v => v.VendorEnName));
 
         }
 
@@ -221,7 +221,7 @@ namespace PrototypeWithAuth.Controllers
                 &&
              (String.IsNullOrEmpty(companyID) || fv.VendorBuisnessID.ToLower().Contains(companyID.ToLower())));
             var listfilteredVendors = _vendorsProc.Read(wheres, new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include = v => v.VendorCategoryTypes } });
-            return PartialView("_IndexForPayment", listfilteredVendors);
+            return PartialView("_IndexForPayment", listfilteredVendors.OrderBy(v=>v.VendorEnName));
         }
 
 

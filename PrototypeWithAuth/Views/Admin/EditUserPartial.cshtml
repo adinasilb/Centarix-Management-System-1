@@ -161,13 +161,13 @@
             <div class="row">
                 <div class="col-4  p-0 only-employee @hidden">
                     <label class="control-label only-employee">Job Category</label>
-                    @Html.DropDownListFor(
-                        m => m.Employee.JobSubcategoryType.JobCategoryTypeID,
+                    @Html.DropDownList(
+                        "JobCategoryTypes",
                         new SelectList(
                         Model.JobCategoryTypes,
                         dataValueField: "JobCategoryTypeID",
                         dataTextField: "Description"),
-                       optionLabel: "Select A Category",
+                       "Select A Category",
                     new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee mark-readonly job-category", @searchable = "default value", @isedittable })
                     @*<select class="mdb-select custom select-dropdown form-control-plaintext only-employee mark-readonly job-category" asp-for="NewEmployee.JobSubcategoryType.JobCategoryTypeID" searchable="default value" disabled>
                             @foreach (var category in Model.JobCategoryTypes)

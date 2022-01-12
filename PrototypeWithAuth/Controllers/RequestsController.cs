@@ -799,8 +799,8 @@ namespace PrototypeWithAuth.Controllers
                         await _requestLocationInstancesProc.SaveLocationsWithoutTransactionAsync(receivedModalVisualViewModel, newRequest, false);
                     }
                     var currentUserID = _userManager.GetUserId(User);
-                    await _requestCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<RequestComment>>(AppData.Json.Serialize(requestItemViewModel.Comments.Where(c => c.CommentTypeID == 1))), newRequest.RequestID, currentUserID);
-                    await _productCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<ProductComment>>(AppData.Json.Serialize(requestItemViewModel.Comments.Where(c => c.CommentTypeID == 2))), newRequest.ProductID, currentUserID);
+                    await _requestCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<RequestComment>>(AppData.Json.Serialize(requestItemViewModel.Comments?.Where(c => c.CommentTypeID == 1))), newRequest.RequestID, currentUserID);
+                    await _productCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<ProductComment>>(AppData.Json.Serialize(requestItemViewModel.Comments?.Where(c => c.CommentTypeID == 2))), newRequest.ProductID, currentUserID);
 
                     MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests, false, guid);
 
@@ -933,11 +933,10 @@ namespace PrototypeWithAuth.Controllers
         {
             StringWithBool Error = new StringWithBool();
             List<ComplexIncludes<Request, ModelBase>> includes = new List<ComplexIncludes<Request, ModelBase>>();
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote });
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).Vendor } });
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((ProductSubcategory)p).ParentCategory } });
             List<Expression<Func<Request, bool>>> wheres = new List<Expression<Func<Request, bool>>> { };
-            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).Vendor } });
-            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((ProductSubcategory)p).ParentCategory } });
 
             if (vendorID != 0 || (requestIds != null && requestIds.Count != 0))
             {
@@ -3305,6 +3304,7 @@ namespace PrototypeWithAuth.Controllers
                 new List<ComplexIncludes<Request, ModelBase>>
                 {
                     new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote },
+                      new ComplexIncludes<Request, ModelBase> { Include = r => r.PaymentStatus },
                     new ComplexIncludes<Request, ModelBase> {
                         Include = r => r.Product,
                         ThenInclude = new ComplexIncludes<ModelBase, ModelBase>
@@ -3640,9 +3640,8 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> OrderLateModal(Request requestFromView)
+        public async Task OrderLateModal(Request requestFromView)
         {
-
             var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestFromView.RequestID },
                 new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include =  r => r.ApplicationUserCreator },
                 new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest},
@@ -3703,7 +3702,7 @@ namespace PrototypeWithAuth.Controllers
 
             }
             //return RedirectToAction("NotificationsView", new { DidntArrive = true });
-            return new EmptyResult();
+
         }
 
 
@@ -4991,7 +4990,7 @@ namespace PrototypeWithAuth.Controllers
             var results = _requestsProc.Read().Select(r => new
             {
                 ProductName = r.Product.ProductName,
-                InvoiceID = r.Payments.FirstOrDefault().InvoiceID,
+                InvoiceNumber = r.Payments.FirstOrDefault().Invoice.InvoiceNumber,
                 CategoryName = r.Product.ProductSubcategory.ParentCategory.Description,
                 SubCategoryName = r.Product.ProductSubcategory.Description,
                 Vendor = r.Product.Vendor.VendorEnName,

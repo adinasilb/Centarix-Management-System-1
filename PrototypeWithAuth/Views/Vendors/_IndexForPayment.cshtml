@@ -8,9 +8,6 @@
 
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.VendorID)
-            </th>
-            <th>
                 @*@Html.DisplayNameFor(model => model.VendorEnName)*@
                 Vendor Name
             </th>
@@ -39,9 +36,6 @@
             @foreach (var item in Model)
             {
                 <tr class="vendor-list-item">
-                    <td>
-                        @Html.DisplayFor(modelItem => item.VendorID)
-                    </td>
                     <td>
                         <button val="@item.VendorID" class="  btn-link no-box-shadow link-ho load-vendor-edit link-clr border-0 text-capitalize" >@item.VendorEnName.ToLower()</button>
                     </td>

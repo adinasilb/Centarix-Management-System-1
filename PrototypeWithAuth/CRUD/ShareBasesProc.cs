@@ -11,7 +11,7 @@ using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class ShareBasesProc<T> : ApplicationDbContextProc<T> where T:ShareBase
+    public class ShareBasesProc<T> : ApplicationDbContextProc<T> where T : ShareBase
     {
         public ShareBasesProc(ApplicationDbContext context, bool FromBase = false) : base(context)
         {
@@ -39,7 +39,7 @@ namespace PrototypeWithAuth.CRUD
                     transaction.Commit();
                 }
                 catch (Exception ex)
-                {                    
+                {
                     transaction.Rollback();
                     ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
                 }
@@ -48,13 +48,14 @@ namespace PrototypeWithAuth.CRUD
 
         }
 
-        protected async Task<StringWithBool> UpdateAsync(int objectID, string currentUserID, List<string> userIDs, T sharedObject)
+        protected async Task<StringWithBool> UpdateAsync(int objectID, string currentUserID, List<string> userIDs, T shareObject)
         {
             StringWithBool ReturnVal = new StringWithBool();
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
+                    List<ModelAndState> sharedObjects = new List<ModelAndState>();
                     foreach (var userID in userIDs)
                     {
                         var sharedObjectDB = _context.Set<T>().Where(sr => sr.ObjectID == objectID)
@@ -62,17 +63,17 @@ namespace PrototypeWithAuth.CRUD
                                                .Where(sr => sr.ToApplicationUserID == userID).FirstOrDefault();
                         if (sharedObjectDB == null)
                         {
-                            sharedObject.ObjectID = objectID;
-                            sharedObject.FromApplicationUserID = currentUserID;
-                            sharedObject.ToApplicationUserID = userID;
-                            _context.Entry(sharedObject).State = EntityState.Added;
+                            sharedObjectDB = AppUtility.DeepClone<T>(shareObject);
+                            sharedObjectDB.ObjectID = objectID;
+                            sharedObjectDB.FromApplicationUserID = currentUserID;
+                            sharedObjectDB.ToApplicationUserID = userID;
+                            _context.Entry(sharedObjectDB).State = EntityState.Added;
                         }
                         else
                         {
                             sharedObjectDB.TimeStamp = DateTime.Now;
                             _context.Entry(sharedObjectDB).State = EntityState.Modified;
                         }
-                       
                     }
 
                     await _context.SaveChangesAsync();

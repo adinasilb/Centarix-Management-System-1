@@ -995,6 +995,7 @@ namespace PrototypeWithAuth.Controllers
                     .Select(sr => sr.ObjectID).ToList();
                 wheres.Add(frl => sharedWithMe.Contains(frl.RequestID));
             }
+           
             else
             {
                 //do not think it is ever supposed to get here
@@ -1045,26 +1046,6 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.ErrorMessage = requestIndexObject.ErrorMessage;
             var onePageOfProducts = Enumerable.Empty<RequestIndexPartialRowViewModel>().ToList();
 
-            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product });
-            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory });
-            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory.ParentCategory });
-            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest });
-            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator });
-            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor });
-            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.RequestStatus });
-            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.UnitType });
-            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubUnitType });
-            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubSubUnitType });
-            includes.Add(new ComplexIncludes<Request, ModelBase>
-            {
-                Include = r => r.RequestLocationInstances,
-                ThenInclude = new ComplexIncludes<ModelBase, ModelBase>
-                {
-                    Include = rli => ((RequestLocationInstance)rli).LocationInstance,
-                    ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = li => ((LocationInstance)li).LocationInstanceParent }
-                }
-            });
-
             FilterListBySelectFilters(selectedFilters, wheres);
 
 
@@ -1082,10 +1063,18 @@ namespace PrototypeWithAuth.Controllers
 
             ApplySearchToRequestList(requestsSearchViewModel, wheres);
             var RequestPassedInWithInclude = _requestsProc.ReadWithIgnoreQueryFilters(wheres, includes);
+
+           
+
             onePageOfProducts = await GetColumnsAndRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude);
 
             requestIndexViewModel.PagedList = onePageOfProducts;
             var amountPages = (int)Math.Ceiling((RequestPassedInWithInclude.Count()/20.0));
+            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart && (requestIndexObject.SidebarType == AppUtility.SidebarEnum.MyLists ||requestIndexObject.SidebarType == AppUtility.SidebarEnum.SharedLists))
+            {
+                amountPages =(int)Math.Ceiling((_requestListRequestsProc.Read(new List<Expression<Func<RequestListRequest, bool>>> { rlr => rlr.ListID == requestIndexObject.ListID }).OrderByDescending(rlr => rlr.TimeStamp)
+                               .Select(rlr => rlr.Request).Count()/20.0));
+            }
             requestIndexViewModel.PageNumbersToShow = new LinkedList<PageNumbers>();
             GetListOfPageNumbers(requestIndexObject, requestIndexViewModel, amountPages);
             //if page number less than 7  than show first 10 and only 3 dots on right not left
@@ -1295,7 +1284,7 @@ protected static void ApplySearchToRequestList(RequestsSearchViewModel requestsS
                             var requests2 = requests.Skip(20*(requestIndexObject.PageNumber-1)).Take(20);
                             onePageOfProducts = await requests2.Select(r =>
                            new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
-                            r, r.ApplicationUserReceiver, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
+                            r, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                          r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
                                            userSharedRequests.Where(sr => sr.ObjectID == r.RequestID).FirstOrDefault(), user,
                                            r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToListAsync();
@@ -1417,7 +1406,7 @@ protected static void ApplySearchToRequestList(RequestsSearchViewModel requestsS
                             iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Skip(20*(requestIndexObject.PageNumber-1)).Take(20).Select(r =>
                            new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryFavorites,
-                            r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
+                            r, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                          r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
                                          user, r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToListAsync();
                                 //.ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
@@ -1429,7 +1418,7 @@ protected static void ApplySearchToRequestList(RequestsSearchViewModel requestsS
                             iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Skip(20*(requestIndexObject.PageNumber-1)).Take(20).Select(r =>
                             new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryShared,
-                             r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
+                             r, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                           r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage,
                                       userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
                                             userSharedRequests.Where(sr => sr.ObjectID == r.RequestID).FirstOrDefault(), userSharedRequests.Where(sr => sr.ObjectID == r.RequestID).Select(sr => sr.FromApplicationUser).FirstOrDefault(), user,
@@ -1444,9 +1433,9 @@ protected static void ApplySearchToRequestList(RequestsSearchViewModel requestsS
                             iconList.Add(popoverMoreIcon);
                             var sharedRequestList = _shareRequestListsProc.Read(new List<Expression<Func<ShareRequestList, bool>>> { srl => srl.ToApplicationUserID == user.Id });
                             onePageOfProducts = await _requestListRequestsProc.Read(new List<Expression<Func<RequestListRequest, bool>>> { rlr => rlr.ListID == requestIndexObject.ListID }).OrderByDescending(rlr => rlr.TimeStamp)
-                                .Skip(20*(requestIndexObject.PageNumber-1)).Take(20).Select(rlr => rlr.Request).Select(r =>
+                               .Select(rlr => rlr.Request).Skip(20*(requestIndexObject.PageNumber-1)).Take(20).Select(r =>
                             new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.RequestLists,
-                             r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
+                             r,   r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                           r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage,
                                          userFavoriteRequests.Where(fr => fr.RequestID == r.RequestID).FirstOrDefault(),
                                             userSharedRequests.Where(sr => sr.ObjectID == r.RequestID).FirstOrDefault(), user,

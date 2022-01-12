@@ -355,6 +355,7 @@ namespace PrototypeWithAuth.CRUD
 
                     Employee user = registerUserViewModel.Employee;
 
+
                     user.UserNum = usernum;
                     user.UserName = registerUserViewModel.Employee.Email;
                     user.DateCreated = DateTime.Now;
@@ -374,6 +375,8 @@ namespace PrototypeWithAuth.CRUD
                         /*User*/
                         /*Employee*/
                         user.IsUser = true;
+
+                        //_context.Entry<Employee>(centarixID.Employee).State = EntityState.Detached;
                         if (user.StartedWorking > AppUtility.DateSoftwareLaunched)
                         {
                             user.LastLogin = user.StartedWorking;
@@ -393,6 +396,7 @@ namespace PrototypeWithAuth.CRUD
                         string newPassword = GeneratePassword(true, true, true, true, false, 10);
                         registerUserViewModel.Password = newPassword;
                     }
+                    var changetracker = _context.ChangeTracker.Entries();
                     IdentityResult result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
                     //if (!result.Succeeded)
                     //{
