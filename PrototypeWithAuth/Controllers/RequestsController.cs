@@ -2707,7 +2707,7 @@ namespace PrototypeWithAuth.Controllers
                         catch (Exception ex)
                         {
                             await _requestsProc.UpdateQuoteStatusAsync(requests, 1);
-                            throw new Exception("Failed to send quote request- "+AppUtility.GetExceptionMessage(ex));
+                            throw new Exception("Failed to send quote request- " + AppUtility.GetExceptionMessage(ex));
                         }
 
                         client.Disconnect(true);
@@ -3019,6 +3019,7 @@ namespace PrototypeWithAuth.Controllers
                         childrenLocationInstances =
                         _locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { m => m.LocationInstanceID == LocationInstanceID },
                         new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = m => m.RequestLocationInstances } }).OrderBy(m => m.LocationNumber);
+                        receivedModalVisualViewModel.ChildrenLocationInstances = childrenLocationInstances.ToList();
                     }
                     else
                     {
@@ -3026,6 +3027,7 @@ namespace PrototypeWithAuth.Controllers
                              _locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { m => m.LocationInstanceParentID == LocationInstanceID },
                         new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = m => m.RequestLocationInstances } })
                              .OrderBy(m => m.LocationNumber);
+                        receivedModalVisualViewModel.ChildrenLocationInstances = childrenLocationInstances.ToList();
                     }
 
                     List<LocationInstancePlace> liPlaces = new List<LocationInstancePlace>();
@@ -3034,10 +3036,10 @@ namespace PrototypeWithAuth.Controllers
                         var requestLocationInstances = request.RequestLocationInstances.ToList();
                         receivedModalVisualViewModel.RequestChildrenLocationInstances =
                              childrenLocationInstances.Select(li => new RequestChildrenLocationInstances()
-                                   {
-                                       LocationInstance = li,
-                                       IsThisRequest = li.RequestLocationInstances.Select(rli => rli.RequestID).Where(i => i == RequestID).Any()
-                                   }).OrderBy(m => m.LocationInstance.LocationNumber).ToList();
+                             {
+                                 LocationInstance = li,
+                                 IsThisRequest = li.RequestLocationInstances.Select(rli => rli.RequestID).Where(i => i == RequestID).Any()
+                             }).OrderBy(m => m.LocationInstance.LocationNumber).ToList();
 
                         foreach (var cli in receivedModalVisualViewModel.RequestChildrenLocationInstances)
                         {
@@ -3979,9 +3981,9 @@ namespace PrototypeWithAuth.Controllers
                 {
                     await transaction.RollbackAsync();
                     Response.StatusCode = 500;
-                        paymentsInvoiceViewModel.Request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == paymentsInvoiceViewModel.Request.RequestID },
-                            new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product }, new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor } }
-                            );
+                    paymentsInvoiceViewModel.Request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == paymentsInvoiceViewModel.Request.RequestID },
+                        new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product }, new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor } }
+                        );
                     paymentsInvoiceViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     return PartialView(paymentsInvoiceViewModel);
                 }
