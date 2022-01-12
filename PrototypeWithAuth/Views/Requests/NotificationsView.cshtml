@@ -64,8 +64,8 @@
                     {
                         <td class="text-center">
                             @{
-                                var orderDate = (DateTime)item.OrderDate;
-                                var expectedArrivalDate = orderDate.AddDays((double)item.Request.ExpectedSupplyDays);
+                                var orderDate = (DateTime)item.NotificationDate;
+                                var expectedArrivalDate = item.NotificationDate.AddDays((double)item.Request.ExpectedSupplyDays);
 
                             }
                             @(DateTime.Now.Date.Subtract(expectedArrivalDate.Date).Days)
