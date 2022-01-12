@@ -552,6 +552,24 @@ $(function () {
 			$.fn.CheckForVendorCurrencyWarning($("#VendorCurrencyID").val(), $("#currency").val());
         }
 	});
+
+	$(".showUnitAmountWarning").change(function (e) {
+		$("#loading").show();
+		$.ajax({
+			async: true,
+			url: "/Requests/UnitWarningModal?SectionType=" + $("#masterSectionType").val(),
+			type: "GET",
+			cache: false,
+			success: function (data) {
+				$("#loading").hide();
+				$.fn.OpenModal('unitWarningModal', 'unit-warning-modal', data)
+			},
+			error: function (jqxhr) {
+				$("#loading").hide();
+				return true;
+			}
+		});
+	});
 	$(".modal").on("change", "#currency", function (e) {
 		$.fn.CheckCurrency(); 
 		$.fn.CheckForVendorCurrencyWarning($("#VendorCurrencyID").val(), $("#currency").val());

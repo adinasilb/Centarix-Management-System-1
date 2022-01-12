@@ -4963,6 +4963,17 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> UnitWarningModal(AppUtility.MenuItems SectionType)
+        {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
+            return PartialView(SectionType);
+        }
+
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
