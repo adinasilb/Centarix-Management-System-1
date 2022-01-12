@@ -2192,7 +2192,7 @@ namespace PrototypeWithAuth.Controllers
                             await _requestsProc.UpdateModelsAsync(new List<ModelAndState> { parentRequestModelState });
                             ParentRequestRollbackList.Add(new ModelAndID()
                             {
-                                ID = Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID),
+                                ID = Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID),
                                 ModelsEnum = AppUtility.ModelsEnum.ParentRequest
                             });
 
@@ -2377,7 +2377,7 @@ namespace PrototypeWithAuth.Controllers
                         string vendorEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.OrdersEmail;
                         //string vendorEmail = /*firstRequest.Product.Vendor.OrdersEmail;*/ emails.Count() < 1 ? requests.FirstOrDefault().Product.Vendor.OrdersEmail : emails[0];
                         string vendorName = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.VendorEnName;
-
+              
                         //add a "From" Email
                         message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
 
@@ -2527,7 +2527,7 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 await _requestsProc.UpdateModelsAsync(ModelStates);
-                ModelState.Clear();
+                ModelStates.Clear();
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
                 {
                     var model6 = await _requestCommentsProc.ReadOneAsync(new List<Expression<Func<RequestComment, bool>>> { pr => pr.CommentID == ModelWithID.ID });
