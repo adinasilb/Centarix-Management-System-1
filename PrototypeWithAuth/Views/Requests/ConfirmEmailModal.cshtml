@@ -93,8 +93,9 @@
                 if (sidebarType == "Add") {
                     window.location.href ="/Requests/?PageType=RequestRequest&SectionType=Requests&SidebarType=List"
                 }
+                
                 else {
-                    var url = "/Requests/" + viewClass+"?"+$.fn.getRequestIndexString(status);
+                    var url = "/Requests/" + viewClass + "?" + $.fn.getRequestIndexString($(".request-status-id").val());
                     $.fn.ajaxPartialIndexTable($(".request-status-id").val(),url, "." + viewClass, "POST", undefined, "terms, step-1, reorder-item, confirm-email");
 
                 }
