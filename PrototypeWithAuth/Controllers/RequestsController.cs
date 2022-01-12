@@ -2408,11 +2408,11 @@ namespace PrototypeWithAuth.Controllers
                         ParentQuote quoteNumberFromJson = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentQuote;
                         if (quoteNumberFromJson != null)
                         {
-                            quoteNumbers = deserializedTempRequestListViewModel.TempRequestViewModels.Select(trvm => trvm.Request.ParentQuote.QuoteNumber).ToList();
+                            quoteNumbers = deserializedTempRequestListViewModel.TempRequestViewModels.Select(trvm => trvm.Request.ParentQuote.QuoteNumber).Distinct().ToList();
                         }
                         else
                         {
-                            var parentQuoteIDs = deserializedTempRequestListViewModel.TempRequestViewModels.Select(trvm => trvm.Request.ParentQuoteID);
+                            var parentQuoteIDs = deserializedTempRequestListViewModel.TempRequestViewModels.Select(trvm => trvm.Request.ParentQuoteID).Distinct();
                             quoteNumbers = _parentQuotesProc.Read(new List<Expression<Func<ParentQuote, bool>>> { pq => parentQuoteIDs.Contains(pq.ParentQuoteID) }).Select(pq => pq.QuoteNumber).ToList();
                         }
 
@@ -3015,19 +3015,19 @@ namespace PrototypeWithAuth.Controllers
                 {
                     var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == RequestID },
                         new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.RequestLocationInstances, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = rli => ((RequestLocationInstance)rli).LocationInstance } } });
-
+                    IQueryable<LocationInstance> childrenLocationInstances = null;
                     if (receivedModalVisualViewModel.ParentLocationInstance.IsEmptyShelf && receivedModalVisualViewModel.ParentLocationInstance.LabPartID != null)
                     {
-                        receivedModalVisualViewModel.ChildrenLocationInstances =
+                        childrenLocationInstances =
                         _locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { m => m.LocationInstanceID == LocationInstanceID },
-                        new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = m => m.RequestLocationInstances } }).OrderBy(m => m.LocationNumber).ToList();
+                        new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = m => m.RequestLocationInstances } }).OrderBy(m => m.LocationNumber);
                     }
                     else
                     {
-                        receivedModalVisualViewModel.ChildrenLocationInstances =
+                        childrenLocationInstances =
                              _locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { m => m.LocationInstanceParentID == LocationInstanceID },
                         new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = m => m.RequestLocationInstances } })
-                             .OrderBy(m => m.LocationNumber).ToList();
+                             .OrderBy(m => m.LocationNumber);
                     }
 
                     List<LocationInstancePlace> liPlaces = new List<LocationInstancePlace>();
@@ -3035,9 +3035,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         var requestLocationInstances = request.RequestLocationInstances.ToList();
                         receivedModalVisualViewModel.RequestChildrenLocationInstances =
-                                _locationInstancesProc.Read(new List<Expression<Func<LocationInstance, bool>>> { m => m.LocationInstanceParentID == parentLocationInstance.LocationInstanceID },
-                        new List<ComplexIncludes<LocationInstance, ModelBase>> { new ComplexIncludes<LocationInstance, ModelBase> { Include = m => m.RequestLocationInstances } })
-                                   .Select(li => new RequestChildrenLocationInstances()
+                             childrenLocationInstances.Select(li => new RequestChildrenLocationInstances()
                                    {
                                        LocationInstance = li,
                                        IsThisRequest = li.RequestLocationInstances.Select(rli => rli.RequestID).Where(i => i == RequestID).Any()
