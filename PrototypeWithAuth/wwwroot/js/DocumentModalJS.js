@@ -4,6 +4,8 @@ var BufferChunkSize = MaxFileSizeMB * (1024 *1024)*2;
 
 function UploadFile(TargetFile, formData)
 {
+
+   
     // create array to store the buffer chunks
     var FileChunk = [];
     // the file object itself that we will work with
@@ -40,6 +42,7 @@ function UploadFile(TargetFile, formData)
         PartCount++;
         FilePartName = UploadFileChunk(chunk, FilePartName, formData);
     }
+
 
 }
 
@@ -81,6 +84,7 @@ $(function () {
     $(".file-select").off("change").on("change", function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
+
         console.log("upload file submitted");
         var dontAllowMultipleFiles = $("#DontAllowMultiple").val();
         if (dontAllowMultipleFiles == false) {

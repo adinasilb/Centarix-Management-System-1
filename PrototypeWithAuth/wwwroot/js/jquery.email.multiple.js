@@ -35,7 +35,7 @@
 				if (e.keyCode === 13 || e.keyCode === 32) {
 					let getValue = $element.val();
 					if (/^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$/.test(getValue)) {
-						$('.all-mail').append('<span class="email-ids">' + getValue + '<span class="cancel-email">&times;</span></span>');
+						$('.all-mail').append('<span class="email-ids">' + getValue + '<span class="remove-email">&times;</span></span>');
 						$element.val('');
 
 						email += getValue + ';'
@@ -55,7 +55,8 @@
 
 			});
 
-			$(document).on('click', '.cancel-email', function () {
+			$(document).on('click', '.remove-email', function () {
+				alert("cancel-email");
 				if (!$(this).attr("disabled")) {
 					$(this).parent().remove();
 					$.fn.CheckListLength();
@@ -66,7 +67,7 @@
 			if (settings.data) {
 				$.each(settings.data, function (x, y) {
 					if (/^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$/.test(y)) {
-						$('.all-mail').append('<span class="email-ids">' + y + '<span class="cancel-email">&times;</span></span>');
+						$('.all-mail').append('<span class="email-ids">' + y + '<span class="remove-email">&times;</span></span>');
 						$element.val('');
 
 						email += y + ';'
