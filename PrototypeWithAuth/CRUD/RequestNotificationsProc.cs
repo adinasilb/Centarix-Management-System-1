@@ -34,7 +34,7 @@ namespace PrototypeWithAuth.CRUD
                     requestNotification.NotificationDate = DateTime.Now;
                     requestNotification.Controller = "Requests";
                     requestNotification.Action = "NotificationsView";
-                    requestNotification.OrderDate = request.ParentRequest.OrderDate;
+                    requestNotification.NotificationDate = request.ParentRequest.OrderDate;
                     requestNotification.Vendor = request.Product.Vendor.VendorEnName;
                     CreateWithoutSaveChanges(requestNotification);
                     

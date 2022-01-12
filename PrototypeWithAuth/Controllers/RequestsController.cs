@@ -814,7 +814,7 @@ namespace PrototypeWithAuth.Controllers
                     requestNotification.NotificationDate = DateTime.Now;
                     requestNotification.Controller = "Requests";
                     requestNotification.Action = "NotificationsView";
-                    requestNotification.OrderDate = DateTime.Now;
+                    requestNotification.NotificationDate = DateTime.Now;
                     await _requestNotificationsProc.CreateWithoutTransactionAsync(requestNotification);
                     await transaction.CommitAsync();
                 }
@@ -1104,8 +1104,7 @@ namespace PrototypeWithAuth.Controllers
                                     requestNotification.NotificationDate = DateTime.Now;
                                     requestNotification.Controller = "Requests";
                                     requestNotification.Action = "NotificationsView";
-                                    requestNotification.OrderDate = DateTime.Now;
-                                    requestNotification.Vendor = tempRequest.Request.Product.Vendor.VendorEnName;
+                                    requestNotification.NotificationDate = DateTime.Now;
                                     _requestNotificationsProc.CreateWithoutSaveChanges(requestNotification);
                                 }
 
@@ -2311,8 +2310,7 @@ namespace PrototypeWithAuth.Controllers
                                 requestNotification.TimeStamp = DateTime.Now;
                                 requestNotification.Controller = "Requests";
                                 requestNotification.Action = "NotificationsView";
-                                requestNotification.OrderDate = DateTime.Now;
-                                requestNotification.Vendor = tempRequest.Request.Product.Vendor.VendorEnName;
+                                requestNotification.NotificationDate = DateTime.Now;
                                 await _requestNotificationsProc.CreateWithoutTransactionAsync(requestNotification);
                                 ModelsCreated.Add(new ModelAndID()
                                 {
@@ -3356,7 +3354,6 @@ namespace PrototypeWithAuth.Controllers
                                 requestNotification.NotificationDate = DateTime.Now;
                                 requestNotification.Controller = "Requests";
                                 requestNotification.Action = "NotificationsView";
-                                requestNotification.Vendor = request.Product.Vendor.VendorEnName;
                                 await _requestNotificationsProc.CreateWithoutTransactionAsync(requestNotification);
                                 //throw new Exception();
                                 await transaction.CommitAsync();
@@ -4184,6 +4181,24 @@ namespace PrototypeWithAuth.Controllers
                 return PartialView("InvalidLinkPage");
             }
             var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now } };
+
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
+            string uploadFolder2 = Path.Combine(uploadFolder1, guid.ToString());
+            string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
+
+            if (Directory.Exists(uploadFolderQuotes))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
+                //searching for the partial file name in the directory
+                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
+                uploadQuoteViewModel.FileStrings = new List<String>();
+                foreach (var orderfile in orderfilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
+                    uploadQuoteViewModel.FileStrings.Add(newFileString);
+                }
+            }
+
             uploadQuoteViewModel.TempRequestListViewModel = new TempRequestListViewModel()
             {
                 GUID = guid
