@@ -8,7 +8,12 @@
 		return $("#Employee_EmployeeStatusID").val() == "1";
 	}
 	var isEdit = function () {
+		alert('in isedit');
+		console.log($('#myForm').hasClass('editUser'));
 		return $('#myForm').hasClass('editUser');
+	}
+	var isCreate = function () {
+		return $('#myForm').hasClass('createUser');
 	}
 	var isUserAndIsNotEdit = function () {
 		//console.log('is user and not in edit' + $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false)
@@ -25,6 +30,7 @@
 		return $("#Employee_EmployeeStatusID").val() == "4";
 	}
 	var isTrueIfNotEmpty = function (variable) {
+		//console.log(variable)
 		if (variable.val() == "") {
 			return false;
 		}
@@ -135,9 +141,7 @@
 				maxlength: 20
 			},
 			"Employee.SecureAppPass": {
-				required: UserOrChangedToUser
-				//todo: are we allowing edit of secure appp password
-				// validate format
+				required: isCreate
 			},
 			"Employee.EmployeeStatusID": {
 				required: true,
