@@ -148,7 +148,6 @@ namespace PrototypeWithAuth.CRUD
             var employeeHour = await ReadOneAsync(new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.EmployeeHoursID ==  deleteHourViewModel.EmployeeHour.EmployeeHoursID }, new List<ComplexIncludes<EmployeeHours, ModelBase>> { new ComplexIncludes<EmployeeHours, ModelBase> { Include= eh => eh.OffDayType } });
             var ehaaOnEmployeeHour = await _employeeHoursAwaitingApprovalProc.ReadOneAsync(new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { eh => eh.EmployeeHoursID == deleteHourViewModel.EmployeeHour.EmployeeHoursID });
             EmployeeHours newEmployeeHour = null;
-            var entries = _context.ChangeTracker.Entries();
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
