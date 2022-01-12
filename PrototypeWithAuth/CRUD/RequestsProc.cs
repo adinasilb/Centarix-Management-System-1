@@ -319,7 +319,7 @@ namespace PrototypeWithAuth.CRUD
             requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
             requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
             requestReceived.IsInInventory = true;
-            if (requestReceived.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString())
+            if (receivedLocationViewModel.Request.Batch != null || receivedLocationViewModel.Request.BatchExpiration != null)
             {
                 requestReceived.Batch = receivedLocationViewModel.Request.Batch;
                 requestReceived.BatchExpiration = receivedLocationViewModel.Request.BatchExpiration;
