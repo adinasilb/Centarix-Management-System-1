@@ -8,8 +8,6 @@
 		return $("#Employee_EmployeeStatusID").val() == "1";
 	}
 	var isEdit = function () {
-		alert('in isedit');
-		console.log($('#myForm').hasClass('editUser'));
 		return $('#myForm').hasClass('editUser');
 	}
 	var isCreate = function () {
