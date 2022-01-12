@@ -66,10 +66,10 @@
             @{var dNone = "d-none";
                 @*var disabled = true;*@}
             @*@if (Model.SelectedTerm == 5)
-            {
-                dNone = "";
-                disabled = false;
-            }*@
+                {
+                    dNone = "";
+                    disabled = false;
+                }*@
             <div class="col-3 @dNone installments-amount-block">
                 <label asp-for="Installments" class="control-label"></label>
                 <input asp-for="Installments" disabled class="form-control-plaintext border-bottom" />
@@ -92,6 +92,19 @@
                     <input asp-for="ParentRequest.NoteToSupplier" class="form-control-plaintext border-bottom" />
                 </div>
             </div>
+            <div class="row">
+                <div class="col-12">
+                    <input type="hidden" id="vendor-primary-email" value="@Model.TempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.OrdersEmail"/>
+                    <label class="control-label">Send to: (Add up to 5 email addresses@*- including the suppliers email address*@)</label>
+                    <input class="form-control-plaintext border-bottom" type="text" id="allEmails" />
+                    @for (int e = 0; e < Model.EmailAddresses.Count; e++)
+                    {
+                        var supplierEmailClass = "emailaddresses ";
+                     
+                        <input type="hidden" asp-for="EmailAddresses[e]" class="@supplierEmailClass" />
+                    }
+                </div>
+            </div>
         }
 
     </div>
@@ -101,9 +114,49 @@
 <input type="hidden" asp-for="ParentRequest.ApplicationUserID" />
 <input type="hidden" asp-for="RedirectAction" />
 <script>
-    $(".terms .mdb-select").materialSelect()</script>
+    $(".terms .mdb-select").materialSelect()
 
+        $('.all-mail').prepend('<span class="email-ids supplier-email">' + $("#vendor-primary-email").val() + '</span>');
+        $(".isSupplier").val($("#vendor-primary-email").val());
+    if ($(".all-mail").length == 0) {
+        let data = [
+            $("#vendor-primary-email").val()
+        ]
+        $("#allEmails").email_multiple({
+            data: data
+        })
+        var newEmailLine = $(".enter-mail-id");
+        newEmailLine.removeAttr('placeholder');
+        newEmailLine.addClass('form-control-plaintext');
+        newEmailLine.addClass('border-bottom');
+    }
+</script>
 <script>
+
+
+
+
+
+    $.fn.CheckListLength = function () {
+        //Disable if 5 emails
+        var listlength = $(".email-ids").length;
+        if (listlength >=5) {
+            $(".enter-mail-id").attr("disabled", true);
+        }
+        else {
+            $(".enter-mail-id").attr("disabled", false);
+        }
+    }
+
+    $.fn.RemoveFromHiddenIds = function (emailValue) {
+        alert(emailValue)
+        $(".emailaddresses[value='" + emailValue + "']:first").val('');
+    }
+
+    $.fn.AddToHiddenIds = function (emailValue) {
+        $(".emailaddresses[value='']:first").val(emailValue);
+    }
+
     $(".submitTerms").off('click').on("click", function (e) {
         e.preventDefault();
         console.log("submit reorder");
@@ -135,7 +188,7 @@
                 traditional: true,
                 type: "POST",
                 cache: true,
-                timeout:7200000,
+                timeout: 7200000,
                 success: function (data) {
                     $(".submitTerms").prop('disabled', false)
 
@@ -145,14 +198,14 @@
                     if (sidebarType == "Quotes" || sidebarType == "Orders" || sidebarType == "Cart") {
                         viewClass = "_IndexTableDataByVendor";
                     }
-                    if(data==""){
+                    if (data == "") {
                         if (sidebarType == "Add") {
                             window.location.href = "/Requests/?PageType=RequestRequest&SectionType=Requests&SidebarType=List"
                         }
                         else {
                             $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "terms, step-1, reorder-item");
                         }
-                     }               
+                    }
                     else {
                         //alert("else");
                         $('.termsModalForm .temprequesthiddenfors').html('');
@@ -177,3 +230,4 @@
 
         //return false;
     });</script>
+<!-- Multiple email js -->

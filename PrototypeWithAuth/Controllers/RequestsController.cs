@@ -508,14 +508,7 @@ namespace PrototypeWithAuth.Controllers
                                 trvm.Comments.Add(comment);
                             }
                         }
-                        if (OrderType != AppUtility.OrderTypeEnum.SaveOperations && OrderType != AppUtility.OrderTypeEnum.Save)
-                        {
-                            trvm.Emails = new List<string>();
-                            foreach (var e in requestItemViewModel.EmailAddresses.Where(e => e != null))
-                            {
-                                trvm.Emails.Add(e);
-                            }
-                        }
+                      
                         trlvm.TempRequestViewModels.Add(trvm);
                         i++;
                     }
@@ -719,7 +712,7 @@ namespace PrototypeWithAuth.Controllers
 
             tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>() {
                     new TempRequestViewModel() {
-                    Request = request, Emails = new List<string>(){ request.Product.Vendor.OrdersEmail }
+                    Request = request
                    } };
             //TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
             //TempRequestJson tempRequestJson = new TempRequestJson()
@@ -995,6 +988,7 @@ namespace PrototypeWithAuth.Controllers
                 ParentRequest = new ParentRequest(),
                 TermsList = termsList,
                 InstallmentDate = DateTime.Now,
+                EmailAddresses = new List<string>() { tempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.OrdersEmail, "", "", "", "" },
                 Error = Error
             };
             tempRequestListViewModel.RequestIndexObject.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum),
@@ -1112,6 +1106,7 @@ namespace PrototypeWithAuth.Controllers
                             else if (SaveUsingTempRequest)
                             {
                                 tempRequest.Payments = new List<Payment>();
+                                tempRequest.Emails = termsViewModel.EmailAddresses.Where(e => e != null).ToList();
                             }
 
                             for (int i = 0; i < tempRequest.Request.Installments; i++)
@@ -1610,7 +1605,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
             requestItemViewModel.Comments = new List<CommentBase>();
-            requestItemViewModel.EmailAddresses = new List<string>() { "", "", "", "", "" };
+            
             requestItemViewModel.ModalType = AppUtility.RequestModalType.Create;
 
             requestItemViewModel.Requests = new List<Request>();
@@ -2387,13 +2382,13 @@ namespace PrototypeWithAuth.Controllers
                         message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
 
                         // add a "To" Email
-                        message.To.Add(new MailboxAddress(vendorName, vendorEmail));
+                        message.To.Add(new MailboxAddress( deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.FirstOrDefault()?? vendorName, vendorEmail));
 
                         //add CC's to email
                         //TEST THIS STATEMENT IF VENDOR IS MISSING AN ORDERS EMAIL
                         if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails != null)
                         {
-                            for (int e = 0; e < deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.Count(); e++)
+                            for (int e = 1; e < deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.Count(); e++)
                             {
                                 message.Cc.Add(new MailboxAddress(deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails[e]));
                             }
@@ -2552,7 +2547,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     var model = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == ModelWithID.ID });
                     ModelStates.Add(new ModelAndState { Model = model, StateEnum = EntityState.Deleted });
-                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentRequest, guid.ToString(), false, true);
+                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.Requests, guid.ToString(), true, true);
 
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ParentQuote))
@@ -2566,7 +2561,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     var model3 = await _parentRequestsProc.ReadOneAsync(new List<Expression<Func<ParentRequest, bool>>> { pr => pr.ParentRequestID == ModelWithID.ID });
                     ModelStates.Add(new ModelAndState { Model = model3, StateEnum = EntityState.Deleted });
-                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.Requests, guid.ToString(), true, true);
+                    MoveDocumentsBackToTempFolder(Convert.ToInt32(ModelWithID.ID), AppUtility.ParentFolderName.ParentRequest, guid.ToString(), false, true);
 
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Product))

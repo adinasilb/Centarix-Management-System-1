@@ -20,21 +20,7 @@
         <span class="heading-1 modal-tab-name">Order</span>
     </div>
 </div>
-<div class="row">
-    <div class="col-12">
-        <label class="control-label">Send to: (Add up to 5 email addresses@*- including the suppliers email address*@)</label>
-        <input class="form-control-plaintext border-bottom" type="text" id="allEmails" />
-        @for (int e = 0; e < Model.EmailAddresses.Count; e++)
-        {
-            var supplierEmailClass = "emailaddresses ";
-            if (e == 0)
-            {
-                supplierEmailClass = "isSupplier";
-            }
-            <input type="hidden" asp-for="EmailAddresses[e]" class="@supplierEmailClass" />
-        }
-    </div>
-</div>
+
 
 <div class="form-group">
     @*you can only add to cart if you are creating a new one*@

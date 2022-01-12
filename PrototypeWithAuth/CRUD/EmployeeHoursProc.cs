@@ -141,16 +141,27 @@ namespace PrototypeWithAuth.CRUD
             StringWithBool ReturnVal = new StringWithBool();
 
             var employeeHoursID = deleteHourViewModel.EmployeeHour.EmployeeHoursID;
-            var notifications = _timekeeperNotificationsProc.Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == employeeHoursID });
+            var notifications = await _timekeeperNotificationsProc.Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == employeeHoursID }).ToListAsync();
             var dayoff = await _companyDaysOffProc.ReadOneAsync( new List<Expression<Func<CompanyDayOff, bool>>> { co => co.Date.Date == deleteHourViewModel.EmployeeHour.Date.Date });
             var anotherEmployeeHourWithSameDate = await ReadOneAsync( new List<Expression<Func<EmployeeHours, bool>>>{eh => eh.Date.Date == deleteHourViewModel.EmployeeHour.Date.Date && eh.EmployeeID == deleteHourViewModel.EmployeeHour.EmployeeID
                     && eh.EmployeeHoursID !=  deleteHourViewModel.EmployeeHour.EmployeeHoursID });
             var employeeHour = await ReadOneAsync(new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.EmployeeHoursID ==  deleteHourViewModel.EmployeeHour.EmployeeHoursID }, new List<ComplexIncludes<EmployeeHours, ModelBase>> { new ComplexIncludes<EmployeeHours, ModelBase> { Include= eh => eh.OffDayType } });
+            var ehaaOnEmployeeHour = await _employeeHoursAwaitingApprovalProc.ReadOneAsync(new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { eh => eh.EmployeeHoursID == deleteHourViewModel.EmployeeHour.EmployeeHoursID });
             EmployeeHours newEmployeeHour = null;
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
+                    if(notifications.Count > 0)
+                    {
+                        await _timekeeperNotificationsProc.DeleteByEHIDAsync(employeeHoursID);
+                    }
+                    
+                    if (ehaaOnEmployeeHour != null)
+                    {
+                        await _employeeHoursAwaitingApprovalProc.DeleteByEHIDAsync(employeeHoursID);
+                    }
+
                     if (anotherEmployeeHourWithSameDate == null)
                     {
                         if (employeeHour.OffDayTypeID == 4)
@@ -171,33 +182,28 @@ namespace PrototypeWithAuth.CRUD
 
                         _context.Entry(newEmployeeHour).State = EntityState.Modified;
                         await _context.SaveChangesAsync();
-
-                        if (notifications.Count() == 0) //might need to change this if if notifications starts working differently
+                        TimekeeperNotification newNotification = new TimekeeperNotification()
                         {
-                            TimekeeperNotification newNotification = new TimekeeperNotification()
-                            {
-                                EmployeeHoursID = employeeHoursID,
-                                IsRead = false,
-                                ApplicationUserID = newEmployeeHour.EmployeeID,
-                                Description = "no hours reported for " + newEmployeeHour.Date.GetElixirDateFormat(),
-                                NotificationStatusID = 5,
-                                TimeStamp = DateTime.Now,
-                                Controller = "Timekeeper",
-                                Action = "SummaryHours"
-                            };
-                            await _timekeeperNotificationsProc.CreateWithoutTransactionAsync(newNotification);
-                        }
-                        await _employeeHoursAwaitingApprovalProc.DeleteByEHIDAsync(employeeHoursID);
+                            EmployeeHoursID = employeeHoursID,
+                            IsRead = false,
+                            ApplicationUserID = newEmployeeHour.EmployeeID,
+                            Description = "no hours reported for " + newEmployeeHour.Date.GetElixirDateFormat(),
+                            NotificationStatusID = 5,
+                            TimeStamp = DateTime.Now,
+                            Controller = "Timekeeper",
+                            Action = "SummaryHours"
+                        };
+                        await _timekeeperNotificationsProc.CreateWithoutTransactionAsync(newNotification);
+                        
                     }
                     else
                     {
-                        await _employeeHoursAwaitingApprovalProc.DeleteByEHIDAsync(employeeHoursID);
-                        await _timekeeperNotificationsProc.DeleteByEHIDAsync(employeeHoursID);
                         _context.Remove(employeeHour);
                         await _context.SaveChangesAsync();
-
                     }
-                 
+                    
+                    
+
                     await transaction.CommitAsync();
                     ReturnVal.SetStringAndBool(true, null);
 

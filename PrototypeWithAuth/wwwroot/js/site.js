@@ -237,10 +237,8 @@ $(function () {
                 //cannot only use the load outside. apparently it needs this one in order to work
                 $(".vendorBusinessId").val(newBusinessID);
                 $(".vendorBusinessId").text(newBusinessID);
-                $("#vendor-primary-email").val(data.ordersEmail);
-                if ($.isFunction($.fn.UpdatePrimaryOrderEmail)) {
-                    $.fn.UpdatePrimaryOrderEmail();
-                }
+              
+               
             })
         }
         //console.log("newBusinessID: " + newBusinessID);
