@@ -602,6 +602,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\ExperimentEntries\" />
+    <Folder Include="wwwroot\files\" />
     <Folder Include="wwwroot\FunctionReports\" />
     <Folder Include="wwwroot\FunctionResults\" />
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
