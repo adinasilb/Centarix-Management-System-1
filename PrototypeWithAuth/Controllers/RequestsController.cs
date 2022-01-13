@@ -6981,10 +6981,10 @@ namespace PrototypeWithAuth.Controllers
         //}
         public IActionResult DownloadRequestsToExcel()
         {
-            var results = _context.Requests.Select(r => new
+            var results = _context.Requests.IgnoreQueryFilters().Where(r => !r.IsDeleted).Select(r => new
             {
                 ProductName = r.Product.ProductName,
-                InvoiceID = r.Payments.FirstOrDefault().Invoice.InvoiceNumber,
+                InvoiceNumber = r.Payments.FirstOrDefault().Invoice.InvoiceNumber,
                 CategoryName = r.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription,
                 SubCategoryName = r.Product.ProductSubcategory.ProductSubcategoryDescription,
                 Vendor = r.Product.Vendor.VendorEnName,
