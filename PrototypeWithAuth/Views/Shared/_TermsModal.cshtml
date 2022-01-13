@@ -94,13 +94,13 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <input type="hidden" id="vendor-primary-email" value="@Model.TempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.OrdersEmail"/>
+                    <input type="hidden" id="vendor-orders-email" value="@Model.TempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.OrdersEmail" />
                     <label class="control-label">Send to: (Add up to 5 email addresses@*- including the suppliers email address*@)</label>
                     <input class="form-control-plaintext border-bottom" type="text" id="allEmails" />
                     @for (int e = 0; e < Model.EmailAddresses.Count; e++)
                     {
                         var supplierEmailClass = "emailaddresses ";
-                     
+
                         <input type="hidden" asp-for="EmailAddresses[e]" class="@supplierEmailClass" />
                     }
                 </div>
@@ -114,13 +114,18 @@
 <input type="hidden" asp-for="ParentRequest.ApplicationUserID" />
 <input type="hidden" asp-for="RedirectAction" />
 <script>
-    $(".terms .mdb-select").materialSelect()
+    //$(document).ready(function () {
+    //    alert("in doc ready: " + $("#vendor-orders-email").val());
+    //    $('.all-mail').prepend('<span class="email-ids">' + $("#vendor-orders-email").val() + '<span class="remove-email">&times;</span></span>');
+    //});
 
-        $('.all-mail').prepend('<span class="email-ids supplier-email">' + $("#vendor-primary-email").val() + '</span>');
-        $(".isSupplier").val($("#vendor-primary-email").val());
+    $(".terms .mdb-select").materialSelect()
+    //$('.all-mail').prepend('<span class="email-ids supplier-email">' + $("#vendor-orders-email").val() + '</span>');
+    
+    $(".isSupplier").val($("#vendor-orders-email").val());
     if ($(".all-mail").length == 0) {
         let data = [
-            $("#vendor-primary-email").val()
+            $("#vendor-orders-email").val()
         ]
         $("#allEmails").email_multiple({
             data: data
@@ -140,7 +145,7 @@
     $.fn.CheckListLength = function () {
         //Disable if 5 emails
         var listlength = $(".email-ids").length;
-        if (listlength >=5) {
+        if (listlength >= 5) {
             $(".enter-mail-id").attr("disabled", true);
         }
         else {
@@ -191,7 +196,6 @@
                 timeout: 7200000,
                 success: function (data) {
                     $(".submitTerms").prop('disabled', false)
-
                     //this if is not necessary right now because everythin is always _indextabledata
                     var sidebarType = $('#masterSidebarType').val();
                     var viewClass = "_IndexTableData";
