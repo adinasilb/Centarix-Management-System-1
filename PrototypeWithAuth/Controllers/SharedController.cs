@@ -575,7 +575,9 @@ namespace PrototypeWithAuth.Controllers
 
             if (productSubCategoryID != 0)
             {
-                request.Product.ProductSubcategory = await _context.ProductSubcategories.Where(ps => ps.ID == productSubCategoryID).Include(ps => ps.ParentCategory).FirstOrDefaultAsync();
+                request.Product.ProductSubcategory = await _productSubcategoriesProc.Read(
+                    new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == productSubCategoryID },
+                    new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory } }).FirstOrDefaultAsync();
                 request.Product.ProductSubcategoryID = productSubCategoryID;
             }
 
