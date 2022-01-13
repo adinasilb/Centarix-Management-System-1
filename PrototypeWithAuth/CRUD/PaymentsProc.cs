@@ -136,7 +136,7 @@ namespace PrototypeWithAuth.CRUD
             payment.IsPaid = true;
             payment.HasInvoice = true;
             payment.Invoice = paymentsInvoiceViewModel.Invoice;
-            payment.Sum = paymentsInvoiceViewModel.Requests.FirstOrDefault().Payments.FirstOrDefault().Sum;
+            payment.Sum = paymentsInvoiceViewModel.Payment.Sum;
             _context.Update(payment);
             await _context.SaveChangesAsync();
         }

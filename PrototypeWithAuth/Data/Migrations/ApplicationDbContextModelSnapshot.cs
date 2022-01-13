@@ -240,9 +240,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber2")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
@@ -2826,6 +2823,20 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationRoomInstanceAbbrev = "BL5",
                             LocationRoomInstanceName = "Biomarker Lab 5",
                             LocationRoomTypeID = 1
+                        },
+                        new
+                        {
+                            LocationRoomInstanceID = 14,
+                            LocationRoomInstanceAbbrev = "S2",
+                            LocationRoomInstanceName = "Storage Room 2",
+                            LocationRoomTypeID = 6
+                        },
+                        new
+                        {
+                            LocationRoomInstanceID = 15,
+                            LocationRoomInstanceAbbrev = "S3",
+                            LocationRoomInstanceName = "Storage Room 3",
+                            LocationRoomTypeID = 6
                         });
                 });
 
@@ -3252,6 +3263,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DescriptionEnum")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("OffDayTypeID");
 
                     b.ToTable("OffDayTypes");
@@ -3260,27 +3274,32 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             OffDayTypeID = 1,
-                            Description = "Sick Day"
+                            Description = "Sick Day",
+                            DescriptionEnum = "SickDay"
                         },
                         new
                         {
                             OffDayTypeID = 2,
-                            Description = "Vacation Day"
+                            Description = "Vacation Day",
+                            DescriptionEnum = "VacationDay"
                         },
                         new
                         {
                             OffDayTypeID = 3,
-                            Description = "Maternity Leave"
+                            Description = "Maternity Leave",
+                            DescriptionEnum = "MaternityLeave"
                         },
                         new
                         {
                             OffDayTypeID = 4,
-                            Description = "Special Day"
+                            Description = "Special Day",
+                            DescriptionEnum = "SpecialDay"
                         },
                         new
                         {
                             OffDayTypeID = 5,
-                            Description = "Unpaid Leave"
+                            Description = "Unpaid Leave",
+                            DescriptionEnum = "UnpaidLeave"
                         });
                 });
 
@@ -5429,9 +5448,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("NotificationStatusID")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("OrderDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("RequestID")
                         .HasColumnType("int");
 
@@ -7179,6 +7195,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int?>("MaritalStatusID")
                         .HasColumnType("int");
+
+                    b.Property<string>("PhoneNumber2")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("RollOverSickDays")
                         .HasColumnType("float");

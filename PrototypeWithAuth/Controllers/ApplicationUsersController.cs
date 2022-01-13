@@ -120,6 +120,7 @@ namespace PrototypeWithAuth.Controllers
                 FreelancerCount = employees.Where(e => e.EmployeeStatusID == 2).Count(),
                 AdvisorCount = employees.Where(e => e.EmployeeStatusID == 3).Count(),
             };
+            //using user image from db(there is one that is wrong in db...) - maybe make add to vm directly from file
             return employeeDetailsViewModel;
         }
 
@@ -376,11 +377,8 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ApproveHours(int id)
         {
             var hoursApproved = await _employeeHoursProc.UpdateApprovedHoursAsync(id);
-            if (!hoursApproved.Bool)
-            {
-                return RedirectToAction("_AwaitingApproval", new { ErrorMessage = hoursApproved.String });
-            }
-            return RedirectToAction("_AwaitingApproval");
+            return RedirectToAction("_AwaitingApproval", new { ErrorMessage = hoursApproved.String });
+            
         }
 
 
@@ -404,12 +402,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> DenyApprovalRequestModal(EmployeeHoursAwaitingApproval employeeHoursAwaitingApproval)
         {
             var deniedHours = await _employeeHoursAwaitingApprovalProc.DenyHoursAsync(employeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID);
-            if(!deniedHours.Bool)
-            {
-                return RedirectToAction("_AwaitingApproval", new { ErrorMessage = deniedHours.String });
-            }
-
-            return RedirectToAction("_AwaitingApproval");
+            return RedirectToAction("_AwaitingApproval", new { ErrorMessage = deniedHours.String });
         }
 
 

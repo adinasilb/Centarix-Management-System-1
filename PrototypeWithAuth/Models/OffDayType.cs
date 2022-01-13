@@ -11,6 +11,7 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int OffDayTypeID { get; set; }
         public string Description { get; set; }
+        public string DescriptionEnum { get; set; }
         public IEnumerable<EmployeeHours> EmployeeHoursPartial { get; set; }
         public IEnumerable<EmployeeHours> EmployeeHours { get; set; }
         public IEnumerable<EmployeeHoursAwaitingApproval> EmployeeHoursAwaitingApprovalsPartial { get; set; }

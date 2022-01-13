@@ -109,17 +109,13 @@ namespace PrototypeWithAuth.Controllers
                 counter++;
             }
             registerUserViewModel.ProtocolRoles = new List<UserRoleViewModel>();
-            registerUserViewModel.ProtocolRoles.Add(new UserRoleViewModel()
+
+            counter = 0;
+            foreach (var role in AppUtility.ProtocolRoleEnums())
             {
-                MenuItemsID = counter,
-                StringWithName = new StringWithName()
-                {
-                    StringName = AppUtility.MenuItems.Protocols.ToString(),
-                    StringDefinition = AppUtility.MenuItems.Protocols.ToString()
-                },
-                Selected = false
+                registerUserViewModel.ProtocolRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, StringWithName = role, Selected = false });
+                counter++;
             }
-            );
             counter++;
             registerUserViewModel.OperationRoles = new List<UserRoleViewModel>();
             foreach (var role in AppUtility.OperationRoleEnums())
@@ -267,7 +263,6 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> CreateUser(RegisterUserViewModel registerUserViewModel)
         {
-            var errorMessage = "";
             var success = await _employeesProc.CreateUser(registerUserViewModel, _hostingEnvironment, Url, Request, _userManager);
             if (!success.Bool)
             {
@@ -279,11 +274,7 @@ namespace PrototypeWithAuth.Controllers
                 registerUserViewModel.Employee.IsUser = false;
                 return View("CreateUser", registerUserViewModel);
             }
-            if (success.String != null)
-            {
-                errorMessage = success.String;
-            }
-            return RedirectToAction("Index", new { errorMessage });
+            return RedirectToAction("Index", new {ErrorMessage = success.String });
         }
 
 
@@ -307,7 +298,7 @@ namespace PrototypeWithAuth.Controllers
             var success = await _employeesProc.UpdateUser(registerUserViewModel, _hostingEnvironment, Url, Request, _userManager);
             if (success.Bool)
             {
-                return new EmptyResult();
+                return Content(success.String);
             }
             else
             {
@@ -417,14 +408,7 @@ namespace PrototypeWithAuth.Controllers
         {
             applicationUser = _employeesProc.Read(new List<Expression<Func<Employee, bool>>> { u => u.Id == applicationUser.Id }).FirstOrDefault();
             var success = await _employeesProc.SuspendUser(applicationUser);
-            if (!success.Bool)
-            {
-                return RedirectToAction("Index", new { ErrorMessage = success.String });
-            }
-            else
-            {
-                return RedirectToAction("Index");
-            }
+            return RedirectToAction("Index", new { ErrorMessage = success.String });
         }
 
         [HttpGet]
@@ -485,6 +469,7 @@ namespace PrototypeWithAuth.Controllers
 
         //    return PartialView();
         //}
+
 
         public async Task<IActionResult> editUserFunction(string id, int? Tab = 0)
         {

@@ -17,7 +17,7 @@ $(function () {
 			age = '';
 		}
 		$("input[name='Age']").val(age);
-		$("input[name='NewEmployee.DOB_submit']").val(val)
+		$("input[name='Employee.DOB_submit']").val(val)
 	});
 
 	$("#GeneratePassword").off('click').on("click", function () {

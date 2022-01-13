@@ -28,8 +28,9 @@ namespace PrototypeWithAuth.CRUD
             var ReturnVal = new StringWithBool();
             try
             {
-                _context.Update(EmployeeHour);
+                _context.Update(EmployeeHour);;
                 await _context.SaveChangesAsync();
+               
                 ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)
@@ -140,16 +141,27 @@ namespace PrototypeWithAuth.CRUD
             StringWithBool ReturnVal = new StringWithBool();
 
             var employeeHoursID = deleteHourViewModel.EmployeeHour.EmployeeHoursID;
-            var notifications = _timekeeperNotificationsProc.Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == employeeHoursID });
+            var notifications = await _timekeeperNotificationsProc.Read(new List<Expression<Func<TimekeeperNotification, bool>>> { n => n.EmployeeHoursID == employeeHoursID }).ToListAsync();
             var dayoff = await _companyDaysOffProc.ReadOneAsync( new List<Expression<Func<CompanyDayOff, bool>>> { co => co.Date.Date == deleteHourViewModel.EmployeeHour.Date.Date });
             var anotherEmployeeHourWithSameDate = await ReadOneAsync( new List<Expression<Func<EmployeeHours, bool>>>{eh => eh.Date.Date == deleteHourViewModel.EmployeeHour.Date.Date && eh.EmployeeID == deleteHourViewModel.EmployeeHour.EmployeeID
                     && eh.EmployeeHoursID !=  deleteHourViewModel.EmployeeHour.EmployeeHoursID });
             var employeeHour = await ReadOneAsync(new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.EmployeeHoursID ==  deleteHourViewModel.EmployeeHour.EmployeeHoursID }, new List<ComplexIncludes<EmployeeHours, ModelBase>> { new ComplexIncludes<EmployeeHours, ModelBase> { Include= eh => eh.OffDayType } });
+            var ehaaOnEmployeeHour = await _employeeHoursAwaitingApprovalProc.ReadOneAsync(new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { eh => eh.EmployeeHoursID == deleteHourViewModel.EmployeeHour.EmployeeHoursID });
             EmployeeHours newEmployeeHour = null;
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
+                    if(notifications.Count > 0)
+                    {
+                        await _timekeeperNotificationsProc.DeleteByEHIDAsync(employeeHoursID);
+                    }
+                    
+                    if (ehaaOnEmployeeHour != null)
+                    {
+                        await _employeeHoursAwaitingApprovalProc.DeleteByEHIDAsync(employeeHoursID);
+                    }
+
                     if (anotherEmployeeHourWithSameDate == null)
                     {
                         if (employeeHour.OffDayTypeID == 4)
@@ -170,31 +182,27 @@ namespace PrototypeWithAuth.CRUD
 
                         _context.Entry(newEmployeeHour).State = EntityState.Modified;
                         await _context.SaveChangesAsync();
-
-                        if (notifications.Count() == 0) //might need to change this if if notifications starts working differently
+                        TimekeeperNotification newNotification = new TimekeeperNotification()
                         {
-                            TimekeeperNotification newNotification = new TimekeeperNotification()
-                            {
-                                EmployeeHoursID = employeeHoursID,
-                                IsRead = false,
-                                ApplicationUserID = newEmployeeHour.EmployeeID,
-                                Description = "no hours reported for " + newEmployeeHour.Date.GetElixirDateFormat(),
-                                NotificationStatusID = 5,
-                                TimeStamp = DateTime.Now,
-                                Controller = "Timekeeper",
-                                Action = "SummaryHours"
-                            };
-                            await _timekeeperNotificationsProc.CreateWithoutTransactionAsync(newNotification);
-                        }
+                            EmployeeHoursID = employeeHoursID,
+                            IsRead = false,
+                            ApplicationUserID = newEmployeeHour.EmployeeID,
+                            Description = "no hours reported for " + newEmployeeHour.Date.GetElixirDateFormat(),
+                            NotificationStatusID = 5,
+                            TimeStamp = DateTime.Now,
+                            Controller = "Timekeeper",
+                            Action = "SummaryHours"
+                        };
+                        await _timekeeperNotificationsProc.CreateWithoutTransactionAsync(newNotification);
+                        
                     }
                     else
                     {
-                        await _timekeeperNotificationsProc.DeleteByEHIDAsync(employeeHoursID);
                         _context.Remove(employeeHour);
                         await _context.SaveChangesAsync();
-
                     }
-                    await _employeeHoursAwaitingApprovalProc.DeleteAsync(employeeHoursID);
+                    
+                    
 
                     await transaction.CommitAsync();
                     ReturnVal.SetStringAndBool(true, null);
@@ -203,7 +211,7 @@ namespace PrototypeWithAuth.CRUD
                 catch (Exception e)
                 {
                     transaction.Rollback();
-                    ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(e));
+                    ReturnVal.SetStringAndBool(false, "Failed to delete hours - "+AppUtility.GetExceptionMessage(e));
                     //throw e;
                 }
                 return ReturnVal;
@@ -221,7 +229,7 @@ namespace PrototypeWithAuth.CRUD
                     bool alreadyOffDay = false;
                     EmployeeHours employeeHour = null;
                     //var user = await _employeesProc.ReadOneAsync( new List<Expression<Func<Employee, bool>>> { e => e.Id== UserID });
-
+                    var specialDays = 0;
                     if (DateTo == new DateTime()) //just one date
                     {
                         var newone = await _companyDaysOffProc.ReadOneAsync(new List<Expression<Func<CompanyDayOff, bool>>> { companyDaysOff => companyDaysOff.Date.Date == DateFrom.Date });
@@ -233,18 +241,12 @@ namespace PrototypeWithAuth.CRUD
 
                             if (OffDayTypeID == 4 && employeeHour?.OffDayTypeID != 4)
                             {
-                                //employeeHour.Employee = user;
-                                //employeeHour.Employee.SpecialDays -= 1;
-                                await _employeesProc.AddSpecialDays(UserID, -1);
-                                //user.SpecialDays -= 1;
-
+                                specialDays+=-1;
                             }
                             else if (employeeHour?.OffDayTypeID == 4 && OffDayTypeID != 4)
                             {
-                                await _employeesProc.AddSpecialDays(UserID, 1);
-                                //user.SpecialDays += 1;
+                                specialDays+=1;
                             }
-                            //await _employeesProc.UpdateAsync(user);
                             if (employeeHour == null)
                             {
                                 employeeHour = new EmployeeHours
@@ -275,6 +277,11 @@ namespace PrototypeWithAuth.CRUD
                                 _context.SaveChanges();
                             }
                         }
+                        if (specialDays!=0)
+                        {
+                            await _employeesProc.AddSpecialDays(UserID, specialDays);
+                        }
+
                         await transaction.CommitAsync();
                     }
                     else
@@ -292,15 +299,11 @@ namespace PrototypeWithAuth.CRUD
                                     employeeHour = employeeHours.Where(eh => eh.Date == DateFrom).FirstOrDefault();
                                     if (OffDayTypeID == 4 && employeeHour?.OffDayTypeID != 4)
                                     {
-                                        //employeeHour.Employee = user;
-                                        //employeeHour.Employee.SpecialDays -= 1;
-                                        await _employeesProc.AddSpecialDays(UserID, -1);
-                                        //user.SpecialDays -= 1;
+                                        specialDays+=-1;
                                     }
                                     else if (employeeHour?.OffDayTypeID == 4 && OffDayTypeID != 4)
                                     {
-                                        await _employeesProc.AddSpecialDays(UserID, 1);
-                                        //user.SpecialDays += 1;
+                                        specialDays+=1;
                                     }
                                     if (employeeHour == null)
                                     {
@@ -344,7 +347,10 @@ namespace PrototypeWithAuth.CRUD
                             DateFrom = DateFrom.AddDays(1);
                             _context.SaveChanges();
                         }
-                        //throw new Exception();
+                        if (specialDays!=0)
+                        {
+                            await _employeesProc.AddSpecialDays(UserID, specialDays);
+                        }
                         await transaction.CommitAsync();
                     }
 
@@ -352,7 +358,7 @@ namespace PrototypeWithAuth.CRUD
                 }
                 catch (Exception ex)
                 {
-                    ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                    ReturnVal.SetStringAndBool(false, "Failed to save off day - " +AppUtility.GetExceptionMessage(ex));
                 }
             }
             return ReturnVal;
@@ -455,7 +461,6 @@ namespace PrototypeWithAuth.CRUD
                         _context.Update(updateHoursViewModel.EmployeeHour);
                         await _context.SaveChangesAsync();
                     }
-
                     var employeeHoursID = updateHoursViewModel.EmployeeHour.EmployeeHoursID;
                     ehaa.EmployeeHoursID = employeeHoursID;
                     int Month = ehaa.Date.Month;
@@ -471,7 +476,6 @@ namespace PrototypeWithAuth.CRUD
                     }
                     await _context.SaveChangesAsync();
 
-                    //throw new Exception();
                     await transaction.CommitAsync();
                     ReturnVal.SetStringAndBool(true, null);
                 }
@@ -479,8 +483,6 @@ namespace PrototypeWithAuth.CRUD
                 {
                     await transaction.RollbackAsync();
                     ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-
-
                 }
             }
             return ReturnVal;
@@ -548,12 +550,8 @@ namespace PrototypeWithAuth.CRUD
                     }
                     _context.Update(employeeHours);
                     await _context.SaveChangesAsync();
-                    var ehaaDeleted  = await _employeeHoursAwaitingApprovalProc.DeleteAsync(employeeHoursBeingApproved.EmployeeHoursAwaitingApprovalID);
-                    if (!ehaaDeleted.Bool)
-                    {
-                        ReturnVal.SetStringAndBool(false, "Failed to Delete hours awaiting approval"); ;
-                        return ReturnVal;
-                    }
+                    await _employeeHoursAwaitingApprovalProc.DeleteAsync(employeeHoursBeingApproved.EmployeeHoursAwaitingApprovalID);
+                    
                     await transaction.CommitAsync();
                     ReturnVal.SetStringAndBool(true, null);
                 }

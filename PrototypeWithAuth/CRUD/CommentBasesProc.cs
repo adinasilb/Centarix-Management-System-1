@@ -35,20 +35,20 @@ namespace PrototypeWithAuth.CRUD
                         {
                             c.ApplicationUserID = userID;
                             c.CommentTimeStamp = DateTime.Now;
-                            _context.Add(c);
+                            _context.Entry(c).State = EntityState.Added;
                         }
                         else
                         {
-                            _context.Update(c);
+                            _context.Entry(c).State = EntityState.Modified;
                         }
                     }
                     else
                     {
-                        var commentDB = _context.Set<T>().Where(c => c.CommentID == c.CommentID).FirstOrDefault();
+                        var commentDB = _context.Set<T>().Where(c1 => c1.CommentID == c.CommentID).FirstOrDefault();
                         if (commentDB != null)
                         {
                             commentDB.IsDeleted = true;
-                            _context.Update(commentDB);
+                            _context.Entry(commentDB).State = EntityState.Modified;
                         }
                     }
                 }

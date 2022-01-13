@@ -137,55 +137,55 @@ namespace PrototypeWithAuth.ViewModels
             switch (indexTableTypes)
             {
                 case AppUtility.IndexTableTypes.Approved:
-                    Columns = GetApproveColumns();
+                    Columns = GetApproveColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.ReceivedInventoryFavorites:
-                    Columns = GetReceivedInventoryFavoriteColumns();
+                    Columns = GetReceivedInventoryFavoriteColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.Ordered:
-                    Columns = GetOrderedColumns();
+                    Columns = GetOrderedColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.ReceivedInventoryShared:
-                    Columns = GetReceivedInventorySharedColumns();
+                    Columns = GetReceivedInventorySharedColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.ReceivedInventory:
-                    Columns = GetReceivedInventoryColumns();
+                    Columns = GetReceivedInventoryColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.Summary:
-                    Columns = GetSummaryColumns();
+                    Columns = GetSummaryColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.SummaryProprietary:
-                    Columns = GetSummaryProprietaryColumns();
+                    Columns = GetSummaryProprietaryColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.OrderedOperations:
-                    Columns = GetOrderedOperationsColumns();
+                    Columns = GetOrderedOperationsColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.ReceivedInventoryOperations:
-                    Columns = GetReceivedInventoryOperationsColumns();
+                    Columns = GetReceivedInventoryOperationsColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.AccountingGeneral:
-                    Columns = GetAccountingGeneralColumns();
+                    Columns = GetAccountingGeneralColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.Cart:
-                    Columns = GetCartColumns();
+                    Columns = GetCartColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.AccountingNotifications:
-                    Columns = GetAccountingNotificationsColumns();
+                    Columns = GetAccountingNotificationsColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.AccountingPaymentsDefault:
-                    Columns = GetAccountingPaymentsDefaultColumns();
+                    Columns = GetAccountingPaymentsDefaultColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.AccountingPaymentsInstallments:
-                    Columns = GetAccountingPaymentsInstallmentsColumns();
+                    Columns = GetAccountingPaymentsInstallmentsColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.LabQuotes:
-                    Columns = GetLabQuotesColumns();
+                    Columns = GetLabQuotesColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.LabOrders:
-                    Columns = GetLabOrdersColumns();
+                    Columns = GetLabOrdersColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.RequestLists:
-                    Columns = GetRequestListColumns();
+                    Columns = GetRequestListColumns().ToList();
                     break;
             }
 
@@ -196,8 +196,8 @@ namespace PrototypeWithAuth.ViewModels
             : this(indexTableTypes, request, requestUser, product, vendor, productSubcategory, parentCategory, unitType, subUnitType, subSubUnitType, requestIndexObject, iconList, defaultImage, favoriteRequest, shareRequest, null, user, locationInstance, locationInstanceParent, parentRequest, null, null, null, null, false)
         {
         }
-        public RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes indexTableTypes, Request request, Product product, Vendor vendor, ProductSubcategory productSubcategory, ParentCategory parentCategory, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType, RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList, string defaultImage, FavoriteRequest favoriteRequest, ShareRequest shareRequest, Employee shareRequestFromUser, ApplicationUser user, LocationInstance locationInstance, LocationInstance locationInstanceParent, ParentRequest parentRequest)
-            : this(indexTableTypes, request, null, product, vendor, productSubcategory, parentCategory, unitType, subUnitType, subSubUnitType, requestIndexObject, iconList, defaultImage, favoriteRequest, shareRequest, shareRequestFromUser, user, locationInstance, locationInstanceParent, parentRequest, null, null, null, null, false)
+        public RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes indexTableTypes, Request request, Employee requestUser,  Product product, Vendor vendor, ProductSubcategory productSubcategory, ParentCategory parentCategory, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType, RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList, string defaultImage, FavoriteRequest favoriteRequest, ShareRequest shareRequest, Employee shareRequestFromUser, ApplicationUser user, LocationInstance locationInstance, LocationInstance locationInstanceParent, ParentRequest parentRequest)
+            : this(indexTableTypes, request, requestUser, product, vendor, productSubcategory, parentCategory, unitType, subUnitType, subSubUnitType, requestIndexObject, iconList, defaultImage, favoriteRequest, shareRequest, shareRequestFromUser, user, locationInstance, locationInstanceParent, parentRequest, null, null, null, null, false)
         {
         }
         public RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes indexTableTypes, Request request, Product product, Vendor vendor, ProductSubcategory productSubcategory, ParentCategory parentCategory, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType, RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList, string defaultImage, FavoriteRequest favoriteRequest, ShareRequest shareRequest, ApplicationUser user, LocationInstance locationInstance, LocationInstance locationInstanceParent, ParentRequest parentRequest, bool viewOnly)
@@ -209,13 +209,13 @@ namespace PrototypeWithAuth.ViewModels
         {
         }
 
-        public RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes indexTableTypes, Request request, Product product, Vendor vendor, ProductSubcategory productSubcategory, ParentCategory parentCategory, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType, RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList, string defaultImage, FavoriteRequest favoriteRequest, ApplicationUser user, LocationInstance locationInstance, LocationInstance locationInstanceParent, ParentRequest parentRequest)
-            : this(indexTableTypes, request, null, product, vendor, productSubcategory, parentCategory, unitType, subUnitType, subSubUnitType, requestIndexObject, iconList, defaultImage, favoriteRequest, null, null, user, locationInstance, locationInstanceParent, parentRequest, null, null, null, null, false)
+        public RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes indexTableTypes, Request request, Employee requestUser, Product product, Vendor vendor, ProductSubcategory productSubcategory, ParentCategory parentCategory, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType, RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList, string defaultImage, FavoriteRequest favoriteRequest, ApplicationUser user, LocationInstance locationInstance, LocationInstance locationInstanceParent, ParentRequest parentRequest)
+            : this(indexTableTypes, request, requestUser, product, vendor, productSubcategory, parentCategory, unitType, subUnitType, subSubUnitType, requestIndexObject, iconList, defaultImage, favoriteRequest, null, null, user, locationInstance, locationInstanceParent, parentRequest, null, null, null, null, false)
         
         {          
         }
 
-        public IEnumerable<RequestIndexPartialColumnViewModel> Columns { get; set; }
+        public List<RequestIndexPartialColumnViewModel> Columns { get; set; }
         public Vendor Vendor { get; set; }
         public decimal TotalCost { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
@@ -292,7 +292,8 @@ namespace PrototypeWithAuth.ViewModels
         }
         private static int GetOrderTypeEnum(string orderType)
         {
-            return (int)Enum.Parse(typeof(AppUtility.OrderTypeEnum), orderType);
+            var id = (int)Enum.Parse(typeof(AppUtility.OrderTypeEnum), orderType);
+            return id;
         }
         private String GetSharedBy(Request request, ShareRequest shareRequest)
         {

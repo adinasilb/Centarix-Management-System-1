@@ -407,8 +407,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 addLocationViewModel.ErrorMessage += "Model State Invalid Exception";
             }
-            addLocationViewModel.LocationTypesDepthOfZero = _locationTypesProc.Read(new List<Expression<Func<LocationType, bool>>> { lt => lt.Depth == 0 });
-            return PartialView(addLocationViewModel);
+            Response.StatusCode = 550;
+            await Response.WriteAsync(addLocationViewModel.ErrorMessage);
+            return new EmptyResult();
         }
 
         //private int GetLocationNumber(int typeID, bool isPart, bool isRoom)

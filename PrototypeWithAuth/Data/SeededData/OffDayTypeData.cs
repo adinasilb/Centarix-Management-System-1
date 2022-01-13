@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Models;
+﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,28 +15,33 @@ namespace PrototypeWithAuth.Data.SeededData
             list.Add(new OffDayType
             {
                 OffDayTypeID = 1,
-                Description = "Sick Day"
+                Description = "Sick Day",
+                DescriptionEnum = AppUtility.OffDayTypeEnum.SickDay.ToString()
             });
             list.Add(new OffDayType
                  {
                      OffDayTypeID = 2,
-                     Description = "Vacation Day"
-                 });
+                     Description = "Vacation Day",
+                     DescriptionEnum = AppUtility.OffDayTypeEnum.VacationDay.ToString()
+            });
             list.Add(new OffDayType
                        {
                            OffDayTypeID = 3,
-                           Description = "Maternity Leave"
-                       });
+                           Description = "Maternity Leave",
+                           DescriptionEnum = AppUtility.OffDayTypeEnum.MaternityLeave.ToString()
+            });
             list.Add(new OffDayType
                    {
                        OffDayTypeID = 4,
-                       Description = "Special Day"
-                   });
+                       Description = "Special Day",
+                       DescriptionEnum = AppUtility.OffDayTypeEnum.SpecialDay.ToString()
+            });
             list.Add(new OffDayType
                    {
                        OffDayTypeID = 5,
-                       Description = "Unpaid Leave"
-                   });
+                       Description = "Unpaid Leave",
+                       DescriptionEnum = AppUtility.OffDayTypeEnum.UnpaidLeave.ToString()
+            });
             return list;
         }
     }

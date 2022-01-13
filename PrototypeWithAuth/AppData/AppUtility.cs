@@ -167,7 +167,7 @@ namespace PrototypeWithAuth.AppData
         public enum RequestModalType { Create, Edit, Summary }
         public enum ProtocolModalType { None, Create, CheckListMode, Summary, Edit, SummaryFloat, CreateNewVersion }
         public enum VendorModalType { Create, Edit, SummaryFloat }
-        public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
+        public enum OrderTypeEnum { None, RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
         public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveToList, DeleteFromList }
         public enum PopoverEnum { None }
@@ -910,6 +910,11 @@ namespace PrototypeWithAuth.AppData
             {
                 return 0.0m;
             }
+        }
+
+        public static String TrimNewLines(String Item)
+        {
+            return Item.Replace("/r/n", " ").Replace("/r", " ").Replace("/n", " ");
         }
 
         public static StringWithBool GetDateOrderedString(ParentRequest parentRequest)

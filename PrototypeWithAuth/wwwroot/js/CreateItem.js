@@ -67,12 +67,13 @@
                             $("#loading").hide();
                             var category = $("#categoryDescription").val();
                             console.log("category " + category)
-                            $('.turn-edit-on-off').attr("checked", true);
                             $('.turn-edit-on-off').prop("checked", true);
                             $(".ordersItemForm .edit-mode-switch-description").text("Edit Mode On");
                             $(".ordersItemForm .turn-edit-on-off").attr('name', 'edit');
                             $("." + category).removeClass("d-none");
                             $("." + category).prop("disabled", false);
+                            enableMarkReadonly($('.turn-edit-on-off'));
+                            $(".proprietryHidenCategory").attr("disabled", false);
                             $(".proprietryHidenCategory").attr("disabled", false);               
                             $.ajax({
                                 //processData: true,
@@ -94,55 +95,7 @@
     })
    
 
-     $(".order-tab").on("click", function (e) {
-        if ($(".all-mail").length == 0) {
-            let data = [
-                $("#vendor-primary-email").val()
-            ]
-            $("#allEmails").email_multiple({
-                data: data
-            })
-            var newEmailLine = $(".enter-mail-id");
-            newEmailLine.removeAttr('placeholder');
-            newEmailLine.addClass('form-control-plaintext');
-            newEmailLine.addClass('border-bottom');
-
-            $(".email-ids:first span").attr("disabled", true);
-            $(".email-ids:first span").css("display", "none");
-            $(".email-ids:first").addClass("supplier-email");
-        }
-    });
     
-
-    $.fn.UpdatePrimaryOrderEmail = function () {
-        if ($(".supplier-email").length > 0) {
-            $(".supplier-email").html($("#vendor-primary-email").val());
-            $(".isSupplier").val($("#vendor-primary-email").val());
-        }
-        else {
-            $('.all-mail').prepend('<span class="email-ids supplier-email">' + $("#vendor-primary-email").val() + '</span>');
-            $(".isSupplier").val($("#vendor-primary-email").val());
-        }
-    };
-
-    $.fn.CheckListLength = function () {
-        //Disable if 5 emails
-        var listlength = $(".email-ids").length;
-        if (listlength >= 5 || (listlength == 4 && $(".supplier-email").length == 0)) {
-            $(".enter-mail-id").attr("disabled", true);
-        }
-        else {
-            $(".enter-mail-id").attr("disabled", false);
-        }
-    }
-
-    $.fn.RemoveFromHiddenIds = function (emailValue) {
-        $(".emailaddresses[value='" + emailValue + "']:first").val('');
-    }
-
-    $.fn.AddToHiddenIds = function (emailValue) {
-        $(".emailaddresses[value='']:first").val(emailValue);
-    }
 
 
     $(".isRequest").click(function(){

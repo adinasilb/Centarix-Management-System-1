@@ -77,6 +77,7 @@
         + " " + AppUtility.ParentCategoryEnum.General
         + " d-none";
     var batchCategories = AppUtility.ParentCategoryEnum.Biological
++ " " + AppUtility.ParentCategoryEnum.Clinical
         + " d-none";
     if (modalType != AppUtility.RequestModalType.Create)
     {
@@ -106,7 +107,6 @@
     var amountCategories = AppUtility.ParentCategoryEnum.Samples;
     var dateCreatedCategories = AppUtility.ParentCategoryEnum.Samples + " d-none";
 }
-
 @{ var request = Model.Requests[0];}
 <span class="heading-1 modal-tab-name">Item</span>
 @*@if (modalType == AppUtility.RequestModalType.Create && !Model.IsProprietary)
@@ -185,62 +185,62 @@
 
 @if (!Model.Requests[0].Product.ProductSubcategory.ParentCategory.IsProprietary)
 {
-<div class="row">
-    <!--<div class="col-md-4 @subProjectCategories">
-                            <div class="form-group SubProject">
-                                <label class="control-label">Sub Project:</label>
-                                @Html.DropDownListFor(vm => vm.Requests[0].SubProjectID,
-    Enumerable.Empty<SelectListItem>(), "Select Sub Project",
-    new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext " + subProjectCategories + " " + markReadOnlyClass, @id = "SubProject", @searchable = "Select Sub Project", @data_stop_refresh = "true" })-->
-    @*<select asp-for="Request.SubProjectID" id="SubProject" class="mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext" searchable="Select Sub Project">
-        </select>*@
-    <!--<span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
-        </div>
-    </div>-->
-    <div class="col-md-6 @vendorCategories">
-        <div class="form-group">
-            <label asp-for="Requests[0].Product.Vendor" class="control-label"></label>
-            @Html.DropDownListFor(
-                    vm => vm.Requests[0].Product.VendorID,
-                    new SelectList(
-                    Model.Vendors,
-                    dataValueField: "VendorID",
-                    dataTextField: "VendorEnName"),
-                    //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
-                    "Select a Vendor",
-                    htmlAttributes: new
-                         {
-                             @class = " vendorList mdb-select custom select-dropdown form-control-plaintext " + vendorCategories + " " + markReadOnlyClass,
-                        @id = "vendorList",
-                             @size = 1,
-                             @searchable = "Select A Vendor",
-                             @data_stop_refresh = "true"
-                         }
-                    )
+    <div class="row">
+        <!--<div class="col-md-4 @subProjectCategories">
+                                <div class="form-group SubProject">
+                                    <label class="control-label">Sub Project:</label>
+                                    @Html.DropDownListFor(vm => vm.Requests[0].SubProjectID,
+        Enumerable.Empty<SelectListItem>(), "Select Sub Project",
+        new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext " + subProjectCategories + " " + markReadOnlyClass, @id = "SubProject", @searchable = "Select Sub Project", @data_stop_refresh = "true" })-->
+        @*<select asp-for="Request.SubProjectID" id="SubProject" class="mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext" searchable="Select Sub Project">
+            </select>*@
+        <!--<span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
+            </div>
+        </div>-->
+        <div class="col-md-6 @vendorCategories">
+            <div class="form-group">
+                <label asp-for="Requests[0].Product.Vendor" class="control-label"></label>
+                @Html.DropDownListFor(
+                        vm => vm.Requests[0].Product.VendorID,
+                        new SelectList(
+                        Model.Vendors,
+                        dataValueField: "VendorID",
+                        dataTextField: "VendorEnName"),
+                        //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
+                        "Select a Vendor",
+                        htmlAttributes: new
+                             {
+                                 @class = " vendorList mdb-select custom select-dropdown form-control-plaintext " + vendorCategories + " " + markReadOnlyClass,
+                            @id = "vendorList",
+                                 @size = 1,
+                                 @searchable = "Select A Vendor",
+                                 @data_stop_refresh = "true"
+                             }
+                        )
 
-            <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
+                <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
+            </div>
+            <input type="hidden" id="VendorCurrencyID" value="@vendorcurrencyid" />
         </div>
-        <input type="hidden" id="VendorCurrencyID" value="@vendorcurrencyid" />
-    </div>
-    <input class="@vendorCategories" type="hidden" value="" id="vendor-primary-email" />
-    <div class="col-md-4 @companyIDCategories">
-        <div class="form-group">
-            @* IN MIDDLE *@
-            <label asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="control-label"></label>
-            <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " disabled />
-            @*don't need a validation here because you it's not saving*@
+        <input class="@vendorCategories" type="hidden" value="" id="vendor-primary-email" />
+        <div class="col-md-4 @companyIDCategories">
+            <div class="form-group">
+                @* IN MIDDLE *@
+                <label asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="control-label"></label>
+                <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " />
+                @*don't need a validation here because you it's not saving*@
+            </div>
         </div>
-    </div>
-    <div class="col-md-2 @vendorCategories">
-        <div class="form-group h-100 d-flex" style="flex-direction: column;text-align: center;justify-content: center;">
-            <a href="#"  class="open-vendor-float-details btn-link text no-hover" value="@Model.Requests[0].Product.VendorID">
-                <i class="icon-account_box-24px1 heading-1"></i>
-            </a>
+        <div class="col-md-2 @vendorCategories">
+            <div class="form-group h-100 d-flex" style="flex-direction: column;text-align: center;justify-content: center;">
+                <a href="#" class="open-vendor-float-details btn-link text no-hover" value="@Model.Requests[0].Product.VendorID" disabled>
+                    <i class="icon-account_box-24px1 heading-1"></i>
+                </a>
+            </div>
         </div>
-    </div>
 
-    <div class="col-12"><span class="vendor-price-warning large-text text-danger-centarix font-weight-bold" style="color: #EED202;" id="vendor-price-warning"></span></div>
-</div>
+        <div class="col-12"><span class="vendor-price-warning large-text text-danger-centarix font-weight-bold" style="color: #EED202;" id="vendor-price-warning"></span></div>
+    </div>
 
     <div class="row">
         <div class="col-md-6 @catalogCategories">
@@ -277,10 +277,10 @@
                 <span asp-validation-for="Requests[0].ParentQuote.QuoteNumber" class="text-danger-centarix" />
             </div>
             <div class="col-md-6">
-                    <label asp-for="Requests[0].ParentQuote.ExpirationDate" class="control-label"></label>
-                    <input asp-for="Requests[0].ParentQuote.ExpirationDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories @markReadOnlyClass" disabled value="@Model.Requests[0].ParentQuote.ExpirationDate.GetElixirDateFormat()" />
-                    <span asp-validation-for="Requests[0].ParentQuote.ExpirationDate" class="text-danger-centarix quote-date" />
-                </div>
+                <label asp-for="Requests[0].ParentQuote.ExpirationDate" class="control-label">Quote Expiration Date</label>
+                <input asp-for="Requests[0].ParentQuote.ExpirationDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories @markReadOnlyClass" disabled value="@(Model.Requests[0].ParentQuote.ExpirationDate == new DateTime() ? "": Model.Requests[0].ParentQuote.ExpirationDate.GetElixirDateFormat())" />
+                <span asp-validation-for="Requests[0].ParentQuote.ExpirationDate" class="text-danger-centarix quote-date" />
+            </div>
         </div>
     }
     <div class="row">
@@ -433,9 +433,11 @@ else //isProprietary
 
     $(".popover-url").off('click').click(function () {
         if ($("#RequestsURL .accounting-popover a").attr("href") == "") {
+            console.log("empty url")
             $(this).popover('hide');
         }
         else {
+            console.log("full url")
             var val = $(this).val();
             console.log("url popover")
             $('[data-toggle="popover"]').popover('dispose');
@@ -471,20 +473,22 @@ else //isProprietary
     $(".open-vendor-float-details").on("click", function (e) {
         e.preventDefault();
         var vendorID = $("select.vendorList").val();
-        $.ajax({
-            async: true,
-            url: "/Requests/VendorFloatDetails?vendorID=" + vendorID+"&SectionType="+$("#masterSectionType").val(),
-            type: "GET",
-            cache: true,
-            success: function (data) {
-                $.fn.OpenModal("vendorFloatModal", "vendor-float-modal", data);
-                $(".vendorFloatModal .mdb-select").materialSelect();
-                $.fn.TurnToDetails("vendorFloatModal");
-                $('.vendorFloatModal a:first').tab('show');
-                return false;
-            }
-        });
-        $(".popover-url").popover('hide');
+        if (vendorID > 0) {
+            $.ajax({
+                async: true,
+                url: "/Requests/VendorFloatDetails?vendorID=" + vendorID + "&SectionType=" + $("#masterSectionType").val(),
+                type: "GET",
+                cache: true,
+                success: function (data) {
+                    $.fn.OpenModal("vendorFloatModal", "vendor-float-modal", data);
+                    $(".vendorFloatModal .mdb-select").materialSelect();
+                    $.fn.TurnToDetails("vendorFloatModal");
+                    $('.vendorFloatModal a:first').tab('show');
+                    return false;
+                }
+            });
+            $(".popover-url").popover('hide');
+        }
     });
 
     //$("#Requests_0__URL").on("blur", function (e) {

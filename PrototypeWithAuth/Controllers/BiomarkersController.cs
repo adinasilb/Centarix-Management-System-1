@@ -781,6 +781,11 @@ namespace PrototypeWithAuth.Controllers
             return boolCheck;
         }
 
+        [HttpPost]
+        public string UploadFile(DocumentsModalViewModel documentsModalViewModel)
+        {
+            return base.UploadFile(documentsModalViewModel);
+        }
 
     }
 }

@@ -1,7 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.CreateSupplierViewModel;
 @using PrototypeWithAuth.AppData
 
-@{ 
+@{
     string navLinkClass = "";
     string buttonClass = "";
     if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
@@ -17,6 +17,12 @@
     {
         navLinkClass = "supplier-nav-link";
         buttonClass = "accounting-background-color";
+    }
+
+    var nextTab = "";
+    if (!Model.IsReadOnly)
+    {
+        nextTab = "next-tab";
     }
 }
 
@@ -37,41 +43,41 @@
             </button>
         </div>
     }
-<div class="row">
-    @if (Model.ModalType == AppUtility.VendorModalType.Create)
-    {
-        <div class="col-7 form-group modal-line-1-header">
-            <div class="mt-1 heading-1">New Supplier</div>
-        </div>
+    <div class="row">
+        @if (Model.ModalType == AppUtility.VendorModalType.Create)
+        {
+            <div class="col-7 form-group modal-line-1-header">
+                <div class="mt-1 heading-1">New Supplier</div>
+            </div>
 
-        <div class="col-5 modal-line-1-header">
-            <input type="submit" id="addSupplier" value="Add Supplier" asp-action="Create" class="@buttonClass  custom-button custom-button-font disabled-submit activeSubmit" style="float: right;" />
-        </div>
-    }
-    else
-    {
-        <div class=" col _VendorHeader">
-            @{ await Html.RenderPartialAsync("~/Views/Vendors/_VendorHeader.cshtml", Model);}
-        </div>
-    }
-</div>
-        <div class="row">
-            <div class="col-12 px-0">
-                <div class="container-fluid div-tabs text-center pl-0">
-                    <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 pl-0 nav-tabs-icons">
-                        <li class="nav-item icon"><a data-toggle="tab" href="#details" id="vendor-details-tab" class="nav-link next-tab   @navLinkClass "><i class="icon-storefront-24px" style="font-size: 2rem;"></i><br />Details</a></li>
-                        <li class="nav-item icon"><a data-toggle="tab" href="#payment" id="vendor-payments-tab" class="nav-link next-tab  @navLinkClass" disabled><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Payment</a></li>
-                        <li class="nav-item icon"><a data-toggle="tab" id="vendor-comment-tab" href="#vendorComments" class="nav-link next-tab  @navLinkClass " disabled><i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />Comments</a></li>
-                        <li class="nav-item icon"><a data-toggle="tab" id="vendor-contact-tab" href="#contact" class="nav-link next-tab   @navLinkClass " disabled><i class="icon-perm_contact_calendar-24px" e.css style="font-size: 2rem;"></i><br />Contact</a></li>
-                    </ul>
-                </div>
+            <div class="col-5 modal-line-1-header">
+                <input type="submit" id="addSupplier" value="Add Supplier" asp-action="Create" class="@buttonClass  custom-button custom-button-font disabled-submit activeSubmit" style="float: right;" />
+            </div>
+        }
+        else
+        {
+            <div class=" col _VendorHeader">
+                @{ await Html.RenderPartialAsync("~/Views/Vendors/_VendorHeader.cshtml", Model);}
+            </div>
+        }
+    </div>
+    <div class="row">
+        <div class="col-12 px-0">
+            <div class="container-fluid div-tabs text-center pl-0">
+                <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 pl-0 nav-tabs-icons">
+                    <li class="nav-item icon"><a data-toggle="tab" href="#details" id="vendor-details-tab" class="nav-link @nextTab   @navLinkClass "><i class="icon-storefront-24px" style="font-size: 2rem;"></i><br />Details</a></li>
+                    <li class="nav-item icon"><a data-toggle="tab" href="#payment" id="vendor-payments-tab" class="nav-link @nextTab  @navLinkClass" disabled><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Payment</a></li>
+                    <li class="nav-item icon"><a data-toggle="tab" id="vendor-comment-tab" href="#vendorComments" class="nav-link @nextTab  @navLinkClass " disabled><i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />Comments</a></li>
+                    <li class="nav-item icon"><a data-toggle="tab" id="vendor-contact-tab" href="#contact" class="nav-link @nextTab  @navLinkClass " disabled><i class="icon-perm_contact_calendar-24px" e.css style="font-size: 2rem;"></i><br />Contact</a></li>
+                </ul>
             </div>
         </div>
     </div>
+</div>
 <div class="modal-sides modal-body-top-p">
-    <div class="new-modal-body partial-div">
+    <div class="new-modal-body partial-div VendorData" style="background:none;">
         @{await Html.RenderPartialAsync("~/Views/Vendors/VendorData.cshtml", Model);
         }
     </div>
-    </div>
+</div>
 

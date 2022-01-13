@@ -80,7 +80,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
 
-            return View(_vendorsProc.Read());
+            return View(_vendorsProc.Read().OrderBy(v=>v.VendorEnName));
 
         }
         // GET: Vendors
@@ -98,7 +98,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
             }
 
-            return PartialView(_vendorsProc.Read());
+            return PartialView(_vendorsProc.Read().OrderBy(v => v.VendorEnName));
 
         }
 
@@ -188,9 +188,12 @@ namespace PrototypeWithAuth.Controllers
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorRoutingNum) || fv.VendorRoutingNum.ToLower().Contains(vendorSearchViewModel.VendorRoutingNum.ToLower())));
 
-            wheres.Add(fv => (orderedVendorCategoryTypes == null || orderedVendorCategoryTypes.All(fv.VendorCategoryTypes.Select(ct => ct.CategoryTypeID).Contains))); //if choose lab, will include vendors that have both lab and operations
+            foreach (var ovct in orderedVendorCategoryTypes)
+            {
+                wheres.Add(fv => fv.VendorCategoryTypes.Select(ct => ct.CategoryTypeID).Contains(ovct));
+            }
             
-            var listfilteredVendors = _vendorsProc.Read(wheres, new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include = v=>v.VendorCategoryTypes} });
+            var listfilteredVendors = _vendorsProc.Read(wheres, new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include = v=>v.VendorCategoryTypes} }).AsEnumerable();
 
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = vendorSearchViewModel.SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
@@ -218,7 +221,7 @@ namespace PrototypeWithAuth.Controllers
                 &&
              (String.IsNullOrEmpty(companyID) || fv.VendorBuisnessID.ToLower().Contains(companyID.ToLower())));
             var listfilteredVendors = _vendorsProc.Read(wheres, new List<ComplexIncludes<Vendor, ModelBase>> { new ComplexIncludes<Vendor, ModelBase> { Include = v => v.VendorCategoryTypes } });
-            return PartialView("_IndexForPayment", listfilteredVendors);
+            return PartialView("_IndexForPayment", listfilteredVendors.OrderBy(v=>v.VendorEnName));
         }
 
 
@@ -293,9 +296,9 @@ namespace PrototypeWithAuth.Controllers
                     TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
                 }
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.NewSupplier;
-                createSupplierViewModel.ErrorMessage += vendorCreated.String;
                 createSupplierViewModel = await GetCreateSupplierViewModel(createSupplierViewModel.SectionType, 0, createSupplierViewModel.Tab);
                 createSupplierViewModel.ModalType = AppUtility.VendorModalType.Create;
+                createSupplierViewModel.ErrorMessage += vendorCreated.String;
 
                 return View(createSupplierViewModel);
 
@@ -352,8 +355,11 @@ namespace PrototypeWithAuth.Controllers
             var vendorUpdated = await _vendorsProc.UpdateAsync(createSupplierViewModel, _userManager.GetUserId(User));
             if (vendorUpdated.Bool)
             {
-                return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
-            }
+                ControllerContext.ModelState.Clear();
+                createSupplierViewModel = await GetCreateSupplierViewModel(createSupplierViewModel.SectionType, createSupplierViewModel.Vendor.VendorID, createSupplierViewModel.Tab);
+                createSupplierViewModel.ModalType = AppUtility.VendorModalType.Edit;
+                return PartialView("VendorData", createSupplierViewModel);
+             }
             else
             {
                 createSupplierViewModel = await GetCreateSupplierViewModel(createSupplierViewModel.SectionType, createSupplierViewModel.Vendor.VendorID, createSupplierViewModel.Tab);

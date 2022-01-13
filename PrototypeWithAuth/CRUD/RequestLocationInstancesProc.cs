@@ -16,9 +16,14 @@ namespace PrototypeWithAuth.CRUD
 {
     public class RequestLocationInstancesProc : ApplicationDbContextProc<RequestLocationInstance>
     {
-        public RequestLocationInstancesProc(ApplicationDbContext context, bool FromBase = false) : base(context)
+        public RequestLocationInstancesProc(ApplicationDbContext context, bool FromBase = false, bool flag = false) : base(context)
         {
             if (!FromBase) { this.InstantiateProcs(); }
+            else if(!flag)
+            {
+                _locationInstancesProc = new LocationInstancesProc(context, true);
+                _temporaryLocationInstancesProc = new TemporaryLocationInstancesProc(context, true);
+            }
         }
 
         public async Task SaveTempLocationWithoutTransactionAsync(ReceivedLocationViewModel receivedLocationViewModel, Request requestReceived)
@@ -66,7 +71,11 @@ namespace PrototypeWithAuth.CRUD
                         var locationInstance = await _locationInstancesProc.ReadOneAsync(new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceID == place.LocationInstanceId });
                         if (locationInstance.IsFull == false)
                         {
-                            _context.Add(rli);
+                            if(archiveOneRequest)
+                            {
+                                rli.IsArchived = true;
+                            }
+                            _context.Entry(rli).State = EntityState.Added;
                         }
                         else
                         {
@@ -77,7 +86,11 @@ namespace PrototypeWithAuth.CRUD
                             if (archiveOneRequest)
                             {
                                 await _requestsProc.ArchiveRequestAsync(requestReceived);
-                                await _locationInstancesProc.MarkLocationAvailableAsync(requestReceived.RequestID, place.LocationInstanceId);
+                                await _locationInstancesProc.MarkLocationAvailableWithoutSaveChangesAsync(requestReceived.RequestID, place.LocationInstanceId);
+                            }
+                            else
+                            {
+                               await _locationInstancesProc.MarkLocationInstanceAsFullAsync(locationInstance);
                             }
                             await _context.SaveChangesAsync();
                         }
@@ -86,8 +99,7 @@ namespace PrototypeWithAuth.CRUD
                             throw new Exception("RequestLocationInstancesProc SaveLocationsAsync in archive request catch-" + AppUtility.GetExceptionMessage(ex));
                         }
 
-                        await _locationInstancesProc.MarkLocationInstanceAsFullAsync(locationInstance);
-                    }
+                           }
                 }
             }
             catch (Exception ex)
@@ -112,15 +124,7 @@ namespace PrototypeWithAuth.CRUD
                             new ComplexIncludes<Request, ModelBase>{ Include = r=>r.RequestLocationInstances}
                             });
                             var requestLocations = request.RequestLocationInstances;
-                            //archive one location and delete the rest
-                            var iterator = requestLocations.GetEnumerator();
-                            while (iterator.MoveNext())
-                            {
-                                var locationToDelete = iterator.Current;
-                                _context.Remove(locationToDelete);
-                                await _locationInstancesProc.MarkLocationAvailableAsync(requestId, locationToDelete.LocationInstanceID);
-                            }
-                            await _context.SaveChangesAsync();
+                            await DeleteWithoutTransactionAsync(requestLocations);
                             await SaveLocationsWithoutTransactionAsync(receivedModalVisualViewModel, request, true);
                             await transaction.CommitAsync();
                         }
@@ -130,6 +134,7 @@ namespace PrototypeWithAuth.CRUD
                         await transaction.RollbackAsync();
                         throw new Exception(AppUtility.GetExceptionMessage(ex));
                     }
+                    ReturnVal.SetStringAndBool(true, null);
                 }
             }
             catch (Exception ex)
@@ -148,8 +153,8 @@ namespace PrototypeWithAuth.CRUD
                 foreach (var requestLocationInstance in requestLocationInstances)
                 {
 
-                    await _locationInstancesProc.MarkLocationAvailableAsync(requestLocationInstance.RequestID, requestLocationInstance.LocationInstanceID);
-                    _context.Remove(requestLocationInstance);
+                    await _locationInstancesProc.MarkLocationAvailableWithoutSaveChangesAsync(requestLocationInstance.RequestID, requestLocationInstance.LocationInstanceID);
+                    _context.Entry(requestLocationInstance).State = EntityState.Deleted;
                     await _context.SaveChangesAsync();
                 }
             }
@@ -169,6 +174,7 @@ namespace PrototypeWithAuth.CRUD
                 {
                     await UpdateWithoutTransactionAsync(receivedModalVisualViewModel, requestID);
                     await transaction.CommitAsync();
+                    ReturnVal.SetStringAndBool(true, null);
                 }
                 catch (Exception ex)
                 {
@@ -188,10 +194,10 @@ namespace PrototypeWithAuth.CRUD
                     var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID }, new List<ComplexIncludes<Request, ModelBase>> {
                             new ComplexIncludes<Request, ModelBase>{ Include = r => r.RequestLocationInstances } });
                     var requestLocations = request.RequestLocationInstances;
-                    await _requestLocationInstancesProc.DeleteWithoutTransactionAsync(requestLocations);
+                    await DeleteWithoutTransactionAsync(requestLocations);
                     receivedModalVisualViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
 
-                    await _requestLocationInstancesProc.SaveLocationsWithoutTransactionAsync(receivedModalVisualViewModel, request, false);
+                    await SaveLocationsWithoutTransactionAsync(receivedModalVisualViewModel, request, false);
                 }
 
             }

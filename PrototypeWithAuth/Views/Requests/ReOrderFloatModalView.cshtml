@@ -191,11 +191,11 @@
     $(".submitOrder").off('click').on("click", function (e) {
         e.preventDefault();
         var orderType = $(this).val();
-        $.fn.SumitOrderFunction(orderType);
+        $.fn.SubmitOrderFunction(orderType);
         //return false;
     });
 
-    $.fn.SumitOrderFunction = function (orderType)
+    $.fn.SubmitOrderFunction = function (orderType)
     {
         console.log("submit reorder");
         //alert("validate form");
@@ -287,7 +287,7 @@
                     $(".submitOrder").click(function (e) {
                         e.preventDefault();
                         
-                        $.fn.SumitOrderFunction($(this).val());
+                        $.fn.SubmitOrderFunction($(this).val());
                       
                     });
                     return true;

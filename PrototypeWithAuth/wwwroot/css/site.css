@@ -1371,11 +1371,11 @@ a.nav-link {
     color: var(--graduated-table-background-color);
 }
 
-.orders-and-inv .sublocation-index {
+/*.orders-and-inv .sublocation-index {*/
     /*padding-right: 2.8125rem !important;*/
-    padding-left: 2.8125rem !important;
+    /*padding-left: 2.8125rem !important;
     border-right: 1px solid var(--black87)
-}
+}*/
 
 .colTwoSublocations .sublocation-index:not(:last-child):not(:last-of-type) {
     /*padding-right: 2.8125rem !important;*/

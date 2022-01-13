@@ -23,9 +23,8 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        public async Task<StringWithBool> DeleteAsync(int ID)
+        public async Task DeleteAsync(int ID)
         {
-            StringWithBool ReturnVal = new StringWithBool();
             try
             {
                 var ehaa = await ReadOneAsync( new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ID });
@@ -34,13 +33,36 @@ namespace PrototypeWithAuth.CRUD
                     _context.Remove(ehaa);
                     await _context.SaveChangesAsync();
                 }
-                ReturnVal.SetStringAndBool(true, null);
+                else
+                {
+                    throw new Exception("Delete of employee hours awaiting approval did not go through");
+                }
             }
             catch (Exception ex)
             {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                throw new Exception("Failed to Delete hours awaiting approval- "+AppUtility.GetExceptionMessage(ex));
             }
-            return ReturnVal;
+        }
+
+        public async Task DeleteByEHIDAsync(int ID)
+        {
+            try
+            {
+                var ehaa = await ReadOneAsync(new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { ehaa => ehaa.EmployeeHoursID == ID });
+                if (ehaa != null)
+                {
+                    _context.Remove(ehaa);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("Delete of employee hours awaiting approval did not go through");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to Delete hours awaiting approval- "+AppUtility.GetExceptionMessage(ex));
+            }
         }
 
         public async Task<StringWithBool> DenyHoursAsync(int ID)
@@ -80,7 +102,7 @@ namespace PrototypeWithAuth.CRUD
                 catch(Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                    ReturnVal.SetStringAndBool(false, "Failed to deny hours- "+ AppUtility.GetExceptionMessage(ex));
                 }
             }
 

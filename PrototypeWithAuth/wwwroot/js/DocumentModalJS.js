@@ -4,6 +4,8 @@ var BufferChunkSize = MaxFileSizeMB * (1024 *1024)*2;
 
 function UploadFile(TargetFile, formData)
 {
+
+   
     // create array to store the buffer chunks
     var FileChunk = [];
     // the file object itself that we will work with
@@ -41,15 +43,24 @@ function UploadFile(TargetFile, formData)
         FilePartName = UploadFileChunk(chunk, FilePartName, formData);
     }
 
+
 }
 
 function UploadFileChunk(Chunk, FileName,  formData)
 {
     formData.set('FilesToSave', Chunk, FileName);
     var fileName = FileName;
+    var section = $("#masterSectionType").val();
+    var urlbeginning = "/Requests/"
+    if (section === "Protocols") {
+        urlbeginning = "/Protocols/"
+    }
+    else if (section == "Biomarkers") {
+        urlbeginning = "/Biomarkers/"
+    }
     $.ajax({
         type: "POST",
-        url: '/Shared/UploadFile/',
+        url: urlbeginning+'UploadFile/',
         async: false,
         contentType: false,
         processData: false,
@@ -73,6 +84,7 @@ $(function () {
     $(".file-select").off("change").on("change", function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
+
         console.log("upload file submitted");
         var dontAllowMultipleFiles = $("#DontAllowMultiple").val();
         if (dontAllowMultipleFiles == false) {

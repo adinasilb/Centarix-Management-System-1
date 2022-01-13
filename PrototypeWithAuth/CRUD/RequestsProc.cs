@@ -46,22 +46,11 @@ namespace PrototypeWithAuth.CRUD
             return await base.ReadOneWithIgnoreQueryFiltersAsync(wheres, includes);
         }
 
-        public async Task<StringWithBool> ArchiveRequestAsync(Request request)
+        public async Task ArchiveRequestAsync(Request request)
         {
-            StringWithBool ReturnVal = new StringWithBool();
-            try
-            {
-                request.IsArchived = true;
-                _context.Update(request);
-                await _context.SaveChangesAsync();
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-            }
-            return ReturnVal;
-
+            request.IsArchived = true;
+            _context.Entry(request).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
 
@@ -206,7 +195,7 @@ namespace PrototypeWithAuth.CRUD
                         foreach (var request in requests)
                         {
                             request.QuoteStatusID = statusNumber;
-                            _context.Update(request);
+                            _context.Entry(request).State = EntityState.Modified;
                             _context.SaveChanges();
                         }
                         await transaction.CommitAsync();
@@ -221,7 +210,7 @@ namespace PrototypeWithAuth.CRUD
             }
             catch (Exception ex)
             {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+                ReturnVal.SetStringAndBool(false,"Failed to update quote status- "+ AppUtility.GetExceptionMessage(ex));
             }
             return ReturnVal;
 
@@ -234,7 +223,7 @@ namespace PrototypeWithAuth.CRUD
                 foreach (var req in requests)
                 {
                     //throw new Exception();
-                    var request = requests.Where(r => r.RequestID == r.RequestID).FirstOrDefault();
+                    var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == req.RequestID });
                     request.ParentQuote = parentQuote;
                     request.QuoteStatusID = 4;
                     request.Cost = req.Cost;
@@ -242,7 +231,7 @@ namespace PrototypeWithAuth.CRUD
                     request.ExchangeRate = requests[0].ExchangeRate;
                     request.IncludeVAT = requests[0].IncludeVAT;
                     request.ExpectedSupplyDays = req.ExpectedSupplyDays;
-                    _context.Update(request);
+                    _context.Entry(request).State = EntityState.Modified;
                 }
                 await _context.SaveChangesAsync();
             }
@@ -330,7 +319,7 @@ namespace PrototypeWithAuth.CRUD
             requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
             requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
             requestReceived.IsInInventory = true;
-            if (requestReceived.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString())
+            if (receivedLocationViewModel.Request.Batch != null || receivedLocationViewModel.Request.BatchExpiration != null)
             {
                 requestReceived.Batch = receivedLocationViewModel.Request.Batch;
                 requestReceived.BatchExpiration = receivedLocationViewModel.Request.BatchExpiration;
@@ -369,13 +358,50 @@ namespace PrototypeWithAuth.CRUD
         public void CreatePartialRequest(ReceivedLocationViewModel receivedLocationViewModel, Request requestReceived, out decimal pricePerUnit)
         {
             requestReceived.RequestID = 0;
+            requestReceived.SerialNumber =0;
             pricePerUnit = requestReceived.PricePerUnit;
             requestReceived.Unit = (uint)(requestReceived.Unit - receivedLocationViewModel.AmountArrived);
             requestReceived.Cost = pricePerUnit * requestReceived.Unit;
             requestReceived.IsPartial = true;
             _context.Entry(requestReceived).State = EntityState.Added;
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
+
+        public async Task<StringWithBool> UpdateExchangeRateByHistory()
+        {
+            StringWithBool ReturnVal = new StringWithBool();
+            try
+            {
+
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        await Read(new List<Expression<Func<Request, bool>>> { r => r.OrderType == AppUtility.OrderTypeEnum.ExcelUpload.ToString() })
+                            .ForEachAsync(r => { 
+                                var rate = AppUtility.GetExchangeRateByDate(r.CreationDate);
+                                r.ExchangeRate = rate;
+                                r.Cost = (r.Cost/3.2m)*rate;
+                                _context.Entry(r).State = EntityState.Modified;
+                        });          
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        throw new Exception(AppUtility.GetExceptionMessage(e));
+                    }
+                    ReturnVal.SetStringAndBool(true, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return ReturnVal;
+        }
+
 
         //private async Task<StringWithBool> MarkInventory()
         //{
@@ -730,6 +756,7 @@ namespace PrototypeWithAuth.CRUD
         //    sw.Close();
         //}
     }
+
 
 
 }

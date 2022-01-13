@@ -33,35 +33,7 @@
                 <div class="row error-message">
                     @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
                 </div>
-                <input type="hidden" asp-for="TempRequestListViewModel.GUID" id="GUID" class="hidden-guid" />
-                <input type="hidden" asp-for="TempRequestListViewModel.SequencePosition" id="SequencePosition" class="hidden-guid" />
-
-                <input type="hidden" asp-for="TempRequestListViewModel.GUID" class="hidden-guid" />
-                @Html.HiddenFor(model => model.TempRequestListViewModel.RequestIndexObject.PageType)
-                @Html.HiddenFor(model => model.TempRequestListViewModel.RequestIndexObject.PageNumber)
-                @Html.HiddenFor(model => model.TempRequestListViewModel.RequestIndexObject.SectionType)
-                @Html.HiddenFor(model => model.TempRequestListViewModel.RequestIndexObject.SelectedCurrency)
-                @*@Html.HiddenFor(model => modeTempRequestListViewModel.l.RequestIndexObject.SelectedPriceSort)*@
-                @Html.HiddenFor(model => model.TempRequestListViewModel.RequestIndexObject.RequestStatusID)
-                @Html.HiddenFor(model => model.TempRequestListViewModel.RequestIndexObject.SidebarFilterID)
-                @Html.HiddenFor(model => model.TempRequestListViewModel.RequestIndexObject.SidebarType)
-                @Html.HiddenFor(model => model.TempRequestListViewModel.RequestIndexObject.OrderType)
-                @Html.HiddenFor(model => model.TempRequestListViewModel.RequestIndexObject.IsReorder)
-                @Html.HiddenFor(model => model.TempRequestListViewModel.RequestIndexObject.ModalType)
-                @Html.HiddenFor(model => model.TempRequestListViewModel.RequestIndexObject.ListID)
-                @Html.HiddenFor(r => r.TempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID)
-                @Html.HiddenFor(r => r.TempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ParentRequestID)
-                @Html.HiddenFor(r => r.TempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.ApplicationUserID)
-                @Html.HiddenFor(r => r.TempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.Credit)
-                @Html.HiddenFor(r => r.TempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.OrderDate)
-                @Html.HiddenFor(r => r.TempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.OrderNumber)
-                @Html.HiddenFor(r => r.TempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.Shipping)
-                @Html.HiddenFor(r => r.TempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.SupplierOrderNumber)
-                @Html.HiddenFor(r => r.TempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.NoteToSupplier)
-                @Html.HiddenFor(r => r.TempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest.Taxes)
-                @*@{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel);}*@
-                <input asp-for="RequestID" style="display: none;" />
-
+                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel); }
                 <div>
                     @{await Html.RenderPartialAsync("_OrderEmail", Model); }
                 </div>
@@ -121,8 +93,9 @@
                 if (sidebarType == "Add") {
                     window.location.href ="/Requests/?PageType=RequestRequest&SectionType=Requests&SidebarType=List"
                 }
+                
                 else {
-                    var url = "/Requests/" + viewClass+"?"+$.fn.getRequestIndexString(status);
+                    var url = "/Requests/" + viewClass + "?" + $.fn.getRequestIndexString($(".request-status-id").val());
                     $.fn.ajaxPartialIndexTable($(".request-status-id").val(),url, "." + viewClass, "POST", undefined, "terms, step-1, reorder-item, confirm-email");
 
                 }

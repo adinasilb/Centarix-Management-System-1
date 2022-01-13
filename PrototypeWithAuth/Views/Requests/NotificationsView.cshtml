@@ -20,6 +20,9 @@
                 daysLateTitle = "Days Late";
             }
         }
+        <div class="error-message text-danger-centarix">
+
+        </div>
         <table class="table table-headerspaced table-noheaderlines table-hover" style="width:95%;">
             <thead>
                 <tr>
@@ -56,13 +59,13 @@
                         @*<td> @item.TimeStamp.ToString("dd'/'MM'/'yyyy") </td>*@
                         <td>@Html.DisplayFor(modelItem => item.Vendor) </td>
 
-                        @*tried to put both buttons in one cell but for some reason it removes the right tr border (?!)*@
-                        @if (item.NotificationStatusID == 1)
-                        {
-                            <td class="text-center">
-                                @{
-                                    var orderDate = (DateTime)item.OrderDate;
-                                    var expectedArrivalDate = orderDate.AddDays((double)item.Request.ExpectedSupplyDays);
+                    @*tried to put both buttons in one cell but for some reason it removes the right tr border (?!)*@
+                    @if (item.NotificationStatusID == 1)
+                    {
+                        <td class="text-center">
+                            @{
+                                var orderDate = (DateTime)item.NotificationDate;
+                                var expectedArrivalDate = orderDate.AddDays((double)item.Request.ExpectedSupplyDays);
 
                                 }
                                 @(DateTime.Now.Date.Subtract(expectedArrivalDate.Date).Days)
