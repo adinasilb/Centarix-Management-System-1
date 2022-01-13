@@ -7,7 +7,7 @@ namespace PrototypeWithAuth.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_ShareProtocols_ProtocolVersions_ProtocolVersionID",
+                name: "FK_ShareProtocols_Protocols_ProtocolID",
                 table: "ShareProtocols");
 
             migrationBuilder.DropForeignKey(
@@ -35,7 +35,7 @@ namespace PrototypeWithAuth.Data.Migrations
                 table: "ShareRequestLists");
 
             migrationBuilder.DropIndex(
-                name: "IX_ShareProtocols_ProtocolVersionID",
+                name: "IX_ShareProtocols_ProtocolID",
                 table: "ShareProtocols");
 
             migrationBuilder.AddColumn<int>(
@@ -67,7 +67,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
             migrationBuilder.Sql("UPDATE ShareRequestLists SET ObjectID = RequestListID ");
 
-            migrationBuilder.Sql("UPDATE ShareProtocols SET ObjectID = ProtocolVersionID ");
+            migrationBuilder.Sql("UPDATE ShareProtocols SET ObjectID = ProtocolID ");
 
         }
 
@@ -105,16 +105,16 @@ namespace PrototypeWithAuth.Data.Migrations
                 column: "RequestListID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShareProtocols_ProtocolVersionID",
+                name: "IX_ShareProtocols_ProtocolID",
                 table: "ShareProtocols",
-                column: "ProtocolVersionID");
+                column: "ProtocolVID");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ShareProtocols_ProtocolVersions_ProtocolVersionID",
+                name: "FK_ShareProtocols_Protocols_ProtocolID",
                 table: "ShareProtocols",
-                column: "ProtocolVersionID",
-                principalTable: "ProtocolVersions",
-                principalColumn: "ProtocolVersionID",
+                column: "ProtocolID",
+                principalTable: "Protocols",
+                principalColumn: "ProtocolID",
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
