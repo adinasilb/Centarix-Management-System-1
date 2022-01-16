@@ -74,7 +74,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("ElixirTestUpload"), sqlServerOptions => sqlServerOptions.CommandTimeout(120));   
+                    Configuration.GetConnectionString("ElixirTest"), sqlServerOptions => sqlServerOptions.CommandTimeout(120));   
             });
 
             services.AddControllersWithViews();
