@@ -1,0 +1,15 @@
+﻿@model IEnumerable<CategoryBase>;
+
+<div class="row lab-man-form category-cols">
+    <div class="col-12">
+        <input type="text" placeholder="search" class="search-by-category col-input" />
+        @{ 
+            var selected = "selected";
+        }
+        @foreach (var category in Model)
+        {
+            <button href="#" type="text" class="category-field @selected col-input" data-catid="@category.ID">@category.Description</button>
+            selected = "";
+        }
+    </div>
+</div>

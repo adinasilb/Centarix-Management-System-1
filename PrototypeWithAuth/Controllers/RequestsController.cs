@@ -508,7 +508,7 @@ namespace PrototypeWithAuth.Controllers
                                 trvm.Comments.Add(comment);
                             }
                         }
-                      
+
                         trlvm.TempRequestViewModels.Add(trvm);
                         i++;
                     }
@@ -1605,7 +1605,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
             requestItemViewModel.Comments = new List<CommentBase>();
-            
+
             requestItemViewModel.ModalType = AppUtility.RequestModalType.Create;
 
             requestItemViewModel.Requests = new List<Request>();
@@ -2377,13 +2377,13 @@ namespace PrototypeWithAuth.Controllers
                         string vendorEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.OrdersEmail;
                         //string vendorEmail = /*firstRequest.Product.Vendor.OrdersEmail;*/ emails.Count() < 1 ? requests.FirstOrDefault().Product.Vendor.OrdersEmail : emails[0];
                         string vendorName = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.VendorEnName;
-              
+
                         //add a "From" Email
                         message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
 
                         // add a "To" Email
                         string ToEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.FirstOrDefault() != null ? deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.FirstOrDefault() : vendorEmail;
-                        message.To.Add(new MailboxAddress(ToEmail ));
+                        message.To.Add(new MailboxAddress(ToEmail));
 
                         //add CC's to email
                         //TEST THIS STATEMENT IF VENDOR IS MISSING AN ORDERS EMAIL
@@ -5066,10 +5066,17 @@ namespace PrototypeWithAuth.Controllers
 
             SettingsInventory settings = new SettingsInventory()
             {
-                Categories = _parentCategoriesProc.Read()
+                Categories = _parentCategoriesProc.Read().OrderBy(pc => pc.Description)
             };
-
-            return View();
+            settings.Subcategories = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ParentCategoryID == settings.Categories.FirstOrDefault().ID })
+                .OrderBy(ps => ps.Description);
+            settings.SettingsForm = new SettingsForm()
+            {
+                Category = settings.Subcategories.FirstOrDefault()
+            };
+            settings.SettingsForm.RequestCount = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.Product.ProductSubcategoryID == settings.SettingsForm.Category.ID }).Count();
+            settings.SettingsForm.ItemCount = _productsProc.Read(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategoryID == settings.SettingsForm.Category.ID }).Count();
+            return View(settings);
         }
 
         [HttpPost]
