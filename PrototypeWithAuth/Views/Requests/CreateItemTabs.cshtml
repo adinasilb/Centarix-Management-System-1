@@ -139,7 +139,7 @@
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,.location-error:hidden, input:visible, textarea:visible)';
     });
 
-    $.fn.SubmitOrderFromAddItemView = function (orderType) {
+    $.fn.SubmitOrderFromAddItemView = function (orderMethod) {
         console.log("in submitorderfromadditemview");
         var formData = new FormData($("#myForm")[0]);
         for (var pair of formData.entries()) {
@@ -149,17 +149,17 @@
             contentType: false,
             processData: false,
             async: true,
-            url: "/Requests/AddItemView?OrderType=" + orderType,
+            url: "/Requests/AddItemView?OrderMethod=" + orderMethod,
             data: formData,
             traditional: true,
             type: "POST",
             cache: false,
             success: function (data) {
-                if(orderType != "Save") {
+                if (orderMethod != "Save") {
                 $(".temprequesthiddenfors").html(''); //remove hidden fors so don't conflict further down the line
                 console.log("in success of ajax call ");
                 //alert("in success of ajax call");
-                //if (orderType == "AddToCart") {
+                //if (orderMethod == "AddToCart") {
                 //    console.log("in add to cart try 2");
                 //    $(".save-item").removeClass("save-item");
                 //    $(".outer-add-item-view").html(data);

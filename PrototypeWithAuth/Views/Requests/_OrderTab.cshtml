@@ -29,7 +29,7 @@
             <span class="small-text">If you want to process a single order immediately</span>
         </div>
         <div class="col-5">
-            <button type="submit" name="OrderType" value="@AppUtility.OrderMethod.OrderNow"
+            <button type="submit" name="OrderMethod" value="@AppUtility.OrderMethod.OrderNow"
                     class="text w-100 custom-order-inv custom-button float-right submitOrder">
                 @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.OrderNow.ToString())
             </button>
@@ -40,11 +40,7 @@
             <span class="small-text">If you want to order multiple items</span>
         </div>
         <div class="col-5">
-            @*<button type="submit" asp-action="AddItemView" asp-controller="Requests" asp-route-OrderType="@AppUtility.OrderMethod.AddToCart.ToString()"
-                        class="text w-100 custom-order-inv custom-button float-right">
-                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.AddToCart.ToString())
-                </button>*@
-            <button type="submit" name="OrderType" value="@AppUtility.OrderMethod.AddToCart"
+            <button type="submit" name="OrderMethod" value="@AppUtility.OrderMethod.AddToCart"
                     class="text w-100 custom-order-inv custom-button float-right submitOrder ">
                 @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.AddToCart.ToString())
             </button>
@@ -56,7 +52,7 @@
             <span class="small-text">Ask the secretary to get a price quote</span>
         </div>
         <div class="col-5">
-            <button type="submit" name="OrderType" value="@AppUtility.OrderMethod.RequestPriceQuote"
+            <button type="submit" name="OrderMethod" value="@AppUtility.OrderMethod.RequestPriceQuote"
                     class="text p-0 w-100 custom-order-inv custom-button create-modal-submit activeSubmit">
                 @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.RequestPriceQuote.ToString())
             </button>
@@ -68,7 +64,7 @@
             <span class="small-text">Update the purchase of an item</span>
         </div>
         <div class="col-5">
-            <button type="submit" name="OrderType" value="@AppUtility.OrderMethod.AlreadyPurchased"
+            <button type="submit" name="OrderMethod" value="@AppUtility.OrderMethod.AlreadyPurchased"
                     class="p-0  text w-100 custom-order-inv custom-button create-modal-submit submitOrder">
                 @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.AlreadyPurchased.ToString())
             </button>

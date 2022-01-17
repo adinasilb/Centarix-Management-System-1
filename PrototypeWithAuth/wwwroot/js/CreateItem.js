@@ -191,7 +191,7 @@
                 processData: false,
                 contentType: false,
                 async: true,
-                url: "/Requests/AddItemView?OrderType=SaveOperations",
+                url: "/Requests/AddItemView?OrderMethod=SaveOperations",
                 type: 'POST',
                 data: formData,
                 cache: false,

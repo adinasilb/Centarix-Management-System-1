@@ -1690,7 +1690,7 @@
             });
         }
 
-        $.fn.CancelModal = function (modalClass, orderType, orderOrigin) {
+        $.fn.CancelModal = function (modalClass, orderMethod, orderOrigin) {
             var modalType = $('#RequestIndexObject_ModalType').val();
             var guid = $('#GUID').val();
             $.ajax({
