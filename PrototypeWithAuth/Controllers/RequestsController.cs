@@ -478,6 +478,7 @@ namespace PrototypeWithAuth.Controllers
                     if (!request.Ignore)
                     {
                         request.OrderMethod = orderMethod;
+                        request.OrderTypeID =1;
                         request.ApplicationUserCreatorID = currentUser.Id;
                         if (!requestItemViewModel.IsProprietary)
                         {
@@ -902,6 +903,7 @@ namespace PrototypeWithAuth.Controllers
         {
             StringWithBool Error = new StringWithBool();
             List<ComplexIncludes<Request, ModelBase>> includes = new List<ComplexIncludes<Request, ModelBase>>();
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.OrderMethod });
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote });
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).Vendor } });
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((ProductSubcategory)p).ParentCategory } });
@@ -1926,7 +1928,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, TempRequestListViewModel tempRequestListViewModel, AppUtility.OrderMethod OrderMethodEnum/*, bool isCancel = false*/)
+        public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, TempRequestListViewModel tempRequestListViewModel, AppUtility.OrderMethod OrderMethod/*, bool isCancel = false*/)
         {
             /*if (isCancel)
             {
@@ -1945,11 +1947,14 @@ namespace PrototypeWithAuth.Controllers
                        new ComplexIncludes<Request, ModelBase> { Include = r => r.Product, ThenInclude =
                          new ComplexIncludes<ModelBase, ModelBase>{ Include = p => ((Product)p).ProductSubcategory, ThenInclude =
                          new ComplexIncludes<ModelBase, ModelBase>{ Include = ps => ((ProductSubcategory)ps).ParentCategory } } },
-                       new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor }});
+                       new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor },
+                   new ComplexIncludes<Request, ModelBase> { Include = r => r.OrderMethod }});
 
-
+                var orderMethodDB = await _orderMethodsProc.ReadOneAsync(new List<Expression<Func<OrderMethod, bool>>> { o => o.DescriptionEnum == OrderMethod.ToString() });
                 var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
                 requestItemViewModel.Requests.FirstOrDefault().RequestID = 0;
+                requestItemViewModel.Requests.FirstOrDefault().OrderMethod = orderMethodDB;
+                requestItemViewModel.Requests.FirstOrDefault().OrderTypeID = 1;
                 requestItemViewModel.Requests.FirstOrDefault().ApplicationUserCreatorID = currentUser.Id;
                 requestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;
                 requestItemViewModel.Requests.FirstOrDefault().SubProjectID = oldRequest.SubProjectID;
@@ -1967,8 +1972,8 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
                 var isInBudget = await checkIfInBudgetAsync(requestItemViewModel.Requests.FirstOrDefault(), oldRequest.Product);
                 requestItemViewModel.TempRequestListViewModel = tempRequestListViewModel;
-                TempRequestViewModel newTrvm = await AddItemAccordingToOrderMethod(requestItemViewModel.Requests.FirstOrDefault(), OrderMethodEnum, isInBudget, requestItemViewModel);
-                if (OrderMethodEnum != AppUtility.OrderMethod.RequestPriceQuote)
+                TempRequestViewModel newTrvm = await AddItemAccordingToOrderMethod(requestItemViewModel.Requests.FirstOrDefault(), OrderMethod, isInBudget, requestItemViewModel);
+                if (OrderMethod != AppUtility.OrderMethod.RequestPriceQuote)
                 {
                     try
                     {
@@ -1990,15 +1995,15 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 var action = "UploadQuoteModal"; //for order now and add to cart
-                if (OrderMethodEnum == AppUtility.OrderMethod.AlreadyPurchased)
+                if (OrderMethod == AppUtility.OrderMethod.AlreadyPurchased)
                 {
                     action = "UploadOrderModal";
                 }
-                else if (OrderMethodEnum == AppUtility.OrderMethod.RequestPriceQuote)
+                else if (OrderMethod == AppUtility.OrderMethod.RequestPriceQuote)
                 {
                     return new EmptyResult();
                 }
-                tempRequestListViewModel.RequestIndexObject.OrderMethod = OrderMethodEnum;
+                tempRequestListViewModel.RequestIndexObject.OrderMethod = OrderMethod;
                 tempRequestListViewModel.RequestIndexObject.IsReorder = true;
                 tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
                 //throw new Exception();
@@ -2354,7 +2359,7 @@ namespace PrototypeWithAuth.Controllers
                         message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
 
                         // add a "To" Email
-                        string ToEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.FirstOrDefault() != null ? deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.FirstOrDefault() : vendorEmail;
+                        string ToEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails?.FirstOrDefault() != null ? deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.FirstOrDefault() : vendorEmail;
                         message.To.Add(new MailboxAddress(ToEmail));
 
                         //add CC's to email
@@ -3272,6 +3277,7 @@ namespace PrototypeWithAuth.Controllers
                 new List<ComplexIncludes<Request, ModelBase>>
                 {
                     new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote },
+                     new ComplexIncludes<Request, ModelBase> { Include = r => r.OrderMethod },
                       new ComplexIncludes<Request, ModelBase> { Include = r => r.PaymentStatus },
                     new ComplexIncludes<Request, ModelBase> {
                         Include = r => r.Product,
