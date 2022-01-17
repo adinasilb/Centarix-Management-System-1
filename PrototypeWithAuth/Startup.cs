@@ -26,6 +26,9 @@ using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using JavaScriptEngineSwitcher.V8;
+using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
+using React.AspNet;
 
 namespace PrototypeWithAuth
 {
@@ -79,7 +82,9 @@ namespace PrototypeWithAuth
             });
 
             services.AddControllersWithViews();
-
+            services.AddReact();
+            services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
+            .AddV8();
 
             // Add framework services.
             services.AddMvc();
@@ -161,6 +166,27 @@ namespace PrototypeWithAuth
             app.UseHttpsRedirection();
 
             app.UseStaticFiles(); //may be here for other reasons but also need to download pdf files
+
+
+            app.UseReact(config =>
+            {
+                // If you want to use server-side rendering of React components,
+                // add all the necessary JavaScript files here. This includes
+                // your components as well as all of their dependencies.
+                // See http://reactjs.net/ for more information. Example:
+                //config
+                //  .AddScript("~/js/First.jsx")
+                //  .AddScript("~/js/Second.jsx");
+
+                // If you use an external build too (for example, Babel, Webpack,
+                // Browserify or Gulp), you can improve performance by disabling
+                // ReactJS.NET's version of Babel and loading the pre-transpiled
+                // scripts. Example:
+                //config
+                //  .SetLoadBabel(false)
+                //  .AddScriptWithoutTransform("~/js/bundle.server.js");
+            });
+
             app.UseRouting();
 
             app.UseAuthentication();
