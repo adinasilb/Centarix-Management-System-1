@@ -478,6 +478,7 @@ namespace PrototypeWithAuth.Controllers
                     if (!request.Ignore)
                     {
                         request.OrderMethod = orderMethod;
+                        request.OrderTypeID =1;
                         request.ApplicationUserCreatorID = currentUser.Id;
                         if (!requestItemViewModel.IsProprietary)
                         {
@@ -1949,9 +1950,11 @@ namespace PrototypeWithAuth.Controllers
                        new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor },
                    new ComplexIncludes<Request, ModelBase> { Include = r => r.OrderMethod }});
 
-
+                var orderMethodDB = await _orderMethodsProc.ReadOneAsync(new List<Expression<Func<OrderMethod, bool>>> { o => o.DescriptionEnum == OrderMethod.ToString() });
                 var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
                 requestItemViewModel.Requests.FirstOrDefault().RequestID = 0;
+                requestItemViewModel.Requests.FirstOrDefault().OrderMethod = orderMethodDB;
+                requestItemViewModel.Requests.FirstOrDefault().OrderTypeID = 1;
                 requestItemViewModel.Requests.FirstOrDefault().ApplicationUserCreatorID = currentUser.Id;
                 requestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;
                 requestItemViewModel.Requests.FirstOrDefault().SubProjectID = oldRequest.SubProjectID;
