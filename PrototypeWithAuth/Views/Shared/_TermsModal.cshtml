@@ -84,7 +84,7 @@
             </div>
 
         </div>
-        @if (Model.TempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderType != AppUtility.OrderTypeEnum.AlreadyPurchased.ToString() && Model.TempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderType != AppUtility.OrderTypeEnum.SaveOperations.ToString())
+        @if (Model.TempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderMethod.DescriptionEnum.ToString() != AppUtility.OrderMethod.AlreadyPurchased.ToString())
         {
             <div class="row">
                 <div class="col-12">

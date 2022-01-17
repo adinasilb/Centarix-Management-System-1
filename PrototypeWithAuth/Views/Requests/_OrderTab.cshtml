@@ -29,9 +29,9 @@
             <span class="small-text">If you want to process a single order immediately</span>
         </div>
         <div class="col-5">
-            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.OrderNow"
+            <button type="submit" name="OrderType" value="@AppUtility.OrderMethod.OrderNow"
                     class="text w-100 custom-order-inv custom-button float-right submitOrder">
-                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.OrderNow.ToString())
+                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.OrderNow.ToString())
             </button>
         </div>
     </div>
@@ -40,13 +40,13 @@
             <span class="small-text">If you want to order multiple items</span>
         </div>
         <div class="col-5">
-            @*<button type="submit" asp-action="AddItemView" asp-controller="Requests" asp-route-OrderType="@AppUtility.OrderTypeEnum.AddToCart.ToString()"
+            @*<button type="submit" asp-action="AddItemView" asp-controller="Requests" asp-route-OrderType="@AppUtility.OrderMethod.AddToCart.ToString()"
                         class="text w-100 custom-order-inv custom-button float-right">
-                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
+                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.AddToCart.ToString())
                 </button>*@
-            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart"
+            <button type="submit" name="OrderType" value="@AppUtility.OrderMethod.AddToCart"
                     class="text w-100 custom-order-inv custom-button float-right submitOrder ">
-                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
+                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.AddToCart.ToString())
             </button>
 
         </div>
@@ -56,9 +56,9 @@
             <span class="small-text">Ask the secretary to get a price quote</span>
         </div>
         <div class="col-5">
-            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.RequestPriceQuote"
+            <button type="submit" name="OrderType" value="@AppUtility.OrderMethod.RequestPriceQuote"
                     class="text p-0 w-100 custom-order-inv custom-button create-modal-submit activeSubmit">
-                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
+                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.RequestPriceQuote.ToString())
             </button>
 
         </div>
@@ -68,9 +68,9 @@
             <span class="small-text">Update the purchase of an item</span>
         </div>
         <div class="col-5">
-            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AlreadyPurchased"
+            <button type="submit" name="OrderType" value="@AppUtility.OrderMethod.AlreadyPurchased"
                     class="p-0  text w-100 custom-order-inv custom-button create-modal-submit submitOrder">
-                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AlreadyPurchased.ToString())
+                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.AlreadyPurchased.ToString())
             </button>
 
         </div>

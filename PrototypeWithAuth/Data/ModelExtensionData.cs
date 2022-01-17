@@ -176,6 +176,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<CommentType>().HasData(
                 SeededData.CommentTypeData.Get()
                 );
+            modelBuilder.Entity<OrderMethod>().HasData(
+               SeededData.OrderMethodData.Get()
+               );
         }
     }
 }

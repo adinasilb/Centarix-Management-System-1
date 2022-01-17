@@ -69,7 +69,7 @@
                 @{await Html.RenderPartialAsync("~/Views/Requests/_ItemTab.cshtml", Model); }
             </div>
         }
-        @if ((Model.Requests[0].RequestStatusID == 3 && Model.SectionType != AppUtility.MenuItems.Protocols && Model.Requests[0].OrderType != AppUtility.OrderTypeEnum.SaveOperations.ToString())
+        @if ((Model.Requests[0].RequestStatusID == 3 && Model.SectionType != AppUtility.MenuItems.Protocols && requestCategoryType != 2)
            || Model.IsProprietary)
         {
             <div id="location" class="tab-pane fade @showLocation" value="2">

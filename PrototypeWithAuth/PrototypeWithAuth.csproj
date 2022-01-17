@@ -543,6 +543,14 @@
     <Compile Remove="Data\Migrations\20211229131857_TestPCDesc.Designer.cs" />
     <Compile Remove="Data\Migrations\20211229132454_TestPCDesc.cs" />
     <Compile Remove="Data\Migrations\20211229132454_TestPCDesc.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220116122503_AddOrderMethods.cs" />
+    <Compile Remove="Data\Migrations\20220116122503_AddOrderMethods.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220116123435_AddOrderMethodTable.cs" />
+    <Compile Remove="Data\Migrations\20220116123435_AddOrderMethodTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220116125507_AddOrderMethodToRequestWithData.cs" />
+    <Compile Remove="Data\Migrations\20220116125507_AddOrderMethodToRequestWithData.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220116131143_AddOrderMethodToRequestWithData.cs" />
+    <Compile Remove="Data\Migrations\20220116131143_AddOrderMethodToRequestWithData.Designer.cs" />
   </ItemGroup>
 
 

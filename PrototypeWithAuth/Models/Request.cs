@@ -77,11 +77,9 @@ namespace PrototypeWithAuth.Models
 
 
         public IEnumerable<RequestNotification> RequestNotifications { get; set; }
-        public string OrderType { get; set; }
 
-      
-
-
+        public int OrderMethodID { get; set; }
+        public OrderMethod OrderMethod { get; set; }
         //payment info
         public uint? Installments { get; set; } //number of installments
         public ListImplementsModelBase<Payment> Payments { get; set; }

@@ -167,7 +167,9 @@ namespace PrototypeWithAuth.AppData
         public enum RequestModalType { Create, Edit, Summary }
         public enum ProtocolModalType { None, Create, CheckListMode, Summary, Edit, SummaryFloat, CreateNewVersion }
         public enum VendorModalType { Create, Edit, SummaryFloat }
-        public enum OrderTypeEnum { None, RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
+        public enum OrderMethod { None, RequestPriceQuote, OrderNow, AddToCart, AlreadyPurchased, Save, ExcelUpload }
+        public enum CartStatus { None, InCart, Ordered}
+        public enum OrderType { Single, Recurring, Standing}
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
         public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveToList, DeleteFromList }
         public enum PopoverEnum { None }

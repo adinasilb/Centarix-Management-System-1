@@ -105,7 +105,7 @@ namespace PrototypeWithAuth.AppData
             set { _SelectedPriceSort = value; }
         }
         public AppUtility.CurrencyEnum SelectedCurrency { get; set; }
-        public AppUtility.OrderTypeEnum OrderType { get; set; }
+        public AppUtility.OrderMethod OrderType { get; set; }
         public bool CategorySelected { get; set; }
         public bool SubcategorySelected { get; set; }
         public bool IsReorder { get; set; }

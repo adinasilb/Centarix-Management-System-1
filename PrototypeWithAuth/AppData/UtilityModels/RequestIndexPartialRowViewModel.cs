@@ -292,7 +292,7 @@ namespace PrototypeWithAuth.ViewModels
         }
         private static int GetOrderTypeEnum(string orderType)
         {
-            var id = (int)Enum.Parse(typeof(AppUtility.OrderTypeEnum), orderType);
+            var id = (int)Enum.Parse(typeof(AppUtility.OrderMethod), orderType);
             return id;
         }
         private String GetSharedBy(Request request, ShareRequest shareRequest)
@@ -369,7 +369,7 @@ namespace PrototypeWithAuth.ViewModels
         {
             try
             {
-                if (r.OrderType == AppUtility.OrderTypeEnum.Save.ToString())
+                if (r.OrderMethod.DescriptionEnum.ToString() == AppUtility.OrderMethod.Save.ToString())
                 {
                     return new List<StringWithBool>() { new StringWithBool { String = "Centarix", Bool = false } };
                 }
@@ -393,7 +393,7 @@ namespace PrototypeWithAuth.ViewModels
         }
         private List<StringWithBool> GetDateForFavoriteRequest()
         {
-            if (r.OrderType == AppUtility.OrderTypeEnum.Save.ToString())
+            if (r.OrderMethod.DescriptionEnum.ToString() == AppUtility.OrderMethod.Save.ToString())
             {
                 return new List<StringWithBool>() { new StringWithBool { String = r.CreationDate.GetElixirDateFormat(), Bool = false } };
             }
@@ -417,7 +417,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, ValueWithError = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = r.CreationDate.GetElixirDateFormat(), Bool = false } } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, null, r, null), AjaxID = r.RequestID };
-            yield return new RequestIndexPartialColumnViewModel() { Width = 0, AjaxLink = "p-0 d-none order-type" + r.RequestID, AjaxID = GetOrderTypeEnum(r.OrderType), ValueWithError = new List<StringWithBool>() { new StringWithBool { String = r.OrderType.ToString(), Bool = false } } };
+            yield return new RequestIndexPartialColumnViewModel() { Width = 0, AjaxLink = "p-0 d-none order-type" + r.RequestID, AjaxID = GetOrderTypeEnum(r.OrderMethod.DescriptionEnum.ToString()), ValueWithError = new List<StringWithBool>() { new StringWithBool { String = r.OrderMethod.DescriptionEnum.ToString().ToString(), Bool = false } } };
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetOrderedColumns()
         {

@@ -377,7 +377,7 @@ namespace PrototypeWithAuth.CRUD
                 {
                     try
                     {
-                        await Read(new List<Expression<Func<Request, bool>>> { r => r.OrderType == AppUtility.OrderTypeEnum.ExcelUpload.ToString() })
+                        await Read(new List<Expression<Func<Request, bool>>> { r => r.OrderMethod.DescriptionEnum.ToString() == AppUtility.OrderMethod.ExcelUpload.ToString() })
                             .ForEachAsync(r => { 
                                 var rate = AppUtility.GetExchangeRateByDate(r.CreationDate);
                                 r.ExchangeRate = rate;

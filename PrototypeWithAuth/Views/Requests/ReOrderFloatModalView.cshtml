@@ -120,27 +120,27 @@
                                 {
                                     <span class="text d-block">&ensp;</span>
                                 }
-                                <button type="submit" name="OrderType" @*asp-action="ReOrderFloatModalView"*@ value="@AppUtility.OrderTypeEnum.RequestPriceQuote"
+                                <button type="submit" name="OrderType" @*asp-action="ReOrderFloatModalView"*@ value="@AppUtility.OrderMethod.RequestPriceQuote"
                                         class="p-0 custom-order-inv custom-button create-modal-submit @submitOrderClass @hasWarningClass" productID="@Model.Requests[0].ProductID">
-                                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
+                                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.RequestPriceQuote.ToString())
                                 </button>
 
                             </div>
                             <div class="col-4">
                                 <span class="text d-block">&ensp;</span>
-                                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.OrderNow"
+                                <button type="submit" name="OrderType" value="@AppUtility.OrderMethod.OrderNow"
                                         class="p-0 custom-order-inv custom-button create-modal-submit  @submitOrderClass  @hasWarningClass"
                                         productID="@Model.Requests[0].ProductID">
-                                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.OrderNow.ToString())
+                                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.OrderNow.ToString())
                                 </button>
 
                             </div>
                             <div class="col-4">
                                 <span class="text d-block">&ensp;</span>
-                                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart"
+                                <button type="submit" name="OrderType" value="@AppUtility.OrderMethod.AddToCart"
                                         class="p-0 custom-order-inv custom-button  create-modal-submit @submitOrderClass  @hasWarningClass"
                                         productID="@Model.Requests[0].ProductID">
-                                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
+                                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.AddToCart.ToString())
                                 </button>
 
                             </div>
@@ -159,10 +159,10 @@
                         </div>
                         <div class="row">
                             <div class="col-4">
-                                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AlreadyPurchased"
+                                <button type="submit" name="OrderType" value="@AppUtility.OrderMethod.AlreadyPurchased"
                                         class="p-0 custom-order-inv custom-button create-modal-submit  @submitOrderClass  @hasWarningClass"
                                         productID="@Model.Requests[0].ProductID">
-                                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AlreadyPurchased.ToString())
+                                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.AlreadyPurchased.ToString())
                                 </button>
 
                             </div>
@@ -217,7 +217,7 @@
                 contentType: false,
                 processData: false,
                 async: true,
-                url: "/Requests/ReOrderFloatModalView?OrderTypeEnum=" + orderType,
+                url: "/Requests/ReOrderFloatModalView?OrderMethod=" + orderType,
                 data: formData,
                 traditional: true,
                 type: "POST",
