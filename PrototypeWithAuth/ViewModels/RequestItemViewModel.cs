@@ -30,6 +30,7 @@ namespace PrototypeWithAuth.ViewModels
         public ILookup<UnitParentType, UnitType> UnitTypes { get; set; }
         public IEnumerable<Project> Projects { get; set; }
         public IEnumerable<SubProject> SubProjects { get; set; }
+        public IEnumerable<ApplicationUser> ApplicationUsers { get; set; }
         public bool Paid { get; set; }
         public bool PayNow { get; set; }
         public bool PayLater { get; set; }

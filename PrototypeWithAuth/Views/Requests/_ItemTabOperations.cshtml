@@ -42,34 +42,27 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <label asp-for="Requests[0].Product.ProductSubcategory.ParentCategory.Description" class="control-label"></label>
-                @if (Model.IsProprietary)
-                {
-                    <input asp-for="Requests[0].Product.ProductSubcategory.ParentCategory.Description" class="form-control-plaintext border-bottom" type="text" readonly />
-                }
-                else
-                {
-                    @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategory.ParentCategoryID,
-                 new SelectList(
-                 Model.ParentCategories,
-                 "ID",
-                 "Description"
-                 ), "Select Category",
-                 new
-                      {
-                          @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass,
-                          @id = "parentlist",
-                     @searchable = "Select Category",
-                          @data_stop_refresh = "true"
-                      })
-                }
+                <label asp-for="Requests[0].Product.ProductSubcategory.ParentCategory.Description" class="control-label">Category</label>
+                @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategory.ParentCategoryID,
+                new SelectList(
+                Model.ParentCategories,
+                "ID",
+                "Description"
+                ), "Select Category",
+                new
+                    {
+                        @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass,
+                        @id = "parentlist",
+                    @searchable = "Select Category",
+                        @data_stop_refresh = "true"
+                    })
                 <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" />
                 <span asp-validation-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
             </div>
         </div>
         <div class="col-md-6 px-4">
             <div class="form-group sublist">
-                <label asp-for="Requests[0].Product.ProductSubcategory.Description" class="control-label"></label>
+                <label asp-for="Requests[0].Product.ProductSubcategory.Description" class="control-label">Subcategory</label>
                 @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategoryID,
                     new SelectList(
                     Model.ProductSubcategories,
@@ -83,7 +76,7 @@
                         @searchable = "Select Sub Category",
                              @data_stop_refresh = "true"
                          })
-                <input type="hidden" asp-for="Requests[0].Product.ProductSubcategoryID" disabled class="proprietryHidenCategory" />
+                <input type="hidden" asp-for="Requests[0].Product.ProductSubcategoryID" disabled  />
                 <span asp-validation-for="Requests[0].Product.ProductSubcategoryID" class="text-danger-centarix"></span>
             </div>
         </div>
@@ -134,43 +127,63 @@
 
             <div class="col-12"><span class="vendor-price-warning large-text text-danger-centarix font-weight-bold" style="color: #EED202;" id="vendor-price-warning"></span></div>
         </div>
-
         <div class="row">
+            <div class="col-md-6 ">
+                <label asp-for="Requests[0].Product.ProductSecondaryName" class="control-label">Item Secondary Name</label>
+                <input asp-for="Requests[0].Product.ProductSecondaryName" class="form-control-plaintext border-bottom catalog-number  @markReadOnlyClass" />
+                <span asp-validation-for="Requests[0].Product.ProductSecondaryName" class="text-danger-centarix"></span>
+            </div>
             <div class="col-md-6 ">
                 <label asp-for="Requests[0].Product.CatalogNumber" class="control-label"></label>
                 <input asp-for="Requests[0].Product.CatalogNumber" class="form-control-plaintext border-bottom catalog-number  @markReadOnlyClass" />
                 <span asp-validation-for="Requests[0].Product.CatalogNumber" class="text-danger-centarix"></span>
             </div>
-            <div class="col-md-3 ">
+        </div>
+        <div class="row">
+            <div class="col-md-6 ">
                 <label asp-for="Requests[0].Warranty" class="control-label">Warranty Months</label>
                 <input asp-for="Requests[0].Warranty" class="form-control-plaintext border-bottom warranty-months  @markReadOnlyClass" type="text" />
                 <span asp-validation-for="Requests[0].Warranty" class="text-danger-centarix"></span>
             </div>
-        </div>
-        @if (modalType != AppUtility.RequestModalType.Create && Model.Requests[0].ParentQuote?.QuoteNumber != null)
-        {
-            <div class="row @hiddenSummaryClass">
-                <div class="col-md-6">
-                    <label asp-for="Requests[0].ParentQuote.QuoteNumber" class="control-label"></label>
-                    <input asp-for="Requests[0].ParentQuote.QuoteNumber" readonly class="form-control-plaintext border-bottom  @markReadOnlyClass" disabled />
-                    <span asp-validation-for="Requests[0].ParentQuote.QuoteNumber" class="text-danger-centarix" />
+            <div class="col-md-6 ">
+                <label asp-for="Requests[0].URL" class="control-label"></label>
+                @*<a type="hidden" id="url-click" href="@AppUtility.GetUrlFromUserData(Model.Requests[0].URL)" target="_blank" />*@
+                <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="form-control-plaintext border-bottom popover-url align-wi" value="RequestsURL">
+                    <input asp-for="Requests[0].URL" class="border-0 bg-transparent black-87 @markReadOnlyClass url-shown" />
+                </button>
+                @*<input asp-for="Requests[0].URL" href="#" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" value="@Model.Requests[0].URL"*@
+                @*class="form-control-plaintext border-bottom @websiteCategories @markReadOnlyClass url-shown" />*@
+
+                <div style="display:none;" id="RequestsURL">
+                    <div class="row px-3 accounting-popover">
+                        <a href="@AppUtility.GetUrlFromUserData(Model.Requests[0].URL)" target="_blank" class="btn-link text no-hover">
+                            <label class="m-2 text-transform-none">@Model.Requests[0].URL</label>
+                        </a>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <label asp-for="Requests[0].ParentQuote.ExpirationDate" class="control-label">Quote Expiration Date</label>
-                    <input asp-for="Requests[0].ParentQuote.ExpirationDate" type="text" readonly class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" disabled value="@(Model.Requests[0].ParentQuote.ExpirationDate == new DateTime() ? "": Model.Requests[0].ParentQuote.ExpirationDate.GetElixirDateFormat())" />
-                    <span asp-validation-for="Requests[0].ParentQuote.ExpirationDate" class="text-danger-centarix quote-date" />
-                </div>
+                <span asp-validation-for="Requests[0].URL" class="text-danger-centarix"></span>
             </div>
-        }
+        </div>
         <div class="row">
-            @if (Model.Requests[0].ExpectedSupplyDays != null )
+            @if (modalType == AppUtility.RequestModalType.Create)
             {
-                <div class="col-md-4 @hiddenSummaryClass requestPriceQuote">
+                <div class="custom-control custom-radio mr-4 ml-4 ">
+                    <input class="custom-control-input received-radio " id="Received" name="_Received" type="radio" value="false" />
+                    <label class="radio-button custom-control-label pt-1 pl-2 received-radio " for="Received">Received</label>
+                </div>
+                <div class="custom-control custom-radio mr-4 ml-4">
+                    <input class="custom-control-input received-radio " id="ExpectedSupply" name="_Received" type="radio" value="true" />
+                    <label class="radio-button custom-control-label pt-1 pl-2 received-radio " for="ExpectedSupply">Expected Supply</label>
+                </div>
+            }
+            @if (Model.Requests[0].ApplicationUserReceiver == null)
+            {
+                <div class="col-md-4 @hiddenSummaryClass expected-supply-info">
                     <label asp-for="Requests[0].ExpectedSupplyDays" class="control-label"></label>
                     <input asp-for="Requests[0].ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days requestPriceQuote  @markReadOnlyClass" type="text" />
                     <span asp-validation-for="Requests[0].ExpectedSupplyDays" class="text-danger-centarix"></span>
                 </div>
-                <div class="col-md-4  @hiddenSummaryClass requestPriceQuote">
+                <div class="col-md-4  @hiddenSummaryClass expected-supply-info">
                     <div class="form-group">
                         <label class="control-label">Expected supply date</label>
                         @if (modalType == AppUtility.RequestModalType.Create)
@@ -191,25 +204,50 @@
                     </div>
                 </div>
             }
-            <div class="col-md-4 ">
-                <label asp-for="Requests[0].URL" class="control-label"></label>
-                @*<a type="hidden" id="url-click" href="@AppUtility.GetUrlFromUserData(Model.Requests[0].URL)" target="_blank" />*@
-                <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="form-control-plaintext border-bottom popover-url align-wi" value="RequestsURL">
-                    <input asp-for="Requests[0].URL" class="border-0 bg-transparent black-87 @markReadOnlyClass url-shown" />
-                </button>
-                @*<input asp-for="Requests[0].URL" href="#" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" value="@Model.Requests[0].URL"*@
-                @*class="form-control-plaintext border-bottom @websiteCategories @markReadOnlyClass url-shown" />*@
-
-                <div style="display:none;" id="RequestsURL">
-                    <div class="row px-3 accounting-popover">
-                        <a href="@AppUtility.GetUrlFromUserData(Model.Requests[0].URL)" target="_blank" class="btn-link text no-hover">
-                            <label class="m-2 text-transform-none">@Model.Requests[0].URL</label>
-                        </a>
-                    </div>
-                </div>
-                <span asp-validation-for="Requests[0].URL" class="text-danger-centarix"></span>
+            <div class="col-md-3 received-info d-none ">
+                <label asp-for="Requests[0].ArrivalDate" class="control-label"></label>
+                <input asp-for="Requests[0].ArrivalDate" class="form-control-plaintext datepicker border-bottom" asp-format="@AppUtility.AspDateFormatString" disabled type="text" />
             </div>
+            <div class="col-md-3 received-info d-none">
+                <label class="control-label">Received By</label>
+                <div class="col-10 offset-1">
+                    @Html.DropDownListFor(vm => vm.Requests[0].ApplicationUserReceiverID,
+                    new SelectList(
+                            Model.ApplicationUsers,
+                            dataValueField: "ID",
+                            dataTextField: "FirstName"+" "+"LastName"),
+                            "Select a Receiver",
+                            htmlAttributes: new
+                                 {
+                                     @class = " receiver mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass,
+                                @id = "receiver",
+                                     @size = 1,
+                                     @searchable = "Select A Receiver",
+                                     @data_stop_refresh = "true"
+                                 }
+                            )
+
+                </div>
+            </div>
+            <input type="hidden" asp-for="Requests[0].ApplicationUserReceiverID" />
+
         </div>
+        @if (modalType != AppUtility.RequestModalType.Create && Model.Requests[0].ParentQuote?.QuoteNumber != null)
+        {
+            <div class="row @hiddenSummaryClass">
+                <div class="col-md-6">
+                    <label asp-for="Requests[0].ParentQuote.QuoteNumber" class="control-label"></label>
+                    <input asp-for="Requests[0].ParentQuote.QuoteNumber" readonly class="form-control-plaintext border-bottom  @markReadOnlyClass" disabled />
+                    <span asp-validation-for="Requests[0].ParentQuote.QuoteNumber" class="text-danger-centarix" />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Requests[0].ParentQuote.ExpirationDate" class="control-label">Quote Expiration Date</label>
+                    <input asp-for="Requests[0].ParentQuote.ExpirationDate" type="text" readonly class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" disabled value="@(Model.Requests[0].ParentQuote.ExpirationDate == new DateTime() ? "": Model.Requests[0].ParentQuote.ExpirationDate.GetElixirDateFormat())" />
+                    <span asp-validation-for="Requests[0].ParentQuote.ExpirationDate" class="text-danger-centarix quote-date" />
+                </div>
+            </div>
+        }
+        
         @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null || Model.Requests[0].ParentRequest?.OrderNumber != null)
         {
             <div class="row">
@@ -240,18 +278,7 @@
         @if (Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true)
         {
             <div class="row">
-                @if (Model.Requests[0].RequestStatusID == 3)
-                {
-                    <div class="col-md-3 ">
-                        <label asp-for="Requests[0].ArrivalDate" class="control-label"></label>
-                        <input asp-for="Requests[0].ArrivalDate" class="form-control-plaintext border-bottom" asp-format="@AppUtility.AspDateFormatString" disabled type="text" />
-                    </div>
-                    <div class="col-md-3">
-                        <label class="control-label">Received By</label>
-                        <input type="text" class="form-control-plaintext border-bottom" disabled value="@Model.Requests[0].ApplicationUserReceiver.FirstName @Model.Requests[0].ApplicationUserReceiver.LastName" />
-                        <input type="hidden" asp-for="Requests[0].ApplicationUserReceiverID" />
-                    </div>
-                }
+                
                 @if (Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true) //todo: make this a loop for each payment
                 {
                     <input type="hidden" asp-for="Requests[0].Payments[0].InvoiceID" />
@@ -270,6 +297,16 @@
             </div>
         }
     <script>
+        $(".received-radio").off('click').click(function (e) {
+            if ($(this).attr("id") == "Received") {
+                $(".received-info").removeClass("d-none");
+                $(".expected-supply-info").addClass("d-none");
+            }
+            else {
+                $(".received-info").addClass("d-none");
+                $(".expected-supply-info").removeClass("d-none");
+            }
+        })
 
         $(".popover-url").off('click').click(function () {
             if ($("#RequestsURL .accounting-popover a").attr("href") == "") {
