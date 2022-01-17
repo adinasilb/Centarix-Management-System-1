@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220117113002_AddOrderTypeModel")]
+    partial class AddOrderTypeModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3399,26 +3401,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("OrderTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            Description = "Single",
-                            DescriptionEnum = "Single"
-                        },
-                        new
-                        {
-                            ID = 2,
-                            Description = "Recurring",
-                            DescriptionEnum = "Recurring"
-                        },
-                        new
-                        {
-                            ID = 3,
-                            Description = "Standing",
-                            DescriptionEnum = "Standing"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
@@ -5348,9 +5330,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("OrderMethodID")
                         .HasColumnType("int");
 
-                    b.Property<int>("OrderTypeID")
-                        .HasColumnType("int");
-
                     b.Property<int?>("ParentQuoteID")
                         .HasColumnType("int");
 
@@ -5401,8 +5380,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("InvoiceID");
 
                     b.HasIndex("OrderMethodID");
-
-                    b.HasIndex("OrderTypeID");
 
                     b.HasIndex("ParentQuoteID");
 
@@ -8230,12 +8207,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.OrderMethod", "OrderMethod")
                         .WithMany()
                         .HasForeignKey("OrderMethodID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.OrderType", "OrderType")
-                        .WithMany()
-                        .HasForeignKey("OrderTypeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

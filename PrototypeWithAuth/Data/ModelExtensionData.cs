@@ -179,6 +179,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<OrderMethod>().HasData(
                SeededData.OrderMethodData.Get()
                );
+            modelBuilder.Entity<OrderType>().HasData(
+               SeededData.OrderTypeData.Get()
+               );
         }
     }
 }
