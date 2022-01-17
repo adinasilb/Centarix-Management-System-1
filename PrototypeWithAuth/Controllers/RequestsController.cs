@@ -464,7 +464,7 @@ namespace PrototypeWithAuth.Controllers
                 var vendor = await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == requestItemViewModel.Requests.FirstOrDefault().Product.VendorID });
                 var exchangeRate = requestItemViewModel.Requests.FirstOrDefault().ExchangeRate;
                 var currency = requestItemViewModel.Requests.FirstOrDefault().Currency;
-                var orderMethod = await _orderMethodsProc.ReadOneAsync(new List<Expression<Func<OrderMethod, bool>>> { o => o.DescriptionEnum == OrderType.ToString() });
+                var orderMethod = await _orderMethodsProc.ReadOneAsync(new List<Expression<Func<OrderMethod, bool>>> { o => o.DescriptionEnum == OrderMethod.ToString() });
                 //declared outside the if b/c it's used farther down too 
                 var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
 
