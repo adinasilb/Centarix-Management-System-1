@@ -5066,9 +5066,9 @@ namespace PrototypeWithAuth.Controllers
 
             SettingsInventory settings = new SettingsInventory()
             {
-                Categories = GetCategoryList(new ParentCategory())
+                Categories = GetCategoryList(new ParentCategory().GetType().Name)
             };
-            settings.Subcategories = GetCategoryList(new ProductSubcategory(), settings.Categories.FirstOrDefault().ID);
+            settings.Subcategories = GetCategoryList(new ProductSubcategory().GetType().Name, settings.Categories.FirstOrDefault().ID);
             settings.SettingsForm = new SettingsForm()
             {
                 Category = settings.Subcategories.FirstOrDefault()
@@ -5079,17 +5079,16 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public IActionResult _CategoryList(ModelBase model, int? ParentCategoryID)
+        public IActionResult _CategoryList(String modelType, int? ParentCategoryID)
         {
-            var categoryBases = GetCategoryList(model, ParentCategoryID);
+            var categoryBases = GetCategoryList(modelType, ParentCategoryID);
             return PartialView(categoryBases);
         }
 
-        public IEnumerable<CategoryBase> GetCategoryList(ModelBase model, int? ParentCategoryID = null)
+        public IEnumerable<CategoryBase> GetCategoryList(String modelType, int? ParentCategoryID = null)
         {
             IEnumerable<CategoryBase> categoryBases = new List<CategoryBase>();
-            var T = model.GetType();
-            switch (T.Name)
+            switch (modelType)
             {
                 case "ProductSubcategory":
                     var wheres = new List<Expression<Func<ProductSubcategory, bool>>>();
