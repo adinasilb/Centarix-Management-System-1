@@ -178,7 +178,7 @@ namespace PrototypeWithAuth.Controllers
                             wheres.Add(r => r.QuoteStatusID == 4 && r.RequestStatusID == 6);
                             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator });
                             select = r => new RequestIndexPartialRowViewModel
-                             (AppUtility.IndexTableTypes.LabOrders, r, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                             (AppUtility.IndexTableTypes.LabOrders, r, r.OrderMethod, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString)
 
                             {
@@ -199,7 +199,7 @@ namespace PrototypeWithAuth.Controllers
                             iconList.Add(editQuoteDetailsIcon);
                             iconList.Add(deleteIcon);
                             orderby = r => r.CreationDate;
-                            select = r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.LabQuotes, r, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                            select = r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.LabQuotes, r, r.OrderMethod, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString, r.ParentQuote)
 
                             {
@@ -248,7 +248,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     orderby = r => r.ParentRequest.OrderDate;
                     select = r => new RequestIndexPartialRowViewModel
-                    (AppUtility.IndexTableTypes.AccountingNotifications, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                    (AppUtility.IndexTableTypes.AccountingNotifications, r, r.OrderMethod, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString, new Request())
                     {
                         ButtonClasses = " invoice-add-all accounting-background-color ",
@@ -268,7 +268,7 @@ namespace PrototypeWithAuth.Controllers
 
                             orderbyForPayments = r => r.Request.ParentRequest.OrderDate;
                             selectForPayments = r => new RequestIndexPartialRowViewModel
-                             (AppUtility.IndexTableTypes.AccountingPaymentsInstallments, r.Request, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
+                             (AppUtility.IndexTableTypes.AccountingPaymentsInstallments, r.Request, r.Request.OrderMethod, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
                                 r.Request.Product.ProductSubcategory.ParentCategory, r.Request.Product.UnitType, r.Request.Product.SubUnitType, r.Request.Product.SubSubUnitType, requestIndexObject, iconList,
                                 defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
 
@@ -281,7 +281,7 @@ namespace PrototypeWithAuth.Controllers
                             iconList.Add(popoverMoreIcon);
                             orderbyForPayments = r => r.Request.ParentRequest.OrderDate;
                             selectForPayments = r => new RequestIndexPartialRowViewModel
-                             (AppUtility.IndexTableTypes.AccountingPaymentsDefault, r.Request, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
+                             (AppUtility.IndexTableTypes.AccountingPaymentsDefault, r.Request, r.Request.OrderMethod, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
                         r.Request.Product.ProductSubcategory.ParentCategory, r.Request.Product.UnitType, r.Request.Product.SubUnitType, r.Request.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
 
                             {
@@ -301,7 +301,7 @@ namespace PrototypeWithAuth.Controllers
                     includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator });
                     iconList.Add(deleteIcon);
                     orderby = r => r.CreationDate;
-                    select = r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Cart, r, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                    select = r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Cart, r, r.OrderMethod, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString)
                     {
                         ButtonClasses = " load-terms-modal order-inv-background-color ",
