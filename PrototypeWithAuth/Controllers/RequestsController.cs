@@ -5066,10 +5066,9 @@ namespace PrototypeWithAuth.Controllers
 
             SettingsInventory settings = new SettingsInventory()
             {
-                Categories = _parentCategoriesProc.Read().OrderBy(pc => pc.Description)
+                Categories = GetCategoryList(new ParentCategory())
             };
-            settings.Subcategories = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ParentCategoryID == settings.Categories.FirstOrDefault().ID })
-                .OrderBy(ps => ps.Description);
+            settings.Subcategories = GetCategoryList(new ProductSubcategory(), settings.Categories.FirstOrDefault().ID);
             settings.SettingsForm = new SettingsForm()
             {
                 Category = settings.Subcategories.FirstOrDefault()
@@ -5078,6 +5077,37 @@ namespace PrototypeWithAuth.Controllers
             settings.SettingsForm.ItemCount = _productsProc.Read(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategoryID == settings.SettingsForm.Category.ID }).Count();
             return View(settings);
         }
+
+        [HttpGet]
+        public IActionResult _CategoryList(ModelBase model, int? ParentCategoryID)
+        {
+            var categoryBases = GetCategoryList(model, ParentCategoryID);
+            return PartialView(categoryBases);
+        }
+
+        public IEnumerable<CategoryBase> GetCategoryList(ModelBase model, int? ParentCategoryID = null)
+        {
+            IEnumerable<CategoryBase> categoryBases = new List<CategoryBase>();
+            var T = model.GetType();
+            switch (T.Name)
+            {
+                case "ProductSubcategory":
+                    var wheres = new List<Expression<Func<ProductSubcategory, bool>>>();
+                    if (ParentCategoryID != null)
+                    {
+                        wheres.Add(ps => ps.ParentCategoryID == ParentCategoryID);
+                    }
+                    categoryBases = _productSubcategoriesProc.Read(wheres);
+                    break;
+                case "ParentCategory":
+                    var wheres2 = new List<Expression<Func<ParentCategory, bool>>>();
+                    categoryBases = _parentCategoriesProc.Read(wheres2);
+                    break;
+            }
+            return categoryBases.OrderBy(pc => pc.Description);
+        }
+
+        //public List<CategoryBase>
 
         [HttpPost]
         public string UploadFile(DocumentsModalViewModel documentsModalViewModel)
