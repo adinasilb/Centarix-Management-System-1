@@ -12,11 +12,7 @@ namespace PrototypeWithAuth.Data.Migrations
                 keyValue: 502,
                 column: "LocationTypeNameAbbre",
                 value: "S");
-            migrationBuilder.Sql("Update li"+
-                    "SET LocationInstanceAbbrev = lt.LocationTypeNameAbbre+li.LocationInstanceAbbrev"+
-                    "From LocationInstances li inner join LocationTypes lt"+
-                    "ON lt.LocationTypeID = li.LocationTypeID"+
-                    "WHERE li.LocationTypeID =502");
+            migrationBuilder.Sql("Update li SET LocationInstanceAbbrev = lt.LocationTypeNameAbbre+li.LocationInstanceAbbrev From LocationInstances li inner join LocationTypes lt ON lt.LocationTypeID = li.LocationTypeID WHERE li.LocationTypeID =502");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
