@@ -295,7 +295,7 @@ namespace PrototypeWithAuth.AppData
         public static DateTime DateSoftwareLaunched = new DateTime(2021, 1, 1);
         public static decimal GetExchangeRateFromApi()
         {
-            var client = new RestClient("http://api.currencylayer.com/live?access_key=8a8f7defe393388b7249ffcdb09d6a34");
+            var client = new RestClient("http://api.currencylayer.com/live?access_key=fb34ee54fcfaa3c8506fa9e99f9a0bb3");
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
             decimal rate = 0.0m;
