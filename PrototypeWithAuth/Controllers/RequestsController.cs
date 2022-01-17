@@ -457,7 +457,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests,Operations")]
-        public async Task<RedirectToActionResult> SaveAddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderMethod OrderType, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
+        public async Task<RedirectToActionResult> SaveAddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderMethod OrderMethod, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             try
             {
@@ -499,7 +499,7 @@ namespace PrototypeWithAuth.Controllers
 
 
                         request.Product.ProductName = AppUtility.TrimNewLines(request.Product.ProductName);
-                        TempRequestViewModel trvm = await AddItemAccordingToOrderType(request, OrderType, isInBudget, requestItemViewModel, requestNum: RequestNum, receivedModalVisualViewModel);
+                        TempRequestViewModel trvm = await AddItemAccordingToOrderMethod(request, OrderMethod, isInBudget, requestItemViewModel, requestNum: RequestNum, receivedModalVisualViewModel);
                         if (requestItemViewModel.Comments != null)
                         {
                             trvm.Comments = new List<CommentBase>();
@@ -533,11 +533,11 @@ namespace PrototypeWithAuth.Controllers
             }
             requestItemViewModel.TempRequestListViewModel.RequestIndexObject = new RequestIndexObject()
             {
-                OrderType = OrderType,
+                OrderMethod = OrderMethod,
                 SectionType = requestItemViewModel.SectionType
             };
             requestItemViewModel.TempRequestListViewModel.RequestIndexObject.GUID = requestItemViewModel.TempRequestListViewModel.GUID;
-            switch (OrderType)
+            switch (OrderMethod)
             {
                 case AppUtility.OrderMethod.AlreadyPurchased:
                     return new RedirectToActionResult("UploadOrderModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
@@ -624,7 +624,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        protected async Task<TempRequestViewModel> AddItemAccordingToOrderType(Request newRequest, AppUtility.OrderMethod OrderTypeEnum, bool isInBudget, RequestItemViewModel requestItemViewModel, int requestNum = 1, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
+        protected async Task<TempRequestViewModel> AddItemAccordingToOrderMethod(Request newRequest, AppUtility.OrderMethod OrderMethodEnum, bool isInBudget, RequestItemViewModel requestItemViewModel, int requestNum = 1, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             var context = new ValidationContext(newRequest, null, null);
             var results = new List<ValidationResult>();
@@ -634,7 +634,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    switch (OrderTypeEnum)
+                    switch (OrderMethodEnum)
                     {
                         case AppUtility.OrderMethod.AddToCart:
                             trvm = await AddToCart(newRequest, isInBudget, requestItemViewModel.TempRequestListViewModel);
@@ -1467,12 +1467,12 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> AddItemView(AppUtility.OrderMethod OrderType, TempRequestListViewModel tempRequestListViewModel, RequestItemViewModel requestItemViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
+        public async Task<IActionResult> AddItemView(AppUtility.OrderMethod OrderMethod, TempRequestListViewModel tempRequestListViewModel, RequestItemViewModel requestItemViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             requestItemViewModel.TempRequestListViewModel = tempRequestListViewModel;
             try
             {
-                var redirectToActionResult = SaveAddItemView(requestItemViewModel, OrderType, receivedModalVisualViewModel).Result;
+                var redirectToActionResult = SaveAddItemView(requestItemViewModel, OrderMethod, receivedModalVisualViewModel).Result;
                 return RedirectToAction(redirectToActionResult.ActionName, redirectToActionResult.ControllerName, redirectToActionResult.RouteValues);
             }
             catch (Exception ex)
@@ -1925,7 +1925,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, TempRequestListViewModel tempRequestListViewModel, AppUtility.OrderMethod OrderTypeEnum/*, bool isCancel = false*/)
+        public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, TempRequestListViewModel tempRequestListViewModel, AppUtility.OrderMethod OrderMethodEnum/*, bool isCancel = false*/)
         {
             /*if (isCancel)
             {
@@ -1966,8 +1966,8 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
                 var isInBudget = await checkIfInBudgetAsync(requestItemViewModel.Requests.FirstOrDefault(), oldRequest.Product);
                 requestItemViewModel.TempRequestListViewModel = tempRequestListViewModel;
-                TempRequestViewModel newTrvm = await AddItemAccordingToOrderType(requestItemViewModel.Requests.FirstOrDefault(), OrderTypeEnum, isInBudget, requestItemViewModel);
-                if (OrderTypeEnum != AppUtility.OrderMethod.RequestPriceQuote)
+                TempRequestViewModel newTrvm = await AddItemAccordingToOrderMethod(requestItemViewModel.Requests.FirstOrDefault(), OrderMethodEnum, isInBudget, requestItemViewModel);
+                if (OrderMethodEnum != AppUtility.OrderMethod.RequestPriceQuote)
                 {
                     try
                     {
@@ -1989,15 +1989,15 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 var action = "UploadQuoteModal"; //for order now and add to cart
-                if (OrderTypeEnum == AppUtility.OrderMethod.AlreadyPurchased)
+                if (OrderMethodEnum == AppUtility.OrderMethod.AlreadyPurchased)
                 {
                     action = "UploadOrderModal";
                 }
-                else if (OrderTypeEnum == AppUtility.OrderMethod.RequestPriceQuote)
+                else if (OrderMethodEnum == AppUtility.OrderMethod.RequestPriceQuote)
                 {
                     return new EmptyResult();
                 }
-                tempRequestListViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
+                tempRequestListViewModel.RequestIndexObject.OrderMethod = OrderMethodEnum;
                 tempRequestListViewModel.RequestIndexObject.IsReorder = true;
                 tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
                 //throw new Exception();
@@ -4090,7 +4090,7 @@ namespace PrototypeWithAuth.Controllers
             }
             var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now } };
 
-            uploadQuoteViewModel.OrderTypeEnum = requestIndexObject.OrderType;
+            uploadQuoteViewModel.OrderMethodEnum = requestIndexObject.OrderMethod;
             uploadQuoteViewModel.TempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
             //uploadQuoteViewModel.TempRequestListViewModel = new TempRequestListViewModel()
             //{

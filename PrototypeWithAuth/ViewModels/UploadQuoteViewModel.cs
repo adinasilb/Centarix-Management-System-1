@@ -13,7 +13,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public ParentQuote ParentQuote { get; set; }
         public List<string> FileStrings { get; set; }
-        public AppUtility.OrderMethod OrderTypeEnum { get; set; }
+        public AppUtility.OrderMethod OrderMethodEnum { get; set; }
         //public RequestIndexObject RequestIndexObject { get; set; }
         public TempRequestListViewModel TempRequestListViewModel { get; set; }
 

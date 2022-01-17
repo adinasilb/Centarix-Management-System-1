@@ -62,7 +62,7 @@ namespace PrototypeWithAuth.Models
 
         [Display(Name = "Catalog Number")]
         public string CatalogNumber { get; set; }
-        public string ProductHebrewName { get; set; }
+        public string ProductSecondaryName { get; set; }
 
         [Display(Name = "Serial Number")]
         public string SerialNumber { get; set; }

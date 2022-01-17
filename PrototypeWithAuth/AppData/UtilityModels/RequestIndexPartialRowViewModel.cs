@@ -291,9 +291,9 @@ namespace PrototypeWithAuth.ViewModels
             }
             return newIconList;
         }
-        private static int GetOrderTypeEnum(string orderType)
+        private static int GetOrderMethodEnum(string orderMethod)
         {
-            var id = (int)Enum.Parse(typeof(AppUtility.OrderMethod), orderType);
+            var id = (int)Enum.Parse(typeof(AppUtility.OrderMethod), orderMethod);
             return id;
         }
         private String GetSharedBy(Request request, ShareRequest shareRequest)
@@ -418,7 +418,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, ValueWithError = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width = 12, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = r.CreationDate.GetElixirDateFormat(), Bool = false } } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, null, r, null), AjaxID = r.RequestID };
-            yield return new RequestIndexPartialColumnViewModel() { Width = 0, AjaxLink = "p-0 d-none order-type" + r.RequestID, AjaxID = GetOrderTypeEnum(r.OrderMethod.DescriptionEnum.ToString()), ValueWithError = new List<StringWithBool>() { new StringWithBool { String = r.OrderMethod.DescriptionEnum.ToString().ToString(), Bool = false } } };
+            yield return new RequestIndexPartialColumnViewModel() { Width = 0, AjaxLink = "p-0 d-none order-type" + r.RequestID, AjaxID = GetOrderMethodEnum(r.OrderMethod.DescriptionEnum.ToString()), ValueWithError = new List<StringWithBool>() { new StringWithBool { String = r.OrderMethod.DescriptionEnum.ToString().ToString(), Bool = false } } };
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetOrderedColumns()
         {
