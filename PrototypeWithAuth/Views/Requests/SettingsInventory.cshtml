@@ -1,7 +1,8 @@
-﻿@model PrototypeWithAuth.ViewModels.SettingsInventory; 
+﻿@model PrototypeWithAuth.ViewModels.SettingsInventory;
 @{
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
+<script src="~/js/Settings.js"></script>
 <form class="lab-man-form">
     <div class="row">
         <div class="item-table">
@@ -16,10 +17,10 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-2 border p-2">
+        <div class="col-2 border p-2 category-list-1">
             @{ await Html.RenderPartialAsync("_CategoryList", Model.Categories);}
         </div>
-        <div class="col-2 border p-2">
+        <div class="col-2 border p-2 category-list-2">
 
             @{ await Html.RenderPartialAsync("_CategoryList", Model.Subcategories);}
         </div>
