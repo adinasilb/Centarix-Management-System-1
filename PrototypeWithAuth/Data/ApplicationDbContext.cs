@@ -23,6 +23,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<OrderType> OrderTypes { get; set; }
         public DbSet<OrderMethod> OrderMethods { get; set; }
         public DbSet<ProductComment> ProductComments { get; set; }
         public DbSet<CommentType> CommentTypes { get; set; }

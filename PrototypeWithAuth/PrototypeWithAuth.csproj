@@ -551,6 +551,10 @@
     <Compile Remove="Data\Migrations\20220116125507_AddOrderMethodToRequestWithData.Designer.cs" />
     <Compile Remove="Data\Migrations\20220116131143_AddOrderMethodToRequestWithData.cs" />
     <Compile Remove="Data\Migrations\20220116131143_AddOrderMethodToRequestWithData.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220117110625_AddOrderTypeModel.cs" />
+    <Compile Remove="Data\Migrations\20220117110625_AddOrderTypeModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220117113558_FillOrderTypesAddForeignKeyToRequest.cs" />
+    <Compile Remove="Data\Migrations\20220117113558_FillOrderTypesAddForeignKeyToRequest.Designer.cs" />
   </ItemGroup>
 
 
