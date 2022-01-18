@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class CategoryBase : ModelBase
+    public class CategoryJson : ModelBase
     {
         [Key]
-        public int ID { get; set; }
-
-        [Required]
-        public string Description { get; set; }
-        public CategoryJson CategoryJson { get; set; }
+        public int CategoryJsonID { get; set; }
+        public int CategoryBaseID { get; set; }
+        public CategoryBase Category { get; set; }
     }
 }
