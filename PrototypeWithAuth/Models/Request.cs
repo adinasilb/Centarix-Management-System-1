@@ -80,8 +80,7 @@ namespace PrototypeWithAuth.Models
 
         public int OrderMethodID { get; set; }
         public OrderMethod OrderMethod { get; set; }
-        public int OrderTypeID { get; set; }
-        public OrderType OrderType { get; set; }
+        
         //payment info
         public uint? Installments { get; set; } //number of installments
         public ListImplementsModelBase<Payment> Payments { get; set; }
