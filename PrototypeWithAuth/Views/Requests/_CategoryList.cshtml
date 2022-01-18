@@ -1,17 +1,22 @@
-﻿@model IEnumerable<CategoryBase>;
+﻿@model PrototypeWithAuth.ViewModels.CategoryListViewModel;
+<script src="~/js/Settings.js"></script>
+<div class="row lab-man-form category-height">
 
-<input type="hidden" id="Model" value="@Model.FirstOrDefault().GetType().Name.ToString()" />
-<input type="hidden" id="FirstModel" value="@Model.FirstOrDefault()" />
-<div class="row lab-man-form category-cols">
-    <div class="col-12">
+    <div class="col-12 category-cols @Model.ColumnNumber h-100">
+        @{
+            var modeltypeval = "modaltypeval" + Model.ColumnNumber;
+            var categoryfield = "category-field" + Model.ColumnNumber;
+        }
+        <input type="hidden" class="@modeltypeval" value="@Model.CategoryBases.FirstOrDefault().GetType().Name.ToString()" />
+        <input type="hidden" class="FirstModel" value="@Model.CategoryBases.FirstOrDefault()" />
         <input type="text" placeholder="search" class="search-by-category col-input" />
-        @{ 
+        @{
             var selected = "selected";
         }
-        @foreach (var category in Model)
-        {
-            <button href="#" class="category-field @selected col-input" data-catid="@category.ID">@category.Description</button>
-            selected = "";
-        }
+            @foreach (var category in Model.CategoryBases)
+            {
+                <button href="#" class="category-field @categoryfield @selected col-input" data-catid="@category.ID">@category.Description</button>
+                selected = "";
+            }
     </div>
 </div>

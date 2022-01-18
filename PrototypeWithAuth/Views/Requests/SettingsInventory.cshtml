@@ -2,7 +2,6 @@
 @{
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-<script src="~/js/Settings.js"></script>
 <form class="lab-man-form">
     <div class="row">
         <div class="item-table">
@@ -16,11 +15,11 @@
             </ul>
         </div>
     </div>
-    <div class="row">
-        <div class="col-2 border p-2 category-list-1">
+    <div class="row category-height ">
+        <div class="col-2 border p-2 category-list-1 cat-col scrollable">
             @{ await Html.RenderPartialAsync("_CategoryList", Model.Categories);}
         </div>
-        <div class="col-2 border p-2 category-list-2">
+        <div class="col-2 border p-2 category-list-2 cat-col scrollable">
 
             @{ await Html.RenderPartialAsync("_CategoryList", Model.Subcategories);}
         </div>

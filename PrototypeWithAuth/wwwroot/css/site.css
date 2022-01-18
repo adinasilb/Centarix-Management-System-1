@@ -3222,3 +3222,11 @@ body.modal-open .popover {
     border-bottom-color: var(--light-gray);
     height: 3.75rem;
 }
+
+.category-height {
+    height: 45rem;
+}
+
+.ch-scrollable {
+    overflow-y: auto;
+}

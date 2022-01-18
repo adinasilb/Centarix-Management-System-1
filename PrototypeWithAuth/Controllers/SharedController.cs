@@ -92,7 +92,7 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.ApplicationDbContextEntries _applicationDbContextEntries;
         protected readonly CRUD.ParentQuotesProc _parentQuotesProc;
         protected readonly CRUD.InvoicesProc _invoicesProc;
-
+        protected readonly CRUD.CategoryBasesProc _categoryBasesProc;
 
         protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
 
@@ -162,6 +162,7 @@ namespace PrototypeWithAuth.Controllers
             _applicationDbContextEntries = new CRUD.ApplicationDbContextEntries(context);
             _parentQuotesProc = new CRUD.ParentQuotesProc(context);
             _invoicesProc = new CRUD.InvoicesProc(context);
+            _categoryBasesProc = new CRUD.CategoryBasesProc(context);
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)

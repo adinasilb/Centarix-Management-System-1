@@ -543,6 +543,8 @@
     <Compile Remove="Data\Migrations\20211229131857_TestPCDesc.Designer.cs" />
     <Compile Remove="Data\Migrations\20211229132454_TestPCDesc.cs" />
     <Compile Remove="Data\Migrations\20211229132454_TestPCDesc.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220118114501_addedCBToContext.cs" />
+    <Compile Remove="Data\Migrations\20220118114501_addedCBToContext.Designer.cs" />
   </ItemGroup>
 
 

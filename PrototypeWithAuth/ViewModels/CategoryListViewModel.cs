@@ -10,6 +10,6 @@ namespace PrototypeWithAuth.ViewModels
     public class CategoryListViewModel
     {
         public List<CategoryBase> CategoryBases { get; set; }
-        public ModelBase ModelBase { get; set; }
+        public int ColumnNumber { get; set; }
     }
 }

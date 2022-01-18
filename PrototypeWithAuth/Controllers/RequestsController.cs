@@ -5066,26 +5066,21 @@ namespace PrototypeWithAuth.Controllers
 
             SettingsInventory settings = new SettingsInventory()
             {
-                Categories = GetCategoryList(new ParentCategory().GetType().Name)
+                Categories = GetCategoryList(new ParentCategory().GetType().Name, 1)
             };
-            settings.Subcategories = GetCategoryList(new ProductSubcategory().GetType().Name, settings.Categories.FirstOrDefault().ID);
-            settings.SettingsForm = new SettingsForm()
-            {
-                Category = settings.Subcategories.FirstOrDefault()
-            };
-            settings.SettingsForm.RequestCount = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.Product.ProductSubcategoryID == settings.SettingsForm.Category.ID }).Count();
-            settings.SettingsForm.ItemCount = _productsProc.Read(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategoryID == settings.SettingsForm.Category.ID }).Count();
+            settings.Subcategories = GetCategoryList(new ProductSubcategory().GetType().Name, 2, settings.Categories.CategoryBases.FirstOrDefault().ID);
+            settings.SettingsForm = GetSettingsFormViewModel(settings.Subcategories.CategoryBases.FirstOrDefault().GetType().Name, settings.Subcategories.CategoryBases.FirstOrDefault().ID);
             return View(settings);
         }
 
         [HttpGet]
-        public IActionResult _CategoryList(String modelType, int? ParentCategoryID)
+        public IActionResult _CategoryList(String modelType, int ColumnNumber, int? ParentCategoryID)
         {
-            var categoryBases = GetCategoryList(modelType, ParentCategoryID);
+            var categoryBases = GetCategoryList(modelType, ColumnNumber, ParentCategoryID);
             return PartialView(categoryBases);
         }
 
-        public IEnumerable<CategoryBase> GetCategoryList(String modelType, int? ParentCategoryID = null)
+        public CategoryListViewModel GetCategoryList(String modelType, int ColumnNumber, int? ParentCategoryID = null)
         {
             IEnumerable<CategoryBase> categoryBases = new List<CategoryBase>();
             switch (modelType)
@@ -5103,10 +5098,36 @@ namespace PrototypeWithAuth.Controllers
                     categoryBases = _parentCategoriesProc.Read(wheres2);
                     break;
             }
-            return categoryBases.OrderBy(pc => pc.Description);
+            CategoryListViewModel clvm = new CategoryListViewModel()
+            {
+                CategoryBases = categoryBases.OrderBy(pc => pc.Description).ToList(),
+                ColumnNumber = ColumnNumber
+            };
+            return clvm;
         }
 
-        //public List<CategoryBase>
+        [HttpGet]
+        public IActionResult _SettingsForm(string ModelType, int CategoryID)
+        {
+            return PartialView(GetSettingsFormViewModel(ModelType, CategoryID));
+        }
+
+        private SettingsForm GetSettingsFormViewModel(string ModelType, int CategoryID)
+        {
+            SettingsForm settingsForm = new SettingsForm();
+            if (ModelType == new ParentCategory().GetType().Name)
+            {
+                settingsForm.Category = _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { cb => cb.ID == CategoryID }).FirstOrDefault();
+            }
+            else if (ModelType == new ProductSubcategory().GetType().Name)
+            {
+                settingsForm.Category = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == CategoryID }).FirstOrDefault();
+            }
+            settingsForm.RequestCount = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.Product.ProductSubcategoryID == settingsForm.Category.ID }).Count();
+            settingsForm.ItemCount = _productsProc.Read(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategoryID == settingsForm.Category.ID }).Count();
+
+            return settingsForm;
+        }
 
         [HttpPost]
         public string UploadFile(DocumentsModalViewModel documentsModalViewModel)
