@@ -653,6 +653,8 @@
     <None Include="wwwroot\ReactViews\comments-mention-input.jsx" />
     <None Include="wwwroot\ReactViews\ActionBar.jsx" />
     <None Include="wwwroot\ReactViews\ActionItem.jsx" />
+    <None Include="wwwroot\ReactViews\ActionBar.jsx" />
+    <None Include="wwwroot\ReactViews\ActionItem.jsx" />
   </ItemGroup>
 
 
