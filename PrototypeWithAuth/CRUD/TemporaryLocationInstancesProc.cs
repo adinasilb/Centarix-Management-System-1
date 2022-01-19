@@ -25,7 +25,7 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public async Task CreateWithoutTransactionAsync(TemporaryLocationInstance temporaryLocationInstance, int locationTypeID)
+        public void CreateWithoutTransactionAsync(ref TemporaryLocationInstance temporaryLocationInstance, int locationTypeID)
         {
             if (temporaryLocationInstance == null)
             {
@@ -37,7 +37,7 @@ namespace PrototypeWithAuth.CRUD
                     LocationInstanceAbbrev = "Temporary " + locationTypeName
                 };
                 _context.Entry(temporaryLocationInstance).State = EntityState.Added;
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
         }
 

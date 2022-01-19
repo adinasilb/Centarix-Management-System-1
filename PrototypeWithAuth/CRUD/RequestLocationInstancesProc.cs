@@ -29,7 +29,7 @@ namespace PrototypeWithAuth.CRUD
         public async Task SaveTempLocationWithoutTransactionAsync(ReceivedLocationViewModel receivedLocationViewModel, Request requestReceived)
         {
             var tempLocationInstance = await _temporaryLocationInstancesProc.ReadOneAsync(new List<Expression<Func<TemporaryLocationInstance, bool>>> { tli => tli.LocationTypeID == receivedLocationViewModel.LocationTypeID });
-            await _temporaryLocationInstancesProc.CreateWithoutTransactionAsync(tempLocationInstance, receivedLocationViewModel.LocationTypeID);
+            _temporaryLocationInstancesProc.CreateWithoutTransactionAsync(ref tempLocationInstance, receivedLocationViewModel.LocationTypeID);
             var rli = new RequestLocationInstance()
             {
                 LocationInstanceID = tempLocationInstance.LocationInstanceID,
