@@ -14,132 +14,137 @@
     <div id="content">
         @{Html.React("ActionBar", new { }); }
     </div>
-<input type="hidden" asp-for="PageNumber" class="page-number" />
-<table class="table table-headerspaced table-noheaderlines table-hover ">
-    <tbody class="scroll-tbody">
-        @for (int i = 0; i < Model.PagedList.Count; i++)
-        {
-            <tr class="text-center one-row">
-                @*<td width="7%">
-                    <div class="form-check order-inv-form">
-                        <input type="checkbox" class="form-check-input filled-in" id="@Model.PagedList[itemNum].RequestID">
-                        <label class="form-check-label" for="@Model.PagedList[itemNum].RequestID">@Model.PagedList[itemNum].RequestID</label>
-                    </div>
-                *@
-                @foreach (var col in Model.PagedList[i].Columns)
-                {
-                    <td width="@col.Width%" class="@(col.Width==0 ? "p-0" : "")">
-                        @{var imgDangerColor = col.Image.Contains("error") ? " text-danger-centarix " : "";}
-                        @if (col.Image != "")
-                        {
-                            <img src="@col.Image" alt="Image" width="75" class="category-image @imgDangerColor" />
-                        }
-                        else if (col.Icons != null)
-                        {
-                            <div class="d-inline-flex">
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/16.13.0/umd/react.development.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.13.0/umd/react-dom.development.js"></script>
 
-                                @foreach (var icon in col.Icons)
-                                {
-                                    //if (icon. !col.Favorite)
-                                    if (icon.IconPopovers?.Count >= 1)
+    <script type="text/babel" src="@Url.Content("~/ReactViews/ActionBar.jsx")"></script>
+    @Html.ReactInitJavaScript()
+    <input type="hidden" asp-for="PageNumber" class="page-number" />
+    <table class="table table-headerspaced table-noheaderlines table-hover ">
+        <tbody class="scroll-tbody">
+            @for (int i = 0; i < Model.PagedList.Count; i++)
+            {
+                <tr class="text-center one-row">
+                    @*<td width="7%">
+                        <div class="form-check order-inv-form">
+                            <input type="checkbox" class="form-check-input filled-in" id="@Model.PagedList[itemNum].RequestID">
+                            <label class="form-check-label" for="@Model.PagedList[itemNum].RequestID">@Model.PagedList[itemNum].RequestID</label>
+                        </div>
+                    *@
+                    @foreach (var col in Model.PagedList[i].Columns)
+                    {
+                        <td width="@col.Width%" class="@(col.Width==0 ? "p-0" : "")">
+                            @{var imgDangerColor = col.Image.Contains("error") ? " text-danger-centarix " : "";}
+                            @if (col.Image != "")
+                            {
+                                <img src="@col.Image" alt="Image" width="75" class="category-image @imgDangerColor" />
+                            }
+                            else if (col.Icons != null)
+                            {
+                                <div class="d-inline-flex">
+
+                                    @foreach (var icon in col.Icons)
                                     {
-                                        <div class="table-icon-div">
-                                            <ul class="list-unstyled p-0 m-0">
-                                                <li>
-                                                    <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" value="@(col.AjaxID + "more")">
-                                                        <i class="@icon.IconClass hover-bold px-1" style="font-size:2rem;">
-                                                        </i>
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <div style="display:none;" id="@(col.AjaxID + "more")">
-                                                        @foreach (var iconpopover in icon.IconPopovers)
-                                                        {
-                                                            <div class="row px-3 icon-more-popover accounting-popover">
-                                                                @*<a asp-action="@iconpopover.Action" asp-controller="@iconpopover.Controller" asp-route-currentStatus="@iconpopover.CurrentLocation"
-                                                                       asp-route-request="@col.AjaxID" asp-route-newStatus="@iconpopover.Description" class="btn-link text no-hover">
-                                                                        <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
-                                                                        <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
-                                                                    </a>*@
-                                                                <a class="btn-link popover-text no-hover requests @iconpopover.AjaxCall" value="@col.AjaxID" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation" data-share-resource-id="@col.AjaxID"
-                                                                   data-route-request="@col.AjaxID" data-route-newStatus="@iconpopover.Description">
-                                                                    <i class="@iconpopover.Icon " style="color: @iconpopover.Color"></i>
-                                                                    <label class="m-2 ">@(AppUtility.GetDisplayNameOfEnumValue(iconpopover.Description.ToString()))</label>
-                                                                </a>
-                                                            </div>
-                                                        }
-                                                        @*<a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
-                                                               title="@icon.TooltipTitle" value="@col.AjaxID">
-                                                                <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
-                                                            </a>*@
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        //if (icon. !col.Favorite)
+                                        if (icon.IconPopovers?.Count >= 1)
+                                        {
+                                            <div class="table-icon-div">
+                                                <ul class="list-unstyled p-0 m-0">
+                                                    <li>
+                                                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" value="@(col.AjaxID + "more")">
+                                                            <i class="@icon.IconClass hover-bold px-1" style="font-size:2rem;">
+                                                            </i>
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <div style="display:none;" id="@(col.AjaxID + "more")">
+                                                            @foreach (var iconpopover in icon.IconPopovers)
+                                                            {
+                                                                <div class="row px-3 icon-more-popover accounting-popover">
+                                                                    @*<a asp-action="@iconpopover.Action" asp-controller="@iconpopover.Controller" asp-route-currentStatus="@iconpopover.CurrentLocation"
+                                                                           asp-route-request="@col.AjaxID" asp-route-newStatus="@iconpopover.Description" class="btn-link text no-hover">
+                                                                            <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
+                                                                            <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
+                                                                        </a>*@
+                                                                    <a class="btn-link popover-text no-hover requests @iconpopover.AjaxCall" value="@col.AjaxID" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation" data-share-resource-id="@col.AjaxID"
+                                                                       data-route-request="@col.AjaxID" data-route-newStatus="@iconpopover.Description">
+                                                                        <i class="@iconpopover.Icon " style="color: @iconpopover.Color"></i>
+                                                                        <label class="m-2 ">@(AppUtility.GetDisplayNameOfEnumValue(iconpopover.Description.ToString()))</label>
+                                                                    </a>
+                                                                </div>
+                                                            }
+                                                            @*<a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                                                   title="@icon.TooltipTitle" value="@col.AjaxID">
+                                                                    <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                                                </a>*@
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="table-icon-div">
+                                                <a class="btn p-0 m-0 no-box-shadow requests @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                                   title="@icon.TooltipTitle" value="@col.AjaxID">
+                                                    <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                                </a>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                for (int val = 0; val < col.ValueWithError.Count; val++)
+                                {
+                                    var dangerColor = col.ValueWithError[val].Bool ? " text-danger-centarix " : "";
+                                    if (val != 0)
+                                    {
+                                        <br />
+                                    }
+                                    if ((col.AjaxLink != null && col.AjaxLink != "") || col.ShowTooltip == true)
+                                    {
+                                        var title = col.ShowTooltip ? col.ValueWithError[val].String : "";
+                                        <a class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" data-toggle="tooltip" data-placement="top" title="@title" value="@col.AjaxID" data-target="item" href="#/">
+                                            <div class="d-block" style="/*overflow:hidden; text-overflow:ellipsis; white-space:nowrap;max-width:200px;*/">
+                                                <p class="m-0 text-center @dangerColor" style="overflow: hidden; text-overflow: ellipsis; -webkit-line-clamp: 3; -webkit-box-orient: vertical; max-height: 5rem; display: -webkit-box; /*white-space:nowrap*/">@col.ValueWithError[val].String</p>
+                                            </div>
+                                        </a>
                                     }
                                     else
                                     {
-                                        <div class="table-icon-div">
-                                            <a class="btn p-0 m-0 no-box-shadow requests @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
-                                               title="@icon.TooltipTitle" value="@col.AjaxID">
-                                                <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
-                                            </a>
-                                        </div>
+                                        var textCase = "";
+                                        if (col.Title.Equals("Amount"))
+                                        {
+                                            textCase = "text-transform: none";
+                                        }
+                                        <label class="m-0 p-0 @dangerColor" style="@textCase">@col.ValueWithError[val].String</label>
                                     }
                                 }
-                            </div>
-                        }
-                        else
-                        {
-                            for (int val = 0; val < col.ValueWithError.Count; val++)
-                            {
-                                var dangerColor = col.ValueWithError[val].Bool ? " text-danger-centarix " : "";
-                                if (val != 0)
-                                {
-                                    <br />
-                                }
-                                if ((col.AjaxLink != null && col.AjaxLink != "") || col.ShowTooltip == true)
-                                {
-                                    var title = col.ShowTooltip ? col.ValueWithError[val].String : "";
-                                    <a class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" data-toggle="tooltip" data-placement="top" title="@title" value="@col.AjaxID" data-target="item" href="#/">
-                                        <div class="d-block" style="/*overflow:hidden; text-overflow:ellipsis; white-space:nowrap;max-width:200px;*/">
-                                            <p class="m-0 text-center @dangerColor" style="overflow: hidden; text-overflow: ellipsis; -webkit-line-clamp: 3; -webkit-box-orient: vertical; max-height: 5rem; display: -webkit-box; /*white-space:nowrap*/">@col.ValueWithError[val].String</p>
-                                        </div>
-                                    </a>
-                                }
-                                else
-                                {
-                                    var textCase = "";
-                                    if (col.Title.Equals("Amount"))
-                                    {
-                                        textCase = "text-transform: none";
-                                    }
-                                    <label class="m-0 p-0 @dangerColor" style="@textCase">@col.ValueWithError[val].String</label>
-                                }
+
                             }
-
-                        }
-                    </td>
-                }
+                        </td>
+                    }
 
 
 
-                @*@if (IsEquipment)
-                    {
-                        <div class="table-icon-div">
-                            <a class="btn p-0 m-0 no-box-shadow" data-toggle="tooltip" data-placement="top"
-                               title="Add" href="@Url.Action("CreateCalibration","Calibrations", new { requestid = Model.PagedList[itemNum].RequestID })">
-                                <i style="        font-size: 2rem;
-                        color: var(--lab-man-color);" class="icon-settings-24px-1"></i>
-                            </a>
-                        </div>
-                    }*@
+                    @*@if (IsEquipment)
+                        {
+                            <div class="table-icon-div">
+                                <a class="btn p-0 m-0 no-box-shadow" data-toggle="tooltip" data-placement="top"
+                                   title="Add" href="@Url.Action("CreateCalibration","Calibrations", new { requestid = Model.PagedList[itemNum].RequestID })">
+                                    <i style="        font-size: 2rem;
+                            color: var(--lab-man-color);" class="icon-settings-24px-1"></i>
+                                </a>
+                            </div>
+                        }*@
 
 
-            </tr>
-        }
-    </tbody>
-</table>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
 <div class="row">
