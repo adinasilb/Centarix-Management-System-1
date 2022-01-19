@@ -243,7 +243,6 @@
     @*<script src="~/js/site.js" asp-append-version="true"></script>*@
     <script src="~/js/moment.min.js"></script>
     <script src="~/js/jszip/jszip.min.js"></script>
-
     @*<script src="~/js/datepicker.min.js"></script>
 
          Include English language
@@ -1774,7 +1773,7 @@
 
     @if (IsSectionDefined("requestNavScript"))
     {
-        @RenderSection("requestNavScript", required: true)
+    @RenderSection("requestNavScript", required: true)
     }
     @Html.ReactGetScriptPaths()
     @Html.ReactInitJavaScript()
