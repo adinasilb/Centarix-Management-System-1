@@ -306,7 +306,7 @@ $(function () {
     $(".cancel-request-edits").off("click").on("click", function (e) {
         $.fn.CloseModal("confirm-edit");
         console.log("cancel request edits");
-        $('.mark-readonly').attr("disabled", false);
+        $('.mark-readonly:not(.mark-roles-readonly)').attr("disabled", false);
         $('.mark-edditable').data("val", true);
         $('.edit-mode-switch-description').text("Edit Mode On");
         $('.turn-edit-on-off').attr('name', 'edit')

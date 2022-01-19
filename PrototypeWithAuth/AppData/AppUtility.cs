@@ -121,7 +121,9 @@ namespace PrototypeWithAuth.AppData
             List<Role> rre = new List<Role>()
             {
                 new Role(){RoleName = "General", RoleDefinition = "Requests", IsMain = true},
-                new Role(){RoleName = "Approve Orders", RoleDefinition = "RequestsApproveOrders"}
+                new Role(){RoleName = "Approve Orders", RoleDefinition = "RequestsApproveOrders"},
+                new Role(){RoleName = "Edit Received Orders Prices/Units", RoleDefinition = "RequestEditReceived"},
+                new Role(){RoleName = "Delete Received Orders", RoleDefinition = "RequestsDeleteReceived"}
             };
             return rre;
         }
@@ -1015,6 +1017,16 @@ namespace PrototypeWithAuth.AppData
         {
         }
 
+
+        public static bool GetPermissionsForPriceTabMarkReadonly(List<String> UserRoles, Request Request)
+        {
+            bool ReturnVal = false;
+            if(Request.RequestStatusID == 3 && UserRoles.Contains("RequestEditReceived"))
+            {
+                ReturnVal = true;
+            }
+            return ReturnVal;
+        }
 
     }
 

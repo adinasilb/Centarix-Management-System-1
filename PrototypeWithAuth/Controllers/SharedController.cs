@@ -584,6 +584,15 @@ namespace PrototypeWithAuth.Controllers
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
             await FillRequestDropdowns(requestItemViewModel, request.Product.ProductSubcategory, categoryType);
+            requestItemViewModel.RequestRoles = new List<String>();
+            IList<String> roles = await _userManager.GetRolesAsync(await _userManager.GetUserAsync(User));
+            foreach(var role in AppUtility.RequestRoleEnums())
+            {
+                if (roles.Contains(role.RoleDefinition))
+                {
+                    requestItemViewModel.RequestRoles.Add(role.RoleDefinition);
+                }
+            }
 
             requestItemViewModel.Tab = Tab ?? 0;
             var requestComments = _requestCommentsProc.Read(new List<Expression<Func<RequestComment, bool>>> { r => r.ObjectID == request.RequestID },

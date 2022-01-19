@@ -431,8 +431,8 @@
 
         function enableMarkReadonly(element) {
             console.log("in if details");
-            $('.mark-readonly').attr("disabled", false);
-            $('.mark-readonly').removeClass("disabled");
+            $('.mark-readonly:not(.mark-roles-readonly)').attr("disabled", false);
+            $('.mark-readonly:not(.mark-roles-readonly)').removeClass("disabled");
             //TODO: add in mark-readonly fields for subunits
             //$.fn.CheckUnitsFilled();
             //$.fn.CheckSubUnitsFilled();
@@ -517,8 +517,8 @@
         $.fn.MakeLocationsEditable = function() {
             console.log('locations');
             $(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
-            $('#location .mark-readonly').removeClass("not-clickable")
-            $('#location .mark-readonly').attr("disabled", false);
+            $('#location .mark-readonly:not(.mark-roles-readonly)').removeClass("not-clickable")
+            $('#location .mark-readonly:not(.mark-roles-readonly)').attr("disabled", false);
             $(".location-icon").removeClass("d-none");
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');

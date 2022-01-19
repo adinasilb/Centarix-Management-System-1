@@ -21,6 +21,7 @@ namespace PrototypeWithAuth.ViewModels
         //public ApplicationUser CurrentUser { get; set; }
         public List<Request> Requests { get; set; } // requests already include the product, we do not need to include a separate product
         public List<Request> RequestsByProduct { get; set; }
+        public List<String> RequestRoles { get; set; }
         public ParentCategory ParentCategory { get; set; }
         public IEnumerable<ParentCategory> ParentCategories { get; set; }
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }

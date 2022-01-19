@@ -1489,7 +1489,10 @@ $(function () {
 
     $.fn.EnableMaterialSelect = function (selectID, dataActivates) {
         console.log("enable " + selectID)
-        var selectedElements = $('#' + dataActivates).find(".active")
+        var selectedElements = $('#' + dataActivates).find(".active");
+        if (selectedElements.parents("div").hasClass("mark-roles-readonly")) {
+            return false;
+        }
         var selectedIndex = $('#' + dataActivates).find(".active").index();
         var dataActivatesLength = $('#' + dataActivates).children('li').length;
         if (selectedElements.length <= 1) {
