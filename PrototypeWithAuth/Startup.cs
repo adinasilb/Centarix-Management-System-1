@@ -168,25 +168,18 @@ namespace PrototypeWithAuth
             app.UseStaticFiles(); //may be here for other reasons but also need to download pdf files
 
 
+
             app.UseReact(config =>
             {
-                // If you want to use server-side rendering of React components,
-                // add all the necessary JavaScript files here. This includes
-                // your components as well as all of their dependencies.
-                // See http://reactjs.net/ for more information. Example:
-                //config
-                //  .AddScript("~/js/First.jsx")
-                 config.AddScript("~/ReactViews/ActionBar.jsx");
 
-                // If you use an external build too (for example, Babel, Webpack,
-                // Browserify or Gulp), you can improve performance by disabling
-                // ReactJS.NET's version of Babel and loading the pre-transpiled
-                // scripts. Example:
-                //config
-                //  .SetLoadBabel(false)
+                config.AddScript("~/ReactViews/ActionBar.jsx")
+                .AddScript("~/ReactViews/ActionItem.jsx");
+
+                //  .SetLoadBabel(false);
                 //  .AddScriptWithoutTransform("~/js/bundle.server.js");
             });
 
+     
             app.UseRouting();
 
             app.UseAuthentication();

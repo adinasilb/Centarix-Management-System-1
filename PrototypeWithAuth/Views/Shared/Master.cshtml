@@ -170,8 +170,8 @@
 
 
     <script type="module" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view-renderer.js"></script>
-    <script type="text/javascript" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view.js"></script>
-    <script type="text/javascript" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select.js"></script>
+    <script type="text/babel" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view.js"></script>
+    <script type="text/babel" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select.js"></script>
 
     <script src="~/lib/bootstrap/dist/src/js/pro/buttons.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/cards.js"></script>
@@ -241,7 +241,6 @@
     @*<script src="~/js/site.js" asp-append-version="true"></script>*@
     <script src="~/js/moment.min.js"></script>
     <script src="~/js/jszip/jszip.min.js"></script>
-
     @*<script src="~/js/datepicker.min.js"></script>
 
          Include English language
@@ -1808,7 +1807,7 @@
 
     @if (IsSectionDefined("requestNavScript"))
     {
-        @RenderSection("requestNavScript", required: true)
+    @RenderSection("requestNavScript", required: true)
     }
 
 </body>
