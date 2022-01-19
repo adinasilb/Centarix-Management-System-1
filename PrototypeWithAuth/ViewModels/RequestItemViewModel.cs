@@ -34,7 +34,7 @@ namespace PrototypeWithAuth.ViewModels
         public bool PayNow { get; set; }
         public bool PayLater { get; set; }
         public bool IsReorder { get; set; }
-
+        public string bcColor { get; set; }
         public List<DocumentFolder> DocumentsInfo { get; set; }
         //public List<string> OrderFileStrings { get; set; }
         //public List<string> InvoiceFileStrings { get; set; }

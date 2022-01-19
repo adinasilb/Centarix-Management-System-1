@@ -13,6 +13,7 @@ namespace PrototypeWithAuth.Models
 
         [Required]
         public string Description { get; set; }
-        public CategoryJson CategoryJson { get; set; }
+        public int CategoryJsonID { get; set; }
+        public string CategoryJson { get; set; }
     }
 }
