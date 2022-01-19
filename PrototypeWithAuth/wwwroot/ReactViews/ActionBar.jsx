@@ -1,8 +1,11 @@
-﻿class ActionBar extends React.Component {
+﻿
+class ActionBar extends React.Component {
     render() {
         return (
-            <ActionItem author="debbie" />
-            
+            <div>
+                <ActionItem author="debbie"/>
+               
+            </div>
         );
     }
 }
