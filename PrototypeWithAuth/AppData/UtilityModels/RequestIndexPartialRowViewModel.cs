@@ -280,12 +280,12 @@ namespace PrototypeWithAuth.ViewModels
                         }
                     }
                 }
-                var deleteIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink?.Contains("load-confirm-delete") ?? false);
-                if (request.RequestStatusID != 3 && deleteIconIndex != -1)
-                {
-                    newIconList.RemoveAt(deleteIconIndex);
-                    newIconList.Insert(deleteIconIndex, placeholder);
-                }
+                //var deleteIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink?.Contains("load-confirm-delete") ?? false);
+                //if (request.RequestStatusID != 3 && deleteIconIndex != -1)
+                //{
+                //    newIconList.RemoveAt(deleteIconIndex);
+                //    newIconList.Insert(deleteIconIndex, placeholder);
+                //}
                 if (viewOnly)
                 {
                     var popoverMoveList = newIconList.ElementAt(morePopoverIndex).IconPopovers.FindIndex(ni => ni.Description == AppUtility.PopoverDescription.MoveToList);
