@@ -171,12 +171,10 @@ namespace PrototypeWithAuth
 
             app.UseReact(config =>
             {
-
-                config.AddScript("~/ReactViews/ActionBar.jsx")
-                .AddScript("~/ReactViews/ActionItem.jsx");
-
-                //  .SetLoadBabel(false);
-                //  .AddScriptWithoutTransform("~/js/bundle.server.js");
+                config.SetLoadBabel(true)
+                  .SetLoadReact(false)
+                  .SetReactAppBuildPath("~/dist");
+                 
             });
 
      
