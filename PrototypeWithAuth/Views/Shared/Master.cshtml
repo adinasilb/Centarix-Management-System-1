@@ -1,4 +1,6 @@
 ﻿@using PrototypeWithAuth.AppData.UtilityModels
+@using React.AspNet
+
 @{
     Layout = null;
 }
@@ -1771,8 +1773,9 @@
 
     @if (IsSectionDefined("requestNavScript"))
     {
-    @RenderSection("requestNavScript", required: true)
+        @RenderSection("requestNavScript", required: true)
     }
-
+    @Html.ReactGetScriptPaths()
+    @Html.ReactInitJavaScript()
 </body>
 </html>
