@@ -11,14 +11,8 @@
     <br />
 }
 <div class="">
-    <div id="content">
-        @{Html.React("ActionBar", new { }); }
-    </div>
-    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/16.13.0/umd/react.development.js"></script>
-    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.13.0/umd/react-dom.development.js"></script>
 
-    <script type="text/babel" src="@Url.Content("~/ReactViews/ActionBar.jsx")"></script>
-    @Html.ReactInitJavaScript()
+   
     <input type="hidden" asp-for="PageNumber" class="page-number" />
     <table class="table table-headerspaced table-noheaderlines table-hover ">
         <tbody class="scroll-tbody">
