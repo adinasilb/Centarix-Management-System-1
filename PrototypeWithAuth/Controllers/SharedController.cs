@@ -584,15 +584,7 @@ namespace PrototypeWithAuth.Controllers
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
             await FillRequestDropdowns(requestItemViewModel, request.Product.ProductSubcategory, categoryType);
-            requestItemViewModel.RequestRoles = new List<String>();
-            IList<String> roles = await _userManager.GetRolesAsync(await _userManager.GetUserAsync(User));
-            foreach(var role in AppUtility.RequestRoleEnums())
-            {
-                if (roles.Contains(role.RoleDefinition))
-                {
-                    requestItemViewModel.RequestRoles.Add(role.RoleDefinition);
-                }
-            }
+            requestItemViewModel.RequestRoles = await GetUserRequestRoles();
 
             requestItemViewModel.Tab = Tab ?? 0;
             var requestComments = _requestCommentsProc.Read(new List<Expression<Func<RequestComment, bool>>> { r => r.ObjectID == request.RequestID },
@@ -1794,6 +1786,20 @@ protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFi
                 createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();
             }
             return createSupplierViewModel;
+        }
+
+        protected async Task<List<String>> GetUserRequestRoles()
+        {
+            List<String> userRequestRoles = new List<String>();
+            IList<String> roles = await _userManager.GetRolesAsync(await _userManager.GetUserAsync(User));
+            foreach (var role in AppUtility.RequestRoleEnums())
+            {
+                if (roles.Contains(role.RoleDefinition))
+                {
+                    userRequestRoles.Add(role.RoleDefinition);
+                }
+            }
+            return userRequestRoles;
         }
 
     }

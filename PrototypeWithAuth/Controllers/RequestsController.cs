@@ -1944,6 +1944,7 @@ namespace PrototypeWithAuth.Controllers
             };
 
             requestItemViewModel.TempRequestListViewModel = trlvm;
+            requestItemViewModel.RequestRoles = await GetUserRequestRoles();
 
             await _tempRequestJsonsProc.UpdateAsync(trlvm.GUID, trlvm.RequestIndexObject, trlvm, _userManager.GetUserId(User), true);
 

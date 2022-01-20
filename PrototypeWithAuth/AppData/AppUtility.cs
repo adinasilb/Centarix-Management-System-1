@@ -1021,7 +1021,7 @@ namespace PrototypeWithAuth.AppData
         public static bool GetPermissionsForPriceTabMarkReadonly(List<String> UserRoles, Request Request)
         {
             bool ReturnVal = false;
-            if(Request.RequestStatusID == 3 && UserRoles.Contains("RequestEditReceived"))
+            if(Request.RequestStatusID == 3 && !UserRoles.Contains("RequestEditReceived"))
             {
                 ReturnVal = true;
             }

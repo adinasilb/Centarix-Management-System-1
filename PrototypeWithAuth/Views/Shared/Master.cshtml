@@ -431,8 +431,13 @@
 
         function enableMarkReadonly(element) {
             console.log("in if details");
-            $('.mark-readonly:not(.mark-roles-readonly)').attr("disabled", false);
-            $('.mark-readonly:not(.mark-roles-readonly)').removeClass("disabled");
+            $('.mark-readonly').attr("disabled", false);
+            $('select.mark-readonly').attr("disabled", false);
+            $('.mark-readonly').removeClass("disabled");
+            $('.mark-readonly.mark-roles-readonly').prop("readonly", true);
+            $('.mark-readonly.mark-roles-readonly.radio-button').attr("disabled", true);
+            $('.mark-readonly.mark-roles-readonly.radio-button').addClass("disabled");
+            $('select.mark-readonly').removeClass("disabled");
             //TODO: add in mark-readonly fields for subunits
             //$.fn.CheckUnitsFilled();
             //$.fn.CheckSubUnitsFilled();
@@ -453,20 +458,32 @@
                 $.fn.EnableMaterialSelect('#operationsSubcategory', 'select-options-operationsSubcategory');
             }
             if ($(element).hasClass('orders')) {
+                alert("in if statement");
                 console.log("orders");
                 $.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
                 $.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
                 $.fn.EnableMaterialSelect('#unitTypeID', 'select-options-unitTypeID');
                 console.log($("#subSubUnitTypeID"))
                 if ($("#subSubUnitTypeID").hasClass('mark-readonly')) {
-                    $.fn.EnableSubSubUnits();
-                    $.fn.ChangeSubSubUnitDropdown();
+                    var onlyMS = true;
+                    if (!$("#subSubUnitTypeID").hasClass('mark-roles-readonly')) {
+                        $.fn.ChangeSubSubUnitDropdown();
+                        onlyMS = false;
+                    }
+                    console.log("enable subsubunits with onlyms: " + onlyMS);
+                    $.fn.EnableSubSubUnits(onlyMS);
                 }
                 console.log($("#subUnitTypeID"))
                 if ($("#subUnitTypeID").hasClass('mark-readonly')) {
                     console.log('enabling');
-                    $.fn.EnableSubUnits();
-                    $.fn.ChangeSubUnitDropdown();
+                    var onlyMS = true;
+                    if (!$("#subUnitTypeID").hasClass('mark-roles-readonly')) {
+                        $.fn.ChangeSubUnitDropdown();
+                        onlyMS = false;
+                    }
+                    console.log("enable subunits with onlyms: " + onlyMS);
+                    $.fn.EnableSubUnits(onlyMS);
+                    
                 }
                 if ($("#quoteStatus").val() == "1" || $("#quoteStatus").val() == "2") {
                     console.log("no quote")
