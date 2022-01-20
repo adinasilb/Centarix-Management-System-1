@@ -619,8 +619,8 @@
 
   <ItemGroup>
     <None Include="wwwroot\favicon_io\site.webmanifest" />
-    <None Include="wwwroot\ReactViews\ActionBar.jsx" />
-    <None Include="wwwroot\ReactViews\ActionItem.jsx" />
+    <None Include="wwwroot\ReactViews\action-bar.jsx" />
+    <None Include="wwwroot\ReactViews\action-item.jsx" />
   </ItemGroup>
 
 
