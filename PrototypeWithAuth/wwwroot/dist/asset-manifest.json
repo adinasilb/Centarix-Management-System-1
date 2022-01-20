@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.js": "/dist/main.a2d5532e.js",
+    "runtime.js": "/dist/runtime.1c264d9c.js",
+    "vendor.js": "/dist/vendor.3e923d66.js"
+  },
+  "entrypoints": [
+    "/dist/main.a2d5532e.js",
+    "/dist/runtime.1c264d9c.js",
+    "/dist/vendor.3e923d66.js"
+  ]
+}
