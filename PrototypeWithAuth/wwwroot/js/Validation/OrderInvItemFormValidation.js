@@ -33,6 +33,9 @@ $('.ordersItemForm').validate({
 			required: true,
 			//mindate: new Date('1900-12-17T03:24:00')
 		},
+		"Requests[0].ArrivalDate": {
+			required: true
+		},
 		"Requests[0].ExpectedSupplyDays": {
 			min: 0,
 			integer: true,

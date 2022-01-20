@@ -8,41 +8,18 @@
     var Category = Model.Requests[0].Product.ProductSubcategory.ParentCategory.Description;
     var modalType = Model.ModalType;
     var markReadOnlyClass = "";
-    var disabledDollarProperty = "disabled";
-    var disabledShekelProperty = "";
-    var hideVat = "";
     var hideNoQuote = "";
-    var disableShekel = "";
-    var disableDollar = "disabled-text";
-    var dollarReadOnly = "";
-    var shekelReadOnly = "";
-    var shekelSelected = "selected";
     var disabledProperty = "";
     var changed = "false";
     if (modalType == AppUtility.RequestModalType.Edit || modalType == AppUtility.RequestModalType.Summary)
     {
         disabledProperty = "disabled";
         markReadOnlyClass = "mark-readonly";
-        shekelReadOnly = "mark-readonly";
         changed = "true";
-        if (Model.Requests[0].Currency.Equals("USD"))
-        {
-            disableShekel = "disabled-text";
-            disableDollar = "";
-            disabledDollarProperty = "";
-            disabledShekelProperty = "readonly";
-            shekelReadOnly = "";
-            dollarReadOnly = "mark-readonly";
-            shekelSelected = "";
-        }
     }
     if (modalType != AppUtility.RequestModalType.Create && (Model.Requests[0].QuoteStatusID == 2 || Model.Requests[0].QuoteStatusID == 1))
     {
         hideNoQuote = "d-none";
-    }
-    if (Model.Requests[0].IncludeVAT == false)
-    {
-        hideVat = "d-none";
     }
     var color = Model.SectionType == AppUtility.MenuItems.Accounting ? "accounting-color" : Model.SectionType == AppUtility.MenuItems.LabManagement ? "lab-man-color" : Model.SectionType == AppUtility.MenuItems.Protocols ? "protocols-color" : "order-inv-color";
 }

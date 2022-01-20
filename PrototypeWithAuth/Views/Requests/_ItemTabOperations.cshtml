@@ -167,23 +167,23 @@
         <div class="row">
             @if (modalType == AppUtility.RequestModalType.Create)
             {
-                <div class="custom-control custom-radio mr-4 ml-4 ">
+                <div class="custom-control custom-radio mr-4 ">
                     <input class="custom-control-input received-radio " id="Received" name="_Received" type="radio" value="false" />
                     <label class="radio-button custom-control-label pt-1 pl-2 received-radio " for="Received">Received</label>
                 </div>
                 <div class="custom-control custom-radio mr-4 ml-4">
-                    <input class="custom-control-input received-radio " id="ExpectedSupply" name="_Received" type="radio" value="true" />
+                    <input class="custom-control-input received-radio " checked id="ExpectedSupply" name="_Received" type="radio" value="true" />
                     <label class="radio-button custom-control-label pt-1 pl-2 received-radio " for="ExpectedSupply">Expected Supply</label>
                 </div>
             }
             @if (Model.Requests[0].ApplicationUserReceiver == null)
             {
-                <div class="col-md-4 @hiddenSummaryClass expected-supply-info">
+                <div class="col-md-3 @hiddenSummaryClass expected-supply-info">
                     <label asp-for="Requests[0].ExpectedSupplyDays" class="control-label"></label>
                     <input asp-for="Requests[0].ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days requestPriceQuote  @markReadOnlyClass" type="text" />
                     <span asp-validation-for="Requests[0].ExpectedSupplyDays" class="text-danger-centarix"></span>
                 </div>
-                <div class="col-md-4  @hiddenSummaryClass expected-supply-info">
+                <div class="col-md-3  @hiddenSummaryClass expected-supply-info">
                     <div class="form-group">
                         <label class="control-label">Expected supply date</label>
                         @if (modalType == AppUtility.RequestModalType.Create)
@@ -206,17 +206,19 @@
             }
             <div class="col-md-3 received-info d-none ">
                 <label asp-for="Requests[0].ArrivalDate" class="control-label"></label>
-                <input asp-for="Requests[0].ArrivalDate" class="form-control-plaintext datepicker border-bottom" asp-format="@AppUtility.AspDateFormatString" disabled type="text" />
+                 @if (modalType == AppUtility.RequestModalType.Create)
+                {
+                    <input value="" class="form-control-plaintext border-bottom datepicker" value = "" type="text" asp-for="Requests[0].ArrivalDate" asp-format="@AppUtility.AspDateFormatString" />
+                }
+                else
+                {
+                    <input asp-for="Requests[0].ArrivalDate" class="form-control-plaintext datepicker border-bottom" disabled asp-format="@AppUtility.AspDateFormatString"  type="text" />
+                }
             </div>
-            <div class="col-md-3 received-info d-none">
+            <div class="col-4 received-info d-none">
                 <label class="control-label">Received By</label>
-                <div class="col-10 offset-1">
                     @Html.DropDownListFor(vm => vm.Requests[0].ApplicationUserReceiverID,
-                    new SelectList(
                             Model.ApplicationUsers,
-                            dataValueField: "ID",
-                            dataTextField: "FirstName"+" "+"LastName"),
-                            "Select a Receiver",
                             htmlAttributes: new
                                  {
                                      @class = " receiver mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass,
@@ -226,8 +228,6 @@
                                      @data_stop_refresh = "true"
                                  }
                             )
-
-                </div>
             </div>
             <input type="hidden" asp-for="Requests[0].ApplicationUserReceiverID" />
 

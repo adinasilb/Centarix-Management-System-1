@@ -1577,6 +1577,18 @@ namespace PrototypeWithAuth.Controllers
             {
                 requestItemViewModel.IsProprietary = true;
             }
+            if(categoryTypeId == 2)
+            {
+                requestItemViewModel.ApplicationUsers = _employeesProc.Read()
+                              .Select(
+                                  u => new SelectListItem
+                                  {
+                                      Text = u.FirstName + " " + u.LastName,
+                                      Value = u.Id,
+                                      Selected = u.Id == _userManager.GetUserId(User)
+                                  }
+                              ).ToList();
+            }
 
             requestItemViewModel.Comments = new List<CommentBase>();
 
