@@ -62,7 +62,7 @@
                     var commentTextValue = Model.Comment.CommentText;
                 }
                 <input name="@commentTextName" id="@commentTextID" value="@commentTextValue" class="form-control-plaintext border-bottom m-0 p-0 comment-text mark-readonly" @disabled />
-                @Html.React("CommentInput", new { users = new List<string> { "Adina", "Rachel", "Debbie" }, classes="form-control-plaintext  border-bottom m-0 p-0 comment-text mark-readonly" })
+                @Html.React("CommentInput", new { users = new List<string> { "Adina", "Rachel", "Debbie"} });
             </div>
 
         </div>

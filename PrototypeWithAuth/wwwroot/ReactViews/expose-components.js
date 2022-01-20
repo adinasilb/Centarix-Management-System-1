@@ -4,10 +4,10 @@ import ReactDOMServer from 'react-dom/server';
 
 
 // any css-in-js or other libraries you want to use server-side
-import ActionBar from './action-bar.jsx';
+import CommentInput from './comments-mention-input.jsx';
 
 global.React = React;
 global.ReactDOM = ReactDOM;
 global.ReactDOMServer = ReactDOMServer;
 
-global.ActionBar =  ActionBar ;
+global.CommentInput = CommentInput ;
