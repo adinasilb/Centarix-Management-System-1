@@ -1282,13 +1282,14 @@ protected static void ApplySearchToRequestList(RequestsSearchViewModel requestsS
                         case 3:
                             iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
+
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverAddToList /*, popoverReorder*//*, popoverDelete*/ };
                             if (await this.IsAuthorizedAsync(requestIndexObject.SectionType, "DeleteReceived"))
                             {
-                                iconList.Add(deleteIcon);
+                                popoverMoreIcon.IconPopovers.Add(popoverDelete);
                             }
-                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverAddToList /*, popoverReorder*//*, popoverDelete*/ };
                             iconList.Add(popoverMoreIcon);
-
+                          
 
                             var requests = RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).ThenBy(r => r.Product.ProductName);
                             var requests2 = requests.Skip(20*(requestIndexObject.PageNumber-1)).Take(20);

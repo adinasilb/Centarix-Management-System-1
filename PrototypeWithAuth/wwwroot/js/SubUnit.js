@@ -463,7 +463,7 @@ $(function () {
         $.fn.ChangeSubSubUnitDropdown(modalClass);
     }
 
-    $(".modal").on("change", ".add-or-edit-item #subUnitTypeID", function () {
+    $("body, .modal").on("change", ".add-or-edit-item #subUnitTypeID", function () {
         $.fn.ChangeSubSubUnitDropdown("add-or-edit-item");
     });
 
@@ -473,7 +473,7 @@ $(function () {
         $.fn.ChangeSubSubUnitDropdown("add-or-edit-item");
     });
 
-    $(".modal").on("change", ".reorder-item #subUnitTypeID", function () {
+    $("body, .modal").on("change", ".reorder-item #subUnitTypeID", function () {
         $.fn.ChangeSubSubUnitDropdown("reorder-item");
     });
 

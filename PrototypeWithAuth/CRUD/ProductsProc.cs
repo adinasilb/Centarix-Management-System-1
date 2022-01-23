@@ -21,30 +21,6 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public async Task<StringWithBool> DeleteAsync(Product product)
-        {
-
-            StringWithBool ReturnVal = new StringWithBool();
-            try
-            {
-                var productRequests = _requestsProc.Read( new List<Expression<Func<Request, bool>>> { r => r.ProductID == product.ProductID }).ToList();
-                if (productRequests.Count() == 0)
-                {
-                    await _productCommentsProc.DeleteWithoutTransactionAsync(product.ProductID);
-                    product.IsDeleted = true;
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
-                }
-                
-                ReturnVal.SetStringAndBool(true, null);
-            }
-            catch (Exception ex)
-            {
-                ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
-            }
-            return ReturnVal;
-
-        }
 
 
     }
