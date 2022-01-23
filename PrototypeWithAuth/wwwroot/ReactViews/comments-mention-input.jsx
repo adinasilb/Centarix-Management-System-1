@@ -27,11 +27,11 @@ export default class CommentInput extends React.Component {
     render() {
 
         return (
-            <MentionsInput hello="hi" class={this.props.classes} value={this.state.value} onChange={this.handleChange}>
+            <MentionsInput  class={this.props.classes} value={this.state.value} onChange={this.handleChange}>
                 <Mention
                     trigger="@"
                     data={this.props.users}
-                    renderSuggestion={this.renderUserSuggestion}
+                    
                 />
             </MentionsInput>
         );
