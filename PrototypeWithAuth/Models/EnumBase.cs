@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class OrderType : StatusBase
+    public abstract class EnumBase : ModelBase
     {
-        
+        [Key]
+        public int ID { get; set; }
+        public string Description { get; set; }
+        public string DescriptionEnum { get; set; }
     }
 }

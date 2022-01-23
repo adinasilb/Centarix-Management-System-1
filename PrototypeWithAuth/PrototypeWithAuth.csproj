@@ -555,6 +555,18 @@
     <Compile Remove="Data\Migrations\20220117110625_AddOrderTypeModel.Designer.cs" />
     <Compile Remove="Data\Migrations\20220117113558_FillOrderTypesAddForeignKeyToRequest.cs" />
     <Compile Remove="Data\Migrations\20220117113558_FillOrderTypesAddForeignKeyToRequest.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220123084354_AddOrderTypeTable.cs" />
+    <Compile Remove="Data\Migrations\20220123084354_AddOrderTypeTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220123121007_AddTimePeriodsModel.cs" />
+    <Compile Remove="Data\Migrations\20220123121007_AddTimePeriodsModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220123121729_AddTimePeriodsModel.cs" />
+    <Compile Remove="Data\Migrations\20220123121729_AddTimePeriodsModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220123122324_AddTimePeriodsModel.cs" />
+    <Compile Remove="Data\Migrations\20220123122324_AddTimePeriodsModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220123122832_AddTimePeriodsModel.cs" />
+    <Compile Remove="Data\Migrations\20220123122832_AddTimePeriodsModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220123130818_AddProductOrderTypeDiscriminator.cs" />
+    <Compile Remove="Data\Migrations\20220123130818_AddProductOrderTypeDiscriminator.Designer.cs" />
   </ItemGroup>
 
 

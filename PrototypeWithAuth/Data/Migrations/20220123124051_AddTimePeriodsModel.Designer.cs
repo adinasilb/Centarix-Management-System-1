@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220123124051_AddTimePeriodsModel")]
+    partial class AddTimePeriodsModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3383,6 +3385,44 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.OrderType", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescriptionEnum")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("OrderTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Description = "Single",
+                            DescriptionEnum = "Single"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Description = "Recurring",
+                            DescriptionEnum = "Recurring"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Description = "Standing",
+                            DescriptionEnum = "Standing"
+                        });
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
                 {
                     b.Property<int>("ID")
@@ -3849,12 +3889,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("CatalogNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<int>("OrderTypeID")
+                        .HasColumnType("int");
 
                     b.Property<string>("ProductComment")
                         .HasColumnType("nvarchar(max)");
@@ -3900,6 +3939,8 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasKey("ProductID");
 
+                    b.HasIndex("OrderTypeID");
+
                     b.HasIndex("ProductSubcategoryID");
 
                     b.HasIndex("SerialNumber")
@@ -3919,8 +3960,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasFilter("[SerialNumber] IS NOT NULL AND [VendorID] IS NOT NULL");
 
                     b.ToTable("Products");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Product");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ProductComment", b =>
@@ -7450,47 +7489,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.RecurringOrder", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.Product");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("HasEnd")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Occurances")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TimePeriodAmount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TimePeriodID")
-                        .HasColumnType("int");
-
-                    b.HasIndex("TimePeriodID");
-
-                    b.HasDiscriminator().HasValue("RecurringOrder");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.SingleOrder", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.Product");
-
-                    b.HasDiscriminator().HasValue("SingleOrder");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.StandingOrder", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.RecurringOrder");
-
-                    b.HasDiscriminator().HasValue("StandingOrder");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -8100,6 +8098,12 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Product", b =>
                 {
+                    b.HasOne("PrototypeWithAuth.Models.OrderType", "OrderType")
+                        .WithMany()
+                        .HasForeignKey("OrderTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("PrototypeWithAuth.Models.ProductSubcategory", "ProductSubcategory")
                         .WithMany("Products")
                         .HasForeignKey("ProductSubcategoryID")
@@ -8757,15 +8761,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("Employees")
                         .HasForeignKey("MaritalStatusID")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.RecurringOrder", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.TimePeriod", "TimePeriod")
-                        .WithMany()
-                        .HasForeignKey("TimePeriodID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

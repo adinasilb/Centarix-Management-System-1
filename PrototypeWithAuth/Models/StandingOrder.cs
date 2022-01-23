@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class OrderMethod : EnumBase
+    public class StandingOrder : RecurringOrder
     {
-        
+
     }
 }

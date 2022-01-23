@@ -170,7 +170,7 @@ namespace PrototypeWithAuth.Data
                 SeededData.CountryData.Get()
             );
             modelBuilder.Entity<Currency>().HasData(
-           SeededData.CurrencyData.Get()
+                SeededData.CurrencyData.Get()
            );
 
             modelBuilder.Entity<CommentType>().HasData(
@@ -179,9 +179,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<OrderMethod>().HasData(
                SeededData.OrderMethodData.Get()
                );
-            modelBuilder.Entity<OrderType>().HasData(
-               SeededData.OrderTypeData.Get()
-               );
+            modelBuilder.Entity<TimePeriod>().HasData(
+                SeededData.TimePeriodData.Get()
+                );
         }
     }
 }

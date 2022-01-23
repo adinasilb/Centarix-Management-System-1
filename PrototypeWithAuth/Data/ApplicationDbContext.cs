@@ -23,7 +23,10 @@ namespace PrototypeWithAuth.Data
         {
 
         }
-        public DbSet<OrderType> OrderTypes { get; set; }
+        public DbSet<TimePeriod> TimePeriods { get; set; }
+        public DbSet<RecurringOrder> RecurringOrders { get; set; }
+        public DbSet<StandingOrder> StandingOrders { get; set; }
+        public DbSet<SingleOrder> SingleOrders { get; set; }
         public DbSet<OrderMethod> OrderMethods { get; set; }
         public DbSet<ProductComment> ProductComments { get; set; }
         public DbSet<CommentType> CommentTypes { get; set; }

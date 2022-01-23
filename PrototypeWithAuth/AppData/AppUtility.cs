@@ -35,6 +35,7 @@ namespace PrototypeWithAuth.AppData
             [Display(Name = "Total + VAT")]
             TotalVat = 4
         }
+        public enum TimePeriods { Days, Weeks, Months}
         public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
         public enum RoleEnum { ApproveOrders }
         public enum PageTypeEnum
@@ -169,7 +170,7 @@ namespace PrototypeWithAuth.AppData
         public enum VendorModalType { Create, Edit, SummaryFloat }
         public enum OrderMethod { None, RequestPriceQuote, OrderNow, AddToCart, AlreadyPurchased, Save, ExcelUpload }
         public enum CartStatus { None, InCart, Ordered}
-        public enum OrderType { Single, Recurring, Standing}
+        public enum OrderType { SingleOrder, RecurringOrder, StandingOrder}
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
         public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveToList, DeleteFromList }
         public enum PopoverEnum { None }

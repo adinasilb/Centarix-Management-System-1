@@ -478,7 +478,6 @@ namespace PrototypeWithAuth.Controllers
                     if (!request.Ignore)
                     {
                         request.OrderMethod = orderMethod;
-                        request.Product.OrderTypeID =1;
                         request.ApplicationUserCreatorID = currentUser.Id;
                         if (!requestItemViewModel.IsProprietary)
                         {
@@ -1597,7 +1596,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Requests = new List<Request>();
             requestItemViewModel.Requests.Add(new Request());
             requestItemViewModel.Requests.FirstOrDefault().ExchangeRate = await GetExchangeRateAsync();
-            requestItemViewModel.Requests.FirstOrDefault().Product = new Product();
+            requestItemViewModel.Requests.FirstOrDefault().Product = new SingleOrder();
             requestItemViewModel.Requests.FirstOrDefault().ParentQuote = new ParentQuote();
             requestItemViewModel.Requests.FirstOrDefault().SubProject = new SubProject();
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory = productSubcategory;
@@ -1641,7 +1640,7 @@ namespace PrototypeWithAuth.Controllers
             operationsItemViewModel.Request = new Request() { IncludeVAT = true };
             if (subcategoryID > 0)
             {
-                operationsItemViewModel.Request.Product = new Product();
+                operationsItemViewModel.Request.Product = new SingleOrder();
                 operationsItemViewModel.Request.Product.ProductSubcategoryID = subcategoryID;
                 operationsItemViewModel.Request.Product.ProductSubcategory =
                   await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == subcategoryID });
@@ -1966,7 +1965,6 @@ namespace PrototypeWithAuth.Controllers
                 var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
                 requestItemViewModel.Requests.FirstOrDefault().RequestID = 0;
                 requestItemViewModel.Requests.FirstOrDefault().OrderMethod = orderMethodDB;
-                requestItemViewModel.Requests.FirstOrDefault().Product.OrderTypeID = 1;
                 requestItemViewModel.Requests.FirstOrDefault().ApplicationUserCreatorID = currentUser.Id;
                 requestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;
                 requestItemViewModel.Requests.FirstOrDefault().SubProjectID = oldRequest.SubProjectID;
@@ -3729,7 +3727,7 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.SidebarEnum.MonthlyPayment:
                     wheres.Add(r => (r.PaymentStatusID == 2/*+30*/ && r.Payments.FirstOrDefault().HasInvoice && r.Payments.FirstOrDefault().IsPaid == false) 
                     || ( 
-                          (r.PaymentStatusID == 5/*installments*/ || r.PaymentStatusID == 7/*standingorder*/ || r.Product.OrderTypeID == 2/*recurring order*/) 
+                          (r.PaymentStatusID == 5/*installments*/ || r.PaymentStatusID == 7/*standingorder*/ || r.Product.GetType().ToString() == AppUtility.OrderType.RecurringOrder.ToString()) 
                           && r.Payments.Where(p => p.PaymentDate.Month == DateTime.Today.Month && p.PaymentDate.Year == DateTime.Today.Year && p.IsPaid == false).Count() > 0)
                        ) ;
                     break;

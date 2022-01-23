@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Product : ModelBase
+    public abstract class Product : ModelBase
     {
         //IMPT: When adding in data validation make sure that you turn data-val off in the search
         //Rollback favorites and shares
@@ -67,8 +67,6 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Serial Number")]
         public string SerialNumber { get; set; }
         public DateTime ProductCreationDate { get; set; }
-        public int OrderTypeID { get; set; }
-        public OrderType OrderType { get; set; }
         public bool IsDeleted { get; set; }
     }
 }
