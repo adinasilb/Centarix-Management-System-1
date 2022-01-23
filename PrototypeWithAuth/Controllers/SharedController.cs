@@ -610,7 +610,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (_requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.ProductID == request.ProductID }).Count() > 1)
             {
-                requestItemViewModel.IsReorder = true;
+                requestItemViewModel.ShowHistory = true;
             }
 
             ModalViewType = "Edit";

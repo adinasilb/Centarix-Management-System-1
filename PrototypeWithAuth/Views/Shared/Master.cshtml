@@ -432,15 +432,15 @@
         function enableMarkReadonly(element) {
             console.log("in if details");
             $('.mark-readonly').attr("disabled", false);
+            $('input[type="button"].mark-readonly.mark-roles-readonly').attr("disabled", true);
             $('select.mark-readonly').attr("disabled", false);
             $('.mark-readonly').removeClass("disabled");
             $('.mark-readonly.mark-roles-readonly').prop("readonly", true);
+
             $('.mark-readonly.mark-roles-readonly.radio-button').attr("disabled", true);
             $('.mark-readonly.mark-roles-readonly.radio-button').addClass("disabled");
             $('select.mark-readonly').removeClass("disabled");
-            //TODO: add in mark-readonly fields for subunits
-            //$.fn.CheckUnitsFilled();
-            //$.fn.CheckSubUnitsFilled();
+
             $('.mark-edditable').data("val", true);
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
@@ -467,7 +467,7 @@
                 if ($("#subSubUnitTypeID").hasClass('mark-readonly')) {
                     var onlyMS = true;
                     if (!$("#subSubUnitTypeID").hasClass('mark-roles-readonly')) {
-                        $.fn.ChangeSubSubUnitDropdown();
+                        $.fn.ChangeSubSubUnitDropdown("add-or-edit-item");
                         onlyMS = false;
                     }
                     console.log("enable subsubunits with onlyms: " + onlyMS);
@@ -478,7 +478,7 @@
                     console.log('enabling');
                     var onlyMS = true;
                     if (!$("#subUnitTypeID").hasClass('mark-roles-readonly')) {
-                        $.fn.ChangeSubUnitDropdown();
+                        $.fn.ChangeSubUnitDropdown("add-or-edit-item");
                         onlyMS = false;
                     }
                     console.log("enable subunits with onlyms: " + onlyMS);
@@ -531,6 +531,26 @@
             }
         }
 
+        $.fn.EnableSubSubUnits = function (onlyMS = false) {
+            console.log("onlyMS: EsSU: " + onlyMS);
+            $("#subSubUnit").prop("disabled", false);
+            if (onlyMS) {
+                console.log("in !ms");
+                $("#subSubUnit").prop('readonly', true);
+            }
+            $.fn.EnableMaterialSelect('#subSubUnitTypeID', 'select-options-subSubUnitTypeID');
+        };
+
+        $.fn.EnableSubUnits = function (onlyMS = false) {
+            console.log("onlyMS: ESU: " + onlyMS);
+            $("#subUnit").prop("disabled", false);
+            if (onlyMS) {
+                console.log("in !ms");
+                $("#subUnit").prop('readonly', true);
+            }
+            $.fn.EnableMaterialSelect('#subUnitTypeID', 'select-options-subUnitTypeID');
+        };
+
         $.fn.MakeLocationsEditable = function() {
             console.log('locations');
             $(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
@@ -574,7 +594,6 @@
                             //$.fn.OnOpenModalView();
                             $("#cost").trigger('change');
                             $(".reorderModal .mdb-select").materialSelect();
-                            //$.fn.CheckCurrency();
                             break;
                         case "summary":
                             //$.fn.OnOpenModalView();
