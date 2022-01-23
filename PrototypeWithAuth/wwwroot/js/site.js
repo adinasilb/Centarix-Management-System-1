@@ -45,17 +45,7 @@ $(function () {
         console.log("in parent list");
         var parentCategoryId = $(this).val();
         var sublistSelector = "#sublist";
-        var requestIndex = "";
-        if ($("#masterSectionType").val() == "Operations") {
-            console.log("operations")
-            parentCategoryId = $(this).val();
-            requestIndex = $(this).attr("request-index");
-            sublistSelector = "select.mdb-select" + requestIndex;
-            console.log("requestIndex " + requestIndex)
-        }
-        else {
-            //parentCategoryId = $("#parentlist").val();
-        }
+        console.log($(sublistSelector))
         console.log("parentcategoryid: " + parentCategoryId);
         var url = "/Requests/GetSubCategoryList";
         console.log("url: " + url);
@@ -65,15 +55,15 @@ $(function () {
             $(sublistSelector).children("option").each(function (i, option) {
                 option.remove();
             });
-            var firstitem1 = '<option value=""> Select Subcategory</option>';
+            var firstitem1 = '<option value=""> Select Sub Category</option>';
 
             $(sublistSelector).append(firstitem1);
 
-            console.log(data);
+            //console.log(data);
             $.each(data, function (i, subCategory) {
-                console.log(subCategory.description)
+                //console.log(subCategory.description)
                 var newitem1 = '<option value="' + subCategory.id + '">' + subCategory.description + '</option>';
-                console.log("newitem1: " + newitem1);
+                //console.log("newitem1: " + newitem1);
                 $(sublistSelector).append(newitem1);
             });
             $(sublistSelector).materialSelect();

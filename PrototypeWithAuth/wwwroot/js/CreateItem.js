@@ -297,4 +297,19 @@
     $(".url-shown").on("click", function (e) {
         $("#url-click").click();
     });
+
+    $('.ordersItemForm').on('click', "#alreadyPaid", function (e) {
+        console.log("pay")
+        if ($("#alreadyPaid:checkbox").is(":checked")) {
+            $(".paid-info").addClass("d-none")
+            $("#alreadyPaid:checkbox").prop("checked", false)
+        }
+        else {
+            $(".paid-info").removeClass("d-none")
+            $("#alreadyPaid:checkbox").prop("checked", true)
+        }
+
+    });
+
+    
 })
