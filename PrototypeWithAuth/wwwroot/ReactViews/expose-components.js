@@ -10,4 +10,5 @@ global.React = React;
 global.ReactDOM = ReactDOM;
 global.ReactDOMServer = ReactDOMServer;
 
-global.CommentInput = CommentInput ;
+global.CommentInput = CommentInput;
+
