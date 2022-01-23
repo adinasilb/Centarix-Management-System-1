@@ -33,7 +33,7 @@
 			$element.keydown(function (e) {
 				$element.css('border', '');
 				if (e.keyCode === 13 || e.keyCode === 32) {
-					let getValue = $element.val();
+					let getValue = $element.val().toString().toLowerCase();
 					if (/^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$/.test(getValue)) {
 						$('.all-mail').append('<span class="email-ids">' + getValue + '<span class="remove-email">&nbsp;&times;&nbsp;</span></span>');
 						$element.val('');
@@ -65,6 +65,7 @@
 
 			if (settings.data) {
 				$.each(settings.data, function (x, y) {
+					y = y.toString().toLowerCase();
 					if (/^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$/.test(y)) {
 						$('.all-mail').append('<span class="email-ids">' + y + '<span class="remove-email">&times;</span></span>');
 						$element.val('');
