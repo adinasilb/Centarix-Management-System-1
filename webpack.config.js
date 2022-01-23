@@ -4,7 +4,7 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 module.exports = {
 	entry: './PrototypeWithAuth/wwwroot/ReactViews/expose-components.js',
 	output: {
-		filename: '[name].js',
+		filename: '[name].[contenthash:8].js',
 		globalObject: 'this',
 		path: path.resolve(__dirname, 'PrototypeWithAuth/wwwroot/dist'),
 		publicPath: '/dist/'
@@ -51,4 +51,10 @@ module.exports = {
 				};
 			},
 		}),
+	],
+	resolve: {
+		alias: {
+			react: path.resolve('./node_modules/react'),
+		}
+	}
 };
