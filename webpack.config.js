@@ -34,6 +34,7 @@ module.exports = {
 		],
 	},
 	plugins: [
+
 		new ManifestPlugin({
 			fileName: 'asset-manifest.json',
 			generate: (seed, files) => {
@@ -50,5 +51,10 @@ module.exports = {
 				};
 			},
 		}),
-	]
+	],
+	resolve: {
+		alias: {
+			react: path.resolve('./node_modules/react'),
+		}
+	}
 };
