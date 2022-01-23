@@ -134,8 +134,11 @@ namespace PrototypeWithAuth.CRUD
         {
             var RequestToSave = await ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == request.RequestID }, new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments } });
             RequestToSave.Cost = request.Cost;
-            RequestToSave.Payments.FirstOrDefault().InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
-            RequestToSave.Payments.FirstOrDefault().HasInvoice = true;
+            foreach (var payment in RequestToSave.Payments)
+            {
+                payment.InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
+                payment.HasInvoice = true;
+            }
             _context.Update(RequestToSave);
         }
 
