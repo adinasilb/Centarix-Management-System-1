@@ -115,7 +115,6 @@
 <input type="hidden" asp-for="RedirectAction" />
 <script>
     //$(document).ready(function () {
-    //    alert("in doc ready: " + $("#vendor-orders-email").val());
     //    $('.all-mail').prepend('<span class="email-ids">' + $("#vendor-orders-email").val() + '<span class="remove-email">&times;</span></span>');
     //});
 
@@ -154,7 +153,6 @@
     }
 
     $.fn.RemoveFromHiddenIds = function (emailValue) {
-        alert(emailValue)
         $(".emailaddresses[value='" + emailValue + "']:first").val('');
     }
 
@@ -165,7 +163,6 @@
     $(".submitTerms").off('click').on("click", function (e) {
         e.preventDefault();
         console.log("submit reorder");
-        //alert("validate form");
         $(".termsModalForm").data("validator").settings.ignore = "";
         var valid = $(".termsModalForm").valid();
         console.log("valid form: " + valid)
@@ -181,7 +178,6 @@
             $(".submitTerms").prop('disabled', true)
             $("#loading").show();
             $("#RedirectAction").val(window.location.href);
-            //alert("window: " + window.location.href);
             console.log("$('#SectionType').val() : " + $("#masterSectionType").val())
             var formData = new FormData($(".termsModalForm")[0]);
             $.ajax({
@@ -211,7 +207,6 @@
                         }
                     }
                     else {
-                        //alert("else");
                         $('.termsModalForm .temprequesthiddenfors').html('');
                         $.fn.OpenModal('emailModal', 'confirm-email', data);
                     }
