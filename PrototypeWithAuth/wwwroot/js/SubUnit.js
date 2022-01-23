@@ -142,8 +142,8 @@ $(function () {
    
     $.fn.ChangeSubUnitDropdown = function (modalClass) {
         console.log("change subunit dropdown");
-        var selected = $("." + modalClass + ' :selected', $("." + modalClass +" #unitTypeID"));
-        var selected2 = $("." + modalClass + ' :selected', $("." + modalClass +" #select-options-unitTypeID"));
+        var selected = $(':selected', $("." + modalClass +" #unitTypeID"));
+        var selected2 = $(':selected', $("." + modalClass +" #select-options-unitTypeID"));
         //console.log("u selected: " + selected);
         var optgroup = selected.closest('optgroup').attr('label');
         var optgroup2 = selected2.closest('optgroup').attr('label');
@@ -152,7 +152,7 @@ $(function () {
         //the following is based on the fact that the unit types and parents are seeded with primary key values
         var selectedIndex = $("." + modalClass +' #select-options-subUnitTypeID').find(".active").index();
         console.log("select index" + selectedIndex)
-        var subOptgroup = $("." + modalClass +' :selected', $("#subUnitTypeID")).closest('optgroup').attr('label');
+        var subOptgroup = $(':selected', $("#subUnitTypeID")).closest('optgroup').attr('label');
         switch (subOptgroup) {
             case "Units":
                 console.log("Units")
@@ -238,13 +238,13 @@ $(function () {
     //change sub sub unit dropdown
     $.fn.ChangeSubSubUnitDropdown = function (modalClass) {
         console.log("in change subsubunitdropdown");
-        var selected = $("." + modalClass +' :selected', $("#subUnitTypeID"));
-        var selected2 = $("." + modalClass +' :selected', $("." + modalClass +" #select-options-subUnitTypeID"));
+        var selected = $(':selected', $("#subUnitTypeID"));
+        var selected2 = $(':selected', $("." + modalClass +" #select-options-subUnitTypeID"));
         var optgroup = selected.closest('optgroup').attr('label');
         var optgroup2 = selected2.closest('optgroup').attr('label');
         var selectedIndex = $("." + modalClass +' #select-options-subSubUnitTypeID').find(".active").index();
         console.log("select index" + selectedIndex)
-        var subOptgroup = $("." + modalClass + ' :selected', $("." + modalClass +" #subSubUnitTypeID")).closest('optgroup').attr('label');
+        var subOptgroup = $(':selected', $("." + modalClass +" #subSubUnitTypeID")).closest('optgroup').attr('label');
         switch (subOptgroup) {
             case "Units":
                 console.log("Units")
@@ -453,7 +453,7 @@ $(function () {
         unitTypeIDChange("add-or-edit-item");
     });
 
-    $(".reorderItem").on("change", "#unitTypeID", function () {
+    $(".reorder-item").on("change", "#unitTypeID", function () {
         unitTypeIDChange("reorder-item");
     });
     function unitTypeIDChange(modalClass) {
@@ -462,14 +462,25 @@ $(function () {
         $.fn.ChangeSubUnitDropdown(modalClass);
         $.fn.ChangeSubSubUnitDropdown(modalClass);
     }
-    $(".modal").on("change", "#subUnitTypeID", function () {
-        $.fn.ChangeSubSubUnitDropdown();
+
+    $(".modal").on("change", ".add-or-edit-item #subUnitTypeID", function () {
+        $.fn.ChangeSubSubUnitDropdown("add-or-edit-item");
     });
 
-    $("#unit-type-select").on("change", function () {
+    $(".add-or-edit-item #unit-type-select").on("change", function () {
         //alert('in id function');
-        $.fn.ChangeSubUnitDropdown();
-        $.fn.ChangeSubSubUnitDropdown();
+        $.fn.ChangeSubUnitDropdown("add-or-edit-item");
+        $.fn.ChangeSubSubUnitDropdown("add-or-edit-item");
+    });
+
+    $(".modal").on("change", ".reorder-item #subUnitTypeID", function () {
+        $.fn.ChangeSubSubUnitDropdown("reorder-item");
+    });
+
+    $(".reorder-item #unit-type-select").on("change", function () {
+        //alert('in id function');
+        $.fn.ChangeSubUnitDropdown("reorder-item");
+        $.fn.ChangeSubSubUnitDropdown("reorder-item");
     });
 
     $(".reorder-item #subUnit").change(function () {
