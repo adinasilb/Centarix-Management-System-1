@@ -188,6 +188,7 @@ $(function () {
     });
     $("#vendorList").off("change").change(function () {
         var vendorid = $("#vendorList").val();
+        console.log("vendorid: " + vendorid);
         $.fn.ChangeVendorBusinessId(vendorid);
         $.fn.AddVendorCurrencyType(vendorid);
         //CheckVendorAndCatalogNumbers();
