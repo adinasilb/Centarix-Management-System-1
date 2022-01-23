@@ -3706,7 +3706,7 @@ namespace PrototypeWithAuth.Controllers
         }
         private async Task<List<RequestPaymentsViewModel>> GetPaymentRequests(AppUtility.SidebarEnum accountingPaymentsEnum, List<Expression<Func<Request, bool>>> wheres = null)
         {
-
+            
             if (wheres == null)
             {
                 wheres = new List<Expression<Func<Request, bool>>>();
@@ -3727,7 +3727,7 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.SidebarEnum.MonthlyPayment:
                     wheres.Add(r => (r.PaymentStatusID == 2/*+30*/ && r.Payments.FirstOrDefault().HasInvoice && r.Payments.FirstOrDefault().IsPaid == false) 
                     || ( 
-                          (r.PaymentStatusID == 5/*installments*/ || r.PaymentStatusID == 7/*standingorder*/ || r.Product.GetType().ToString() == AppUtility.OrderType.RecurringOrder.ToString()) 
+                          (r.PaymentStatusID == 5/*installments*/ || r.PaymentStatusID == 7/*standingorder*/ || r.Product is RecurringOrder) 
                           && r.Payments.Where(p => p.PaymentDate.Month == DateTime.Today.Month && p.PaymentDate.Year == DateTime.Today.Year && p.IsPaid == false).Count() > 0)
                        ) ;
                     break;
@@ -3765,9 +3765,9 @@ namespace PrototypeWithAuth.Controllers
                     break;
             }
 
-            var requests = _requestsProc.Read(wheres, includes);
+            var requests = _requestsProc.Read(wheres, includes).ToList();
 
-            await requests.ForEachAsync(r => requestList.Add(new RequestPaymentsViewModel { Request = r, Payment = r.Payments.FirstOrDefault() }));
+            requests.ForEach(r => requestList.Add(new RequestPaymentsViewModel { Request = r, Payment = r.Payments.FirstOrDefault() }));
 
             return requestList;
         }
