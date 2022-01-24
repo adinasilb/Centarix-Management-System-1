@@ -33,28 +33,23 @@ export default class CommentInput extends React.Component {
 
     render() {
 
-        return (
-            <div className="scrollable">
-                <MentionsInput name={this.props.commentTextName} id={this.props.commentTextID} className="react-mentions border-bottom" value={this.state.value} onChange={this.handleChange}>
-          
-                <Mention
-                    displayTransform={this.displayTransform}
-                    trigger="@"
-                    className="users"
-                    data={this.props.users}
+        return (        
+                <MentionsInput name={this.props.commentTextName} id={this.props.commentTextID} className="react-mentions border-bottom" value={this.state.value} onChange={this.handleChange}>          
+                    <Mention
+                        displayTransform={this.displayTransform}
+                        trigger="@"
+                        className="users"
+                        data={this.props.users}
                         appendSpaceOnAdd={true}
-                        style="color:blue"
-                />
-       
-                <Mention 
-                    displayTransform={this.displayTransform}
-                    trigger="@"
-                    className= "items"
-                    data={this.props.items}
-                    appendSpaceOnAdd={true}                    
-                />
+                    />       
+                    <Mention 
+                        displayTransform={this.displayTransform}
+                        trigger="@"
+                        className= "items"
+                        data={this.props.items}
+                        appendSpaceOnAdd={true}                    
+                    />
                 </MentionsInput>
-                </div>
         );
     }
 }
