@@ -579,6 +579,11 @@
     <Content Include="webpack.config.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include=".babelrc" />
+    <Content Include="webpack.config.js" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Abp" Version="5.10.1" />
