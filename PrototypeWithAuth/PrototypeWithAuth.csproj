@@ -570,22 +570,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include=".babelrc" />
-    <Content Include="webpack.config.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include=".babelrc" />
-    <Content Include="webpack.config.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include=".babelrc" />
-    <Content Include="webpack.config.js" />
-  </ItemGroup>
-
-
-  <ItemGroup>
     <PackageReference Include="Abp" Version="5.10.1" />
     <PackageReference Include="Aspose.Slides.NET" Version="21.5.0" />
     <PackageReference Include="bootstrap" Version="4.5.0" />
