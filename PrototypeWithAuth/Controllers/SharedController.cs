@@ -1742,8 +1742,6 @@ namespace PrototypeWithAuth.Controllers
             comment.CommentTypeID = typeID;
             comment.CommentType = await _commentType.ReadOneAsync(new List<Expression<Func<CommentType, bool>>> { ct => ct.TypeID == typeID });
             CommentsInfoViewModel commentsInfoViewModel = new CommentsInfoViewModel { Comment = comment, Index = index };
-            commentsInfoViewModel.MentionUsers = _employeesProc.Read().Select(e => new MentionsModel { Display = e.FirstName+" "+e.LastName, ID = e.Id }).ToList();
-            commentsInfoViewModel.MentionItems = _productsProc.Read().Select(p => new MentionsModel { Display = p.ProductName, ID = p.ProductID.ToString() }).ToList();
             return commentsInfoViewModel;
         }
 
