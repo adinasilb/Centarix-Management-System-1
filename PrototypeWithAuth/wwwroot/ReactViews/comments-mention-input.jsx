@@ -1,21 +1,6 @@
 ﻿import React from 'react';
 import { MentionsInput, Mention } from 'react-mentions'
 
-const users = [
-    {
-        id: "1",
-        display: "Jimmy"
-    },
-    {
-        id: "2",
-        display: "Ketut"
-    },
-    {
-        id: "3",
-        display: "Gede"
-    }
-];
-
 
 export default class CommentInput extends React.Component {
 
@@ -28,12 +13,12 @@ export default class CommentInput extends React.Component {
             value: ""
         };
 
-        ///this.handleChange = this.handleChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.renderUserSuggestion = this.renderUserSuggestion.bind(this);
+        this.displayTransform = this.displayTransform.bind(this);
     }
 
-    handleChange = e => {
-    e.preventDefault();
+    handleChange(event) {
         console.log("handle change")
         this.setState({ value: event.target.value });
     }
@@ -42,18 +27,34 @@ export default class CommentInput extends React.Component {
         console.log("rendersuggestion")
     }
 
+    displayTransform (id, display){
+        return `@${display}`
+    }
+
     render() {
 
         return (
-            <MentionsInput class={this.props.classes} value={this.state.value} onChange={this.handleChange}
-                markup="@[__display__](__id__)" onChange={this.handleCommentChange}
-            >
+            <div className="scrollable">
+                <MentionsInput name={this.props.commentTextName} id={this.props.commentTextID} className="react-mentions border-bottom" value={this.state.value} onChange={this.handleChange}>
+          
                 <Mention
+                    displayTransform={this.displayTransform}
                     trigger="@"
-                    data={users}
-                    renderSuggestion={this.renderUserSuggestion}
+                    className="users"
+                    data={this.props.users}
+                        appendSpaceOnAdd={true}
+                        style="color:blue"
                 />
-            </MentionsInput>
+       
+                <Mention 
+                    displayTransform={this.displayTransform}
+                    trigger="@"
+                    className= "items"
+                    data={this.props.items}
+                    appendSpaceOnAdd={true}                    
+                />
+                </MentionsInput>
+                </div>
         );
     }
 }
