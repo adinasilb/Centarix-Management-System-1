@@ -1576,7 +1576,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 requestItemViewModel.IsProprietary = true;
             }
-            if(categoryTypeId == 2)
+            if (categoryTypeId == 2)
             {
                 requestItemViewModel.ApplicationUsers = _employeesProc.Read()
                               .Select(
@@ -1590,7 +1590,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
             requestItemViewModel.Comments = new List<CommentBase>();
-
+            requestItemViewModel.MentionUsers =  _employeesProc.Read().Select(e => new MentionsModel { Display = e.FirstName+e.LastName, ID = e.Id }).ToList();
             requestItemViewModel.ModalType = AppUtility.RequestModalType.Create;
 
             requestItemViewModel.Requests = new List<Request>();
@@ -3706,7 +3706,7 @@ namespace PrototypeWithAuth.Controllers
         }
         private async Task<List<RequestPaymentsViewModel>> GetPaymentRequests(AppUtility.SidebarEnum accountingPaymentsEnum, List<Expression<Func<Request, bool>>> wheres = null)
         {
-            
+
             if (wheres == null)
             {
                 wheres = new List<Expression<Func<Request, bool>>>();
@@ -3725,11 +3725,11 @@ namespace PrototypeWithAuth.Controllers
             switch (accountingPaymentsEnum)
             {
                 case AppUtility.SidebarEnum.MonthlyPayment:
-                    wheres.Add(r => (r.PaymentStatusID == 2/*+30*/ && r.Payments.FirstOrDefault().HasInvoice && r.Payments.FirstOrDefault().IsPaid == false) 
-                    || ( 
-                          (r.PaymentStatusID == 5/*installments*/ || r.PaymentStatusID == 7/*standingorder*/ || r.Product is RecurringOrder) 
+                    wheres.Add(r => (r.PaymentStatusID == 2/*+30*/ && r.Payments.FirstOrDefault().HasInvoice && r.Payments.FirstOrDefault().IsPaid == false)
+                    || (
+                          (r.PaymentStatusID == 5/*installments*/ || r.PaymentStatusID == 7/*standingorder*/ || r.Product is RecurringOrder)
                           && r.Payments.Where(p => p.PaymentDate.Month == DateTime.Today.Month && p.PaymentDate.Year == DateTime.Today.Year && p.IsPaid == false).Count() > 0)
-                       ) ;
+                       );
                     break;
                 case AppUtility.SidebarEnum.PayNow:
                     wheres.Add(r => r.PaymentStatusID == 3 && r.Payments.FirstOrDefault().IsPaid == false);

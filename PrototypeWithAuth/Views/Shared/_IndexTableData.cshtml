@@ -2,7 +2,6 @@
 @using PrototypeWithAuth.Data;
 @using PrototypeWithAuth.AppData
 @using Microsoft.AspNetCore.Identity
-@using React.AspNet
 
 @inject SignInManager<ApplicationUser> SignInManager
 @if (AppUtility.IsAjaxRequest(Context.Request))
@@ -10,9 +9,7 @@
     <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text error-msg"></span></div>
     <br />
 }
-<div class="">
-
-   
+<div class="">   
     <input type="hidden" asp-for="PageNumber" class="page-number" />
     <table class="table table-headerspaced table-noheaderlines table-hover ">
         <tbody class="scroll-tbody">
