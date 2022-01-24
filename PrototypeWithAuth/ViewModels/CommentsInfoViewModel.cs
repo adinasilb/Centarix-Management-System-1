@@ -13,7 +13,5 @@ namespace PrototypeWithAuth.ViewModels
         public CommentBase Comment { get; set; }
         public bool IsEdit { get; set; }
         public bool IsRemove { get; set; }
-        public List<MentionsModel> MentionUsers { get; set; }
-        public List<MentionsModel> MentionItems { get; set; }
     }
 }
