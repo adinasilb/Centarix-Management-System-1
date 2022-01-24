@@ -89,5 +89,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<string> LastUrls { get; set; }
         public bool HasQuote { get; set; }
         public bool HasWarnings { get; set; }
+        public AppUtility.OrderType OrderType { get; set; }
     }
 }
