@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrototypeWithAuth.Models
 {
-    public abstract class Product : ModelBase
+    public class Product : ModelBase
     {
         //IMPT: When adding in data validation make sure that you turn data-val off in the search
         //Rollback favorites and shares

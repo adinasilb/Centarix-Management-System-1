@@ -64,9 +64,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("UPDATE Products SET OrderTypeID= 1 WHERE OrderType ='" + AppData.AppUtility.OrderType.SingleOrder.ToString() + "'");
-            migrationBuilder.Sql("UPDATE Products SET OrderTypeID= 2 WHERE OrderType ='" + AppData.AppUtility.OrderType.RecurringOrder.ToString() + "'");
-            migrationBuilder.Sql("UPDATE Products SET OrderTypeID= 3 WHERE OrderType ='" + AppData.AppUtility.OrderType.StandingOrder.ToString() + "'");
+            migrationBuilder.Sql("UPDATE Products SET OrderTypeID= 1 WHERE Discriminator ='" + AppData.AppUtility.OrderType.SingleOrder.ToString() + "'");
+            migrationBuilder.Sql("UPDATE Products SET OrderTypeID= 2 WHERE Discriminator ='" + AppData.AppUtility.OrderType.RecurringOrder.ToString() + "'");
+            migrationBuilder.Sql("UPDATE Products SET OrderTypeID= 3 WHERE Discriminator ='" + AppData.AppUtility.OrderType.StandingOrder.ToString() + "'");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Products_TimePeriods_TimePeriodID",

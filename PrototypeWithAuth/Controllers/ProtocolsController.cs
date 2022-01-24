@@ -1605,7 +1605,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     else
                     {
-                        viewmodel.Function.Product = new SingleOrder();
+                        viewmodel.Function.Product = new Product();
                         viewmodel.ProductSubcategories = _context.ProductSubcategories.ToList();
                         viewmodel.Products = _context.Products.Where(p => p.Requests.Where(r => r.RequestStatusID == 3 || r.RequestStatusID == 7).Any()).ToList();
 
