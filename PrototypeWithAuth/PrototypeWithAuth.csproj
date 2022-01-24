@@ -648,7 +648,6 @@
 
   <ItemGroup>
     <None Include="wwwroot\favicon_io\site.webmanifest" />
-    <None Include="wwwroot\ReactViews\comments-mention-input.jsx" />
   </ItemGroup>
 
 
