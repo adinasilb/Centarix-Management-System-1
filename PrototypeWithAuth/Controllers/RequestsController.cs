@@ -1590,7 +1590,8 @@ namespace PrototypeWithAuth.Controllers
             }
 
             requestItemViewModel.Comments = new List<CommentBase>();
-                 requestItemViewModel.ModalType = AppUtility.RequestModalType.Create;
+            requestItemViewModel.MentionUsers =  _employeesProc.Read().Select(e => new MentionsModel { Display = e.FirstName+e.LastName, ID = e.Id }).ToList();
+            requestItemViewModel.ModalType = AppUtility.RequestModalType.Create;
 
             requestItemViewModel.Requests = new List<Request>();
             requestItemViewModel.Requests.Add(new Request());
