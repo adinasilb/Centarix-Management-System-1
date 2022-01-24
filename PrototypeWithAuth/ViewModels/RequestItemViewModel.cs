@@ -78,7 +78,6 @@ namespace PrototypeWithAuth.ViewModels
         public int Tab { get; set; } = 1;
         public IEnumerable<CommentType> CommentTypes { get; set; }
         public List<CommentBase> Comments { get; set; }
-        public List<MentionsModel> MentionUsers { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
         public AppUtility.RequestModalType ModalType { get; set; }
         public bool IsProprietary { get; set; }
