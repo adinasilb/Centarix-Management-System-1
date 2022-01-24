@@ -319,7 +319,7 @@ body {
     border: .31px solid #ebebeb;
 }
 
-input.form-control-plaintext:not(.select-dropdown) {
+input.form-control-plaintext:not(.select-dropdown), .react-mentions__input {
     padding-bottom: .5rem !important;
     padding-top: .5rem !important;
 }
@@ -591,7 +591,7 @@ body {
     line-height: 100%;
 }
 
-.form-control-plaintext, .mdb-select {
+.form-control-plaintext, .mdb-select, .react-mentions__input {
     margin-top: 0px;
     padding-top: 0px;
     line-height: 100%;
@@ -2032,7 +2032,7 @@ td .btn {
     color: var(--order-inv-color) !important;
 }
 /*HOVER FOR EACH SECTION*/
-.order-inv-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus,
+.order-inv-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus, .order-inv-form .react-mentions__input:not(.danger-box-shadow):not(.url-shown):focus,
 .order-inv-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
 .order-inv-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within {
     outline-width: 0px !important;
@@ -2041,11 +2041,11 @@ td .btn {
 }
 
 
-    .order-inv-form .form-control-plaintext.danger-box-shadow:focus {
-        outline-width: 0px !important;
-        outline-color: none !important;
-        box-shadow: 0 2px 0 0 var(--danger-color) !important;
-    }
+.order-inv-form .form-control-plaintext.danger-box-shadow:focus, .order-inv-form .react-mentions__input.danger-box-shadow:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--danger-color) !important;
+}
 
 .order-inv-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
@@ -2067,13 +2067,14 @@ td .btn {
 
 .bio-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
 .bio-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
-.bio-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus {
+.bio-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus,
+.bio-form .react-mentions__input:not(.danger-box-shadow):not(.url-shown):focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--biomarkers-color) !important;
 }
 
-.bio-form .form-control-plaintext.danger-box-shadow:focus {
+.bio-form .form-control-plaintext.danger-box-shadow:focus, .bio-form .react-mentions__input.danger-box-shadow:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--danger-color) !important;
@@ -2086,7 +2087,7 @@ td .btn {
 
 .users-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
 .users-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
-.users-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus {
+.users-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus, .users-form .react-mentions__input:not(.danger-box-shadow):not(.url-shown):focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--user-color) !important;
@@ -2116,11 +2117,12 @@ span.caret {
 
 .supplier-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
 .supplier-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
-.supplier-form.form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus {
+.supplier-form.form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus,
+.supplier-form.react-mentions__input:not(.danger-box-shadow):not(.url-shown):focus {
     box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
 }
 
-.form-control-plaintext:focus, input[type="text"]:focus {
+.form-control-plaintext:focus, input[type="text"]:focus, .react-mentions__input:focus{
     outline-width: 0px !important;
     outline-color: none !important;
 }
@@ -2128,7 +2130,7 @@ span.caret {
 .protocol-form .form-control-plaintext:focus, .protocol-form input[type="text"]:focus {
     box-shadow: 0 2px 0 0 var(--protocol-color) !important;
 }
-.protocol-form.createReportForm .form-control-plaintext:focus {
+.protocol-form.createReportForm .form-control-plaintext:focus, .protocol-form.createReportForm .react-mentions__input:focus {
     box-shadow: none !important;
 }
 
@@ -2152,7 +2154,7 @@ span.caret {
 }
 
 
-.supplier-form .select.form-control-plaintext:focus, .supplier-form input[type="text"]:not(.url-shown):focus {
+.supplier-form .select.form-control-plaintext:focus, .supplier-form input[type="text"]:not(.url-shown):focus, .supplier-form .select.react-mentions__input:focus {
     border-bottom: none !important;
     border: 2px solid var(--lab-man-color) !important;
 }
@@ -2194,7 +2196,7 @@ span.caret {
     color: var(--acc-color) !important;
 }
 
-.accounting-form .form-control-plaintext:focus, .accounting-form input[type="text"]:focus {
+.accounting-form .form-control-plaintext:focus, .accounting-form input[type="text"]:focus, .accounting-form .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--acc-color) !important;
@@ -2209,7 +2211,7 @@ span.caret {
     box-shadow: 0 2px 0 0 var(--acc-color) !important;
 }
 
-.oper-form .form-control-plaintext:focus, .oper-form input[type="text"]:focus {
+.oper-form .form-control-plaintext:focus, .oper-form input[type="text"]:focus, .oper-form .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --operations-color) !important;
@@ -2233,7 +2235,7 @@ span.caret {
     border: 2px solid var(--user-color) !important;
 }
 
-.users-form .form-control-plaintext:focus,  .users-form input[type="text"]:focus {
+.users-form .form-control-plaintext:focus, .users-form input[type="text"]:focus, .users-form .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --user-color) !important;
@@ -2263,7 +2265,7 @@ span.caret {
     border-radius: .25rem;
 }
 
-.timekeeper-form .form-control-plaintext:focus, .timekeeper input[type="text"]:focus {
+.timekeeper-form .form-control-plaintext:focus, .timekeeper input[type="text"]:focus, .timekeeper-form .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --timekeeper-color) !important;
@@ -2298,7 +2300,7 @@ span.caret {
     border: 2px solid var(--timekeeper-color) !important;
 }
 /*begin change to reports*/
-.expenses-form .form-control-plaintext:focus, .expenses-form input[type="text"]:focus {
+.expenses-form .form-control-plaintext:focus, .expenses-form input[type="text"]:focus, .expenses-form .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --expense-color) !important;
@@ -3186,4 +3188,15 @@ body.modal-open .popover {
     max-height: 50px;
     overflow: hidden;
     color: var(--danger-color);
+}
+
+
+.react-mentions__highlighter, .react-mentions__input {
+    border: none;
+}
+.react-mentions__input {
+    border: none;
+}
+.users{
+    color:blue;
 }
