@@ -125,6 +125,10 @@
 {
     
     <div class="row">
+        <div class="col-2 recurring-info d-none">
+            <input type="checkbox" id="standingOrder" class="form-check-input filled-in " />
+            <label class="form-check-label" id="standingOrder">Standing Order</label>
+        </div>
         <div class="col-2">
             <input type="checkbox" asp-for="Paid" id="alreadyPaid" class="form-check-input filled-in " />
             <label class="form-check-label" asp-for="Paid" id="alreadyPaid">Paid</label>
@@ -133,56 +137,7 @@
 
     </div>
     <div class="row paid-info d-none ">
-        <div class="col-3 pl-0">
-            <div class=" payment-type form-group">
-                <label class="control-label">Bank Name</label>
-                @Html.DropDownListFor(vm => vm.Requests[0].Payments[0].CompanyAccountID,
-            new SelectList(
-            Model.CompanyAccounts,
-            "CompanyAccountID",
-            "CompanyBankName"
-            ), "Select Bank Name",
-            new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext", @id = "bankName" })
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="payment-type form-group d-none">
-                <label class="control-label">Payment Type</label>
-                @Html.DropDownListFor(vm => vm.Requests[0].Payments[0].PaymentTypeID,
-            new SelectList(
-            Model.PaymentTypes,
-            "PaymentTypeID",
-            "PaymentTypeDescription"
-            ), "Select Payment Type",
-            new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext paymentType" })
-            </div>
-        </div>
-        <div class="col-3 credit-card d-none">
-            <div class="form-group ">
-                <label class="control-label credit-card d-none">Card #</label>
-                <select class="mdb-select custom select-dropdown form-control-plaintext cardNum mdb-select-sublist " disabled asp-for="Requests[0].Payments[0].CreditCardID"></select>
-            </div>
-        </div>
-        <div class="col-3 pl-0">
-            <div class="form-group payment-date d-none">
-                <label class="control-label wire d-none">Transfer Date</label>
-                <label class="control-label credit-card">Reference Date</label>
-                <label class="control-label bank-check d-none">Cash Out Date</label>
-                <input class="form-control-plaintext border-bottom datepicker" type="text" asp-for="Requests[0].Payments[0].PaymentReferenceDate" value="" />
-            </div>
-        </div>
-        <div class="col-3 wire d-none">
-            <div class="form-group ">
-                <label class="control-label">Payment Reference</label>
-                <input class="form-control-plaintext border-bottom reference-1" type="text" disabled asp-for="Requests[0].Payments[0].Reference" />
-            </div>
-        </div>
-        <div class="col-3 bank-check d-none">
-            <div class="form-group ">
-                <label class="control-label">Check Number</label>
-                <input class="form-control-plaintext border-bottom" type="text" disabled asp-for="Requests[0].Payments[0].CheckNumber" />
-            </div>
-        </div>
+       
     </div>
 
 }
@@ -286,27 +241,51 @@
 }
 
 <script>
+    $(function(){
     $(".order-type").off("click").on("click", function(e){
             e.preventDefault()
             var selectedStyles = "custom-button-font oper-background-color"
             var unselectedStyles = "custom-oper"
         if($(this).attr("id")=="single"){
             $(".recurring-info").addClass("d-none")
-            $("#single").addClass(selectedStyles)
-            $("#single").removeClass(unselectedStyles)
-            $("#recurring").addClass(unselectedStyles)
-            $("#recurring").removeClass(selectedStyles)
+            $("#single").addClass(selectedStyles).removeClass(unselectedStyles)
+            $("#recurring").addClass(unselectedStyles).removeClass(selectedStyles)
             $("#OrderType").val("SingleOrder")
         }
         else{
              $(".recurring-info").removeClass("d-none")
              //if standing order is checked - ordertype = 3
              $("#OrderType").val("RecurringOrder")
-             $("#single").addClass(unselectedStyles)
-            $("#single").removeClass(selectedStyles)
-            $("#recurring").addClass(selectedStyles)
-            $("#recurring").removeClass(unselectedStyles)
+             $("#single").addClass(unselectedStyles).removeClass(selectedStyles)
+            $("#recurring").addClass(selectedStyles).removeClass(unselectedStyles)
         }
+    })
+    $("#alreadyPaid").off("click").on("click", function (e) {
+        console.log("pay")
+        if ($("#alreadyPaid:checkbox").is(":checked")) {
+            $(".paid-info").addClass("d-none")
+            $("#alreadyPaid:checkbox").prop("checked", false)
+            $("#Paid").val(false)
+        }
+        else {
+            $(".paid-info").removeClass("d-none")
+            $("#alreadyPaid:checkbox").prop("checked", true)
+            $("#Paid").val(true)
+        }
+
+    });
+    $("#standingOrder").off("click").on("click", function (e) {
+        console.log("pay")
+        if ($("#standingOrder:checkbox").is(":checked")) {
+            $("#standingOrder:checkbox").prop("checked", false)
+            $("#OrderType").val("StandingOrder")
+        }
+        else {
+            $("#standingOrder:checkbox").prop("checked", true)
+            $("#OrderType").val("StandingOrder")
+        }
+
+    });
     })
     </script>
 
