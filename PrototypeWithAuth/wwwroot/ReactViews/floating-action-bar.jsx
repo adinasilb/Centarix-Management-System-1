@@ -2,6 +2,7 @@
 import {
     Link, Route, Switch, StaticRouter
 } from 'react-router-dom';
+import DeleteModal from './delete-modal.jsx';
 
 export default class FloatingActionBar extends React.Component {
     constructor(props) {
@@ -22,7 +23,11 @@ export default class FloatingActionBar extends React.Component {
                     <div className="floating-action-bar">
                 <StaticRouter >
                     <Switch  >
-                        <Route path="/" />
+                        <Route path="/DeleteModal" render={() => {
+                            return (
+                                <DeleteModal />)
+                        }}
+                 />
                     </Switch>
                     <div>
                         
@@ -43,7 +48,7 @@ export default class FloatingActionBar extends React.Component {
                                 <Link to="/" ><i className="icon-insert_drive_file-24px-1"></i>Add File</Link>
                             </li>
                             <li className="list-group-item ">
-                                <Link to="/" ><i className="icon-delete-24px1"></i>Delete</Link>
+                                <Link to="/DeleteModal" ><i className="icon-delete-24px1"></i>Delete</Link>
                             </li>
                             <li className="list-group-item ">
 
