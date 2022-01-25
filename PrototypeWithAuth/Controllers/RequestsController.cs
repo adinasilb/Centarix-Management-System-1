@@ -1595,7 +1595,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Requests = new List<Request>();
             requestItemViewModel.Requests.Add(new Request());
             requestItemViewModel.Requests.FirstOrDefault().ExchangeRate = await GetExchangeRateAsync();
-            requestItemViewModel.Requests.FirstOrDefault().Product = new Product();
+            requestItemViewModel.Requests.FirstOrDefault().Product = new SingleOrder();
             requestItemViewModel.Requests.FirstOrDefault().ParentQuote = new ParentQuote();
             requestItemViewModel.Requests.FirstOrDefault().SubProject = new SubProject();
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory = productSubcategory;
@@ -1639,7 +1639,7 @@ namespace PrototypeWithAuth.Controllers
             operationsItemViewModel.Request = new Request() { IncludeVAT = true };
             if (subcategoryID > 0)
             {
-                operationsItemViewModel.Request.Product = new Product();
+                operationsItemViewModel.Request.Product = new SingleOrder();
                 operationsItemViewModel.Request.Product.ProductSubcategoryID = subcategoryID;
                 operationsItemViewModel.Request.Product.ProductSubcategory =
                   await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == subcategoryID });

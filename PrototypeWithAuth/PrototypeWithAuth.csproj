@@ -567,6 +567,8 @@
     <Compile Remove="Data\Migrations\20220123122832_AddTimePeriodsModel.Designer.cs" />
     <Compile Remove="Data\Migrations\20220123130818_AddProductOrderTypeDiscriminator.cs" />
     <Compile Remove="Data\Migrations\20220123130818_AddProductOrderTypeDiscriminator.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220125072613_ProductOrderTypeReAdd.cs" />
+    <Compile Remove="Data\Migrations\20220125072613_ProductOrderTypeReAdd.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
