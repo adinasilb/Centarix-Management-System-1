@@ -3197,3 +3197,39 @@ body.modal-open .popover {
 .react-mentions__input {
     border: none;
 }
+
+.floating-action-bar {
+    position: fixed;
+    margin-bottom: 5rem;
+    bottom: 0;
+    z-index: 9999;
+    border-radius: 0.25rem !important;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.floating-action-bar .list-group {
+    
+}
+
+.floating-action-bar .list-group-item {
+    border: none;
+    background-color: transparent;
+    color: white;
+
+
+}
+
+    .floating-action-bar .list-group-item .close {
+        opacity: 100%;
+        color: white;
+        font-weight: var(--bold-regular)
+    }
+
+.floating-action-bar .list-group-item a{
+    color: white;
+}
+
+.accounting-form .floating-action-bar{
+    background:var(--acc-color);
+}
