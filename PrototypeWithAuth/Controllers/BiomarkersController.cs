@@ -621,7 +621,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<ActionResult> SaveTests(TestViewModel testViewModel, TestValuesViewModel testValuesViewModel, List<FieldViewModel> fieldViewModels)
         {
 
-            await _testValuesProc.SaveAsync(testViewModel);
+            var save = await _testValuesProc.SaveAsync(testViewModel);
             SaveFiles(testViewModel.Guid, testViewModel.ExperimentEntry.ExperimentEntryID);
 
             return RedirectToAction("_TestValues", new { TestID = testViewModel.FieldViewModels.FirstOrDefault().TestID, ListNumber = 0, SiteID = testViewModel.ExperimentEntry.SiteID, ExperimentID = testViewModel.ExperimentID, ExperimentEntryID = testViewModel.ExperimentEntry.ExperimentEntryID });

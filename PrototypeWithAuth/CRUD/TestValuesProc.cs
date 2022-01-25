@@ -63,6 +63,7 @@ namespace PrototypeWithAuth.CRUD
                     }
                     _context.Update(testValue);
                 }
+                var changetracker = _context.ChangeTracker.Entries();
                 await _context.SaveChangesAsync();
                 ReturnVal.SetStringAndBool(true, null);
             }
