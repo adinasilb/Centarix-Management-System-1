@@ -1282,13 +1282,13 @@
                     if(isReopen)
                     {
                         console.log("before fx");
-                        //if ($("._testvalues").length > 0) {
+                        if ($("._testvalues").length > 0) {
 
-                        //    if (!$("._testvalues").hasClass("changed")) {
-                        //        $("._testvalues").addClass("changed");
-                        //    }
-                        //}
-                        //alert("._DocumentsModalData")
+                            if (!$("._testvalues").hasClass("changed")) {
+                                $("._testvalues").addClass("changed");
+                            }
+                        }
+                        alert("._DocumentsModalData")
                         $("._DocumentsModalData").html(data);
                     }
                     else {
