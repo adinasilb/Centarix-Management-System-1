@@ -1,6 +1,11 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
 @using PrototypeWithAuth.AppData
-<div class="error-message"   >
+@using React.AspNet
+
+@Html.React("FloatingActionBar", new { })
+@Html.ReactGetScriptPaths()
+@Html.ReactInitJavaScript()
+<div class="error-message">
     @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage);}
 </div>
 @if (Model.RequestsByVendor.Count() > 0)

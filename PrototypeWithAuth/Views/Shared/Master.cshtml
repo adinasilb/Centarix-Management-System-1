@@ -1,4 +1,6 @@
 ﻿@using PrototypeWithAuth.AppData.UtilityModels
+@using React.AspNet
+
 @{
     Layout = null;
 }
@@ -1726,7 +1728,7 @@
             });
         }
 
-        $.fn.CancelModal = function (modalClass, orderType, orderOrigin) {
+        $.fn.CancelModal = function (modalClass, orderMethod, orderOrigin) {
             var modalType = $('#RequestIndexObject_ModalType').val();
             var guid = $('#GUID').val();
             $.ajax({
@@ -1807,8 +1809,8 @@
 
     @if (IsSectionDefined("requestNavScript"))
     {
-    @RenderSection("requestNavScript", required: true)
+        @RenderSection("requestNavScript", required: true)
     }
-
+  
 </body>
 </html>
