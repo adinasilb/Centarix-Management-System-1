@@ -89,5 +89,12 @@ namespace PrototypeWithAuth.ViewModels
         public List<string> LastUrls { get; set; }
         public bool HasQuote { get; set; }
         public bool HasWarnings { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public bool HasEnd { get; set; }
+        public int Occurances { get; set; }
+        public int TimePeriodID { get; set; }
+        public int TimePeriodAmount { get; set; }
+
     }
 }
