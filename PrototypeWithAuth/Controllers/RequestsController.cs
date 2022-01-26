@@ -1360,10 +1360,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> DeleteModal(int? id, RequestIndexObject requestIndexObject)
         {
-            if (!AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView("InvalidLinkPage");
-            }
+            //if (!AppUtility.IsAjaxRequest(Request))
+            //{
+            //    return PartialView("InvalidLinkPage");
+            //}
             if (id == null)
             {
                 ViewBag.ErrorMessage = "Product not found (no id). Unable to delete.";
