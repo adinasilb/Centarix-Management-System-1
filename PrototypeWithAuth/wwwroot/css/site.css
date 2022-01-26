@@ -2032,16 +2032,16 @@ td .btn {
     color: var(--order-inv-color) !important;
 }
 /*HOVER FOR EACH SECTION*/
-.order-inv-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus,
+.order-inv-form .form-control-plaintext:read-write:not(.danger-box-shadow):not(.url-shown):focus,
 .order-inv-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
-.order-inv-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within {
+.order-inv-form button[type="button"].form-control-plaintext:read-write:not(.danger-box-shadow):focus-within {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
 }
 
 
-    .order-inv-form .form-control-plaintext.danger-box-shadow:focus {
+    .order-inv-form .form-control-plaintext:read-write.danger-box-shadow:focus {
         outline-width: 0px !important;
         outline-color: none !important;
         box-shadow: 0 2px 0 0 var(--danger-color) !important;

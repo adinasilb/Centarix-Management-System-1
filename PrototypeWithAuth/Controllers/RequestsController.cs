@@ -1928,9 +1928,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
             };
-
+            request.RequestStatusID =1;
             requestItemViewModel.Requests = new List<Request>() { request };
-            requestItemViewModel.IsReorder = true;
+            requestItemViewModel.ModalType = AppUtility.RequestModalType.Reorder;
             requestItemViewModel.HasWarnings = _productCommentsProc.Read(new List<Expression<Func<ProductComment, bool>>> { pc => pc.ObjectID == request.ProductID && pc.CommentTypeID == 2 }).Count() > 0;
             requestItemViewModel.HasQuote = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.ProductID == request.ProductID && r.ParentQuote.ExpirationDate >= DateTime.Now.Date }).Select(r => r.ParentQuote).OrderByDescending(r => r.QuoteDate).Count() > 0;
 
@@ -1944,6 +1944,7 @@ namespace PrototypeWithAuth.Controllers
             };
 
             requestItemViewModel.TempRequestListViewModel = trlvm;
+            requestItemViewModel.RequestRoles = await GetUserRequestRoles();
 
             await _tempRequestJsonsProc.UpdateAsync(trlvm.GUID, trlvm.RequestIndexObject, trlvm, _userManager.GetUserId(User), true);
 

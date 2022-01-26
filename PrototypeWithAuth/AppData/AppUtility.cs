@@ -223,7 +223,7 @@ namespace PrototypeWithAuth.AppData
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }
         public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusable, Equipment, Operation, Biological, Safety, General, Clinical }
-        public enum RequestModalType { Create, Edit, Summary }
+        public enum RequestModalType { Create, Edit, Summary, Reorder }
         public enum ProtocolModalType { None, Create, CheckListMode, Summary, Edit, SummaryFloat, CreateNewVersion }
         public enum VendorModalType { Create, Edit, SummaryFloat }
         public enum OrderTypeEnum { None, RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
@@ -1021,7 +1021,7 @@ namespace PrototypeWithAuth.AppData
         public static bool GetPermissionsForPriceTabMarkReadonly(List<String> UserRoles, Request Request)
         {
             bool ReturnVal = false;
-            if(Request.RequestStatusID == 3 && UserRoles.Contains("RequestEditReceived"))
+            if(Request.RequestStatusID == 3 && !UserRoles.Contains("RequestEditReceived"))
             {
                 ReturnVal = true;
             }

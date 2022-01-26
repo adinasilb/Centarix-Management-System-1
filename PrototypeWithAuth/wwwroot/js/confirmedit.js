@@ -322,8 +322,8 @@ $(function () {
             $.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
             $.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
             $.fn.EnableMaterialSelect('#unitTypeID', 'select-options-unitTypeID');
-            $.fn.CheckUnitsFilled();
-            $.fn.CheckSubUnitsFilled();
+            $.fn.CheckUnitsFilled("add-or-edit-item");
+            $.fn.CheckSubUnitsFilled("add-or-edit-item");
         }
         if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
             $.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');

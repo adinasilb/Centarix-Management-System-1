@@ -280,21 +280,18 @@ namespace PrototypeWithAuth.ViewModels
                         }
                     }
                 }
+                //var deleteIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink?.Contains("load-confirm-delete") ?? false);
+                //if (request.RequestStatusID != 3 && deleteIconIndex != -1)
+                //{
+                //    newIconList.RemoveAt(deleteIconIndex);
+                //    newIconList.Insert(deleteIconIndex, placeholder);
+                //}
                 if (viewOnly)
                 {
                     var popoverMoveList = newIconList.ElementAt(morePopoverIndex).IconPopovers.FindIndex(ni => ni.Description == AppUtility.PopoverDescription.MoveToList);
                     newIconList[morePopoverIndex].IconPopovers.RemoveAt(popoverMoveList);
                     var popoverDeleteFromList = newIconList.ElementAt(morePopoverIndex).IconPopovers.FindIndex(ni => ni.Description == AppUtility.PopoverDescription.DeleteFromList);
                     newIconList[morePopoverIndex].IconPopovers.RemoveAt(popoverDeleteFromList);
-                }
-                else
-                {
-                    var deleteIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink?.Contains("load-confirm-delete") ?? false);
-                    if (request.RequestStatusID != 3 && forApprovalIconIndex != -1)
-                    {
-                        newIconList.RemoveAt(deleteIconIndex);
-                        newIconList.Insert(deleteIconIndex, placeholder);
-                    }
                 }
             }
             return newIconList;

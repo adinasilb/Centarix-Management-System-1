@@ -584,15 +584,7 @@ namespace PrototypeWithAuth.Controllers
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
             await FillRequestDropdowns(requestItemViewModel, request.Product.ProductSubcategory, categoryType);
-            requestItemViewModel.RequestRoles = new List<String>();
-            IList<String> roles = await _userManager.GetRolesAsync(await _userManager.GetUserAsync(User));
-            foreach(var role in AppUtility.RequestRoleEnums())
-            {
-                if (roles.Contains(role.RoleDefinition))
-                {
-                    requestItemViewModel.RequestRoles.Add(role.RoleDefinition);
-                }
-            }
+            requestItemViewModel.RequestRoles = await GetUserRequestRoles();
 
             requestItemViewModel.Tab = Tab ?? 0;
             var requestComments = _requestCommentsProc.Read(new List<Expression<Func<RequestComment, bool>>> { r => r.ObjectID == request.RequestID },
@@ -618,7 +610,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (_requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.ProductID == request.ProductID }).Count() > 1)
             {
-                requestItemViewModel.IsReorder = true;
+                requestItemViewModel.ShowHistory = true;
             }
 
             ModalViewType = "Edit";
@@ -1290,13 +1282,14 @@ protected static void ApplySearchToRequestList(RequestsSearchViewModel requestsS
                         case 3:
                             iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
+
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverAddToList /*, popoverReorder*//*, popoverDelete*/ };
                             if (await this.IsAuthorizedAsync(requestIndexObject.SectionType, "DeleteReceived"))
                             {
-                                iconList.Add(deleteIcon);
+                                popoverMoreIcon.IconPopovers.Add(popoverDelete);
                             }
-                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverAddToList /*, popoverReorder*//*, popoverDelete*/ };
                             iconList.Add(popoverMoreIcon);
-
+                          
 
                             var requests = RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).ThenBy(r => r.Product.ProductName);
                             var requests2 = requests.Skip(20*(requestIndexObject.PageNumber-1)).Take(20);
@@ -1794,6 +1787,20 @@ protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFi
                 createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();
             }
             return createSupplierViewModel;
+        }
+
+        protected async Task<List<String>> GetUserRequestRoles()
+        {
+            List<String> userRequestRoles = new List<String>();
+            IList<String> roles = await _userManager.GetRolesAsync(await _userManager.GetUserAsync(User));
+            foreach (var role in AppUtility.RequestRoleEnums())
+            {
+                if (roles.Contains(role.RoleDefinition))
+                {
+                    userRequestRoles.Add(role.RoleDefinition);
+                }
+            }
+            return userRequestRoles;
         }
 
     }
