@@ -21,7 +21,7 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public async Task<StringWithBool> SaveAsync(TestViewModel TestViewModel)
+        public StringWithBool SaveAsync(ref TestViewModel TestViewModel)
         {
             StringWithBool ReturnVal = new StringWithBool();
             try
@@ -31,7 +31,7 @@ namespace PrototypeWithAuth.CRUD
                     TestValue testValue = new TestValue();
                     if (fieldTest.TestValueID != 0)
                     {
-                        testValue = await this.ReadOneAsync(new List<Expression<Func<TestValue, bool>>> 
+                        testValue = (TestValue)this.ReadOne(new List<Expression<Func<TestValue, bool>>> 
                                                             { tv => tv.TestValueID == fieldTest.TestValueID });
                     }
                     else
@@ -64,7 +64,7 @@ namespace PrototypeWithAuth.CRUD
                     _context.Update(testValue);
                 }
                 var changetracker = _context.ChangeTracker.Entries();
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 ReturnVal.SetStringAndBool(true, null);
             }
             catch(Exception ex)
