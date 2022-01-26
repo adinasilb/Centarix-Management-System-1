@@ -1,7 +1,9 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
 @using PrototypeWithAuth.AppData
 @using React.AspNet
-@Html.React("FloatingActionBar", new {})
+@using React.Router;
+
+@Html.ReactRouter("RootComponent", new { });
 @Html.ReactGetScriptPaths()
 @Html.ReactInitJavaScript()
 <div class="error-message">
