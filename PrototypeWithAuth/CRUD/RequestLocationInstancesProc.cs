@@ -19,7 +19,7 @@ namespace PrototypeWithAuth.CRUD
         public RequestLocationInstancesProc(ApplicationDbContext context, bool FromBase = false, bool flag = false) : base(context)
         {
             if (!FromBase) { this.InstantiateProcs(); }
-            else if(!flag)
+            else if (!flag)
             {
                 _locationInstancesProc = new LocationInstancesProc(context, true);
                 _temporaryLocationInstancesProc = new TemporaryLocationInstancesProc(context, true);
@@ -71,7 +71,7 @@ namespace PrototypeWithAuth.CRUD
                         var locationInstance = await _locationInstancesProc.ReadOneAsync(new List<Expression<Func<LocationInstance, bool>>> { li => li.LocationInstanceID == place.LocationInstanceId });
                         if (locationInstance.IsFull == false)
                         {
-                            if(archiveOneRequest)
+                            if (archiveOneRequest)
                             {
                                 rli.IsArchived = true;
                             }
@@ -90,7 +90,7 @@ namespace PrototypeWithAuth.CRUD
                             }
                             else
                             {
-                               await _locationInstancesProc.MarkLocationInstanceAsFullAsync(locationInstance);
+                                await _locationInstancesProc.MarkLocationInstanceAsFullAsync(locationInstance);
                             }
                             await _context.SaveChangesAsync();
                         }
@@ -99,12 +99,12 @@ namespace PrototypeWithAuth.CRUD
                             throw new Exception("RequestLocationInstancesProc SaveLocationsAsync in archive request catch-" + AppUtility.GetExceptionMessage(ex));
                         }
 
-                           }
+                    }
                 }
             }
             catch (Exception ex)
             {
-               throw new Exception("RequestLocationInstancesProc SaveLocationsAsync-" + AppUtility.GetExceptionMessage(ex));
+                throw new Exception("RequestLocationInstancesProc SaveLocationsAsync-" + AppUtility.GetExceptionMessage(ex));
             }
 
         }
@@ -120,7 +120,7 @@ namespace PrototypeWithAuth.CRUD
                     {
                         if (receivedModalVisualViewModel.LocationInstancePlaces != null)
                         {
-                            var request = await _requestsProc.ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestId }, new List<ComplexIncludes<Request, ModelBase>> { 
+                            var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestId }, new List<ComplexIncludes<Request, ModelBase>> {
                             new ComplexIncludes<Request, ModelBase>{ Include = r=>r.RequestLocationInstances}
                             });
                             var requestLocations = request.RequestLocationInstances;
@@ -149,7 +149,7 @@ namespace PrototypeWithAuth.CRUD
         {
 
             try
-            {                
+            {
                 foreach (var requestLocationInstance in requestLocationInstances)
                 {
 
@@ -160,9 +160,9 @@ namespace PrototypeWithAuth.CRUD
             }
             catch (Exception ex)
             {
-                throw new Exception("RequestLocationInstanceProc DeleteAsync -"+ AppUtility.GetExceptionMessage(ex));
+                throw new Exception("RequestLocationInstanceProc DeleteAsync -" + AppUtility.GetExceptionMessage(ex));
             }
-         
+
         }
 
         public async Task<StringWithBool> UpdateAsync(ReceivedModalVisualViewModel receivedModalVisualViewModel, int requestID)
@@ -180,7 +180,7 @@ namespace PrototypeWithAuth.CRUD
                 {
                     ReturnVal.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
                 }
-              
+
             }
             return ReturnVal;
         }
@@ -203,8 +203,8 @@ namespace PrototypeWithAuth.CRUD
             }
             catch (Exception ex)
             {
-                throw new Exception( AppUtility.GetExceptionMessage(ex));
+                throw new Exception(AppUtility.GetExceptionMessage(ex));
             }
         }
-    } 
+    }
 }

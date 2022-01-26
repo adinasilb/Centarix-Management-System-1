@@ -105,154 +105,71 @@ namespace PrototypeWithAuth.Controllers
             var counter = 0;
             foreach (var role in AppUtility.RequestRoleEnums())
             {
-                registerUserViewModel.OrderRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, StringWithName = role, Selected = false });
+                registerUserViewModel.OrderRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = false });
                 counter++;
             }
             registerUserViewModel.ProtocolRoles = new List<UserRoleViewModel>();
-
             counter = 0;
             foreach (var role in AppUtility.ProtocolRoleEnums())
             {
-                registerUserViewModel.ProtocolRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, StringWithName = role, Selected = false });
+                registerUserViewModel.ProtocolRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = false });
                 counter++;
             }
-            counter++;
             registerUserViewModel.OperationRoles = new List<UserRoleViewModel>();
+            counter = 0;
             foreach (var role in AppUtility.OperationRoleEnums())
             {
-                registerUserViewModel.OperationRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, StringWithName = role, Selected = false });
+                registerUserViewModel.OperationRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = false });
                 counter++;
             }
             registerUserViewModel.BiomarkerRoles = new List<UserRoleViewModel>();
-            registerUserViewModel.BiomarkerRoles.Add(new UserRoleViewModel()
+            foreach (var role in AppUtility.BiomarkerRoleEnums())
             {
-                MenuItemsID = counter,
-                StringWithName = new StringWithName()
-                {
-                    StringName = AppUtility.MenuItems.Biomarkers.ToString(),
-                    StringDefinition = AppUtility.MenuItems.Biomarkers.ToString()
-                },
-                Selected = false
+                registerUserViewModel.BiomarkerRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = false });
+                counter++;
             }
-            );
-            counter++;
+            counter = 0;
             registerUserViewModel.TimekeeperRoles = new List<UserRoleViewModel>();
-            registerUserViewModel.TimekeeperRoles.Add(new UserRoleViewModel()
+            foreach (var role in AppUtility.TimekeeperRoleEnums())
             {
-                MenuItemsID = counter,
-                StringWithName = new StringWithName()
-                {
-                    StringName = AppUtility.MenuItems.TimeKeeper.ToString(),
-                    StringDefinition = AppUtility.MenuItems.TimeKeeper.ToString()
-                },
-                Selected = false
+                registerUserViewModel.TimekeeperRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = false });
+                counter++;
             }
-            );
-            counter++;
             registerUserViewModel.LabManagementRoles = new List<UserRoleViewModel>();
-            registerUserViewModel.LabManagementRoles.Add(new UserRoleViewModel()
+            counter = 0;
+            foreach (var role in AppUtility.LabManagementRoleEnums())
             {
-                MenuItemsID = counter,
-                StringWithName = new StringWithName()
-                {
-                    StringName = AppUtility.MenuItems.LabManagement.ToString(),
-                    StringDefinition = AppUtility.MenuItems.LabManagement.ToString()
-                },
-                Selected = false
+                registerUserViewModel.LabManagementRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = false });
+                counter++;
             }
-            );
-            counter++;
             registerUserViewModel.AccountingRoles = new List<UserRoleViewModel>();
-            registerUserViewModel.AccountingRoles.Add(new UserRoleViewModel()
+            counter = 0;
+            foreach (var role in AppUtility.AccountingRoleEnums())
             {
-                MenuItemsID = counter,
-                StringWithName = new StringWithName()
-                {
-                    StringName = AppUtility.MenuItems.Accounting.ToString(),
-                    StringDefinition = AppUtility.MenuItems.Accounting.ToString()
-                },
-                Selected = false
+                registerUserViewModel.AccountingRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = false });
+                counter++;
             }
-            );
-            counter++;
             registerUserViewModel.ExpenseesRoles = new List<UserRoleViewModel>();
-            registerUserViewModel.ExpenseesRoles.Add(new UserRoleViewModel()
+            counter = 0;
+            foreach (var role in AppUtility.ReportsRoleEnums())
             {
-                MenuItemsID = counter,
-                StringWithName = new StringWithName()
-                {
-                    StringName = AppUtility.MenuItems.Reports.ToString(),
-                    StringDefinition = AppUtility.MenuItems.Reports.ToString()
-                },
-                Selected = false
+                registerUserViewModel.ExpenseesRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = false });
+                counter++;
             }
-            );
-            counter++;
             registerUserViewModel.IncomeRoles = new List<UserRoleViewModel>();
-            registerUserViewModel.IncomeRoles.Add(new UserRoleViewModel()
+            counter = 0;
+            foreach (var role in AppUtility.IncomeRoleEnums())
             {
-                MenuItemsID = counter,
-                StringWithName = new StringWithName()
-                {
-                    StringName = AppUtility.MenuItems.Income.ToString(),
-                    StringDefinition = AppUtility.MenuItems.Income.ToString()
-                },
-                Selected = false
+                registerUserViewModel.IncomeRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = false });
+                counter++;
             }
-            );
-            counter++;
             registerUserViewModel.UserRoles = new List<UserRoleViewModel>();
-            registerUserViewModel.UserRoles.Add(new UserRoleViewModel()
+            counter = 0;
+            foreach (var role in AppUtility.UsersRoleEnums())
             {
-                MenuItemsID = counter,
-                StringWithName = new StringWithName()
-                {
-                    StringName = AppUtility.MenuItems.Users.ToString(),
-                    StringDefinition = AppUtility.MenuItems.Users.ToString()
-                },
-                Selected = false
+                registerUserViewModel.UserRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = false });
+                counter++;
             }
-            );
-            //registerUserViewModel.OrderRoles = new List<UserRoleViewModel>()
-            //{
-            //    new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Requests, Name="General", Selected=false }
-            //};
-            //registerUserViewModel.ProtocolRoles = new List<UserRoleViewModel>()
-            //{
-            //    new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Protocols, Name="General", Selected=false }
-            //};
-            //registerUserViewModel.OperationRoles = new List<UserRoleViewModel>()
-            //{
-            //    new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Operations, Name="General", Selected=false }
-            //};
-            //registerUserViewModel.BiomarkerRoles = new List<UserRoleViewModel>()
-            //{
-            //    new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Biomarkers, Name="General", Selected=false }
-            //};
-            //registerUserViewModel.TimekeeperRoles = new List<UserRoleViewModel>()
-            //{
-            //    new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.TimeKeeper, Name="General", Selected=false }
-            //};
-            //registerUserViewModel.LabManagementRoles = new List<UserRoleViewModel>()
-            //{
-            //    new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.LabManagement, Name="General", Selected=false }
-            //};
-            //registerUserViewModel.AccountingRoles = new List<UserRoleViewModel>()
-            //{
-            //    new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Accounting, Name="General", Selected=false }
-            //};
-            //registerUserViewModel.ExpenseesRoles = new List<UserRoleViewModel>()
-            //{
-            //    new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Reports, Name="General", Selected=false }
-            //};
-            //registerUserViewModel.IncomeRoles = new List<UserRoleViewModel>()
-            //{
-            //    new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Income, Name="General", Selected=false }
-            //};
-            //registerUserViewModel.UserRoles = new List<UserRoleViewModel>()
-            //{
-            //    new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Users, Name="General", Selected=false }
-            //};
 
             return View(registerUserViewModel);
         }
@@ -274,7 +191,7 @@ namespace PrototypeWithAuth.Controllers
                 registerUserViewModel.Employee.IsUser = false;
                 return View("CreateUser", registerUserViewModel);
             }
-            return RedirectToAction("Index", new {ErrorMessage = success.String });
+            return RedirectToAction("Index", new { ErrorMessage = success.String });
         }
 
 
@@ -294,7 +211,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> EditUser(RegisterUserViewModel registerUserViewModel)
 
         {
-            
+
             var success = await _employeesProc.UpdateUser(registerUserViewModel, _hostingEnvironment, Url, Request, _userManager);
             if (success.Bool)
             {
@@ -523,123 +440,73 @@ namespace PrototypeWithAuth.Controllers
                 var nextselected = false;
                 foreach (var role in AppUtility.RequestRoleEnums())
                 {
-                    nextselected = rolesList.Contains(role.StringDefinition) ? true : false;
-                    registerUserViewModel.OrderRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, StringWithName = role, Selected = nextselected });
+                    nextselected = rolesList.Contains(role.RoleDefinition) ? true : false;
+                    registerUserViewModel.OrderRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = nextselected });
                     counter++;
                 }
                 registerUserViewModel.ProtocolRoles = new List<UserRoleViewModel>();
-                nextselected = rolesList.Contains(AppUtility.MenuItems.Protocols.ToString()) ? true : false;
                 foreach (var role in AppUtility.ProtocolRoleEnums())
                 {
-                    nextselected = rolesList.Contains(role.StringDefinition) ? true : false;
-                    registerUserViewModel.ProtocolRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, StringWithName = role, Selected = nextselected });
+                    nextselected = rolesList.Contains(role.RoleDefinition) ? true : false;
+                    registerUserViewModel.ProtocolRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = nextselected });
                     counter++;
                 }
-                counter++;
                 registerUserViewModel.OperationRoles = new List<UserRoleViewModel>();
                 foreach (var role in AppUtility.OperationRoleEnums())
                 {
-                    nextselected = rolesList.Contains(role.StringDefinition) ? true : false;
-                    registerUserViewModel.OperationRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, StringWithName = role, Selected = nextselected });
+                    nextselected = rolesList.Contains(role.RoleDefinition) ? true : false;
+                    registerUserViewModel.OperationRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = nextselected });
                     counter++;
                 }
                 registerUserViewModel.BiomarkerRoles = new List<UserRoleViewModel>();
-                nextselected = rolesList.Contains(AppUtility.MenuItems.Biomarkers.ToString()) ? true : false;
-                registerUserViewModel.BiomarkerRoles.Add(new UserRoleViewModel()
+                foreach(var role in AppUtility.BiomarkerRoleEnums())
                 {
-                    MenuItemsID = counter,
-                    StringWithName = new StringWithName()
-                    {
-                        StringName = AppUtility.MenuItems.Biomarkers.ToString(),
-                        StringDefinition = AppUtility.MenuItems.Biomarkers.ToString()
-                    },
-                    Selected = nextselected
+                    nextselected = rolesList.Contains(role.RoleDefinition) ? true : false;
+                    registerUserViewModel.BiomarkerRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = nextselected });
+                    counter++;
                 }
-                );
-                counter++;
                 registerUserViewModel.TimekeeperRoles = new List<UserRoleViewModel>();
-                nextselected = rolesList.Contains(AppUtility.MenuItems.TimeKeeper.ToString()) ? true : false;
-                registerUserViewModel.TimekeeperRoles.Add(new UserRoleViewModel()
+                foreach (var role in AppUtility.TimekeeperRoleEnums())
                 {
-                    MenuItemsID = counter,
-                    StringWithName = new StringWithName()
-                    {
-                        StringName = AppUtility.MenuItems.TimeKeeper.ToString(),
-                        StringDefinition = AppUtility.MenuItems.TimeKeeper.ToString()
-                    },
-                    Selected = nextselected
+                    nextselected = rolesList.Contains(role.RoleDefinition) ? true : false;
+                    registerUserViewModel.TimekeeperRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = nextselected });
+                    counter++;
                 }
-                );
-                counter++;
                 registerUserViewModel.LabManagementRoles = new List<UserRoleViewModel>();
-                nextselected = rolesList.Contains(AppUtility.MenuItems.LabManagement.ToString()) ? true : false;
-                registerUserViewModel.LabManagementRoles.Add(new UserRoleViewModel()
+                foreach (var role in AppUtility.LabManagementRoleEnums())
                 {
-                    MenuItemsID = counter,
-                    StringWithName = new StringWithName()
-                    {
-                        StringName = AppUtility.MenuItems.LabManagement.ToString(),
-                        StringDefinition = AppUtility.MenuItems.LabManagement.ToString()
-                    },
-                    Selected = nextselected
+                    nextselected = rolesList.Contains(role.RoleDefinition) ? true : false;
+                    registerUserViewModel.LabManagementRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = nextselected });
+                    counter++;
                 }
-                );
-                counter++;
                 registerUserViewModel.AccountingRoles = new List<UserRoleViewModel>();
-                nextselected = rolesList.Contains(AppUtility.MenuItems.Accounting.ToString()) ? true : false;
-                registerUserViewModel.AccountingRoles.Add(new UserRoleViewModel()
+                foreach (var role in AppUtility.AccountingRoleEnums())
                 {
-                    MenuItemsID = counter,
-                    StringWithName = new StringWithName()
-                    {
-                        StringName = AppUtility.MenuItems.Accounting.ToString(),
-                        StringDefinition = AppUtility.MenuItems.Accounting.ToString()
-                    },
-                    Selected = nextselected
+                    nextselected = rolesList.Contains(role.RoleDefinition) ? true : false;
+                    registerUserViewModel.AccountingRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = nextselected });
+                    counter++;
                 }
-                );
-                counter++;
                 registerUserViewModel.ExpenseesRoles = new List<UserRoleViewModel>();
-                nextselected = rolesList.Contains(AppUtility.MenuItems.Reports.ToString()) ? true : false;
-                registerUserViewModel.ExpenseesRoles.Add(new UserRoleViewModel()
+                foreach (var role in AppUtility.ReportsRoleEnums())
                 {
-                    MenuItemsID = counter,
-                    StringWithName = new StringWithName()
-                    {
-                        StringName = AppUtility.MenuItems.Reports.ToString(),
-                        StringDefinition = AppUtility.MenuItems.Reports.ToString()
-                    },
-                    Selected = nextselected
+                    nextselected = rolesList.Contains(role.RoleDefinition) ? true : false;
+                    registerUserViewModel.ExpenseesRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = nextselected });
+                    counter++;
                 }
-                );
-                counter++;
                 registerUserViewModel.IncomeRoles = new List<UserRoleViewModel>();
-                nextselected = rolesList.Contains(AppUtility.MenuItems.Income.ToString()) ? true : false;
-                registerUserViewModel.IncomeRoles.Add(new UserRoleViewModel()
+                foreach (var role in AppUtility.IncomeRoleEnums())
                 {
-                    MenuItemsID = counter,
-                    StringWithName = new StringWithName()
-                    {
-                        StringName = AppUtility.MenuItems.Income.ToString(),
-                        StringDefinition = AppUtility.MenuItems.Income.ToString()
-                    },
-                    Selected = nextselected
+                    nextselected = rolesList.Contains(role.RoleDefinition) ? true : false;
+                    registerUserViewModel.IncomeRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = nextselected });
+                    counter++;
                 }
-                );
-                counter++;
                 registerUserViewModel.UserRoles = new List<UserRoleViewModel>();
-                nextselected = rolesList.Contains(AppUtility.MenuItems.Users.ToString()) ? true : false;
-                registerUserViewModel.UserRoles.Add(new UserRoleViewModel()
+                foreach (var role in AppUtility.UsersRoleEnums())
                 {
-                    MenuItemsID = counter,
-                    StringWithName = new StringWithName()
-                    {
-                        StringName = AppUtility.MenuItems.Users.ToString(),
-                        StringDefinition = AppUtility.MenuItems.Users.ToString()
-                    },
-                    Selected = nextselected
+                    nextselected = rolesList.Contains(role.RoleDefinition) ? true : false;
+                    registerUserViewModel.UserRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, Role = role, Selected = nextselected });
+                    counter++;
                 }
-                );
 
 
 
