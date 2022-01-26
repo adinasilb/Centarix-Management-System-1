@@ -636,7 +636,9 @@ namespace PrototypeWithAuth.ViewModels
                 Title = "",
                 Width = 10,
                 Icons = iconList,
-                AjaxID = r.RequestID
+                //AjaxID = r.RequestID
+                AjaxID = payments.FirstOrDefault().PaymentID
+
             };
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetAccountingPaymentsInstallmentsColumns()
@@ -677,6 +679,7 @@ namespace PrototypeWithAuth.ViewModels
                 Width = 10,
                 Icons = iconList,
                 AjaxID = payments.FirstOrDefault().PaymentID
+                //AjaxID = r.RequestID
             };
         }
 
