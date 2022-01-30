@@ -20,14 +20,7 @@ export default class RootComponent extends React.Component {
                 <FloatingActionBar/>
                 <Switch>                    
                     <Route path="/DeleteModal" component={DeleteModal} />
-                    <Route
-                        path="*"
-                        component={({ staticContext }) => {
-                            if (staticContext) staticContext.status = 404;
-
-                            return <h1>Not Found :(</h1>;
-                        }}
-                    />
+                  
                 </Switch>
             </div>
         );

@@ -3202,7 +3202,7 @@ body.modal-open .popover {
     position: fixed;
     margin-bottom: 5rem;
     bottom: 0;
-    z-index: 9999;
+    z-index: 1039;
     border-radius: 0.25rem !important;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);

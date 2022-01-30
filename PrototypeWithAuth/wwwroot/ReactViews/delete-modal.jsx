@@ -1,16 +1,16 @@
 ﻿import React, { Component } from 'react';
-import createPortal from 'react-dom';
+import ReactDOM from 'react-dom';
 export default class DeleteModal extends Component {
     state = { isLoaded: false, view: "" };
 
-    htmlDecode(input) {
-        var e = document.createElement('div');
-        e.innerHTML = input;
-        return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+    componentDidUpdate() {
+        var myModal = new bootstrap.Modal(document.getElementsByClassName('modal')[0],  {
+            backdrop: true,
+            keyboard: false,
+        });
+        myModal.show()
     }
-
     componentDidMount() {
-        console.log("here")
         fetch("/Requests/DeleteModal?id=4", {
             method: "GET"            
         })
@@ -30,7 +30,7 @@ export default class DeleteModal extends Component {
         if (!isLoaded) {
             return <div>Loading...</div>;
         }
-        return createPortal(<div dangerouslySetInnerHTML={{ __html: this.htmlDecode(this.state.view) }} />,
+        return ReactDOM.createPortal(<div dangerouslySetInnerHTML={{ __html: this.state.view }} />,
         document.getElementById("deleteItem")
         );
     }
