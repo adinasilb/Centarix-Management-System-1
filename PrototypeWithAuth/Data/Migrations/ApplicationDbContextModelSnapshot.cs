@@ -3328,6 +3328,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("CategoryJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CategoryJsonID")
+                        .HasColumnType("int");
+
                     b.Property<int>("CategoryTypeID")
                         .HasColumnType("int");
 
@@ -3348,6 +3354,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 1,
                             Description = "Consumables",
                             IsProprietary = false
@@ -3355,6 +3362,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 2,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 1,
                             Description = "Reagents And Chemicals",
                             IsProprietary = false
@@ -3362,6 +3370,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 3,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 1,
                             Description = "Biological",
                             IsProprietary = false
@@ -3369,6 +3378,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 4,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 1,
                             Description = "Reusable",
                             IsProprietary = false
@@ -3376,6 +3386,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 5,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 1,
                             Description = "Safety",
                             IsProprietary = false
@@ -3383,6 +3394,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 6,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 1,
                             Description = "General",
                             IsProprietary = false
@@ -3390,6 +3402,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 7,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 1,
                             Description = "Clinical",
                             IsProprietary = false
@@ -3397,6 +3410,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 14,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 1,
                             Description = "Samples",
                             IsProprietary = true
@@ -3404,6 +3418,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 8,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 2,
                             Description = "IT",
                             IsProprietary = false
@@ -3411,6 +3426,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 9,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 2,
                             Description = "Day To Day",
                             IsProprietary = false
@@ -3418,6 +3434,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 10,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 2,
                             Description = "Travel",
                             IsProprietary = false
@@ -3425,6 +3442,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 11,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 2,
                             Description = "Advice",
                             IsProprietary = false
@@ -3432,6 +3450,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 12,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 2,
                             Description = "Regulations",
                             IsProprietary = false
@@ -3439,6 +3458,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 13,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 2,
                             Description = "Government",
                             IsProprietary = false
@@ -3898,6 +3918,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("CategoryJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CategoryJsonID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -3921,6 +3947,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 101,
+                            CategoryJsonID = 0,
                             Description = "PCR",
                             ImageURL = "/images/css/CategoryImages/consumables/pcr_consumables.png",
                             IsOldSubCategory = false,
@@ -3929,6 +3956,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 102,
+                            CategoryJsonID = 0,
                             Description = "Cell Culture Plates",
                             ImageURL = "/images/css/CategoryImages/consumables/culture_plates.png",
                             IsOldSubCategory = false,
@@ -3937,6 +3965,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 103,
+                            CategoryJsonID = 0,
                             Description = "Petri Dish",
                             ImageURL = "/images/css/CategoryImages/consumables/petri_dish.png",
                             IsOldSubCategory = false,
@@ -3945,6 +3974,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 104,
+                            CategoryJsonID = 0,
                             Description = "Tips",
                             ImageURL = "/images/css/CategoryImages/consumables/tips2.png",
                             IsOldSubCategory = false,
@@ -3953,6 +3983,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 105,
+                            CategoryJsonID = 0,
                             Description = "Pipets",
                             ImageURL = "/images/css/CategoryImages/consumables/pipettes.png",
                             IsOldSubCategory = false,
@@ -3961,6 +3992,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 106,
+                            CategoryJsonID = 0,
                             Description = "Tubes",
                             ImageURL = "/images/css/CategoryImages/consumables/tubes.png",
                             IsOldSubCategory = false,
@@ -3969,6 +4001,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 107,
+                            CategoryJsonID = 0,
                             Description = "Robot Consumables",
                             ImageURL = "/images/css/CategoryImages/consumables/robot_consumables_tips.png",
                             IsOldSubCategory = false,
@@ -3977,6 +4010,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 108,
+                            CategoryJsonID = 0,
                             Description = "DD-PCR Plastics",
                             ImageURL = "/images/css/CategoryImages/consumables/ddpcr_consumables.png",
                             IsOldSubCategory = false,
@@ -3985,6 +4019,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 109,
+                            CategoryJsonID = 0,
                             Description = "Q-PCR Plastics",
                             ImageURL = "/images/css/CategoryImages/consumables/rtpcr_consumables.png",
                             IsOldSubCategory = false,
@@ -3993,6 +4028,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 110,
+                            CategoryJsonID = 0,
                             Description = "FPLC Consumables",
                             ImageURL = "/images/css/CategoryImages/consumables/fplc_consumables.png",
                             IsOldSubCategory = false,
@@ -4001,6 +4037,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 111,
+                            CategoryJsonID = 0,
                             Description = "TFF Consumables",
                             ImageURL = "/images/css/CategoryImages/consumables/tff_consumables.png",
                             IsOldSubCategory = false,
@@ -4009,6 +4046,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 112,
+                            CategoryJsonID = 0,
                             Description = "Column",
                             ImageURL = "/images/css/CategoryImages/consumables/column.png",
                             IsOldSubCategory = false,
@@ -4017,6 +4055,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 113,
+                            CategoryJsonID = 0,
                             Description = "Filtration system",
                             ImageURL = "/images/css/CategoryImages/consumables/filteration_system.png",
                             IsOldSubCategory = false,
@@ -4025,6 +4064,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 114,
+                            CategoryJsonID = 0,
                             Description = "Flasks",
                             ImageURL = "/images/css/CategoryImages/consumables/flasks.png",
                             IsOldSubCategory = false,
@@ -4033,6 +4073,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 115,
+                            CategoryJsonID = 0,
                             Description = "Bags",
                             ImageURL = "/images/css/CategoryImages/consumables/bags.png",
                             IsOldSubCategory = false,
@@ -4041,6 +4082,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 116,
+                            CategoryJsonID = 0,
                             Description = "Syringes",
                             ImageURL = "/images/css/CategoryImages/consumables/syringes.png",
                             IsOldSubCategory = false,
@@ -4049,6 +4091,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 117,
+                            CategoryJsonID = 0,
                             Description = "Covaris Consumables",
                             ImageURL = "/images/css/CategoryImages/consumables/covaris_consumables.png",
                             IsOldSubCategory = false,
@@ -4057,6 +4100,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 118,
+                            CategoryJsonID = 0,
                             Description = "Tapestation consumables",
                             ImageURL = "/images/css/CategoryImages/consumables/tapestation_consumables.png",
                             IsOldSubCategory = false,
@@ -4065,6 +4109,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 119,
+                            CategoryJsonID = 0,
                             Description = "Sequencing",
                             ImageURL = "/images/css/CategoryImages/consumables/sequencing.png",
                             IsOldSubCategory = false,
@@ -4073,6 +4118,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 120,
+                            CategoryJsonID = 0,
                             Description = "General Consumables",
                             ImageURL = "/images/css/CategoryImages/consumables/general.png",
                             IsOldSubCategory = false,
@@ -4081,6 +4127,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 201,
+                            CategoryJsonID = 0,
                             Description = "Chemical Powder",
                             ImageURL = "/images/css/CategoryImages/reagents/chemical_powder.png",
                             IsOldSubCategory = false,
@@ -4089,6 +4136,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 202,
+                            CategoryJsonID = 0,
                             Description = "Antibody",
                             ImageURL = "/images/css/CategoryImages/reagents/antibody.png",
                             IsOldSubCategory = false,
@@ -4097,6 +4145,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 203,
+                            CategoryJsonID = 0,
                             Description = "Cell Media",
                             ImageURL = "/images/css/CategoryImages/reagents/cell_media.png",
                             IsOldSubCategory = false,
@@ -4105,6 +4154,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 204,
+                            CategoryJsonID = 0,
                             Description = "",
                             ImageURL = "/images/css/CategoryImages/reagents/chemical_solution2.png",
                             IsOldSubCategory = false,
@@ -4113,6 +4163,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 205,
+                            CategoryJsonID = 0,
                             Description = "Kit",
                             ImageURL = "/images/css/CategoryImages/reagents/kit.png",
                             IsOldSubCategory = false,
@@ -4121,6 +4172,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 206,
+                            CategoryJsonID = 0,
                             Description = "PCR Reagents",
                             ImageURL = "/images/css/CategoryImages/reagents/PCR_reagent.png",
                             IsOldSubCategory = false,
@@ -4129,6 +4181,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 207,
+                            CategoryJsonID = 0,
                             Description = "Q-PCR Reagents",
                             ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent2.png",
                             IsOldSubCategory = false,
@@ -4137,6 +4190,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 208,
+                            CategoryJsonID = 0,
                             Description = "Probes",
                             ImageURL = "/images/css/CategoryImages/reagents/dna_probes2.png",
                             IsOldSubCategory = false,
@@ -4145,6 +4199,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 209,
+                            CategoryJsonID = 0,
                             Description = "Primers and Oligos",
                             ImageURL = "/images/css/CategoryImages/reagents/primer.png",
                             IsOldSubCategory = false,
@@ -4153,6 +4208,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 210,
+                            CategoryJsonID = 0,
                             Description = "Cell Media Supplements",
                             ImageURL = "/images/css/CategoryImages/reagents/media_supplement.png",
                             IsOldSubCategory = false,
@@ -4161,6 +4217,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 211,
+                            CategoryJsonID = 0,
                             Description = "Antibiotics",
                             ImageURL = "/images/css/CategoryImages/reagents/antibiotics.png",
                             IsOldSubCategory = false,
@@ -4169,6 +4226,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 212,
+                            CategoryJsonID = 0,
                             Description = "Restriction Enzyme",
                             ImageURL = "/images/css/CategoryImages/reagents/restriction_enzyme.png",
                             IsOldSubCategory = false,
@@ -4177,6 +4235,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 213,
+                            CategoryJsonID = 0,
                             Description = "RNA Enzyme",
                             ImageURL = "/images/css/CategoryImages/reagents/rna_enzyme.png",
                             IsOldSubCategory = false,
@@ -4185,6 +4244,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 214,
+                            CategoryJsonID = 0,
                             Description = "FPLC Reagent",
                             ImageURL = "/images/css/CategoryImages/reagents/fplc_reagent.png",
                             IsOldSubCategory = false,
@@ -4193,6 +4253,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 215,
+                            CategoryJsonID = 0,
                             Description = "TFF Reagent",
                             ImageURL = "/images/css/CategoryImages/reagents/TFF_reagent.png",
                             IsOldSubCategory = false,
@@ -4201,6 +4262,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 216,
+                            CategoryJsonID = 0,
                             Description = "Nucleic Acid Quantitation (DNA/RNA qubit assay, Picogreen assay)",
                             ImageURL = "/images/css/CategoryImages/reagents/nucleic_acid_quantitation.png",
                             IsOldSubCategory = false,
@@ -4209,6 +4271,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 217,
+                            CategoryJsonID = 0,
                             Description = "General Reagents and Chemicals",
                             ImageURL = "/images/css/CategoryImages/reagents/general_reagents.png",
                             IsOldSubCategory = false,
@@ -4217,6 +4280,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 218,
+                            CategoryJsonID = 0,
                             Description = "DNA Enzymes",
                             ImageURL = "/images/css/CategoryImages/reagents/dna_enzyme.png",
                             IsOldSubCategory = false,
@@ -4225,6 +4289,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 219,
+                            CategoryJsonID = 0,
                             Description = "Gas Refilling",
                             ImageURL = "/images/css/CategoryImages/reagents/gas_refilling2.png",
                             IsOldSubCategory = false,
@@ -4233,6 +4298,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 220,
+                            CategoryJsonID = 0,
                             Description = "DD-PCR Reagents",
                             ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent3.png",
                             IsOldSubCategory = false,
@@ -4241,6 +4307,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 301,
+                            CategoryJsonID = 0,
                             Description = "Cells",
                             ImageURL = "/images/css/CategoryImages/biological/cell1.png",
                             IsOldSubCategory = false,
@@ -4249,6 +4316,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 302,
+                            CategoryJsonID = 0,
                             Description = "Virus",
                             ImageURL = "/images/css/CategoryImages/biological/virus.png",
                             IsOldSubCategory = false,
@@ -4257,6 +4325,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 303,
+                            CategoryJsonID = 0,
                             Description = "Plasmid",
                             ImageURL = "/images/css/CategoryImages/biological/plasmid2.png",
                             IsOldSubCategory = false,
@@ -4265,6 +4334,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 304,
+                            CategoryJsonID = 0,
                             Description = "Bacterial Stock",
                             ImageURL = "/images/css/CategoryImages/biological/bacteria.png",
                             IsOldSubCategory = false,
@@ -4273,6 +4343,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 305,
+                            CategoryJsonID = 0,
                             Description = "General Biological",
                             ImageURL = "/images/css/CategoryImages/biological/general.png",
                             IsOldSubCategory = false,
@@ -4281,6 +4352,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 401,
+                            CategoryJsonID = 0,
                             Description = "Reusable",
                             ImageURL = "/images/css/CategoryImages/reusable/all_reusables.png",
                             IsOldSubCategory = false,
@@ -4289,6 +4361,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 501,
+                            CategoryJsonID = 0,
                             Description = "PPE (Personal Protective Equipment)",
                             ImageURL = "/images/css/CategoryImages/safety/protective_wear.png",
                             IsOldSubCategory = false,
@@ -4297,6 +4370,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 502,
+                            CategoryJsonID = 0,
                             Description = "Lab Safety",
                             ImageURL = "/images/css/CategoryImages/safety/safety.png",
                             IsOldSubCategory = false,
@@ -4305,6 +4379,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 601,
+                            CategoryJsonID = 0,
                             Description = "General",
                             ImageURL = "/images/css/CategoryImages/general/general.png",
                             IsOldSubCategory = false,
@@ -4313,6 +4388,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 701,
+                            CategoryJsonID = 0,
                             Description = "EDTA Tubes",
                             ImageURL = "/images/css/CategoryImages/clinical/edta_tubes3.png",
                             IsOldSubCategory = false,
@@ -4321,6 +4397,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 702,
+                            CategoryJsonID = 0,
                             Description = "Serum Tubes",
                             ImageURL = "/images/css/CategoryImages/clinical/serum_tubes.png",
                             IsOldSubCategory = false,
@@ -4329,6 +4406,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 703,
+                            CategoryJsonID = 0,
                             Description = "Sample Collection and Processing (Blood, Saliva Collection, Swabsticks, Sepmate, and Ficoll for PBMC, Extraction kits for DNA/RNA)",
                             ImageURL = "/images/css/CategoryImages/clinical/sample_collection.png",
                             IsOldSubCategory = false,
@@ -4337,6 +4415,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 801,
+                            CategoryJsonID = 0,
                             Description = "Communications",
                             ImageURL = "/images/css/CategoryImages/it/communications.png",
                             IsOldSubCategory = false,
@@ -4345,6 +4424,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 802,
+                            CategoryJsonID = 0,
                             Description = "Cybersecurity",
                             ImageURL = "/images/css/CategoryImages/it/cybersecurity.png",
                             IsOldSubCategory = false,
@@ -4353,6 +4433,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 803,
+                            CategoryJsonID = 0,
                             Description = "Hardware",
                             ImageURL = "/images/css/CategoryImages/it/hardware3.png",
                             IsOldSubCategory = false,
@@ -4361,6 +4442,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 804,
+                            CategoryJsonID = 0,
                             Description = "General",
                             ImageURL = "/images/css/CategoryImages/it/general.png",
                             IsOldSubCategory = false,
@@ -4369,6 +4451,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 901,
+                            CategoryJsonID = 0,
                             Description = "Bookeeping",
                             ImageURL = "/images/css/CategoryImages/daytoday/taxes2.png",
                             IsOldSubCategory = false,
@@ -4377,6 +4460,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 902,
+                            CategoryJsonID = 0,
                             Description = "Books",
                             ImageURL = "/images/css/CategoryImages/daytoday/books.png",
                             IsOldSubCategory = false,
@@ -4385,6 +4469,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 903,
+                            CategoryJsonID = 0,
                             Description = "Branding",
                             ImageURL = "/images/css/CategoryImages/daytoday/branding.png",
                             IsOldSubCategory = false,
@@ -4393,6 +4478,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 904,
+                            CategoryJsonID = 0,
                             Description = "Company Events",
                             ImageURL = "/images/css/CategoryImages/daytoday/company_events.png",
                             IsOldSubCategory = false,
@@ -4401,6 +4487,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 905,
+                            CategoryJsonID = 0,
                             Description = "Electricity",
                             ImageURL = "/images/css/CategoryImages/daytoday/electricity2.png",
                             IsOldSubCategory = false,
@@ -4409,6 +4496,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 906,
+                            CategoryJsonID = 0,
                             Description = "Fees",
                             ImageURL = "/images/css/CategoryImages/daytoday/fees.png",
                             IsOldSubCategory = false,
@@ -4417,6 +4505,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 907,
+                            CategoryJsonID = 0,
                             Description = "Food",
                             ImageURL = "/images/css/CategoryImages/daytoday/food.png",
                             IsOldSubCategory = false,
@@ -4425,6 +4514,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 908,
+                            CategoryJsonID = 0,
                             Description = "Furniture",
                             ImageURL = "/images/css/CategoryImages/daytoday/furniture2.png",
                             IsOldSubCategory = false,
@@ -4433,6 +4523,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 909,
+                            CategoryJsonID = 0,
                             Description = "General Day To Day",
                             ImageURL = "/images/css/CategoryImages/daytoday/general.png",
                             IsOldSubCategory = false,
@@ -4441,6 +4532,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 910,
+                            CategoryJsonID = 0,
                             Description = "Graphic",
                             ImageURL = "/images/css/CategoryImages/daytoday/graphics.png",
                             IsOldSubCategory = false,
@@ -4449,6 +4541,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 911,
+                            CategoryJsonID = 0,
                             Description = "Insurance",
                             ImageURL = "/images/css/CategoryImages/daytoday/insurance.png",
                             IsOldSubCategory = false,
@@ -4457,6 +4550,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 912,
+                            CategoryJsonID = 0,
                             Description = "Parking",
                             ImageURL = "/images/css/CategoryImages/daytoday/parking2.png",
                             IsOldSubCategory = false,
@@ -4465,6 +4559,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 913,
+                            CategoryJsonID = 0,
                             Description = "Renovation",
                             ImageURL = "/images/css/CategoryImages/daytoday/renovation.png",
                             IsOldSubCategory = false,
@@ -4473,6 +4568,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 914,
+                            CategoryJsonID = 0,
                             Description = "Rent",
                             ImageURL = "/images/css/CategoryImages/daytoday/rent2.png",
                             IsOldSubCategory = false,
@@ -4481,6 +4577,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 915,
+                            CategoryJsonID = 0,
                             Description = "Shipment",
                             ImageURL = "/images/css/CategoryImages/daytoday/shippment.png",
                             IsOldSubCategory = false,
@@ -4489,6 +4586,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1001,
+                            CategoryJsonID = 0,
                             Description = "Conference",
                             ImageURL = "/images/css/CategoryImages/travel/conference3.png",
                             IsOldSubCategory = false,
@@ -4497,6 +4595,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1002,
+                            CategoryJsonID = 0,
                             Description = "Flight Tickets",
                             ImageURL = "/images/css/CategoryImages/travel/flight_tickets.png",
                             IsOldSubCategory = false,
@@ -4505,6 +4604,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1003,
+                            CategoryJsonID = 0,
                             Description = "Food",
                             ImageURL = "/images/css/CategoryImages/travel/food.png",
                             IsOldSubCategory = false,
@@ -4513,6 +4613,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1004,
+                            CategoryJsonID = 0,
                             Description = "Hotels",
                             ImageURL = "/images/css/CategoryImages/travel/hotels3.png",
                             IsOldSubCategory = false,
@@ -4521,6 +4622,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1005,
+                            CategoryJsonID = 0,
                             Description = "General Travel",
                             ImageURL = "/images/css/CategoryImages/travel/travel.png",
                             IsOldSubCategory = false,
@@ -4529,6 +4631,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1006,
+                            CategoryJsonID = 0,
                             Description = "General",
                             ImageURL = "/images/css/CategoryImages/travel/general.png",
                             IsOldSubCategory = false,
@@ -4537,6 +4640,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1101,
+                            CategoryJsonID = 0,
                             Description = "Business Advice",
                             ImageURL = "/images/css/CategoryImages/advice/business_advice.png",
                             IsOldSubCategory = false,
@@ -4545,6 +4649,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1102,
+                            CategoryJsonID = 0,
                             Description = "Clinical Regulations",
                             ImageURL = "/images/css/CategoryImages/advice/clinical_regulation2.png",
                             IsOldSubCategory = false,
@@ -4553,6 +4658,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1103,
+                            CategoryJsonID = 0,
                             Description = "General",
                             ImageURL = "/images/css/CategoryImages/advice/general.png",
                             IsOldSubCategory = false,
@@ -4561,6 +4667,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1104,
+                            CategoryJsonID = 0,
                             Description = "Legal",
                             ImageURL = "/images/css/CategoryImages/advice/legal.png",
                             IsOldSubCategory = false,
@@ -4569,6 +4676,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1105,
+                            CategoryJsonID = 0,
                             Description = "Scientific Advice",
                             ImageURL = "/images/css/CategoryImages/advice/scientific_advice3.png",
                             IsOldSubCategory = false,
@@ -4577,6 +4685,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1201,
+                            CategoryJsonID = 0,
                             Description = "Regulations",
                             ImageURL = "/images/css/CategoryImages/regulations/regulations.png",
                             IsOldSubCategory = false,
@@ -4585,6 +4694,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1202,
+                            CategoryJsonID = 0,
                             Description = "Safety",
                             ImageURL = "/images/css/CategoryImages/regulations/safety.png",
                             IsOldSubCategory = false,
@@ -4593,6 +4703,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1203,
+                            CategoryJsonID = 0,
                             Description = "General",
                             ImageURL = "/images/css/CategoryImages/regulations/general.png",
                             IsOldSubCategory = false,
@@ -4601,6 +4712,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1301,
+                            CategoryJsonID = 0,
                             Description = "Taxes",
                             ImageURL = "/images/css/CategoryImages/government/taxes4.png",
                             IsOldSubCategory = false,
@@ -4609,6 +4721,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1302,
+                            CategoryJsonID = 0,
                             Description = "General",
                             ImageURL = "/images/css/CategoryImages/government/general.png",
                             IsOldSubCategory = false,
@@ -4617,6 +4730,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1401,
+                            CategoryJsonID = 0,
                             Description = "Virus",
                             ImageURL = "/images/css/CategoryImages/samples/virus.png",
                             IsOldSubCategory = false,
@@ -4625,6 +4739,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1402,
+                            CategoryJsonID = 0,
                             Description = "Plasmid",
                             ImageURL = "/images/css/CategoryImages/samples/plasmid.png",
                             IsOldSubCategory = false,
@@ -4633,6 +4748,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1403,
+                            CategoryJsonID = 0,
                             Description = "Probes",
                             ImageURL = "/images/css/CategoryImages/samples/dna_probes2.png",
                             IsOldSubCategory = false,
@@ -4641,6 +4757,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1404,
+                            CategoryJsonID = 0,
                             Description = "Cells",
                             ImageURL = "/images/css/CategoryImages/samples/cell1.png",
                             IsOldSubCategory = false,
@@ -4649,6 +4766,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1405,
+                            CategoryJsonID = 0,
                             Description = "Bacteria with Plasmids",
                             ImageURL = "/images/css/CategoryImages/samples/bacteria2.png",
                             IsOldSubCategory = false,
@@ -4657,6 +4775,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1406,
+                            CategoryJsonID = 0,
                             Description = "Blood",
                             ImageURL = "/images/css/CategoryImages/samples/blood.png",
                             IsOldSubCategory = false,
@@ -4665,6 +4784,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1407,
+                            CategoryJsonID = 0,
                             Description = "Serum",
                             ImageURL = "/images/css/CategoryImages/samples/serum.png",
                             IsOldSubCategory = false,
@@ -4673,6 +4793,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1408,
+                            CategoryJsonID = 0,
                             Description = "Buffer",
                             ImageURL = "/images/css/CategoryImages/samples/buffer2.png",
                             IsOldSubCategory = false,
@@ -4681,6 +4802,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1409,
+                            CategoryJsonID = 0,
                             Description = "Media",
                             ImageURL = "/images/css/CategoryImages/samples/media2.png",
                             IsOldSubCategory = false,
@@ -4689,6 +4811,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1501,
+                            CategoryJsonID = 0,
                             Description = "Old Sub category",
                             ImageURL = "/images/css/CategoryImages/consumables/general.png",
                             IsOldSubCategory = true,
@@ -4697,6 +4820,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1502,
+                            CategoryJsonID = 0,
                             Description = "Old Sub category",
                             ImageURL = "/images/css/CategoryImages/reagents/general_reagents.png",
                             IsOldSubCategory = true,
@@ -4705,6 +4829,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1503,
+                            CategoryJsonID = 0,
                             Description = "Old Sub category",
                             ImageURL = "/images/css/CategoryImages/biological/general.png",
                             IsOldSubCategory = true,
@@ -4713,6 +4838,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1504,
+                            CategoryJsonID = 0,
                             Description = "Old Sub category",
                             ImageURL = "/images/css/CategoryImages/reusable/all_reusables.png",
                             IsOldSubCategory = true,
@@ -4721,6 +4847,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1505,
+                            CategoryJsonID = 0,
                             Description = "Old Sub category",
                             ImageURL = "/images/css/CategoryImages/safety/safety.png",
                             IsOldSubCategory = true,
@@ -5182,6 +5309,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("AdditionalFieldsJson")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("Amount")
                         .HasColumnType("int");
 
@@ -5571,6 +5701,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("CategoryJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CategoryJsonID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -5595,6 +5731,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 1,
+                            CategoryJsonID = 0,
                             Description = "Rejuvenation",
                             ImageUrl = "rejuvenation_image.svg",
                             IsMain = true,
@@ -5604,6 +5741,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 2,
+                            CategoryJsonID = 0,
                             Description = "Biomarkers",
                             ImageUrl = "biomarkers_image.svg",
                             IsMain = true,
@@ -5613,6 +5751,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 3,
+                            CategoryJsonID = 0,
                             Description = "Delivery Systems",
                             ImageUrl = "delivery_systems_image.svg",
                             IsMain = true,
@@ -5622,6 +5761,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 4,
+                            CategoryJsonID = 0,
                             Description = "Clinical Trials",
                             ImageUrl = "clinical_trials_image.svg",
                             IsMain = true,
@@ -5631,6 +5771,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 5,
+                            CategoryJsonID = 0,
                             Description = "AAV",
                             IsMain = false,
                             IsReportsCategory = false,
@@ -5639,6 +5780,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 6,
+                            CategoryJsonID = 0,
                             Description = "Telomere Rejuvenation",
                             IsMain = false,
                             IsReportsCategory = false,
@@ -5647,6 +5789,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 7,
+                            CategoryJsonID = 0,
                             Description = "Telomere Measurement",
                             IsMain = false,
                             IsReportsCategory = false,
@@ -5655,6 +5798,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 8,
+                            CategoryJsonID = 0,
                             Description = "Methylation Biomarker",
                             IsMain = false,
                             IsReportsCategory = false,
@@ -5663,6 +5807,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 9,
+                            CategoryJsonID = 0,
                             Description = "Transcriptome",
                             IsMain = false,
                             IsReportsCategory = false,
@@ -5671,6 +5816,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 10,
+                            CategoryJsonID = 0,
                             Description = "Serum Rejuvenation",
                             IsMain = false,
                             IsReportsCategory = false,
@@ -5679,6 +5825,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 11,
+                            CategoryJsonID = 0,
                             Description = "Reprogramming",
                             IsMain = false,
                             IsReportsCategory = false,
@@ -5687,6 +5834,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 12,
+                            CategoryJsonID = 0,
                             Description = "Methylation Rejuvenation",
                             IsMain = false,
                             IsReportsCategory = false,
@@ -5695,6 +5843,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 13,
+                            CategoryJsonID = 0,
                             Description = "New Methods",
                             IsMain = false,
                             IsReportsCategory = false,
@@ -5703,6 +5852,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 14,
+                            CategoryJsonID = 0,
                             Description = "Software",
                             ImageUrl = "software_image.svg",
                             IsMain = false,
@@ -5712,6 +5862,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 15,
+                            CategoryJsonID = 0,
                             Description = "Learning",
                             ImageUrl = "learning_image.svg",
                             IsMain = false,
@@ -5721,6 +5872,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 16,
+                            CategoryJsonID = 0,
                             Description = "Companies",
                             ImageUrl = "companies_image.svg",
                             IsMain = false,
@@ -5730,6 +5882,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ID = 17,
+                            CategoryJsonID = 0,
                             Description = "News",
                             ImageUrl = "news_image.svg",
                             IsMain = false,

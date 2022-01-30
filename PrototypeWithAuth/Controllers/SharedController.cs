@@ -92,7 +92,9 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.ApplicationDbContextEntries _applicationDbContextEntries;
         protected readonly CRUD.ParentQuotesProc _parentQuotesProc;
         protected readonly CRUD.InvoicesProc _invoicesProc;
+        protected readonly CRUD.CategoryBasesProc _categoryBasesProc;
 
+        protected readonly CRUD.TestHeadersProc _testHeadersProc;
 
         protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
 
@@ -162,6 +164,8 @@ namespace PrototypeWithAuth.Controllers
             _applicationDbContextEntries = new CRUD.ApplicationDbContextEntries(context);
             _parentQuotesProc = new CRUD.ParentQuotesProc(context);
             _invoicesProc = new CRUD.InvoicesProc(context);
+            _categoryBasesProc = new CRUD.CategoryBasesProc(context);
+            _testHeadersProc = new CRUD.TestHeadersProc(context);
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)
@@ -575,12 +579,15 @@ namespace PrototypeWithAuth.Controllers
 
             if (productSubCategoryID != 0)
             {
-                request.Product.ProductSubcategory = await _context.ProductSubcategories.Where(ps => ps.ID == productSubCategoryID).Include(ps => ps.ParentCategory).FirstOrDefaultAsync();
+                request.Product.ProductSubcategory = await _productSubcategoriesProc.Read(
+                    new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == productSubCategoryID },
+                    new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory } }).FirstOrDefaultAsync();
                 request.Product.ProductSubcategoryID = productSubCategoryID;
             }
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
             await FillRequestDropdowns(requestItemViewModel, request.Product.ProductSubcategory, categoryType);
+            requestItemViewModel.RequestRoles = await GetUserRequestRoles();
 
             requestItemViewModel.Tab = Tab ?? 0;
             var requestComments = _requestCommentsProc.Read(new List<Expression<Func<RequestComment, bool>>> { r => r.ObjectID == request.RequestID },
@@ -606,7 +613,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (_requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.ProductID == request.ProductID }).Count() > 1)
             {
-                requestItemViewModel.IsReorder = true;
+                requestItemViewModel.ShowHistory = true;
             }
 
             ModalViewType = "Edit";
@@ -1226,6 +1233,7 @@ protected static void ApplySearchToRequestList(RequestsSearchViewModel requestsS
 
             var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
             var popoverDelete = new IconPopoverViewModel(" icon-delete-24px  ", "black", AppUtility.PopoverDescription.Delete, "Delete", "Requests", AppUtility.PopoverEnum.None, "load-confirm-delete");
+            //var popoverCantDelete = new IconPopoverViewModel(" icon-delete-24px  ", "grey", AppUtility.PopoverDescription.Delete, "", "", AppUtility.PopoverEnum.None, "");
             var popoverReorder = new IconPopoverViewModel(" icon-add_circle_outline-24px1 ", "#00CA72", AppUtility.PopoverDescription.Reorder, "Reorder", "Requests", AppUtility.PopoverEnum.None, "load-order-details");
             var popoverRemoveShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
             var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
@@ -1277,8 +1285,14 @@ protected static void ApplySearchToRequestList(RequestsSearchViewModel requestsS
                         case 3:
                             iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
+
                             popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverAddToList /*, popoverReorder*//*, popoverDelete*/ };
+                            if (await this.IsAuthorizedAsync(requestIndexObject.SectionType, "DeleteReceived"))
+                            {
+                                popoverMoreIcon.IconPopovers.Add(popoverDelete);
+                            }
                             iconList.Add(popoverMoreIcon);
+                          
 
                             var requests = RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).ThenBy(r => r.Product.ProductName);
                             var requests2 = requests.Skip(20*(requestIndexObject.PageNumber-1)).Take(20);
@@ -1776,6 +1790,20 @@ protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFi
                 createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();
             }
             return createSupplierViewModel;
+        }
+
+        protected async Task<List<String>> GetUserRequestRoles()
+        {
+            List<String> userRequestRoles = new List<String>();
+            IList<String> roles = await _userManager.GetRolesAsync(await _userManager.GetUserAsync(User));
+            foreach (var role in AppUtility.RequestRoleEnums())
+            {
+                if (roles.Contains(role.RoleDefinition))
+                {
+                    userRequestRoles.Add(role.RoleDefinition);
+                }
+            }
+            return userRequestRoles;
         }
 
     }

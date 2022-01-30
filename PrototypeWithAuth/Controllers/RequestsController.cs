@@ -508,7 +508,7 @@ namespace PrototypeWithAuth.Controllers
                                 trvm.Comments.Add(comment);
                             }
                         }
-                      
+
                         trlvm.TempRequestViewModels.Add(trvm);
                         i++;
                     }
@@ -1605,7 +1605,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
             requestItemViewModel.Comments = new List<CommentBase>();
-            
+
             requestItemViewModel.ModalType = AppUtility.RequestModalType.Create;
 
             requestItemViewModel.Requests = new List<Request>();
@@ -1928,9 +1928,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
             };
-
+            request.RequestStatusID =1;
             requestItemViewModel.Requests = new List<Request>() { request };
-            requestItemViewModel.IsReorder = true;
+            requestItemViewModel.ModalType = AppUtility.RequestModalType.Reorder;
             requestItemViewModel.HasWarnings = _productCommentsProc.Read(new List<Expression<Func<ProductComment, bool>>> { pc => pc.ObjectID == request.ProductID && pc.CommentTypeID == 2 }).Count() > 0;
             requestItemViewModel.HasQuote = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.ProductID == request.ProductID && r.ParentQuote.ExpirationDate >= DateTime.Now.Date }).Select(r => r.ParentQuote).OrderByDescending(r => r.QuoteDate).Count() > 0;
 
@@ -1944,6 +1944,7 @@ namespace PrototypeWithAuth.Controllers
             };
 
             requestItemViewModel.TempRequestListViewModel = trlvm;
+            requestItemViewModel.RequestRoles = await GetUserRequestRoles();
 
             await _tempRequestJsonsProc.UpdateAsync(trlvm.GUID, trlvm.RequestIndexObject, trlvm, _userManager.GetUserId(User), true);
 
@@ -2233,7 +2234,7 @@ namespace PrototypeWithAuth.Controllers
                                         StateEnum = tempRequest.Request.ParentQuoteID == null || tempRequest.Request.ParentQuoteID == 0 ? EntityState.Added : EntityState.Modified
                                     };
                                     ModelStates.Add(parentQuoteModelState);
-                                    if (tempRequest.Request.ParentQuoteID == null)
+                                    if (tempRequest.Request.ParentQuoteID == null || tempRequest.Request.ParentQuoteID == 0)
                                     {
                                         ParentQuoteRollbackList = ModelsCreated;
                                     }
@@ -2275,15 +2276,25 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 if (tempRequest.Comments != null)
                                 {
-                                    await _requestCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<RequestComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 1))), tempRequest.Request.RequestID, currentUser.Id);
-                                    await _productCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<ProductComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 2))), tempRequest.Request.ProductID, currentUser.Id);
-
-                                    foreach (var c in tempRequest.Comments)
+                                    var requestComments = AppData.Json.Deserialize<List<RequestComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 1)));
+                                    await _requestCommentsProc.UpdateWithoutTransactionAsync(requestComments, tempRequest.Request.RequestID, currentUser.Id);
+                                    foreach (var c in requestComments)
                                     {
                                         ModelsCreated.Add(new ModelAndID()
                                         {
                                             ID = c.CommentID,
-                                            ModelsEnum = AppUtility.ModelsEnum.Comment
+                                            ModelsEnum = AppUtility.ModelsEnum.RequestComment
+                                        });
+                                    }
+                                    var productComments = AppData.Json.Deserialize<List<ProductComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 2)));
+                                    await _productCommentsProc.UpdateWithoutTransactionAsync(productComments, tempRequest.Request.ProductID, currentUser.Id);
+
+                                    foreach (var c in productComments)
+                                    {
+                                        ModelsCreated.Add(new ModelAndID()
+                                        {
+                                            ID = c.CommentID,
+                                            ModelsEnum = AppUtility.ModelsEnum.ProductComment
                                         });
                                     }
                                 }
@@ -2377,12 +2388,12 @@ namespace PrototypeWithAuth.Controllers
                         string vendorEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.OrdersEmail;
                         //string vendorEmail = /*firstRequest.Product.Vendor.OrdersEmail;*/ emails.Count() < 1 ? requests.FirstOrDefault().Product.Vendor.OrdersEmail : emails[0];
                         string vendorName = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.VendorEnName;
-              
+
                         //add a "From" Email
                         message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
 
                         // add a "To" Email
-                        string ToEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.FirstOrDefault() != null ? deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.FirstOrDefault() : vendorEmail;
+                        string ToEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails?.FirstOrDefault() != null ? deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.FirstOrDefault() : vendorEmail;
                         message.To.Add(new MailboxAddress(ToEmail ));
 
                         //add CC's to email
@@ -2499,7 +2510,12 @@ namespace PrototypeWithAuth.Controllers
                 {
                     TempRequestViewModels = originalJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
                 };
-                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
+                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.RequestComment))
+                {
+                    var comment = deTLVM.TempRequestViewModels.Select(t => t.Comments.Where(c => c.CommentID == ModelWithID.ID).FirstOrDefault()).FirstOrDefault();
+                    ModelStates.Add(new ModelAndState { Model = comment, StateEnum = EntityState.Modified });
+                }
+                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ProductComment))
                 {
                     var comment = deTLVM.TempRequestViewModels.Select(t => t.Comments.Where(c => c.CommentID == ModelWithID.ID).FirstOrDefault()).FirstOrDefault();
                     ModelStates.Add(new ModelAndState { Model = comment, StateEnum = EntityState.Modified });
@@ -2529,9 +2545,14 @@ namespace PrototypeWithAuth.Controllers
 
                 await _requestsProc.UpdateModelsAsync(ModelStates);
                 ModelStates.Clear();
-                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.RequestComment))
                 {
                     var model6 = await _requestCommentsProc.ReadOneAsync(new List<Expression<Func<RequestComment, bool>>> { pr => pr.CommentID == ModelWithID.ID });
+                    ModelStates.Add(new ModelAndState { Model = model6, StateEnum = EntityState.Deleted });
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ProductComment))
+                {
+                    var model6 = await _productCommentsProc.ReadOneAsync(new List<Expression<Func<ProductComment, bool>>> { pr => pr.CommentID == ModelWithID.ID });
                     ModelStates.Add(new ModelAndState { Model = model6, StateEnum = EntityState.Deleted });
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Payment))
@@ -5066,10 +5087,67 @@ namespace PrototypeWithAuth.Controllers
 
             SettingsInventory settings = new SettingsInventory()
             {
-                Categories = _parentCategoriesProc.Read()
+                Categories = GetCategoryList(new ParentCategory().GetType().Name, 1)
             };
+            settings.Subcategories = GetCategoryList(new ProductSubcategory().GetType().Name, 2, settings.Categories.CategoryBases.FirstOrDefault().ID);
+            settings.SettingsForm = GetSettingsFormViewModel(settings.Subcategories.CategoryBases.FirstOrDefault().GetType().Name, settings.Subcategories.CategoryBases.FirstOrDefault().ID);
+            return View(settings);
+        }
 
-            return View();
+        [HttpGet]
+        public IActionResult _CategoryList(String modelType, int ColumnNumber, int? ParentCategoryID)
+        {
+            var categoryBases = GetCategoryList(modelType, ColumnNumber, ParentCategoryID);
+            return PartialView(categoryBases);
+        }
+
+        public CategoryListViewModel GetCategoryList(String modelType, int ColumnNumber, int? ParentCategoryID = null)
+        {
+            IEnumerable<CategoryBase> categoryBases = new List<CategoryBase>();
+            switch (modelType)
+            {
+                case "ProductSubcategory":
+                    var wheres = new List<Expression<Func<ProductSubcategory, bool>>>();
+                    if (ParentCategoryID != null)
+                    {
+                        wheres.Add(ps => ps.ParentCategoryID == ParentCategoryID);
+                    }
+                    categoryBases = _productSubcategoriesProc.Read(wheres);
+                    break;
+                case "ParentCategory":
+                    var wheres2 = new List<Expression<Func<ParentCategory, bool>>>();
+                    categoryBases = _parentCategoriesProc.Read(wheres2);
+                    break;
+            }
+            CategoryListViewModel clvm = new CategoryListViewModel()
+            {
+                CategoryBases = categoryBases.OrderBy(pc => pc.Description).ToList(),
+                ColumnNumber = ColumnNumber
+            };
+            return clvm;
+        }
+
+        [HttpGet]
+        public IActionResult _SettingsForm(string ModelType, int CategoryID)
+        {
+            return PartialView(GetSettingsFormViewModel(ModelType, CategoryID));
+        }
+
+        private SettingsForm GetSettingsFormViewModel(string ModelType, int CategoryID)
+        {
+            SettingsForm settingsForm = new SettingsForm();
+            if (ModelType == new ParentCategory().GetType().Name)
+            {
+                settingsForm.Category = _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { cb => cb.ID == CategoryID }).FirstOrDefault();
+            }
+            else if (ModelType == new ProductSubcategory().GetType().Name)
+            {
+                settingsForm.Category = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == CategoryID }).FirstOrDefault();
+            }
+            settingsForm.RequestCount = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.Product.ProductSubcategoryID == settingsForm.Category.ID }).Count();
+            settingsForm.ItemCount = _productsProc.Read(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategoryID == settingsForm.Category.ID }).Count();
+
+            return settingsForm;
         }
 
         [HttpPost]

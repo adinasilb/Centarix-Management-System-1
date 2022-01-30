@@ -24,6 +24,7 @@ namespace PrototypeWithAuth.Models
         public string ApplicationUserCreatorID { get; set; }
         [ForeignKey("ApplicationUserCreatorID")]
         public Employee ApplicationUserCreator { get; set; }
+        public string AdditionalFieldsJson { get; set; }
         public int? SubProjectID { get; set; }
         public SubProject SubProject { get; set; }
 

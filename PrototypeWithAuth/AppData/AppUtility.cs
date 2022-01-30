@@ -116,35 +116,94 @@ namespace PrototypeWithAuth.AppData
             Asia
         }
         public static string AspDateFormatString = "{0:d MMM yyyy}";
-        public static List<StringWithName> RequestRoleEnums()
+        public static List<Role> RequestRoleEnums()
         {
-            List<StringWithName> rre = new List<StringWithName>()
+            List<Role> rre = new List<Role>()
             {
-                new StringWithName(){StringName = "General", StringDefinition = "Requests"},
-                new StringWithName(){StringName = "Approve Orders", StringDefinition = "RequestsApproveOrders"}
+                new Role(){RoleName = "General", RoleDefinition = "Requests", IsMain = true},
+                new Role(){RoleName = "Approve Orders", RoleDefinition = "RequestsApproveOrders"},
+                new Role(){RoleName = "Edit Received Orders Prices/Units", RoleDefinition = "RequestEditReceived"},
+                new Role(){RoleName = "Delete Received Orders", RoleDefinition = "RequestsDeleteReceived"}
             };
             return rre;
         }
-        public static List<StringWithName> OperationRoleEnums()
+        public static List<Role> ProtocolRoleEnums()
         {
-            List<StringWithName> ore = new List<StringWithName>()
+            List<Role> pre = new List<Role>()
             {
-                new StringWithName(){StringName = "General", StringDefinition = "Operations"},
-                new StringWithName(){StringName = "Approve Orders", StringDefinition = "OperationsApproveOrders"}
-            };
-            return ore;
-        }
-        public static List<StringWithName> ProtocolRoleEnums()
-        {
-            List<StringWithName> pre = new List<StringWithName>()
-            {
-                new StringWithName(){StringName = "General", StringDefinition = "Protocols"},
-                new StringWithName(){StringName = "Biomarkers", StringDefinition = "ProtocolsBiomarkers"},
-                new StringWithName(){StringName = "Rejuvenation", StringDefinition = "ProtocolsRejuvenation"},
-                new StringWithName(){StringName = "Delivery Systems", StringDefinition = "ProtocolsDeliverySystems"}
+                new Role(){RoleName = "General", RoleDefinition = "Protocols", IsMain = true},
+                new Role(){RoleName = "Biomarkers", RoleDefinition = "ProtocolsBiomarkers"},
+                new Role(){RoleName = "Rejuvenation", RoleDefinition = "ProtocolsRejuvenation"},
+                new Role(){RoleName = "Delivery Systems", RoleDefinition = "ProtocolsDeliverySystems"}
             };
             return pre;
         }
+        public static List<Role> OperationRoleEnums()
+        {
+            List<Role> ore = new List<Role>()
+            {
+                new Role(){RoleName = "General", RoleDefinition = "Operations", IsMain = true},
+                new Role(){RoleName = "Approve Orders", RoleDefinition = "OperationsApproveOrders"}
+            };
+            return ore;
+        }
+        public static List<Role> BiomarkerRoleEnums()
+        {
+            List<Role> bre = new List<Role>()
+            {
+                new Role(){RoleName = "General", RoleDefinition="Biomarkers", IsMain = true}
+            };
+            return bre;
+        }
+        public static List<Role> TimekeeperRoleEnums()
+        {
+            List<Role> tre = new List<Role>()
+            {
+                new Role(){RoleName = "General", RoleDefinition="TimeKeeper", IsMain = true}
+            };
+            return tre;
+        }
+        public static List<Role> LabManagementRoleEnums()
+        {
+            List<Role> lmre = new List<Role>()
+            {
+                new Role(){RoleName="General", RoleDefinition="LabManagement", IsMain = true}
+            };
+            return lmre;
+        }
+        public static List<Role> AccountingRoleEnums()
+        {
+            List<Role> are = new List<Role>()
+            {
+                new Role{RoleName = "General", RoleDefinition="Accounting", IsMain = true}
+            };
+            return are;
+        }
+        public static List<Role> ReportsRoleEnums()
+        {
+            List<Role> rre = new List<Role>()
+            {
+                new Role{RoleName="General", RoleDefinition="Reports", IsMain=true}
+            };
+            return rre;
+        }
+        public static List<Role> IncomeRoleEnums()
+        {
+            List<Role> ire = new List<Role>()
+            {
+                new Role{RoleName="General", RoleDefinition="Income", IsMain = true}
+            };
+            return ire;
+        }
+        public static List<Role> UsersRoleEnums()
+        {
+            List<Role> ure = new List<Role>()
+            {
+                new Role{RoleName="General", RoleDefinition="Users", IsMain=true}
+            };
+            return ure;
+        }
+
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum { None, NIS, USD }
         public enum PaymentsPopoverEnum
@@ -164,7 +223,7 @@ namespace PrototypeWithAuth.AppData
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }
         public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusable, Equipment, Operation, Biological, Safety, General, Clinical }
-        public enum RequestModalType { Create, Edit, Summary }
+        public enum RequestModalType { Create, Edit, Summary, Reorder }
         public enum ProtocolModalType { None, Create, CheckListMode, Summary, Edit, SummaryFloat, CreateNewVersion }
         public enum VendorModalType { Create, Edit, SummaryFloat }
         public enum OrderTypeEnum { None, RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
@@ -192,7 +251,7 @@ namespace PrototypeWithAuth.AppData
         public enum IconNamesEnum { Share, Favorite, MorePopover, Edit, RemoveShare }
 
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
-        { Request, Resource, Protocols, RequestLists, Product, ParentQuote, ParentRequest, Payment, Comment, RequestNotification }
+        { Request, Resource, Protocols, RequestLists, Product, ParentQuote, ParentRequest, Payment, RequestComment, ProductComment, RequestNotification }
         public enum GlobalInfoType { ExchangeRate, TimekeeperNotificationUpdated, BirthdayNotificationUpdated, LoginUpdates, LastProtocolLine }
         public enum DataTypeEnum { String, Double, DateTime, Bool, File }
         public enum DataCalculation { None, BMI }
@@ -954,10 +1013,20 @@ namespace PrototypeWithAuth.AppData
             return returnString;
         }
 
-        public static void CheckForError(StringWithBool stringWithBool,  String Message)
+        public static void CheckForError(StringWithBool stringWithBool, String Message)
         {
         }
 
+
+        public static bool GetPermissionsForPriceTabMarkReadonly(List<String> UserRoles, Request Request)
+        {
+            bool ReturnVal = false;
+            if(Request.RequestStatusID == 3 && !UserRoles.Contains("RequestEditReceived"))
+            {
+                ReturnVal = true;
+            }
+            return ReturnVal;
+        }
 
     }
 
