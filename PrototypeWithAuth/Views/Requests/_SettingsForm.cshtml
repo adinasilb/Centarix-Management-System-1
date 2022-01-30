@@ -10,8 +10,9 @@
     <div class="row">
         @Model.Category.Description
     </div>
-    <div class="row">
+    <div class="row modal-sides">
         @{
+            @*<img src="@Model.Requests[0].Product.ProductSubcategory.ImageURL" class="sub-category-image top-modal-image" alt="Alternate Text" width="75" />*@
             <div class="heading-1 modal-title col-8">
                 <textarea asp-for="Category.Description" class="form-control-plaintext border-bottom heading-1 item-name" placeholder="(item name)" cols="50" maxlength="150" style="resize:none;"></textarea>
             </div>

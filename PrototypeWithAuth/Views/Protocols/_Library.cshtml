@@ -36,7 +36,7 @@
                         <a class="text text-dark open-resources-list" main-category-id="@maincategory.ID">
                             <fieldset class=" main-type-fieldset">
                                 @{
-                                    var imageUrl = "/images/protocol_images/" + maincategory.ImageUrl;
+                                    var imageUrl = "/images/protocol_images/" + maincategory.ImageURL;
                                     var altImage = maincategory.Description;
                                 }
 
@@ -73,7 +73,7 @@
                         <a href='@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID = maincategory.ID })' class="text text-dark">
                             <fieldset class=" main-type-fieldset">
                                 @{
-                                    var imageUrl = "/images/protocol_images/" + maincategory.ImageUrl;
+                                    var imageUrl = "/images/protocol_images/" + maincategory.ImageURL;
                                     var altImage = maincategory.Description;
                                 }
 

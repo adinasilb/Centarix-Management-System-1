@@ -13,7 +13,7 @@ namespace PrototypeWithAuth.Models
         //public string ResourceCategoryDescription { get; set; }
         public bool IsMain { get; set; }
         public bool IsResourceType { get; set; }
-        public string ImageUrl { get; set; }
+        //public string ImageUrl { get; set; }
         public bool IsReportsCategory { get; set; }
         public IEnumerable<ResourceResourceCategory> ResourceResourceCategories { get; set; }
         public IEnumerable<Report> Reports { get; set; }
