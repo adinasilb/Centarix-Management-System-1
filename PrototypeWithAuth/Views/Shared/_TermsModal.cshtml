@@ -103,6 +103,7 @@
 
                         <input type="hidden" asp-for="EmailAddresses[e]" class="@supplierEmailClass" />
                     }
+                    <span class=" no-email-error text text-danger-centarix d-none">If no email is selected the order form will be sent to the vendor's default email</span>
                 </div>
             </div>
         }
@@ -144,10 +145,17 @@
     $.fn.CheckListLength = function () {
         //Disable if 5 emails
         var listlength = $(".email-ids").length;
+      
         if (listlength >= 5) {
             $(".enter-mail-id").attr("disabled", true);
         }
         else {
+            if (listlength == 0) {
+                $(".no-email-error").removeClass("d-none");
+            }
+            else {
+                $(".no-email-error").addClass("d-none")
+            }
             $(".enter-mail-id").attr("disabled", false);
         }
     }
