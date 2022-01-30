@@ -275,8 +275,8 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Settings",
-                        Controller = "Requests",
-                        Action = "SettingsInventory",
+                        //Controller = "Requests",
+                        //Action = "SettingsInventory",
                         RouteValues = new RouteValueDictionary(),
                         Classes = AllClasses
                     });
@@ -299,8 +299,8 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Workflow",
-                        Controller = "Protocols",
-                        Action = "CurrentProtocols",
+                        //Controller = "Protocols",
+                        //Action = "CurrentProtocols",
                         RouteValues = new RouteValueDictionary()
                         {
                         {"PageType", AppUtility.PageTypeEnum.ProtocolsWorkflow },
@@ -313,8 +313,8 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Protocols",
-                        Controller = "Protocols",
-                        Action = "Index",
+                        //Controller = "Protocols",
+                        //Action = "Index",
                         RouteValues = new RouteValueDictionary()
                         {
                         {"PageType", AppUtility.PageTypeEnum.ProtocolsProtocols },
@@ -327,8 +327,8 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Create",
-                        Controller = "Protocols",
-                        Action = "ResearchProtocol",
+                        //Controller = "Protocols",
+                        //Action = "ResearchProtocol",
                         RouteValues = new RouteValueDictionary()
                         {
                         {"PageType", AppUtility.PageTypeEnum.ProtocolsCreate},
@@ -355,8 +355,8 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Resources",
-                        Controller = "Protocols",
-                        Action = "Library",
+                        //Controller = "Protocols",
+                        //Action = "Library",
                         RouteValues = new RouteValueDictionary()
                         {
                         {"PageType", AppUtility.PageTypeEnum.ProtocolsResources },
