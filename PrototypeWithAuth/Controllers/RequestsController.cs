@@ -2234,7 +2234,7 @@ namespace PrototypeWithAuth.Controllers
                                         StateEnum = tempRequest.Request.ParentQuoteID == null || tempRequest.Request.ParentQuoteID == 0 ? EntityState.Added : EntityState.Modified
                                     };
                                     ModelStates.Add(parentQuoteModelState);
-                                    if (tempRequest.Request.ParentQuoteID == null)
+                                    if (tempRequest.Request.ParentQuoteID == null || tempRequest.Request.ParentQuoteID == 0)
                                     {
                                         ParentQuoteRollbackList = ModelsCreated;
                                     }
@@ -2276,15 +2276,25 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 if (tempRequest.Comments != null)
                                 {
-                                    await _requestCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<RequestComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 1))), tempRequest.Request.RequestID, currentUser.Id);
-                                    await _productCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<ProductComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 2))), tempRequest.Request.ProductID, currentUser.Id);
-
-                                    foreach (var c in tempRequest.Comments)
+                                    var requestComments = AppData.Json.Deserialize<List<RequestComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 1)));
+                                    await _requestCommentsProc.UpdateWithoutTransactionAsync(requestComments, tempRequest.Request.RequestID, currentUser.Id);
+                                    foreach (var c in requestComments)
                                     {
                                         ModelsCreated.Add(new ModelAndID()
                                         {
                                             ID = c.CommentID,
-                                            ModelsEnum = AppUtility.ModelsEnum.Comment
+                                            ModelsEnum = AppUtility.ModelsEnum.RequestComment
+                                        });
+                                    }
+                                    var productComments = AppData.Json.Deserialize<List<ProductComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 2)));
+                                    await _productCommentsProc.UpdateWithoutTransactionAsync(productComments, tempRequest.Request.ProductID, currentUser.Id);
+
+                                    foreach (var c in productComments)
+                                    {
+                                        ModelsCreated.Add(new ModelAndID()
+                                        {
+                                            ID = c.CommentID,
+                                            ModelsEnum = AppUtility.ModelsEnum.ProductComment
                                         });
                                     }
                                 }
@@ -2500,7 +2510,12 @@ namespace PrototypeWithAuth.Controllers
                 {
                     TempRequestViewModels = originalJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
                 };
-                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
+                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.RequestComment))
+                {
+                    var comment = deTLVM.TempRequestViewModels.Select(t => t.Comments.Where(c => c.CommentID == ModelWithID.ID).FirstOrDefault()).FirstOrDefault();
+                    ModelStates.Add(new ModelAndState { Model = comment, StateEnum = EntityState.Modified });
+                }
+                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ProductComment))
                 {
                     var comment = deTLVM.TempRequestViewModels.Select(t => t.Comments.Where(c => c.CommentID == ModelWithID.ID).FirstOrDefault()).FirstOrDefault();
                     ModelStates.Add(new ModelAndState { Model = comment, StateEnum = EntityState.Modified });
@@ -2530,9 +2545,14 @@ namespace PrototypeWithAuth.Controllers
 
                 await _requestsProc.UpdateModelsAsync(ModelStates);
                 ModelStates.Clear();
-                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.RequestComment))
                 {
                     var model6 = await _requestCommentsProc.ReadOneAsync(new List<Expression<Func<RequestComment, bool>>> { pr => pr.CommentID == ModelWithID.ID });
+                    ModelStates.Add(new ModelAndState { Model = model6, StateEnum = EntityState.Deleted });
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ProductComment))
+                {
+                    var model6 = await _productCommentsProc.ReadOneAsync(new List<Expression<Func<ProductComment, bool>>> { pr => pr.CommentID == ModelWithID.ID });
                     ModelStates.Add(new ModelAndState { Model = model6, StateEnum = EntityState.Deleted });
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Payment))

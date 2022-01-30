@@ -1258,8 +1258,29 @@ $(function () {
     $.fn.SaveOffDays = function (url, month) {
         var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
         var dateRangeToDay = rangeTo.attr('data-date');
+        var isMultipleDatePicker = $(".datepicker-here").attr("data-range")
+        console.log("minrange: " + $('#vacation-dates').datepicker().data('datepicker').selectedDates[0])
+        if ((isMultipleDatePicker == 'false' && $('#vacation-dates').datepicker().data('datepicker').selectedDates[0] == undefined) || (isMultipleDatePicker == 'true' && $('#vacation-dates').datepicker().data('datepicker').minRange == "")) {
+            $('input.selectedDate').val("");
+         
+            $('input.selectedDate').valid();
+            $('input.selectedDate').trigger("change");
+            $("#saveOffDay").attr("disabled", false);
+            return;
+        }
+        else {
+            if (isMultipleDatePicker == 'false') {
+                var dateFrom = $('#vacation-dates').datepicker().data('datepicker').selectedDates[0].toISOString();
+            }
+            else {
 
-        var dateFrom = $('#vacation-dates').datepicker().data('datepicker').minRange.toISOString()
+                var dateFrom = $('#vacation-dates').datepicker().data('datepicker').minRange.toISOString()
+            }
+            $('input.selectedDate').val(true);
+            $('input.selectedDate').trigger("change");
+            $('input.selectedDate').valid();
+            
+        }
         var dateTo = '';
         if (dateRangeToDay == undefined) {
             dateTo = null;
