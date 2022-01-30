@@ -29,6 +29,8 @@ $(function () {
             $("#loading").show();
             console.log("has class orders");
             url = "/Requests/EditModalView";
+            var selectedTab = $('.nav-tabs .active').parent().index() + 1;
+            formData.set("Tab", selectedTab)
         }
         else if ($('.turn-edit-on-off').hasClass('locations')) {
             //console.log("has class locations");
