@@ -75,6 +75,12 @@ $(function () {
                 if ($('.turn-edit-on-off').hasClass('operations') || $('.turn-edit-on-off').hasClass('orders')) {
                     $(".editModal").html(data);
                     //$.fn.OnOpenModalView();
+                    var selectTabSelector = $('.nav-tabs li:nth-child(' + selectedTab + ") a")
+                    selectTabSelector.addClass(" active ");
+                    $(".tab-pane").removeClass("show")
+                    $(".tab-pane").removeClass("active")
+                    var href = selectTabSelector.attr("href")
+                    $(href).addClass("show active");
                     $.fn.LoadEditModalDetails();
                     $("[data-toggle='tooltip']").tooltip();
                 }
