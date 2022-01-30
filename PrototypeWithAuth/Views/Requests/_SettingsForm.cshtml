@@ -1,4 +1,5 @@
-﻿@model PrototypeWithAuth.ViewModels.SettingsForm;
+﻿@using PrototypeWithAuth.ViewModels;  
+@model SettingsForm;
 
 <form action="" method="get" class="lab-man-form" id="myForm">
     <div class="row top-bar border-bottom text-center text-justify">
@@ -8,5 +9,13 @@
     </div>
     <div class="row">
         @Model.Category.Description
+    </div>
+    <div class="row">
+        @{
+            <div class="heading-1 modal-title col-8">
+                <textarea asp-for="Category.Description" class="form-control-plaintext border-bottom heading-1 item-name" placeholder="(item name)" cols="50" maxlength="150" style="resize:none;"></textarea>
+            </div>
+            <span asp-validation-for="Category.Description" class="text-danger-centarix"></span>
+        }
     </div>
 </form> 
