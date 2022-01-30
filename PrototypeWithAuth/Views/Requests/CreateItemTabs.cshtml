@@ -122,6 +122,7 @@
         $("#myForm").data("validator").settings.ignore = "";
         var valid = $("#myForm").valid();
         console.log("valid form: " + valid)
+        
         $(".submitOrder").prop('disabled', true)
         if (!valid) {
 
@@ -142,6 +143,7 @@
     $.fn.SubmitOrderFromAddItemView = function (orderMethod) {
         console.log("in submitorderfromadditemview");
         var formData = new FormData($("#myForm")[0]);
+        console.log("...formData")
         for (var pair of formData.entries()) {
             console.log(pair[0] + ', ' + pair[1]);
         }

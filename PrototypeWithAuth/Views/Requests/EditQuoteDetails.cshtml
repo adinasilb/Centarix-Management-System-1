@@ -11,6 +11,9 @@
 <script src="~/js/WarantySupplyDateCalc.js"></script>
 <script src="~/js/editquotemodal.js"></script>
 @*<script src="~/js/SubUnit.js"></script>*@
+@{
+    var productOrderType = Model.Requests.FirstOrDefault().Product.GetType().ToString();
+}
 <div class="modal modal-view fader on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog-centered  mx-auto elixir-modal-xl " role="document">
@@ -67,7 +70,7 @@
                                 </div>
 
 
-                                <input type="hidden" asp-for="@Model.Requests[0].Product.ProductSubcategoryID" />
+                                <input type="hidden" asp-for="Requests[0].Product.ProductSubcategoryID" name="Requests[0].@(productOrderType).ProductSubcategoryID" />
                                 <input type="hidden" asp-for="@Model.ParentQuote.ParentQuoteID" />
                                 <div class="col-3 ">
                                     <div class="form-group d-inline-flex">

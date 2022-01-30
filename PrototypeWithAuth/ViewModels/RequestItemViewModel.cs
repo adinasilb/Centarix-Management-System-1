@@ -27,7 +27,7 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<Vendor> Vendors { get; set; }
         public IEnumerable<RequestStatus> RequestStatuses { get; set; }
         public IEnumerable<SelectListItem> UnitTypeList { get; set; }
-        public ILookup<UnitParentType, UnitType> UnitTypes { get; set; }
+        public IEnumerable<UnitType> UnitTypes { get; set; }
         public IEnumerable<Project> Projects { get; set; }
         public IEnumerable<SubProject> SubProjects { get; set; }
         public List<SelectListItem> ApplicationUsers { get; set; }

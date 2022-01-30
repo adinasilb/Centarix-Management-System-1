@@ -1680,7 +1680,7 @@ protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFi
             requestItemViewModel.SubProjects = subprojects;
 
             requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
-            requestItemViewModel.UnitTypes = unittypeslookup;
+            requestItemViewModel.UnitTypes = unittypes;
             requestItemViewModel.CommentTypes = _commentType.Read().AsEnumerable();
             requestItemViewModel.PaymentTypes = paymenttypes;
             requestItemViewModel.CompanyAccounts = companyaccounts;

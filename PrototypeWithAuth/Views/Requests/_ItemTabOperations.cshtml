@@ -24,6 +24,7 @@
             vendorcurrencyid = Model.Requests[0].Product.Vendor.Country.CurrencyID.ToString();
         }
     }
+        var productOrderType = Model.OrderType.ToString();
 
 }
 
@@ -42,8 +43,8 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <label asp-for="Requests[0].Product.ProductSubcategory.ParentCategory.Description" class="control-label">Category</label>
-                @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategory.ParentCategoryID,
+                <label asp-for="Requests[0].Product.ProductSubcategory.ParentCategory.Description" name="Requests[0].@(productOrderType).ProductSubcategory.ParentCategory.Description" class="control-label">Category</label>
+                @Html.DropDownList("Requests[0]."+productOrderType+".ProductSubcategory.ParentCategoryID",
                 new SelectList(
                 Model.ParentCategories,
                 "ID",
@@ -55,6 +56,7 @@
                         @id = "parentlist",
                     @searchable = "Select Category",
                         @data_stop_refresh = "true"
+
                     })
                 <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" />
                 <span asp-validation-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
@@ -63,7 +65,7 @@
         <div class="col-md-6 px-4">
             <div class="form-group sublist">
                 <label asp-for="Requests[0].Product.ProductSubcategory.Description" class="control-label">Subcategory</label>
-                @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategoryID,
+                @Html.DropDownList("Requests[0]."+productOrderType+".ProductSubcategoryID",
                     new SelectList(
                     Model.ProductSubcategories,
                     "ID",
@@ -75,8 +77,9 @@
                              @id = "sublist",
                         @searchable = "Select Sub Category",
                              @data_stop_refresh = "true"
+
                          })
-                <input type="hidden" asp-for="Requests[0].Product.ProductSubcategoryID" disabled  />
+                <input type="hidden" asp-for="Requests[0].Product.ProductSubcategoryID" name="Requests[0].@(productOrderType).ProductSubcategoryID" disabled  />
                 <span asp-validation-for="Requests[0].Product.ProductSubcategoryID" class="text-danger-centarix"></span>
             </div>
         </div>
@@ -86,8 +89,8 @@
             <div class="col-md-6 ">
                 <div class="form-group">
                     <label asp-for="Requests[0].Product.Vendor" class="control-label"></label>
-                    @Html.DropDownListFor(
-                            vm => vm.Requests[0].Product.VendorID,
+                    @Html.DropDownList(
+                            "Requests[0]."+productOrderType+".VendorID",
                             new SelectList(
                             Model.Vendors,
                             dataValueField: "VendorID",
@@ -113,7 +116,7 @@
                 <div class="form-group">
                     @* IN MIDDLE *@
                     <label asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="control-label"></label>
-                    <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " />
+                    <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" name="Requests[0].@(productOrderType).Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " />
                     @*don't need a validation here because you it's not saving*@
                 </div>
             </div>
@@ -130,12 +133,12 @@
         <div class="row">
             <div class="col-md-6 ">
                 <label asp-for="Requests[0].Product.ProductSecondaryName" class="control-label">Item Secondary Name</label>
-                <input asp-for="Requests[0].Product.ProductSecondaryName" class="form-control-plaintext border-bottom catalog-number  @markReadOnlyClass" />
+                <input asp-for="Requests[0].Product.ProductSecondaryName" name="Requests[0].@(productOrderType).ProductSecondaryName" class="form-control-plaintext border-bottom  @markReadOnlyClass" />
                 <span asp-validation-for="Requests[0].Product.ProductSecondaryName" class="text-danger-centarix"></span>
             </div>
             <div class="col-md-6 ">
                 <label asp-for="Requests[0].Product.CatalogNumber" class="control-label"></label>
-                <input asp-for="Requests[0].Product.CatalogNumber" class="form-control-plaintext border-bottom catalog-number  @markReadOnlyClass" />
+                <input asp-for="Requests[0].Product.CatalogNumber" name="Requests[0].@(productOrderType).CatalogNumber" class="form-control-plaintext border-bottom catalog-number  @markReadOnlyClass" />
                 <span asp-validation-for="Requests[0].Product.CatalogNumber" class="text-danger-centarix"></span>
             </div>
         </div>

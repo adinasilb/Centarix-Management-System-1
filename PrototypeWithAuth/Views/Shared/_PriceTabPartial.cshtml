@@ -14,6 +14,8 @@
     var dollarReadOnly = "";
     var shekelReadOnly = "";
     var disableIfNotReorder = "disabled";
+    
+    var productOrderType = Model.OrderType.ToString();
     //var shekelSelected = "selected";
     //var disabledProperty = "";
     if (modalType == AppUtility.RequestModalType.Edit || modalType == AppUtility.RequestModalType.Summary)
@@ -82,11 +84,12 @@
                                     </optgroup>
                                 }
                             </select>*@
-                        @Html.DropDownListFor(
-                            vm => vm.Requests[0].Product.UnitTypeID,
-                            Model.UnitTypeList,
+                        @Html.DropDownList(
+                            "Requests[0]."+productOrderType+".UnitTypeID",
+                                 new SelectList(Model.UnitTypes, "UnitTypeID", "UnitTypeDescription", Model.Requests[0].Product.UnitTypeID, "UnitParentType.UnitParentTypeDescription"),
                             "",
-                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @id = "unitTypeID" }
+                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass,
+                            @id = "unitTypeID" }
                             )
                         <span asp-validation-for="Requests[0].Product.UnitType" class="text-danger-centarix"></span>
                     </div>
@@ -150,7 +153,7 @@
                 <div class="row ">
                     <div class="col-md-4 pl-0 form-group">
                         <label asp-for="Requests[0].Product.SubUnit" class="control-label"></label>
-                        <input type="number" name="Requests[0].Product.SubUnit" value="@(Model.Requests[0].Product.SubUnit==0? "" : AppUtility.TrimZeros(Model.Requests[0].Product.SubUnit??0).ToString())" class="form-control-plaintext border-bottom @subMarkReadOnly "
+                        <input type="number" name="Requests[0].@(productOrderType).SubUnit" value="@(Model.Requests[0].Product.SubUnit==0? "" : AppUtility.TrimZeros(Model.Requests[0].Product.SubUnit??0).ToString())" class="form-control-plaintext border-bottom @subMarkReadOnly "
                                id="subUnit" @disableIfNotReorder @cardDisabledSub />
                         <span asp-validation-for="Requests[0].Product.SubUnit" class="text-danger-centarix"></span>
                     </div>
@@ -158,9 +161,9 @@
                         <label asp-for="Requests[0].Product.SubUnitType" class="control-label"></label>
                         @if (!Model.IsReorder || cardDisabledSub == "disabled")
                         {
-                            @Html.DropDownListFor(
-                                vm => vm.Requests[0].Product.SubUnitTypeID,
-                                Model.UnitTypeList,
+                            @Html.DropDownList(
+                                "Requests[0]."+productOrderType+".SubUnitTypeID",
+                                 new SelectList(Model.UnitTypes, "UnitTypeID", "UnitTypeDescription", Model.Requests[0].Product.SubUnitTypeID, "UnitParentType.UnitParentTypeDescription"),
                                 "",
                                 htmlAttributes: new
                                     {
@@ -172,11 +175,12 @@
                         }
                         else
                         {
-                            @Html.DropDownListFor(
-                                vm => vm.Requests[0].Product.SubUnitTypeID,
-                                Model.UnitTypeList,
+                            @Html.DropDownList(
+                                "Requests[0]."+productOrderType+".SubUnitTypeID",
+                                 new SelectList(Model.UnitTypes, "UnitTypeID", "UnitTypeDescription", Model.Requests[0].Product.SubUnitTypeID, "UnitParentType.UnitParentTypeDescription"),
                                 "",
-                                htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext subunit-type-select " + @subMarkReadOnly, @id = "subUnitTypeID" })
+                                htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext subunit-type-select " + @subMarkReadOnly,
+                                 @id = "subUnitTypeID"})
                         }
                         <span asp-validation-for="Requests[0].Product.SubUnitType" class="text-danger-centarix"></span>
                     </div>
@@ -250,7 +254,7 @@
                 <div class="row">
                     <div class="col-md-4 pl-0 form-group">
                         <label asp-for="Requests[0].Product.SubSubUnit" class="control-label"></label>
-                        <input type="number" name="Requests[0].Product.SubSubUnit" value="@(Model.Requests[0].Product.SubUnit==0? "" : AppUtility.TrimZeros(Model.Requests[0].Product.SubUnit??0).ToString())" class="form-control-plaintext border-bottom
+                        <input type="number" name="Requests[0].@(productOrderType).SubSubUnit" value="@(Model.Requests[0].Product.SubUnit==0? "" : AppUtility.TrimZeros(Model.Requests[0].Product.SubUnit??0).ToString())" class="form-control-plaintext border-bottom
                                @subsubMarkReadOnly " @cardDisabledSubSub @disableIfNotReorder id="subSubUnit" />
                         <span asp-validation-for="Requests[0].Product.SubSubUnit" class="text-danger-centarix"></span>
                     </div>
@@ -258,9 +262,9 @@
                         <label asp-for="Requests[0].Product.SubSubUnitType" class="control-label"></label>
                         @if (!Model.IsReorder || cardDisabledSubSub == "disabled")
                         {
-                            @Html.DropDownListFor(
-                                vm => vm.Requests[0].Product.SubSubUnitTypeID,
-                                Model.UnitTypeList,
+                            @Html.DropDownList(
+                                "Requests[0]."+productOrderType+".SubSubUnitTypeID",
+                                 new SelectList(Model.UnitTypes, "UnitTypeID", "UnitTypeDescription", Model.Requests[0].Product.SubSubUnitTypeID, "UnitParentType.UnitParentTypeDescription"),
                                 "",
                                 htmlAttributes: new
                                      {
@@ -271,14 +275,14 @@
                         }
                         else
                         {
-                            @Html.DropDownListFor(
-                                vm => vm.Requests[0].Product.SubSubUnitTypeID,
-                                Model.UnitTypeList,
+                            @Html.DropDownList(
+                                "Requests[0]."+productOrderType+".SubSubUnitTypeID",
+                                 new SelectList(Model.UnitTypes, "UnitTypeID", "UnitTypeDescription", Model.Requests[0].Product.SubSubUnitTypeID, "UnitParentType.UnitParentTypeDescription"),
                                 "",
                                 htmlAttributes: new
                                      {
                                          @class = "mdb-select custom select-dropdown form-control-plaintext sub-subunit-type-select " + @subsubMarkReadOnly,
-                                    @id = "subSubUnitTypeID"
+                                         @id = "subSubUnitTypeID"
                                      })
                         }
                         <span asp-validation-for="Requests[0].Product.SubSubUnitType" class="text-danger-centarix"></span>

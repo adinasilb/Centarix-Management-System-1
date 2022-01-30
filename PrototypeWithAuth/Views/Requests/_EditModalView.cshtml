@@ -9,6 +9,7 @@
     var summary = "";
     var disabled = "";
     var color = "";
+    var productOrderType = Model.OrderType.ToString();
     if (Model.ModalType != AppUtility.RequestModalType.Summary)
     {
         summary = "hidden";
@@ -128,14 +129,15 @@
                 </div>
                 @*Begin Hidden Inputs:*@
                 @Html.HiddenFor(vm => vm.Requests[0].ProductID)
-                @Html.HiddenFor(vm => vm.Requests[0].Product.ProductSubcategory.ID)
+                <input type="hidden" asp-for= "Requests[0].Product.ProductSubcategory.ID" name="Requests[0].@(productOrderType).ProductSubcategory.ID"/>
                 @Html.HiddenFor(vm => vm.Requests[0].RequestStatusID)
                 @Html.HiddenFor(vm => vm.Requests[0].ParentRequestID)
                 @Html.HiddenFor(vm => vm.Requests[0].ParentQuoteID)
                 @*End Hidden Inputs*@
 
                 @*Hidden Input for Product Subcategory*@
-                @Html.HiddenFor(vm => vm.Requests[0].Product.ProductSubcategory.Description)
+                <input type="hidden" asp-for= "Requests[0].Product.ProductSubcategory.Description" name="Requests[0].@(productOrderType).ProductSubcategory.Description"/>
+
             </form>
 
         </div>
