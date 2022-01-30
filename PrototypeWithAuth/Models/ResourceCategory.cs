@@ -17,5 +17,6 @@ namespace PrototypeWithAuth.Models
         public bool IsReportsCategory { get; set; }
         public IEnumerable<ResourceResourceCategory> ResourceResourceCategories { get; set; }
         public IEnumerable<Report> Reports { get; set; }
+        //public override CategoryJson CategoryJson { get; set; }
     }
 }

@@ -308,7 +308,7 @@ $(function () {
     $(".cancel-request-edits").off("click").on("click", function (e) {
         $.fn.CloseModal("confirm-edit");
         console.log("cancel request edits");
-        $('.mark-readonly').attr("disabled", false);
+        $('.mark-readonly:not(.mark-roles-readonly)').attr("disabled", false);
         $('.mark-edditable').data("val", true);
         $('.edit-mode-switch-description').text("Edit Mode On");
         $('.turn-edit-on-off').attr('name', 'edit')
@@ -324,8 +324,8 @@ $(function () {
             $.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
             $.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
             $.fn.EnableMaterialSelect('#unitTypeID', 'select-options-unitTypeID');
-            $.fn.CheckUnitsFilled();
-            $.fn.CheckSubUnitsFilled();
+            $.fn.CheckUnitsFilled("add-or-edit-item");
+            $.fn.CheckSubUnitsFilled("add-or-edit-item");
         }
         if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
             $.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');

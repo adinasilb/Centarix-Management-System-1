@@ -23,6 +23,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+
         public DbSet<ProductComment> ProductComments { get; set; }
         public DbSet<CommentType> CommentTypes { get; set; }
         public DbSet<Currency> Currencies { get; set; }

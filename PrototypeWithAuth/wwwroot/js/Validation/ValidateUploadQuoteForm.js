@@ -17,6 +17,10 @@
 		"QuotesInput" :{
 			fileRequired : true			
 		},
+		"ParentQuote.Discount": {
+			min: 0,
+			integer: true
+        },
 		"ParentRequest.SupplierOrderNumber": {
 			required: true
 		},
