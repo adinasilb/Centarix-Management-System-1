@@ -74,7 +74,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("AdinaLocal"), sqlServerOptions => sqlServerOptions.CommandTimeout(120));
+                    Configuration.GetConnectionString("AdinaHome2"), sqlServerOptions => sqlServerOptions.CommandTimeout(120));
                     options.EnableSensitiveDataLogging(true);   
             });
 
@@ -181,7 +181,6 @@ namespace PrototypeWithAuth
             //ChangePassword(serviceProvider).Wait();
 
             CreateRoles(serviceProvider).Wait();
-            //CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer");
 
 
             //AddRoles(serviceProvider).Wait();
@@ -243,6 +242,8 @@ namespace PrototypeWithAuth
                 }
             }
 
+            await CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer");
+
             //string[] roleNames1 = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
             //string[] roleNames2 = Enum.GetNames(typeof(AppUtility.RoleItems)).Cast<string>().Select(x => x.ToString()).ToArray();
             //string[] roleNames = new string[roleNames1.Length + roleNames2.Length];
@@ -268,7 +269,7 @@ namespace PrototypeWithAuth
 
             //await UserManager.AddToRoleAsync(poweruser, "Admin");
 
-            
+
 
             //var poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
             ////{

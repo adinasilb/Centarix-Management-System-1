@@ -96,6 +96,12 @@
                                 <input class="form-control-plaintext border-bottom" disabled />
                             </div>
                         </div>
+                        <div class="custom-fields-details">
+
+                        </div>
+                        <div class="add-custom-fields">
+                            @{ await Html.RenderPartialAsync("_AddCustomFields.cshtml", "details-form");}
+                        </div>
                     </div>
                     <div id="price" class="tab-pane fade in" value="1">
                         Price
