@@ -1,6 +1,9 @@
 ﻿@using PrototypeWithAuth.ViewModels;
 @model SettingsForm;
 
+@{
+    var showItem = " active show ";
+}
 <form action="" method="get" class="lab-man-form" id="myForm">
     <div class="row top-bar border-bottom text-center text-justify under-row-margin">
         <div class="col-12">
@@ -23,9 +26,94 @@
                     <span asp-validation-for="Category.Description" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-2">
-                    <input type="submit" class="custom-button custom-button-font" value="Save" />
+                    <input type="button" class="save-settings-form custom-button custom-button-font lab-man-background-color" value="Save" />
                 </div>
             }
         </div>
+        <div class="row">
+            <div class="col-12 px-0">
+                <div class="container-fluid div-tabs pt-0 text-center pl-0">
+                    <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 pl-0 nav-tabs-icons">
+                        <li class="nav-item icon"><a data-toggle="tab" href="#details" class="nav-link current-tab next-tab active"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Details</a></li>
+                        <li class="nav-item icon"><a data-toggle="tab" href="#price" class="nav-link next-tab"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Price</a></li>
+                        <li class="nav-item icon"><a data-toggle="tab" href="#documents" class="nav-link next-tab"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Documents</a></li>
+                        <li class="nav-item icon"><a data-toggle="tab" href="#received" class="nav-link next-tab"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Received</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-</form> 
+    <div class="new-modal-body edit-modal-outer-body ">
+        <div class="container-fluid edit-modal-body box-shadow orders partial-div" style="background: #FFF; border: 2px solid #EAEAEB;">
+            <div class="container-fluid div-tabs no-box-shadow p-0">
+                <div class="tab-content">
+                    <div id="details" class="tab-pane fade in @showItem" value="1">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="control-label">Category</label>
+                                @{ var catText = Model.CategoryDescription ?? "Select A Category"; }
+                                <select class="form-control-plaintext border-bottom mdb-select" disabled>
+                                    <option value="0">@catText</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label">Subcategory</label>
+                                @{ var subCatText = Model.SubcategoryDescription ?? "Select A Subcategory"; }
+                                <select class="form-control-plaintext border-bottom mdb-select" disabled>
+                                    <option value="0">@subCatText</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="control-label">Vendor</label>
+                                <select class="form-control-plaintext border-bottom mdb-select" disabled>
+                                    <option value="0">Select Vendor</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label">Company ID (automatic)</label>
+                                <input class="form-control-plaintext border-bottom" disabled />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="control-label">Catalogue No.</label>
+                                <input class="form-control-plaintext border-bottom" disabled />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label">URL</label>
+                                <input class="form-control-plaintext border-bottom" disabled />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="control-label">Expected Supply Days</label>
+                                <input class="form-control-plaintext border-bottom" disabled />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label">Expected Supply Date</label>
+                                <input class="form-control-plaintext border-bottom" disabled />
+                            </div>
+                        </div>
+                    </div>
+                    <div id="price" class="tab-pane fade in" value="1">
+                        Price
+                    </div>
+                    <div id="documents" class="tab-pane fade in" value="1">
+                        Documents
+                    </div>
+                    <div id="received" class="tab-pane fade in" value="1">
+                        Received
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(".save-settings-form").on("click", function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+    });
+</script>

@@ -1117,6 +1117,13 @@ a.nav-link {
     color: var(--operations-color);
 }
 
+.lab-man-form .container-fluid ul li a.active, .oper-form .container-fluid ul li a:hover {
+    background-color: transparent;
+    border-width: 0px;
+    border-bottom: 4px solid var(--lab-man-color);
+    color: var(--lab-man-color);
+}
+
 .container-fluid ul li a.user-nav-link.active, .container-fluid ul li a.user-nav-link:hover {
     background-color: transparent;
     border-width: 0px;
@@ -3229,4 +3236,8 @@ body.modal-open .popover {
 
 .ch-scrollable {
     overflow-y: auto;
+}
+
+.settings-form select[disabled] > option{
+    color: var(--black-87) !important;
 }

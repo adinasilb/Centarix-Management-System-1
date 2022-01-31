@@ -11,5 +11,7 @@ namespace PrototypeWithAuth.ViewModels
         public CategoryBase Category { get; set; }
         public int ItemCount { get; set; }
         public int RequestCount { get; set; }
+        public string CategoryDescription { get; set; }
+        public string SubcategoryDescription { get; set; }
     }
 }

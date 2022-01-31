@@ -5119,10 +5119,15 @@ namespace PrototypeWithAuth.Controllers
             if (ModelType == new ParentCategory().GetType().Name)
             {
                 settingsForm.Category = _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { cb => cb.ID == CategoryID }).FirstOrDefault();
+                settingsForm.CategoryDescription = settingsForm.Category.Description;
             }
             else if (ModelType == new ProductSubcategory().GetType().Name)
             {
-                settingsForm.Category = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == CategoryID }).FirstOrDefault();
+                var category = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == CategoryID },
+                    new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory } }).FirstOrDefault();
+                settingsForm.Category = category;
+                settingsForm.CategoryDescription = category.ParentCategory.Description;
+                settingsForm.SubcategoryDescription = category.Description;
             }
             settingsForm.RequestCount = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.Product.ProductSubcategoryID == settingsForm.Category.ID }).Count();
             settingsForm.ItemCount = _productsProc.Read(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategoryID == settingsForm.Category.ID }).Count();
