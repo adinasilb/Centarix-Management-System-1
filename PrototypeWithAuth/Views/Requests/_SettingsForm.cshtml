@@ -1,22 +1,25 @@
-﻿@using PrototypeWithAuth.ViewModels;  
+﻿@using PrototypeWithAuth.ViewModels;
 @model SettingsForm;
 
 <form action="" method="get" class="lab-man-form" id="myForm">
-    <div class="row top-bar border-bottom text-center text-justify">
+    <div class="row top-bar border-bottom text-center text-justify under-row-margin">
         <div class="col-12">
             @Model.ItemCount Items &nbsp;&nbsp;&nbsp;&nbsp; @Model.RequestCount Requests
         </div>
     </div>
-    <div class="row">
-        @Model.Category.Description
-    </div>
-    <div class="row modal-sides">
-        @{
-            @*<img src="@Model.Requests[0].Product.ProductSubcategory.ImageURL" class="sub-category-image top-modal-image" alt="Alternate Text" width="75" />*@
-            <div class="heading-1 modal-title col-8">
-                <textarea asp-for="Category.Description" class="form-control-plaintext border-bottom heading-1 item-name" placeholder="(item name)" cols="50" maxlength="150" style="resize:none;"></textarea>
-            </div>
-            <span asp-validation-for="Category.Description" class="text-danger-centarix"></span>
-        }
+    <div class="new-modal-header modal-line-1-header-with-back modal-sides">
+        <div class="row modal-title-line justify-content-between under-row-margin container">
+            @{
+                var source = Model.Category.ImageURL ?? "";
+                var categoryNameRows = Model.Category.Description != null ? Math.Ceiling((float)(Model.Category.Description.Length) / 30) : 1;
+                <img src="@Model.Category.ImageURL" class="sub-category-image top-modal-image" alt="Alternate Text" width="75" />
+
+                <div class="modal-product-title col-10" style=" margin-left: 2rem !important">
+
+                    <textarea asp-for="Category.Description" class="form-control-plaintext w-75 border-bottom heading-1 category-name" placeholder="(category name)" rows="@categoryNameRows" cols="50" maxlength="150" style="resize:none;"></textarea>
+                </div>
+                <span asp-validation-for="Category.Description" class="text-danger-centarix"></span>
+            }
+        </div>
     </div>
 </form> 

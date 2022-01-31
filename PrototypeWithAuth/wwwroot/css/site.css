@@ -3230,3 +3230,9 @@ body.modal-open .popover {
 .ch-scrollable {
     overflow-y: auto;
 }
+
+
+.category-name{
+    bottom: 0; 
+    position: fixed;
+}
