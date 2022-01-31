@@ -68,7 +68,6 @@ $(function () {
 			error.insertAfter(element);
 		}
 		if (element.hasClass('employee-status')) {
-			alert("has class employee status");
 			$("#validation-EmployeeStatus").removeClass("hidden");
 		}
 	}

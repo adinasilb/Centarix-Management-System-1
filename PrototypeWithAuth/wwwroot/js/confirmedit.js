@@ -154,7 +154,6 @@ $(function () {
                             cache: true,
                             success: function (data) {
                                 if (data.includes("Invalid Url")) {
-                                    alert("in invalid url");
                                     $.fn.OpenModal('invalid-right-modal', 'right-invalid', data);
                                 }
                                 else {
