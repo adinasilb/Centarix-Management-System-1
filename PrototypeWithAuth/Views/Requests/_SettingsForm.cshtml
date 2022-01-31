@@ -12,13 +12,19 @@
             @{
                 var source = Model.Category.ImageURL ?? "";
                 var categoryNameRows = Model.Category.Description != null ? Math.Ceiling((float)(Model.Category.Description.Length) / 30) : 1;
-                <img src="@Model.Category.ImageURL" class="sub-category-image top-modal-image" alt="Alternate Text" width="75" />
-
-                <div class="modal-product-title col-10" style=" margin-left: 2rem !important">
-
-                    <textarea asp-for="Category.Description" class="form-control-plaintext w-75 border-bottom heading-1 category-name" placeholder="(category name)" rows="@categoryNameRows" cols="50" maxlength="150" style="resize:none;"></textarea>
+                <div class="col-2">
+                    <img src="@Model.Category.ImageURL" class="sub-category-image top-modal-image" alt="Alternate Text" width="75" />
                 </div>
-                <span asp-validation-for="Category.Description" class="text-danger-centarix"></span>
+                <div class="col-8">
+                    <div class="modal-product-title" style=" margin-left: 2rem !important">
+
+                        <textarea asp-for="Category.Description" class="form-control-plaintext border-bottom heading-1 category-name" placeholder="(category name)" rows="@categoryNameRows" cols="50" maxlength="150" style="resize:none;"></textarea>
+                    </div>
+                    <span asp-validation-for="Category.Description" class="text-danger-centarix"></span>
+                </div>
+                <div class="col-2">
+                    <input type="submit" class="custom-button custom-button-font" value="Save" />
+                </div>
             }
         </div>
     </div>
