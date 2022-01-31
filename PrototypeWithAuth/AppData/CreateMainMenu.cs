@@ -51,15 +51,15 @@ namespace PrototypeWithAuth.AppData
                     menuID = 3,
                     MenuDescription = AppUtility.MenuItems.Operations.ToString(),
                     MenuViewName = "Operation",
-                    //ControllerName = "Requests",
-                    //ActionName = "Index",
-                    RouteValues = new Microsoft.AspNetCore.Routing.RouteValueDictionary()
-                    {
-                        {"PageType",  AppUtility.PageTypeEnum.OperationsRequest },
-                        { "SectionType", AppUtility.MenuItems.Operations },
-                        { "SidebarType", AppUtility.SidebarEnum.List },
-                        { "RequestStatusID", 2 },
-                    },
+                    ControllerName = "",//ControllerName = "Requests",
+                    ActionName = "",//ActionName = "Index",
+                    //RouteValues = new Microsoft.AspNetCore.Routing.RouteValueDictionary()
+                    //{
+                    //    {"PageType",  AppUtility.PageTypeEnum.OperationsRequest },
+                    //    { "SectionType", AppUtility.MenuItems.Operations },
+                    //    { "SidebarType", AppUtility.SidebarEnum.List },
+                    //    { "RequestStatusID", 2 },
+                    //},
                     MenuImageURL = "/images/css/main_menu_icons/operation.png",
                     SmallMenuImageURL = "/images/css/main_menu_small_icons/operations_menu_button.png"
                 },
@@ -108,8 +108,8 @@ namespace PrototypeWithAuth.AppData
                     menuID = 8,
                     MenuDescription = AppUtility.MenuItems.Reports.ToString(),
                     MenuViewName = "Reports",
-                    //ControllerName = "Expenses",
-                    //ActionName = "SummaryPieCharts",
+                    ControllerName="",//ControllerName = "Expenses",
+                    ActionName="",//ActionName = "SummaryPieCharts",
                     MenuImageURL = "/images/css/main_menu_icons/expenses.png",
                     SmallMenuImageURL = "/images/css/main_menu_small_icons/reports_menu_button.png"
                 },
