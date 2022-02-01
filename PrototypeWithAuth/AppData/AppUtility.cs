@@ -35,6 +35,7 @@ namespace PrototypeWithAuth.AppData
             [Display(Name = "Total + VAT")]
             TotalVat = 4
         }
+        public enum RecurrenceEndStatuses { NoEnd, EndDate, LimitedOccurrences }
         public enum TimePeriods { Days, Weeks, Months}
         public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
         public enum RoleEnum { ApproveOrders }

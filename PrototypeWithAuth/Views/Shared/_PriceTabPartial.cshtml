@@ -14,7 +14,7 @@
     var dollarReadOnly = "";
     var shekelReadOnly = "";
     var disableIfNotReorder = "disabled";
-    
+
     var productOrderType = Model.OrderType.ToString();
     //var shekelSelected = "selected";
     //var disabledProperty = "";
@@ -49,8 +49,22 @@
     {
         disableIfNotReorder = "";
     }
-    var color = Model.SectionType == AppUtility.MenuItems.Accounting ? "accounting-color" : Model.SectionType == AppUtility.MenuItems.LabManagement ? "lab-man-color" : Model.SectionType == AppUtility.MenuItems.Protocols ? "protocols-color" : "order-inv-color";
-
+    var color = "order-inv-color";
+    switch (Model.SectionType)
+    {
+        case AppUtility.MenuItems.Accounting:
+            color = "accounting-color";
+            break;
+        case AppUtility.MenuItems.LabManagement:
+            color = "lab-man-color";
+            break;
+        case AppUtility.MenuItems.Protocols:
+            color = "protocols-color";
+            break;
+        case AppUtility.MenuItems.Operations:
+            color = "oper-color";
+            break;
+    };
     var showUnitAmoutWarning = "";
     if(Model.Requests.FirstOrDefault().RequestStatusID==3)
     {

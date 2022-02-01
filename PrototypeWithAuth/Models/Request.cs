@@ -187,9 +187,9 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<RequestListRequest> RequestListRequests { get; set; }
         private const string SerialNumberPefix = "IL";
         public string SerialNumberString { get { return SerialNumberPefix + SerialNumber; } }
-        public SingleOrder SingleOrder { private get; set; }
-        public StandingOrder StandingOrder { private get; set; }
-        public RecurringOrder RecurringOrder { private get; set; }
+        public SingleOrder SingleOrder { get; set; }
+        public StandingOrder StandingOrder { get; set; }
+        public RecurringOrder RecurringOrder { get; set; }
 
     }
 }

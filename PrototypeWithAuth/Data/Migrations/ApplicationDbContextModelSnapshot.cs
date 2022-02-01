@@ -5171,6 +5171,44 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.RecurrenceEndStatus", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescriptionEnum")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("RecurringOrderEndStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Description = "No End",
+                            DescriptionEnum = "NoEnd"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Description = "End Date",
+                            DescriptionEnum = "EndDate"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Description = "Limited Occurrences",
+                            DescriptionEnum = "LimitedOccurrences"
+                        });
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.Report", b =>
                 {
                     b.Property<int>("ReportID")
@@ -7457,10 +7495,10 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("HasEnd")
-                        .HasColumnType("bit");
+                    b.Property<int>("Occurrences")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Occurances")
+                    b.Property<int>("RecurrenceEndStatusID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
@@ -7471,6 +7509,8 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int>("TimePeriodID")
                         .HasColumnType("int");
+
+                    b.HasIndex("RecurrenceEndStatusID");
 
                     b.HasIndex("TimePeriodID");
 
@@ -8761,6 +8801,12 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RecurringOrder", b =>
                 {
+                    b.HasOne("PrototypeWithAuth.Models.RecurrenceEndStatus", "RecurrenceEndStatus")
+                        .WithMany()
+                        .HasForeignKey("RecurrenceEndStatusID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("PrototypeWithAuth.Models.TimePeriod", "TimePeriod")
                         .WithMany()
                         .HasForeignKey("TimePeriodID")

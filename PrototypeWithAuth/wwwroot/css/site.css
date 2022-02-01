@@ -185,6 +185,10 @@ span.choose {
     border-radius: 18px;
     border-color: var(--order-inv-color) !important;
 }
+.oper-form .RequestUnitCard div:first-child, .oper-form .RequestSubunitCard div:first-child, .oper-form .RequestSubsubunitCard div:first-child {
+    border-radius: 18px;
+    border-color: var(--operations-color) !important;
+}
 .supplier-form .RequestUnitCard div:first-child, .supplier-form .RequestSubunitCard div:first-child, .supplier-form .RequestSubsubunitCard div:first-child {
     border-radius: 18px;
     border-color: var(--lab-man-color) !important;

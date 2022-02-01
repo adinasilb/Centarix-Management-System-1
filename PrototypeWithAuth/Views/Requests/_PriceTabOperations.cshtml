@@ -13,6 +13,9 @@
     var hideNoQuote = "";
     var disabledProperty = "";
     var changed = "false";
+    var productOrderType = Model.OrderType.ToString();
+    var dynamicID = "Request_0__" + productOrderType + "_";
+    var dynamicName = "Request[0]." + productOrderType + ".";
     if (modalType == AppUtility.RequestModalType.Edit || modalType == AppUtility.RequestModalType.Summary)
     {
         disabledProperty = "disabled";
@@ -25,26 +28,26 @@
     }
     var color = Model.SectionType == AppUtility.MenuItems.Accounting ? "accounting-color" : Model.SectionType == AppUtility.MenuItems.LabManagement ? "lab-man-color" : Model.SectionType == AppUtility.MenuItems.Protocols ? "protocols-color" : "order-inv-color";
 }
- <input type="hidden" id="quoteStatus" asp-for="Requests[0].QuoteStatusID" />
- <input type="hidden" asp-for="OrderType" />
+<input type="hidden" id="quoteStatus" asp-for="Requests[0].QuoteStatusID" />
+<input type="hidden" asp-for="OrderType" />
 <div class="row no-mb">
     <div class="col-md-8">
         <span class="heading-1 modal-tab-name">Price</span><br />
         <span class=" large-text text-danger-centarix font-weight-bold" id="price-warning"></span>
     </div>
- </div>
+</div>
 
- <div class="row d-flex align-content-center">
-     <button class="col-6 custom-button custom-button-font oper-background-color order-type" id="single" style="border-radius: 1.438rem 0rem 0rem 1.438rem; font-size: 1rem; height: 2.2rem">
-            <i class="icon-monetization_on-24px p-1" style="font-size: 1.2rem; vertical-align:middle"></i>
-         <span class="">Single Order</span>
-      </button>
-      <button class="col-6 custom-button custom-oper order-type" id="recurring" style="border-radius: 0rem 1.438rem 1.438rem 0rem; font-size: 1rem; height: 2.2rem">
-            <i class="icon-monetization_on-24px" style="font-size: 1.2rem; vertical-align:middle"></i>
-          <span class="">Recurring Order</span>
-      </button>
- </div>
- <div>
+<div class="row d-flex align-content-center">
+    <button class="col-6 custom-button custom-button-font oper-background-color order-type" id="single" style="border-radius: 1.438rem 0rem 0rem 1.438rem; font-size: 1rem; height: 2.2rem">
+        <i class="icon-monetization_on-24px p-1" style="font-size: 1.2rem; vertical-align:middle"></i>
+        <span class="">Single Order</span>
+    </button>
+    <button class="col-6 custom-button custom-oper order-type" id="recurring" style="border-radius: 0rem 1.438rem 1.438rem 0rem; font-size: 1rem; height: 2.2rem">
+        <i class="icon-monetization_on-24px" style="font-size: 1.2rem; vertical-align:middle"></i>
+        <span class="">Recurring Order</span>
+    </button>
+</div>
+<div>
     <div class="col-md-4">
         <div class="row @hideNoQuote">
             <div class="col-6">
@@ -116,20 +119,83 @@
         </div>
 
     }
-    
+
 </div>
 <div class="row recurring-info d-none">
-        <input value="date"/>
+    <div class="col-6">
+        <label class="oper-color text">Recurrences</label>
+        <div class="row">
+            <div class="col-7">
+                <label class="control-label">Start Date</label>
+                <input id="@(dynamicID)StartDate" name="@(dynamicName)StartDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" value="@(Model.Requests[0].RecurringOrder?.StartDate.GetElixirDateFormat())" />
+            </div>
+        </div>
+        <div class="row">
+            @{
+                var timePeriodAmt = Model.Requests[0].RecurringOrder != null ? Model.Requests[0].RecurringOrder.TimePeriodAmount : Model.Requests[0].StandingOrder?.TimePeriodAmount;
+                var timePeriodID = Model.Requests[0].RecurringOrder != null ? Model.Requests[0].RecurringOrder.TimePeriodID : Model.Requests[0].StandingOrder?.TimePeriodID;
+            }
+            <div class="col-4">
+                <label class="control-label">Repeat Every</label>
+                <input type="number" id="@(dynamicID)TimePeriodAmount" name="@(dynamicName)TimePeriodAmount" value="@(timePeriodAmt != null ? AppUtility.ConvertIntToString((uint)timePeriodAmt) : "")" class="form-control-plaintext border-bottom @markReadOnlyClass" />
+            </div>
+            <div class="col-7">
+                <label class="control-label">Select Time Period</label>
+
+                @Html.DropDownList(dynamicName+"TimePeriodID",
+                new SelectList(
+                Model.TimePeriods,
+                "ID",
+                "Description",
+                Model.Requests[0].RecurringOrder?.TimePeriodID
+                ), "Select Time Period",
+                new
+                {
+                @class = " mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass,
+                @id = "timePeriod",
+                @data_stop_refresh = "true"
+                })
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <label class="oper-color text">End</label>
+        <div class="row">
+            <div class="custom-control custom-radio mr-4 ml-4 ">
+                <input class="custom-control-input recurring-end-info @markReadOnlyClass" id="@(dynamicID)RecurringOrderEndStatusID1" name="@(dynamicName)RecurringOrderEndStatusID" type="radio" value="1" />
+                <label class="radio-button custom-control-label pt-1 pl-2 recurring-end-info @markReadOnlyClass" for="@(dynamicID)RecurringOrderEndStatusID1">Never</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="custom-control custom-radio ml-4">
+                <input class="custom-control-input recurring-end-info @markReadOnlyClass" id="@(dynamicID)RecurringOrderEndStatusID2" name="@(dynamicName)RecurringOrderEndStatusID" type="radio" value="2" />
+                <label class="radio-button custom-control-label pt-1 pl-2 recurring-end-info @markReadOnlyClass" for="@(dynamicID)RecurringOrderEndStatusID2">End Date</label>
+            </div>
+            <div class="col-6">
+                <input id="@(dynamicID)EndDate" name="@(dynamicName)EndDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" value="@(Model.Requests[0].RecurringOrder?.EndDate.GetElixirDateFormat())" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="custom-control custom-radio  ml-4">
+                <input class="custom-control-input recurring-end-info @markReadOnlyClass" id="@(dynamicID)RecurringOrderEndStatusID3" name="@(dynamicName)RecurringOrderEndStatusID" type="radio" value="3" />
+                <label class="radio-button custom-control-label pt-1 pl-2 recurring-end-info @markReadOnlyClass" for="@(dynamicID)RecurringOrderEndStatusID3">After</label>
+            </div>
+            <div class="col-6 d-flex">
+                <input type="number" id="@(dynamicID)Occurrences" name="@(dynamicName)Occurrences" value="@(Model.Requests[0].RecurringOrder?.Occurrences)" class=" form-control-plaintext border-bottom @markReadOnlyClass w-50" />
+                <label class="">Occurrences</label>
+            </div>
+        </div>
+    </div>
 </div>
 @if (modalType == AppUtility.RequestModalType.Create)
 {
-    
+
     <div class="row">
-        <div class="col-2 recurring-info d-none">
+        <div class="col-3 recurring-info d-none">
             <input type="checkbox" id="standingOrder" class="form-check-input filled-in " />
             <label class="form-check-label" id="standingOrder">Standing Order</label>
         </div>
-        <div class="col-2">
+        <div class="col-3">
             <input type="checkbox" asp-for="Paid" id="alreadyPaid" class="form-check-input filled-in " />
             <label class="form-check-label" asp-for="Paid" id="alreadyPaid">Paid</label>
             <input type="hidden" asp-for="Paid" />
@@ -137,7 +203,56 @@
 
     </div>
     <div class="row paid-info d-none ">
-       
+        <div class="col-3 pl-0">
+            <div class=" payment-type form-group">
+                <label class="control-label">Bank Name</label>
+                @Html.DropDownListFor(vm => vm.Requests[0].Payments[0].CompanyAccountID,
+            new SelectList(
+            Model.CompanyAccounts,
+            "CompanyAccountID",
+            "CompanyBankName"
+            ), "Select Bank Name",
+            new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext", @id = "bankName" })
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="payment-type form-group d-none">
+                <label class="control-label">Payment Type</label>
+                @Html.DropDownListFor(vm => vm.Requests[0].Payments[0].PaymentTypeID,
+            new SelectList(
+            Model.PaymentTypes,
+            "PaymentTypeID",
+            "PaymentTypeDescription"
+            ), "Select Payment Type",
+            new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext paymentType" })
+            </div>
+        </div>
+        <div class="col-3 credit-card d-none">
+            <div class="form-group ">
+                <label class="control-label credit-card d-none">Card #</label>
+                <select class="mdb-select custom select-dropdown form-control-plaintext cardNum mdb-select-sublist " disabled asp-for="Requests[0].Payments[0].CreditCardID"></select>
+            </div>
+        </div>
+        <div class="col-3 pl-0">
+            <div class="form-group payment-date d-none">
+                <label class="control-label wire d-none">Transfer Date</label>
+                <label class="control-label credit-card">Reference Date</label>
+                <label class="control-label bank-check d-none">Cash Out Date</label>
+                <input class="form-control-plaintext border-bottom datepicker" type="text" asp-for="Requests[0].Payments[0].PaymentReferenceDate" value="" />
+            </div>
+        </div>
+        <div class="col-3 wire d-none">
+            <div class="form-group ">
+                <label class="control-label">Payment Reference</label>
+                <input class="form-control-plaintext border-bottom reference-1" type="text" disabled asp-for="Requests[0].Payments[0].Reference" />
+            </div>
+        </div>
+        <div class="col-3 bank-check d-none">
+            <div class="form-group ">
+                <label class="control-label">Check Number</label>
+                <input class="form-control-plaintext border-bottom" type="text" disabled asp-for="Requests[0].Payments[0].CheckNumber" />
+            </div>
+        </div>
     </div>
 
 }
@@ -240,58 +355,12 @@
     </div>
 }
 
-<script>
-    $(function(){
-    $(".order-type").off("click").on("click", function(e){
-            e.preventDefault()
-            var selectedStyles = "custom-button-font oper-background-color"
-            var unselectedStyles = "custom-oper"
-        if($(this).attr("id")=="single"){
-            $(".recurring-info").addClass("d-none")
-            $("#single").addClass(selectedStyles).removeClass(unselectedStyles)
-            $("#recurring").addClass(unselectedStyles).removeClass(selectedStyles)
-            $("#OrderType").val("SingleOrder")
-        }
-        else{
-             $(".recurring-info").removeClass("d-none")
-             //if standing order is checked - ordertype = 3
-             $("#OrderType").val("RecurringOrder")
-             $("#single").addClass(unselectedStyles).removeClass(selectedStyles)
-            $("#recurring").addClass(selectedStyles).removeClass(unselectedStyles)
-        }
-    })
-    $("#alreadyPaid").off("click").on("click", function (e) {
-        console.log("pay")
-        if ($("#alreadyPaid:checkbox").is(":checked")) {
-            $(".paid-info").addClass("d-none")
-            $("#alreadyPaid:checkbox").prop("checked", false)
-            $("#Paid").val(false)
-        }
-        else {
-            $(".paid-info").removeClass("d-none")
-            $("#alreadyPaid:checkbox").prop("checked", true)
-            $("#Paid").val(true)
-        }
-
-    });
-    $("#standingOrder").off("click").on("click", function (e) {
-        console.log("pay")
-        if ($("#standingOrder:checkbox").is(":checked")) {
-            $("#standingOrder:checkbox").prop("checked", false)
-            $("#OrderType").val("StandingOrder")
-        }
-        else {
-            $("#standingOrder:checkbox").prop("checked", true)
-            $("#OrderType").val("StandingOrder")
-        }
-
-    });
-    })
-    </script>
 
 <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
 <script src="~/js/TermsModal.js"></script>
+<script src="~/js/OperationsItem.js"></script>
+
 
 
 

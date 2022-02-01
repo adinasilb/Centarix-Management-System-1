@@ -801,7 +801,7 @@ table td, table td .btn, .text, table th {
         color: var(--acc-color)
     }
 
-.order-inv-form .document-border:hover i {
+.order-inv-form .document-icon:hover {
     color: var(--order-inv-color)
 }
 

@@ -182,6 +182,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<TimePeriod>().HasData(
                 SeededData.TimePeriodData.Get()
                 );
+            modelBuilder.Entity<RecurrenceEndStatus>().HasData(
+                SeededData.RecurringOrderEndStatusData.Get()
+                );
         }
     }
 }

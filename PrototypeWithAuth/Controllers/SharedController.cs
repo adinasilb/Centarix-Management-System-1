@@ -93,6 +93,7 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.ParentQuotesProc _parentQuotesProc;
         protected readonly CRUD.InvoicesProc _invoicesProc;
         protected readonly CRUD.OrderMethodsProc _orderMethodsProc;
+        protected readonly CRUD.TimePeriodsProc _timePeriodProc;
 
 
         protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
@@ -164,6 +165,7 @@ namespace PrototypeWithAuth.Controllers
             _parentQuotesProc = new CRUD.ParentQuotesProc(context);
             _invoicesProc = new CRUD.InvoicesProc(context);
             _orderMethodsProc = new CRUD.OrderMethodsProc(context);
+            _timePeriodProc = new CRUD.TimePeriodsProc(context);
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)
@@ -895,7 +897,9 @@ namespace PrototypeWithAuth.Controllers
                         GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, requestParentFolderName, requestFolder, requestId);
                     }
                 }
-                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Details, requestParentFolderName, requestFolder, requestId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, requestParentFolderName, requestFolder, requestId);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, requestParentFolderName, requestFolder, requestId);
+
                 if (requestItemViewModel.Requests.FirstOrDefault().ParentQuoteID != null)
                 {
                     GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, quoteParentFolderName, quoteFolder, parentQuoteId);
@@ -1672,6 +1676,7 @@ protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFi
             var unittypeslookup = unittypes.ToLookup(u => u.UnitParentType);
             var paymenttypes = await _paymentTypesProc.Read().ToListAsync();
             var companyaccounts = await _companyAccountsProc.Read().ToListAsync();
+            var timeperiods = await _timePeriodProc.Read().ToListAsync();
 
             requestItemViewModel.ParentCategories = parentcategories;
             requestItemViewModel.ProductSubcategories = productsubcategories;
@@ -1684,6 +1689,7 @@ protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFi
             requestItemViewModel.CommentTypes = _commentType.Read().AsEnumerable();
             requestItemViewModel.PaymentTypes = paymenttypes;
             requestItemViewModel.CompanyAccounts = companyaccounts;
+            requestItemViewModel.TimePeriods = timeperiods;
             return requestItemViewModel;
         }
 

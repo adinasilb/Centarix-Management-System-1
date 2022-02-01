@@ -31,6 +31,7 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<Project> Projects { get; set; }
         public IEnumerable<SubProject> SubProjects { get; set; }
         public List<SelectListItem> ApplicationUsers { get; set; }
+        public IEnumerable<TimePeriod> TimePeriods { get; set; }
         public bool Paid { get; set; }
         public bool PayNow { get; set; }
         public bool PayLater { get; set; }

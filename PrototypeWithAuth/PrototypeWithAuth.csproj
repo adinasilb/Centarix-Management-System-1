@@ -567,6 +567,12 @@
     <Compile Remove="Data\Migrations\20220123122832_AddTimePeriodsModel.Designer.cs" />
     <Compile Remove="Data\Migrations\20220123130818_AddProductOrderTypeDiscriminator.cs" />
     <Compile Remove="Data\Migrations\20220123130818_AddProductOrderTypeDiscriminator.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220131112202_AddRecurringOrderEndStatusModel.cs" />
+    <Compile Remove="Data\Migrations\20220131112202_AddRecurringOrderEndStatusModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220201081915_RenameRecurrenceEndStatuses.cs" />
+    <Compile Remove="Data\Migrations\20220201081915_RenameRecurrenceEndStatuses.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220201082615_UpdateRecurrenceEndStatusSeededData.cs" />
+    <Compile Remove="Data\Migrations\20220201082615_UpdateRecurrenceEndStatusSeededData.Designer.cs" />
   </ItemGroup>
 
 

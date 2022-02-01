@@ -23,6 +23,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<RecurrenceEndStatus> RecurringOrderEndStatuses { get; set;}
         public DbSet<TimePeriod> TimePeriods { get; set; }
         public DbSet<RecurringOrder> RecurringOrders { get; set; }
         public DbSet<StandingOrder> StandingOrders { get; set; }
@@ -415,6 +416,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Request>().Ignore(e => e.TotalWithVat);
             modelBuilder.Entity<Request>().Ignore(e => e.Ignore);
             modelBuilder.Entity<Request>().Ignore(e => e.IsReceived);
+            modelBuilder.Entity<Request>().Ignore(e => e.SingleOrder);
+            modelBuilder.Entity<Request>().Ignore(e => e.RecurringOrder);
+            modelBuilder.Entity<Request>().Ignore(e => e.StandingOrder);
             modelBuilder.Entity<ParentQuote>().Ignore(e => e.ExpirationDate_submit);
             modelBuilder.Entity<ParentQuote>().Ignore(e => e.QuoteDate_submit);
             modelBuilder.Entity<ParentRequest>().Ignore(e => e.OrderDate_submit);
