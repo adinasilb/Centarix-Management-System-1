@@ -18,7 +18,9 @@
         disable = "disabled";
     }
 }
-
+<div class="row error-message d-none">
+    @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
+</div>
 <div class="row modal-tab-name" style="margin-bottom:0px">
     <span class="heading-1 col-4">Location</span>
     @{

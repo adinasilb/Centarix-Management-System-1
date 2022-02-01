@@ -20,21 +20,7 @@
         <span class="heading-1 modal-tab-name">Order</span>
     </div>
 </div>
-<div class="row">
-    <div class="col-12">
-        <label class="control-label">Send to: (Add up to 5 email addresses@*- including the suppliers email address*@)</label>
-        <input class="form-control-plaintext border-bottom" type="text" id="allEmails" />
-        @for (int e = 0; e < Model.EmailAddresses.Count; e++)
-        {
-            var supplierEmailClass = "emailaddresses ";
-            if (e == 0)
-            {
-                supplierEmailClass = "isSupplier";
-            }
-            <input type="hidden" asp-for="EmailAddresses[e]" class="@supplierEmailClass" />
-        }
-    </div>
-</div>
+
 
 <div class="form-group">
     @*you can only add to cart if you are creating a new one*@
@@ -95,71 +81,3 @@
 <script src="~/js/validate.js"></script>
 <script src="~/js/site.js"></script>
 
-<script>
-    $(".submitOrder").off("click").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("submit order from _ordertab");
-        //alert("validate form");
-        $("#myForm").data("validator").settings.ignore = "";
-        var valid = $("#myForm").valid();
-        console.log("valid form: " + valid)
-        if (!valid) {
-
-            if (!$('.activeSubmit').hasClass('disabled-submit')) {
-                $('.activeSubmit').addClass('disabled-submit')
-            }
-
-        }
-        else {
-            $(".submitOrder").prop('disabled', true)
-            $('.activeSubmit').removeClass('disabled-submit')
-            $("#loading").show();
-            var orderType = $(this).attr("value");
-            $.fn.SubmitOrderFromAddItemView(orderType);
-        }
-        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,.location-error:hidden, input:visible, textarea:visible)';
-    });
-
-    $.fn.SubmitOrderFromAddItemView = function (orderType) {
-        console.log("in submitorderfromadditemview");
-        var formData = new FormData($("#myForm")[0]);
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ', ' + pair[1]);
-        }
-        $.ajax({
-            contentType: false,
-            processData: false,
-            async: true,
-            url: "/Requests/AddItemView?OrderType=" + orderType,
-            data: formData,
-            traditional: true,
-            type: "POST",
-            cache: false,
-            success: function (data) {
-                $(".temprequesthiddenfors").html(''); //remove hidden fors so don't conflict further down the line
-                console.log("in success of ajax call ");
-                //alert("in success of ajax call");
-                //if (orderType == "AddToCart") {
-                //    console.log("in add to cart try 2");
-                //    $(".save-item").removeClass("save-item");
-                //    $(".outer-add-item-view").html(data);
-                //}
-                //else {
-                $.fn.OpenModal('modalStep1', 'step-1', data)
-                $(".submitOrder").prop('disabled', false)
-                //}
-                /*$("temprequesthiddenfors").remove();*/
-                $("#loading").hide();
-                return true;
-            },
-            error: function (jqxhr) {
-                console.log("in error of ajax call ");
-                $("#loading").hide();
-                $('.error-message').html(jqxhr.responseText);
-                $(".submitOrder").prop('disabled', false)
-            }
-            
-        });
-    };
-</script>

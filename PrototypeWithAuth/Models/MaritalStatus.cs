@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class MaritalStatus
+    public class MaritalStatus : ModelBase
     {
         [Key]
         public int MaritalStatusID { get; set; }

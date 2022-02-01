@@ -1,0 +1,138 @@
+﻿@model PrototypeWithAuth.ViewModels.CreateSupplierViewModel;
+@using PrototypeWithAuth.ViewModels;
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+@inject UserManager<ApplicationUser> UserManager
+@{
+    string showDetails = "";
+    string showPayment = "";
+    string showComments = "";
+    string showContact = "";
+    switch (Model.Tab)
+    {
+        case 1:
+            showDetails = " active show ";
+            break;
+        case 2:
+            showPayment = " active show ";
+            break;
+        case 3:
+            showComments = " active show ";
+            break;
+        case 4:
+            showContact = " active show ";
+            break;
+
+    }
+
+    string switchClass = "";
+    if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement) || Model.SectionType.Equals(AppUtility.MenuItems.Requests))
+    {
+        switchClass = "suppliers";
+    }
+    else if (Model.SectionType.Equals(AppUtility.MenuItems.Accounting))
+    {
+        switchClass = "accounting";
+    }
+
+
+
+    <input type="hidden" class="old-name" value="@Model.Vendor?.VendorEnName" />
+    <div class="container-fluid " style="background: #FFF; ">
+        <input type="hidden" class="setupdropdowns" value="true" />
+        @for (int ct = 0; ct < Model.VendorCategoryTypes?.Count; ct++)
+        {
+            <input type="hidden" asp-for="VendorCategoryTypes[0]" class="vendor-cat-types" />
+        }
+        @if (Model.ModalType == AppUtility.VendorModalType.Edit)
+        {
+            <div class=" row text-right ">
+                <div class="switch col-12 switch-margin">
+                    <label>
+                        <label class="edit-mode-switch-description">Edit Mode Off</label>
+                        <input type="checkbox" class="turn-edit-on-off @switchClass" name="details" value="@Model.Vendor.VendorID">
+                        <span class="lever"></span>
+                    </label>
+                </div>
+            </div>
+        }
+        <div class="tab-content">
+            <div id="details" class="tab-pane fade in @showDetails" value="1">
+                @{await Html.RenderPartialAsync("~/Views/Vendors/_DetailsTab.cshtml", Model); }
+            </div>
+            <div id="payment" class="tab-pane fade in @showPayment" value="2">
+                @{await Html.RenderPartialAsync("~/Views/Vendors/_PaymentTab.cshtml", Model); }
+            </div>
+            <div id="vendorComments" class="tab-pane fade in @showComments" value="3">
+                @{await Html.RenderPartialAsync("~/Views/Vendors/_CommentTab.cshtml", Model); }
+            </div>
+            <div id="contact" class="tab-pane fade in @showContact" value="4">
+                @{await Html.RenderPartialAsync("~/Views/Vendors/_ContactTab.cshtml", Model); }
+            </div>
+        </div>
+    </div>
+}
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<script src="~/js/Validation/CreateVendorFormValidation.js"></script>
+<script src="~/js/validate.js" asp-append-version="true"></script>
+@if (Model.Tab != 0 && Model.SectionType != AppUtility.MenuItems.Requests)
+{
+    @*<script>
+        $.fn.ChangeCheckboxesToFilledIn();
+    </script>*@
+}
+<script type="text/javascript">
+    $(function () {
+        $(document).ready(function () {
+            $.fn.SetUpDropdowns();
+        });
+        $.fn.SetUpDropdowns = function () {
+            $(".vendor-cat-types").each(function () {
+                $("#VendorCategoryTypes option[value='" + $(this).val() + "']").attr("selected", true);
+                console.log("value of cat type is: " + $(this).val());
+            });
+        };
+    });
+
+
+    $(".popover-url").off('click').click(function () {
+        if ($("#VendorWebsite .accounting-popover a").attr("href") == "") {
+            $(this).popover('hide');
+        }
+        else {
+            var val = $(this).val();
+            console.log("url popover")
+            $('[data-toggle="popover"]').popover('dispose');
+            $(this).popover({
+                sanitize: false,
+                placement: 'bottom',
+                html: true,
+                content: function () {
+                    return $('#' + val).html();
+                }
+            });
+            $(this).popover('toggle');
+        }
+    });
+
+    $("#Vendor_VendorWebsite").on("focusout", function (e) {
+        var inputText = $(this).val();
+        $.ajax({
+            async: true,
+            url: "/Requests/GetUrlFromUserData?inputtedUrl=" + inputText,
+            traditional: true,
+            type: "GET",
+            cache: false,
+            success: function (data) {
+                $("#VendorWebsite a").attr("href", data);
+                $("#VendorWebsite a label").html(inputText);
+                return false;
+            }
+        });
+        $(".popover-url").popover('hide');
+    });
+
+</script>
+<script src="~/js/commentPopover.js"></script>

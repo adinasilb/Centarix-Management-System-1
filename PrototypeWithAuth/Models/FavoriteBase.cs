@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public abstract class FavoriteBase
+    public abstract class FavoriteBase : ModelBase
     {
         [Key]
         public int FavoriteID { get; set; }

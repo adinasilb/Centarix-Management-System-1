@@ -70,12 +70,12 @@ $('.ordersItemForm').validate({
 			greaterThan: 0
 		},
 		"Requests[0].Cost": {
-			required: false,
+			required: true,
 			number: true,
 			min: 1
 		},
 		"sum-dollars": {
-			required: true,
+			required: false,
 			number: true,
 			min: 1
 		},

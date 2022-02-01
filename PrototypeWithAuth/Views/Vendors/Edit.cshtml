@@ -7,79 +7,29 @@
     ViewData["Title"] = "Edit";
     Layout = null;
 }
-@{ string buttonClass = "";
-    string navLinkClass = "";
-    string backgroundColor = "";
+@{ 
     string form = "";
-    string switchClass = "";
     if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
-
     {
-        buttonClass = "lab-man-background-color";
-        navLinkClass = "lab-man-nav-link";
-        backgroundColor = "var(--lab-man-color)";
         form = "supplier-form";
-        switchClass = "suppliers";
     }
     else
     {
-        buttonClass = "accounting-background-color";
-        navLinkClass = "supplier-nav-link";
-        backgroundColor = " var(--acc-color)";
         form = "accounting-form";
-        switchClass = "accounting";
     }
 
     <div class="modal modal-view right fader @form on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
         <div class="modal-dialog modal-lg" role="document" style="max-height:100%; width: 50%; max-width: 100%">
-            @*style needed here to override bootstraps modal width limitations*@
 
             <div class="modal-content d-inline-block">
 
-                <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="createVendorForm">
+                <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="createVendorForm" autocomplete="off">
 
-                    @Html.HiddenFor(c => c.SectionType)
-                    <div class="new-modal-header modal-line-1-header-with-back modal-sides" style="padding: 0.5em 6em">
-                            @if (Model.ErrorMessage != null)
-                            {
-                                <div class="row">
-                                    <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>                               
-                                </div>
-                            }
-                            <div>
-                                <button class="back-button" type="button" @*data-dismiss="modal"*@ style="border-width: 0; background: transparent" @*onclick="$(this).closest('.modal').modal('hide');"*@>
-                                    <img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" />
-                                </button>
-                            </div>
-                            <div class=" col _VendorHeader">
-                                @{ await Html.RenderPartialAsync("_VendorHeader", Model);}
-                            </div>
-                            <div class="row">
-                                <div class="col-12 px-0">
-                                    <div class="container-fluid div-tabs text-center pl-0">
-                                        <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 pl-0 nav-tabs-icons">
-                                            <li class="nav-item icon"><a data-toggle="tab" href="#details" id="vendor-details-tab" class="nav-link next-tab  @navLinkClass "><i class="icon-storefront-24px" style="font-size: 2rem;"></i><br />Details</a></li>
-                                            @*<li class="nav-item icon"><a data-toggle="tab" href="#categories" id="vendor-categories-tab" class="nav-link next-tab  @navLinkClass" disabled><i class="icon-category-24px1" style="font-size: 2rem;"></i><br />Categories</a></li>*@
-                                            <li class="nav-item icon"><a data-toggle="tab" href="#payment" id="vendor-payments-tab" class="nav-link next-tab @navLinkClass" disabled><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Payment</a></li>
-                                            <li class="nav-item icon"><a data-toggle="tab" id="vendor-comment-tab" href="#comments" class="nav-link next-tab @navLinkClass " disabled><i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />Comments</a></li>
-                                            <li class="nav-item icon"><a data-toggle="tab" id="vendor-contact-tab" href="#contact" class="nav-link next-tab  @navLinkClass " disabled><i class="icon-perm_contact_calendar-24px" e.css style="font-size: 2rem;"></i><br />Contact</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <div class="new-modal-body edit-modal-outer-body partial-div">
-                   @Html.Partial("EditPartial")
-                    </div>
-
+                    @{ await Html.RenderPartialAsync("~/Views/Vendors/_VendorTabs.cshtml", Model);}
                 </form>
             </div>
         </div>
 
     </div>
 }
-
-@*@section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}     HAVE TO CORRECT THIS IN HERE AND IN CREATE
-    }*@

@@ -1371,11 +1371,11 @@ a.nav-link {
     color: var(--graduated-table-background-color);
 }
 
-.orders-and-inv .sublocation-index {
+/*.orders-and-inv .sublocation-index {*/
     /*padding-right: 2.8125rem !important;*/
-    padding-left: 2.8125rem !important;
+    /*padding-left: 2.8125rem !important;
     border-right: 1px solid var(--black87)
-}
+}*/
 
 .colTwoSublocations .sublocation-index:not(:last-child):not(:last-of-type) {
     /*padding-right: 2.8125rem !important;*/
@@ -2032,16 +2032,16 @@ td .btn {
     color: var(--order-inv-color) !important;
 }
 /*HOVER FOR EACH SECTION*/
-.order-inv-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus,
+.order-inv-form .form-control-plaintext:read-write:not(.danger-box-shadow):not(.url-shown):focus,
 .order-inv-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
-.order-inv-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within {
+.order-inv-form button[type="button"].form-control-plaintext:read-write:not(.danger-box-shadow):focus-within {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
 }
 
 
-    .order-inv-form .form-control-plaintext.danger-box-shadow:focus {
+    .order-inv-form .form-control-plaintext:read-write.danger-box-shadow:focus {
         outline-width: 0px !important;
         outline-color: none !important;
         box-shadow: 0 2px 0 0 var(--danger-color) !important;
@@ -3179,4 +3179,54 @@ body.modal-open .popover {
     width: 50% !important;
     position: absolute !important;
     left: 25% !important;
+}
+
+.error-message, error-msg {
+    display: block;
+    max-height: 50px;
+    overflow: hidden;
+    color: var(--danger-color);
+}
+
+/*Category Settings*/
+.category-field {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    background-color: var( --white);
+    border: 0;
+    text-align: left;
+    color: var(--black-87);
+}
+.search-by-category{
+    border-color: var(--light-gray) !important;
+}
+.category-cols .col-input {
+    text-overflow: ellipsis;
+    width: 100%;
+    padding: .5rem;
+    margin: .2rem;
+    border-radius: .5rem;
+}
+
+.lab-man-form .category-field.selected {
+    background-color: var(--lab-man-50-color) !important;
+}
+
+.category-cols{
+    border-color: var(--light-gray) !important;
+}
+.settings-form .top-bar {
+    background-color: var(--lab-man-50-color) !important;
+    border-bottom-color: var(--light-gray);
+    height: 3.75rem;
+}
+
+.category-height {
+    height: 45rem;
+}
+
+.ch-scrollable {
+    overflow-y: auto;
 }

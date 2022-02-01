@@ -9,13 +9,14 @@ using KeyAttribute = System.ComponentModel.DataAnnotations.KeyAttribute;
 
 namespace PrototypeWithAuth.Models
 {
-    public abstract class Notification<T> where T: NotificationStatus
+    public abstract class Notification<T> : ModelBase where T: NotificationStatus
     {
         [Key]
         public int NotificationID { get; set; }
         public string Description { get; set; }
         [DataType(DataType.Date)]
         public DateTime TimeStamp { get; set; }
+        public DateTime NotificationDate { get; set; }
         public bool IsRead { get; set; }
         public string ApplicationUserID { get; set; }
         public ApplicationUser ApplicationUser {get; set;}
@@ -23,5 +24,6 @@ namespace PrototypeWithAuth.Models
         public string Action { get; set; }
         public int NotificationStatusID { get; set; }
         public T NotificationStatus { get; set; }
+       
     }
 }

@@ -69,7 +69,8 @@
                 <input type="hidden" asp-for="Requests[0].Payments.FirstOrDefault().InvoiceID" />
                 <input type="hidden" asp-for="Requests[0].OrderType" />
                 <input type="hidden" asp-for="Requests[0].ArrivalDate" />
-                <input type="hidden" value="@Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum" id="categoryDescription" />
+                <input type="hidden" asp-for="Requests[0].SerialNumber" />
+
 
                 <input type="hidden" asp-for="Requests[0].IsInInventory" />
                 <input type="hidden" asp-for="Requests[0].SerialNumber" />
@@ -89,22 +90,23 @@
                     <div class="row modal-title-line justify-content-between">
                         @if (Model.Requests[0].Product.ProductSubcategory.ImageURL != null)
                         {
-                            <img src="@Model.Requests[0].Product.ProductSubcategory.ImageURL" class="top-modal-image" alt="Alternate Text" width="75" />
+                        <img src="@Model.Requests[0].Product.ProductSubcategory.ImageURL" class="sub-category-image top-modal-image" alt="Alternate Text" width="75" />
                         }
                         else
                         {
-                            <img src="~/images/css/CategoryImages/placeholder.png" alt="Alternate Text" class="top-modal-image" width="75" /> @*this will be the product image and will need to be pulled from wherever it will be located in the DB*@
+                        <img src="~/images/css/CategoryImages/placeholder.png" alt="Alternate Text" class="top-modal-image" width="75" />  @*this will be the product image and will need to be pulled from wherever it will be located in the DB*@
                         }
                         <div class=" col _ItemHeader">
                             @{ await Html.RenderPartialAsync("_ItemHeader", Model);}
                         </div>
                         <div class="form-group">
-                            @if ((Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].RequestStatusID == 2) && Model.SectionType == AppUtility.MenuItems.Requests
+                            @if ((Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].RequestStatusID == 2) 
+                                && (Model.SectionType == AppUtility.MenuItems.Requests && Model.ModalType != AppUtility.RequestModalType.Summary)
                              && Model.Requests[0].Product.UnitTypeID != -1 && !Model.Requests[0].Product.ProductSubcategory.IsOldSubCategory && !Model.IsHistory)
                             {
-                                <div class="d-flex align-items-center">
-                                    <button type="button" value="@Model.Requests[0].RequestID" class="load-order-details custom-button custom-button-font @color m-auto">Request</button>
-                                </div>
+                            <div class="d-flex align-items-center">
+                                <button type="button" value="@Model.Requests[0].RequestID" class="load-order-details custom-button custom-button-font @color m-auto ">Request</button>
+                            </div>
                             }
                             <div class="row pt-2 d-flex justify-content-center">
                                 Product Serial: @Model.Requests[0].Product.SerialNumber
@@ -127,14 +129,14 @@
                 </div>
                 @*Begin Hidden Inputs:*@
                 @Html.HiddenFor(vm => vm.Requests[0].ProductID)
-                @Html.HiddenFor(vm => vm.Requests[0].Product.ProductSubcategory.ParentCategoryID)
+                @Html.HiddenFor(vm => vm.Requests[0].Product.ProductSubcategory.ID)
                 @Html.HiddenFor(vm => vm.Requests[0].RequestStatusID)
                 @Html.HiddenFor(vm => vm.Requests[0].ParentRequestID)
                 @Html.HiddenFor(vm => vm.Requests[0].ParentQuoteID)
                 @*End Hidden Inputs*@
 
                 @*Hidden Input for Product Subcategory*@
-                @Html.HiddenFor(vm => vm.Requests[0].Product.ProductSubcategory.ProductSubcategoryDescription)
+                @Html.HiddenFor(vm => vm.Requests[0].Product.ProductSubcategory.Description)
             </form>
 
         </div>

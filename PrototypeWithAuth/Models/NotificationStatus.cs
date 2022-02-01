@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class NotificationStatus
+    public class NotificationStatus : ModelBase
     {
         [Key]
         public int NotificationStatusID { get; set; }

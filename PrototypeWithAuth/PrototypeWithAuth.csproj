@@ -507,6 +507,46 @@
     <Compile Remove="Data\Migrations\20211117091838_ItemSerialNumber.Designer.cs" />
     <Compile Remove="Data\Migrations\20211114083811_AddShareRequestLists.cs" />
     <Compile Remove="Data\Migrations\20211114083811_AddShareRequestLists.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211125115311_BirthdayNotificationColorBlack.cs" />
+    <Compile Remove="Data\Migrations\20211125115311_BirthdayNotificationColorBlack.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211125115311_BirthdayNotificationColorBlack.cs" />
+    <Compile Remove="Data\Migrations\20211125115311_BirthdayNotificationColorBlack.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211123075054_RenameRequestComments.cs" />
+    <Compile Remove="Data\Migrations\20211123075054_RenameRequestComments.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211123084231_RequestCommentInheritsBase.cs" />
+    <Compile Remove="Data\Migrations\20211123084231_RequestCommentInheritsBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211123084944_RenameRequestIDToObjectID.cs" />
+    <Compile Remove="Data\Migrations\20211123084944_RenameRequestIDToObjectID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211123085459_RenameRequestIDToObjectID.cs" />
+    <Compile Remove="Data\Migrations\20211123085459_RenameRequestIDToObjectID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211123094009_RequestCommentInheritsBase.cs" />
+    <Compile Remove="Data\Migrations\20211123094009_RequestCommentInheritsBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229080541_addedCategoryBase.cs" />
+    <Compile Remove="Data\Migrations\20211229080541_addedCategoryBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229081223_addedCategoryBase.cs" />
+    <Compile Remove="Data\Migrations\20211229081223_addedCategoryBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229082742_RenamePCPSPKToID.cs" />
+    <Compile Remove="Data\Migrations\20211229082742_RenamePCPSPKToID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229084123_RenamePCPSPKToID.cs" />
+    <Compile Remove="Data\Migrations\20211229084123_RenamePCPSPKToID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229092511_migrateCategories1.cs" />
+    <Compile Remove="Data\Migrations\20211229092511_migrateCategories1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229093643_extendedCategoryBase.cs" />
+    <Compile Remove="Data\Migrations\20211229093643_extendedCategoryBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229094231_extendedCategoryBase.cs" />
+    <Compile Remove="Data\Migrations\20211229094231_extendedCategoryBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229100342_updateFKFluentAPIsResourceCategory.cs" />
+    <Compile Remove="Data\Migrations\20211229100342_updateFKFluentAPIsResourceCategory.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229115306_updateFKFluentAPIsResourceCategory.cs" />
+    <Compile Remove="Data\Migrations\20211229115306_updateFKFluentAPIsResourceCategory.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229131857_TestPCDesc.cs" />
+    <Compile Remove="Data\Migrations\20211229131857_TestPCDesc.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211229132454_TestPCDesc.cs" />
+    <Compile Remove="Data\Migrations\20211229132454_TestPCDesc.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220118114501_addedCBToContext.cs" />
+    <Compile Remove="Data\Migrations\20220118114501_addedCBToContext.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220119063031_addedCategoryJsons.cs" />
+    <Compile Remove="Data\Migrations\20220119063031_addedCategoryJsons.Designer.cs" />
   </ItemGroup>
 
 
@@ -515,13 +555,16 @@
     <PackageReference Include="Aspose.Slides.NET" Version="21.5.0" />
     <PackageReference Include="bootstrap" Version="4.5.0" />
     <PackageReference Include="Chart.Mvc.Core" Version="1.1.0" />
+    <PackageReference Include="CsvHelper" Version="27.2.1" />
     <PackageReference Include="EmguCV" Version="3.1.0.1" />
+    <PackageReference Include="EPPlus" Version="5.8.4" />
     <PackageReference Include="GoogleAuthenticator" Version="2.0.1" />
     <PackageReference Include="jQuery.Fullcalendar" Version="3.9.0" />
     <PackageReference Include="jQuery.Validation" Version="1.19.2" />
     <PackageReference Include="JSZip" Version="3.1.5" />
     <PackageReference Include="LinqToExcel" Version="1.11.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.16.0" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
@@ -546,10 +589,12 @@
     <PackageReference Include="OpenCvSharp3-AnyCPU" Version="4.0.0.20181129" />
     <PackageReference Include="RestSharp" Version="106.11.7" />
     <PackageReference Include="Select.HtmlToPdf.NetCore" Version="20.1.0" />
+    <PackageReference Include="Serialize.Linq" Version="2.0.0" />
     <PackageReference Include="System-Web-Helpers.dll" Version="1.0.0" />
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
     <PackageReference Include="System.Data.OleDb" Version="5.0.0" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0" />
+    <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
     <PackageReference Include="WebcamCapturer.Controls.WPF" Version="1.1.1.2" />
     <PackageReference Include="WebcamCapturer.Core" Version="1.1.1.2" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="7.9.1" />
@@ -560,19 +605,30 @@
 
 
   <ItemGroup>
+    <Folder Include="wwwroot\ExperimentEntries\" />
+    <Folder Include="wwwroot\files\" />
+    <Folder Include="wwwroot\FunctionLine\" />
+    <Folder Include="wwwroot\FunctionReports\" />
+    <Folder Include="wwwroot\FunctionResults\" />
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />
+    <Folder Include="wwwroot\Materials\" />
     <Folder Include="wwwroot\FunctionResults\" />
     <Folder Include="wwwroot\FunctionLine\" />
     <Folder Include="wwwroot\Reports\" />
     <Folder Include="wwwroot\ParentRequest\" />
     <Folder Include="wwwroot\Requests\" />
-    <Folder Include="wwwroot\ParentRequest\" />
     <Folder Include="wwwroot\ParentQuote\" />
     <Folder Include="wwwroot\Reports\" />
     <Folder Include="wwwroot\Protocols\" />
     <Folder Include="wwwroot\ParentQuotes\" />
+    <Folder Include="wwwroot\ParentQuote\" />
+    <Folder Include="wwwroot\ParentQuote\fb6f29cc-299d-4873-838c-38a9bfc3c7c2\Quotes\" />
+    <Folder Include="wwwroot\ParentRequest\" />
     <Folder Include="wwwroot\Protocols\" />
+    <Folder Include="wwwroot\Reports\" />
+    <Folder Include="wwwroot\Requests\" />
+    <Folder Include="wwwroot\Requests\17\Info\" />
     <Folder Include="wwwroot\ResourceImages\" />
   </ItemGroup>
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Resource
+    public class Resource : ModelBase
     {
         [Key]
         public int ResourceID { get; set; }

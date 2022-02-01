@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class EmployeeStatus
+    public class EmployeeStatus : ModelBase
     {
         private string _Abbreviation { get; set; }
 

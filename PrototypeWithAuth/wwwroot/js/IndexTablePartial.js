@@ -119,10 +119,10 @@ $(function () {
             return false;
         });
     });
-    $('._IndexTableData [data-toggle = "tooltip"], ._IndexTableDataByVendor [data-toggle = "tooltip"]' ).off('click').on("click", function (e) {
-        e.preventDefault();
-        console.log('prevent default')
-    });
+    //$('._IndexTableData [data-toggle = "tooltip"], ._IndexTableDataByVendor [data-toggle = "tooltip"]' ).off('click').on("click", function (e) {
+    //    e.preventDefault();
+    //    console.log('prevent default')
+    //});
     //$("body").off("click", ".share-request").on("click", ".share-request", function (e) {
     //	alert("share request");
     //	var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
@@ -198,7 +198,7 @@ $(function () {
     $(".load-product-details").off('click').on("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        $(".tooltip").remove();
+        $(".tooltip").hide();
         $("#loading").show();
         var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr('value') + "&SectionType=" + $("#masterSectionType").val();
         $.fn.CallPageRequest($itemurl, "details");
@@ -211,7 +211,7 @@ $(function () {
 
         e.preventDefault();
         e.stopPropagation();
-        $(".tooltip").remove();
+        $(".tooltip").hide();
         $("#loading").show();
         console.log('in load products details summary');
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
@@ -248,7 +248,7 @@ $(function () {
         $("#loading").show();
         console.log("a tag: " + $(".order-type" + val))
         console.log("order type: " + $(".order-type" + val).attr("value"))
-        if ($(".order-type" + val).attr("value") == "1") {
+        if ($(".order-type" + val).attr("value") == "2") {
             console.log("confirm email")
             $.ajax({
                 async: true,
@@ -263,7 +263,7 @@ $(function () {
                 }
             })
         }
-        else if ($(".order-type" + val).attr("value") == "2") {
+        else if ($(".order-type" + val).attr("value") == "3") {
             console.log("cart")
             $.ajax({
                 async: true,
@@ -318,6 +318,12 @@ $(function () {
                             $('[data-toggle="tooltip"]').tooltip('dispose'); //is this the right syntax?
                             $('._IndexTable').html(data);
                         }
+                    },
+                    error: function (jqxhr) {
+                        $("#loading").hide();
+                        $('.error-message').addClass("d-none");
+                        $('.error-message').html(jqxhr.responseText);
+                        $('.error-message:first').removeClass("d-none");
                     }
                 })
             }
@@ -337,6 +343,12 @@ $(function () {
                         requestFavorite.addClass(unfav);
                         $("#loading").hide();
 
+                    },
+                    error: function (jqxhr) {
+                        $("#loading").hide();
+                        $('.error-message').addClass("d-none");
+                        $('.error-message').html(jqxhr.responseText);
+                        $('.error-message:first').removeClass("d-none");
                     }
                 })
             }
@@ -364,7 +376,7 @@ $(function () {
         return false;
     });
 
-    $(".page-item a").off('click').on("click", function (e) {
+    $(".page-item.not-active span").off('click').on("click", function (e) {
         console.log("next page");
         e.preventDefault();
         $("#loading").show();
@@ -525,7 +537,7 @@ $(function () {
             data: formdata,
             traditional: true,
             type: type,
-            cache: false,
+            cache: true,
             success: function (data) {
                 $(viewClass).html(data);
                 $(".tooltip").remove();
@@ -543,7 +555,9 @@ $(function () {
                 return true;
             },
             error: function (jqxhr) {
+                $('.error-message').addClass("d-none");
                 $('.error-message').html(jqxhr.responseText);
+                $('.error-message:first').removeClass("d-none");
             }
         });
 

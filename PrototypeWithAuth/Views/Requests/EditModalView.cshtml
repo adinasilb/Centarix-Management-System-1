@@ -5,7 +5,6 @@
 @inject UserManager<ApplicationUser> _userManager
 
 @{
-    TempData.Keep();
     ViewData["Title"] = "EditModalView";
 
     Layout = null;
@@ -13,6 +12,6 @@
 }
 
 
-<div class="modal modal-view right fader on-form-modal editModal" aria-labelledby="Request" data-backdrop="false" style="z-index: 1050">
+<div class="modal modal-view right fader on-form-modal editModal add-or-edit-item" aria-labelledby="Request" data-backdrop="false" style="z-index: 1050">
     @{ await Html.RenderPartialAsync("_EditModalView", Model);}
 </div>

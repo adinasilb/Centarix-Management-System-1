@@ -240,9 +240,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber2")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
@@ -516,38 +513,49 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Comment", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.CommentType", b =>
                 {
-                    b.Property<int>("CommentID")
+                    b.Property<int>("TypeID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CommentText")
+                    b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CommentTimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CommentType")
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                    b.Property<string>("DescriptionEnum")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RequestID")
-                        .HasColumnType("int");
+                    b.Property<string>("Icon")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CommentID");
+                    b.Property<string>("IconActionClass")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("ApplicationUserID");
+                    b.HasKey("TypeID");
 
-                    b.HasIndex("RequestID");
+                    b.ToTable("CommentTypes");
 
-                    b.ToTable("Comments");
+                    b.HasData(
+                        new
+                        {
+                            TypeID = 1,
+                            Color = "#30BCC9",
+                            Description = "Comment",
+                            DescriptionEnum = "Comment",
+                            Icon = "icon-comment-24px"
+                        },
+                        new
+                        {
+                            TypeID = 2,
+                            Color = " var(--danger-color)",
+                            Description = "Warning",
+                            DescriptionEnum = "Warning",
+                            Icon = "icon-report_problem-24px"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.CompanyAccount", b =>
@@ -1240,9 +1248,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime?>("Exit2")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsBonus")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("OffDayTypeID")
                         .HasColumnType("int");
 
@@ -1305,9 +1310,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<DateTime?>("Exit2")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsBonus")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDenied")
                         .ValueGeneratedOnAdd()
@@ -1374,6 +1376,53 @@ namespace PrototypeWithAuth.Data.Migrations
                             EmployeeHoursStatusID = 3,
                             Description = "Forgot to report"
                         });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeInfoNotification", b =>
+                {
+                    b.Property<int>("NotificationID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Action")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Controller")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmployeeID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("NotificationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("NotificationStatusID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.HasKey("NotificationID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.HasIndex("NotificationStatusID");
+
+                    b.ToTable("EmployeeInfoNotifications");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeStatus", b =>
@@ -2774,6 +2823,20 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationRoomInstanceAbbrev = "BL5",
                             LocationRoomInstanceName = "Biomarker Lab 5",
                             LocationRoomTypeID = 1
+                        },
+                        new
+                        {
+                            LocationRoomInstanceID = 14,
+                            LocationRoomInstanceAbbrev = "S2",
+                            LocationRoomInstanceName = "Storage Room 2",
+                            LocationRoomTypeID = 6
+                        },
+                        new
+                        {
+                            LocationRoomInstanceID = 15,
+                            LocationRoomInstanceAbbrev = "S3",
+                            LocationRoomInstanceName = "Storage Room 3",
+                            LocationRoomTypeID = 6
                         });
                 });
 
@@ -3200,6 +3263,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DescriptionEnum")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("OffDayTypeID");
 
                     b.ToTable("OffDayTypes");
@@ -3208,27 +3274,32 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             OffDayTypeID = 1,
-                            Description = "Sick Day"
+                            Description = "Sick Day",
+                            DescriptionEnum = "SickDay"
                         },
                         new
                         {
                             OffDayTypeID = 2,
-                            Description = "Vacation Day"
+                            Description = "Vacation Day",
+                            DescriptionEnum = "VacationDay"
                         },
                         new
                         {
                             OffDayTypeID = 3,
-                            Description = "Maternity Leave"
+                            Description = "Maternity Leave",
+                            DescriptionEnum = "MaternityLeave"
                         },
                         new
                         {
                             OffDayTypeID = 4,
-                            Description = "Special Day"
+                            Description = "Special Day",
+                            DescriptionEnum = "SpecialDay"
                         },
                         new
                         {
                             OffDayTypeID = 5,
-                            Description = "Unpaid Leave"
+                            Description = "Unpaid Leave",
+                            DescriptionEnum = "UnpaidLeave"
                         });
                 });
 
@@ -3252,22 +3323,28 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
                 {
-                    b.Property<int>("ParentCategoryID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("CategoryJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CategoryJsonID")
+                        .HasColumnType("int");
+
                     b.Property<int>("CategoryTypeID")
                         .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsProprietary")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ParentCategoryDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ParentCategoryID");
+                    b.HasKey("ID");
 
                     b.HasIndex("CategoryTypeID");
 
@@ -3276,101 +3353,115 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasData(
                         new
                         {
-                            ParentCategoryID = 1,
+                            ID = 1,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 1,
-                            IsProprietary = false,
-                            ParentCategoryDescription = "Consumables"
+                            Description = "Consumables",
+                            IsProprietary = false
                         },
                         new
                         {
-                            ParentCategoryID = 2,
+                            ID = 2,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 1,
-                            IsProprietary = false,
-                            ParentCategoryDescription = "Reagents And Chemicals"
+                            Description = "Reagents And Chemicals",
+                            IsProprietary = false
                         },
                         new
                         {
-                            ParentCategoryID = 3,
+                            ID = 3,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 1,
-                            IsProprietary = false,
-                            ParentCategoryDescription = "Biological"
+                            Description = "Biological",
+                            IsProprietary = false
                         },
                         new
                         {
-                            ParentCategoryID = 4,
+                            ID = 4,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 1,
-                            IsProprietary = false,
-                            ParentCategoryDescription = "Reusable"
+                            Description = "Reusable",
+                            IsProprietary = false
                         },
                         new
                         {
-                            ParentCategoryID = 5,
+                            ID = 5,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 1,
-                            IsProprietary = false,
-                            ParentCategoryDescription = "Safety"
+                            Description = "Safety",
+                            IsProprietary = false
                         },
                         new
                         {
-                            ParentCategoryID = 6,
+                            ID = 6,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 1,
-                            IsProprietary = false,
-                            ParentCategoryDescription = "General"
+                            Description = "General",
+                            IsProprietary = false
                         },
                         new
                         {
-                            ParentCategoryID = 7,
+                            ID = 7,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 1,
-                            IsProprietary = false,
-                            ParentCategoryDescription = "Clinical"
+                            Description = "Clinical",
+                            IsProprietary = false
                         },
                         new
                         {
-                            ParentCategoryID = 14,
+                            ID = 14,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 1,
-                            IsProprietary = true,
-                            ParentCategoryDescription = "Samples"
+                            Description = "Samples",
+                            IsProprietary = true
                         },
                         new
                         {
-                            ParentCategoryID = 8,
+                            ID = 8,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 2,
-                            IsProprietary = false,
-                            ParentCategoryDescription = "IT"
+                            Description = "IT",
+                            IsProprietary = false
                         },
                         new
                         {
-                            ParentCategoryID = 9,
+                            ID = 9,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 2,
-                            IsProprietary = false,
-                            ParentCategoryDescription = "Day To Day"
+                            Description = "Day To Day",
+                            IsProprietary = false
                         },
                         new
                         {
-                            ParentCategoryID = 10,
+                            ID = 10,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 2,
-                            IsProprietary = false,
-                            ParentCategoryDescription = "Travel"
+                            Description = "Travel",
+                            IsProprietary = false
                         },
                         new
                         {
-                            ParentCategoryID = 11,
+                            ID = 11,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 2,
-                            IsProprietary = false,
-                            ParentCategoryDescription = "Advice"
+                            Description = "Advice",
+                            IsProprietary = false
                         },
                         new
                         {
-                            ParentCategoryID = 12,
+                            ID = 12,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 2,
-                            IsProprietary = false,
-                            ParentCategoryDescription = "Regulations"
+                            Description = "Regulations",
+                            IsProprietary = false
                         },
                         new
                         {
-                            ParentCategoryID = 13,
+                            ID = 13,
+                            CategoryJsonID = 0,
                             CategoryTypeID = 2,
-                            IsProprietary = false,
-                            ParentCategoryDescription = "Government"
+                            Description = "Government",
+                            IsProprietary = false
                         });
                 });
 
@@ -3784,12 +3875,58 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.ProductSubcategory", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.ProductComment", b =>
                 {
-                    b.Property<int>("ProductSubcategoryID")
+                    b.Property<int>("CommentID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CommentText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CommentTimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CommentTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ObjectID")
+                        .HasColumnType("int");
+
+                    b.HasKey("CommentID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("CommentTypeID");
+
+                    b.HasIndex("ObjectID");
+
+                    b.ToTable("ProductComments");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ProductSubcategory", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CategoryJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CategoryJsonID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageURL")
                         .HasColumnType("nvarchar(max)");
@@ -3800,11 +3937,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ParentCategoryID")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProductSubcategoryDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProductSubcategoryID");
+                    b.HasKey("ID");
 
                     b.HasIndex("ParentCategoryID");
 
@@ -3813,811 +3946,912 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasData(
                         new
                         {
-                            ProductSubcategoryID = 101,
+                            ID = 101,
+                            CategoryJsonID = 0,
+                            Description = "PCR",
                             ImageURL = "/images/css/CategoryImages/consumables/pcr_consumables.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "PCR"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 102,
+                            ID = 102,
+                            CategoryJsonID = 0,
+                            Description = "Cell Culture Plates",
                             ImageURL = "/images/css/CategoryImages/consumables/culture_plates.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Cell Culture Plates"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 103,
+                            ID = 103,
+                            CategoryJsonID = 0,
+                            Description = "Petri Dish",
                             ImageURL = "/images/css/CategoryImages/consumables/petri_dish.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Petri Dish"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 104,
+                            ID = 104,
+                            CategoryJsonID = 0,
+                            Description = "Tips",
                             ImageURL = "/images/css/CategoryImages/consumables/tips2.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Tips"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 105,
+                            ID = 105,
+                            CategoryJsonID = 0,
+                            Description = "Pipets",
                             ImageURL = "/images/css/CategoryImages/consumables/pipettes.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Pipets"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 106,
+                            ID = 106,
+                            CategoryJsonID = 0,
+                            Description = "Tubes",
                             ImageURL = "/images/css/CategoryImages/consumables/tubes.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Tubes"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 107,
+                            ID = 107,
+                            CategoryJsonID = 0,
+                            Description = "Robot Consumables",
                             ImageURL = "/images/css/CategoryImages/consumables/robot_consumables_tips.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Robot Consumables"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 108,
+                            ID = 108,
+                            CategoryJsonID = 0,
+                            Description = "DD-PCR Plastics",
                             ImageURL = "/images/css/CategoryImages/consumables/ddpcr_consumables.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "DD-PCR Plastics"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 109,
+                            ID = 109,
+                            CategoryJsonID = 0,
+                            Description = "Q-PCR Plastics",
                             ImageURL = "/images/css/CategoryImages/consumables/rtpcr_consumables.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Q-PCR Plastics"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 110,
+                            ID = 110,
+                            CategoryJsonID = 0,
+                            Description = "FPLC Consumables",
                             ImageURL = "/images/css/CategoryImages/consumables/fplc_consumables.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "FPLC Consumables"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 111,
+                            ID = 111,
+                            CategoryJsonID = 0,
+                            Description = "TFF Consumables",
                             ImageURL = "/images/css/CategoryImages/consumables/tff_consumables.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "TFF Consumables"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 112,
+                            ID = 112,
+                            CategoryJsonID = 0,
+                            Description = "Column",
                             ImageURL = "/images/css/CategoryImages/consumables/column.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Column"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 113,
+                            ID = 113,
+                            CategoryJsonID = 0,
+                            Description = "Filtration system",
                             ImageURL = "/images/css/CategoryImages/consumables/filteration_system.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Filtration system"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 114,
+                            ID = 114,
+                            CategoryJsonID = 0,
+                            Description = "Flasks",
                             ImageURL = "/images/css/CategoryImages/consumables/flasks.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Flasks"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 115,
+                            ID = 115,
+                            CategoryJsonID = 0,
+                            Description = "Bags",
                             ImageURL = "/images/css/CategoryImages/consumables/bags.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Bags"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 116,
+                            ID = 116,
+                            CategoryJsonID = 0,
+                            Description = "Syringes",
                             ImageURL = "/images/css/CategoryImages/consumables/syringes.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Syringes"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 117,
+                            ID = 117,
+                            CategoryJsonID = 0,
+                            Description = "Covaris Consumables",
                             ImageURL = "/images/css/CategoryImages/consumables/covaris_consumables.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Covaris Consumables"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 118,
+                            ID = 118,
+                            CategoryJsonID = 0,
+                            Description = "Tapestation consumables",
                             ImageURL = "/images/css/CategoryImages/consumables/tapestation_consumables.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Tapestation consumables"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 119,
+                            ID = 119,
+                            CategoryJsonID = 0,
+                            Description = "Sequencing",
                             ImageURL = "/images/css/CategoryImages/consumables/sequencing.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Sequencing"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 120,
+                            ID = 120,
+                            CategoryJsonID = 0,
+                            Description = "General Consumables",
                             ImageURL = "/images/css/CategoryImages/consumables/general.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "General Consumables"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 201,
+                            ID = 201,
+                            CategoryJsonID = 0,
+                            Description = "Chemical Powder",
                             ImageURL = "/images/css/CategoryImages/reagents/chemical_powder.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Chemical Powder"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 202,
+                            ID = 202,
+                            CategoryJsonID = 0,
+                            Description = "Antibody",
                             ImageURL = "/images/css/CategoryImages/reagents/antibody.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Antibody"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 203,
+                            ID = 203,
+                            CategoryJsonID = 0,
+                            Description = "Cell Media",
                             ImageURL = "/images/css/CategoryImages/reagents/cell_media.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Cell Media"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 204,
+                            ID = 204,
+                            CategoryJsonID = 0,
+                            Description = "Solutions",
                             ImageURL = "/images/css/CategoryImages/reagents/chemical_solution2.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Solutions"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 205,
+                            ID = 205,
+                            CategoryJsonID = 0,
+                            Description = "Kit",
                             ImageURL = "/images/css/CategoryImages/reagents/kit.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Kit"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 206,
+                            ID = 206,
+                            CategoryJsonID = 0,
+                            Description = "PCR Reagents",
                             ImageURL = "/images/css/CategoryImages/reagents/PCR_reagent.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "PCR Reagents"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 207,
+                            ID = 207,
+                            CategoryJsonID = 0,
+                            Description = "Q-PCR Reagents",
                             ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent2.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Q-PCR Reagents"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 208,
+                            ID = 208,
+                            CategoryJsonID = 0,
+                            Description = "Probes",
                             ImageURL = "/images/css/CategoryImages/reagents/dna_probes2.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Probes"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 209,
+                            ID = 209,
+                            CategoryJsonID = 0,
+                            Description = "Primers and Oligos",
                             ImageURL = "/images/css/CategoryImages/reagents/primer.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Primers and Oligos"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 210,
+                            ID = 210,
+                            CategoryJsonID = 0,
+                            Description = "Cell Media Supplements",
                             ImageURL = "/images/css/CategoryImages/reagents/media_supplement.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Cell Media Supplements"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 211,
+                            ID = 211,
+                            CategoryJsonID = 0,
+                            Description = "Antibiotics",
                             ImageURL = "/images/css/CategoryImages/reagents/antibiotics.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Antibiotics"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 212,
+                            ID = 212,
+                            CategoryJsonID = 0,
+                            Description = "Restriction Enzyme",
                             ImageURL = "/images/css/CategoryImages/reagents/restriction_enzyme.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Restriction Enzyme"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 213,
+                            ID = 213,
+                            CategoryJsonID = 0,
+                            Description = "RNA Enzyme",
                             ImageURL = "/images/css/CategoryImages/reagents/rna_enzyme.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "RNA Enzyme"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 214,
+                            ID = 214,
+                            CategoryJsonID = 0,
+                            Description = "FPLC Reagent",
                             ImageURL = "/images/css/CategoryImages/reagents/fplc_reagent.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "FPLC Reagent"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 215,
+                            ID = 215,
+                            CategoryJsonID = 0,
+                            Description = "TFF Reagent",
                             ImageURL = "/images/css/CategoryImages/reagents/TFF_reagent.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "TFF Reagent"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 216,
+                            ID = 216,
+                            CategoryJsonID = 0,
+                            Description = "Nucleic Acid Quantitation (DNA/RNA qubit assay, Picogreen assay)",
                             ImageURL = "/images/css/CategoryImages/reagents/nucleic_acid_quantitation.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Nucleic Acid Quantitation (DNA/RNA qubit assay, Picogreen assay)"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 217,
+                            ID = 217,
+                            CategoryJsonID = 0,
+                            Description = "General Reagents and Chemicals",
                             ImageURL = "/images/css/CategoryImages/reagents/general_reagents.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "General Reagents and Chemicals"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 218,
+                            ID = 218,
+                            CategoryJsonID = 0,
+                            Description = "DNA Enzymes",
                             ImageURL = "/images/css/CategoryImages/reagents/dna_enzyme.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "DNA Enzymes"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 219,
+                            ID = 219,
+                            CategoryJsonID = 0,
+                            Description = "Gas Refilling",
                             ImageURL = "/images/css/CategoryImages/reagents/gas_refilling2.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Gas Refilling"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 220,
+                            ID = 220,
+                            CategoryJsonID = 0,
+                            Description = "DD-PCR Reagents",
                             ImageURL = "/images/css/CategoryImages/reagents/ddPCR_reagent3.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "DD-PCR Reagents"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 301,
+                            ID = 301,
+                            CategoryJsonID = 0,
+                            Description = "Cells",
                             ImageURL = "/images/css/CategoryImages/biological/cell1.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Cells"
+                            ParentCategoryID = 3
                         },
                         new
                         {
-                            ProductSubcategoryID = 302,
+                            ID = 302,
+                            CategoryJsonID = 0,
+                            Description = "Virus",
                             ImageURL = "/images/css/CategoryImages/biological/virus.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Virus"
+                            ParentCategoryID = 3
                         },
                         new
                         {
-                            ProductSubcategoryID = 303,
+                            ID = 303,
+                            CategoryJsonID = 0,
+                            Description = "Plasmid",
                             ImageURL = "/images/css/CategoryImages/biological/plasmid2.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Plasmid"
+                            ParentCategoryID = 3
                         },
                         new
                         {
-                            ProductSubcategoryID = 304,
+                            ID = 304,
+                            CategoryJsonID = 0,
+                            Description = "Bacterial Stock",
                             ImageURL = "/images/css/CategoryImages/biological/bacteria.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Bacterial Stock"
+                            ParentCategoryID = 3
                         },
                         new
                         {
-                            ProductSubcategoryID = 305,
+                            ID = 305,
+                            CategoryJsonID = 0,
+                            Description = "General Biological",
                             ImageURL = "/images/css/CategoryImages/biological/general.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "General Biological"
+                            ParentCategoryID = 3
                         },
                         new
                         {
-                            ProductSubcategoryID = 401,
+                            ID = 401,
+                            CategoryJsonID = 0,
+                            Description = "Reusable",
                             ImageURL = "/images/css/CategoryImages/reusable/all_reusables.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Reusable"
+                            ParentCategoryID = 4
                         },
                         new
                         {
-                            ProductSubcategoryID = 501,
+                            ID = 501,
+                            CategoryJsonID = 0,
+                            Description = "PPE (Personal Protective Equipment)",
                             ImageURL = "/images/css/CategoryImages/safety/protective_wear.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 5,
-                            ProductSubcategoryDescription = "PPE (Personal Protective Equipment)"
+                            ParentCategoryID = 5
                         },
                         new
                         {
-                            ProductSubcategoryID = 502,
+                            ID = 502,
+                            CategoryJsonID = 0,
+                            Description = "Lab Safety",
                             ImageURL = "/images/css/CategoryImages/safety/safety.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 5,
-                            ProductSubcategoryDescription = "Lab Safety"
+                            ParentCategoryID = 5
                         },
                         new
                         {
-                            ProductSubcategoryID = 601,
+                            ID = 601,
+                            CategoryJsonID = 0,
+                            Description = "General",
                             ImageURL = "/images/css/CategoryImages/general/general.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "General"
+                            ParentCategoryID = 6
                         },
                         new
                         {
-                            ProductSubcategoryID = 701,
+                            ID = 701,
+                            CategoryJsonID = 0,
+                            Description = "EDTA Tubes",
                             ImageURL = "/images/css/CategoryImages/clinical/edta_tubes3.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 7,
-                            ProductSubcategoryDescription = "EDTA Tubes"
+                            ParentCategoryID = 7
                         },
                         new
                         {
-                            ProductSubcategoryID = 702,
+                            ID = 702,
+                            CategoryJsonID = 0,
+                            Description = "Serum Tubes",
                             ImageURL = "/images/css/CategoryImages/clinical/serum_tubes.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 7,
-                            ProductSubcategoryDescription = "Serum Tubes"
+                            ParentCategoryID = 7
                         },
                         new
                         {
-                            ProductSubcategoryID = 703,
+                            ID = 703,
+                            CategoryJsonID = 0,
+                            Description = "Sample Collection and Processing (Blood, Saliva Collection, Swabsticks, Sepmate, and Ficoll for PBMC, Extraction kits for DNA/RNA)",
                             ImageURL = "/images/css/CategoryImages/clinical/sample_collection.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 7,
-                            ProductSubcategoryDescription = "Sample Collection and Processing (Blood, Saliva Collection, Swabsticks, Sepmate, and Ficoll for PBMC, Extraction kits for DNA/RNA)"
+                            ParentCategoryID = 7
                         },
                         new
                         {
-                            ProductSubcategoryID = 801,
+                            ID = 801,
+                            CategoryJsonID = 0,
+                            Description = "Communications",
                             ImageURL = "/images/css/CategoryImages/it/communications.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 8,
-                            ProductSubcategoryDescription = "Communications"
+                            ParentCategoryID = 8
                         },
                         new
                         {
-                            ProductSubcategoryID = 802,
+                            ID = 802,
+                            CategoryJsonID = 0,
+                            Description = "Cybersecurity",
                             ImageURL = "/images/css/CategoryImages/it/cybersecurity.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 8,
-                            ProductSubcategoryDescription = "Cybersecurity"
+                            ParentCategoryID = 8
                         },
                         new
                         {
-                            ProductSubcategoryID = 803,
+                            ID = 803,
+                            CategoryJsonID = 0,
+                            Description = "Hardware",
                             ImageURL = "/images/css/CategoryImages/it/hardware3.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 8,
-                            ProductSubcategoryDescription = "Hardware"
+                            ParentCategoryID = 8
                         },
                         new
                         {
-                            ProductSubcategoryID = 804,
+                            ID = 804,
+                            CategoryJsonID = 0,
+                            Description = "General",
                             ImageURL = "/images/css/CategoryImages/it/general.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 8,
-                            ProductSubcategoryDescription = "General"
+                            ParentCategoryID = 8
                         },
                         new
                         {
-                            ProductSubcategoryID = 901,
+                            ID = 901,
+                            CategoryJsonID = 0,
+                            Description = "Bookeeping",
                             ImageURL = "/images/css/CategoryImages/daytoday/taxes2.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Bookeeping"
+                            ParentCategoryID = 9
                         },
                         new
                         {
-                            ProductSubcategoryID = 902,
+                            ID = 902,
+                            CategoryJsonID = 0,
+                            Description = "Books",
                             ImageURL = "/images/css/CategoryImages/daytoday/books.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Books"
+                            ParentCategoryID = 9
                         },
                         new
                         {
-                            ProductSubcategoryID = 903,
+                            ID = 903,
+                            CategoryJsonID = 0,
+                            Description = "Branding",
                             ImageURL = "/images/css/CategoryImages/daytoday/branding.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Branding"
+                            ParentCategoryID = 9
                         },
                         new
                         {
-                            ProductSubcategoryID = 904,
+                            ID = 904,
+                            CategoryJsonID = 0,
+                            Description = "Company Events",
                             ImageURL = "/images/css/CategoryImages/daytoday/company_events.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Company Events"
+                            ParentCategoryID = 9
                         },
                         new
                         {
-                            ProductSubcategoryID = 905,
+                            ID = 905,
+                            CategoryJsonID = 0,
+                            Description = "Electricity",
                             ImageURL = "/images/css/CategoryImages/daytoday/electricity2.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Electricity"
+                            ParentCategoryID = 9
                         },
                         new
                         {
-                            ProductSubcategoryID = 906,
+                            ID = 906,
+                            CategoryJsonID = 0,
+                            Description = "Fees",
                             ImageURL = "/images/css/CategoryImages/daytoday/fees.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Fees"
+                            ParentCategoryID = 9
                         },
                         new
                         {
-                            ProductSubcategoryID = 907,
+                            ID = 907,
+                            CategoryJsonID = 0,
+                            Description = "Food",
                             ImageURL = "/images/css/CategoryImages/daytoday/food.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Food"
+                            ParentCategoryID = 9
                         },
                         new
                         {
-                            ProductSubcategoryID = 908,
+                            ID = 908,
+                            CategoryJsonID = 0,
+                            Description = "Furniture",
                             ImageURL = "/images/css/CategoryImages/daytoday/furniture2.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Furniture"
+                            ParentCategoryID = 9
                         },
                         new
                         {
-                            ProductSubcategoryID = 909,
+                            ID = 909,
+                            CategoryJsonID = 0,
+                            Description = "General Day To Day",
                             ImageURL = "/images/css/CategoryImages/daytoday/general.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "General Day To Day"
+                            ParentCategoryID = 9
                         },
                         new
                         {
-                            ProductSubcategoryID = 910,
+                            ID = 910,
+                            CategoryJsonID = 0,
+                            Description = "Graphic",
                             ImageURL = "/images/css/CategoryImages/daytoday/graphics.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Graphic"
+                            ParentCategoryID = 9
                         },
                         new
                         {
-                            ProductSubcategoryID = 911,
+                            ID = 911,
+                            CategoryJsonID = 0,
+                            Description = "Insurance",
                             ImageURL = "/images/css/CategoryImages/daytoday/insurance.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Insurance"
+                            ParentCategoryID = 9
                         },
                         new
                         {
-                            ProductSubcategoryID = 912,
+                            ID = 912,
+                            CategoryJsonID = 0,
+                            Description = "Parking",
                             ImageURL = "/images/css/CategoryImages/daytoday/parking2.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Parking"
+                            ParentCategoryID = 9
                         },
                         new
                         {
-                            ProductSubcategoryID = 913,
+                            ID = 913,
+                            CategoryJsonID = 0,
+                            Description = "Renovation",
                             ImageURL = "/images/css/CategoryImages/daytoday/renovation.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Renovation"
+                            ParentCategoryID = 9
                         },
                         new
                         {
-                            ProductSubcategoryID = 914,
+                            ID = 914,
+                            CategoryJsonID = 0,
+                            Description = "Rent",
                             ImageURL = "/images/css/CategoryImages/daytoday/rent2.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Rent"
+                            ParentCategoryID = 9
                         },
                         new
                         {
-                            ProductSubcategoryID = 915,
+                            ID = 915,
+                            CategoryJsonID = 0,
+                            Description = "Shipment",
                             ImageURL = "/images/css/CategoryImages/daytoday/shippment.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 9,
-                            ProductSubcategoryDescription = "Shipment"
+                            ParentCategoryID = 9
                         },
                         new
                         {
-                            ProductSubcategoryID = 1001,
+                            ID = 1001,
+                            CategoryJsonID = 0,
+                            Description = "Conference",
                             ImageURL = "/images/css/CategoryImages/travel/conference3.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 10,
-                            ProductSubcategoryDescription = "Conference"
+                            ParentCategoryID = 10
                         },
                         new
                         {
-                            ProductSubcategoryID = 1002,
+                            ID = 1002,
+                            CategoryJsonID = 0,
+                            Description = "Flight Tickets",
                             ImageURL = "/images/css/CategoryImages/travel/flight_tickets.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 10,
-                            ProductSubcategoryDescription = "Flight Tickets"
+                            ParentCategoryID = 10
                         },
                         new
                         {
-                            ProductSubcategoryID = 1003,
+                            ID = 1003,
+                            CategoryJsonID = 0,
+                            Description = "Food",
                             ImageURL = "/images/css/CategoryImages/travel/food.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 10,
-                            ProductSubcategoryDescription = "Food"
+                            ParentCategoryID = 10
                         },
                         new
                         {
-                            ProductSubcategoryID = 1004,
+                            ID = 1004,
+                            CategoryJsonID = 0,
+                            Description = "Hotels",
                             ImageURL = "/images/css/CategoryImages/travel/hotels3.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 10,
-                            ProductSubcategoryDescription = "Hotels"
+                            ParentCategoryID = 10
                         },
                         new
                         {
-                            ProductSubcategoryID = 1005,
+                            ID = 1005,
+                            CategoryJsonID = 0,
+                            Description = "General Travel",
                             ImageURL = "/images/css/CategoryImages/travel/travel.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 10,
-                            ProductSubcategoryDescription = "General Travel"
+                            ParentCategoryID = 10
                         },
                         new
                         {
-                            ProductSubcategoryID = 1006,
+                            ID = 1006,
+                            CategoryJsonID = 0,
+                            Description = "General",
                             ImageURL = "/images/css/CategoryImages/travel/general.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 10,
-                            ProductSubcategoryDescription = "General"
+                            ParentCategoryID = 10
                         },
                         new
                         {
-                            ProductSubcategoryID = 1101,
+                            ID = 1101,
+                            CategoryJsonID = 0,
+                            Description = "Business Advice",
                             ImageURL = "/images/css/CategoryImages/advice/business_advice.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 11,
-                            ProductSubcategoryDescription = "Business Advice"
+                            ParentCategoryID = 11
                         },
                         new
                         {
-                            ProductSubcategoryID = 1102,
+                            ID = 1102,
+                            CategoryJsonID = 0,
+                            Description = "Clinical Regulations",
                             ImageURL = "/images/css/CategoryImages/advice/clinical_regulation2.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 11,
-                            ProductSubcategoryDescription = "Clinical Regulations"
+                            ParentCategoryID = 11
                         },
                         new
                         {
-                            ProductSubcategoryID = 1103,
+                            ID = 1103,
+                            CategoryJsonID = 0,
+                            Description = "General",
                             ImageURL = "/images/css/CategoryImages/advice/general.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 11,
-                            ProductSubcategoryDescription = "General"
+                            ParentCategoryID = 11
                         },
                         new
                         {
-                            ProductSubcategoryID = 1104,
+                            ID = 1104,
+                            CategoryJsonID = 0,
+                            Description = "Legal",
                             ImageURL = "/images/css/CategoryImages/advice/legal.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 11,
-                            ProductSubcategoryDescription = "Legal"
+                            ParentCategoryID = 11
                         },
                         new
                         {
-                            ProductSubcategoryID = 1105,
+                            ID = 1105,
+                            CategoryJsonID = 0,
+                            Description = "Scientific Advice",
                             ImageURL = "/images/css/CategoryImages/advice/scientific_advice3.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 11,
-                            ProductSubcategoryDescription = "Scientific Advice"
+                            ParentCategoryID = 11
                         },
                         new
                         {
-                            ProductSubcategoryID = 1201,
+                            ID = 1201,
+                            CategoryJsonID = 0,
+                            Description = "Regulations",
                             ImageURL = "/images/css/CategoryImages/regulations/regulations.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 12,
-                            ProductSubcategoryDescription = "Regulations"
+                            ParentCategoryID = 12
                         },
                         new
                         {
-                            ProductSubcategoryID = 1202,
+                            ID = 1202,
+                            CategoryJsonID = 0,
+                            Description = "Safety",
                             ImageURL = "/images/css/CategoryImages/regulations/safety.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 12,
-                            ProductSubcategoryDescription = "Safety"
+                            ParentCategoryID = 12
                         },
                         new
                         {
-                            ProductSubcategoryID = 1203,
+                            ID = 1203,
+                            CategoryJsonID = 0,
+                            Description = "General",
                             ImageURL = "/images/css/CategoryImages/regulations/general.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 12,
-                            ProductSubcategoryDescription = "General"
+                            ParentCategoryID = 12
                         },
                         new
                         {
-                            ProductSubcategoryID = 1301,
+                            ID = 1301,
+                            CategoryJsonID = 0,
+                            Description = "Taxes",
                             ImageURL = "/images/css/CategoryImages/government/taxes4.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 13,
-                            ProductSubcategoryDescription = "Taxes"
+                            ParentCategoryID = 13
                         },
                         new
                         {
-                            ProductSubcategoryID = 1302,
+                            ID = 1302,
+                            CategoryJsonID = 0,
+                            Description = "General",
                             ImageURL = "/images/css/CategoryImages/government/general.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 13,
-                            ProductSubcategoryDescription = "General"
+                            ParentCategoryID = 13
                         },
                         new
                         {
-                            ProductSubcategoryID = 1401,
+                            ID = 1401,
+                            CategoryJsonID = 0,
+                            Description = "Virus",
                             ImageURL = "/images/css/CategoryImages/samples/virus.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 14,
-                            ProductSubcategoryDescription = "Virus"
+                            ParentCategoryID = 14
                         },
                         new
                         {
-                            ProductSubcategoryID = 1402,
+                            ID = 1402,
+                            CategoryJsonID = 0,
+                            Description = "Plasmid",
                             ImageURL = "/images/css/CategoryImages/samples/plasmid.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 14,
-                            ProductSubcategoryDescription = "Plasmid"
+                            ParentCategoryID = 14
                         },
                         new
                         {
-                            ProductSubcategoryID = 1403,
+                            ID = 1403,
+                            CategoryJsonID = 0,
+                            Description = "Probes",
                             ImageURL = "/images/css/CategoryImages/samples/dna_probes2.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 14,
-                            ProductSubcategoryDescription = "Probes"
+                            ParentCategoryID = 14
                         },
                         new
                         {
-                            ProductSubcategoryID = 1404,
+                            ID = 1404,
+                            CategoryJsonID = 0,
+                            Description = "Cells",
                             ImageURL = "/images/css/CategoryImages/samples/cell1.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 14,
-                            ProductSubcategoryDescription = "Cells"
+                            ParentCategoryID = 14
                         },
                         new
                         {
-                            ProductSubcategoryID = 1405,
+                            ID = 1405,
+                            CategoryJsonID = 0,
+                            Description = "Bacteria with Plasmids",
                             ImageURL = "/images/css/CategoryImages/samples/bacteria2.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 14,
-                            ProductSubcategoryDescription = "Bacteria with Plasmids"
+                            ParentCategoryID = 14
                         },
                         new
                         {
-                            ProductSubcategoryID = 1406,
+                            ID = 1406,
+                            CategoryJsonID = 0,
+                            Description = "Blood",
                             ImageURL = "/images/css/CategoryImages/samples/blood.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 14,
-                            ProductSubcategoryDescription = "Blood"
+                            ParentCategoryID = 14
                         },
                         new
                         {
-                            ProductSubcategoryID = 1407,
+                            ID = 1407,
+                            CategoryJsonID = 0,
+                            Description = "Serum",
                             ImageURL = "/images/css/CategoryImages/samples/serum.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 14,
-                            ProductSubcategoryDescription = "Serum"
+                            ParentCategoryID = 14
                         },
                         new
                         {
-                            ProductSubcategoryID = 1408,
+                            ID = 1408,
+                            CategoryJsonID = 0,
+                            Description = "Buffer",
                             ImageURL = "/images/css/CategoryImages/samples/buffer2.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 14,
-                            ProductSubcategoryDescription = "Buffer"
+                            ParentCategoryID = 14
                         },
                         new
                         {
-                            ProductSubcategoryID = 1409,
+                            ID = 1409,
+                            CategoryJsonID = 0,
+                            Description = "Media",
                             ImageURL = "/images/css/CategoryImages/samples/media2.png",
                             IsOldSubCategory = false,
-                            ParentCategoryID = 14,
-                            ProductSubcategoryDescription = "Media"
+                            ParentCategoryID = 14
                         },
                         new
                         {
-                            ProductSubcategoryID = 1501,
+                            ID = 1501,
+                            CategoryJsonID = 0,
+                            Description = "Old Sub category",
                             ImageURL = "/images/css/CategoryImages/consumables/general.png",
                             IsOldSubCategory = true,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Old Sub category"
+                            ParentCategoryID = 1
                         },
                         new
                         {
-                            ProductSubcategoryID = 1502,
+                            ID = 1502,
+                            CategoryJsonID = 0,
+                            Description = "Old Sub category",
                             ImageURL = "/images/css/CategoryImages/reagents/general_reagents.png",
                             IsOldSubCategory = true,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Old Sub category"
+                            ParentCategoryID = 2
                         },
                         new
                         {
-                            ProductSubcategoryID = 1503,
+                            ID = 1503,
+                            CategoryJsonID = 0,
+                            Description = "Old Sub category",
                             ImageURL = "/images/css/CategoryImages/biological/general.png",
                             IsOldSubCategory = true,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Old Sub category"
+                            ParentCategoryID = 3
                         },
                         new
                         {
-                            ProductSubcategoryID = 1504,
+                            ID = 1504,
+                            CategoryJsonID = 0,
+                            Description = "Old Sub category",
                             ImageURL = "/images/css/CategoryImages/reusable/all_reusables.png",
                             IsOldSubCategory = true,
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Old Sub category"
+                            ParentCategoryID = 4
                         },
                         new
                         {
-                            ProductSubcategoryID = 1505,
+                            ID = 1505,
+                            CategoryJsonID = 0,
+                            Description = "Old Sub category",
                             ImageURL = "/images/css/CategoryImages/safety/safety.png",
                             IsOldSubCategory = true,
-                            ParentCategoryID = 5,
-                            ProductSubcategoryDescription = "Old Sub category"
+                            ParentCategoryID = 5
                         });
                 });
 
@@ -4735,26 +4969,36 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolComment", b =>
                 {
-                    b.Property<int>("ProtocolCommentID")
+                    b.Property<int>("CommentID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserCreatorID")
+                    b.Property<string>("ApplicationUserID")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CommentText")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CommentTimeStamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ProtocolCommentDescription")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CommentTypeID")
+                        .HasColumnType("int");
 
-                    b.Property<string>("ProtocolCommmentType")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
-                    b.HasKey("ProtocolCommentID");
+                    b.Property<int>("ObjectID")
+                        .HasColumnType("int");
 
-                    b.HasIndex("ApplicationUserCreatorID");
+                    b.HasKey("CommentID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("CommentTypeID");
+
+                    b.HasIndex("ObjectID");
 
                     b.ToTable("ProtocolComments");
                 });
@@ -5065,6 +5309,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("AdditionalFieldsJson")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("Amount")
                         .HasColumnType("int");
 
@@ -5200,6 +5447,42 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("Requests");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.RequestComment", b =>
+                {
+                    b.Property<int>("CommentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CommentText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CommentTimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CommentTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ObjectID")
+                        .HasColumnType("int");
+
+                    b.HasKey("CommentID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("CommentTypeID");
+
+                    b.HasIndex("ObjectID");
+
+                    b.ToTable("RequestComments");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestList", b =>
                 {
                     b.Property<int>("ListID")
@@ -5289,11 +5572,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("NotificationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("NotificationStatusID")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("OrderDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("RequestID")
                         .HasColumnType("int");
@@ -5302,7 +5585,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("Vendor")
                         .HasColumnType("nvarchar(max)");
@@ -5411,10 +5696,20 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ResourceCategory", b =>
                 {
-                    b.Property<int>("ResourceCategoryID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CategoryJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CategoryJsonID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
@@ -5428,157 +5723,171 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsResourceType")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ResourceCategoryDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ResourceCategoryID");
+                    b.HasKey("ID");
 
                     b.ToTable("ResourceCategories");
 
                     b.HasData(
                         new
                         {
-                            ResourceCategoryID = 1,
+                            ID = 1,
+                            CategoryJsonID = 0,
+                            Description = "Rejuvenation",
                             ImageUrl = "rejuvenation_image.svg",
                             IsMain = true,
                             IsReportsCategory = true,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Rejuvenation"
+                            IsResourceType = false
                         },
                         new
                         {
-                            ResourceCategoryID = 2,
+                            ID = 2,
+                            CategoryJsonID = 0,
+                            Description = "Biomarkers",
                             ImageUrl = "biomarkers_image.svg",
                             IsMain = true,
                             IsReportsCategory = true,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Biomarkers"
+                            IsResourceType = false
                         },
                         new
                         {
-                            ResourceCategoryID = 3,
+                            ID = 3,
+                            CategoryJsonID = 0,
+                            Description = "Delivery Systems",
                             ImageUrl = "delivery_systems_image.svg",
                             IsMain = true,
                             IsReportsCategory = true,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Delivery Systems"
+                            IsResourceType = false
                         },
                         new
                         {
-                            ResourceCategoryID = 4,
+                            ID = 4,
+                            CategoryJsonID = 0,
+                            Description = "Clinical Trials",
                             ImageUrl = "clinical_trials_image.svg",
                             IsMain = true,
                             IsReportsCategory = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Clinical Trials"
+                            IsResourceType = false
                         },
                         new
                         {
-                            ResourceCategoryID = 5,
+                            ID = 5,
+                            CategoryJsonID = 0,
+                            Description = "AAV",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "AAV"
+                            IsResourceType = false
                         },
                         new
                         {
-                            ResourceCategoryID = 6,
+                            ID = 6,
+                            CategoryJsonID = 0,
+                            Description = "Telomere Rejuvenation",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Telomere Rejuvenation"
+                            IsResourceType = false
                         },
                         new
                         {
-                            ResourceCategoryID = 7,
+                            ID = 7,
+                            CategoryJsonID = 0,
+                            Description = "Telomere Measurement",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Telomere Measurement"
+                            IsResourceType = false
                         },
                         new
                         {
-                            ResourceCategoryID = 8,
+                            ID = 8,
+                            CategoryJsonID = 0,
+                            Description = "Methylation Biomarker",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Methylation Biomarker"
+                            IsResourceType = false
                         },
                         new
                         {
-                            ResourceCategoryID = 9,
+                            ID = 9,
+                            CategoryJsonID = 0,
+                            Description = "Transcriptome",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Transcriptome"
+                            IsResourceType = false
                         },
                         new
                         {
-                            ResourceCategoryID = 10,
+                            ID = 10,
+                            CategoryJsonID = 0,
+                            Description = "Serum Rejuvenation",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Serum Rejuvenation"
+                            IsResourceType = false
                         },
                         new
                         {
-                            ResourceCategoryID = 11,
+                            ID = 11,
+                            CategoryJsonID = 0,
+                            Description = "Reprogramming",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Reprogramming"
+                            IsResourceType = false
                         },
                         new
                         {
-                            ResourceCategoryID = 12,
+                            ID = 12,
+                            CategoryJsonID = 0,
+                            Description = "Methylation Rejuvenation",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Methylation Rejuvenation"
+                            IsResourceType = false
                         },
                         new
                         {
-                            ResourceCategoryID = 13,
+                            ID = 13,
+                            CategoryJsonID = 0,
+                            Description = "New Methods",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "New Methods"
+                            IsResourceType = false
                         },
                         new
                         {
-                            ResourceCategoryID = 14,
+                            ID = 14,
+                            CategoryJsonID = 0,
+                            Description = "Software",
                             ImageUrl = "software_image.svg",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = true,
-                            ResourceCategoryDescription = "Software"
+                            IsResourceType = true
                         },
                         new
                         {
-                            ResourceCategoryID = 15,
+                            ID = 15,
+                            CategoryJsonID = 0,
+                            Description = "Learning",
                             ImageUrl = "learning_image.svg",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = true,
-                            ResourceCategoryDescription = "Learning"
+                            IsResourceType = true
                         },
                         new
                         {
-                            ResourceCategoryID = 16,
+                            ID = 16,
+                            CategoryJsonID = 0,
+                            Description = "Companies",
                             ImageUrl = "companies_image.svg",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = true,
-                            ResourceCategoryDescription = "Companies"
+                            IsResourceType = true
                         },
                         new
                         {
-                            ResourceCategoryID = 17,
+                            ID = 17,
+                            CategoryJsonID = 0,
+                            Description = "News",
                             ImageUrl = "news_image.svg",
                             IsMain = false,
                             IsReportsCategory = false,
-                            IsResourceType = true,
-                            ResourceCategoryDescription = "News"
+                            IsResourceType = true
                         });
                 });
 
@@ -5664,7 +5973,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("FromApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("ProtocolVersionID")
+                    b.Property<int>("ObjectID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
@@ -5679,7 +5988,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("FromApplicationUserID");
 
-                    b.HasIndex("ProtocolVersionID");
+                    b.HasIndex("ObjectID");
 
                     b.HasIndex("ToApplicationUserID");
 
@@ -5696,7 +6005,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("FromApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("RequestID")
+                    b.Property<int>("ObjectID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
@@ -5711,7 +6020,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("FromApplicationUserID");
 
-                    b.HasIndex("RequestID");
+                    b.HasIndex("ObjectID");
 
                     b.HasIndex("ToApplicationUserID");
 
@@ -5728,7 +6037,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("FromApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("RequestListID")
+                    b.Property<int>("ObjectID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
@@ -5746,7 +6055,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("FromApplicationUserID");
 
-                    b.HasIndex("RequestListID");
+                    b.HasIndex("ObjectID");
 
                     b.HasIndex("ToApplicationUserID");
 
@@ -5763,7 +6072,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("FromApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ResourceID")
+                    b.Property<int>("ObjectID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
@@ -5778,7 +6087,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("FromApplicationUserID");
 
-                    b.HasIndex("ResourceID");
+                    b.HasIndex("ObjectID");
 
                     b.HasIndex("ToApplicationUserID");
 
@@ -6211,11 +6520,16 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("NotificationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("NotificationStatusID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.HasKey("NotificationID");
 
@@ -6932,7 +7246,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.VendorComment", b =>
                 {
-                    b.Property<int>("VendorCommentID")
+                    b.Property<int>("CommentID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -6946,17 +7260,22 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("CommentTimeStamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CommentType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("VendorID")
+                    b.Property<int>("CommentTypeID")
                         .HasColumnType("int");
 
-                    b.HasKey("VendorCommentID");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ObjectID")
+                        .HasColumnType("int");
+
+                    b.HasKey("CommentID");
 
                     b.HasIndex("ApplicationUserID");
 
-                    b.HasIndex("VendorID");
+                    b.HasIndex("CommentTypeID");
+
+                    b.HasIndex("ObjectID");
 
                     b.ToTable("VendorComments");
                 });
@@ -6997,12 +7316,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<double>("BonusSickDays")
-                        .HasColumnType("float");
-
-                    b.Property<double>("BonusVacationDays")
-                        .HasColumnType("float");
-
                     b.Property<int?>("CitizenshipID")
                         .HasColumnType("int");
 
@@ -7035,6 +7348,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int?>("MaritalStatusID")
                         .HasColumnType("int");
+
+                    b.Property<string>("PhoneNumber2")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("RollOverSickDays")
                         .HasColumnType("float");
@@ -7107,6 +7423,22 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationNumber = 1,
                             LocationTypeID = 600,
                             Width = 0
+                        });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeInfoNotificationStatus", b =>
+                {
+                    b.HasBaseType("PrototypeWithAuth.Models.NotificationStatus");
+
+                    b.HasDiscriminator().HasValue("EmployeeInfoNotificationStatus");
+
+                    b.HasData(
+                        new
+                        {
+                            NotificationStatusID = 6,
+                            Color = "--black-87",
+                            Description = "Happy Birthday",
+                            Icon = "icon-cake_black_24dp"
                         });
                 });
 
@@ -7266,20 +7598,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Comment", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
-                        .WithMany()
-                        .HasForeignKey("RequestID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.CompanyDayOff", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.CompanyDayOffType", "CompanyDayOffType")
@@ -7374,9 +7692,28 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.ExperimentEntry", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeInfoNotification", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.EmployeeInfoNotificationStatus", "NotificationStatus")
+                        .WithMany("EmployeeInfoNotifications")
+                        .HasForeignKey("NotificationStatusID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ExperimentEntry", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -7770,6 +8107,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.ProductSubcategory", "ProductSubcategory")
                         .WithMany("Products")
                         .HasForeignKey("ProductSubcategoryID")
+                        .HasConstraintName("FK_Products_ProductSubcategory")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -7794,11 +8132,32 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.ProductComment", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentType")
+                        .WithMany()
+                        .HasForeignKey("CommentTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ObjectID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.ProductSubcategory", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.ParentCategory", "ParentCategory")
                         .WithMany("ProductSubcategories")
                         .HasForeignKey("ParentCategoryID")
+                        .HasConstraintName("FK_ProductSubcategories_ParentCategory")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -7820,10 +8179,22 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolComment", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserCreator")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("ApplicationUserCreatorID")
+                        .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentType")
+                        .WithMany()
+                        .HasForeignKey("CommentTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
+                        .WithMany()
+                        .HasForeignKey("ObjectID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolInstance", b =>
@@ -7872,8 +8243,9 @@ namespace PrototypeWithAuth.Data.Migrations
             modelBuilder.Entity("PrototypeWithAuth.Models.Report", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.ResourceCategory", "ReportCategory")
-                        .WithMany()
+                        .WithMany("Reports")
                         .HasForeignKey("ReportCategoryID")
+                        .HasConstraintName("FK_Reports_ResourceCategories_ReportCategoryID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -7886,12 +8258,12 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Request", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserCreator")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUserCreator")
                         .WithMany("RequestsCreated")
                         .HasForeignKey("ApplicationUserCreatorID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserReceiver")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUserReceiver")
                         .WithMany("RequestsReceived")
                         .HasForeignKey("ApplicationUserReceiverID")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -7937,6 +8309,26 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("Requests")
                         .HasForeignKey("SubProjectID")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.RequestComment", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentType")
+                        .WithMany()
+                        .HasForeignKey("CommentTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
+                        .WithMany()
+                        .HasForeignKey("ObjectID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestList", b =>
@@ -8030,6 +8422,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.ResourceCategory", "ResourceCategory")
                         .WithMany("ResourceResourceCategories")
                         .HasForeignKey("ResourceCategoryID")
+                        .HasConstraintName("FK_ResourceResourceCategory_ResourceCategories_ResourceCategoryID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -8050,17 +8443,18 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ShareProtocol", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "FromApplicationUser")
                         .WithMany()
                         .HasForeignKey("FromApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.ProtocolVersion", "ProtocolVersion")
                         .WithMany()
-                        .HasForeignKey("ProtocolVersionID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("ObjectID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ToApplicationUser")
                         .WithMany()
                         .HasForeignKey("ToApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -8068,18 +8462,18 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequest", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "FromApplicationUser")
                         .WithMany("ShareRequestsCreated")
                         .HasForeignKey("FromApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Request", "Request")
                         .WithMany("ShareRequests")
-                        .HasForeignKey("RequestID")
+                        .HasForeignKey("ObjectID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ToApplicationUser")
                         .WithMany("ShareRequestsReceived")
                         .HasForeignKey("ToApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -8087,18 +8481,18 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequestList", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "FromApplicationUser")
                         .WithMany()
                         .HasForeignKey("FromApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.RequestList", "RequestList")
                         .WithMany()
-                        .HasForeignKey("RequestListID")
+                        .HasForeignKey("ObjectID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ToApplicationUser")
                         .WithMany()
                         .HasForeignKey("ToApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -8106,18 +8500,18 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ShareResource", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "FromApplicationUser")
                         .WithMany("ShareResourcesCreated")
                         .HasForeignKey("FromApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Resource", "Resource")
                         .WithMany()
-                        .HasForeignKey("ResourceID")
+                        .HasForeignKey("ObjectID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ToApplicationUser")
                         .WithMany("ShareResourcesReceived")
                         .HasForeignKey("ToApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -8307,14 +8701,20 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.VendorComment", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("PrototypeWithAuth.Models.CommentType", "CommentType")
+                        .WithMany()
+                        .HasForeignKey("CommentTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("PrototypeWithAuth.Models.Vendor", "Vendor")
                         .WithMany("VendorComments")
-                        .HasForeignKey("VendorID")
+                        .HasForeignKey("ObjectID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

@@ -18,13 +18,15 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
+using System.Linq.Expressions;
+using PrototypeWithAuth.AppData.UtilityModels;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PrototypeWithAuth.Controllers
 {
     public class ApplicationUsersController : SharedController
     {
-
+        
         public ApplicationUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
             : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
@@ -63,7 +65,7 @@ namespace PrototypeWithAuth.Controllers
                         TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsInventory;
                     }
                 }
-                return View(await _context.Employees.Where(u => !u.IsSuspended).ToListAsync());
+                return View(await _employeesProc.Read(new List<Expression<Func<Employee, bool>>> { u => !u.IsSuspended }).ToListAsync());
 
             }
             else
@@ -97,20 +99,28 @@ namespace PrototypeWithAuth.Controllers
         }
         private EmployeeDetailsViewModel GetWorkersDetailsViewModel()
         {
-            IIncludableQueryable<Employee, JobCategoryType> employees = _context.Employees.Where(u => u.EmployeeStatusID != 4).Where(u => !u.IsSuspended)
-                .Include(e => e.EmployeeStatus).Include(e => e.SalariedEmployee).Include(e => e.JobSubcategoryType).ThenInclude(js => js.JobCategoryType);
+            var employees =  _employeesProc.Read(new List<Expression<Func<Employee, bool>>> { u => u.EmployeeStatusID != 4, u => !u.IsSuspended },
+                new List<ComplexIncludes<Employee, ModelBase>> {
+                    new ComplexIncludes<Employee, ModelBase> { Include = e => e.EmployeeStatus},
+                    new ComplexIncludes<Employee, ModelBase> { Include = e => e.SalariedEmployee},
+                    new ComplexIncludes<Employee, ModelBase> { 
+                        Include = e => e.JobSubcategoryType,
+                        ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = js => ((JobSubcategoryType)js).JobCategoryType } }
+                });
+            var centarixIDs = _centarixIDsProc.Read();
             //var ed = employeeDetails.OrderBy(ed => ed.Employee.UserNum);
             EmployeeDetailsViewModel employeeDetailsViewModel = new EmployeeDetailsViewModel
             {
                 Employees = employees.Select(u => new UserWithCentarixIDViewModel
                 {
                     Employee = u,
-                    CentarixID = AppUtility.GetEmployeeCentarixID(_context.CentarixIDs.Where(ci => ci.EmployeeID == u.Id).OrderBy(ci => ci.TimeStamp))
+                    CentarixID = AppUtility.GetEmployeeCentarixID( centarixIDs.Where(ci => ci.EmployeeID == u.Id).OrderBy(ci => ci.TimeStamp))
                 }).OrderBy(ed => ed.Employee.UserNum),
                 SalariedEmployeeCount = employees.Where(e => e.EmployeeStatusID == 1).Count(),
                 FreelancerCount = employees.Where(e => e.EmployeeStatusID == 2).Count(),
                 AdvisorCount = employees.Where(e => e.EmployeeStatusID == 3).Count(),
             };
+            //using user image from db(there is one that is wrong in db...) - maybe make add to vm directly from file
             return employeeDetailsViewModel;
         }
 
@@ -148,21 +158,27 @@ namespace PrototypeWithAuth.Controllers
                 month = DateTime.Now.Month;
             }
 
-            var employees = _context.Employees.Where(u => !u.IsSuspended && u.EmployeeStatusID != 4).Include(e => e.EmployeeStatus).Include(e => e.JobSubcategoryType).ThenInclude(js => js.JobCategoryType)
-             .Include(e => e.SalariedEmployee).Select(e => new
-             {
+            var employees = _employeesProc.Read(new List<Expression<Func<Employee, bool>>> { u => u.EmployeeStatusID != 4, u => !u.IsSuspended },
+                new List<ComplexIncludes<Employee, ModelBase>> {
+                    new ComplexIncludes<Employee, ModelBase> { Include = e => e.EmployeeStatus},
+                    new ComplexIncludes<Employee, ModelBase> { Include = e => e.SalariedEmployee},
+                    new ComplexIncludes<Employee, ModelBase> {
+                        Include = e => e.JobSubcategoryType,
+                        ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = js => ((JobSubcategoryType)js).JobCategoryType } }
+                }).Select(e => new
+                {
                  Employee = e,
                  EmployeeHours = e.EmployeeHours.Where(eh => (yearlyMonthlyEnum == YearlyMonthlyEnum.Monthly && (eh.Date.Year == year && eh.Date.Month == month && eh.Date.Date < DateTime.Now.Date))
                  || ((yearlyMonthlyEnum == YearlyMonthlyEnum.Yearly && (eh.Date.Year == year && eh.Date.Date < DateTime.Now.Date)))),
                  EmployeeHoursAwaitingApproval = e.EmployeeHours.Where(eh => (yearlyMonthlyEnum == YearlyMonthlyEnum.Monthly && (eh.Date.Year == year && eh.Date.Month == month && eh.Date.Date < DateTime.Now.Date))
                  || ((yearlyMonthlyEnum == YearlyMonthlyEnum.Yearly && (eh.Date.Year == year && eh.Date.Date < DateTime.Now.Date)))).Select(eh => eh.EmployeeHoursAwaitingApproval).Where(eha => eha != null && !eha.IsDenied)
 
-             });
+                });
 
 
 
             List<WorkerHourViewModel> workerHoursViewModel = new List<WorkerHourViewModel>();
-            var companyDaysOff = _context.CompanyDayOffs.ToList();
+            var companyDaysOff = _companyDaysOffProc.Read().ToList();
             //if enum is yearly
             double totalWorkingDaysInMonthOrYear = amountInYear == 0 ? GetTotalWorkingDaysThisYear(new DateTime(year, 1, 1), companyDaysOff) : amountInYear;
             if (yearlyMonthlyEnum == YearlyMonthlyEnum.Monthly)
@@ -189,7 +205,7 @@ namespace PrototypeWithAuth.Controllers
                 //IEnumerable<EmployeeHours> employeeHoursOfMonthOrYear;
 
 
-                var workingDaysDates = employee.EmployeeHours.Where(eh => (eh.OffDayTypeID == null) || (eh.IsBonus && eh.OffDayTypeID != null)).Where(eh => (eh.Exit1 != null || eh.TotalHours != null)).Select(eh => eh.Date.Date).ToList();
+                var workingDaysDates = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == null).Where(eh => (eh.Exit1 != null || eh.TotalHours != null)).Select(eh => eh.Date.Date).ToList();
                 workingDays = workingDaysDates.Count();
 
                 if (employee.Employee.EmployeeStatusID == 1)
@@ -250,9 +266,12 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Hours;
 
-            Employee user = _context.Employees.Include(e => e.SalariedEmployee).Where(e => e.Id == userId).FirstOrDefault();
+            Employee user = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { e => e.Id == userId },
+                new List<ComplexIncludes<Employee, ModelBase>> {
+                    new ComplexIncludes<Employee, ModelBase> { Include = e => e.SalariedEmployee},
+                });
 
-            SummaryHoursViewModel viewModel = base.SummaryHoursFunction(month, year, user);
+            SummaryHoursViewModel viewModel = await base.SummaryHoursFunctionAsync(month, year, user);
             viewModel.PageType = PageTypeEnum.UsersWorkers;
             return View(viewModel);
         }
@@ -296,9 +315,14 @@ namespace PrototypeWithAuth.Controllers
         }
         private List<EmployeeHoursAwaitingApprovalViewModel> GetAwaitingApprovalModel()
         {
-            var employeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals.Include(ehwa => ehwa.Employee).Include(ehwa => ehwa.EmployeeHours).Include(ehwa => ehwa.EmployeeHoursStatusEntry1).Include(ehwa => ehwa.EmployeeHoursStatusEntry2)
-                .Include(ehwa => ehwa.PartialOffDayType).ToList()
-                .Where(ehwa => !ehwa.IsDenied);
+            var employeeHoursAwaitingApproval = _employeeHoursAwaitingApprovalProc.Read(new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { ehwa => !ehwa.IsDenied },
+                new List<ComplexIncludes<EmployeeHoursAwaitingApproval, ModelBase>> {
+                    new ComplexIncludes<EmployeeHoursAwaitingApproval, ModelBase> { Include = ehwa => ehwa.Employee},
+                    new ComplexIncludes<EmployeeHoursAwaitingApproval, ModelBase> { Include = ehwa => ehwa.EmployeeHours},
+                    new ComplexIncludes<EmployeeHoursAwaitingApproval, ModelBase> { Include = ehwa => ehwa.EmployeeHoursStatusEntry1},
+                    new ComplexIncludes<EmployeeHoursAwaitingApproval, ModelBase> { Include = ehwa => ehwa.EmployeeHoursStatusEntry2},
+                    new ComplexIncludes<EmployeeHoursAwaitingApproval, ModelBase> { Include = ehwa => ehwa.PartialOffDayType},
+                });
             List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = new List<EmployeeHoursAwaitingApprovalViewModel>();
             foreach (EmployeeHoursAwaitingApproval ehaa in employeeHoursAwaitingApproval)
             {
@@ -352,160 +376,11 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> ApproveHours(int id)
         {
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    EmployeeHours employeeHours = new EmployeeHours();
-                    EmployeeHoursAwaitingApproval employeeHoursBeingApproved = await _context.EmployeeHoursAwaitingApprovals
-                        .Include(ehaa => ehaa.EmployeeHours)
-                        .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == id).AsNoTracking().FirstOrDefaultAsync();
-                    employeeHours = await _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == employeeHoursBeingApproved.EmployeeHoursID).AsNoTracking().FirstOrDefaultAsync();
-                    var user = await _context.Employees.Include(e => e.SalariedEmployee).Where(e => e.Id == employeeHoursBeingApproved.EmployeeID).FirstOrDefaultAsync();
-                    if (employeeHoursBeingApproved.OffDayTypeID != null)
-                    {
-                        //add back to the bonus days
-                        if (employeeHoursBeingApproved.IsBonus)
-                        {
-                            if (employeeHoursBeingApproved.OffDayTypeID == 2)
-                            {
-                                user.BonusVacationDays += 1;
-                            }
-                            else
-                            {
-                                user.BonusSickDays += 1;
-                            }
-
-                        }
-
-                        employeeHoursBeingApproved.OffDayTypeID = null;
-                        _context.Update(user);
-                    }
-                    else if (employeeHoursBeingApproved.EmployeeHours.OffDayTypeID == 4)
-                    {
-                        user.SpecialDays += 1;
-                    }
-                    if (employeeHours?.PartialOffDayTypeID != null)
-                    {
-                        ReturnPartialBonusDay(user, employeeHoursBeingApproved.PartialOffDayTypeID ?? 2, employeeHours);
-                    }
-                    if (employeeHoursBeingApproved.PartialOffDayTypeID != null)
-                    {
-                        var partialHours = employeeHours.PartialOffDayHours?.TotalHours ?? 0;
-                        var days = Math.Round(partialHours / user.SalariedEmployee.HoursPerDay, 2);
-                        var vacationLeftCount = base.GetUsersOffDaysLeft(user, employeeHoursBeingApproved.PartialOffDayTypeID ?? 2, employeeHoursBeingApproved.Date.Year);
-                        /*if (vacationLeftCount < days)
-                        {
-                            TakePartialBonusDay(user, employeeHoursBeingApproved.PartialOffDayTypeID ?? 2, employeeHoursBeingApproved, days);
-                        }*/
-                    }
-                    if (employeeHours == null)
-                    {
-                        employeeHours = new EmployeeHours
-                        {
-                            Entry1 = employeeHoursBeingApproved.Entry1,
-                            Entry2 = employeeHoursBeingApproved.Entry2,
-                            Exit1 = employeeHoursBeingApproved.Exit1,
-                            Exit2 = employeeHoursBeingApproved.Exit2,
-                            TotalHours = employeeHoursBeingApproved.TotalHours,
-                            EmployeeHoursStatusEntry1ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry1ID,
-                            EmployeeHoursStatusEntry2ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry2ID,
-                            EmployeeID = employeeHoursBeingApproved.EmployeeID,
-                            Date = employeeHoursBeingApproved.Date,
-                            EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID,
-                            PartialOffDayTypeID = employeeHoursBeingApproved.PartialOffDayTypeID,
-                            PartialOffDayHours = employeeHoursBeingApproved.PartialOffDayHours,
-                            OffDayTypeID = employeeHoursBeingApproved.OffDayTypeID,
-                            IsBonus = employeeHoursBeingApproved.IsBonus
-                        };
-                    }
-                    else
-                    {
-                        employeeHours.Entry1 = employeeHoursBeingApproved.Entry1;
-                        employeeHours.Entry2 = employeeHoursBeingApproved.Entry2;
-                        employeeHours.Exit1 = employeeHoursBeingApproved.Exit1;
-                        employeeHours.Exit2 = employeeHoursBeingApproved.Exit2;
-                        employeeHours.TotalHours = employeeHoursBeingApproved.TotalHours;
-                        employeeHours.EmployeeHoursStatusEntry1ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry1ID;
-                        employeeHours.EmployeeHoursStatusEntry2ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry2ID;
-                        employeeHours.EmployeeID = employeeHoursBeingApproved.EmployeeID;
-                        employeeHours.Date = employeeHoursBeingApproved.Date;
-                        employeeHours.EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID;
-                        employeeHours.PartialOffDayTypeID = employeeHoursBeingApproved.PartialOffDayTypeID;
-                        employeeHours.PartialOffDayHours = employeeHoursBeingApproved.PartialOffDayHours;
-                        employeeHours.OffDayTypeID = employeeHoursBeingApproved.OffDayTypeID;
-                        employeeHours.IsBonus = employeeHoursBeingApproved.IsBonus;
-                    }
-
-                    try
-                    {
-                        _context.Entry(employeeHours).State = EntityState.Modified;
-                        await _context.SaveChangesAsync();
-                        _context.Entry(employeeHoursBeingApproved).State = EntityState.Deleted;
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
-                    //throw new Exception();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    return RedirectToAction("_AwaitingApproval", new { ErrorMessage = AppUtility.GetExceptionMessage(ex) });
-
-                }
-            }
-            return RedirectToAction("_AwaitingApproval");
+            var hoursApproved = await _employeeHoursProc.UpdateApprovedHoursAsync(id);
+            return RedirectToAction("_AwaitingApproval", new { ErrorMessage = hoursApproved.String });
+            
         }
 
-
-        private void TakePartialBonusDay(Employee user, int offDayTypeID, EmployeeHoursAwaitingApproval employeeHour, double days)
-        {
-            if (offDayTypeID == 2)
-            {
-                if (user.BonusVacationDays >= days)
-                {
-                    employeeHour.IsBonus = true;
-                    user.BonusVacationDays -= days;
-                    _context.Update(user);
-                }
-            }
-            else
-            {
-                if (user.BonusSickDays >= days)
-                {
-                    employeeHour.IsBonus = true;
-                    user.BonusSickDays -= days;
-                    _context.Update(user);
-                }
-            }
-        }
-        private void ReturnPartialBonusDay(Employee user, int offDayTypeID, EmployeeHours employeeHour)
-        {
-            var partialHours = employeeHour.PartialOffDayHours?.TotalHours ?? 0;
-            var days = Math.Round(partialHours / user.SalariedEmployee.HoursPerDay, 2);
-            if (offDayTypeID == 2)
-            {
-                if (user.BonusVacationDays >= days)
-                {
-                    employeeHour.IsBonus = true;
-                    user.BonusVacationDays += days;
-                    _context.Update(user);
-                }
-            }
-            else
-            {
-                if (user.BonusSickDays >= days)
-                {
-                    employeeHour.IsBonus = true;
-                    user.BonusSickDays += days;
-                    _context.Update(user);
-                }
-            }
-        }
 
         [HttpGet]
         [Authorize(Roles = "Users")]
@@ -515,9 +390,10 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var ehaa = _context.EmployeeHoursAwaitingApprovals
-                .Include(ehaa => ehaa.EmployeeHours)
-                .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ehaaID).FirstOrDefault();
+            var ehaa = await _employeeHoursAwaitingApprovalProc.ReadOneAsync(new List<Expression<Func<EmployeeHoursAwaitingApproval, bool>>> { ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ehaaID },
+                new List<ComplexIncludes<EmployeeHoursAwaitingApproval, ModelBase>> {
+                    new ComplexIncludes<EmployeeHoursAwaitingApproval, ModelBase> { Include = ehwa => ehwa.EmployeeHours}
+                });
             return PartialView(ehaa);
         }
 
@@ -525,37 +401,8 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> DenyApprovalRequestModal(EmployeeHoursAwaitingApproval employeeHoursAwaitingApproval)
         {
-            EmployeeHoursAwaitingApproval employeeHoursBeingApproved = await _context.EmployeeHoursAwaitingApprovals
-                .Include(ehaa => ehaa.EmployeeHours).Include(ehaa => ehaa.Employee)
-                .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == employeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID)
-                .AsNoTracking().FirstOrDefaultAsync();
-
-            employeeHoursBeingApproved.IsDenied = true;
-            try
-            {
-                _context.Entry(employeeHoursBeingApproved).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-
-                TimekeeperNotification notification = new TimekeeperNotification()
-                {
-                    EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID,
-                    IsRead = false,
-                    ApplicationUserID = employeeHoursBeingApproved.EmployeeID,
-                    Description = "update hours request denied for " + employeeHoursBeingApproved.Date.GetElixirDateFormat(),
-                    NotificationStatusID = 5,
-                    TimeStamp = DateTime.Now,
-                    Controller = "Timekeeper",
-                    Action = "SummaryHours"
-                };
-                _context.Add(notification);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                return RedirectToAction("_AwaitingApproval", new { ErrorMessage = AppUtility.GetExceptionMessage(ex) });
-            }
-
-            return RedirectToAction("_AwaitingApproval");
+            var deniedHours = await _employeeHoursAwaitingApprovalProc.DenyHoursAsync(employeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID);
+            return RedirectToAction("_AwaitingApproval", new { ErrorMessage = deniedHours.String });
         }
 
 

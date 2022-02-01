@@ -44,7 +44,7 @@
                             @if (disabled)
                             {
                                 <input asp-for="EmployeeHour.Date" asp-format="@AppUtility.AspDateFormatString" class="form-control-plaintext  border-bottom update-hour-date datepicker " type="text" disabled />
-                                <input type="hidden" asp-for="EmployeeHour.Date" asp-format="{0:dd/MM/yyyy}" />
+                                <input type="hidden"  asp-for="EmployeeHour.Date"asp-format="@AppUtility.AspDateFormatString" />
                             }
                             else
                             {

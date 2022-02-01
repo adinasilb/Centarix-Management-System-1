@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public abstract class LineBase
+    public abstract class LineBase : ModelBase
     {
         [Key]
         public int LineID { get; set; }

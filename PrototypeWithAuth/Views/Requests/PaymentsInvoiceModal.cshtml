@@ -10,43 +10,34 @@
             </button>
             <form action="" method="post" enctype="multipart/form-data" class="modal-padding payModalForm accounting-form" id="myForm">
                 <input type="hidden" asp-for="AccountingEnum" />
-                <input type="text" class="d-none" id="currency" value="@Model.Requests[0].Currency.ToString()" />
+                <input type="text" class="d-none" id="currency" value="@Model.Request.Currency.ToString()" />
 @*                <input type="hidden" asp-for="Requests[0].ExchangeRate" class="exchange-rate" />*@
                 <input type="hidden" asp-for="Payment.PaymentID" />
                 <input type="hidden" asp-for="AmtLeftToPay" class="amtLeftToPay"/>
-                @for (int i = 0; i < Model.Requests.Count; i++)
-                {
-                    <input type="hidden" asp-for="Requests[i].RequestID" />
-                }
+                <input type="hidden" asp-for="Request.RequestID" />
 
                 <div class="modal-body">
                     <div class="container ">
                         <div class="row modal-header-padding">
                             <div class="col-6">
-                                <span class="heading-1">Pay @Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName.ToLower()</span>
+                                <span class="heading-1">Pay @Model.Request.Product.Vendor.VendorEnName.ToLower()</span>
                             </div>
 
                             @{
-                                var CostShekel = (double)Model.Requests.Sum(r => r.Payments.Where(p => !p.IsPaid).OrderBy(p => p.PaymentDate).FirstOrDefault().Sum);
+                                var CostShekel = (double)Model.Request.Payments.Where(p => !p.IsPaid).OrderBy(p => p.PaymentDate).FirstOrDefault().Sum;
                                 var VAT = 0.0;
-                                foreach (var request in Model.Requests)
+                                if (Model.Request.IncludeVAT == true)
                                 {
-                                    if (request.IncludeVAT == true)
-                                    {
-                                        VAT += (double)request.Payments.Where(p => !p.IsPaid).OrderBy(p => p.PaymentDate).FirstOrDefault().Sum * 0.17;
-                                    }
+                                    VAT += (double)Model.Request.Payments.Where(p => !p.IsPaid).OrderBy(p => p.PaymentDate).FirstOrDefault().Sum * 0.17;
                                 }
                                 var TotalShekel = CostShekel + VAT;
-                                var CostDollar = (double)Model.Requests.Sum(r => r.Payments.Where(p => !p.IsPaid).OrderBy(p => p.PaymentDate).FirstOrDefault().Sum / r.ExchangeRate);
+                                var CostDollar = (double)(Model.Request.Payments.Where(p => !p.IsPaid).OrderBy(p => p.PaymentDate).FirstOrDefault().Sum / Model.Request.ExchangeRate);
                                 var DollarVAT = 0.0;
-                                foreach (var request in Model.Requests)
+                                if (Model.Request.IncludeVAT == true)
                                 {
-                                    if (request.IncludeVAT == true)
-                                    {
-                                        DollarVAT += (double)(request.Payments.Where(p => !p.IsPaid).OrderBy(p => p.PaymentDate).FirstOrDefault().Sum / request.ExchangeRate) * 0.17;
-                                    }
+                                    DollarVAT += (double)(Model.Request.Payments.Where(p => !p.IsPaid).OrderBy(p => p.PaymentDate).FirstOrDefault().Sum / Model.Request.ExchangeRate) * 0.17;
                                 }
-                                var TotalDollar = CostDollar + DollarVAT; 
+                                var TotalDollar = CostDollar + DollarVAT;
                                 var ShippingTotalShekel = TotalShekel;
                                 var ShippingTotalDollar = TotalDollar;
                                 foreach (var shipping in Model.ShippingToPay)
@@ -84,61 +75,48 @@
                                 </thead>
 
                                 <tbody>
-                                    @{var x = -1; }
-                                    @foreach (var Request in Model.Requests)
-                                    {
-                                        x++;
-                                        var PaymentIndex = Request.Payments.FindIndex(p => p.PaymentID == Model.Payment.PaymentID);
+                                        @{var PaymentIndex = Model.Request.Payments.FindIndex(p => p.PaymentID == Model.Payment.PaymentID); }
                                         <tr class="invoice-request">
                                             <td style="width:15%;">
                                                 @{
                                                     var imageurl = "/images/css/CategoryImages/placeholder.png";
-                                                    if (Request.Product.ProductSubcategory.ImageURL != null)
+                                                    if (Model.Request.Product.ProductSubcategory.ImageURL != null)
                                                     {
-                                                        imageurl = Request.Product.ProductSubcategory.ImageURL;
+                                                        imageurl = Model.Request.Product.ProductSubcategory.ImageURL;
                                                     }
                                                 }
 
                                                 <img src="@imageurl" alt="Image" width="75" class="category-image" />
                                             </td>
                                             <td style="width:25%;">
-                                                @Request.Product.ProductName
+                                                @Model.Request.Product.ProductName
                                             </td>
                                             <td style="width: 15%; text-transform: none">
-                                                @Request.Unit @if (Request.Product.UnitType != null)
-                                                {@Request.Product.UnitType.UnitTypeDescription<br />}
-                                                @Request.Product.SubUnit @if (Request.Product.SubUnitType != null)
-                                                {@Request.Product.SubUnitType.UnitTypeDescription<br />}
-                                                @Request.Product.SubSubUnit @if (Request.Product.SubSubUnitType != null)
-                                                {@Request.Product.SubSubUnitType.UnitTypeDescription<br />}
+                                                @Model.Request.Unit @if (Model.Request.Product.UnitType != null)
+                                                {@Model.Request.Product.UnitType.UnitTypeDescription<br />}
+                                                @Model.Request.Product.SubUnit @if (Model.Request.Product.SubUnitType != null)
+                                                {@Model.Request.Product.SubUnitType.UnitTypeDescription<br />}
+                                                @Model.Request.Product.SubSubUnit @if (Model.Request.Product.SubSubUnitType != null)
+                                                {@Model.Request.Product.SubSubUnitType.UnitTypeDescription<br />}
                                             </td>
                                             <td style="width:15%;">
                                                 <div class="input-group">
-                                                    @if (Request.Currency == AppUtility.CurrencyEnum.NIS.ToString())
+                                                    @if (Model.Request.Currency == AppUtility.CurrencyEnum.NIS.ToString())
                                                     {
                                                         <span class="input-group-text border-bottom pr-2">&#x20aa;</span>
-                                                        <input asp-for="Requests[x].Payments[PaymentIndex].Sum" class="form-control-plaintext border-bottom installment-sum" vat-val="@Request.IncludeVAT.ToString()" />
+                                                        <input asp-for="Payment.Sum" class="form-control-plaintext border-bottom installment-sum" vat-val="@Model.Request.IncludeVAT.ToString()" />
                                                     }
                                                     else
                                                     {
                                                         <span class="input-group-text border-bottom pr-2">&#36;</span>
-                                                        <input class="form-control-plaintext border-bottom" id="price-in-dollars" index="@x"
-                                                               value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[x].Payments[PaymentIndex].Sum / Model.Requests[0].ExchangeRate, 2))" />
-                                                        <input type="hidden" asp-for="Requests[x].Payments[PaymentIndex].Sum" class="installment-sum @x" vat-val="@Request.IncludeVAT.ToString()" />
+                                                        <input class="form-control-plaintext border-bottom" id="price-in-dollars" 
+                                                               value="@(Model.Request.ExchangeRate == 0 ? 0 : Math.Round(Model.Request.Payments[PaymentIndex].Sum / Model.Request.ExchangeRate, 2))" />
+                                                        <input type="hidden" asp-for="Payment.Sum" class="installment-sum " vat-val="@Model.Request.IncludeVAT.ToString()" />
                                                     }
                                                 </div>
                                             </td>
 
-                                            <td style="width:30%;">
-                                                @if (Model.Requests.Count > 1)
-                                                {
-                                                    <a class="remove-invoice-item float-right" request="@Request.RequestID">
-                                                        <i class="icon-delete-24px px-1 mr-3" style="font-size:1.6rem;"></i>
-                                                    </a>
-                                                }
-                                            </td>
                                         </tr>
-                                    }
                                 </tbody>
                             </table>
 
@@ -203,15 +181,13 @@
                         {
                             <strong>Shipping:</strong>
                             <div class="row pt-2">
-                                @for (var s = 0; s < Model.ShippingToPay.Count; s++)
-                                {
-                                    @Html.HiddenFor(m => m.ShippingToPay[s].ID);
+                                    @Html.HiddenFor(m => m.ShippingToPay[0].ID)
                                     <div class="col-2">
                                         <div class="form-group">
-                                            <label class=" control-label">@Model.ShippingToPay[s].Name</label>
+                                            <label class=" control-label">@Model.ShippingToPay[0].Name</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
-                                                <input value="@String.Format("{0:0.00}",Model.ShippingToPay[s].CostShekel)" class="form-control-plaintext border-bottom" disabled />
+                                                <input value="@String.Format("{0:0.00}",Model.ShippingToPay[0].CostShekel)" class="form-control-plaintext border-bottom" disabled />
                                             </div>
                                         </div>
                                     </div>
@@ -220,14 +196,10 @@
                                             <label class=" control-label"></label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#36;</span>
-                                                <input value="@String.Format("{0:0.00}",Model.ShippingToPay[s].CostDollar)" class="form-control-plaintext border-bottom" disabled />
+                                                <input value="@String.Format("{0:0.00}",Model.ShippingToPay[0].CostDollar)" class="form-control-plaintext border-bottom" disabled />
                                             </div>
                                         </div>
                                     </div>
-
-                                }
-                            </div>
-                            <div class="row">
                                 <div class="col-2">
                                     <div class="form-group">
                                         <label class=" control-label">Total + VAT + Shipping</label>
@@ -306,7 +278,7 @@
                             </div>
                         </div>
                         <input type="submit" style="display:none;" id="documentSubmit" url="@Url.Action("DocumentsModal", "Requests");" class="documentSubmit" />
-                        <input type="hidden" asp-for="Requests[0].ExchangeRate" class="exchange-rate" />
+                        <input type="hidden" asp-for="Request.ExchangeRate" class="exchange-rate" />
 
                         <div class="row mt-5 ">
                             <div class="col-4 pl-0">
@@ -332,7 +304,7 @@
                         <div class="row">
                             <div class="modal-footer-mt mx-auto">
                                 @*<button class="btn inv-payments-button float-right">Paid</button>*@
-                                <input type="submit" class="  custom-button custom-button-font accounting-background-color between-button-margin" id="payInvoice" asp-action="PaymentsInvoiceModal" value="Paid" />
+                                <input type="button" class="  custom-button custom-button-font accounting-background-color between-button-margin" id="payInvoice" value="Paid" />
                                 <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('payments-invoice')">Cancel</button>
                             </div>
                         </div>
@@ -353,8 +325,7 @@
     $('#price-in-dollars').change(function (e) {
         console.log("change price")
         var cost = $(this).val() * $('.exchange-rate').val();
-        var index = $(this).attr("index");
-        $('.installment-sum.' + index).val(cost)
+        $('.installment-sum').val(cost)
         $.fn.SetTotals();
     });
     $(".installment-sum").change(function (e) {
@@ -412,6 +383,7 @@
                     return true;
                 },
                 error: function (jqxhr) {
+                    console.log("error in post")
                     $.fn.OpenModal("modal", "payments-invoice", jqxhr.responseText);
                 }
             })

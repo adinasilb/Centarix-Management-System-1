@@ -41,22 +41,22 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Reports")]
-        public IActionResult _PieChart(SummaryChartsViewModel summaryChartsViewModel)
+        public async Task<IActionResult> _PieChart(SummaryChartsViewModel summaryChartsViewModel)
         {
-            ChartViewModel pieChartViewModel = GetChartData(summaryChartsViewModel);
+            ChartViewModel pieChartViewModel = await GetChartData(summaryChartsViewModel);
 
             return PartialView(pieChartViewModel);
         }
         [HttpPost]
         [Authorize(Roles = "Reports")]
-        public IActionResult _GraphChart(SummaryChartsViewModel summaryChartsViewModel)
+        public async Task<IActionResult> _GraphChart(SummaryChartsViewModel summaryChartsViewModel)
         {
-            ChartViewModel chartViewModel = GetChartData(summaryChartsViewModel);
+            ChartViewModel chartViewModel = await GetChartData(summaryChartsViewModel);
 
             return PartialView(chartViewModel);
         }
         [Authorize(Roles = "Reports")]
-        private ChartViewModel GetChartData(SummaryChartsViewModel summaryChartsViewModel)
+        private async Task<ChartViewModel> GetChartData(SummaryChartsViewModel summaryChartsViewModel)
         {
             var count = 0;
             bool isDollars = false;
@@ -88,7 +88,7 @@ namespace PrototypeWithAuth.Controllers
             pieChartViewModel.SectionName = new List<String>();
             pieChartViewModel.SectionValue = new List<decimal>();
             pieChartViewModel.Currency = currency;
-            var latestExchangeRate = base.GetExchangeRate();
+            var latestExchangeRate = await base.GetExchangeRateAsync();
             if (summaryChartsViewModel.SelectedEmployees != null)
             {
                 var employees = _context.Employees.Where(e => summaryChartsViewModel.SelectedEmployees.Contains(e.Id));
@@ -161,14 +161,14 @@ namespace PrototypeWithAuth.Controllers
             {
                 count = 0;
 
-                var subCategories = _context.ProductSubcategories.Where(ps => summaryChartsViewModel.SelectedProductSubcategories.Contains(ps.ProductSubcategoryID));
+                var subCategories = _context.ProductSubcategories.Where(ps => summaryChartsViewModel.SelectedProductSubcategories.Contains(ps.ID));
                 foreach (var ps in subCategories)
                 {
                     if (count > 18)
                     {
                         count = 0;
                     }
-                    requestList = requests.Where(r => r.Product.ProductSubcategoryID == ps.ProductSubcategoryID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory);
+                    requestList = requests.Where(r => r.Product.ProductSubcategoryID == ps.ID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory);
                     decimal cost = 0;
                     if (isDollars)
                     {
@@ -179,7 +179,7 @@ namespace PrototypeWithAuth.Controllers
                         cost = requestList.Sum(r => r.Cost??0);
                     }
 
-                    pieChartViewModel.SectionName.Add(ps.ProductSubcategoryDescription);
+                    pieChartViewModel.SectionName.Add(ps.Description);
                     if (cost > 0)
                     {
                         pieChartViewModel.SectionColor.Add(colors[count]);
@@ -195,7 +195,7 @@ namespace PrototypeWithAuth.Controllers
             else if (summaryChartsViewModel.SelectedParentCategories != null)
             {
                 count = 0;
-                var parentCategories = _context.ParentCategories.Where(pc => summaryChartsViewModel.SelectedParentCategories.Contains(pc.ParentCategoryID));
+                var parentCategories = _context.ParentCategories.Where(pc => summaryChartsViewModel.SelectedParentCategories.Contains(pc.ID));
 
                 foreach (var pc in parentCategories)
                 {
@@ -203,7 +203,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         count = 0;
                     }
-                    requestList = requests.Where(r => r.Product.ProductSubcategory.ParentCategoryID == pc.ParentCategoryID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
+                    requestList = requests.Where(r => r.Product.ProductSubcategory.ParentCategoryID == pc.ID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
                     decimal cost = 0;
                     if (isDollars)
                     {
@@ -214,7 +214,7 @@ namespace PrototypeWithAuth.Controllers
                         cost = requestList.Sum(r => r.Cost??0);
                     }
 
-                    pieChartViewModel.SectionName.Add(pc.ParentCategoryDescription);
+                    pieChartViewModel.SectionName.Add(pc.Description);
                     if (cost > 0)
                     {
                         pieChartViewModel.SectionColor.Add(colors[count]);
@@ -340,26 +340,26 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Reports")]
-        public IActionResult SummaryTables()
+        public async Task<IActionResult> SummaryTables()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ExpensesSummary;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Tables;
 
-            SummaryTablesViewModel summaryTablesViewModel = GetSummaryTablesViewModel(AppUtility.CurrencyEnum.USD, DateTime.Now.Year);
+            SummaryTablesViewModel summaryTablesViewModel = await GetSummaryTablesViewModel(AppUtility.CurrencyEnum.USD, DateTime.Now.Year);
             return View(summaryTablesViewModel);
         }
 
         [HttpGet]
         [Authorize(Roles = "Reports")]
-        public IActionResult _SummaryTables(AppUtility.CurrencyEnum currencyEnum, int year)
+        public async Task<IActionResult> _SummaryTables(AppUtility.CurrencyEnum currencyEnum, int year)
         {
-            SummaryTablesViewModel summaryTablesViewModel = GetSummaryTablesViewModel(currencyEnum, year);
+            SummaryTablesViewModel summaryTablesViewModel =await GetSummaryTablesViewModel(currencyEnum, year);
             return PartialView(summaryTablesViewModel);
         }
 
         [Authorize(Roles = "Reports")]
-        public SummaryTablesViewModel GetSummaryTablesViewModel(AppUtility.CurrencyEnum currencyEnum, int year)
+        public async  Task<SummaryTablesViewModel> GetSummaryTablesViewModel(AppUtility.CurrencyEnum currencyEnum, int year)
         {
             List<SummaryTableItem> summaryTableItems = new List<SummaryTableItem>();
             for (int i = 1; i <= 12; i++)
@@ -379,7 +379,7 @@ namespace PrototypeWithAuth.Controllers
                 decimal plastics = 0;
                 decimal reusables = 0;
                 decimal total = 0;
-                var latestExchangeRate = base.GetExchangeRate();
+                var latestExchangeRate = await base.GetExchangeRateAsync();
                 switch (currencyEnum)
                 {
                     case AppUtility.CurrencyEnum.NIS:
@@ -673,7 +673,7 @@ namespace PrototypeWithAuth.Controllers
             Dictionary<ParentCategory, List<Request>> ParentCategories = new Dictionary<ParentCategory, List<Request>>();
             foreach (var pc in parentCategories)
             {
-                var pcRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategoryID == pc.ParentCategoryID)
+                var pcRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategoryID == pc.ID)
                     .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
                     .Where(r => categoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID))
                     .Where(r => r.Payments.FirstOrDefault().Invoice != null)
@@ -700,7 +700,7 @@ namespace PrototypeWithAuth.Controllers
             Dictionary<ProductSubcategory, List<Request>> productSubs = new Dictionary<ProductSubcategory, List<Request>>();
             foreach (var sc in subCategories)
             {
-                var scRequests = _context.Requests.Where(r => r.Product.ProductSubcategoryID == sc.ProductSubcategoryID)
+                var scRequests = _context.Requests.Where(r => r.Product.ProductSubcategoryID == sc.ID)
                     .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
                     .Where(r => categoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID))
                     .Where(r => r.Payments.FirstOrDefault().Invoice != null)
@@ -711,7 +711,7 @@ namespace PrototypeWithAuth.Controllers
             StatisticsSubCategoryViewModel statisticsSubCategoryViewModel = new StatisticsSubCategoryViewModel()
             {
                 ProductSubcategories = productSubs,
-                ParentCategoryName = _context.ParentCategories.Where(pc => pc.ParentCategoryID == ParentCategoryId).FirstOrDefault().ParentCategoryDescription
+                ParentCategoryName = _context.ParentCategories.Where(pc => pc.ID == ParentCategoryId).FirstOrDefault().Description
             };
 
             return PartialView(statisticsSubCategoryViewModel);

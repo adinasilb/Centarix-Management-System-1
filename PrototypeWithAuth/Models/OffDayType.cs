@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class OffDayType
+    public class OffDayType : ModelBase
     {
         [Key]
         public int OffDayTypeID { get; set; }
         public string Description { get; set; }
+        public string DescriptionEnum { get; set; }
         public IEnumerable<EmployeeHours> EmployeeHoursPartial { get; set; }
         public IEnumerable<EmployeeHours> EmployeeHours { get; set; }
         public IEnumerable<EmployeeHoursAwaitingApproval> EmployeeHoursAwaitingApprovalsPartial { get; set; }

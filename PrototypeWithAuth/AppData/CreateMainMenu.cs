@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Models;
+﻿using Microsoft.AspNetCore.Routing;
+using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,34 +34,32 @@ namespace PrototypeWithAuth.AppData
                 new Menu()
                 {
                     menuID = 2,
-                     MenuDescription = AppUtility.MenuItems.Protocols.ToString(),
-                     MenuViewName = "Protocols",
-                    //ControllerName = "Protocols",
-                    //ActionName = "CurrentProtocols",
-                     ControllerName = "Protocols",
-                     ActionName = "ReportsCategories",
-                     RouteValues = new Microsoft.AspNetCore.Routing.RouteValueDictionary()
-                     {
-                         {"PageType", AppUtility.PageTypeEnum.ProtocolsReports },
-                         {"SidebarType", AppUtility.SidebarEnum.WeeklyReports }
-                     },
+                    MenuDescription = AppUtility.MenuItems.Protocols.ToString(),
+                    MenuViewName = "Protocols",
+                    ControllerName = "Protocols",
+                    ActionName = "ReportsCategories",
                     MenuImageURL = "/images/css/main_menu_icons/protocols.png",
-                    SmallMenuImageURL = "/images/css/main_menu_small_icons/protocols_menu_button.png"
+                    SmallMenuImageURL = "/images/css/main_menu_small_icons/protocols_menu_button.png",
+                    RouteValues = new RouteValueDictionary()
+                    {
+                        {"PageType", AppUtility.PageTypeEnum.ProtocolsReports },
+                        {"SidebarType", AppUtility.SidebarEnum.WeeklyReports }
+                    }
                 },
                 new Menu()
                 {
                     menuID = 3,
                     MenuDescription = AppUtility.MenuItems.Operations.ToString(),
                     MenuViewName = "Operation",
-                    ControllerName = "Requests",
-                    ActionName = "Index",
-                    RouteValues = new Microsoft.AspNetCore.Routing.RouteValueDictionary()
-                    {
-                        {"PageType",  AppUtility.PageTypeEnum.OperationsRequest },
-                        { "SectionType", AppUtility.MenuItems.Operations },
-                        { "SidebarType", AppUtility.SidebarEnum.List },
-                        { "RequestStatusID", 2 },
-                    },
+                    ControllerName = "",//ControllerName = "Requests",
+                    ActionName = "",//ActionName = "Index",
+                    //RouteValues = new Microsoft.AspNetCore.Routing.RouteValueDictionary()
+                    //{
+                    //    {"PageType",  AppUtility.PageTypeEnum.OperationsRequest },
+                    //    { "SectionType", AppUtility.MenuItems.Operations },
+                    //    { "SidebarType", AppUtility.SidebarEnum.List },
+                    //    { "RequestStatusID", 2 },
+                    //},
                     MenuImageURL = "/images/css/main_menu_icons/operation.png",
                     SmallMenuImageURL = "/images/css/main_menu_small_icons/operations_menu_button.png"
                 },
@@ -109,8 +108,8 @@ namespace PrototypeWithAuth.AppData
                     menuID = 8,
                     MenuDescription = AppUtility.MenuItems.Reports.ToString(),
                     MenuViewName = "Reports",
-                    ControllerName = "",
-                    ActionName = "",
+                    ControllerName="",//ControllerName = "Expenses",
+                    ActionName="",//ActionName = "SummaryPieCharts",
                     MenuImageURL = "/images/css/main_menu_icons/expenses.png",
                     SmallMenuImageURL = "/images/css/main_menu_small_icons/reports_menu_button.png"
                 },

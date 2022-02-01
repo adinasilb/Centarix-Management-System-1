@@ -21,6 +21,7 @@ namespace PrototypeWithAuth.ViewModels
         //public ApplicationUser CurrentUser { get; set; }
         public List<Request> Requests { get; set; } // requests already include the product, we do not need to include a separate product
         public List<Request> RequestsByProduct { get; set; }
+        public List<String> RequestRoles { get; set; }
         public ParentCategory ParentCategory { get; set; }
         public IEnumerable<ParentCategory> ParentCategories { get; set; }
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
@@ -33,8 +34,8 @@ namespace PrototypeWithAuth.ViewModels
         public bool Paid { get; set; }
         public bool PayNow { get; set; }
         public bool PayLater { get; set; }
-        public bool IsReorder { get; set; }
-
+        public bool ShowHistory { get; set; }
+        public string bcColor { get; set; }
         public List<DocumentFolder> DocumentsInfo { get; set; }
         //public List<string> OrderFileStrings { get; set; }
         //public List<string> InvoiceFileStrings { get; set; }
@@ -56,8 +57,6 @@ namespace PrototypeWithAuth.ViewModels
         //public List<IFormFile> CreditFiles { get; set; }
 
         public FileInfo[] OrderFilesFound { get; set; }
-        public IEnumerable<Comment> OldComments { get; set; }
-        public Comment NewComment { get; set; }
 
         public List<Payment> NewPayments { get; set; }
         public double Debt { get; set; } //shekel
@@ -78,8 +77,8 @@ namespace PrototypeWithAuth.ViewModels
         public ReceivedModalVisualViewModel ReceivedModalVisualViewModel { get; set; }
         public LocationType ParentDepthZeroOfSelected { get; set; }
         public int Tab { get; set; } = 1;
-        public List<AppUtility.CommentTypeEnum> CommentTypes { get; set; }
-        public List<Comment> Comments { get; set; }
+        public IEnumerable<CommentType> CommentTypes { get; set; }
+        public List<CommentBase> Comments { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
         public AppUtility.RequestModalType ModalType { get; set; }
         public bool IsProprietary { get; set; }
@@ -88,5 +87,7 @@ namespace PrototypeWithAuth.ViewModels
         public PricePopoverViewModel PricePopoverViewModel { get; set; }
         public TempRequestListViewModel TempRequestListViewModel { get; set; }
         public List<string> LastUrls { get; set; }
+        public bool HasQuote { get; set; }
+        public bool HasWarnings { get; set; }
     }
 }

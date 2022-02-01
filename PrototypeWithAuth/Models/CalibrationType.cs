@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class CalibrationType
+    public class CalibrationType : ModelBase
     {
         [Key]
         public int CalibrationTypeID { get; set; }

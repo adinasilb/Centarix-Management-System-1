@@ -10,7 +10,8 @@ namespace PrototypeWithAuth.Models
 {
     public class ShareRequestList : ShareBase
     {
-        public int RequestListID { get; set; }
+
+        [ForeignKey("ObjectID")]
         public RequestList RequestList { get; set; }
         public bool ViewOnly { get; set; }
     }

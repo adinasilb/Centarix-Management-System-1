@@ -137,7 +137,7 @@
             selector = '.modal .temprequesthiddenfors';
         }
         console.log(selector)
-        var e = $.fn.AddTempRequestHiddenFors(guid, sequence, selector);
+        var e = $.fn.AddTempRequestHiddenFors(guid, sequence, selector, true);
         if (!e) {
             $.fn.CloseModal('step-1');
         }
@@ -192,7 +192,7 @@
                         $(".save-item").removeClass("save-item").off('click')
                     }
                     else {
-                        $.fn.OpenModal('termsModal', 'terms', data)
+                        $.fn.OpenModal('termsModal', 'terms', data);
                     }
 
                     $("#loading").hide();

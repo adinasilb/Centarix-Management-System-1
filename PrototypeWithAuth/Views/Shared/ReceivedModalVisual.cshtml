@@ -91,7 +91,7 @@
 
                         if (locationsList[z].IsEmptyShelf)
                         {
-                            if (!inReceivedModal && Model.RequestChildrenLocationInstances[z].IsThisRequest)
+                            if (!inReceivedModal && Model.RequestChildrenLocationInstances.Count()>0 && Model.RequestChildrenLocationInstances[z].IsThisRequest)
                             {
                                 outerClass += " location-selected";
                                 iconClass = "icon-delete-24px ";

@@ -42,7 +42,7 @@
     <div class="col-2 container p-0 text-right">
         <ul class="list-unstyled">
             <li>
-                <button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 @markReadOnlyClass">
+                <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 @markReadOnlyClass  addComment">
                     <i class="@color icon-add_circle-24px" style="font-size: 3rem;"></i>
                 </button>
             </li>
@@ -52,24 +52,10 @@
                 @foreach (var item in Model.CommentTypes)
                 {
                     <div class="row px-2 comment-btn">
-
-                        @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
-                        {
-                            <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark" style="font-size:1rem; font-weight:400;" onclick="$.fn.addRequestComment('@item')">
-                                <i class="icon-comment-24px mr-2 mt-1" style="color: #30BCC9; font-size: 1.25rem;"></i>
-                                @item
-                            </button><hr class="m-0" />
-
-                        }
-                        else
-                        {
-                            <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark" style="font-size:1rem; font-weight:400;" onclick="$.fn.addRequestComment('@item')">
-                                <i class="icon-report_problem-24px mr-2 mt-1" style="color: var(--danger-color); font-size: 1.25rem;"></i>
-                                @item
-                            </button><hr class="m-0" />
-
-                        }
-
+                        <button type="button" class="no-box-shadow btn bg-transparent add-comment row p-0 text-capitalize text-dark" style="font-size:1rem; font-weight:400;" data-val="@item.TypeID" >
+                            <i class="@item.Icon mr-2 mt-1" style="color: @item.Color; font-size: 1.25rem;"></i>
+                            @item.Description
+                        </button><hr class="m-0" />
                     </div>
                 }
             </div>
@@ -78,10 +64,11 @@
     </div>
 </div>
 
-<div id="comment-info">
-    <input type="hidden" value="@Model.Comments.Count" id="index" />
+<div class="comment-info-div">
+    <input type="hidden" value="@Model.Comments.Count" id="comment-index" />
     @for (int i = 0; i < Model.Comments.Count; i++)
     {
-        await Html.RenderPartialAsync(Url.Content("../Requests/CommentInfoPartialView"), new CommentsInfoViewModel { Comment = Model.Comments[i], Index = i, IsEdit = true });
+        await Html.RenderPartialAsync("_CommentInfoPartialView", new CommentsInfoViewModel { Comment = Model.Comments[i], Index = i, IsEdit = true });
     }
 </div>
+<script src="~/js/commentPopover.js"></script>

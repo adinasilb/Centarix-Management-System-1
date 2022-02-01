@@ -21,6 +21,7 @@ namespace PrototypeWithAuth.ViewModels
         //public RequestIndexObject RequestIndexObject { get; set; }
         public TempRequestListViewModel TempRequestListViewModel { get; set; }
         public string RedirectAction { get; set; }
+        public List<String> EmailAddresses { get; set; }
         public StringWithBool Error { get; set; }
     }
 }

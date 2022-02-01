@@ -1,6 +1,7 @@
 ﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
+
 // Write your JavaScript code.
 
 //global Exchange Rate variable (usd --> nis)
@@ -68,9 +69,11 @@ $(function () {
 
             $(sublistSelector).append(firstitem1);
 
+            console.log(data);
             $.each(data, function (i, subCategory) {
-                console.log(subCategory.productSubcategoryDescription)
-                var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
+                console.log(subCategory.description)
+                var newitem1 = '<option value="' + subCategory.id + '">' + subCategory.description + '</option>';
+                console.log("newitem1: " + newitem1);
                 $(sublistSelector).append(newitem1);
             });
             $(sublistSelector).materialSelect();
@@ -176,15 +179,16 @@ $(function () {
 
 
 
-    $('.modal').on('change', '#vendorList', function () {
+    $('.modal').off('change', '#vendorList').on('change', '#vendorList', function () {
         console.log('in on change vendor')
         var vendorid = $(this).val();
         $.fn.ChangeVendorBusinessId(vendorid);
         $.fn.AddVendorCurrencyType(vendorid);
         //$.fn.CheckVendorAndCatalogNumbers();
     });
-    $("#vendorList").change(function () {
+    $("#vendorList").off("change").change(function () {
         var vendorid = $("#vendorList").val();
+        console.log("vendorid: " + vendorid);
         $.fn.ChangeVendorBusinessId(vendorid);
         $.fn.AddVendorCurrencyType(vendorid);
         //CheckVendorAndCatalogNumbers();
@@ -234,10 +238,8 @@ $(function () {
                 //cannot only use the load outside. apparently it needs this one in order to work
                 $(".vendorBusinessId").val(newBusinessID);
                 $(".vendorBusinessId").text(newBusinessID);
-                $("#vendor-primary-email").val(data.ordersEmail);
-                if ($.isFunction($.fn.UpdatePrimaryOrderEmail)) {
-                    $.fn.UpdatePrimaryOrderEmail();
-                }
+              
+               
             })
         }
         //console.log("newBusinessID: " + newBusinessID);
@@ -442,67 +444,27 @@ $(function () {
 
 
     $(".load-sublocation-view").off("click").on("click", function (e) {
-
-        //e.preventDefault();
-        //e.stopPropagation();
-        //add or remove the background class in col 1
-        //$(".load-sublocation-view").parent().removeClass("td-selected");
-        //$(this).parent().addClass("td-selected");
+        //this is to prevent double loading double clicking of same thing
+        if ($(".location-type-selected").hasClass("in-middle-of-action")) { e.preventDefault(); return true; }
         $("#loading1")/*.delay(1000)*/.show(0);
 
-        //delete all prev tables:
-        //var tableVal = $(this).val();
-        //console.log("-------------------------------------------------------------");
-        //console.log("table val: " + tableVal);
-        //$('div[id^="table"]').each(function () {
-        //	var tableID = $(this).attr("id");
-        //	var tableNum = tableID.substr(5, tableID.length);
-        //	console.log("tableID: " + tableID);
-        //	console.log("tableNum: " + tableNum);
-        //	if (parseInt(tableVal) < parseInt(tableNum)) {
-        //		console.log(tableVal + " < " + tableNum);
-        //		$(this).hide();
-        //	}
-        //	else {
-        //		console.log(tableVal + " > " + tableNum);
-        //	}
-        //});
 
         var myDiv = $(".colTwoSublocations");
         var table = $(this).closest('table');
 
-        ////delete all children tables
-        //var div = $(this).closest('div');
-        //var divid = $(this).closest('div').prop("id");
-        //console.log("div: " + div);
-        //console.log("divid: " + divid);
-
-        //if (divid != "") {
-        //	var nextDiv = div.nextAll(".sublocation-index");
-        //	var nextDivID = nextDiv.prop("id");
-        //	console.log("nextdiv: " + nextDiv);
-        //	console.log("nextdivid: " + nextDivID);
-
-        //	nextDiv.html("");
-        //	//while (nextDiv != null) {
-        //	//	nextDiv = div.next(".sublocation-index");
-        //	//	//nextDiv.html("");
-        //	//}
-        //}
+        $(".location-type-selected").addClass("in-middle-of-action")
+     
 
         //Begin CSS Styling
         var stylingClass = "filled-location-class";
         var trstylingClass = "filled-location-tr";
-        //$("body td").removeClass(stylingClass);
-
-        //$(table + " td").removeClass(stylingClass);
-        //$(table + " td").removeClass(stylingClass);
+      
         table.children('tbody').children('tr').children('td').removeClass(stylingClass);
         table.children('tbody').children('tr').removeClass(trstylingClass);
         $(this).parent().addClass(stylingClass);
         $(this).parent().parent().addClass(trstylingClass);
 
-        //$("." + stylingClass).addClass(stylingClass);
+        
 
         var parentStylingClass = "parent-location-selected-outer-lab-man  location-open-border-right";
         var isParent = false;
@@ -569,15 +531,9 @@ $(function () {
                 $("#loading1").hide();
                 $("#loading1")/*.delay(1000)*/.hide(0);
                 myDiv.append(result);
-                if ($(parentLocation).hasClass("parent-location")) {
-                    //$(".second-col .li-name").html($(".col.sublocation-index").attr("parentName"));
-                    //$("table td.li-name").html($(parentLocation).attr("name"));
-                    //$("table td.li-name").removeClass("filled-location-class-color")
-                    $(".second-col").addClass("filled-location-class");
-                }
                 //this.html(result);
                 //add heading name
-
+                $(".location-type-selected").removeClass("in-middle-of-action");
 
 
             }
@@ -618,6 +574,10 @@ $(function () {
                     $(".second-col").removeClass("filled-location-class");
 
                 }
+                else {
+                    $(".second-col").addClass("filled-location-class");
+
+                }
 
                 $("#loading2").hide();
                 $("#loading2")/*.delay(1000)*/.hide(0);
@@ -652,7 +612,8 @@ $(function () {
             success: (result) => {
                 console.log("result: " + result);
                 if (result) {
-                    if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+                    if (/*( extn == "png" || extn == "jpg" || extn == "jpeg") && */result > '') {
+                        //alert("empty string");
                         console.log("inside the if statement");
                         if (typeof (FileReader) != "undefined") {
                             console.log("file reader does not equal undefined");
@@ -669,7 +630,7 @@ $(function () {
                         $("#UserImagePath").val(result);
                     }
                     else {
-                        //alert("Please only select images");
+                        alert("Please only select images");
                     }
 
                 }
@@ -692,6 +653,7 @@ $(function () {
         var imgPath = $("#UserImagePath").val();
         //$(".user-image").html('<img src="~/' + imgPath + '" class="user-image" />');
         $("#user-image").attr("src", "/" + imgPath);
+        //alert("img path: " + imgPath);
         $(".userImage i").hide();
 
         $.fn.CloseModal('user-picture');
@@ -1022,26 +984,13 @@ $(function () {
             type: 'GET',
             cache: false,
             success: function (data) {
-                $("#comment-info").append(data);
+                $(".comment-info-div").append(data);
                 $('#comment-index').val(++index);
             }
         });
     }
 
-    $.fn.addRequestComment = function (type) {
-        console.log(type);
-        var index = $('#index').val();
-        $.ajax({
-            async: false,
-            url: '/Requests/CommentInfoPartialView?type=' + type + '&index=' + index,
-            type: 'GET',
-            cache: false,
-            success: function (data) {
-                $("#comment-info").append(data);
-                $('#index').val(++index);
-            }
-        });
-    }
+   
 
     $.fn.OpenUserImageModal = function (url) {
         console.log("in call modal2, url: " + url);
@@ -1309,8 +1258,29 @@ $(function () {
     $.fn.SaveOffDays = function (url, month) {
         var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
         var dateRangeToDay = rangeTo.attr('data-date');
+        var isMultipleDatePicker = $(".datepicker-here").attr("data-range")
+        console.log("minrange: " + $('#vacation-dates').datepicker().data('datepicker').selectedDates[0])
+        if ((isMultipleDatePicker == 'false' && $('#vacation-dates').datepicker().data('datepicker').selectedDates[0] == undefined) || (isMultipleDatePicker == 'true' && $('#vacation-dates').datepicker().data('datepicker').minRange == "")) {
+            $('input.selectedDate').val("");
+         
+            $('input.selectedDate').valid();
+            $('input.selectedDate').trigger("change");
+            $("#saveOffDay").attr("disabled", false);
+            return;
+        }
+        else {
+            if (isMultipleDatePicker == 'false') {
+                var dateFrom = $('#vacation-dates').datepicker().data('datepicker').selectedDates[0].toISOString();
+            }
+            else {
 
-        var dateFrom = $('#vacation-dates').datepicker().data('datepicker').minRange.toISOString()
+                var dateFrom = $('#vacation-dates').datepicker().data('datepicker').minRange.toISOString()
+            }
+            $('input.selectedDate').val(true);
+            $('input.selectedDate').trigger("change");
+            $('input.selectedDate').valid();
+            
+        }
         var dateTo = '';
         if (dateRangeToDay == undefined) {
             dateTo = null;
@@ -1446,6 +1416,7 @@ $(function () {
         else {
             console.log('close edit')
             $.fn.CloseModal("edits");
+            $.fn.CloseModal('invalid-right-modal');
         }
     })
 
@@ -1457,6 +1428,7 @@ $(function () {
         //	return false;
         //}
         //else {
+       
         var type = $(this).attr('name');
         console.log(type);
         var url = '';
@@ -1474,7 +1446,8 @@ $(function () {
         else if ($(this).hasClass('users')) {
             url = "/Admin/EditUser";
             section = "Users";
-        } else if ($(this).hasClass('orders')) {
+        }
+        else if ($(this).hasClass('orders')) {
             url = "/Requests/EditModalView";
             section = "Requests";
         }
@@ -1511,8 +1484,12 @@ $(function () {
 
         }
         else if (type == 'details') {
+  
             if ($(this).hasClass('locations')) {
                 $.fn.MakeLocationsEditable();
+            }
+            else if ($(this).hasClass('users')) {
+                $.fn.enableUsersMarkReadonly();
             }
             else {
                 enableMarkReadonly($(this));
@@ -1534,76 +1511,68 @@ $(function () {
 
     $.fn.EnableMaterialSelect = function (selectID, dataActivates) {
         console.log("enable " + selectID)
-        var selectedElements = $('#' + dataActivates).find(".active")
-        var selectedIndex = $('#' + dataActivates).find(".active").index();
-        var dataActivatesLength = $('#' + dataActivates).children('li').length;
-        if (selectedElements.length <= 1) {
-            if ($('#' + dataActivates + " .search-wrap").length > 0 || $(selectID).children().length < dataActivatesLength) {
-                selectedIndex = selectedIndex - 1;
-            }
-            var isOptGroup = false;
-            if ($('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup') || $('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup-option')) { isOptGroup = true; }
-            if (isOptGroup) {
-                var selected = $(':selected', $(selectID));
-                console.log(selectID + "  " + selectedIndex);
-                var optgroup = selected.closest('optgroup').attr('label');
-                switch (optgroup) {
-                    case "Units":
-                        console.log("Units")
-                        selectedIndex = selectedIndex;
-                        break;
-                    case "Weight/Volume":
-                        console.log("Volume")
-                        selectedIndex = selectedIndex - 1;
-                        break;
-                    case "Test":
-                        console.log("Test")
-                        selectedIndex = selectedIndex - 2;
-                        break;
-                }
-
-            }
+        var selectedElements = $('#' + dataActivates).find(".active");
+        var shouldRemainReadonly = false;
+        if (selectedElements.parents("div").hasClass("mark-roles-readonly")) {
+            shouldRemainReadonly = true;
         }
-        $(selectID).destroyMaterialSelect();
-        $(selectID).prop("disabled", false);
-        if (selectedElements.length <= 1) {
-
-            $(selectID).prop('selectedIndex', selectedIndex);
-        }
-        else {
-            var selectedIndexes = [];
-            selectedElements.each(function (el) {
-                selectedIndexes.push(el)
-            })
-            var i = 0
-            $(selectID).children().each(function (el) {
-                if (el == selectedIndexes[i]) {
-                    el.selected = true;
-                    i++
+        console.log("shouldRemeainReadonly: " + shouldRemainReadonly);
+        if (!shouldRemainReadonly) {
+            var selectedIndex = $('#' + dataActivates).find(".active").index();
+            var dataActivatesLength = $('#' + dataActivates).children('li').length;
+            if (selectedElements.length <= 1) {
+                if ($('#' + dataActivates + " .search-wrap").length > 0 || $(selectID).children().length < dataActivatesLength) {
+                    selectedIndex = selectedIndex - 1;
                 }
-            })
+                var isOptGroup = false;
+                if ($('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup') || $('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup-option')) { isOptGroup = true; }
+                if (isOptGroup) {
+                    var selected = $(':selected', $(selectID));
+                    console.log(selectID + "  " + selectedIndex);
+                    var optgroup = selected.closest('optgroup').attr('label');
+                    switch (optgroup) {
+                        case "Units":
+                            console.log("Units")
+                            selectedIndex = selectedIndex;
+                            break;
+                        case "Weight/Volume":
+                            console.log("Volume")
+                            selectedIndex = selectedIndex - 1;
+                            break;
+                        case "Test":
+                            console.log("Test")
+                            selectedIndex = selectedIndex - 2;
+                            break;
+                    }
+
+                }
+            }
+            $(selectID).destroyMaterialSelect();
+            $(selectID).prop("disabled", false);
+            if (selectedElements.length <= 1) {
+
+                $(selectID).prop('selectedIndex', selectedIndex);
+            }
+            else {
+                var selectedIndexes = [];
+                selectedElements.each(function (el) {
+                    selectedIndexes.push(el)
+                })
+                var i = 0
+                $(selectID).children().each(function (el) {
+                    if (el == selectedIndexes[i]) {
+                        el.selected = true;
+                        i++
+                    }
+                })
+            }
+            $('[data-activates="' + dataActivates + '"]').prop('disabled', false);
+            $(selectID).materialSelect();
+            $.fn.ChangeCheckboxesToFilledInWithoutMDB();
+            $('.open-document-modal').attr("data-val", true);
         }
         $(selectID).removeAttr("disabled")
-        $('[data-activates="' + dataActivates + '"]').prop('disabled', false);
-        $(selectID).materialSelect();
-        $.fn.ChangeCheckboxesToFilledInWithoutMDB();
-        $('.open-document-modal').attr("data-val", true);
     }
-    $("#addSupplierComment").click(function () {
-        $('[data-toggle="popover"]').popover('dispose');
-        $('#addSupplierComment').popover({
-            sanitize: false,
-            placement: 'bottom',
-            html: true,
-            content: function () {
-                return $('#popover-content').html();
-            }
-        });
-        $('#addSupplierComment').popover('toggle');
-
-    });
-
-
 
     $("#home-btn").off('click').on('click', function () {
         $('[data-toggle="popover"]').popover('dispose');
@@ -1627,17 +1596,17 @@ $(function () {
         $('#ExternalCalibrations_0__IsRepeat').val(val)
     });
 
-    $('.modal #FirstName').off('change').change(function () {
-        $('.userName').val($(this).val() + " " + $('#LastName').val())
+    $('.modal #Employee_FirstName').off('change').change(function () {
+        $('.userName').val($(this).val() + " " + $('#Employee_LastName').val())
     });
-    $('.modal #LastName').off('change').change(function () {
-        $('.userName').val($('#FirstName').val() + " " + $(this).val())
+    $('.modal #Employee_LastName').off('change').change(function () {
+        $('.userName').val($('#Employee_FirstName').val() + " " + $(this).val())
     });
-    $('#FirstName').off('change').change(function () {
-        $('.userName').val($(this).val() + " " + $('#LastName').val())
+    $('#Employee_FirstName').off('change').change(function () {
+        $('.userName').val($(this).val() + " " + $('#Employee_LastName').val())
     });
-    $('#LastName').off('change').change(function () {
-        $('.userName').val($('#FirstName').val() + " " + $(this).val())
+    $('#Employee_LastName').off('change').change(function () {
+        $('.userName').val($('#Employee_FirstName').val() + " " + $(this).val())
     });
     $.fn.CallPageTimekeeper = function (url) {
         $.ajax({
@@ -1667,7 +1636,7 @@ $(function () {
         });
     })
 
-    $('.load-delete-hour-modal').click(function (e) {
+    $('.load-delete-hour-modal').off("click").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         $itemurl = "/Timekeeper/DeleteHourModal/?id=" + $(this).attr('value') + "&sectionType=" + $('#masterSectionType').val();

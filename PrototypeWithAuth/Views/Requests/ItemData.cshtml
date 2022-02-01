@@ -39,16 +39,17 @@
     }
     var requestCategoryType = Model.Requests[0].Product?.ProductSubcategory.ParentCategory.CategoryTypeID;
 }
-
+<input type="hidden" value="@Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum" id="categoryDescription" />
 <div class="container-fluid div-tabs no-box-shadow p-0">
     <input type="hidden" value="@Model.ModalType" id="modalType" />
 
     @if (Model.ModalType == AppUtility.RequestModalType.Edit && Model.Requests[0].IsArchived == false)
     {
-        <div class=" row text-right mb- ">
+        <div class=" row text-right ">
             <div class="switch col-12 switch-margin">
                 <label>
                     <label class="edit-mode-switch-description">Edit Mode Off</label>
+
                     <input type="checkbox" class="turn-edit-on-off  orders has-location-tab" value="@Model.Requests.FirstOrDefault().RequestID" productID="@Model.Requests.FirstOrDefault().ProductID" name="details">
                     <span class="lever"></span>
                 </label>
@@ -69,7 +70,7 @@
             </div>
         }
         @if ((Model.Requests[0].RequestStatusID == 3 && Model.SectionType != AppUtility.MenuItems.Protocols && Model.Requests[0].OrderType != AppUtility.OrderTypeEnum.SaveOperations.ToString())
-            || Model.IsProprietary)
+           || Model.IsProprietary)
         {
             <div id="location" class="tab-pane fade @showLocation" value="2">
                 @{await Html.RenderPartialAsync("~/Views/Requests/_LocationTab.cshtml", Model); }
@@ -87,7 +88,7 @@
         <div id="comments" class="tab-pane fade @showComments" value="5">
             @{await Html.RenderPartialAsync("~/Views/Requests/_CommentsTab.cshtml", Model); }
         </div>
-        @if (Model.IsHistory == false && ((Model.ModalType.Equals(AppUtility.RequestModalType.Summary) && (Model.RequestStatusID != 7 && !Model.IsProprietary)) || Model.IsReorder) && Model.SectionType != AppUtility.MenuItems.Protocols)
+        @if (Model.IsHistory == false && ((Model.ModalType.Equals(AppUtility.RequestModalType.Summary) && (Model.RequestStatusID != 7 && !Model.IsProprietary)) || Model.ShowHistory) && Model.SectionType != AppUtility.MenuItems.Protocols)
         {<div id="history" class="tab-pane fade @showHistory" value="6">
                 @{await Html.RenderPartialAsync("~/Views/Requests/_HistoryTab.cshtml", Model); }
             </div>

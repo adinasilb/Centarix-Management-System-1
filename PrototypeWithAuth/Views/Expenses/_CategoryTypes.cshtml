@@ -42,27 +42,27 @@
             var arrowButtonClasses = buttonClasses + " right-arrow-icon";
             <tr class="text-left">
                 <td class="p-0">
-                    <button class="@buttonClasses" value="@category.Key.ParentCategoryID">
-                        @category.Key.ParentCategoryDescription
+                    <button class="@buttonClasses" value="@category.Key.ID">
+                        @category.Key.Description
                     </button>
                 </td>
                 <td class="p-0">
-                    <button class="@buttonClasses" value="@category.Key.ParentCategoryID">
+                    <button class="@buttonClasses" value="@category.Key.ID">
                         @category.Value.Count()
                     </button>
                 </td>
                 <td class="p-0">
-                    <button class="@buttonClasses" value="@category.Key.ParentCategoryID">
+                    <button class="@buttonClasses" value="@category.Key.ID">
                         @category.Value.Select(r => r.ProductID).Distinct().Count()
                     </button>
                 </td>
                 <td class="p-0">
-                    <button class="@buttonClasses" value="@category.Key.ParentCategoryID">
+                    <button class="@buttonClasses" value="@category.Key.ID">
                         &#8362; @string.Format("{0:n0}", category.Value.Sum(r => r.Cost))
                     </button>
                 </td>
                 <td class="p-0">
-                    <button class="@arrowButtonClasses" value="@category.Key.ParentCategoryID">
+                    <button class="@arrowButtonClasses" value="@category.Key.ID">
                         <i class="icon-back-24px ml-3 large-icon float-right"></i>
                     </button>
                 </td>

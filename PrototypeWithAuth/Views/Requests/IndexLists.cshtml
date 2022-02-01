@@ -5,22 +5,12 @@
 @inject SignInManager<ApplicationUser> SignInManager
 
 @{
-    TempData.Keep();
     ViewData["Title"] = "My Lists";
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
     if (AppUtility.IsAjaxRequest(this.Context.Request))
     {
         Layout = null;
-    }
-
-    bool search = false;
-    if (TempData["Search"] != null)
-    {
-        if (TempData["Search"].ToString() == "True")
-        {
-            search = true;
-        }
     }
 
 }

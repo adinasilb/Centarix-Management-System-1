@@ -13,13 +13,27 @@ $('.addInvoiceForm').validate({
 		},
 		"Invoice.InvoiceNumber": {
 			required: true,
-			//number: true,
-			//min: 1,
+			remote: {
+				url: '/Requests/CheckUniqueVendorAndInvoiceNumber',
+				type: 'POST',
+				data: {
+					"VendorID": function () { return $("#Vendor_VendorID").val() },
+					"InvoiceNumber": function () { return $("#Invoice_InvoiceNumber").val() }
+				},
+			},
 
 		},
 		"Invoice.InvoiceDate": {
 			required: true,
 			IsTodayOrEarlier: true
         }
+	},
+	messages: {
+		/*		"subLocationSelected": "Please choose a location before submitting",
+				"locationVisualSelected": "Please choose a location before submitting",
+				"locationTypeSelected": "Please choose a location before submitting",*/
+		"Invoice.InvoiceNumber": {
+			remote: "This invoice number already exists for the chosen vendor"
+		}
 	}
 });

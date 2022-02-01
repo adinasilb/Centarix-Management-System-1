@@ -10,6 +10,8 @@ using Abp.Domain.Entities;
 using System.Threading.Tasks;
 using System.Transactions;
 using System.Threading;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PrototypeWithAuth.Data
 {
@@ -22,6 +24,8 @@ namespace PrototypeWithAuth.Data
 
         }
 
+        public DbSet<ProductComment> ProductComments { get; set; }
+        public DbSet<CommentType> CommentTypes { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<OldVendorCountry> OldVendorCountries { get; set; }
         public DbSet<Country> Countries { get; set; }
@@ -111,10 +115,12 @@ namespace PrototypeWithAuth.Data
         public DbSet<Employee> Employees { get; set; }
         public DbSet<TimekeeperNotificationStatus> TimekeeperNotificationStatuses { get; set; }
         public DbSet<RequestNotificationStatus> RequestNotificationStatuses { get; set; }
+        public DbSet<EmployeeInfoNotificationStatus> EmployeeInfoNotificationStatuses { get; set; }
         public DbSet<NotificationStatus> NotificationStatuses { get; set; }
         public DbSet<RequestNotification> RequestNotifications { get; set; }
         public DbSet<TimekeeperNotification> TimekeeperNotifications { get; set; }
         //public DbSet<Notification<NotificationStatus>> Notifications { get; set; }
+        public DbSet<EmployeeInfoNotification> EmployeeInfoNotifications { get; set; }
         public DbSet<PaymentStatus> PaymentStatuses { get; set; }
         public DbSet<ParentQuote> ParentQuotes { get; set; }
         public DbSet<QuoteStatus> QuoteStatuses { get; set; }
@@ -128,7 +134,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<CompanyAccount> CompanyAccounts { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }
-        public DbSet<Comment> Comments { get; set; }
+        public DbSet<RequestComment> RequestComments { get; set; }
         public DbSet<RequestStatus> RequestStatuses { get; set; }
         public DbSet<Request> Requests { get; set; }
         public DbSet<ParentRequest> ParentRequests { get; set; }
@@ -265,11 +271,32 @@ namespace PrototypeWithAuth.Data
                 .WithMany(au => au.ShareResourcesReceived)
                 .HasForeignKey(sr => sr.ToApplicationUserID);
 
+            //naming the constraints so they won't be droppped and readded
+
             // configures one-to-many relationship between Inventory and InventorySubcategories
             modelBuilder.Entity<ProductSubcategory>()
             .HasOne<ParentCategory>(ps => ps.ParentCategory)
             .WithMany(pc => pc.ProductSubcategories)
-            .HasForeignKey(ps => ps.ParentCategoryID);
+            .HasForeignKey(ps => ps.ParentCategoryID)
+            .HasConstraintName("FK_ProductSubcategories_ParentCategory");
+
+            modelBuilder.Entity<Product>()
+                .HasOne<ProductSubcategory>(p => p.ProductSubcategory)
+                .WithMany(ps => ps.Products)
+                .HasForeignKey(p => p.ProductSubcategoryID)
+                .HasConstraintName("FK_Products_ProductSubcategory");
+
+            modelBuilder.Entity<ResourceResourceCategory>()
+                .HasOne<ResourceCategory>(rrc => rrc.ResourceCategory)
+                .WithMany(rc => rc.ResourceResourceCategories)
+                .HasForeignKey(rrc => rrc.ResourceCategoryID)
+                .HasConstraintName("FK_ResourceResourceCategory_ResourceCategories_ResourceCategoryID");
+
+            modelBuilder.Entity<Report>()
+                .HasOne<ResourceCategory>(r => r.ReportCategory)
+                .WithMany(rc => rc.Reports)
+                .HasForeignKey(r => r.ReportCategoryID)
+                .HasConstraintName("FK_Reports_ResourceCategories_ReportCategoryID");
 
             modelBuilder.Entity<SubProject>()
             .HasOne<Project>(sp => sp.Project)
@@ -350,9 +377,14 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Payment>()
                 .HasQueryFilter(item => !item.IsDeleted);
 
-            modelBuilder.Entity<Comment>()
+            modelBuilder.Entity<RequestComment>()
                 .HasQueryFilter(item => !item.IsDeleted);
 
+            modelBuilder.Entity<ProductComment>()
+                .HasQueryFilter(item => !item.IsDeleted);
+
+            modelBuilder.Entity<VendorComment>()
+                .HasQueryFilter(item => !item.IsDeleted);
             //modelBuilder.Entity<LocationInstance>()
             //    .HasQueryFilter(item => !(item is TemporaryLocationInstance));
 
@@ -412,11 +444,14 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Request>().HasIndex(r => r.SerialNumber).IsUnique();
             modelBuilder.Entity<Participant>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<ExperimentEntry>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<TimekeeperNotification>().Property(tn => tn.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<RequestNotification>().Property(rn => rn.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<EmployeeInfoNotification>().Property(en => en.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<Vendor>().HasIndex(v => new { v.CountryID, v.VendorBuisnessID }).IsUnique();
             modelBuilder.Entity<Participant>().HasIndex(p => new { p.ParticipantID, p.CentarixID }).IsUnique();
             modelBuilder.HasSequence<int>("SerialNumberHelper", schema: "dbo").StartsAt(1).IncrementsBy(1);
             modelBuilder.Entity<Request>().Property(r => r.SerialNumber).HasDefaultValueSql("NEXT VALUE FOR dbo.SerialNumberHelper");
-      
+
             /*PROTOCOLS*/
             ///set up composite keys
 
@@ -459,8 +494,10 @@ namespace PrototypeWithAuth.Data
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
 
-        }
 
+
+
+        }
 
     }
 }

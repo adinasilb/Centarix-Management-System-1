@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class ProtocolCategory
+    public class ProtocolCategory : ModelBase
     {
         [Key]
         public int ProtocolCategoryTypeID { get; set; }

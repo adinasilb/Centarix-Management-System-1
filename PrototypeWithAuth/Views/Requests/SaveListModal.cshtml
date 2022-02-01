@@ -2,7 +2,7 @@
 <div class="modal modal-view save-list-modal" id="myModal" data-backdrop="false" style="z-index: 9101">
     <div class="modal-dialog-centered elixir-modal-xs mx-auto " role="document" style="max-height:100%;">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-                <button type="button" class="close modal-close-padding modal-close-style" onclick="$.fn.CloseModal('save-list');" aria-label="Close">
+                <button type="button" class="close modal-close-padding modal-close-style" onclick="$.fn.CloseModal('save-list-settings');" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             <form action="" class="small-modal-padding">
@@ -15,7 +15,7 @@
                         <input type="submit" class="submit-save custom-button custom-button-font order-inv-background-color" value="Save" />
                     </div>
                     <div class="col-6">
-                        <input type="submit" class="cancel-save custom-button custom-cancel text-black custom-button-small-font px-5" value="Cancel" />
+                        <input type="button" class="cancel-save custom-button custom-cancel text-black custom-button-small-font px-5" value="Cancel" onclick="$.fn.CloseModal('save-list-settings');" />
                     </div>
 
                 </div>

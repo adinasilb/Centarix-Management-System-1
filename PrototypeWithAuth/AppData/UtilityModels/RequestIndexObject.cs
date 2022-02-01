@@ -28,7 +28,7 @@ namespace PrototypeWithAuth.AppData
                 }
             }
             set { _PageNumber = value; }
-        } 
+        }
         public int RequestStatusID
         {
             get
@@ -69,7 +69,7 @@ namespace PrototypeWithAuth.AppData
             set { _SidebarType = value; }
         }
         public String SidebarFilterID { get; set; }
-        public AppUtility.PageTypeEnum PageType 
+        public AppUtility.PageTypeEnum PageType
         {
             get
             {
@@ -91,11 +91,11 @@ namespace PrototypeWithAuth.AppData
             {
                 if (_SelectedPriceSort == null)
                 {
-                    return new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString()};
+                    return new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString() };
                 }
                 else
                 {
-                    if(_SelectedPriceSort[0]==null)
+                    if (_SelectedPriceSort[0]==null)
                     {
                         return new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString() };
                     }
@@ -111,7 +111,7 @@ namespace PrototypeWithAuth.AppData
         public bool IsReorder { get; set; }
         public bool IsArchive { get; set; }
         public Guid GUID { get; set; } //THIS IS ONLY FOR PASSING BETWEEN CONTROLLERS ---> NOT FOR USE IN REMEMBERING DATA/REFERENCING ETC.
-        
+
         //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
         public AppUtility.ModalType ModalType { get; set; }
 

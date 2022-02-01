@@ -1,103 +1,101 @@
 ﻿$(function () {
 
-    $("#sublist").off("change").on("change", function (e) {
+    $('.partial-div, body').off('change', 'select.subcategory').on('change', 'select.subcategory', function (e) {
         if ($('#masterSectionType').val() != "Operations") {
             console.log("subcategory change")
             var subcategoryID = $("#sublist").val()
             var pageType = $("#masterPageType").val()
-            var itemName = $("#Requests_0__Product_ProductName").val()
-            console.log("name " + itemName);
-            var isRequestQuote = false; //always false until put back in //$(".isRequest").is(":checked")
-            console.log(isRequestQuote)
-            console.log("subcategory " + subcategoryID)
-            var url = "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&PageType=" + pageType + "&itemName=" + itemName + "&isRequestQuote=" + isRequestQuote;
-            console.log(url);
-            if (subcategoryID != "") {
-                $.ajax({
-                    //processData: true,
-                    //contentType: true,
-                    async: true,
-                    url: url,
-                    type: 'GET',
-                    cache: false,
-                    //data: formData,
-                    success: function (data) {
-                        $(".outer-partial").html(data);
-                        $(".mdb-select").materialSelect();
-                        $.fn.AddSaveItemClass();
-                        $("#loading").hide();
-                        var category = $("#categoryDescription").val();
-                        console.log("category " + category)
-                        $("." + category).removeClass("d-none");
-                        $("." + category).prop("disabled", false);
-                        $.fn.DisableMaterialSelect("#parentlist", 'select-options-parentlist');
-                        $.fn.DisableMaterialSelect("#sublist", 'select-options-sublist');
-                        $(".proprietryHidenCategory").attr("disabled", false);
-                        console.log($("#requestQuoteValue").attr("value"))
-                        if ($("#requestQuoteValue").val() == "true") {
-                            console.log("request")
-                            $(".requestPriceQuote").addClass("d-none");
-                            $(".requestPriceQuote").attr("disabled", true)
+            var sectionType = $("#masterSectionType").val()
+            var modalType = $("#modalType").val();
+            var requestID = $("#Requests_0__RequestID").val()
+            if (modalType == "Create") {
+                var itemName = $("#Requests_0__Product_ProductName").val()
+                console.log("name " + itemName);
+                var isRequestQuote = false; //always false until put back in //$(".isRequest").is(":checked")
+                console.log(isRequestQuote)
+                console.log("subcategory " + subcategoryID)
+                var url = "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&PageType=" + pageType + "&itemName=" + itemName + "&isRequestQuote=" + isRequestQuote;
+                console.log(url);
+                if (subcategoryID != "") {
+                    $.ajax({
+                        //processData: true,
+                        //contentType: true,
+                        async: true,
+                        url: url,
+                        type: 'GET',
+                        cache: false,
+                        //data: formData,
+                        success: function (data) {
+                            $(".outer-partial").html(data);
+                            $(".mdb-select").materialSelect();
+                            $.fn.AddSaveItemClass();
+                            $("#loading").hide();
+                            var category = $("#categoryDescription").val();
+                            console.log("category " + category)
+                            $("." + category).removeClass("d-none");
+                            $("." + category).prop("disabled", false);
+                            $.fn.DisableMaterialSelect("#parentlist", 'select-options-parentlist');
+                            $.fn.DisableMaterialSelect("#sublist", 'select-options-sublist');
+                            $(".proprietryHidenCategory").attr("disabled", false);
+                            console.log($("#requestQuoteValue").attr("value"))
+                            if ($("#requestQuoteValue").val() == "true") {
+                                console.log("request")
+                                $(".requestPriceQuote").addClass("d-none");
+                                $(".requestPriceQuote").attr("disabled", true)
+                            }
+                            else {
+                                $('.requestQuoteHide').addClass("d-none");
+                            }
                         }
-                        else {
-                            $('.requestQuoteHide').addClass("d-none");
-                        }
-                    }
-                })
+                    })
+                }
             }
-        }
+            else if (modalType == "Edit") {
+                var url = "/Requests/ItemData/?id=" + requestID + "&tab=1"+"&productSubCategoryId=" + subcategoryID + "&SectionType=" + sectionType;
+                if (subcategoryID != "") {
+                    $.ajax({
+                        //processData: true,
+                        //contentType: true,
+                        async: true,
+                        url: url,
+                        type: 'GET',
+                        cache: false,
+                        //data: formData,
+                        success: function (data) {
+                            $(".ordersItemForm .partial-div").html(data);
+                            $(".ordersItemForm .mdb-select").materialSelect();
+                            $("#loading").hide();
+                            var category = $("#categoryDescription").val();
+                            console.log("category " + category)
+                            $('.turn-edit-on-off').prop("checked", true);
+                            $(".ordersItemForm .edit-mode-switch-description").text("Edit Mode On");
+                            $(".ordersItemForm .turn-edit-on-off").attr('name', 'edit');
+                            $("." + category).removeClass("d-none");
+                            $("." + category).prop("disabled", false);
+                            enableMarkReadonly($('.turn-edit-on-off'));
+                            $(".proprietryHidenCategory").attr("disabled", false);
+                            $(".proprietryHidenCategory").attr("disabled", false);               
+                            $.ajax({
+                                //processData: true,
+                                //contentType: true,
+                                async: true,
+                                url: "/Requests/GetCategoryImageSrc?productSubCategoryID="+subcategoryID,
+                                type: 'GET',
+                                cache: false,
+                                //data: formData,
+                                success: function (data) {
+                                    $(".sub-category-image").attr("src", data);
+                                }
+                            })
+                        }
+                    })
+                }
+            }
+        }            
     })
    
 
-     $(".order-tab").on("click", function (e) {
-        if ($(".all-mail").length == 0) {
-            let data = [
-                $("#vendor-primary-email").val()
-            ]
-            $("#allEmails").email_multiple({
-                data: data
-            })
-            var newEmailLine = $(".enter-mail-id");
-            newEmailLine.removeAttr('placeholder');
-            newEmailLine.addClass('form-control-plaintext');
-            newEmailLine.addClass('border-bottom');
-
-            $(".email-ids:first span").attr("disabled", true);
-            $(".email-ids:first span").css("display", "none");
-            $(".email-ids:first").addClass("supplier-email");
-        }
-    });
     
-
-    $.fn.UpdatePrimaryOrderEmail = function () {
-        if ($(".supplier-email").length > 0) {
-            $(".supplier-email").html($("#vendor-primary-email").val());
-            $(".isSupplier").val($("#vendor-primary-email").val());
-        }
-        else {
-            $('.all-mail').prepend('<span class="email-ids supplier-email">' + $("#vendor-primary-email").val() + '</span>');
-            $(".isSupplier").val($("#vendor-primary-email").val());
-        }
-    };
-
-    $.fn.CheckListLength = function () {
-        //Disable if 5 emails
-        var listlength = $(".email-ids").length;
-        if (listlength >= 5 || (listlength == 4 && $(".supplier-email").length == 0)) {
-            $(".enter-mail-id").attr("disabled", true);
-        }
-        else {
-            $(".enter-mail-id").attr("disabled", false);
-        }
-    }
-
-    $.fn.RemoveFromHiddenIds = function (emailValue) {
-        $(".emailaddresses[value='" + emailValue + "']:first").val('');
-    }
-
-    $.fn.AddToHiddenIds = function (emailValue) {
-        $(".emailaddresses[value='']:first").val(emailValue);
-    }
 
 
     $(".isRequest").click(function(){
@@ -263,6 +261,22 @@
                 return $('#popover-content').html();
             }
         });
+
+        $(".add-comment").off("click").click(function () {
+            var type = $(this).attr("data-val")
+            var index = $('#index').val();
+            $.ajax({
+                async: false,
+                url: '/Requests/_CommentInfoPartialView?typeID=' + type + '&index=' + index,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $(".comment-info-div").append(data);
+                    $('#index').val(++index);
+                }
+            });
+        });
+
         $('#addRequestComment').popover('toggle');
 
     });

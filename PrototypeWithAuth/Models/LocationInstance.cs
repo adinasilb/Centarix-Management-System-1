@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Models
 {
-    public class LocationInstance
+    public class LocationInstance : ModelBase
     {
         //WHEN QUERY - NEED TO SPECIFY OfType<LocationInstance> TO NOT HAVE TEMPORARY LOCATIONS
         [Key]
         public int LocationInstanceID { get; set; }
         public int LocationTypeID { get; set; }
         public LocationType LocationType { get; set; }
-        public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; }
-        public IEnumerable<RequestLocationInstance> AllRequestLocationInstances { get; set; } //refers to the ParentLocationInstanceID on the RLI
+        public ListImplementsModelBase<RequestLocationInstance> RequestLocationInstances { get; set; }
+        public ListImplementsModelBase<RequestLocationInstance> AllRequestLocationInstances { get; set; } //refers to the ParentLocationInstanceID on the RLI
         public int? LocationInstanceParentID { get; set; }
         public LocationInstance LocationInstanceParent { get; set; }
         public int Height { get; set; }
