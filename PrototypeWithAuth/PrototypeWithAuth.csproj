@@ -613,21 +613,13 @@
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />
     <Folder Include="wwwroot\Materials\" />
-    <Folder Include="wwwroot\FunctionResults\" />
-    <Folder Include="wwwroot\FunctionLine\" />
     <Folder Include="wwwroot\Reports\" />
     <Folder Include="wwwroot\ParentRequest\" />
     <Folder Include="wwwroot\Requests\" />
     <Folder Include="wwwroot\ParentQuote\" />
-    <Folder Include="wwwroot\Reports\" />
     <Folder Include="wwwroot\Protocols\" />
     <Folder Include="wwwroot\ParentQuotes\" />
-    <Folder Include="wwwroot\ParentQuote\" />
     <Folder Include="wwwroot\ParentQuote\fb6f29cc-299d-4873-838c-38a9bfc3c7c2\Quotes\" />
-    <Folder Include="wwwroot\ParentRequest\" />
-    <Folder Include="wwwroot\Protocols\" />
-    <Folder Include="wwwroot\Reports\" />
-    <Folder Include="wwwroot\Requests\" />
     <Folder Include="wwwroot\Requests\17\Info\" />
     <Folder Include="wwwroot\ResourceImages\" />
   </ItemGroup>
