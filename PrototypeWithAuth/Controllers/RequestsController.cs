@@ -5146,6 +5146,11 @@ namespace PrototypeWithAuth.Controllers
         {
             return _requestsProc.UpdateExchangeRateByHistory().Result.Bool;
         }
+
+        public async Task<IActionResult> _CustomFields()
+        {
+            return PartialView(new CustomField());
+        }
     }
 }
 

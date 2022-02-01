@@ -15,6 +15,7 @@
             cache: true,
             success: function (data) {
                 $(".settings-form").html(data);
+                $(".mdb-select").materialSelect();
                 return false;
             }
         });
@@ -56,4 +57,17 @@
             }
         });
     };
+
+    $(".details-form").off("click").on("click", function () {
+        $.ajax({
+            async: true,
+            url: "/Requests/_CustomFields",
+            type: "GET",
+            cache: true,
+            success: function (data) {
+                $(".custom-fields-details").html(data);
+                return false;
+            }
+        });
+    });
 });
