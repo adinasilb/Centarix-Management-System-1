@@ -10,12 +10,16 @@
   <ItemGroup>
     <Compile Remove="Models\LocationModels\**" />
     <Compile Remove="wwwroot\images\NewFolder\**" />
+    <Compile Remove="wwwroot\ParentQuote\fb6f29cc-299d-4873-838c-38a9bfc3c7c2\**" />
     <Content Remove="Models\LocationModels\**" />
     <Content Remove="wwwroot\images\NewFolder\**" />
+    <Content Remove="wwwroot\ParentQuote\fb6f29cc-299d-4873-838c-38a9bfc3c7c2\**" />
     <EmbeddedResource Remove="Models\LocationModels\**" />
     <EmbeddedResource Remove="wwwroot\images\NewFolder\**" />
+    <EmbeddedResource Remove="wwwroot\ParentQuote\fb6f29cc-299d-4873-838c-38a9bfc3c7c2\**" />
     <None Remove="Models\LocationModels\**" />
     <None Remove="wwwroot\images\NewFolder\**" />
+    <None Remove="wwwroot\ParentQuote\fb6f29cc-299d-4873-838c-38a9bfc3c7c2\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -619,7 +623,6 @@
     <Folder Include="wwwroot\ParentQuote\" />
     <Folder Include="wwwroot\Protocols\" />
     <Folder Include="wwwroot\ParentQuotes\" />
-    <Folder Include="wwwroot\ParentQuote\fb6f29cc-299d-4873-838c-38a9bfc3c7c2\Quotes\" />
     <Folder Include="wwwroot\Requests\17\Info\" />
     <Folder Include="wwwroot\ResourceImages\" />
   </ItemGroup>
