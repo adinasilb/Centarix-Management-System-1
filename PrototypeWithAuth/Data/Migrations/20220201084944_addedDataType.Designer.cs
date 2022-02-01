@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220201084944_addedDataType")]
+    partial class addedDataType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1165,33 +1167,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("CustomDataTypeID");
 
                     b.ToTable("CustomDataTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            CustomDataTypeID = 1,
-                            Name = "String"
-                        },
-                        new
-                        {
-                            CustomDataTypeID = 2,
-                            Name = "Double"
-                        },
-                        new
-                        {
-                            CustomDataTypeID = 3,
-                            Name = "Bool"
-                        },
-                        new
-                        {
-                            CustomDataTypeID = 4,
-                            Name = "DateTime"
-                        },
-                        new
-                        {
-                            CustomDataTypeID = 5,
-                            Name = "File"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Degree", b =>

@@ -5,6 +5,7 @@
     var showItem = " active show ";
 }
 <form action="" method="get" class="lab-man-form" id="myForm">
+    <input type="hidden" class="customFieldCounter" value="0" />
     <div class="row top-bar border-bottom text-center text-justify under-row-margin">
         <div class="col-12">
             @Model.ItemCount Items &nbsp;&nbsp;&nbsp;&nbsp; @Model.RequestCount Requests
@@ -96,9 +97,9 @@
                                 <input class="form-control-plaintext border-bottom" disabled />
                             </div>
                         </div>
-                        <div class="custom-fields-details">
+                        <div class="custom-fields-details row lab-man-form">
                         </div>
-                        <div class="add-custom-fields">
+                        <div class="add-custom-fields row">
                             @{ await Html.RenderPartialAsync("_AddCustomFields.cshtml", "details-form");}
                         </div>
                     </div>

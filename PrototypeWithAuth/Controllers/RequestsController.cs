@@ -5147,9 +5147,14 @@ namespace PrototypeWithAuth.Controllers
             return _requestsProc.UpdateExchangeRateByHistory().Result.Bool;
         }
 
-        public async Task<IActionResult> _CustomFields()
+        public async Task<IActionResult> _CustomField(int CustomFieldCounter)
         {
-            return PartialView(new CustomField());
+            var CustomField = new CustomField()
+            {
+                CustomDataTypes = _customDataTypesProc.Read(),
+                CustomFieldCounter = CustomFieldCounter
+            };
+            return PartialView(CustomField);
         }
     }
 }

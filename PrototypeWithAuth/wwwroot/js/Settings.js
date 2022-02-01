@@ -59,13 +59,17 @@
     };
 
     $(".details-form").off("click").on("click", function () {
+        var customFieldCounter = $(".customFieldCounter").attr("value");
         $.ajax({
             async: true,
-            url: "/Requests/_CustomFields",
+            url: "/Requests/_CustomField?" + customFieldCounter,
             type: "GET",
             cache: true,
             success: function (data) {
                 $(".custom-fields-details").html(data);
+                $(".mdb-select-" + customFieldCounter).materialSelect();
+                $('input[type="checkbox"]').checkbox();
+                $(".customFieldCounter").attr("value", customFieldCounter + 1);
                 return false;
             }
         });
