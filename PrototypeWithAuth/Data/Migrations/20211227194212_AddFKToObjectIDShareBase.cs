@@ -19,7 +19,7 @@ namespace PrototypeWithAuth.Data.Migrations
                 table: "ShareRequestLists");
 
             migrationBuilder.DropColumn(
-                name: "ProtocolID",
+                name: "ProtocolVersionID",
                 table: "ShareProtocols");
 
             migrationBuilder.AlterColumn<int>(
@@ -146,7 +146,7 @@ namespace PrototypeWithAuth.Data.Migrations
                 oldClrType: typeof(int));
 
             migrationBuilder.AddColumn<int>(
-                name: "ProtocolID",
+                name: "ProtocolVersionID",
                 table: "ShareProtocols",
                 type: "int",
                 nullable: true);
