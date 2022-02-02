@@ -74,7 +74,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("ElixirProduction"));
+                    Configuration.GetConnectionString("ElixirProductionUpload"));
                 //options.EnableSensitiveDataLogging(true);
             });
 
@@ -180,7 +180,7 @@ namespace PrototypeWithAuth
 
             //ChangePassword(serviceProvider).Wait();
 
-            CreateRoles(serviceProvider).Wait();
+            //CreateRoles(serviceProvider).Wait();
             //CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer");
 
 
