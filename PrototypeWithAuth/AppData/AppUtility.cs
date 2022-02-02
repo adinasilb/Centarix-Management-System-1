@@ -122,7 +122,7 @@ namespace PrototypeWithAuth.AppData
             {
                 new Role(){RoleName = "General", RoleDefinition = "Requests", IsMain = true},
                 new Role(){RoleName = "Approve Orders", RoleDefinition = "RequestsApproveOrders"},
-                new Role(){RoleName = "Edit Received Orders Prices/Units", RoleDefinition = "RequestEditReceived"},
+                new Role(){RoleName = "Edit Received Orders Prices", RoleDefinition = "RequestEditReceived"},
                 new Role(){RoleName = "Delete Received Orders", RoleDefinition = "RequestsDeleteReceived"}
             };
             return rre;

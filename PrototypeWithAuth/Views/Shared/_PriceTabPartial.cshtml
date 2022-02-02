@@ -68,7 +68,7 @@
                 <div class="row">
                     <div class="col-md-4 form-group">
                         <label asp-for="Requests[0].Unit" class="control-label"></label>
-                        <input type="number" asp-for="@Model.Requests[0].Unit" value="@(AppUtility.ConvertIntToString(Model.Requests[0].Unit))" old-val="@Model.Requests[0].Unit.ToString()" class="unit form-control-plaintext border-bottom @markReadOnlyClass @markPriceUnitReadonly @showUnitAmoutWarning "
+                        <input type="number" asp-for="@Model.Requests[0].Unit" value="@(AppUtility.ConvertIntToString(Model.Requests[0].Unit))" old-val="@Model.Requests[0].Unit.ToString()" class="unit form-control-plaintext border-bottom @markReadOnlyClass  @showUnitAmoutWarning "
                                id="unit" />
                         @*@Html.EditorFor(vm => vm.Requests[0].Unit,
         new { htmlAttributes = new { @class = "form-control-plaintext border-bottom " + @markReadOnlyClass @markPriceUnitReadonly, @min = "1", @id = "unit", @value = AppUtility.ConvertIntToString(Model.Requests[0].Unit) } })*@
@@ -92,7 +92,7 @@
                             vm => vm.Requests[0].Product.UnitTypeID,
                             Model.UnitTypeList,
                             "",
-                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass + " " + markPriceUnitReadonly, @id = "unitTypeID" }
+                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass , @id = "unitTypeID" }
                             )
                         <span asp-validation-for="Requests[0].Product.UnitType" class="text-danger-centarix"></span>
                     </div>
@@ -139,13 +139,13 @@
     }
     <div class="col-4 pl-0 RequestSubunitCard">
         <div class="border h-100 ">
-            <button type="button" class="close sub-close @cardDisplayNoneSub pr-2 pt-2  @markReadOnlyClass @markPriceUnitReadonly" aria-label="Close" style="/* display: flex; */float: right;">
+            <button type="button" class="close sub-close @cardDisplayNoneSub pr-2 pt-2  @markReadOnlyClass " aria-label="Close" style="/* display: flex; */float: right;">
                 <span aria-hidden="true">×</span>
             </button>
             <div class="mx-2rem addSubUnitCard mt-4 @plusDisplayNoneSub">
                 <div class="row " style="display:initial;">
                     <div class="col-8 offset-2 text-center font-weight-light">
-                        <input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow @markReadOnlyClass @markPriceUnitReadonly" @disableIfNotReorder style="font-size: 5rem; line-height:normal" />
+                        <input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow @markReadOnlyClass " @disableIfNotReorder style="font-size: 5rem; line-height:normal" />
                         <br><span class="text-capitalize @color text">add sub unit</span>
                     </div>
                 </div>
@@ -156,7 +156,7 @@
                 <div class="row ">
                     <div class="col-md-4 pl-0 form-group">
                         <label asp-for="Requests[0].Product.SubUnit" class="control-label"></label>
-                        <input type="number" name="Requests[0].Product.SubUnit" value="@(Model.Requests[0].Product.SubUnit==0? "" : AppUtility.TrimZeros(Model.Requests[0].Product.SubUnit??0).ToString())" class="form-control-plaintext border-bottom @subMarkReadOnly @markPriceUnitReadonly "
+                        <input type="number" name="Requests[0].Product.SubUnit" value="@(Model.Requests[0].Product.SubUnit==0? "" : AppUtility.TrimZeros(Model.Requests[0].Product.SubUnit??0).ToString())" class="form-control-plaintext border-bottom @subMarkReadOnly  "
                                id="subUnit" @disableIfNotReorder @cardDisabledSub />
                         <span asp-validation-for="Requests[0].Product.SubUnit" class="text-danger-centarix"></span>
                     </div>
@@ -170,7 +170,7 @@
                                 "",
                                 htmlAttributes: new
                                     {
-                                        @class = "mdb-select custom select-dropdown form-control-plaintext subunit-type-select " + @subMarkReadOnly + " " + markPriceUnitReadonly ,
+                                        @class = "mdb-select custom select-dropdown form-control-plaintext subunit-type-select " + @subMarkReadOnly ,
                                         @disabled = "disabled",
                                         @id = "subUnitTypeID"
                                     }
@@ -182,7 +182,7 @@
                                 vm => vm.Requests[0].Product.SubUnitTypeID,
                                 Model.UnitTypeList,
                                 "",
-                                htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext subunit-type-select " + @subMarkReadOnly + " " + markPriceUnitReadonly, @id = "subUnitTypeID" })
+                                htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext subunit-type-select " + @subMarkReadOnly , @id = "subUnitTypeID" })
                         }
                         <span asp-validation-for="Requests[0].Product.SubUnitType" class="text-danger-centarix"></span>
                     </div>
@@ -236,7 +236,7 @@
     }
     <div class="col-4 pl-0 RequestSubsubunitCard @cardDivDisplayNone">
         <div class="border h-100">
-            <button type="button" class="close subsub-close @cardDisplayNoneSubSub pr-2 pt-2 @markReadOnlyClass @markPriceUnitReadonly" aria-label="Close" style="
+            <button type="button" class="close subsub-close @cardDisplayNoneSubSub pr-2 pt-2 @markReadOnlyClass" aria-label="Close" style="
     /* display: flex; */
     float: right;
 ">
@@ -246,7 +246,7 @@
                 <div class="row " style="display:initial;">
                     <div class="col-8 offset-2 text-center font-weight-light">
 
-                        <input type="button" value="+" class=" addSubSubUnit btn m-0 p-0 no-box-shadow @markReadOnlyClass @markPriceUnitReadonly" @disableIfNotReorder style="font-size: 5rem; line-height:normal" />
+                        <input type="button" value="+" class=" addSubSubUnit btn m-0 p-0 no-box-shadow @markReadOnlyClass" @disableIfNotReorder style="font-size: 5rem; line-height:normal" />
                         <br>
                         <span class="text-capitalize @color text">add sub unit</span>
                     </div>
@@ -257,7 +257,7 @@
                     <div class="col-md-4 pl-0 form-group">
                         <label asp-for="Requests[0].Product.SubSubUnit" class="control-label"></label>
                         <input type="number" name="Requests[0].Product.SubSubUnit" value="@(Model.Requests[0].Product.SubUnit==0? "" : AppUtility.TrimZeros(Model.Requests[0].Product.SubUnit??0).ToString())" class="form-control-plaintext border-bottom
-                               @subsubMarkReadOnly @markPriceUnitReadonly " @cardDisabledSubSub @disableIfNotReorder id="subSubUnit" />
+                               @subsubMarkReadOnly " @cardDisabledSubSub @disableIfNotReorder id="subSubUnit" />
                         <span asp-validation-for="Requests[0].Product.SubSubUnit" class="text-danger-centarix"></span>
                     </div>
                     <div class="col-md-8 form-group">
@@ -270,7 +270,7 @@
                                 "",
                                 htmlAttributes: new
                                      {
-                                         @class = "mdb-select custom select-dropdown form-control-plaintext sub-subunit-type-select " + @subsubMarkReadOnly +" " + markPriceUnitReadonly,
+                                         @class = "mdb-select custom select-dropdown form-control-plaintext sub-subunit-type-select " + @subsubMarkReadOnly,
                                     @disabled = "disabled",
                                          @id = "subSubUnitTypeID"
                                      })
@@ -283,7 +283,7 @@
                                 "",
                                 htmlAttributes: new
                                      {
-                                         @class = "mdb-select custom select-dropdown form-control-plaintext sub-subunit-type-select " + @subsubMarkReadOnly + " " + markPriceUnitReadonly,
+                                         @class = "mdb-select custom select-dropdown form-control-plaintext sub-subunit-type-select " + @subsubMarkReadOnly ,
                                     @id = "subSubUnitTypeID"
                                      })
                         }
