@@ -3206,6 +3206,7 @@ body.modal-open .popover {
     border-radius: 0.25rem !important;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
+    background-color: blue;
 }
 
 .floating-action-bar .list-group {
@@ -3216,7 +3217,6 @@ body.modal-open .popover {
     border: none;
     background-color: transparent;
     color: white;
-
 
 }
 
