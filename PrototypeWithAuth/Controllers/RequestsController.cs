@@ -1928,7 +1928,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
             };
-            request.RequestStatusID =1;
+            request.RequestStatusID = 1;
             requestItemViewModel.Requests = new List<Request>() { request };
             requestItemViewModel.ModalType = AppUtility.RequestModalType.Reorder;
             requestItemViewModel.HasWarnings = _productCommentsProc.Read(new List<Expression<Func<ProductComment, bool>>> { pc => pc.ObjectID == request.ProductID && pc.CommentTypeID == 2 }).Count() > 0;
@@ -2394,7 +2394,7 @@ namespace PrototypeWithAuth.Controllers
 
                         // add a "To" Email
                         string ToEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails?.FirstOrDefault() != null ? deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.FirstOrDefault() : vendorEmail;
-                        message.To.Add(new MailboxAddress(ToEmail ));
+                        message.To.Add(new MailboxAddress(ToEmail));
 
                         //add CC's to email
                         //TEST THIS STATEMENT IF VENDOR IS MISSING AN ORDERS EMAIL
@@ -2969,7 +2969,7 @@ namespace PrototypeWithAuth.Controllers
                 receivedModalSublocationsViewModel.LabPartTypes = _labPartsProc.Read().AsEnumerable();
             }
             while (!finished)
-            {              
+            {
                 //need to get the whole thing b/c need both the name and the child id so it's instead of looping through the list twice
                 var nextType = await _locationTypesProc.ReadOneAsync(new List<Expression<Func<LocationType, bool>>> { lt => lt.LocationTypeID == locationTypeIDLoop });
                 string nextTYpeName = nextType.LocationTypeName;
@@ -5015,15 +5015,26 @@ namespace PrototypeWithAuth.Controllers
 
         public IActionResult DownloadRequestsToExcel()
         {
-            var results = _requestsProc.Read().Select(r => new
+            var subcategoryList = new List<int>() { 201, 217, 204 };
+            var results1 = _requestsProc.ReadWithIgnoreQueryFilters(
+                new List<Expression<Func<Request, bool>>> { r => subcategoryList.Contains(r.Product.ProductSubcategoryID) },
+                new List<ComplexIncludes<Request, ModelBase>>{ new ComplexIncludes<Request, ModelBase>() { Include = r => r.RequestLocationInstances, ThenInclude =
+                new ComplexIncludes<ModelBase, ModelBase>(){ Include = rli => ((RequestLocationInstance)rli).LocationInstance } }});
+            var results = results1.Select(r => new
             {
                 ProductName = r.Product.ProductName,
-                InvoiceNumber = r.Payments.FirstOrDefault().Invoice.InvoiceNumber,
+                //InvoiceNumber = r.Payments.FirstOrDefault().Invoice.InvoiceNumber,
                 CategoryName = r.Product.ProductSubcategory.ParentCategory.Description,
                 SubCategoryName = r.Product.ProductSubcategory.Description,
                 Vendor = r.Product.Vendor.VendorEnName,
-                CompanyID = r.Product.Vendor.VendorBuisnessID,
+                //CompanyID = r.Product.Vendor.VendorBuisnessID,
                 CatalogNumber = r.Product.CatalogNumber,
+                Location = (r.RequestLocationInstances.FirstOrDefault().LocationInstance.LabPartID != null ?
+                (r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationInstanceName + " " + 
+                r.RequestLocationInstances.FirstOrDefault().LocationInstance.LabPart.LabPartName) :
+                (r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationInstanceName ??
+                r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName) ) ??
+                (r.RequestStatusID != 3 ? "Has not been received yet" : "ERROR")
                 //BatchLot = r.Batch,
                 //ExpirationDate = AppUtility.GetExcelDateFormat(r.BatchExpiration),
                 //QuoteNumber = r.ParentQuote.QuoteNumber,

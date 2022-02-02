@@ -176,7 +176,7 @@ namespace PrototypeWithAuth.Data.SeededData
             {
                 ID = 204,
                 ParentCategoryID = 2,
-                Description = "",
+                Description = "Solutions",
                 ImageURL = "/images/css/CategoryImages/reagents/chemical_solution2.png"
             });
             list.Add(new ProductSubcategory
