@@ -1,6 +1,6 @@
 ﻿@using PrototypeWithAuth.AppData.UtilityModels
 @using React.AspNet
-
+@using React.Router
 @{
     Layout = null;
 }
@@ -82,7 +82,9 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <div class="request_nav_body"> @RenderBody()</div>
     <div class="modals">
-        @{await Html.RenderPartialAsync("ModalLoader"); }
+      @Html.ReactRouter("RootComponent", new { })
+@Html.ReactGetScriptPaths()
+@Html.ReactInitJavaScript()
     </div>
 
 

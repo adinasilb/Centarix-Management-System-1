@@ -1,11 +1,8 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
 @using PrototypeWithAuth.AppData
-@using React.AspNet
-@using React.Router;
 
-@Html.ReactRouter("RootComponent", new { })
-@Html.ReactGetScriptPaths()
-@Html.ReactInitJavaScript()
+
+
 <div class="error-message">
     @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage);}
 </div>
