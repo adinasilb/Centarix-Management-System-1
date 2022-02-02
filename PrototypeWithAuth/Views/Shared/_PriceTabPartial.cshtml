@@ -68,7 +68,7 @@
                 <div class="row">
                     <div class="col-md-4 form-group">
                         <label asp-for="Requests[0].Unit" class="control-label"></label>
-                        <input type="number" asp-for="@Model.Requests[0].Unit" value="@(AppUtility.ConvertIntToString(Model.Requests[0].Unit))" old-val="@Model.Requests[0].Unit.ToString()" class="unit form-control-plaintext border-bottom @markReadOnlyClass  @showUnitAmoutWarning "
+                        <input type="number" asp-for="@Model.Requests[0].Unit" value="@(AppUtility.ConvertIntToString(Model.Requests[0].Unit))" old-val="@Model.Requests[0].Unit.ToString()" class="unit form-control-plaintext border-bottom @markReadOnlyClass @markPriceUnitReadonly @showUnitAmoutWarning "
                                id="unit" />
                         @*@Html.EditorFor(vm => vm.Requests[0].Unit,
         new { htmlAttributes = new { @class = "form-control-plaintext border-bottom " + @markReadOnlyClass @markPriceUnitReadonly, @min = "1", @id = "unit", @value = AppUtility.ConvertIntToString(Model.Requests[0].Unit) } })*@
