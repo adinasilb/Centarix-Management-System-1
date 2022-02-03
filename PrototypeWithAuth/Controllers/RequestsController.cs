@@ -5015,7 +5015,7 @@ namespace PrototypeWithAuth.Controllers
 
         public IActionResult DownloadRequestsToExcel()
         {
-            var subcategoryList = new List<int>() { 201, 217, 204 };
+            var subcategoryList = new List<int>() { 201, 217, 204, 1502 };
             var results1 = _requestsProc.ReadWithIgnoreQueryFilters(
                 new List<Expression<Func<Request, bool>>> { r => subcategoryList.Contains(r.Product.ProductSubcategoryID) },
                 new List<ComplexIncludes<Request, ModelBase>>{ new ComplexIncludes<Request, ModelBase>() { Include = r => r.RequestLocationInstances, ThenInclude =
