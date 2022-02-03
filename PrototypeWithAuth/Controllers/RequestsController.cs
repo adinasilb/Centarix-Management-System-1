@@ -1358,7 +1358,7 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> DeleteModal(int? id, RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> _DeleteModal(int? id, RequestIndexObject requestIndexObject)
         {
             //if (!AppUtility.IsAjaxRequest(Request))
             //{
