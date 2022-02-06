@@ -1,7 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.ProtocolsIndexViewModel
 @using PrototypeWithAuth.AppData
 <input type="hidden" value="@Model.SidebarFilterID" class="sideBarFilterID" />
-
 @if (Model.PagedList.Count() > 0)
 {
     <div>@{ await Html.RenderPartialAsync("_IndexFilter", Model.ProtocolsFilterViewModel);}</div>

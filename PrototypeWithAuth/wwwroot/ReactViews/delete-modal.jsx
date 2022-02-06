@@ -51,13 +51,13 @@ export default class DeleteModal extends Component {
                     <div className="modal-dialog-centered modal-lg mx-auto " role="document" style={{maxHeight:"100%",  overflowY:"auto"}}>
 
                         <div className="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-                            <div className="close-button"><CloseButton /></div>
+                            <div className="close-button"><CloseButton history={this.props.history}/></div>
                             <form action="" method="post" encType="multipart/form-data" style={{ height: "100%", overflow: "auto" }} className="modal-padding" id="myForm">
                                 <div dangerouslySetInnerHTML={{ __html: this.state.view }} />
                                 <div className="modal-footer">
                                     <div className="text-center mx-auto modal-footer-mt">
                                         <button type="submit" className="custom-button custom-button-font @bcColor between-button-margin submit-delete" value="@Model.Request.RequestID">Confirm</button>
-                                        <CancelButton />
+                                        <CancelButton history={this.props.history}/>
                                     </div>
                                 </div>
 
