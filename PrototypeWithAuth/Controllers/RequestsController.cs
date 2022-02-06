@@ -5152,7 +5152,8 @@ namespace PrototypeWithAuth.Controllers
             var CustomField = new CustomField()
             {
                 CustomDataTypes = _customDataTypesProc.Read(),
-                CustomFieldCounter = CustomFieldCounter
+                CustomFieldCounter = CustomFieldCounter,
+                Required = new List<bool>() { new bool() }
             };
             return PartialView(CustomField);
         }

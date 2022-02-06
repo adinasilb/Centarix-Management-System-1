@@ -68,7 +68,6 @@
             success: function (data) {
                 $(".custom-fields-details").html(data);
                 $(".mdb-select-" + customFieldCounter).materialSelect();
-                $('input[type="checkbox"]').checkbox();
                 $(".customFieldCounter").attr("value", customFieldCounter + 1);
                 return false;
             }

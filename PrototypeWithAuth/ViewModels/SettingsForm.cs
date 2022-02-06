@@ -13,5 +13,6 @@ namespace PrototypeWithAuth.ViewModels
         public int RequestCount { get; set; }
         public string CategoryDescription { get; set; }
         public string SubcategoryDescription { get; set; }
+        public List<bool> Test { get; set; }
     }
 }
