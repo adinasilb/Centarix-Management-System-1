@@ -18,6 +18,8 @@ namespace PrototypeWithAuth.AppData.UtilityModels
         public String Icon { get; private set; }
         public String Color { get; private set; }
         public AppUtility.PopoverDescription Description { get; private set; }
+
+        public string DescriptionDisplayName { get { return AppUtility.GetDisplayNameOfEnumValue(Description.ToString()); } }
         public String Action { get; private set; }
         public String Controller { get; private set; }
         public AppUtility.PopoverEnum CurrentLocation { get; private set; }
