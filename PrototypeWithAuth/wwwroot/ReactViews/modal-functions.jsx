@@ -19,6 +19,7 @@ var closeModal = function (modalClass) {
     var modalElements = document.getElementsByClassName("modal");
     console.log(modalElements)
     if (modalElements.length == 1) {
+        alert("here")
         document.getElementsByClassName("modal-backdrop")[0].remove();
         document.getElementsByClassName('body')[0].classList.remove('modal-open');
     }
