@@ -146,7 +146,7 @@
                       @data_stop_refresh = "true"
                   })
             }
-            <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" />
+            <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" name="Requests[0].@(productOrderType).ProductSubcategory.ParentCategoryID"/>
             <span asp-validation-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
         </div>
     </div>

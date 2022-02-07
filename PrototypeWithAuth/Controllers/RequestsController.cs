@@ -3183,7 +3183,27 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(documentsModalViewModel);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public ActionResult _DocumentsCard(AppUtility.FolderNamesEnum requestFolderNameEnum, string id, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests,
+            AppUtility.RequestModalType modalType = AppUtility.RequestModalType.Create)
+        {
+            if (!AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView("InvalidLinkPage");
+            }
+            string requestParentFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
+            var requestFolder = Path.Combine(requestParentFolder, id);
+            DocumentsCardViewModel documentsCardViewModel = new DocumentsCardViewModel()
+            {
+                DocumentInfo = GetExistingFileStrings(requestFolderNameEnum, parentFolderName, requestFolder, id),
+                SectionType = sectionType,
+                ShowSwitch = true,
+                ModalType = modalType
+            };
 
+            return PartialView(documentsCardViewModel);
+        }
 
         [HttpPost]
         [RequestSizeLimit(100_000_000)]

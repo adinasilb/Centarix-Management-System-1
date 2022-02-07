@@ -94,7 +94,7 @@
                 </button>
                 @*@for (int x = 0; x < Model.Requests.Count; x++)
                     {
-                        <input type="hidden" asp-for="Requests[x].RequestID" />
+                    <input type="hidden" asp-for="Requests[x].RequestID" />
                     }*@
 
                 <div class="modal-header modal-header-padding">
@@ -111,27 +111,29 @@
                         <div class="row">
                             <div class="col-3 offset-9">
                                 @if (@*User.IsInRole("Admin") &&*@ Model.ShowSwitch)
-{
-<div class=" row text-right mb-0">
-    <div class="switch col-12 switch-margin">
-        <label>
-            @{
-                var switchDescription = Model.IsEdittable ? "Edit Mode On" : "Edit Mode Off";
-            }
-            <label class="edit-mode-switch-description disa"> @switchDescription</label>
-            <input type="checkbox" class="turn-edit-doc-on-off operations" @isChecked @*value="@Model.Request.RequestID"*@>
-            <span class="lever"></span>
-        </label>
-    </div>
-</div>
-}
+                                {
+                                    <div class=" row text-right mb-0">
+                                        <div class="switch col-12 switch-margin">
+                                            <label>
+                                                @{
+                                                    var switchDescription = Model.IsEdittable ? "Edit Mode On" : "Edit Mode Off";
+                                                }
+                                                <label class="edit-mode-switch-description"> @switchDescription</label>
+                                                <input type="checkbox" class="turn-edit-doc-on-off" @isChecked @*value="@Model.Request.RequestID"*@>
+                                                <span class="lever"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-body">
                     <div class="_DocumentsModalData">
-                        @{ await Html.RenderPartialAsync("_DocumentsModalData");}
+                        @{
+                            await Html.RenderPartialAsync("_DocumentsModalData");
+                        }
                     </div>
 
                     <div class="row justify-content-center">
@@ -140,65 +142,65 @@
                             <div class="upload-btn-wrapper between-button-margin">
                                 <button type="button" class="custom-button custom-button-font @bcColorToUse  upload-file document-modal-buttons" data-string="@Model.FolderName">Upload A File</button>
 
-                                        @if (disabled)
-                                        {
-                                            @if (Model.DontAllowMultiple)
-                                            {
-                                                <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" disabled />
-                                            }
-                                            else
-                                            {
-                                                <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" multiple disabled />
-                                            }
-                                        }
-                                        else
-                                        {
-                                            @if (Model.DontAllowMultiple)
-                                            {
+                                @if (disabled)
+                                {
+                                    @if (Model.DontAllowMultiple)
+                                    {
+                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" disabled />
+                                    }
+                                    else
+                                    {
+                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" multiple disabled />
+                                    }
+                                }
+                                else
+                                {
+                                    @if (Model.DontAllowMultiple)
+                                    {
 
-                                                <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" />
-                                            }
-                                            else
-                                            {
-                                                <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls"  multiple />
-                                            }
-                                        }
+                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" />
+                                    }
+                                    else
+                                    {
+                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" multiple />
+                                    }
+                                }
 
                             </div>
                         }
 
 
-                                @{
-                                    var saveClass = "";
-                                    var cancelClass = "d-none";
-                                    var saveButtonText = "Save";
-                                }
-                                @if (disabled)
-                                {
-                                    saveClass = "d-none";
-                                    cancelClass = "";
-                                }
-                                @if (Model.ParentFolderName == AppUtility.ParentFolderName.Reports)
-                                {
-                                    saveButtonText = "Add";
-                                }
-                                else if(Model.ParentFolderName == AppUtility.ParentFolderName.ExperimentEntries)
-                                {
-                                    saveButtonText = "Close";
-                                }
-                                <button type="button" class="custom-button custom-button-font @bcColorToUse @saveClass document-modal-save document-modal-buttons " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('documents');">
-                                    @saveButtonText
-                                </button>
-                                <button type="button" class="custom-button custom-cancel @cancelClass  document-modal-cancel " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('documents');">
-                                    Cancel
-                                </button>
-                            </div>
-                        </div>
+                        @{
+                            var saveClass = "";
+                            var cancelClass = "d-none";
+                            var saveButtonText = "Save";
+                        }
+                        @if (disabled)
+                        {
+                            saveClass = "d-none";
+                            cancelClass = "";
+                        }
+                        @if (Model.ParentFolderName == AppUtility.ParentFolderName.Reports)
+                        {
+                            saveButtonText = "Add";
+                        }
+                        else if (Model.ParentFolderName == AppUtility.ParentFolderName.ExperimentEntries)
+                        {
+                            saveButtonText = "Close";
+                        }
+                        <button type="button" class="custom-button custom-button-font @bcColorToUse @saveClass document-modal-save document-modal-buttons " @*data-dismiss="modal"*@ aria-label="Close">
+                            @saveButtonText
+                        </button>
+                        <button type="button" class="custom-button custom-cancel @cancelClass  document-modal-cancel " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('documents');">
+                            Cancel
+                        </button>
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
+    </div>
+</form>
 
-        <script src="~/js/DeleteDocModal.js"></script>
-        <script src="~/js/DocumentModalJS.js"></script>
-        <script src="~/js/site.js"></script>
+<script src="~/js/DeleteDocModal.js"></script>
+<script src="~/js/DocumentModalJS.js"></script>
+<script src="~/js/site.js"></script>

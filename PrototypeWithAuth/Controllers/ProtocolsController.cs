@@ -806,7 +806,7 @@ namespace PrototypeWithAuth.Controllers
                 List<DocumentFolder> folders = new List<DocumentFolder>();
                 string materialId = material.MaterialID.ToString();
                 string uploadMaterialFolder2 = Path.Combine(uploadProtocolsFolder, materialId);
-                base.GetExistingFileStrings(folders, AppUtility.FolderNamesEnum.Pictures, AppUtility.ParentFolderName.Materials, uploadMaterialFolder2, materialId);
+                folders.Add(GetExistingFileStrings(AppUtility.FolderNamesEnum.Pictures, AppUtility.ParentFolderName.Materials, uploadMaterialFolder2, materialId));
                 MaterialFolders.Add(material, folders);
             }
 
@@ -1436,7 +1436,7 @@ namespace PrototypeWithAuth.Controllers
             };
 
             deleteDocumentViewModel.DocumentsInfo = new List<DocumentFolder>();
-            base.GetExistingFileStrings(deleteDocumentViewModel.DocumentsInfo, folderName, parentFolderName, uploadReportsFolder2, FunctionResultID.ToString());
+            deleteDocumentViewModel.DocumentsInfo.Add(GetExistingFileStrings(folderName, parentFolderName, uploadReportsFolder2, FunctionResultID.ToString()));
             return PartialView(deleteDocumentViewModel);
         }
 
@@ -2764,8 +2764,8 @@ namespace PrototypeWithAuth.Controllers
         {
             createProtocolsViewModel.DocumentsInfo = new List<DocumentFolder>();
 
-            base.GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, parentFolderName, uploadFolder, id);
-            base.GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, parentFolderName, uploadFolder, id);
+            createProtocolsViewModel.DocumentsInfo.Add(GetExistingFileStrings( AppUtility.FolderNamesEnum.Info, parentFolderName, uploadFolder, id));
+            createProtocolsViewModel.DocumentsInfo.Add(GetExistingFileStrings(AppUtility.FolderNamesEnum.Pictures, parentFolderName, uploadFolder, id));
         }
 
         [Authorize(Roles = "Protocols")]
@@ -3247,7 +3247,7 @@ namespace PrototypeWithAuth.Controllers
             };
 
             deleteDocumentViewModel.DocumentsInfo = new List<DocumentFolder>();
-            base.GetExistingFileStrings(deleteDocumentViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Files, parentFolderName, uploadReportsFolder2, FunctionReportID.ToString());
+            deleteDocumentViewModel.DocumentsInfo.Add(GetExistingFileStrings(AppUtility.FolderNamesEnum.Files, parentFolderName, uploadReportsFolder2, FunctionReportID.ToString()));
             return PartialView(deleteDocumentViewModel);
         }
 
