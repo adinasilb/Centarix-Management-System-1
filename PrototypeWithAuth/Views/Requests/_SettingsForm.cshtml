@@ -1,5 +1,5 @@
 ﻿@using PrototypeWithAuth.ViewModels;
-@using PrototypeWithAuth.AppData.UtilityModels; 
+@using PrototypeWithAuth.AppData.UtilityModels;
 @model SettingsForm;
 
 @{
@@ -10,8 +10,9 @@
     <div class="row top-bar border-bottom text-center text-justify under-row-margin d-flex" style="height:auto;">
         <div class="col-12 align-items-center justify-content-center pt-3 pb-3">
             <span class="align-items-center">
-            <span class="lab-man-color">@Model.ItemCount</span> Items &nbsp;&nbsp;&nbsp;&nbsp; 
-            <span class="lab-man-color">@Model.RequestCount</span> Requests</span>
+                <span class="lab-man-color">@Model.ItemCount</span> Items &nbsp;&nbsp;&nbsp;&nbsp;
+                <span class="lab-man-color">@Model.RequestCount</span> Requests
+            </span>
         </div>
     </div>
     <div class="new-modal-header modal-line-1-header-with-back modal-sides">
@@ -101,11 +102,12 @@
                             </div>
                         </div>
                         <div class="custom-fields-details lab-man-form">
-                            <div class="row under-row-margin">
-                                <div class=" col-5 top-menu lab-man-color mb-2 hidden">
-                                    Custom Fields
-                                </div>
+                            <div class="cf_header hidden">
+                                @{ await Html.RenderPartialAsync("_CFHeader.cshtml"); }
                             </div>
+                        </div>
+                        <div class="cf_header hidden">
+                            @{ await Html.RenderPartialAsync("_BorderCF.cshtml");}
                         </div>
                         <div class="add-custom-fields row">
                             @{ await Html.RenderPartialAsync("_AddCustomFields.cshtml", "details-form");}

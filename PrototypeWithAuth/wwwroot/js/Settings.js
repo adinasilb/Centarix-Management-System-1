@@ -70,6 +70,8 @@
                 $(".mdb-select-" + customFieldCounter).materialSelect();
                 $(".customFieldCounter").attr("value", customFieldCounter + 1);
                 $(".form-check input[type='hidden']").remove()
+                $(".cf_header").removeClass("hidden");
+                //$(".cf-header").show();
                 return false;
             }
         });
