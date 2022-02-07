@@ -23,7 +23,7 @@
 
             @{ await Html.RenderPartialAsync("_CategoryList", Model.Subcategories);}
         </div>
-        <div class="col-8 border settings-form">
+        <div class="col-8 border settings-form scrollable h-auto">
             @{ await Html.RenderPartialAsync("_SettingsForm", Model.SettingsForm);}
         </div>
     </div>
