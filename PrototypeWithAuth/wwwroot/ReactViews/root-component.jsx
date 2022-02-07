@@ -17,18 +17,18 @@ import FloatingActionBar from './floating-action-bar.jsx';
 export default class RootComponent extends React.Component {
     constructor(props) {
         super(props);
-       
+
         this.state = { viewModel: this.props.viewModel, showView: this.props.showView };
     }
     render() {
         console.log(this.state.viewModel)
         const app = (
-     
+
             <div>
-    
+
                 <FloatingActionBar showFloatingActionBar={false} />
                 <_IndexTableData viewModel={this.state.viewModel} showView={true} />
-                <Switch>                    
+                <Switch>
                     <Route path="/DeleteModal" component={DeleteModal} />
                     <Route path="/_IndexTableData" component={_IndexTableData} />
                 </Switch>
