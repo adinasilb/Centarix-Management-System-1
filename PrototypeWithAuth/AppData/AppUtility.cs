@@ -456,7 +456,7 @@ namespace PrototypeWithAuth.AppData
                             //    accountingPopoverLink.Action = "ChangePaymentStatus";
                             //    accountingPopoverLink.Controller = "Requests";
                             //    accountingPopoverLink.Color = "#00CA72";
-                            //    accountingPopoverLink.Icon = "icon-add_circle_outline-24px1";
+                            //    accountingPopoverLink.Icon = "icon-add_circle_outline-24px-1";
                             //    break;
                             //case PaymentsPopoverEnum.MonthlyPayment:
                             //    accountingPopoverLink.Action = "ChangePaymentStatus";

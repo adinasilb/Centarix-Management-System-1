@@ -495,7 +495,7 @@ namespace PrototypeWithAuth.AppData
                     { "CategoryType", categoryType }
                 },
                 Classes = menuClass,
-                IconName = "icon-add_circle_outline-24px1",
+                IconName = "icon-add_circle_outline-24px-1",
                 AjaxLink = "add-item-sidebar"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Type) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
@@ -510,7 +510,7 @@ namespace PrototypeWithAuth.AppData
                     { "CategoryType", categoryType }
                 },
                 Classes = menuClass,
-                IconName = "icon-category-24px1"
+                IconName = "icon-category-24px-1"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Vendors) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -590,7 +590,7 @@ namespace PrototypeWithAuth.AppData
                     { "PageType", AppUtility.PageTypeEnum.RequestSummary}
                 },
                 Classes = menuClass,
-                IconName = "icon-add_circle_outline-24px1"
+                IconName = "icon-add_circle_outline-24px-1"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Type) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -604,7 +604,7 @@ namespace PrototypeWithAuth.AppData
                     { "CategoryType", categoryType }
                 },
                 Classes = menuClass,
-                IconName = "icon-category-24px1"
+                IconName = "icon-category-24px-1"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Vendors) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -809,7 +809,7 @@ namespace PrototypeWithAuth.AppData
                 {
                     {"SectionType", AppUtility.MenuItems.LabManagement }
                 },
-                IconName = "icon-storefront-24px1",
+                IconName = "icon-storefront-24px-1",
                 Classes = Classes
             });
             if (SidebarTitle == AppUtility.SidebarEnum.NewSupplier) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
@@ -822,7 +822,7 @@ namespace PrototypeWithAuth.AppData
                 {
                     {"SectionType", AppUtility.MenuItems.LabManagement }
                 },
-                IconName = "icon-add_circle_outline-24px1",
+                IconName = "icon-add_circle_outline-24px-1",
                 Classes = Classes
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Search) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
@@ -883,7 +883,7 @@ namespace PrototypeWithAuth.AppData
                 {
                     {AppUtility.TempDataTypes.PageType.ToString(), AppUtility.PageTypeEnum.LabManagementEquipment}
                 },
-                IconName = "icon-category-24px1",
+                IconName = "icon-category-24px-1",
                 Classes = Classes
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Search) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
@@ -946,7 +946,7 @@ namespace PrototypeWithAuth.AppData
                 Description = "Add Location",
                 AjaxLink = "load-add-location",
                 Classes = Classes,
-                IconName = "icon-add_circle_outline-24px1"
+                IconName = "icon-add_circle_outline-24px-1"
             });
             return SidebarMenuItems;
         }
@@ -1170,7 +1170,7 @@ namespace PrototypeWithAuth.AppData
                     {"SectionType", AppUtility.MenuItems.Accounting }
                 },
                 Classes = CurrentClasses,
-                IconName = "icon-storefront-24px1"
+                IconName = "icon-storefront-24px-1"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.NewSupplier) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1183,7 +1183,7 @@ namespace PrototypeWithAuth.AppData
                     {"SectionType", AppUtility.MenuItems.Accounting }
                 },
                 Classes = CurrentClasses,
-                IconName = "icon-add_circle_outline-24px1"
+                IconName = "icon-add_circle_outline-24px-1"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Search) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1277,7 +1277,7 @@ namespace PrototypeWithAuth.AppData
                     { "SectionType", AppUtility.MenuItems.Operations }
                 },
                 Classes = CurrentClasses,
-                IconName = "icon-add_circle_outline-24px1",
+                IconName = "icon-add_circle_outline-24px-1",
                 AjaxLink = "add-item-sidebar"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Type) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
@@ -1292,7 +1292,7 @@ namespace PrototypeWithAuth.AppData
                     { "SectionType", AppUtility.MenuItems.Operations }
                 },
                 Classes = CurrentClasses,
-                IconName = "icon-category-24px1"
+                IconName = "icon-category-24px-1"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Vendors) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1373,7 +1373,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "CreateUser",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
-                IconName = "icon-add_circle_outline-24px1"
+                IconName = "icon-add_circle_outline-24px-1"
             });
 
             return SidebarMenuItems;
@@ -1509,7 +1509,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "SummaryTables",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
-                IconName = "icon-table_chart-24px1"
+                IconName = "icon-table_chart-24px-1"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Graphs) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
