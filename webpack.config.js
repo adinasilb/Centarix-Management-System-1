@@ -1,4 +1,4 @@
-﻿const path = require('path');
+﻿﻿const path = require('path');
 const ManifestPlugin = require('webpack-manifest-plugin');
 
 module.exports = {

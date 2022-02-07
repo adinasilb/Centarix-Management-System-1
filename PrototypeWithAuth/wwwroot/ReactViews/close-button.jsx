@@ -1,9 +1,9 @@
 ﻿import React from 'react';
 import { useHistory } from "react-router-dom";
-import { closeModal} from "./modal-functions.jsx"
+import { closeModal } from "./modal-functions.jsx"
 
 export default function CloseButton() {
-    
+
     const history = useHistory();
     var back = e => {
         e.stopPropagation();
