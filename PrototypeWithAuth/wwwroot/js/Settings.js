@@ -66,9 +66,10 @@
             type: "GET",
             cache: true,
             success: function (data) {
-                $(".custom-fields-details").html(data);
+                $(".custom-fields-details").append(data);
                 $(".mdb-select-" + customFieldCounter).materialSelect();
                 $(".customFieldCounter").attr("value", customFieldCounter + 1);
+                $(".form-check input[type='hidden']").remove()
                 return false;
             }
         });

@@ -1559,34 +1559,34 @@ table.table.visualzoom tr td {
         width: 0;
     }
 /* Create a custom checkbox */
-.checkmark {
+/*.checkmark {
     position: absolute;
     top: 0;
     left: 0;
     height: 25px;
     width: 25px;
     background-color: #eee;
-}
+}*/
 /* On mouse-over, add a grey background color */
-.checktainer:hover input ~ .checkmark {
+/*.checktainer:hover input ~ .checkmark {
     background-color: #ccc;
-}
+}*/
 /* When the checkbox is checked, add a blue background */
-.checktainer input:checked ~ .checkmark {
+/*.checktainer input:checked ~ .checkmark {
     background-color: var(--order-inv-color);
-}
+}*/
 /* Create the checkmark/indicator (hidden when not checked) */
-.checkmark:after {
+/*.checkmark:after {
     content: "";
     position: absolute;
     display: none;
-}
+}*/
 /* Show the checkmark when checked */
-.checktainer input:checked ~ .checkmark:after {
+/*.checktainer input:checked ~ .checkmark:after {
     display: block;
-}
+}*/
 /* Style the checkmark/indicator */
-.checktainer .checkmark:after {
+/*.checktainer .checkmark:after {
     left: 9px;
     top: 5px;
     width: 5px;
@@ -1596,7 +1596,7 @@ table.table.visualzoom tr td {
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
-}
+}*/
 
 input[type=checkbox].css-checkbox {
     display: none;
@@ -3240,6 +3240,10 @@ body.modal-open .popover {
     overflow-y: auto;
 }
 
-.settings-form select[disabled] > option{
+/*.settings-form select[disabled] > option{
     color: var(--black-87) !important;
+}*/
+
+.settings-form input[disabled], .settings-form select[disabled] > option {
+    color: var(--black-50) !important;
 }

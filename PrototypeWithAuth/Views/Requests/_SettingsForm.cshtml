@@ -1,4 +1,5 @@
 ﻿@using PrototypeWithAuth.ViewModels;
+@using PrototypeWithAuth.AppData.UtilityModels; 
 @model SettingsForm;
 
 @{
@@ -6,9 +7,11 @@
 }
 <form action="" method="get" class="lab-man-form" id="myForm">
     <input type="hidden" class="customFieldCounter" value="0" />
-    <div class="row top-bar border-bottom text-center text-justify under-row-margin">
-        <div class="col-12">
-            @Model.ItemCount Items &nbsp;&nbsp;&nbsp;&nbsp; @Model.RequestCount Requests
+    <div class="row top-bar border-bottom text-center text-justify under-row-margin d-flex" style="height:auto;">
+        <div class="col-12 align-items-center justify-content-center pt-3 pb-3">
+            <span class="align-items-center">
+            <span class="lab-man-color">@Model.ItemCount</span> Items &nbsp;&nbsp;&nbsp;&nbsp; 
+            <span class="lab-man-color">@Model.RequestCount</span> Requests</span>
         </div>
     </div>
     <div class="new-modal-header modal-line-1-header-with-back modal-sides">
@@ -64,14 +67,6 @@
                                     <option value="0">@subCatText</option>
                                 </select>
                             </div>
-                            <div class="col-2">
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input filled-in" asp-for="Test[0]" />
-                                        <label class="form-check-label " asp-for="Test[0]">Required</label>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
@@ -82,30 +77,35 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="control-label">Company ID (automatic)</label>
-                                <input class="form-control-plaintext border-bottom" disabled />
+                                <input class="form-control-plaintext border-bottom" value="@ElixirStrings.IntPlaceholder" disabled />
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <label class="control-label">Catalogue No.</label>
-                                <input class="form-control-plaintext border-bottom" disabled />
+                                <input class="form-control-plaintext border-bottom" value="@ElixirStrings.IntPlaceholder" disabled />
                             </div>
                             <div class="col-md-6">
                                 <label class="control-label">URL</label>
-                                <input class="form-control-plaintext border-bottom" disabled />
+                                <input class="form-control-plaintext border-bottom" value="@ElixirStrings.UrlPlaceholder" disabled />
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <label class="control-label">Expected Supply Days</label>
-                                <input class="form-control-plaintext border-bottom" disabled />
+                                <input class="form-control-plaintext border-bottom" value="@ElixirStrings.SmallIntPlaceholder" disabled />
                             </div>
                             <div class="col-md-6">
                                 <label class="control-label">Expected Supply Date</label>
-                                <input class="form-control-plaintext border-bottom" disabled />
+                                <input class="form-control-plaintext border-bottom" value="@ElixirStrings.ExpectedSupplyDate" disabled />
                             </div>
                         </div>
-                        <div class="custom-fields-details row lab-man-form">
+                        <div class="custom-fields-details lab-man-form">
+                            <div class="row under-row-margin">
+                                <div class=" col-5 top-menu lab-man-color mb-2 hidden">
+                                    Custom Fields
+                                </div>
+                            </div>
                         </div>
                         <div class="add-custom-fields row">
                             @{ await Html.RenderPartialAsync("_AddCustomFields.cshtml", "details-form");}
