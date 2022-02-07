@@ -27,10 +27,22 @@ namespace PrototypeWithAuth.Controllers
 {
     public class BiomarkersController : SharedController
     {
+        public static string BaseUrl = "";
+        public static string wwRoot = "";
         public BiomarkersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
               : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
+            string baseUrl = string.Format("{0}://{1}", httpContextAccessor.HttpContext.Request.Scheme, httpContextAccessor.HttpContext.Request.Host);
+                //string.Format("{0}://{1}", HttpContext.Request.Scheme, HttpContext.Request.Host);
+            InitializeWWRoot(baseUrl, _hostingEnvironment.WebRootPath);
         }
+
+        public static void InitializeWWRoot(string baseurl, string www)
+        {
+            BaseUrl = baseurl;
+            wwRoot = www;
+        }
+
 
         [HttpGet]
         [Authorize(Roles = "Biomarkers")]
@@ -810,8 +822,8 @@ namespace PrototypeWithAuth.Controllers
         {
             //_hostingEnvironment.WebRootPath
             var accessor = new HttpContextAccessor();
-            var wrp = accessor.HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>();
-            string uploadFolderA = Path.Combine(wrp.WebRootPath, AppUtility.ParentFolderName.ExperimentEntries.ToString());
+            //var wrp = accessor.HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>();
+            string uploadFolderA = Path.Combine(wwRoot, AppUtility.ParentFolderName.ExperimentEntries.ToString());
             var MiddleFolderNameA = eeId.ToString();
             string uploadFolderB = Path.Combine(uploadFolderA, MiddleFolderNameA);
             var FolderNameB = tvId.ToString();
@@ -819,7 +831,8 @@ namespace PrototypeWithAuth.Controllers
 
             if (Directory.Exists(uploadFolderC))
             {
-                return AppUtility.GetLastFiles(uploadFolderC, 4);
+                var file = System.IO.Directory.GetFiles(uploadFolderC)[0];
+                return BaseUrl + "/" + AppUtility.GetLastFiles(file, 4);
                 //documentsModalViewModel = SaveDocuments(uploadFolderC, documentsModalViewModel);
             }
             return "Can't Find File";
@@ -827,6 +840,7 @@ namespace PrototypeWithAuth.Controllers
 
         public IActionResult DownloadExcel()
         {
+            const string NullValue = "Null";
             var results = _testValuesProc.Read().Select(tv => new
             {
                 UniqueID = tv.TestValueID,
@@ -854,8 +868,8 @@ namespace PrototypeWithAuth.Controllers
                 Value = tv.TestHeader.Type == AppUtility.DataTypeEnum.File.ToString() ? 
                 (FindFile(tv.ExperimentEntryID, tv.TestValueID, GetOuterBiomarkersFile()) == true ? 
                 GetBiomarkerFileName(tv.ExperimentEntryID, tv.TestValueID)
-                : "No File") 
-                : (tv.Value ?? "Null")
+                : NullValue) 
+                : (tv.Value ?? NullValue)
             });
 
             var cc = new CsvConfiguration(new System.Globalization.CultureInfo("en-US"));
