@@ -60,15 +60,16 @@
 
     $(".details-form").off("click").on("click", function () {
         var customFieldCounter = $(".customFieldCounter").attr("value");
+        console.log("customFieldCounter: " + customFieldCounter);
         $.ajax({
             async: true,
-            url: "/Requests/_CustomField?" + customFieldCounter,
+            url: "/Requests/_CustomField?CustomFieldCounter=" + parseInt(customFieldCounter),
             type: "GET",
             cache: true,
             success: function (data) {
                 $(".custom-fields-details").append(data);
                 $(".mdb-select-" + customFieldCounter).materialSelect();
-                $(".customFieldCounter").attr("value", customFieldCounter + 1);
+                $(".customFieldCounter").attr("value", parseInt(customFieldCounter) + 1);
                 $(".form-check input[type='hidden']").remove()
                 $(".cf_header").removeClass("hidden");
                 //$(".cf-header").show();
