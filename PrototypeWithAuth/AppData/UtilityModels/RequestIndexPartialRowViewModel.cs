@@ -187,7 +187,10 @@ namespace PrototypeWithAuth.ViewModels
                 case AppUtility.IndexTableTypes.RequestLists:
                     Columns = GetRequestListColumns().ToList();
                     break;
+
             }
+            //nullify r for json purposes because it is not needed anymore
+            r=null;
 
         }
 

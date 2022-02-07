@@ -78,7 +78,7 @@ namespace PrototypeWithAuth
             {
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DevelopersDB"), sqlServerOptions => sqlServerOptions.CommandTimeout(120));
-                    options.EnableSensitiveDataLogging(true);   
+                options.EnableSensitiveDataLogging(true);
             });
 
             services.AddControllersWithViews();
@@ -171,15 +171,13 @@ namespace PrototypeWithAuth
 
             app.UseReact(config =>
             {
+                config.SetLoadBabel(true)
+                  .SetLoadReact(false)
+                  .SetReactAppBuildPath("~/dist");
 
-                config.AddScript("~/ReactViews/ActionBar.jsx")
-                .AddScript("~/ReactViews/ActionItem.jsx");
-
-                //  .SetLoadBabel(false);
-                //  .AddScriptWithoutTransform("~/js/bundle.server.js");
             });
 
-     
+
             app.UseRouting();
 
             app.UseAuthentication();
@@ -286,7 +284,7 @@ namespace PrototypeWithAuth
 
             //await UserManager.AddToRoleAsync(poweruser, "Admin");
 
-            
+
 
             //var poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
             ////{
