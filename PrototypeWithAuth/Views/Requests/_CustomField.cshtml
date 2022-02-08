@@ -35,7 +35,7 @@
         </div>
     </div>
     <div class="col-1 d-flex" style="height:auto;">
-        <a href="" class="remove-custom-field danger-filter align-items-end pb-2 d-flex" cf="@Model.CustomFieldCounter" style="height:auto; font-size:1.75rem;">
+        <a href="" class="remove-custom-field danger-filter align-items-end pb-2 d-flex" divclass="@Model.DivClass" cf="@Model.CustomFieldCounter" style="height:auto; font-size:1.75rem;">
             <i class="icon-delete-24px align-items-end"></i>
         </a>
     </div>
@@ -44,10 +44,12 @@
 <script>
     $(".remove-custom-field").off("click").on("click", function (e) {
         e.preventDefault();
+        var divName = $(this).attr("divclass");
         var CustomFieldCounter = $(this).attr("cf");
-        $(".custom-fields-" + CustomFieldCounter).remove();
-        if ($(".custom-fields").length == 0) {
-            $(".cf_header").addClass("hidden");
+        $("." + divName + " .custom-fields-" + CustomFieldCounter).remove();
+        if ($("." + divName + " .custom-fields").length == 0) {
+            $("." + divName + " .cf_header").addClass("hidden");
         }
     });
+
 </script>

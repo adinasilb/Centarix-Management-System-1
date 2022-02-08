@@ -5113,6 +5113,12 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(GetSettingsFormViewModel(ModelType, CategoryID));
         }
 
+        [HttpPost]
+        public IActionResult _SettingsForm(SettingsForm SettingsForm)
+        {
+            return RedirectToAction("SettingsInventory");
+        }
+
         private SettingsForm GetSettingsFormViewModel(string ModelType, int CategoryID)
         {
             SettingsForm settingsForm = new SettingsForm();
@@ -5147,13 +5153,14 @@ namespace PrototypeWithAuth.Controllers
             return _requestsProc.UpdateExchangeRateByHistory().Result.Bool;
         }
 
-        public async Task<IActionResult> _CustomField(int CustomFieldCounter)
+        public async Task<IActionResult> _CustomField(int CustomFieldCounter, string DivClass)
         {
             var CustomField = new CustomField()
             {
                 CustomDataTypes = _customDataTypesProc.Read(),
                 CustomFieldCounter = CustomFieldCounter,
-                Required = new List<bool>() { new bool() }
+                Required = new List<bool>() { new bool() },
+                DivClass = DivClass
             };
             return PartialView(CustomField);
         }

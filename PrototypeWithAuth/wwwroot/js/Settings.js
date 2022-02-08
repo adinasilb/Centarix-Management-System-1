@@ -58,20 +58,20 @@
         });
     };
 
-    $.fn.ShowCustomField = function (div) {
+    $.fn.ShowCustomField = function (divClass) {
         var customFieldCounter = $(".customFieldCounter").attr("value");
         console.log("customFieldCounter: " + customFieldCounter);
         $.ajax({
             async: true,
-            url: "/Requests/_CustomField?CustomFieldCounter=" + parseInt(customFieldCounter),
+            url: "/Requests/_CustomField?CustomFieldCounter=" + parseInt(customFieldCounter) + "&DivClass=" + divClass,
             type: "GET",
             cache: true,
             success: function (data) {
-                div.append(data);
+                $("." + divClass).append(data);
                 $(".mdb-select-" + customFieldCounter).materialSelect();
                 $(".customFieldCounter").attr("value", parseInt(customFieldCounter) + 1);
                 $(".form-check input[type='hidden']").remove()
-                $(".cf_header").removeClass("hidden");
+                $("." + divClass + " .cf_header").removeClass("hidden");
                 //$(".cf-header").show();
                 return false;
             }
@@ -79,11 +79,11 @@
     }
 
     $(".price-form").off("click").on("click", function () {
-        $.fn.ShowCustomField($(".custom-fields-price"));
+        $.fn.ShowCustomField("custom-fields-price");
     });
 
     $(".details-form").off("click").on("click", function () {
-        $.fn.ShowCustomField($(".custom-fields-details"));
+        $.fn.ShowCustomField("custom-fields-details");
         
     });
 

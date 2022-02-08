@@ -8,6 +8,8 @@
 }
 <form action="" method="get" class="lab-man-form" id="myForm">
     <input type="hidden" class="customFieldCounter" value="0" />
+    <input type="hidden" asp-for="Category.ID" />
+    <input type="hidden" asp-for="Category.Description" />
     <div class="row top-bar border-bottom text-center text-justify under-row-margin d-flex" style="height:auto;">
         <div class="col-12 align-items-center justify-content-center pt-3 pb-3">
             <span class="align-items-center">
@@ -16,7 +18,7 @@
             </span>
         </div>
     </div>
-    <div class="new-modal-header modal-line-1-header-with-back modal-sides ch-scrollable" style="height:13.3rem; overflow:hidden;">
+    <div class="new-modal-header modal-line-1-header-with-back modal-sides ch-scrollable pt-0" style="height:12.2rem; overflow:hidden;">
         <div class="row modal-title-line justify-content-between under-row-margin container">
             @{
                 var source = Model.Category.ImageURL ?? "";
@@ -49,7 +51,7 @@
             </div>
         </div>
     </div>
-    <div class="settings new-modal-body edit-modal-outer-body " style="height:26.25rem;">
+    <div class="settings new-modal-body edit-modal-outer-body " style="height:33.5rem;">
         <div class="container-fluid edit-modal-body box-shadow orders partial-div" style="background: #FFF; border: 2px solid #EAEAEB;">
             <div class="container-fluid div-tabs no-box-shadow p-0">
                 <div class="tab-content">
@@ -169,5 +171,23 @@
     $(".save-settings-form").on("click", function (e) {
         e.stopPropagation();
         e.preventDefault();
+        var formData = new FormData($("#myForm")[0]);
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
+        $.ajax({
+            processData: false,
+            contentType: false,
+            data: formData,
+            url: "/Requests/_SettingsForm",
+            type: 'POST',
+            success: function (data) {
+                console.log("success");
+            },
+            error: function (jqxhr) {
+                console.log("error");
+                //$("._Lines").html(jqxhr.responseText);
+            }
+        });
     });
 </script>
