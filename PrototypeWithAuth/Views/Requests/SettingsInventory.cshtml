@@ -3,27 +3,27 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 <form class="lab-man-form">
-    <div class="row">
-        <div class="item-table">
+    <div class="row d-flex">
+        <div class="item-table h-auto mb-4">
             <ul class="pl-0">
-                <li class="list-inline-item m-0">
-                    <a class="lm-top pt-4 active text-center " value="2" href="#"><label class="new-button-text">Main</label> </a>
+                <li class="list-inline-item m-0 p-1">
+                    <a class="lm-top pl-2 pt-4 active text-center new-button pb-0 align-items-center" value="2" href="#"><label class="new-button-text">Main</label> </a>
                 </li>
-                <li class="list-inline-item m-0">
-                    <a class="lm-top pt-4 " value="2" href="#"><label class="new-button-text">Samples</label> </a>
+                <li class="list-inline-item m-0 p-1">
+                    <a class="lm-top pl-2 pt-4 new-button pb-0 align-items-center" value="2" href="#"><label class="new-button-text">Samples</label> </a>
                 </li>
             </ul>
         </div>
     </div>
-    <div class="row category-height mb-5">
-        <div class="col-2 border p-2 category-list-1 cat-col scrollable">
+    <div class="row mb-5">
+        <div class="col-2 border p-2 category-list-1 cat-col category-height ">
             @{ await Html.RenderPartialAsync("_CategoryList", Model.Categories);}
         </div>
-        <div class="col-2 border p-2 category-list-2 cat-col scrollable">
+        <div class="col-2 border p-2 category-list-2 cat-col category-height ">
 
             @{ await Html.RenderPartialAsync("_CategoryList", Model.Subcategories);}
         </div>
-        <div class="col-8 border settings-form scrollable h-auto d-block">
+        <div class="col-8 border settings-form  h-auto d-block">
             @{ await Html.RenderPartialAsync("_SettingsForm", Model.SettingsForm);}
         </div>
     </div>

@@ -1206,9 +1206,36 @@ a.nav-link {
     height: 100%;
     overflow-y: auto;
 }
+.lab-man-form .new-button {
+    margin: 0 2rem 0 0 !important;
+    font-size:1.5rem !important;
+}
+
+.lab-man-form    .new-button:hover {
+        color: var(--lab-man-color);
+        background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
+    }
+
+.lab-man-form    .new-button.active {
+        /*color: var(--lab-man-form) !important;*/
+        border-bottom: .188rem solid var(--lab-man-color);
+    }
+.order-inv-form .new-button {
+    margin: 0 4rem 0 0 !important;
+}
+
+.order-inv-form .new-button:hover {
+        color: var(--order-inv-color);
+        background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
+    }
+
+    .order-inv-form .new-button.active {
+        color: var(--order-inv-color) !important;
+        border-bottom: .188rem solid var(--order-inv-color);
+    }
+
 
 .new-button {
-    margin: 0 4rem 0 0;
     background-color: transparent;
     color: var(--black-87);
     font-size: 1.25rem;
@@ -1218,16 +1245,13 @@ a.nav-link {
     .new-button:hover {
         /*background-color: #338f84;*/
         opacity: 1;
-        color: var(--order-inv-color);
         background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
         border-radius: 3px;
         text-decoration: none;
     }
 
     .new-button.active {
-        color: var(--order-inv-color) !important;
         font-weight: var(--bold-regular);
-        border-bottom: .188rem solid var(--order-inv-color);
     }
 
 .new-button-text {
@@ -3238,17 +3262,25 @@ body.modal-open .popover {
 }
 
 .category-height {
-    /*height: 45rem;*/
+    height: 50rem;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.settings.new-modal-body{
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .ch-scrollable {
-    overflow-y: auto;
 }
 
+.ch-overflow{
+
+}
 /*.settings-form select[disabled] > option{
     color: var(--black-87) !important;
 }*/
-
 .settings-form input[disabled], .settings-form select[disabled] > option {
     color: var(--black-50) !important;
 }

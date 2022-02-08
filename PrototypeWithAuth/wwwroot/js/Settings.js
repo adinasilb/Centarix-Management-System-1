@@ -58,7 +58,7 @@
         });
     };
 
-    $(".details-form").off("click").on("click", function () {
+    $.fn.ShowCustomField = function (div) {
         var customFieldCounter = $(".customFieldCounter").attr("value");
         console.log("customFieldCounter: " + customFieldCounter);
         $.ajax({
@@ -67,7 +67,7 @@
             type: "GET",
             cache: true,
             success: function (data) {
-                $(".custom-fields-details").append(data);
+                div.append(data);
                 $(".mdb-select-" + customFieldCounter).materialSelect();
                 $(".customFieldCounter").attr("value", parseInt(customFieldCounter) + 1);
                 $(".form-check input[type='hidden']").remove()
@@ -76,6 +76,15 @@
                 return false;
             }
         });
+    }
+
+    $(".price-form").off("click").on("click", function () {
+        $.fn.ShowCustomField($(".custom-fields-price"));
+    });
+
+    $(".details-form").off("click").on("click", function () {
+        $.fn.ShowCustomField($(".custom-fields-details"));
+        
     });
 
 });

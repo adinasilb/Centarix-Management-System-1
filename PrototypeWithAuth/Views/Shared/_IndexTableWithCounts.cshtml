@@ -2,6 +2,21 @@
 @using PrototypeWithAuth.AppData
 @{
 
+    var form = "order-inv-form";
+    if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].ToString() == AppUtility.MenuItems.Operations.ToString())
+    {
+        form = "oper-form";
+    }
+    else if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].ToString() == AppUtility.MenuItems.LabManagement.ToString())
+    {
+        form = "lab-man-form";
+    }
+    else if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].ToString() == AppUtility.MenuItems.Accounting.ToString())
+    {
+        form = "acc-form";
+    }
+
+
     @*string newButtonText = "";*@
     string orderedButtonText = "";
     string receivedButtonText = "";
@@ -56,7 +71,7 @@
 
 }
 <div class="">
-    <div class="item-table">
+    <div class="item-table @form">
         <ul class="pl-0">
             @if (Model.PageType != AppUtility.PageTypeEnum.OperationsRequest)
             {
