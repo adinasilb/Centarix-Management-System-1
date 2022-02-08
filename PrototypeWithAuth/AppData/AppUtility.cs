@@ -17,6 +17,7 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -146,7 +147,9 @@ namespace PrototypeWithAuth.AppData
             return pre;
         }
         public enum RoleItems { Admin, CEO }
-        public enum CurrencyEnum { None, NIS, USD }
+        public enum CurrencyEnum { None,
+            NIS,
+            USD }
         public enum PaymentsPopoverEnum
         {
             //Share,
@@ -470,7 +473,7 @@ namespace PrototypeWithAuth.AppData
                             //    accountingPopoverLink.Icon = "icon-credit_card-24px";
                             //    break;
                             case PaymentsPopoverEnum.PayLater:
-                                accountingPopoverLink= new IconPopoverViewModel(description: Enum.Parse<PopoverDescription>(e.ToString()), color: "#5F79E2", action: "ChangePaymentStatus", controller: "Requests", icon: "icon-centarix-icons-19", currentLocation: CurrentEnum);
+                                accountingPopoverLink= new IconPopoverViewModel(description: Enum.Parse<PopoverDescription>(e.ToString()), color: "#5F79E2", action: "ChangePaymentStatus", controller: "Requests", icon: "icon-centarix-icons-19", ajaxcall: "change-payment-status");
                                 break;
                                 //case PaymentsPopoverEnum.Installments:
                                 //    accountingPopoverLink.Action = "ChangePaymentStatus";

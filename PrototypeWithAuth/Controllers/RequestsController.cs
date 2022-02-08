@@ -149,7 +149,7 @@ namespace PrototypeWithAuth.Controllers
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color);", "request-favorite", "Favorite");
             var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
-            var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
+            var popoverPartialClarifyIcon = new IconColumnViewModel("Clarify");
             var resendIcon = new IconColumnViewModel("Resend");
             string checkboxString = "Checkbox";
             string buttonText = "";
@@ -222,7 +222,7 @@ namespace PrototypeWithAuth.Controllers
                         && (notificationFilterViewModel.CentarixOrderNumber == null || r.ParentRequest.OrderNumber == notificationFilterViewModel.CentarixOrderNumber)
                         && (notificationFilterViewModel.ProductName == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.ProductName.ToLower())));
                     }
-                    iconList.Add(popoverPartialClarifyIcon);
+                  
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.DidntArrive:
@@ -238,6 +238,7 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.SidebarEnum.ForClarification:
                             wheres.Add(r => r.IsClarify);
                             checkboxString = "";
+                            iconList.Add(popoverPartialClarifyIcon);
                             break;
                         case AppUtility.SidebarEnum.NoInvoice:
                             wheres.Add(r => r.Payments.FirstOrDefault().HasInvoice == false);
@@ -3782,11 +3783,11 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = " Accounting")]
-        public async Task<IActionResult> ChangePaymentStatus(AppUtility.PaymentsPopoverEnum newStatus, int requestID, AppUtility.PaymentsPopoverEnum currentStatus)
+        public async Task<IActionResult> ChangePaymentStatus(RequestIndexObject requestIndexObject, int requestID, AppUtility.PaymentsPopoverEnum newStatus)
         {
             var StringWithBool = await _requestsProc.UpdatePaymentStatusAsync(newStatus, requestID);
-            var accountingPaymentsEnum = (AppUtility.SidebarEnum)Enum.Parse(typeof(AppUtility.SidebarEnum), currentStatus.ToString());
-            return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = accountingPaymentsEnum, ErrorMessage = StringWithBool.String });
+            requestIndexObject.ErrorMessage = StringWithBool.String;
+            return RedirectToAction("_IndexTableByVendor", requestIndexObject);
         }
 
         [HttpGet]
