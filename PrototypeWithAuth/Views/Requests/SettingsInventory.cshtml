@@ -15,7 +15,7 @@
             </ul>
         </div>
     </div>
-    <div class="row category-height ">
+    <div class="row category-height mb-5">
         <div class="col-2 border p-2 category-list-1 cat-col scrollable">
             @{ await Html.RenderPartialAsync("_CategoryList", Model.Categories);}
         </div>
@@ -23,7 +23,7 @@
 
             @{ await Html.RenderPartialAsync("_CategoryList", Model.Subcategories);}
         </div>
-        <div class="col-8 border settings-form scrollable h-auto">
+        <div class="col-8 border settings-form scrollable h-auto d-block">
             @{ await Html.RenderPartialAsync("_SettingsForm", Model.SettingsForm);}
         </div>
     </div>

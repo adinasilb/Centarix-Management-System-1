@@ -5,7 +5,7 @@
 @{
     var showItem = " active show ";
 }
-<form action="" method="get" class="lab-man-form" id="myForm">
+<form action="" method="get" class="lab-man-form category-height" id="myForm">
     <input type="hidden" class="customFieldCounter" value="0" />
     <div class="row top-bar border-bottom text-center text-justify under-row-margin d-flex" style="height:auto;">
         <div class="col-12 align-items-center justify-content-center pt-3 pb-3">
@@ -15,7 +15,7 @@
             </span>
         </div>
     </div>
-    <div class="new-modal-header modal-line-1-header-with-back modal-sides">
+    <div class="new-modal-header modal-line-1-header-with-back modal-sides ch-scrollable">
         <div class="row modal-title-line justify-content-between under-row-margin container">
             @{
                 var source = Model.Category.ImageURL ?? "";
