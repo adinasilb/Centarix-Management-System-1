@@ -197,8 +197,8 @@ namespace PrototypeWithAuth.Controllers
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--protocols-color)", "protocol-favorite", "Favorite");
             var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
             var popoverRemoveShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
-            var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Protocols", AppUtility.PopoverEnum.None, "share-protocol-fx");
-            var popoverStart = new IconPopoverViewModel("icon-play_circle_outline-24px-1", "#4CAF50", AppUtility.PopoverDescription.Start, "StartProtocol", "Protocols", AppUtility.PopoverEnum.None, "start-protocol-fx");
+            var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Protocols", AppUtility.SidebarEnum.None, "share-protocol-fx");
+            var popoverStart = new IconPopoverViewModel("icon-play_circle_outline-24px-1", "#4CAF50", AppUtility.PopoverDescription.Start, "StartProtocol", "Protocols", AppUtility.SidebarEnum.None, "start-protocol-fx");
             var updateResultsIcon = new IconColumnViewModel("UpdateResults");
             var user = await _userManager.GetUserAsync(User);
             switch (protocolsIndexObject.PageType)

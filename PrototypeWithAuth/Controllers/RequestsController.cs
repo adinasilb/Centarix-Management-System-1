@@ -148,7 +148,7 @@ namespace PrototypeWithAuth.Controllers
 
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color);", "request-favorite", "Favorite");
-            var popoverMoreIcon = new IconColumnViewModel("More", "icon-more_vert-24px", "black", "More");
+            var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
             var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
             var resendIcon = new IconColumnViewModel("Resend");
             string checkboxString = "Checkbox";
@@ -291,7 +291,7 @@ namespace PrototypeWithAuth.Controllers
                             buttonText = "Pay All";
                             break;
                     }
-
+                    popoverMoreIcon.IconPopovers = AppUtility.GetPaymentsPopoverLinks(requestIndexObject.SidebarType);
                     viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(orderbyForPayments).Select(selectForPayments).ToLookup(r => r.Vendor);
                     break;
                 case AppUtility.PageTypeEnum.RequestCart:
