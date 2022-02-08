@@ -19,14 +19,14 @@ export default class RootComponent extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { viewModel: this.props.viewModel, viewEnum: this.props.viewEnum, bcColor: this.props.bcColor, ajaxLink: this.props.ajaxLink, btnText: this.props.btnText };
+        this.state = { viewModel: this.props.viewModel, viewEnum: this.props.viewEnum, bcColor: this.props.bcColor, ajaxLink: this.props.ajaxLink, btnText: this.props.btnText, sectionClass: this.props.sectionClass };
     }
 
     renderSwitch = () => {
         console.log(this.state.viewEnum);
         switch (this.state.viewEnum) {
             case "IndexTableDataByVendor":
-                return (<_IndexTableDataByVendor viewModel={this.state.viewModel} showView={true} bcColor={this.state.bcColor} ajaxLink={this.state.ajaxLink} btnText = {this.state.btnText}/>);
+                return (<_IndexTableDataByVendor viewModel={this.state.viewModel} showView={true} bcColor={this.state.bcColor} ajaxLink={this.state.ajaxLink} btnText={this.state.btnText} sectionClass={this.state.sectionClass} />);
                 break;
             case "IndexTableData":
                 return (<_IndexTableData viewModel={this.state.viewModel} showView={true} />);

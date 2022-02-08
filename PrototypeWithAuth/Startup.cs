@@ -29,6 +29,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using JavaScriptEngineSwitcher.V8;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using React.AspNet;
+using Newtonsoft.Json.Converters;
 
 namespace PrototypeWithAuth
 {
@@ -174,7 +175,7 @@ namespace PrototypeWithAuth
                 config.SetLoadBabel(true)
                   .SetLoadReact(false)
                   .SetReactAppBuildPath("~/dist");
-
+                config.JsonSerializerSettings = new JsonSerializerSettings { Converters= new List<JsonConverter> { new StringEnumConverter() } };
             });
 
 

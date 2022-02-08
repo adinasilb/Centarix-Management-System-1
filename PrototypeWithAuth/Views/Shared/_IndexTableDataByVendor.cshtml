@@ -3,52 +3,54 @@
 @using System.Globalization;
 @using PrototypeWithAuth.AppData
 @using React.AspNet
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Converters;
 <script src="~/js/IndexTablePartial.js"></script>
 <script src="~/js/accounting.js"></script>
 <script src="~/js/PricePopoverScript.js"></script>
 <form method="post" enctype="multipart/form-data" style="height: 100%;">
     @{
-        //for button for selected items
-        var btnText = "Pay Selected";
-        var ajaxLink = "pay-selected";
-        var bcColor = "accounting-background-color";
-        var sectionClass = ""; //if no section class, accounting color is default
+    //for button for selected items
+    var btnText = "Pay Selected";
+    var ajaxLink = "pay-selected";
+    var bcColor = "accounting-background-color";
+    var sectionClass = ""; //if no section class, accounting color is default
 
-        switch (Model.SidebarType)
-        {
-            case AppUtility.SidebarEnum.NoInvoice:
-                ajaxLink = "add-to-selected";
-                btnText = "Add To Selected";
-                break;
-            case AppUtility.SidebarEnum.Installments:
-                ajaxLink = "pay-invoice-selected";
-                break;
-            case AppUtility.SidebarEnum.Quotes:
-                bcColor = "lab-man-background-color";
-                ajaxLink = "update-quote-for-selected";
-                btnText = "Add To Selected";
-                sectionClass = "labmanage";
-                break;
-            case AppUtility.SidebarEnum.Orders:
-                bcColor = "lab-man-background-color";
-                ajaxLink = "load-terms-for-selected";
-                btnText = "Order Selected";
-                sectionClass = "labmanage";
-                break;
-            case AppUtility.SidebarEnum.Cart:
-                bcColor = "order-inv-background-color";
-                ajaxLink = "load-terms-for-selected";
-                btnText = "Order Selected";
-                sectionClass = "orders-and-inv";
-                break;
-            default:
-                break;
-        }
+    switch (Model.SidebarType)
+    {
+    case AppUtility.SidebarEnum.NoInvoice:
+    ajaxLink = "add-to-selected";
+    btnText = "Add To Selected";
+    break;
+    case AppUtility.SidebarEnum.Installments:
+    ajaxLink = "pay-invoice-selected";
+    break;
+    case AppUtility.SidebarEnum.Quotes:
+    bcColor = "lab-man-background-color";
+    ajaxLink = "update-quote-for-selected";
+    btnText = "Add To Selected";
+    sectionClass = "labmanage";
+    break;
+    case AppUtility.SidebarEnum.Orders:
+    bcColor = "lab-man-background-color";
+    ajaxLink = "load-terms-for-selected";
+    btnText = "Order Selected";
+    sectionClass = "labmanage";
+    break;
+    case AppUtility.SidebarEnum.Cart:
+    bcColor = "order-inv-background-color";
+    ajaxLink = "load-terms-for-selected";
+    btnText = "Order Selected";
+    sectionClass = "orders-and-inv";
+    break;
+    default:
+    break;
     }
-    @Html.React("RootComponent", new { viewModel = Model, viewEnum= "IndexTableDataByVendor" })
+    }
+    @Html.React("RootComponent", new { viewModel = Model, viewEnum = "IndexTableDataByVendor", btnText = btnText, sectionClass = sectionClass, ajaxLink = ajaxLink, bcColor = bcColor })
     @Html.ReactGetScriptPaths()
     @Html.ReactInitJavaScript()
- 
+
 
 
 

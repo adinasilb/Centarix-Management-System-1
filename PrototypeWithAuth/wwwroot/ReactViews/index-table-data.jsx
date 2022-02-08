@@ -36,9 +36,9 @@ export default class _IndexTableData extends Component {
                         <input type="hidden" id="PageNumber" name="PageNumber" className="page-number" />
                         <table className="table table-headerspaced table-noheaderlines table-hover ">
                             <tbody className="scroll-tbody">
-                                {this.state.viewModel.pagedList.map((r, i) => (
+                                {this.state.viewModel.PagedList.map((r, i) => (
                                     <tr key={ "tr"+i} className="text-center one-row">
-                                        {r.columns.map((col,i) => (
+                                        {r.Columns.map((col,i) => (
                                             <IndexTableColumn key={"col"+i} columnData={col}/>
                                         ))}
                                     </tr>
