@@ -169,7 +169,12 @@ namespace PrototypeWithAuth.AppData
         public enum VendorModalType { Create, Edit, SummaryFloat }
         public enum OrderTypeEnum { None, RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
-        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveToList, DeleteFromList }
+        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveToList, DeleteFromList, MonthlyPayment,         
+            PayNow ,           
+            PayLater,
+            Installments,
+            SpecifyPayment
+        }
         public enum PopoverEnum { None }
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
@@ -425,9 +430,9 @@ namespace PrototypeWithAuth.AppData
               value.Hour, value.Minute, 0);
         }
 
-        public static List<AccountingPopoverLink> GetPaymentsPopoverLinks(AppUtility.SidebarEnum CurrentEnum)
+        public static List<IconPopoverViewModel> GetPaymentsPopoverLinks(AppUtility.SidebarEnum CurrentEnum)
         {
-            List<AccountingPopoverLink> list = new List<AccountingPopoverLink>();
+            List<IconPopoverViewModel> list = new List<IconPopoverViewModel>();
             //List<PaymentsPopoverEnum> enums = Enum.GetValues(typeof(PaymentsPopoverEnum)).Cast<PaymentsPopoverEnum>().ToList();
             List<PaymentsPopoverEnum> enums = new List<PaymentsPopoverEnum> { PaymentsPopoverEnum.PayLater };
             if (!CurrentEnum.Equals(AppUtility.SidebarEnum.StandingOrders.ToString()))
@@ -437,9 +442,7 @@ namespace PrototypeWithAuth.AppData
 
                     if (CurrentEnum.ToString() != e.ToString() && CurrentEnum != AppUtility.SidebarEnum.None)
                     {
-                        AccountingPopoverLink accountingPopoverLink = new AccountingPopoverLink();
-                        accountingPopoverLink.CurrentLocation = (PaymentsPopoverEnum)Enum.Parse(typeof(PaymentsPopoverEnum), CurrentEnum.ToString());
-                        accountingPopoverLink.Description = e;
+                        IconPopoverViewModel accountingPopoverLink = null;
                         switch (e)
                         {
                             //case PaymentsPopoverEnum.Share:
@@ -467,10 +470,7 @@ namespace PrototypeWithAuth.AppData
                             //    accountingPopoverLink.Icon = "icon-credit_card-24px";
                             //    break;
                             case PaymentsPopoverEnum.PayLater:
-                                accountingPopoverLink.Action = "ChangePaymentStatus";
-                                accountingPopoverLink.Controller = "Requests";
-                                accountingPopoverLink.Color = "#5F79E2";
-                                accountingPopoverLink.Icon = "icon-centarix-icons-19";
+                                accountingPopoverLink= new IconPopoverViewModel(description: Enum.Parse<PopoverDescription>(e.ToString()), color: "#5F79E2", action: "ChangePaymentStatus", controller: "Requests", icon: "icon-centarix-icons-19", currentLocation: CurrentEnum);
                                 break;
                                 //case PaymentsPopoverEnum.Installments:
                                 //    accountingPopoverLink.Action = "ChangePaymentStatus";
