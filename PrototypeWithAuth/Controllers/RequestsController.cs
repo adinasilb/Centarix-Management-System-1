@@ -148,8 +148,8 @@ namespace PrototypeWithAuth.Controllers
 
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color);", "request-favorite", "Favorite");
-            var popoverMoreIcon = new IconColumnViewModel("More", "icon-more_vert-24px", "black", "More");
-            var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
+            var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
+            var popoverPartialClarifyIcon = new IconColumnViewModel("Clarify");
             var resendIcon = new IconColumnViewModel("Resend");
             string checkboxString = "Checkbox";
             string buttonText = "";
@@ -222,7 +222,7 @@ namespace PrototypeWithAuth.Controllers
                         && (notificationFilterViewModel.CentarixOrderNumber == null || r.ParentRequest.OrderNumber == notificationFilterViewModel.CentarixOrderNumber)
                         && (notificationFilterViewModel.ProductName == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.ProductName.ToLower())));
                     }
-                    iconList.Add(popoverPartialClarifyIcon);
+                  
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.DidntArrive:
@@ -238,6 +238,7 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.SidebarEnum.ForClarification:
                             wheres.Add(r => r.IsClarify);
                             checkboxString = "";
+                            iconList.Add(popoverPartialClarifyIcon);
                             break;
                         case AppUtility.SidebarEnum.NoInvoice:
                             wheres.Add(r => r.Payments.FirstOrDefault().HasInvoice == false);
@@ -291,7 +292,7 @@ namespace PrototypeWithAuth.Controllers
                             buttonText = "Pay All";
                             break;
                     }
-
+                    popoverMoreIcon.IconPopovers = AppUtility.GetPaymentsPopoverLinks(requestIndexObject.SidebarType);
                     viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(orderbyForPayments).Select(selectForPayments).ToLookup(r => r.Vendor);
                     break;
                 case AppUtility.PageTypeEnum.RequestCart:
@@ -2234,7 +2235,7 @@ namespace PrototypeWithAuth.Controllers
                                         StateEnum = tempRequest.Request.ParentQuoteID == null || tempRequest.Request.ParentQuoteID == 0 ? EntityState.Added : EntityState.Modified
                                     };
                                     ModelStates.Add(parentQuoteModelState);
-                                    if (tempRequest.Request.ParentQuoteID == null)
+                                    if (tempRequest.Request.ParentQuoteID == null || tempRequest.Request.ParentQuoteID == 0)
                                     {
                                         ParentQuoteRollbackList = ModelsCreated;
                                     }
@@ -2276,15 +2277,25 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 if (tempRequest.Comments != null)
                                 {
-                                    await _requestCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<RequestComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 1))), tempRequest.Request.RequestID, currentUser.Id);
-                                    await _productCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<ProductComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 2))), tempRequest.Request.ProductID, currentUser.Id);
-
-                                    foreach (var c in tempRequest.Comments)
+                                    var requestComments = AppData.Json.Deserialize<List<RequestComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 1)));
+                                    await _requestCommentsProc.UpdateWithoutTransactionAsync(requestComments, tempRequest.Request.RequestID, currentUser.Id);
+                                    foreach (var c in requestComments)
                                     {
                                         ModelsCreated.Add(new ModelAndID()
                                         {
                                             ID = c.CommentID,
-                                            ModelsEnum = AppUtility.ModelsEnum.Comment
+                                            ModelsEnum = AppUtility.ModelsEnum.RequestComment
+                                        });
+                                    }
+                                    var productComments = AppData.Json.Deserialize<List<ProductComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 2)));
+                                    await _productCommentsProc.UpdateWithoutTransactionAsync(productComments, tempRequest.Request.ProductID, currentUser.Id);
+
+                                    foreach (var c in productComments)
+                                    {
+                                        ModelsCreated.Add(new ModelAndID()
+                                        {
+                                            ID = c.CommentID,
+                                            ModelsEnum = AppUtility.ModelsEnum.ProductComment
                                         });
                                     }
                                 }
@@ -2383,8 +2394,8 @@ namespace PrototypeWithAuth.Controllers
                         message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
 
                         // add a "To" Email
-                        string ToEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.FirstOrDefault() != null ? deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.FirstOrDefault() : vendorEmail;
-                        message.To.Add(new MailboxAddress(ToEmail));
+                        string ToEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails?.FirstOrDefault() != null ? deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.FirstOrDefault() : vendorEmail;
+                        message.To.Add(new MailboxAddress(ToEmail ));
 
                         //add CC's to email
                         //TEST THIS STATEMENT IF VENDOR IS MISSING AN ORDERS EMAIL
@@ -2500,7 +2511,12 @@ namespace PrototypeWithAuth.Controllers
                 {
                     TempRequestViewModels = originalJson.DeserializeJson<FullRequestJson>().TempRequestViewModels
                 };
-                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
+                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.RequestComment))
+                {
+                    var comment = deTLVM.TempRequestViewModels.Select(t => t.Comments.Where(c => c.CommentID == ModelWithID.ID).FirstOrDefault()).FirstOrDefault();
+                    ModelStates.Add(new ModelAndState { Model = comment, StateEnum = EntityState.Modified });
+                }
+                foreach (var ModelWithID in ModelModified.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ProductComment))
                 {
                     var comment = deTLVM.TempRequestViewModels.Select(t => t.Comments.Where(c => c.CommentID == ModelWithID.ID).FirstOrDefault()).FirstOrDefault();
                     ModelStates.Add(new ModelAndState { Model = comment, StateEnum = EntityState.Modified });
@@ -2530,9 +2546,14 @@ namespace PrototypeWithAuth.Controllers
 
                 await _requestsProc.UpdateModelsAsync(ModelStates);
                 ModelStates.Clear();
-                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Comment))
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.RequestComment))
                 {
                     var model6 = await _requestCommentsProc.ReadOneAsync(new List<Expression<Func<RequestComment, bool>>> { pr => pr.CommentID == ModelWithID.ID });
+                    ModelStates.Add(new ModelAndState { Model = model6, StateEnum = EntityState.Deleted });
+                }
+                foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.ProductComment))
+                {
+                    var model6 = await _productCommentsProc.ReadOneAsync(new List<Expression<Func<ProductComment, bool>>> { pr => pr.CommentID == ModelWithID.ID });
                     ModelStates.Add(new ModelAndState { Model = model6, StateEnum = EntityState.Deleted });
                 }
                 foreach (var ModelWithID in ModelsCreated.Where(mc => mc.ModelsEnum == AppUtility.ModelsEnum.Payment))
@@ -3783,11 +3804,11 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = " Accounting")]
-        public async Task<IActionResult> ChangePaymentStatus(AppUtility.PaymentsPopoverEnum newStatus, int requestID, AppUtility.PaymentsPopoverEnum currentStatus)
+        public async Task<IActionResult> ChangePaymentStatus(RequestIndexObject requestIndexObject, int requestID, AppUtility.PaymentsPopoverEnum newStatus)
         {
             var StringWithBool = await _requestsProc.UpdatePaymentStatusAsync(newStatus, requestID);
-            var accountingPaymentsEnum = (AppUtility.SidebarEnum)Enum.Parse(typeof(AppUtility.SidebarEnum), currentStatus.ToString());
-            return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = accountingPaymentsEnum, ErrorMessage = StringWithBool.String });
+            requestIndexObject.ErrorMessage = StringWithBool.String;
+            return RedirectToAction("_IndexTableByVendor", requestIndexObject);
         }
 
         [HttpGet]
@@ -4995,7 +5016,12 @@ namespace PrototypeWithAuth.Controllers
 
         public IActionResult DownloadRequestsToExcel()
         {
-            var results = _requestsProc.Read().Select(r => new
+            var subcategoryList = new List<int>() { 1502 };
+            var results1 = _requestsProc.ReadWithIgnoreQueryFilters(
+                new List<Expression<Func<Request, bool>>> { r => subcategoryList.Contains(r.Product.ProductSubcategoryID) },
+                new List<ComplexIncludes<Request, ModelBase>>{ new ComplexIncludes<Request, ModelBase>() { Include = r => r.RequestLocationInstances, ThenInclude =
+                new ComplexIncludes<ModelBase, ModelBase>(){ Include = rli => ((RequestLocationInstance)rli).LocationInstance } }});
+            var results = results1.Select(r => new
             {
                 ProductName = r.Product.ProductName,
                 InvoiceNumber = r.Payments.FirstOrDefault().Invoice.InvoiceNumber,
@@ -5166,4 +5192,3 @@ namespace PrototypeWithAuth.Controllers
         }
     }
 }
-

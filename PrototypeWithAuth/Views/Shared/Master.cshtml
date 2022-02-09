@@ -1,4 +1,6 @@
 ﻿@using PrototypeWithAuth.AppData.UtilityModels
+@using React.AspNet
+@using React.Router
 @{
     Layout = null;
 }
@@ -80,9 +82,65 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <div class="request_nav_body"> @RenderBody()</div>
     <div class="modals">
-        @{await Html.RenderPartialAsync("ModalLoader"); }
-    </div>
 
+        <div class="two-factor-expired"></div>
+        <div class="add-invoice"></div>
+        <div class="adjust-payments"></div>
+        <div class="confirm-edit"></div>
+        <div class="confirm-exit"></div>
+        <div class="confirm-email"></div>
+        <div class="documents-delete"></div>
+        <div class="documents"></div>
+        <div class="edit-quote"></div>
+        <div class="payments-pay"></div>
+        <div class="payments-invoice"></div>
+        <div class="received-item"></div>
+        <div class="reorder-item"></div>
+        <div class="terms"></div>
+        <div class="upload-order"></div>
+        <div class="upload-quote"></div>
+        <div class="step-1"></div>
+        <div class="step-2"></div>
+        <div class="cart-total"></div>
+        <div class="visual-zoom"></div>
+        <div class="suspend-user"></div>
+        <div class="user-picture"></div>
+        <div class="deny-approval"></div>
+        <div class="delete-item"> </div>
+        <div class="history-item"></div>
+        <div class="edits"></div>
+        <div class="add-location"></div>
+        <div class="update-time-worked"></div>
+        <div class="off-day"></div>
+        <div class="hours-awaiting-approval"></div>
+        <div class="share-request"></div>
+        <div class="add-material"></div>
+        <div class="late-order"></div>
+        <div class="add-resources"></div>
+        <div class="material-info"></div>
+        <div class="resource-notes-modal"></div>
+        <div class="share-modal"></div>
+        <div class="new-report"></div>
+        <div class="confirm-archive"></div>
+        <div class="save-report"></div>
+        <div class="protocol-details"></div>
+        <div class="add-function"></div>
+        <div class="add-change-div"></div>
+        <div class="add-participant"></div>
+        <div class="edit-participant"></div>
+        <div class="new-entry"></div>
+        <div class="save-bio-test-modal"></div>
+        <div class="move-list"></div>
+        <div class="new-list"></div>
+        <div class="delete-list-request"></div>
+        <div class="list-settings"></div>
+        <div class="delete-list"></div>
+        <div class="save-list-settings"></div>
+        <div class="products-warning-modal"></div>
+        <div class="vendor-float-modal"></div>
+        <div class="right-invalid"></div>
+        <div class="unit-warning-modal"></div>
+    </div>
 
     <!--  SCRIPTS  -->
     <!-- JQuery -->
@@ -170,8 +228,8 @@
 
 
     <script type="module" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view-renderer.js"></script>
-    <script type="text/javascript" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view.js"></script>
-    <script type="text/javascript" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select.js"></script>
+    <script type="text/babel" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view.js"></script>
+    <script type="text/babel" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select.js"></script>
 
     <script src="~/lib/bootstrap/dist/src/js/pro/buttons.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/cards.js"></script>
@@ -459,7 +517,6 @@
                 $.fn.EnableMaterialSelect('#operationsSubcategory', 'select-options-operationsSubcategory');
             }
             if ($(element).hasClass('orders')) {
-                alert("in if statement");
                 console.log("orders");
                 $.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
                 $.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
@@ -1319,12 +1376,12 @@
                     if(isReopen)
                     {
                         console.log("before fx");
-                        //if ($("._testvalues").length > 0) {
+                        if ($("._testvalues").length > 0) {
 
-                        //    if (!$("._testvalues").hasClass("changed")) {
-                        //        $("._testvalues").addClass("changed");
-                        //    }
-                        //}
+                            if (!$("._testvalues").hasClass("changed")) {
+                                $("._testvalues").addClass("changed");
+                            }
+                        }
                         //alert("._DocumentsModalData")
                         $("._DocumentsModalData").html(data);
                     }
@@ -1555,9 +1612,11 @@
             return {
                 SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation,
                 SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived, CatalogNumber: catalogNumber,
-                SelectedTypesIDs: selectedType, NumFilters: $("#NumFilters").val(), "SearchText" :searchText
+                SelectedTypesIDs: selectedType, NumFilters: $("#NumFilters").val(), "SearchText": searchText
             }
         }
+
+
 
 
 
@@ -1727,7 +1786,7 @@
             });
         }
 
-        $.fn.CancelModal = function (modalClass, orderType, orderOrigin) {
+        $.fn.CancelModal = function (modalClass, orderMethod, orderOrigin) {
             var modalType = $('#RequestIndexObject_ModalType').val();
             var guid = $('#GUID').val();
             $.ajax({
@@ -1805,6 +1864,7 @@
         }
 
     </script>
+
 
     @if (IsSectionDefined("requestNavScript"))
     {

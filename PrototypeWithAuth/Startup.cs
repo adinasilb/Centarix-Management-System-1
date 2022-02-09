@@ -26,6 +26,10 @@ using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using JavaScriptEngineSwitcher.V8;
+using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
+using React.AspNet;
+using Newtonsoft.Json.Converters;
 
 namespace PrototypeWithAuth
 {
@@ -74,12 +78,14 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("AdinaLocal"), sqlServerOptions => sqlServerOptions.CommandTimeout(120));
-                    options.EnableSensitiveDataLogging(true);   
+                    Configuration.GetConnectionString("DevelopersDB"), sqlServerOptions => sqlServerOptions.CommandTimeout(120));
+                options.EnableSensitiveDataLogging(true);
             });
 
             services.AddControllersWithViews();
-
+            services.AddReact();
+            services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
+            .AddV8();
 
             // Add framework services.
             services.AddMvc();
@@ -161,6 +167,18 @@ namespace PrototypeWithAuth
             app.UseHttpsRedirection();
 
             app.UseStaticFiles(); //may be here for other reasons but also need to download pdf files
+
+
+
+            app.UseReact(config =>
+            {
+                config.SetLoadBabel(true)
+                  .SetLoadReact(false)
+                  .SetReactAppBuildPath("~/dist");
+                config.JsonSerializerSettings = new JsonSerializerSettings { Converters= new List<JsonConverter> { new StringEnumConverter() } };
+            });
+
+
             app.UseRouting();
 
             app.UseAuthentication();

@@ -122,7 +122,7 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
-            <label asp-for="Requests[0].Product.ProductSubcategory.ParentCategory.Description" class="control-label"></label>
+            <label  class="control-label">Category</label>
             @if (Model.IsProprietary)
             {
                 <input asp-for="Requests[0].Product.ProductSubcategory.ParentCategory.Description" class="form-control-plaintext border-bottom" type="text" readonly />
@@ -149,7 +149,7 @@
     </div>
     <div class="col-md-6 px-4">
         <div class="form-group sublist">
-            <label asp-for="Requests[0].Product.ProductSubcategory.Description" class="control-label"></label>
+            <label class="control-label">Product Subcategory</label>
             @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategoryID,
                 new SelectList(
                 Model.ProductSubcategories,
@@ -227,7 +227,7 @@
             <div class="form-group">
                 @* IN MIDDLE *@
                 <label asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="control-label"></label>
-                <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " />
+                <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " disabled />
                 @*don't need a validation here because you it's not saving*@
             </div>
         </div>

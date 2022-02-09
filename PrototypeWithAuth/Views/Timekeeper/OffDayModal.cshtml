@@ -3,6 +3,8 @@
 
 <link href="~/css/datepicker.min.css" rel="stylesheet" type="text/css">
 <script src="~/js/site.js"></script>
+<script src="~/js/Validation/SaveOffDayValidation.js"></script>
+<script src="~/js/validate.js"></script>
 <div class="modal modal-document fader on-form-modal timekeeper-form " id="" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
 
     <div class="modal-dialog-centered mx-auto elixir-modal-sm">
@@ -10,7 +12,7 @@
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('off-day');">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding sickModal">
+            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding sickModal saveOffDayForm">
                 <input type="hidden" asp-for="@Model.OffDayType" />
                 <input type="hidden" asp-for="@Model.PageType" />
                 <input type="hidden" asp-for="@Model.ToDate" />
@@ -27,7 +29,8 @@
                         </div>
                     </div>
                 </div>
-                @{ 
+                <div><input name="dateSelected" class="selectedDate d-none" value="" /></div>
+                @{
                     bool dataRange = true;
                     if (Model.OffDayType == AppUtility.OffDayTypeEnum.SpecialDay)
                     {
