@@ -29,5 +29,6 @@ namespace PrototypeWithAuth.Models
         public CategoryType CategoryType { get; set; }
         public bool IsProprietary { get; set; }
         public IEnumerable<UnitTypeParentCategory> UnitTypeParentCategory { get; set; }
+        //public override CategoryJson CategoryJson { get; set; }
     }
 }

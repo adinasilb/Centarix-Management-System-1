@@ -23,5 +23,6 @@ namespace PrototypeWithAuth.Models
         public string ImageURL { get; set; }
 
         public bool IsOldSubCategory {get; set;}
+        //public override CategoryJson CategoryJson { get; set; }
     }
 }

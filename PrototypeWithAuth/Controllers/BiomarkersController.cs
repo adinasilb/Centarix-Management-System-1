@@ -541,7 +541,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.HumanTrials;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.BiomarkersExperiments;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Biomarkers;
-
+            
             var ee = await _experimentEntriesProc.ReadOneAsync(new List<Expression<Func<ExperimentEntry, bool>>> { e => e.ExperimentEntryID == ID },
                 new List<ComplexIncludes<ExperimentEntry, ModelBase>>
                 {
@@ -559,11 +559,13 @@ namespace PrototypeWithAuth.Controllers
             var areFilesFilled = new List<BoolIntViewModel>();
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ExperimentEntries.ToString());
 
-            var value1 = _testValuesProc.Read(new List<Expression<Func<TestValue, bool>>> { tv => tv.ExperimentEntryID == ID }).Count();
-            var value2 = tests.SelectMany(t => t.TestOuterGroups/*.Where(tog => tog.TestID == tests.FirstOrDefault().TestID)*/.SelectMany(to => to.TestGroups.SelectMany(tg => tg.TestHeaders))).Count();
-            if (value1 < value2)
+
+            var testvaluesMade = _testValuesProc.Read(new List<Expression<Func<TestValue, bool>>> { tv => tv.ExperimentEntryID == ID }).Count();
+            var testsNeedValues = tests.SelectMany(t => t.TestOuterGroups).SelectMany(tog => tog.TestGroups).SelectMany(tg => tg.TestHeaders);
+            //tests.SelectMany(t => t.TestOuterGroups/*.Where(tog => tog.TestID == tests.FirstOrDefault().TestID)*/.SelectMany(to => to.TestGroups.SelectMany(tg => tg.TestHeaders))).Count();
+            if (testvaluesMade < testsNeedValues.Count())
             {
-                testValues = await CreateTestValuesIfNoneAsync(tests, testValues, ee.ExperimentEntryID);
+                testValues = await CreateTestValuesIfNoneAsync(testsNeedValues, testValues, ee.ExperimentEntryID);
             }
             List<BoolIntViewModel> filesPrevFilled = CheckForFiles(testValues, ee.ExperimentEntryID);
             TestViewModel testViewModel = new TestViewModel()
@@ -630,9 +632,24 @@ namespace PrototypeWithAuth.Controllers
             }
             return FilesWithDocsSaved;
         }
-        private async Task<List<TestValue>> CreateTestValuesIfNoneAsync(List<Test> tests, List<TestValue> testValues, int ExperimentEntryID)
+        private async Task<List<TestValue>> CreateTestValuesIfNoneAsync(IEnumerable<TestHeader> tests, List<TestValue> testValues, int ExperimentEntryID)
         {
+            foreach (var testheader in tests)
+            {
+                if (!testValues.Where(tv => tv.TestHeaderID == testheader.TestHeaderID).Any())
+                {
+                    TestValue tv = new TestValue()
+                    {
+                        TestHeaderID = testheader.TestHeaderID,
+                        TestHeader = testheader,
+                        ExperimentEntryID = ExperimentEntryID
+                    };
+                    _context.Update(tv);
 
+                    testValues.Add(tv);
+                }
+            }
+            await _context.SaveChangesAsync();
             return testValues;
         }
 
@@ -652,7 +669,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<ActionResult> SaveTests(TestViewModel testViewModel, TestValuesViewModel testValuesViewModel, List<FieldViewModel> fieldViewModels)
         {
 
-            await _testValuesProc.SaveAsync(testViewModel);
+            var save = _testValuesProc.SaveAsync(ref testViewModel);
             SaveFiles(testViewModel.Guid, testViewModel.ExperimentEntry.ExperimentEntryID);
 
             return RedirectToAction("_TestValues", new { TestID = testViewModel.FieldViewModels.FirstOrDefault().TestID, ListNumber = 0, SiteID = testViewModel.ExperimentEntry.SiteID, ExperimentID = testViewModel.ExperimentID, ExperimentEntryID = testViewModel.ExperimentEntry.ExperimentEntryID });
@@ -757,7 +774,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }).ToList();
             var testValues = GetTestValuesFromTestIDAndExperimentEntryID(TestID, ExperimentEntryID);
-            List<BoolIntViewModel> filesPrevFilled = CheckForFiles(testValues, ExperimentEntryID);
+            List<BoolIntViewModel> filesPrevFilled =  CheckForFiles(testValues, ExperimentEntryID);
             TestValuesViewModel testValuesViewModel = new TestValuesViewModel()
             {
                 ListNumber = ListNumber,
