@@ -5016,54 +5016,59 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult DownloadRequestsToExcel()
         {
             var subcategoryList = new List<int>() { 201, 217, 204, 1502 };
+            //var results1 = _requestsProc.ReadWithIgnoreQueryFilters(
+            //    new List<Expression<Func<Request, bool>>> { r => subcategoryList.Contains(r.Product.ProductSubcategoryID) },
+            //    new List<ComplexIncludes<Request, ModelBase>>{ new ComplexIncludes<Request, ModelBase>() { Include = r => r.RequestLocationInstances, ThenInclude =
+            //    new ComplexIncludes<ModelBase, ModelBase>(){ Include = rli => ((RequestLocationInstance)rli).LocationInstance } }});
             var results1 = _requestsProc.ReadWithIgnoreQueryFilters(
-                new List<Expression<Func<Request, bool>>> { r => subcategoryList.Contains(r.Product.ProductSubcategoryID) },
-                new List<ComplexIncludes<Request, ModelBase>>{ new ComplexIncludes<Request, ModelBase>() { Include = r => r.RequestLocationInstances, ThenInclude =
-                new ComplexIncludes<ModelBase, ModelBase>(){ Include = rli => ((RequestLocationInstance)rli).LocationInstance } }});
+                new List<Expression<Func<Request, bool>>> { r => r.CreationDate <= DateTime.Parse("12/01/2022") });
             var results = results1.Select(r => new
             {
+                CustomExcelID = r.RequestID,
                 ProductName = r.Product.ProductName,
-                //InvoiceNumber = r.Payments.FirstOrDefault().Invoice.InvoiceNumber,
+                InvoiceNumber = r.Payments.FirstOrDefault().Invoice.InvoiceNumber,
                 CategoryName = r.Product.ProductSubcategory.ParentCategory.Description,
                 SubCategoryName = r.Product.ProductSubcategory.Description,
                 Vendor = r.Product.Vendor.VendorEnName,
-                //CompanyID = r.Product.Vendor.VendorBuisnessID,
+                CompanyID = r.Product.Vendor.VendorBuisnessID,
                 CatalogNumber = r.Product.CatalogNumber,
-                Location = (r.RequestLocationInstances.FirstOrDefault().LocationInstance.LabPartID != null ?
-                (r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationInstanceName + " " + 
-                r.RequestLocationInstances.FirstOrDefault().LocationInstance.LabPart.LabPartName) :
-                (r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationInstanceName ??
-                r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName) ) ??
-                (r.RequestStatusID != 3 ? "Has not been received yet" : "ERROR")
-                //BatchLot = r.Batch,
-                //ExpirationDate = AppUtility.GetExcelDateFormat(r.BatchExpiration),
-                //QuoteNumber = r.ParentQuote.QuoteNumber,
-                //QuoteExpirationDate = AppUtility.GetExcelDateFormat(r.ParentQuote.ExpirationDate),
-                //ExpectedSupplyDays = r.ExpectedSupplyDays,
-                //ExpectedSupplyDate = r.ParentRequest.OrderDate.AddDays(Convert.ToDouble(r.ExpectedSupplyDays)),
-                //URL = AppUtility.GetUrlFromUserData(r.URL),
-                //CentarixOrderNumber = r.ParentRequest.OrderNumber,
-                //OrderDate = AppUtility.GetExcelDateFormat(r.ParentRequest.OrderDate),
-                //ArrivalDate = AppUtility.GetExcelDateFormat(r.ArrivalDate),
-                //RequestedBy = r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName,
-                //OrderedBy = r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName,
-                //ReceivedBy = r.ApplicationUserReceiver.FirstName + " " + r.ApplicationUserReceiver.LastName,
-                //Currency = r.Currency,
-                //ExchangeRate = r.ExchangeRate,
-                //Amount = r.Unit,
-                //Unit = r.Product.UnitType.UnitTypeDescription,
-                //SubUnitAmount = r.Product.SubUnit,
-                //SubUnit = r.Product.SubUnitType.UnitTypeDescription,
-                //SubSubUnitAmount = r.Product.SubSubUnit,
-                //SubSubUnit = r.Product.SubSubUnitType.UnitTypeDescription,
-                //Total = r.Cost,
-                //IncludeVat = r.IncludeVAT,
-                //Discount = r.ParentQuote.Discount,
-                //Terms = r.PaymentStatus.PaymentStatusDescription,
-                //IsPaid = r.Payments.FirstOrDefault().IsPaid,
-                //Partial = r.IsPartial,
-                //Clarify = r.IsClarify,
-                //Payments = r.Payments.Count()
+                //Location = (r.RequestLocationInstances.FirstOrDefault().LocationInstance.LabPartID != null ?
+                //(r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationInstanceName + " " + 
+                //r.RequestLocationInstances.FirstOrDefault().LocationInstance.LabPart.LabPartName) :
+                //(r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationInstanceName ??
+                //r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName) ) ??
+                //(r.RequestStatusID != 3 ? "Has not been received yet" : "ERROR")
+                BatchLot = r.Batch,
+                ExpirationDate = AppUtility.GetExcelDateFormat(r.BatchExpiration),
+                QuoteNumber = r.ParentQuote.QuoteNumber,
+                QuoteExpirationDate = AppUtility.GetExcelDateFormat(r.ParentQuote.ExpirationDate),
+                ExpectedSupplyDays = r.ExpectedSupplyDays,
+                ExpectedSupplyDate = r.ExpectedSupplyDays != null ? r.ParentRequest.OrderDate.AddDays(Convert.ToDouble(r.ExpectedSupplyDays)).ToString() : "",
+                URL = AppUtility.GetUrlFromUserData(r.URL),
+                CentarixOrderNumber = r.ParentRequest.OrderNumber,
+                OrderType = r.OrderType,
+                RequestDate = AppUtility.GetExcelDateFormat(r.CreationDate),
+                OrderDate = AppUtility.GetExcelDateFormat(r.ParentRequest.OrderDate),
+                ArrivalDate = AppUtility.GetExcelDateFormat(r.ArrivalDate),
+                RequestedBy = r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName,
+                OrderedBy = r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName,
+                ReceivedBy = r.ApplicationUserReceiver.FirstName + " " + r.ApplicationUserReceiver.LastName,
+                Currency = r.Currency,
+                ExchangeRate = r.ExchangeRate,
+                Amount = r.Unit,
+                Unit = r.Product.UnitType.UnitTypeDescription,
+                SubUnitAmount = r.Product.SubUnit,
+                SubUnit = r.Product.SubUnitType.UnitTypeDescription,
+                SubSubUnitAmount = r.Product.SubSubUnit,
+                SubSubUnit = r.Product.SubSubUnitType.UnitTypeDescription,
+                Total = r.Cost,
+                IncludeVat = r.IncludeVAT,
+                Discount = r.ParentQuote.Discount,
+                Terms = r.PaymentStatus.PaymentStatusDescription,
+                IsPaid = r.Payments.FirstOrDefault().IsPaid,
+                Partial = r.IsPartial,
+                Clarify = r.IsClarify,
+                Payments = r.Payments.Count()
             }).ToList();
 
             var cc = new CsvConfiguration(new System.Globalization.CultureInfo("en-US"));
