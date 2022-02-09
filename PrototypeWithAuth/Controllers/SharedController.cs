@@ -93,7 +93,6 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.ParentQuotesProc _parentQuotesProc;
         protected readonly CRUD.InvoicesProc _invoicesProc;
         protected readonly CRUD.CategoryBasesProc _categoryBasesProc;
-        protected readonly CRUD.OrderMethodsProc _orderMethodsProc;
 
         protected readonly CRUD.TestHeadersProc _testHeadersProc;
 
@@ -165,7 +164,6 @@ namespace PrototypeWithAuth.Controllers
             _applicationDbContextEntries = new CRUD.ApplicationDbContextEntries(context);
             _parentQuotesProc = new CRUD.ParentQuotesProc(context);
             _invoicesProc = new CRUD.InvoicesProc(context);
-            _orderMethodsProc = new CRUD.OrderMethodsProc(context);
             _categoryBasesProc = new CRUD.CategoryBasesProc(context);
             _testHeadersProc = new CRUD.TestHeadersProc(context);
         }
@@ -1235,9 +1233,9 @@ namespace PrototypeWithAuth.Controllers
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color);", "request-favorite", "Favorite");
 
             var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
-            var popoverDelete = new IconPopoverViewModel(" icon-delete-24px  ", "black", AppUtility.PopoverDescription.Delete, "Delete", "Requests", AppUtility.PopoverEnum.None, "load-confirm-delete");
+            var popoverDelete = new IconPopoverViewModel(" icon-delete-24px  ", "black", AppUtility.PopoverDescription.Delete, "Delete", "Requests", "load-confirm-delete");
             //var popoverCantDelete = new IconPopoverViewModel(" icon-delete-24px  ", "grey", AppUtility.PopoverDescription.Delete, "", "", AppUtility.PopoverEnum.None, "");
-            var popoverReorder = new IconPopoverViewModel(" icon-add_circle_outline-24px1 ", "#00CA72", AppUtility.PopoverDescription.Reorder, "Reorder", "Requests", AppUtility.PopoverEnum.None, "load-order-details");
+            var popoverReorder = new IconPopoverViewModel(" icon-add_circle_outline-24px1 ", "#00CA72", AppUtility.PopoverDescription.Reorder, "Reorder", "Requests", "load-order-details");
             var popoverRemoveShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
             var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Requests",  "share-request-fx");
             var popoverAddToList = new IconPopoverViewModel("icon-centarix-icons-04", "black", AppUtility.PopoverDescription.AddToList, "MoveToListModal", "Requests",  "move-to-list");
