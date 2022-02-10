@@ -173,7 +173,7 @@
                                 <label asp-for="InvoiceImage" class="control-label"></label>
                                 <br />
                                 <input type="hidden" asp-for="Guid" class="hidden-guid" />
-                                <button class="my-2 accounting-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()"
+                                <button class="my-2 section-bg-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()"
                                         data-id="0" parentfolder="@AppUtility.ParentFolderName.Requests"
                                         id="@AppUtility.FolderNamesEnum.Invoices.ToString()" data-val="@true" show-switch="@false">
                                     Select File
@@ -186,7 +186,7 @@
                                 *@
                             </div>
                             <div class="col-2 offset-3 align-self-center">
-                                <input type="submit" class="accounting-background-color custom-button-font custom-button save-invoice" value="Save" />
+                                <input type="submit" class="section-bg-color custom-button-font custom-button save-invoice" value="Save" />
                             </div>
                             <div class="col-2 align-self-center">
                                 <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('add-invoice')">Cancel</button>
