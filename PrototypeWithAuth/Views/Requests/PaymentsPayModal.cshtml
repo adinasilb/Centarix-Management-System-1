@@ -11,7 +11,7 @@
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('payments-invoice')">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" class="modal-padding payModalForm accounting-form" id="myForm">
+            <form action="" method="post" enctype="multipart/form-data" class="modal-padding payModalForm " id="myForm">
                 @if (Model.Error.Bool == true)
                 {
                     <span class="text-danger-centarix">@Model.Error.String</span>

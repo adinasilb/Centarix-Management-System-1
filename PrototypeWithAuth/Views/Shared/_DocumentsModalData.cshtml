@@ -17,33 +17,29 @@
     //    requestid = 0;
     //}
 
-    var form = "order-inv-form";
     var deleteDocumentClass = "";
     var sectionType = AppUtility.MenuItems.Requests.ToString();
 
     if (Model.SectionType == AppUtility.MenuItems.Operations)
     {
-        form = "oper-form";
+      
         sectionType = AppUtility.MenuItems.Operations.ToString();
     }
     else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
     {
-        form = "supplier-form";
+
         sectionType = AppUtility.MenuItems.LabManagement.ToString();
     }
     else if (Model.SectionType == AppUtility.MenuItems.Accounting)
     {
-        form = "accounting-form";
         sectionType = AppUtility.MenuItems.Accounting.ToString();
     }
     else if (Model.SectionType == AppUtility.MenuItems.Protocols)
     {
-        form = "protocol-form";
         sectionType = AppUtility.MenuItems.Protocols.ToString();
     }
     else if (Model.SectionType == AppUtility.MenuItems.Biomarkers)
     {
-        form = "bio-form";
         sectionType = AppUtility.MenuItems.Biomarkers.ToString();
     }
     var bcColorToUse = "section-bg-color";

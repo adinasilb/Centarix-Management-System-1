@@ -7,18 +7,9 @@
     ViewData["Title"] = "Edit";
     Layout = null;
 }
-@{ 
-    string form = "";
-    if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
-    {
-        form = "supplier-form";
-    }
-    else
-    {
-        form = "accounting-form";
-    }
+@{
 
-    <div class="modal modal-view right fader @form on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+    <div class="modal modal-view right fader on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
         <div class="modal-dialog modal-lg" role="document" style="max-height:100%; width: 50%; max-width: 100%">
 

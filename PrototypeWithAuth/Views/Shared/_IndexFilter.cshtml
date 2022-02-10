@@ -12,16 +12,14 @@
 @{ 
     var colorClass = "custom-order-inv";
     var sectionClass = "orders";
-    var formClass = "order-inv-form";
     if (Model.SectionType == AppUtility.MenuItems.Operations)
     {
         colorClass = "custom-oper";
         sectionClass = "operations";
-        formClass = "oper-form";
 
     }
 }
-<div class="container-fluid @formClass">
+<div class="container-fluid ">
     <div class="row">
         <ul class="list-unstyled mb-0 ">
             <li class="filter-and-search @sectionClass">

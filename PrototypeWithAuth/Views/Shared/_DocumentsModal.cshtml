@@ -11,29 +11,10 @@
     //{
     //    requestid = 0;
     //}
-    var form = "order-inv-form";
+   
     var deleteDocumentClass = "";
 
-    if (Model.SectionType == AppUtility.MenuItems.Operations)
-    {
-        form = "oper-form";
-    }
-    else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
-    {
-        form = "supplier-form";
-    }
-    else if (Model.SectionType == AppUtility.MenuItems.Accounting)
-    {
-        form = "accounting-form";
-    }
-    else if (Model.SectionType == AppUtility.MenuItems.Protocols)
-    {
-        form = "protocol-form";
-    }
-    else if (Model.SectionType == AppUtility.MenuItems.Biomarkers)
-    {
-        form = "bio-form";
-    }
+   
     var bcColorToUse = "section-bg-color";
     var colorToUse = "section-filter";
     var disabled = false;
@@ -72,7 +53,7 @@
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
 @*<form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding documentModalForm" id="myForm">*@
 <form action="" data-string="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding documentModalForm" id="myForm">
-    <div class="modal modal-document fader documentsModal @form" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9900">
+    <div class="modal modal-document fader documentsModal " id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9900">
         <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
             <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
 
