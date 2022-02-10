@@ -41,7 +41,7 @@
         <div class="d-flex align-items-center col-4">
             @*                <button type="submit" asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.Save" name="OrderType" asp-route-RequestStatusID="7" asp-route-PageType="RequestSummary" asp-route-SectionType="Requests" asp-route-SidebarType="List" class=" custom-button custom-button-font @bcColor m-auto complete-order disabled-submit">Save</button>
             *@
-            <button type="submit" value="@AppUtility.OrderTypeEnum.Save" name="OrderType" class=" custom-button custom-button-font @Model.bcColor m-auto complete-order disabled-submit submitOrder">Save</button>
+            <button type="submit" value="@AppUtility.OrderMethod.Save" name="OrderType" class=" custom-button custom-button-font @Model.bcColor m-auto complete-order disabled-submit submitOrder">Save</button>
         </div>
     }
     @if (Model.SectionType == AppUtility.MenuItems.Operations)

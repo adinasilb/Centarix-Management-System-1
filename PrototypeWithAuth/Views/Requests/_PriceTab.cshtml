@@ -17,16 +17,6 @@
         disabledProperty = "disabled";
         markReadOnlyClass = "mark-readonly";
         changed = "true";
-        if (Model.Requests[0].Currency.Equals("USD"))
-        {
-            disableShekel = "disabled-text";
-            disableDollar = "";
-            disabledDollarProperty = "";
-            disabledShekelProperty = "readonly";
-            shekelReadOnly = "";
-            dollarReadOnly = "mark-readonly";
-            shekelSelected = "";
-        }
         if(AppUtility.GetPermissionsForPriceTabMarkReadonly(Model.RequestRoles, Model.Requests.FirstOrDefault()))
         {
             markPriceUnitReadonly = "mark-roles-readonly";
