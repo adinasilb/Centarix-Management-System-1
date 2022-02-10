@@ -30,11 +30,11 @@
                         <div class="mx-auto text-center">
                             @if (!Suspend)
                             {
-                                <input type="submit" value="Unsuspend" asp-action="SuspendUserModal" class="custom-button custom-button-font users-background-color between-button-margin " />
+                                <input type="submit" value="Unsuspend" asp-action="SuspendUserModal" class="custom-button custom-button-font section-bg-color between-button-margin " />
                             }
                             else
                             {
-                                <input type="submit" value="Suspend" asp-action="SuspendUserModal" class="custom-button custom-button-font users-background-color between-button-margin" />
+                                <input type="submit" value="Suspend" asp-action="SuspendUserModal" class="custom-button custom-button-font section-bg-color between-button-margin" />
                             }
                             <input type="button" @*data-dismiss="modal"*@ value="Cancel" class="custom-cancel custom-button" onclick="$.fn.CloseModal('suspend-user');" />
                         </div>

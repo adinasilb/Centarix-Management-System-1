@@ -640,7 +640,7 @@
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
             $('.open-archive-modal').removeClass('disabled-background-color');
-            $('.open-archive-modal').addClass('order-inv-background-color');
+            $('.open-archive-modal').addClass('btn-bg-color');
         }
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
@@ -777,7 +777,7 @@
             $("." + modalClass + ' .open-document-modal').attr("data-val", false);
             $("." + modalClass + ' .location-icon').addClass('d-none');
             $("." + modalClass + ' .open-archive-modal').addClass('disabled-background-color');
-            $("." + modalClass + ' .open-archive-modal').removeClass('order-inv-background-color');
+            $("." + modalClass + ' .open-archive-modal').removeClass('btn-bg-color');
 
             //console.log('locations edot mode off');
             //$("." + modalClass +".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
@@ -1722,7 +1722,7 @@
                     $('.search-by-name-in-filter').attr('value', searchText);
                     $('.search-by-catalog-number').attr('value', catalogNumber);
                     $('body').removeClass('popover-open');
-                    $('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
+                    $('#invFilterPopover').removeClass('btn-bg-color custom-button-font');
                     $('#invFilterPopover').addClass('custom-order-inv');
                     $('#protocolFilterPopover').removeClass('protocols-background-color custom-button-font');
                     $('#protocolFilterPopover').addClass('custom-protocols');

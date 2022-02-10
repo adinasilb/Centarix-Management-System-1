@@ -7,8 +7,8 @@
     <title>PurchaseOrderView - Centarix Management System</title>
 
 
-    <link rel="stylesheet" href="/css/site.css?v=PEUcuXGTW-cGxxRrd5Kq_tDYtClyozSMCKfJ2ro2_a4" />
-    <link rel="stylesheet" href="/css/Master.css?v=mwjMvN0H0S7e1Zfiij9fFFs-Za3Bcl2YvlCu3MqJZXA" />
+    <link rel="stylesheet" href="/css/site.css?v=gJNI9pBVEx7NNJJLo9fHtZ1DeSckNZXIAMT-bZpTMso" />
+    <link rel="stylesheet" href="/css/Master.css?v=ZDiiZ9uhNHVrMJwk-leMVCIz3FVD6nSzQZs8skNaYmA" />
     <link href="/css/forms.css" rel="stylesheet" />
     <link href="/css/elixir-fonts/elixir-icons.css" rel="stylesheet" />
     <link rel="stylesheet" href="/css/jquery-ui.min.css">
@@ -59,7 +59,7 @@
         display: none;">
         <img src="/images/css/Loading/centarix_loading3.gif" />
     </div>
-    <script src="/js/site.js?v=QmdimhnB_F6G4qmk-RkbNgi5Y5jpHxthtvcpNhchZJA"></script>
+    <script src="/js/site.js?v=_KSFgy68dQBphvE96JeZAVM48ICoqF210dY1qJmXLtc"></script>
     <div class="request_nav_body"> 
     <!--<head>-->
         <!-- Required meta tags -->
@@ -93,20 +93,20 @@
     </header>
     <div class="row">
         <div class="col-6">
-                <span style="font-weight: 700; font-size:2rem;">Purchase Order: 181</span>
+                <span style="font-weight: 700; font-size:2rem;">Purchase Order: 21</span>
         </div>
         <div class="col-3 offset-3 text-center">
-            <span style="font-weight:500" id="date">10 Jan 2022</span>
+            <span style="font-weight:500" id="date">12 Dec 2021</span>
         </div>
     </div>
     <hr>
     <div class="row">
         <div class="col-4">
             <div class="vendor-info">
-                <span class="heading-1">Beakers and More (Dollar)</span><br>
-                <span>ID: 45656</span><br>
-                <span>New York</span><br>
-                <span>Tel: 7189999999</span>
+                <span class="heading-1">Centarix Supplier</span><br>
+                <span>ID: 1588</span><br>
+                <span>Baltimore</span><br>
+                <span>Tel: 4439552063</span>
             </div>
         </div>
         <div class="col-6 offset-2">
@@ -133,13 +133,13 @@
             </thead>
             <tbody>
 
-<input data-val="true" data-val-required="The RequestID field is required." id="Requests_0__RequestID" name="Requests[0].RequestID" type="hidden" value="2527" />                        <tr>
-                            <td style="font-weight: 500;">Already Purchased Cookies Hello World</td>
-                            <td>48</td>
-                                <td>4</td>
-                                <td class="">&#x20AA; 1.00</td>
-                            <td class="">7%</td>
-                            <td class="">&#x20AA; 4.00</td>
+<input data-val="true" data-val-required="The RequestID field is required." id="Requests_0__RequestID" name="Requests[0].RequestID" type="hidden" value="0" />                        <tr>
+                            <td style="font-weight: 500;">Violin</td>
+                            <td>46.34658</td>
+                                <td>3</td>
+                                <td class="">$ 3.00</td>
+                            <td class="">0%</td>
+                            <td class="">$ 9.00</td>
                         </tr>
 
 
@@ -148,20 +148,20 @@
                         <img src="/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">
                     </td>
                         <td>Shipping</td>
-                        <td>&#x20AA; 50.00</td>
+                        <td>$ 45.00</td>
                 </tr>
                 <tr class="">
                     <td>Total</td>
-                    <td>&#x20AA; 54.00</td>
+                    <td>$ 54.00</td>
                 </tr>
                 <tr class="">
                     <td>VAT [17%]</td>
-                    <td>&#x20AA; 9.18</td>
+                    <td>$ 9.18</td>
                 </tr>
                 <tr class="">
                     <td class="font-weight-bold">Total To Pay</td>
 
-                    <td class="font-weight-bold">&#x20AA; 63.18</td>
+                    <td class="font-weight-bold">$ 63.18</td>
                 </tr>
             </tbody>
         </table>
@@ -177,6 +177,15 @@
     <br />
     <br />
     <br />
+<div class="m-4" style="width:25%;">
+            <span class="heading-1">
+                Payment Terms:
+            </span><br />
+            <span class="text">
+                
+                &#x2B; 30
+            </span><br />
+        </div>
 </div>
         </div>
 </div>
@@ -235,9 +244,7 @@
 <div class="list-settings"></div>
 <div class="delete-list"></div>
 <div class="save-list-settings"></div>
-<div class="products-warning-modal"></div>
-<div class="vendor-float-modal"></div>
-<div class="right-invalid"></div>    </div>
+    </div>
 
 
     <!--  SCRIPTS  -->
@@ -513,32 +520,6 @@
     };
 
 
-        $.fn.enableUsersMarkReadonly = function () {
-            console.log("in enable users mark readonly");
-            if ($("#EmployeeStatusID4:checked").length > 0) {
-                console.log("is a user");
-                $('.mark-readonly:not(.only-employee)').attr("disabled", false);
-                $('.mark-readonly.only-employee').attr("disabled", "disabled");
-                $('.mark-readonly:not(.only-employee)').removeClass("disabled");
-                $('.mark-readonly.only-employee:not(.disabled)').addClass("disabled");
-            }
-            else {
-                console.log("is NOT a user");
-                $('.mark-readonly').attr("disabled", false);
-                $('.mark-readonly').removeClass("disabled");
-            }
-            //$('.row:not(.only-employee) .mark-edditable').data("val", true);
-            $('.edit-mode-switch-description').text("Edit Mode On");
-            $('.turn-edit-on-off').attr('name', 'edit');
-
-                $.fn.EnableMaterialSelect('#job-subcategory', 'select-options-job-subcategory');
-                $.fn.EnableMaterialSelect('#Employee_JobSubcategoryType_JobCategoryTypeID', 'select-options-Employee_JobSubcategoryType_JobCategoryTypeID');
-                $.fn.EnableMaterialSelect('#Employee_DegreeID', 'select-options-Employee_DegreeID');
-                $.fn.EnableMaterialSelect('#Employee_MaritalStatusID', 'select-options-Employee_MaritalStatusID');
-                $.fn.EnableMaterialSelect('#Employee_CitizenshipID', 'select-options-Employee_CitizenshipID');
-
-        }
-
         function enableMarkReadonly(element) {
             console.log("in if details");
             $('.mark-readonly').attr("disabled", false);
@@ -550,12 +531,12 @@
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
             $('.location-icon').removeClass('d-none');
-
+            
 
             //turn off document modals
             if ($(element).hasClass('operations') || $(element).hasClass('orders')) {
                 console.log("orders operations");
-                $.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist');
+               // $.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist');
                 $.fn.EnableMaterialSelect('#sublist', 'select-options-sublist');
                 $.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList');
                 $.fn.EnableMaterialSelect('#currency', 'select-options-currency');
@@ -590,6 +571,13 @@
             if ($(element).hasClass('suppliers') || $(element).hasClass('accounting')) {
                 $.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
                 $.fn.EnableMaterialSelect('#VendorCountries', 'select-options-VendorCountries');
+            }
+            if ($(element).hasClass('users')) {
+                $.fn.EnableMaterialSelect('#job-subcategory', 'select-options-job-subcategory');
+                $.fn.EnableMaterialSelect('#NewEmployee_JobSubcategoryType_JobCategoryTypeID', 'select-options-NewEmployee_JobSubcategoryType_JobCategoryTypeID');
+                $.fn.EnableMaterialSelect('#NewEmployee_DegreeID', 'select-options-NewEmployee_DegreeID');
+                $.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
+                $.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
             }
             if ($(element).hasClass('protocols')) {
 
@@ -633,7 +621,7 @@
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
             $('.open-archive-modal').removeClass('disabled-background-color');
-            $('.open-archive-modal').addClass('order-inv-background-color');
+            $('.open-archive-modal').addClass('section-bg-color');
         }
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
@@ -675,7 +663,7 @@
                             $.fn.LoadSummaryModal('edits');
                             $('.modal-content a:first').tab('show');
                             break;
-                        case "summaryProtocolsParital":
+                        case "summaryProtocolsParital":    
                             $("._ProtocolsDetailsFloatModal").html(data);
                             $.fn.LoadSummaryModal('_ProtocolsDetailsFloatModal');
                             $('.modal-content a:first').tab('show');
@@ -770,7 +758,7 @@
             $("." + modalClass + ' .open-document-modal').attr("data-val", false);
             $("." + modalClass + ' .location-icon').addClass('d-none');
             $("." + modalClass + ' .open-archive-modal').addClass('disabled-background-color');
-            $("." + modalClass + ' .open-archive-modal').removeClass('order-inv-background-color');
+            $("." + modalClass + ' .open-archive-modal').removeClass('section-bg-color');
 
             //console.log('locations edot mode off');
             //$("." + modalClass +".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
@@ -834,7 +822,7 @@
             $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
                 var item = "";
                 $.each(data, function (i, subCategory) {
-                    item += '<option value="' + subCategory.ID + '">' + subCategory.Description + '</option>'
+                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
                 });
                 $("#sublist").html(item);
                 $("#sublist").val(subcategoryId1).change();
@@ -974,16 +962,9 @@
                 cache: true,
                 success: function (data) {
                     $("#loading").hide();
-                    if (data.includes("Invalid")) {
-                        $.fn.OpenModal('invalid-right-modal', 'right-invalid', data);
-                    }
-                    else {
-                        $.fn.OpenModal('users-form', 'edits', data)
-                        $.fn.CalculateAge();
-                        $.fn.OnOpenModal();
-                        $.fn.TurnToDetails("edits");
-
-                    }
+                    $.fn.OpenModal('users-form', 'edits', data)
+                    $.fn.CalculateAge();
+                    $.fn.OnOpenModal();
                 }
             });
         };
@@ -1209,22 +1190,17 @@
             //delete existing modals
             $.getJSON("/Home/GetLatestNotifications", function (data) {
                 $.each(data, function (i, notification) {
-                    var date = new Date(notification.date)
-
-                    var isOrderLate = false;
+                    var timestamp = new Date(notification.timeStamp)
                     var link = '/-1/-2?requestID=-3&didntArrive=-4';
-                    if (notification.controller == "") {
-                        link = '#'
-                    }
-                    else {
-                        link = link.replace("-4", isOrderLate);
-                        link = link.replace("-3", notification.id);
-                        link = link.replace("-2", notification.action);
-                        link = link.replace("-1", notification.controller);
-                    }
-                    if (notification.status == "1") {
+                    var isOrderLate = false;
+                    if(notification.status=="1")
+                    {
                         isOrderLate = true;
                     }
+                    link = link.replace("-4", isOrderLate);
+                    link = link.replace("-3", notification.id);
+                    link = link.replace("-2", notification.action);
+                    link = link.replace("-1", notification.controller);
                     var bold = "";
                     console.log( notification.isRead);
                     if (notification.isRead == false) {
@@ -1238,8 +1214,8 @@
                         '<i class="' + notification.icon + ' rounded-circle p-1" style="font-size: 1.75rem; color:var(' + notification.color + '); border: .125rem solid var(' + notification.color + ');"></i>' +
                         '</div>' +
                         '<div class=" col-10">' +
-                        '<label class="m-0 mr-5" id="notificationTimestamp">' + date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear() +  ' </label>' +
-                        '<br><label class="m-0 " id="notificationDescription" style="color:var('+notification.color+');">' + notification.description + '</label> </br>' +
+                        '<label class="m-0 mr-5" id="notificationTimestamp">' + timestamp.getDate() + '/' + (timestamp.getMonth()+1) + '/' + timestamp.getFullYear() +  ' </label>' +
+                        '<label class="m-0 " id="notificationDescription" style="color:var('+notification.color+');">' + notification.description + '</label> </br>' +
                         '<label class="m-0" id="requestName" >' + notification.requestName + '</label>' +
                         '</div>' +
 
@@ -1336,7 +1312,7 @@
             if (status === undefined) {
                 requestStatusId = $(".request-status-id").val();
             }
-
+     
             var queryString =
                 "PageNumber=" + $('.page-number').val() +
                 "&RequestStatusID=" + requestStatusId +
@@ -1415,7 +1391,7 @@
                     //    console.log("don't allow multiples")
                     //    $(".upload-file").attr('disabled', true)
                     //    $(".upload-file").addClass('disabled-background-color')
-                    //    $(".upload-file").removeClass('protocols-background-color')
+                    //    $(".upload-file").removeClass('section-bg-color')
                     //    $(".file-select").attr('disabled', true)
                     //}
                     if ($(".addFunctionForm").length >0)
@@ -1423,7 +1399,7 @@
                         if (numCards < 1) {
                             $(".upload-file").attr('disabled', false)
                             $(".upload-file").removeClass('disabled-background-color')
-                            $(".upload-file").addClass('protocols-background-color')
+                            $(".upload-file").addClass('section-bg-color')
                             $(".file-select").attr('disabled', false)
                             $(".upload-file").removeClass("d-none");
                             $(".saveFunction").addClass("d-none");
@@ -1432,7 +1408,7 @@
                         else {
                             $(".upload-file").attr('disabled', true)
                             $(".upload-file").addClass('disabled-background-color')
-                            $(".upload-file").removeClass('protocols-background-color')
+                            $(".upload-file").removeClass('section-bg-color')
                             $(".file-select").attr('disabled', true)
                             $(".upload-file").addClass("d-none");
                             $(".saveFunction").attr('disabled', false)
@@ -1502,13 +1478,13 @@
             $("body, .modal").bind("click");
         }
 
-        $.fn.AddTempRequestHiddenFors = function (guid, sequence, selector, isRollBack) {
+        $.fn.AddTempRequestHiddenFors = function (guid, sequence, selector) {
             //var guid = $('.hidden-guid').val();
             var error = "";
             //alert("in $.fn.AddTempRequestHiddenFors : " + guid);
             $.ajax({
                 async: false,
-                url: "/Requests/RollbackTempRequestHiddenFors?GUID=" + guid + "&SequencePosition=" + sequence + "&isRollBack=" + isRollBack,
+                url: "/Requests/RollbackTempRequestHiddenFors?GUID=" + guid + "&SequencePosition=" + sequence,
                 traditional: true,
                 type: "GET",
                 cache: false,
@@ -1632,12 +1608,12 @@
             }
         }
 
-
+ 
 
         $.fn.ButtonFilterClick =function(id , col, parent)
         {
             var data = $.fn.BindSelectedFilters('.popover');
-
+       
             var arr;
             if (col.hasClass('vendor-col')) {
                 arr = data.SelectedVendorsIDs;
@@ -1665,7 +1641,7 @@
             $.fn.ReloadFilterDiv(numFilters, data);
         }
 
-
+    
         $.fn.ApplyFilterClick = function()
         {
             console.log('clicked!')
@@ -1717,9 +1693,9 @@
                     $('.search-by-name-in-filter').attr('value', searchText);
                     $('.search-by-catalog-number').attr('value', catalogNumber);
                     $('body').removeClass('popover-open');
-                    $('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
+                    $('#invFilterPopover').removeClass('section-bg-color custom-button-font');
                     $('#invFilterPopover').addClass('custom-order-inv');
-                    $('#protocolFilterPopover').removeClass('protocols-background-color custom-button-font');
+                    $('#protocolFilterPopover').removeClass('section-bg-color custom-button-font');
                     $('#protocolFilterPopover').addClass('custom-protocols');
                 }
             });
@@ -1779,7 +1755,7 @@
             var url = "";
             if(sectionType == "Protocols")
             {
-                url = "/Protocols/_ProtocolFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType
+                url = "/Protocols/_ProtocolFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType   
                 contentID = "protocolFilterContent";
                 contentDivID ="protocolFilterContentDiv";
             }
