@@ -8,7 +8,8 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class SettingsInventory
     {
-        public IEnumerable<ParentCategory> Categories { get; set; }
-        public IEnumerable<ProductSubcategory> Subcategories { get; set; }
+        public CategoryListViewModel Categories { get; set; }
+        public CategoryListViewModel Subcategories { get; set; }
+        public SettingsForm SettingsForm { get; set; }
     }
 }

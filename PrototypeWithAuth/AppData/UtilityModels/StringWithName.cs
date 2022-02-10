@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.AppData.UtilityModels
 {
-    public class StringWithName //Mimic an enum but be allowed to name them
+    public class StringWithName
     {
         public string StringName { get; set; }
         public string StringDefinition { get; set; }

@@ -23,9 +23,7 @@ namespace PrototypeWithAuth.Data.Migrations
                 keyValue: 502,
                 column: "LocationTypeNameAbbre",
                 value: "");
-            migrationBuilder.Sql("Update LocationInstances"+
-                "SET LocationInstanceAbbrev = LocationNumber"+
-                "WHERE LocationTypeID =502");
+            migrationBuilder.Sql("Update LocationInstances SET LocationInstanceAbbrev = LocationNumber WHERE LocationTypeID =502");
         }
     }
 }

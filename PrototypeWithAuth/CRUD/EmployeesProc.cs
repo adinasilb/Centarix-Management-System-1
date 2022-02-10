@@ -23,7 +23,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class EmployeesProc :ApplicationDbContextProc<Employee>
+    public class EmployeesProc : ApplicationDbContextProc<Employee>
     {
         public object TempData { get; private set; }
 
@@ -35,23 +35,23 @@ namespace PrototypeWithAuth.CRUD
             }
         }
 
-        public async Task AddSpecialDays (string UserID, int SpecialDays)
+        public async Task AddSpecialDays(string UserID, int SpecialDays)
         {
             try
             {
                 var employee = this.Read(new List<Expression<Func<Employee, bool>>> { u => u.Id == UserID }).FirstOrDefault();
-                if (employee.SpecialDays + SpecialDays<0)
+                if (employee.SpecialDays + SpecialDays < 0)
                 {
                     throw new Exception("special days selected went over limit.");
                 }
                 employee.SpecialDays += SpecialDays;
-             
+
                 _context.Update(employee);
                 await _context.SaveChangesAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception("Failed to update special day- "+ AppUtility.GetExceptionMessage(ex));
+                throw new Exception("Failed to update special day- " + AppUtility.GetExceptionMessage(ex));
             }
         }
         public async Task<StringWithBool> UpdateLastReadNotification(string UserID)
@@ -274,23 +274,47 @@ namespace PrototypeWithAuth.CRUD
 
                     foreach (var role in registerUserViewModel.OrderRoles)
                     {
-                        await CheckRoleAsync(rolesList, employeeEditted, role.StringWithName.StringDefinition, role.Selected, _userManager);
+                        await CheckRoleAsync(rolesList, employeeEditted, role.Role.RoleDefinition, role.Selected, _userManager);
                     }
                     foreach (var role in registerUserViewModel.OperationRoles)
                     {
-                        await CheckRoleAsync(rolesList, employeeEditted, role.StringWithName.StringDefinition, role.Selected, _userManager);
+                        await CheckRoleAsync(rolesList, employeeEditted, role.Role.RoleDefinition, role.Selected, _userManager);
                     }
                     foreach (var role in registerUserViewModel.ProtocolRoles)
                     {
-                        await CheckRoleAsync(rolesList, employeeEditted, role.StringWithName.StringDefinition, role.Selected, _userManager);
+                        await CheckRoleAsync(rolesList, employeeEditted, role.Role.RoleDefinition, role.Selected, _userManager);
                     }
-                    await CheckRoleAsync(rolesList, employeeEditted, AppUtility.MenuItems.Biomarkers.ToString(), registerUserViewModel.BiomarkerRoles[0].Selected, _userManager);
-                    await CheckRoleAsync(rolesList, employeeEditted, AppUtility.MenuItems.TimeKeeper.ToString(), registerUserViewModel.TimekeeperRoles[0].Selected, _userManager);
-                    await CheckRoleAsync(rolesList, employeeEditted, AppUtility.MenuItems.LabManagement.ToString(), registerUserViewModel.LabManagementRoles[0].Selected, _userManager);
-                    await CheckRoleAsync(rolesList, employeeEditted, AppUtility.MenuItems.Accounting.ToString(), registerUserViewModel.AccountingRoles[0].Selected, _userManager);
-                    await CheckRoleAsync(rolesList, employeeEditted, AppUtility.MenuItems.Reports.ToString(), registerUserViewModel.ExpenseesRoles[0].Selected, _userManager);
-                    await CheckRoleAsync(rolesList, employeeEditted, AppUtility.MenuItems.Income.ToString(), registerUserViewModel.IncomeRoles[0].Selected, _userManager);
-                    await CheckRoleAsync(rolesList, employeeEditted, AppUtility.MenuItems.Users.ToString(), registerUserViewModel.UserRoles[0].Selected, _userManager);
+                    foreach (var role in registerUserViewModel.BiomarkerRoles)
+                    {
+                        await CheckRoleAsync(rolesList, employeeEditted, role.Role.RoleDefinition, role.Selected, _userManager);
+                    }
+                    foreach (var role in registerUserViewModel.TimekeeperRoles)
+                    {
+                        await CheckRoleAsync(rolesList, employeeEditted, role.Role.RoleDefinition, role.Selected, _userManager);
+                    }
+                    foreach (var role in registerUserViewModel.LabManagementRoles)
+                    {
+                        await CheckRoleAsync(rolesList, employeeEditted, role.Role.RoleDefinition, role.Selected, _userManager);
+                    }
+                    foreach (var role in registerUserViewModel.AccountingRoles)
+                    {
+                        await CheckRoleAsync(rolesList, employeeEditted, role.Role.RoleDefinition, role.Selected, _userManager);
+                    }
+
+                    foreach (var role in registerUserViewModel.ExpenseesRoles)
+                    {
+                        await CheckRoleAsync(rolesList, employeeEditted, role.Role.RoleDefinition, role.Selected, _userManager);
+                    }
+
+                    foreach (var role in registerUserViewModel.IncomeRoles)
+                    {
+                        await CheckRoleAsync(rolesList, employeeEditted, role.Role.RoleDefinition, role.Selected, _userManager);
+                    }
+
+                    foreach (var role in registerUserViewModel.UserRoles)
+                    {
+                        await CheckRoleAsync(rolesList, employeeEditted, role.Role.RoleDefinition, role.Selected, _userManager);
+                    }
 
                     if (registerUserViewModel.UserImageSaved == "true")
                     {
@@ -482,85 +506,85 @@ namespace PrototypeWithAuth.CRUD
                         await _context.SaveChangesAsync();
 
                         var addRoleErrors = new List<IdentityError>();
-                            
-                            foreach (UserRoleViewModel orderRole in registerUserViewModel.OrderRoles)
-                            {
-                                if (orderRole.Selected)
-                                {
-                                    addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, orderRole.StringWithName.StringDefinition)).Errors);
-                                }
-                            }
-                            foreach (UserRoleViewModel protocolRole in registerUserViewModel.ProtocolRoles)
-                            {
-                                if (protocolRole.Selected)
-                                {
-                                    addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, protocolRole.StringWithName.StringDefinition)).Errors);
-                                }
-                            }
-                            foreach (UserRoleViewModel operationRole in registerUserViewModel.OperationRoles)
-                            {
-                                if (operationRole.Selected)
-                                {
-                                    addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, operationRole.StringWithName.StringDefinition)).Errors);
 
-                                }
-                            }
-                            foreach (UserRoleViewModel biomarkerRole in registerUserViewModel.BiomarkerRoles)
+                        foreach (UserRoleViewModel orderRole in registerUserViewModel.OrderRoles)
+                        {
+                            if (orderRole.Selected)
                             {
-                                if (biomarkerRole.Selected)
-                                {
-                                    addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, biomarkerRole.StringWithName.StringDefinition)).Errors);
-                                }
+                                addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, orderRole.Role.RoleDefinition)).Errors);
                             }
-                            foreach (UserRoleViewModel timekeeperRole in registerUserViewModel.TimekeeperRoles)
+                        }
+                        foreach (UserRoleViewModel protocolRole in registerUserViewModel.ProtocolRoles)
+                        {
+                            if (protocolRole.Selected)
                             {
-                                if (timekeeperRole.Selected)
-                                {
-                                    addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, timekeeperRole.StringWithName.StringDefinition)).Errors);
-                                }
+                                addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, protocolRole.Role.RoleDefinition)).Errors);
                             }
-                            foreach (UserRoleViewModel labmanagementRole in registerUserViewModel.LabManagementRoles)
+                        }
+                        foreach (UserRoleViewModel operationRole in registerUserViewModel.OperationRoles)
+                        {
+                            if (operationRole.Selected)
                             {
-                                if (labmanagementRole.Selected)
-                                {
-                                    addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, labmanagementRole.StringWithName.StringDefinition)).Errors);
-                                }
+                                addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, operationRole.Role.RoleDefinition)).Errors);
+
                             }
-                            foreach (UserRoleViewModel accountingRole in registerUserViewModel.AccountingRoles)
+                        }
+                        foreach (UserRoleViewModel biomarkerRole in registerUserViewModel.BiomarkerRoles)
+                        {
+                            if (biomarkerRole.Selected)
                             {
-                                if (accountingRole.Selected)
-                                {
-                                    addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, accountingRole.StringWithName.StringDefinition)).Errors);
-                                }
+                                addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, biomarkerRole.Role.RoleDefinition)).Errors);
                             }
-                            foreach (UserRoleViewModel expensesRole in registerUserViewModel.ExpenseesRoles)
+                        }
+                        foreach (UserRoleViewModel timekeeperRole in registerUserViewModel.TimekeeperRoles)
+                        {
+                            if (timekeeperRole.Selected)
                             {
-                                if (expensesRole.Selected)
-                                {
-                                    addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, expensesRole.StringWithName.StringDefinition)).Errors);
-                                }
+                                addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, timekeeperRole.Role.RoleDefinition)).Errors);
                             }
-                            foreach (UserRoleViewModel incomeRole in registerUserViewModel.IncomeRoles)
+                        }
+                        foreach (UserRoleViewModel labmanagementRole in registerUserViewModel.LabManagementRoles)
+                        {
+                            if (labmanagementRole.Selected)
                             {
-                                if (incomeRole.Selected)
-                                {
-                                    addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, incomeRole.StringWithName.StringDefinition)).Errors);
-                                }
+                                addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, labmanagementRole.Role.RoleDefinition)).Errors);
                             }
-                            foreach (UserRoleViewModel usersRole in registerUserViewModel.UserRoles)
+                        }
+                        foreach (UserRoleViewModel accountingRole in registerUserViewModel.AccountingRoles)
+                        {
+                            if (accountingRole.Selected)
                             {
-                                if (usersRole.Selected)
-                                {
-                                    addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, usersRole.StringWithName.StringDefinition)).Errors);
-                                }
+                                addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, accountingRole.Role.RoleDefinition)).Errors);
                             }
-                        if(addRoleErrors.Count > 0)
+                        }
+                        foreach (UserRoleViewModel expensesRole in registerUserViewModel.ExpenseesRoles)
+                        {
+                            if (expensesRole.Selected)
+                            {
+                                addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, expensesRole.Role.RoleDefinition)).Errors);
+                            }
+                        }
+                        foreach (UserRoleViewModel incomeRole in registerUserViewModel.IncomeRoles)
+                        {
+                            if (incomeRole.Selected)
+                            {
+                                addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, incomeRole.Role.RoleDefinition)).Errors);
+                            }
+                        }
+                        foreach (UserRoleViewModel usersRole in registerUserViewModel.UserRoles)
+                        {
+                            if (usersRole.Selected)
+                            {
+                                addRoleErrors.Concat((await _userManager.AddToRoleAsync(user, usersRole.Role.RoleDefinition)).Errors);
+                            }
+                        }
+                        if (addRoleErrors.Count > 0)
                         {
                             ReturnVal.String = "User saved successfully but something went wrong while tring to add the roles. Please retry adding roles to the newly create user";
                             foreach (IdentityError e in result.Errors)
                             {
                                 ReturnVal.String += e.Code.ToString() + " " + e.Description.ToString();
-                            }                     
+                            }
                         }
 
                         if (registerUserViewModel.UserImageSaved == "true")
@@ -609,14 +633,14 @@ namespace PrototypeWithAuth.CRUD
                     }
                     //throw new Exception();
 
-                    
+
                     await transaction.CommitAsync();
                     ReturnVal.Bool = true;
                     if (IsUser)
                     {
                         ReturnVal = await SendConfimationEmail(user, Url, Request, _userManager);
                     }
-                    
+
                 }
                 catch (Exception ex)
                 {
@@ -627,7 +651,7 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
         }
 
-        
+
         private async Task<StringWithBool> SendConfimationEmail(ApplicationUser user, IUrlHelper Url, HttpRequest Request, UserManager<ApplicationUser> _userManager)
         {
             var ReturnVal = new StringWithBool();
@@ -672,7 +696,7 @@ namespace PrototypeWithAuth.CRUD
                 }
                 catch (Exception ex)
                 {
-                    ReturnVal.SetStringAndBool(true, "User Added but Failed to send confirmation Email - please see a developer. "+ AppUtility.GetExceptionMessage(ex));
+                    ReturnVal.SetStringAndBool(true, "User Added but Failed to send confirmation Email - please see a developer. " + AppUtility.GetExceptionMessage(ex));
                 }
 
                 client.Disconnect(true);
@@ -800,9 +824,9 @@ namespace PrototypeWithAuth.CRUD
                 await _context.SaveChangesAsync();
                 ReturnVal.SetStringAndBool(true, null);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                ReturnVal.SetStringAndBool(false, "Failed to suspend user - " +AppUtility.GetExceptionMessage(ex));
+                ReturnVal.SetStringAndBool(false, "Failed to suspend user - " + AppUtility.GetExceptionMessage(ex));
             }
             return ReturnVal;
         }

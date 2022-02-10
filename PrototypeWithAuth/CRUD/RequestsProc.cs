@@ -59,6 +59,7 @@ namespace PrototypeWithAuth.CRUD
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
+                List<ModelAndState> modelsToUpdate = new List<ModelAndState>();
                 var request = await ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID },
                     new List<ComplexIncludes<Request, ModelBase>>
                     {
@@ -74,24 +75,41 @@ namespace PrototypeWithAuth.CRUD
                     try
                     {
                         request.IsDeleted = true;
-                        _context.Update(request);
-                        await _context.SaveChangesAsync();
+                        modelsToUpdate.Add(new ModelAndState { Model = request, StateEnum = EntityState.Modified });
 
                         if (request.ParentRequest != null)
                         {
-                            await _parentRequestsProc.DeleteAsync(request.ParentRequest, request.RequestID);
+                            request.ParentRequest.Requests = Read(new List<Expression<Func<Request, bool>>> { r => r.ParentRequestID == request.ParentRequest.ParentRequestID && r.IsDeleted != true }).ToList();
+                            if (request.ParentRequest.Requests.Count() == 0)
+                            {
+                                request.ParentRequest.IsDeleted = true;
+                                await _paymentsProc.DeleteAsync(requestID);
+                                modelsToUpdate.Add(new ModelAndState { Model = request.ParentRequest, StateEnum = EntityState.Modified });
+                            }
                         }
                         if (request.ParentQuote != null)
                         {
-                            await _parentQuotesProc.DeleteAsync(request.ParentQuote);
+                            request.ParentQuote.Requests = Read(new List<Expression<Func<Request, bool>>> { r => r.ParentQuoteID == request.ParentQuote.ParentQuoteID && r.IsDeleted != true }).ToList();
+                            if (request.ParentQuote.Requests.Count() == 0)
+                            {
+                                request.ParentQuote.IsDeleted = true;
+                                modelsToUpdate.Add(new ModelAndState { Model = request.ParentQuote, StateEnum = EntityState.Modified });
+                            }
                         }
-                        await _productsProc.DeleteAsync(request.Product);
+                        var productRequests = Read(new List<Expression<Func<Request, bool>>> { r => r.ProductID == request.Product.ProductID }).ToList();
+                        if (productRequests.Count() == 0)
+                        {
+                            await _productCommentsProc.DeleteWithoutTransactionAsync(request.Product.ProductID);
+                            request.Product.IsDeleted = true;
+                            modelsToUpdate.Add(new ModelAndState { Model = request.Product, StateEnum = EntityState.Modified });
+                        }
                         var requestLocationInstances = request.RequestLocationInstances.ToList();
                         await _requestLocationInstancesProc.DeleteWithoutTransactionAsync(requestLocationInstances);
                         await _requestCommentsProc.DeleteWithoutTransactionAsync(request.RequestID);
                         var notifications = _requestNotificationsProc.Read(new List<Expression<Func<RequestNotification, bool>>> { rn => rn.RequestID == request.RequestID }).ToList();
                         await _requestNotificationsProc.DeleteWithoutTransactionAsync(notifications);
                         //throw new Exception();
+                        await UpdateModelsAsync(modelsToUpdate);
                         await transaction.CommitAsync();
                     }
                     catch (Exception e)

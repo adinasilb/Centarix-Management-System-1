@@ -100,12 +100,13 @@
                             @{ await Html.RenderPartialAsync("_ItemHeader", Model);}
                         </div>
                         <div class="form-group">
-                            @if ((Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].RequestStatusID == 2) && Model.SectionType == AppUtility.MenuItems.Requests
-                            && Model.Requests[0].Product.UnitTypeID != -1 && !Model.Requests[0].Product.ProductSubcategory.IsOldSubCategory && !Model.IsHistory)
+                            @if ((Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].RequestStatusID == 2) 
+                                && (Model.SectionType == AppUtility.MenuItems.Requests && Model.ModalType != AppUtility.RequestModalType.Summary)
+                             && Model.Requests[0].Product.UnitTypeID != -1 && !Model.Requests[0].Product.ProductSubcategory.IsOldSubCategory && !Model.IsHistory)
                             {
-                                <div class="d-flex align-items-center">
-                                    <button type="button" value="@Model.Requests[0].RequestID" class="load-order-details custom-button custom-button-font @color m-auto">Request</button>
-                                </div>
+                            <div class="d-flex align-items-center">
+                                <button type="button" value="@Model.Requests[0].RequestID" class="load-order-details custom-button custom-button-font @color m-auto ">Request</button>
+                            </div>
                             }
                             <div class="row pt-2 d-flex justify-content-center">
                                 Product Serial: @Model.Requests[0].Product.SerialNumber

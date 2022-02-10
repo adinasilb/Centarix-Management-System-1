@@ -12,6 +12,7 @@
 
         bcColor = "oper-background-color";
     }
+    Model.bcColor = bcColor;
 }
 <div class="row justify-content-center error-message pt-3">
     @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
@@ -35,27 +36,7 @@
 <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
     @*class needed here to override bootstraps modal limitations*@
 
-
-    <div class="form-group modal-line-1-header modal-sides row">
-        @{var productNameRows = Model.Requests[0].Product.ProductName != null ? Math.Ceiling((float)(Model.Requests[0].Product.ProductName.Length) / 45) : 1;}
-        <div class="heading-1 modal-title col-8">
-            <textarea asp-for="Requests[0].Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name" placeholder="(item name)" rows="@productNameRows" cols="50" maxlength="150" style="resize:none;"></textarea>
-        </div>
-        <span asp-validation-for="Requests[0].Product.ProductName" class="text-danger-centarix"></span>
-        
-        @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary)
-        {
-            <div class="d-flex align-items-center col-4">
-                  <button type="submit" value="@AppUtility.OrderMethod.Save" name="OrderMethod" class=" custom-button custom-button-font @bcColor m-auto complete-order disabled-submit submitOrder">Save</button>
-            </div>
-        }
-        @if (Model.SectionType == AppUtility.MenuItems.Operations)
-        {
-            <div class="d-flex align-items-center col-4">
-                <button type="submit" class=" custom-button custom-button-font @bcColor m-auto complete-order add-to-cart disabled-submit">Add Item</button>
-            </div>
-        }
-    </div>
+    @{ await Html.RenderPartialAsync("_CreateItemHeader"); }
     <div class="row">
         <div class="col-12 px-0">
             <div class="container-fluid div-tabs text-center modal-sides">
@@ -184,7 +165,7 @@
                 $('.error-message').html(jqxhr.responseText);
                 $(".submitOrder").prop('disabled', false)
             }
-            
+
         });
     };
     
