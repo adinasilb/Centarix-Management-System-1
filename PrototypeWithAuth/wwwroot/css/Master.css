@@ -119,7 +119,7 @@
     filter: var(--operations-filter);
 }
 
-.timekeeper-color {
+.TimeKeeper .section-bg-color {
     background-color: var(--timekeeper-color);
 }
 
@@ -187,11 +187,13 @@
     filter: var(--operations-filter);
 }
 
-.order-inv-background-color {
+.Requests .section-bg-color {
     background-color: var(--order-inv-color) !important;
 }
-
-.users-background-color {
+.LabManagement .section-bg-color {
+    background-color: var(--lab-man-color) !important;
+}
+.Users .section-bg-color {
     background-color: var(--user-color) !important;
 }
 
@@ -203,7 +205,7 @@
     color: var(--biomarkers-color) !important;
 }
 
-.biomarkers-background-color{
+.Biomarkers .section-bg-color {
     background-color: var(--biomarkers-color) !important;
 }
 
@@ -229,11 +231,7 @@
     color: var(--lab-man-color) !important;
 }
 
-.lab-man-background-color {
-    background-color: var(--lab-man-color) !important;
-}
-
-.oper-background-color {
+.Operations .section-bg-color {
     background-color: var(--operations-color) !important;
 }
 
@@ -245,7 +243,7 @@
     color: var(--expense-color) !important;
 }
 
-.expenses-background-color-25 {
+.Reports .section-bg-color-25 {
     background-color: var(--expenses-25) !important;
 }
 
@@ -253,7 +251,7 @@
     filter: var(--expense-filter) !important;
 }
 
-.expenses-background-color {
+.Reports .section-bg-color {
     background-color: var(--expense-color) !important;
 }
 
@@ -265,7 +263,7 @@
     filter: var(--protocol-filter) !important;
 }
 
-.protocols-background-color {
+.Protocols .section-bg-color {
     background-color: var(--protocol-color) !important;
 }
 
@@ -285,7 +283,7 @@ a.yearly-monthly, input[type=button].yearly-monthly {
     color: var(--acc-color);
 }
 
-.accounting-background-color {
+.Accounting .section-bg-color {
     background-color: var(--acc-color);
 }
 
