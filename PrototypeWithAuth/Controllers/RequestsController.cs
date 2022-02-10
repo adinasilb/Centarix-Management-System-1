@@ -5093,10 +5093,31 @@ namespace PrototypeWithAuth.Controllers
 
             SettingsInventory settings = new SettingsInventory()
             {
-                Categories = GetCategoryList(new ParentCategory().GetType().Name, 1)
+                TopTabsList = new List<TopTabWithCounts>()
+                {
+                    new TopTabWithCounts()
+                    {
+                        Name = "Main",
+                        Page = "Main",
+                        Counts = new BoolIntViewModel()
+                        {
+                            Bool = false
+                        }
+                    },
+                    new TopTabWithCounts()
+                    {
+                        Name = "Samples",
+                        Page = "Samples",
+                        Counts = new BoolIntViewModel()
+                        {
+                            Bool = false
+                        }
+                    }
+                }
+                //Categories = GetCategoryList(new ParentCategory().GetType().Name, 1)
             };
-            settings.Subcategories = GetCategoryList(new ProductSubcategory().GetType().Name, 2, settings.Categories.CategoryBases.FirstOrDefault().ID);
-            settings.SettingsForm = GetSettingsFormViewModel(settings.Subcategories.CategoryBases.FirstOrDefault().GetType().Name, settings.Subcategories.CategoryBases.FirstOrDefault().ID);
+            //settings.Subcategories = GetCategoryList(new ProductSubcategory().GetType().Name, 2, settings.Categories.CategoryBases.FirstOrDefault().ID);
+            //settings.SettingsForm = GetSettingsFormViewModel(settings.Subcategories.CategoryBases.FirstOrDefault().GetType().Name, settings.Subcategories.CategoryBases.FirstOrDefault().ID);
             return View(settings);
         }
 

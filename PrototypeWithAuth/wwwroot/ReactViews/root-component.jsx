@@ -13,6 +13,7 @@ import {
 import DeleteModal from './delete-modal.jsx';
 import _IndexTableData from './index-table-data.jsx';
 import _IndexTableDataByVendor from './index-table-data-by-vendor.jsx';
+import SettingsInventory from "./settings-inventory.jsx";
 import FloatingActionBar from './floating-action-bar.jsx';
 
 export default class RootComponent extends React.Component {
@@ -33,7 +34,7 @@ export default class RootComponent extends React.Component {
                 break;
             case "SettingsInventory":
                 return (<SettingsInventory viewModel={this.state.viewModel} showView={true} />);
-                    break;
+                break;
         }
     }
 
@@ -47,10 +48,11 @@ export default class RootComponent extends React.Component {
                 {
                     this.renderSwitch()
                 }
-              
+
                 <Switch>
                     <Route path="/DeleteModal" component={DeleteModal} />
                     <Route path="/_IndexTableData" component={_IndexTableData} />
+                    <Route path="SettingsInventory" component={SettingsInventory} />
                 </Switch>
             </div>
         );

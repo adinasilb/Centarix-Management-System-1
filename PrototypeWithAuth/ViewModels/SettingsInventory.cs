@@ -11,5 +11,6 @@ namespace PrototypeWithAuth.ViewModels
         public CategoryListViewModel Categories { get; set; }
         public CategoryListViewModel Subcategories { get; set; }
         public SettingsForm SettingsForm { get; set; }
+        public List<TopTabWithCounts> TopTabsList { get; set; }
     }
 }
