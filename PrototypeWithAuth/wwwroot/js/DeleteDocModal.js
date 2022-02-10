@@ -53,7 +53,7 @@ $.fn.RemoveColorsOfDocs = function ($foldername) {
 		$foldername = $foldername + "."+$("#ObjectID").val()
 	}
 	console.log("foldername: "+$foldername)
-	$("#" + $foldername + " i").removeClass('oper-filter');
+	$("#" + $foldername + " i").removeClass('section-filter');
 	$("#" + $foldername + " i").removeClass('order-inv-filter')
 	$("#" + $foldername + " i").removeClass('lab-man-filter')
 	$("#" + $foldername + " i").removeClass('protocols-filter')

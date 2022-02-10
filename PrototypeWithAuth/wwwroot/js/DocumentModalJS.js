@@ -169,14 +169,14 @@ $(function () {
         var folder = "#" + $foldername + ".active-document-modal";
         var div = $(folder + " i");
 
-        if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter") || div.hasClass("contains-file" || $(".active-document-modal .material-image-icon").hasClass("protocols-filter"))) {
+        if (div.hasClass("order-inv-filter") || div.hasClass("section-filter") || div.hasClass("lab-man-filter") || div.hasClass("contains-file" || $(".active-document-modal .material-image-icon").hasClass("protocols-filter"))) {
             console.log("has class already");
         } else {
             console.log("does not class already");
             console.log(folder)
             $(folder + ".active-document-modal" + " div.card.document-border").addClass("hasFile");
             if (section == "Operations") {
-                div.addClass("oper-filter");
+                div.addClass("section-filter");
             } else if ((section == "LabManagement")) {
                 div.addClass("lab-man-filter");
             }
