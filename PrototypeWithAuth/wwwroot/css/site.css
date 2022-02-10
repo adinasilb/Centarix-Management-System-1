@@ -909,59 +909,49 @@ ul li button.bold-hover-effects::before {
     font-weight: bold;
 }
 /*.ourNavBar li a { color: #333 }*/
-.ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
-    opacity: 1;
+.Requests .ourNavBar li.activeNavLink a, .Requests .ourNavBar a.activeNavLink, .Requests .ourNavBar li button.activeNavLink, .Requests .container li a.activeNavLink {
     filter: var(--order-inv-filter);
-    font-weight: 500;
 }
 
-.ourNavBar li.activeNavOperLink a, .ourNavBar a.activeNavOperLink, .ourNavBar li button.activeNavOperLink, .container li a.activeNavOperLink {
+.Biomarkers .ourNavBar li.activeNavLink a, .Biomarkers .ourNavBar a.activeNavLink, .Biomarkers .ourNavBar li button.activeNavLink, .Biomarkers .container li a.activeNavLink {
+    filter: var(--biomarkers-filter);
+}
+
+.Protocols .ourNavBar li.activeNavLink a, .Protocols .ourNavBar a.activeNavLink, .Protocols .ourNavBar li button.activeNavLink, .Protocols .container li a.activeNavLink {
+    filter: var(--protocol-filter);
+}
+
+
+.Reports .ourNavBar li.activeNavLink a, .Reports .ourNavBar a.activeNavLink, .Reports .ourNavBar li button.activeNavLink, .Reports .container li a.activeNavLink {
+    filter: var(--expenses-filter);
+}
+
+
+.ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink, a.activeNavLink {
     opacity: 1;
+    font-weight: 500;
+    color: black;
+}
+
+.Operations .ourNavBar li.activeNavLink a, .Operations .ourNavBar a.activeNavLink, .Operations .ourNavBar li button.activeNavLink, .Operations .container li a.activeNavLink {
     filter: var(--operations-filter);
-    font-weight: 500;
 }
 
-.ourNavBar li button.add-item-btn.active {
-    opacity: 1;
-    color: var(--order-inv-color);
-}
 
-.ourNavBar li.activeNavLinkAcc a, .ourNavBar a.activeNavLinkAcc {
+.Accounting .ourNavBar li.activeNavLink a, .Accounting .ourNavBar a.activeNavLink {
     filter: var(--acc-filter);
-    color: black;
-    font-weight: 500;
 }
 
-.ourNavBar li.activeNavLinkLabMan a, .ourNavBar a.activeNavLabMan {
+.LabManagement .ourNavBar li.activeNavLink a, .LabManagement .ourNavBar a.activeNavLink, .LabManagement  a.activeNavLink {
     filter: var(--lab-man-filter);
-    color: black;
-    font-weight: 500;
 }
 
-a.activeNavLabMan {
-    filter: var(--lab-man-filter);
-    color: black;
-    font-weight: 500;
-}
-
-.ourNavBar .activeUserClass {
-    opacity: 1;
+.Users .ourNavBar li.activeNavLink a, .Users .ourNavBar a.activeNavLink, .Users a.activeNavLink {
     filter: var(--users-filter);
-    text-decoration: none;
-    -webkit-text-stroke-width: 0px;
-    -webkit-text-stroke-color: black;
-    color: black;
-    font-weight: 500;
 }
 
-.ourNavBar .activeTimekeeperClass {
-    opacity: 1;
+.TimeKeeper .ourNavBar li.activeNavLink a, .TimeKeeper .ourNavBar a.activeNavLink, .TimeKeeper a.activeNavLink {
     filter: var(--timekeeper-filter);
-    text-decoration: none;
-    -webkit-text-stroke-width: 0px;
-    -webkit-text-stroke-color: black;
-    color: black;
-    font-weight: 500;
 }
 
 ul li.acc-sidebar.active {

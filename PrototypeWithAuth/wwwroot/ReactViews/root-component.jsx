@@ -29,7 +29,7 @@ export default class RootComponent extends React.Component {
                 return (<_IndexTableDataByVendor viewModel={this.state.viewModel} showView={true} bcColor={this.state.bcColor} ajaxLink={this.state.ajaxLink} btnText={this.state.btnText} sectionClass={this.state.sectionClass} />);
                 break;
             case "IndexTableData":
-                return (<_IndexTableData viewModel={this.state.viewModel} showView={true} />);
+                return (<_IndexTableData viewModel={this.state.viewModel} showView={true} bcColor={this.state.bcColor} />);
                 break;
         }
     }
@@ -39,7 +39,7 @@ export default class RootComponent extends React.Component {
         const app = (
 
             <div>
-
+     
                 <FloatingActionBar showFloatingActionBar={false} />
                 {
                     this.renderSwitch()
@@ -47,7 +47,6 @@ export default class RootComponent extends React.Component {
               
                 <Switch>
                     <Route path="/DeleteModal" component={DeleteModal} />
-                    <Route path="/_IndexTableData" component={_IndexTableData} />
                 </Switch>
             </div>
         );

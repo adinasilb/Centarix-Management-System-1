@@ -17,7 +17,6 @@
     //    requestid = 0;
     //}
 
-    var color = "order-inv-color";
     var form = "order-inv-form";
     var deleteDocumentClass = "";
     var sectionType = AppUtility.MenuItems.Requests.ToString();
@@ -25,35 +24,30 @@
     if (Model.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
-        color = "operations-filter";
         sectionType = AppUtility.MenuItems.Operations.ToString();
     }
     else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
     {
         form = "supplier-form";
-        color = "lab-man-filter";
         sectionType = AppUtility.MenuItems.LabManagement.ToString();
     }
     else if (Model.SectionType == AppUtility.MenuItems.Accounting)
     {
         form = "accounting-form";
-        color = "accounting-filter";
         sectionType = AppUtility.MenuItems.Accounting.ToString();
     }
     else if (Model.SectionType == AppUtility.MenuItems.Protocols)
     {
         form = "protocol-form";
-        color = "protocols-color";
         sectionType = AppUtility.MenuItems.Protocols.ToString();
     }
     else if (Model.SectionType == AppUtility.MenuItems.Biomarkers)
     {
         form = "bio-form";
-        color = "biomarkers-color";
         sectionType = AppUtility.MenuItems.Biomarkers.ToString();
     }
     var bcColorToUse = "section-bg-color";
-    var colorToUse = color;
+    var colorToUse = "section-filter";
     var disabled = false;
     var isChecked = "";
     if (!Model.IsEdittable)
@@ -97,7 +91,7 @@
 <input type="hidden" asp-for="Guid" class="guid" />
 @*edittable options*@
 <input type="hidden" id="bcColor" class="section-bg-color" />
-<input type="hidden" id="color" class="@color" />
+<input type="hidden" id="color" class="section-filter" />
 <input type="hidden" asp-for="ShowSwitch" class="showSwitch" />
 <input type="hidden" asp-for="IsEdittable" class="@markDisabled isEdittable" />
 @if (Model.FileStrings != null && Model.FileStrings?.Count > 0)
@@ -110,7 +104,7 @@
                 @if (Model.FileStrings.Count > 3)
                 {
                     <a class="heading-1" href="#carousel-example-multi" data-slide="prev">
-                        <i class="fas fa-chevron-left @color"></i>
+                        <i class="fas fa-chevron-left section-filter"></i>
                     </a>
                 }
             </div>
@@ -173,7 +167,7 @@
                                             <div class="card-body d-flex text-center align-items-center justify-content-center">
 
                                                 <a href="\@Model.FileStrings[i]" target="_blank" class="mx-3  view-img">
-                                                    <i class="icon-centarix-icons-09 @color " style="font-size:2rem"></i>
+                                                    <i class="icon-centarix-icons-09 section-filter " style="font-size:2rem"></i>
                                                 </a>
 
                                                 @*@{var link = "delete-file-document"; }*@
@@ -205,7 +199,7 @@
                 @if (Model.FileStrings.Count > 3)
                 {
                     <a class="heading-1" href="#carousel-example-multi" data-slide="next">
-                        <i class="fas fa-chevron-right @color"></i>
+                        <i class="fas fa-chevron-right section-filter"></i>
                     </a>
                 }
             </div>

@@ -70,7 +70,7 @@
                             <label asp-for="Resource.PubMedID" class="modal-control-label"></label>
                             <div class="input-group">
                                 <input asp-for="Resource.PubMedID" class="form-control-plaintext border-bottom" />
-                                <i class="icon-add_circle-24px protocols-filter get-pubmedinfo" style="font-size: 2.688rem;"></i>
+                                <i class="icon-add_circle-24px section-filter get-pubmedinfo" style="font-size: 2.688rem;"></i>
                             </div>
                             <span asp-validation-for="Resource.PubMedID" class="text-danger-centarix"></span>
                         </div>
@@ -146,7 +146,7 @@
                 </div>
                 <div class="row">
                     <div class="modal-footer-mt mx-auto">
-                        <input type="submit" class="custom-button custom-cancel protocols-filter activeSubmit addResourceSubmit" @*asp-action="AddResource"*@ />
+                        <input type="submit" class="custom-button custom-cancel section-filter activeSubmit addResourceSubmit" @*asp-action="AddResource"*@ />
                         <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('add-resources')">Cancel</button>
                     </div>
                 </div>

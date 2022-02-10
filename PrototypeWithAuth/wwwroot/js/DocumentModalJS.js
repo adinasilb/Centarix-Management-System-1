@@ -169,28 +169,21 @@ $(function () {
         var folder = "#" + $foldername + ".active-document-modal";
         var div = $(folder + " i");
 
-        if (div.hasClass("order-inv-filter") || div.hasClass("section-filter") || div.hasClass("lab-man-filter") || div.hasClass("contains-file" || $(".active-document-modal .material-image-icon").hasClass("protocols-filter"))) {
+        if (div.hasClass("section-filter") ||  div.hasClass("contains-file" || $(".active-document-modal .material-image-icon").hasClass("section-filter"))) {
             console.log("has class already");
         } else {
             console.log("does not class already");
             console.log(folder)
             $(folder + ".active-document-modal" + " div.card.document-border").addClass("hasFile");
-            if (section == "Operations") {
-                div.addClass("section-filter");
-            } else if ((section == "LabManagement")) {
-                div.addClass("lab-man-filter");
-            }
-            else if ((section == "Protocols")) {
-                div.addClass("protocols-filter");
-                $(".active-document-modal .material-image-icon").addClass("protocols-filter");
+
+            div.addClass("section-filter")
+
+            if ((section == "Protocols")) {
+                $(".active-document-modal .material-image-icon").addClass("section-filter");
             }
             else if ((section == "Biomarkers")) {
-                div.addClass("biomarkers-filter");
                 $(".active-document-modal" + " div.card .document-border").addClass("hasFile");
-            }
-            else {
-                div.addClass("order-inv-filter");
-            }
+            }         
             var folderInput = "#" + $foldername + "Input";
             $(folderInput).addClass("contains-file");
             if ($(folderInput).rules()) {

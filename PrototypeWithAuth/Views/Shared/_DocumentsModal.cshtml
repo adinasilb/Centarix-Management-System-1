@@ -11,37 +11,31 @@
     //{
     //    requestid = 0;
     //}
-    var color = "order-inv-color";
     var form = "order-inv-form";
     var deleteDocumentClass = "";
 
     if (Model.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
-        color = "operations-filter";
     }
     else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
     {
         form = "supplier-form";
-        color = "lab-man-filter";
     }
     else if (Model.SectionType == AppUtility.MenuItems.Accounting)
     {
         form = "accounting-form";
-        color = "accounting-filter";
     }
     else if (Model.SectionType == AppUtility.MenuItems.Protocols)
     {
         form = "protocol-form";
-        color = "protocols-color";
     }
     else if (Model.SectionType == AppUtility.MenuItems.Biomarkers)
     {
         form = "bio-form";
-        color = "biomarkers-color";
     }
     var bcColorToUse = "section-bg-color";
-    var colorToUse = color;
+    var colorToUse = "section-filter";
     var disabled = false;
     var isChecked = "";
     if (!Model.IsEdittable)
