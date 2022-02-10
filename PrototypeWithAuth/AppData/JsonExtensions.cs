@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using JsonKnownTypes;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
@@ -19,6 +20,7 @@ namespace PrototypeWithAuth.AppData
             //           {
             //               ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             //           });
+
             var jsonstring = JsonConvert.SerializeObject(value, Newtonsoft.Json.Formatting.Indented,
                 new JsonSerializerSettings()
                 {

@@ -86,6 +86,7 @@ $(function () {
         var parentFolder = $(".active-document-modal").attr("parentFolder")
         var showSwitch = $(".active-document-modal").attr("showSwitch")
         var modalType = $("#modalType").val();
+        var guid = $("#GUID").val()
 
         var targetFile = new FormData($(".ordersItemForm")[0]).getAll("FilesToSave").filter(f => f.size>0)
         console.log(targetFile)
@@ -94,14 +95,15 @@ $(function () {
         $.fn.AddObjectToFormdata(uploadFileFormData, {
             ObjectID: objectID,
             ParentFolderName: parentFolder,
-            FolderName: folderEnumString
+            FolderName: folderEnumString,
+            Guid : guid
         })
 
         UploadFile(targetFile[0], uploadFileFormData);
-
+        var folderID = objectID == "0" ? guid : objectID;
         $.ajax({
             async: true,
-            url: "/Requests/_DocumentsCard?requestFolderNameEnum=" + folderEnumString + "&id=" + objectID + "&sectionType=" + section + "&parentFolderName=" + parentFolder + "&modalType=" + modalType,
+            url: "/Requests/_DocumentsCard?requestFolderNameEnum=" + folderEnumString + "&id=" + folderID + "&sectionType=" + section + "&parentFolderName=" + parentFolder + "&modalType=" + modalType,
             type: 'GET',
             cache: false,
             success: function (data) {
@@ -141,7 +143,7 @@ $(function () {
 
         console.log("in save doc files");
 
-        var formData = new FormData();
+        var section = $("#masterSectionType").val();
 
         if ($(this).hasClass("direct-upload")) {
             console.log("direct upload")
@@ -153,16 +155,13 @@ $(function () {
         else {
             var $enumString = $('.folderName').val();
             var $requestId = $('.objectID').val();
-            var section = $("#masterSectionType").val();
             var guid = $("#Guid").val();
-            var $CustomMainObjectID = $("#CustomMainObjectID").val();
-            var section = $("#masterSectionType").val()
             var $CustomMainObjectID = $("#CustomMainObjectID").val();
             var $isEdittable = $('.isEdittable').val();
             var $showSwitch = $('.showSwitch').val();
             var parentFolder = $('.parentFolderName').val();
 
-            formData = new FormData($(".documentModalForm")[0]);
+            var formData = new FormData($(".documentModalForm")[0]);
 
             var targetFile = formData.getAll("FilesToSave")
             console.log(targetFile)
@@ -326,7 +325,7 @@ $(function () {
         e.preventDefault();
         console.log("reload doc cards")
         var folderEnumString = $('.folderName').val();
-        var requestId = $('.objectID').val();
+        var requestId = $('.objectID').val() == 0 ? $('#GUID').val() : $('.objectID').val();
         var section = $("#masterSectionType").val();
         var parentFolder = $('.parentFolderName').val();
         var showSwitch = $('.showSwitch').val();

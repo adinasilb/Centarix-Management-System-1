@@ -461,6 +461,22 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
+                switch (requestItemViewModel.OrderType) 
+                {
+                    case AppUtility.OrderType.SingleOrder:
+                        requestItemViewModel.Requests[0].Product = requestItemViewModel.Requests[0].SingleOrder;
+                        requestItemViewModel.Requests[0].SingleOrder = null;
+                        break;
+                    case AppUtility.OrderType.RecurringOrder:
+                        requestItemViewModel.Requests[0].Product = requestItemViewModel.Requests[0].RecurringOrder;
+                        requestItemViewModel.Requests[0].RecurringOrder = null;
+                        break;
+                    case AppUtility.OrderType.StandingOrder:
+                        requestItemViewModel.Requests[0].Product = requestItemViewModel.Requests[0].StandingOrder;
+                        requestItemViewModel.Requests[0].StandingOrder = null;
+                        break;
+                };
+                
                 var vendor = await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == requestItemViewModel.Requests.FirstOrDefault().Product.VendorID });
                 var exchangeRate = requestItemViewModel.Requests.FirstOrDefault().ExchangeRate;
                 var currency = requestItemViewModel.Requests.FirstOrDefault().Currency;
@@ -472,11 +488,13 @@ namespace PrototypeWithAuth.Controllers
                 var i = 1;
                 var additionalRequests = false;
                 var trlvm = new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() };
+                
                 foreach (var request in requestItemViewModel.Requests)
                 {
                     //throw new Exception();
                     if (!request.Ignore)
                     {
+                        
                         request.OrderMethod = orderMethod;
                         request.ApplicationUserCreatorID = currentUser.Id;
                         if (!requestItemViewModel.IsProprietary)
@@ -509,7 +527,7 @@ namespace PrototypeWithAuth.Controllers
                                 trvm.Comments.Add(comment);
                             }
                         }
-
+                        
                         trlvm.TempRequestViewModels.Add(trvm);
                         i++;
                     }
@@ -1472,6 +1490,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddItemView(AppUtility.OrderMethod OrderMethod, TempRequestListViewModel tempRequestListViewModel, RequestItemViewModel requestItemViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             requestItemViewModel.TempRequestListViewModel = tempRequestListViewModel;
+            
             try
             {
                 var redirectToActionResult = SaveAddItemView(requestItemViewModel, OrderMethod, receivedModalVisualViewModel).Result;
@@ -1791,6 +1810,18 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     var request = requestItemViewModel.Requests.FirstOrDefault();
+                    if (request.SingleOrder != null)
+                    {
+                        request.Product = request.SingleOrder;
+                    }
+                    else if (request.RecurringOrder != null)
+                    {
+                        request.Product = request.RecurringOrder;
+                    }
+                    else if (request.StandingOrder != null)
+                    {
+                        request.Product = request.StandingOrder;
+                    }
                     //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
                     request.ParentRequest = null;
                     var parentQuote = await _parentQuotesProc.ReadOneAsync(new List<Expression<Func<ParentQuote, bool>>> { pq => pq.ParentQuoteID == request.ParentQuoteID });
@@ -4106,7 +4137,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<TempRequestListViewModel> LoadTempListFromRequestIndexObjectAsync(RequestIndexObject requestIndexObject)
         {
             var oldJsonSequenceNumber = _tempRequestJsonsProc.Read(new List<Expression<Func<TempRequestJson, bool>>> { trj => trj.GuidID == requestIndexObject.GUID }).Select(trj => trj.SequencePosition)
-                .OrderByDescending(p => p).FirstOrDefault();
+            .OrderByDescending(p => p).FirstOrDefault();
 
             var oldJson = _tempRequestJsonsProc.Read(new List<Expression<Func<TempRequestJson, bool>>>
             { trj => trj.GuidID == requestIndexObject.GUID && trj.SequencePosition==oldJsonSequenceNumber })

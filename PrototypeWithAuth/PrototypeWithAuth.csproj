@@ -587,6 +587,7 @@
     <PackageReference Include="GoogleAuthenticator" Version="2.0.1" />
     <PackageReference Include="jQuery.Fullcalendar" Version="3.9.0" />
     <PackageReference Include="jQuery.Validation" Version="1.19.2" />
+    <PackageReference Include="JsonKnownTypes" Version="0.5.4" />
     <PackageReference Include="JSZip" Version="3.1.5" />
     <PackageReference Include="LinqToExcel" Version="1.11.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.16.0" />
@@ -621,6 +622,7 @@
     <PackageReference Include="System.Data.OleDb" Version="5.0.0" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0" />
     <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
+    <PackageReference Include="TypeIndicatorConverter.Core" Version="1.0.0" />
     <PackageReference Include="WebcamCapturer.Controls.WPF" Version="1.1.1.2" />
     <PackageReference Include="WebcamCapturer.Core" Version="1.1.1.2" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="7.9.1" />

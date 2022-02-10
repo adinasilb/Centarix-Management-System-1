@@ -585,6 +585,7 @@ namespace PrototypeWithAuth.Controllers
                 request.Product.ProductSubcategoryID = productSubCategoryID;
             }
 
+  
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
             await FillRequestDropdowns(requestItemViewModel, request.Product.ProductSubcategory, categoryType);
 
@@ -616,6 +617,18 @@ namespace PrototypeWithAuth.Controllers
             }
 
             ModalViewType = "Edit";
+            if(request.Product is SingleOrder)
+            {
+                request.SingleOrder = (SingleOrder)request.Product;
+            }
+            else if (request.Product is RecurringOrder)
+            {
+                request.RecurringOrder = (RecurringOrder)request.Product;
+            }
+            else if (request.Product is StandingOrder)
+            {
+                request.StandingOrder = (StandingOrder)request.Product;
+            }
             requestItemViewModel.Requests.Add(request);
 
             //load the correct list of subprojects
@@ -1235,8 +1248,8 @@ namespace PrototypeWithAuth.Controllers
             var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
             var popoverDelete = new IconPopoverViewModel(" icon-delete-24px  ", "black", AppUtility.PopoverDescription.Delete, "Delete", "Requests", AppUtility.PopoverEnum.None, "load-confirm-delete");
             var popoverReorder = new IconPopoverViewModel(" icon-add_circle_outline-24px-1 ", "#00CA72", AppUtility.PopoverDescription.Reorder, "Reorder", "Requests", AppUtility.PopoverEnum.None, "load-order-details");
-            var popoverRemoveShare = new IconPopoverViewModel("icon-storefront-24px-1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
-            var popoverShare = new IconPopoverViewModel("icon-storefront-24px-1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
+            var popoverRemoveShare = new IconPopoverViewModel("icon-share-24px-1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
+            var popoverShare = new IconPopoverViewModel("icon-share-24px-1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
             var popoverAddToList = new IconPopoverViewModel("icon-centarix-icons-04", "black", AppUtility.PopoverDescription.AddToList, "MoveToListModal", "Requests", AppUtility.PopoverEnum.None, "move-to-list");
             var popoverMoveList = new IconPopoverViewModel("icon-entry-24px", "black", AppUtility.PopoverDescription.MoveToList, "MoveToListModal", "Requests", AppUtility.PopoverEnum.None, "move-to-list");
             var popoverDeleteFromList = new IconPopoverViewModel("icon-delete-24px", "black", AppUtility.PopoverDescription.DeleteFromList, "DeleteFromListModal", "Requests", AppUtility.PopoverEnum.None, "remove-from-list");
