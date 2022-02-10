@@ -1,7 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
 @using PrototypeWithAuth.AppData
 @{
-    var bcColor = "order-inv-background-color  ";
     var color = "order-inv-color";
     var form = "order-inv-form";
     var dollarDisabled = "disabled disabled-text";
@@ -13,7 +12,6 @@
     var submitOrderClass = " submitOrder ";
     if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].Equals(AppUtility.MenuItems.LabManagement.ToString()))
     {
-        bcColor = "lab-man-background-color";
         form = "supplier-form";
         color = "lab-man-color";
     }

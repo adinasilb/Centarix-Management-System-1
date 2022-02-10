@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Search";
     string form = "";
-    var buttonSubmitClass = "";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
     if (AppUtility.IsAjaxRequest(this.Context.Request))
     {
@@ -12,24 +11,20 @@
 
     if (Model.SectionType == AppUtility.MenuItems.LabManagement)
     {
-        buttonSubmitClass = "lab-man-background-color";
-        form = "supplier-form";
+         form = "supplier-form";
 
     }
     else if (Model.SectionType == AppUtility.MenuItems.Requests)
     {
         form = "order-inv-form";
-        buttonSubmitClass = "order-inv-background-color";
     }
     else if (Model.SectionType == AppUtility.MenuItems.Accounting)
     {
         form = "accounting-form";
-        buttonSubmitClass = "accounting-background-color";
     }
     else
     {
         form = "oper-form";
-        buttonSubmitClass = "oper-background-color";
     }
 }
 
@@ -49,7 +44,7 @@
                                 </div>
 
                                 <div class="col-md-3 text-center">
-                                    <input type="button" value="Search" @* asp-action="Search"*@ class="@buttonSubmitClass custom-button custom-button-font search-for-request" />
+                                    <input type="button" value="Search" @* asp-action="Search"*@ class="section-bg-color custom-button custom-button-font search-for-request" />
                                 </div>
                             </div>
                             <div class="row">

@@ -4,7 +4,6 @@
     Layout = null;
     var markDisabled = "details";
 
-    var bcColor = "order-inv-background-color";
     var color = "order-inv-color";
     var form = "order-inv-form";
     var deleteDocumentClass = "";
@@ -14,7 +13,6 @@
     //{
 
     //    form = "supplier-form";
-    //    bcColor = "lab-man-background-color";
     //    color = "lab-man-filter";
     //    sectionType = AppUtility.MenuItems.LabManagement.ToString();
     //}
@@ -96,7 +94,7 @@
                     <div class="modal-footer border-0 p-0">
                         <div class="mx-auto modal-footer-mt">
                             <input type="hidden" asp-for="OrderTypeEnum" />
-                            <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin submitQuote" @*asp-action="UploadQuoteModal"*@ />
+                            <input type="submit" class="custom-button custom-button-font section-bg-color between-button-margin submitQuote" @*asp-action="UploadQuoteModal"*@ />
                             <button type="button" class="custom-button custom-cancel cancel-quote">Cancel</button>
                         </div>
                     </div>
