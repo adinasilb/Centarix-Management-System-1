@@ -4,18 +4,6 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
-@{ 
-    var bcColor = "";
-    switch (Model.SectionType)
-    {
-        case AppUtility.MenuItems.Requests:
-            bcColor = " order-inv-background-color ";
-            break;
-        case AppUtility.MenuItems.LabManagement:
-            bcColor = " lab-man-background-color ";
-            break;
-    }
-}
 @*<script src="~/js/VisualLocationsZoom.js"></script>*@
 @*<script src="~/js/site.js" asp-append-version="true"></script>*@
     <script src="~/js/IndexTablePartial.js"></script>
@@ -48,12 +36,11 @@
                             @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
                             {
                                 z++;
-                                var backgroundClass = "thick-border";
+                                var backgroundClass = "thick-border section-bg-color";
                                 @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                                 {
                                     if (Model.ChildrenLocationInstances[z].IsFull)
                                     {
-                                        backgroundClass += bcColor;
                                         var rli = Model.ChildrenLocationInstances[z].RequestLocationInstances.Where(rli => rli.Request.IsArchived ==false).FirstOrDefault();
                                         var innerHtml = rli.Request.Product.ProductName;
                                         var requestID = rli.RequestID;
