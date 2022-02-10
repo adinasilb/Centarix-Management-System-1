@@ -1177,7 +1177,7 @@
         };
 
 
-        $("table tr .order-inv-form .form-check-input").click(function () {
+        $("table tr . .form-check-input").click(function () {
             if ($(this).is(':checked')) {
                 $(this).closest("tr").addClass("clicked-border-orders-inv");
             }
