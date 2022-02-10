@@ -61,7 +61,7 @@ namespace PrototypeWithAuth.CRUD
 
         public async Task<double> ReadPartialOffDayHoursByYearAsync(int year, int partialOffDayTypeID, string UserID)
         {
-            var offdays = Read(new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.Date.Year == year, eh => eh.EmployeeID == UserID, eh => eh.OffDayTypeID == partialOffDayTypeID && eh.Date <= DateTime.Now.Date });
+            var offdays = Read(new List<Expression<Func<EmployeeHours, bool>>> { eh => eh.Date.Year == year, eh => eh.EmployeeID == UserID, eh => eh.PartialOffDayTypeID == partialOffDayTypeID && eh.Date <= DateTime.Now.Date });
             var list = await offdays.Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToListAsync();
             return list.Sum(p => p);
         }
