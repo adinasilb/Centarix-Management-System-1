@@ -31,6 +31,9 @@ export default class RootComponent extends React.Component {
             case "IndexTableData":
                 return (<_IndexTableData viewModel={this.state.viewModel} showView={true} />);
                 break;
+            case "SettingsInventory":
+                return (<SettingsInventory viewModel={this.state.viewModel} showView={true} />);
+                    break;
         }
     }
 
