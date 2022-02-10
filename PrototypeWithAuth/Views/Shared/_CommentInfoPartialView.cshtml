@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
+
 @inject UserManager<ApplicationUser> _userManager
 @{
 
@@ -60,6 +61,7 @@
                     var commentTextName = "Comments[" + Model.Index + "].CommentText";
                     var commentTextValue = Model.Comment.CommentText;
                 }
+
                 <input name="@commentTextName" id="@commentTextID" value="@commentTextValue" class="form-control-plaintext border-bottom m-0 p-0 comment-text mark-readonly" @disabled />
 
             </div>

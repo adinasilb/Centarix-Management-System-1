@@ -178,6 +178,7 @@ $(function () {
     });
     $("#vendorList").off("change").change(function () {
         var vendorid = $("#vendorList").val();
+        console.log("vendorid: " + vendorid);
         $.fn.ChangeVendorBusinessId(vendorid);
         $.fn.AddVendorCurrencyType(vendorid);
         //CheckVendorAndCatalogNumbers();
@@ -1246,8 +1247,29 @@ $(function () {
     $.fn.SaveOffDays = function (url, month) {
         var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
         var dateRangeToDay = rangeTo.attr('data-date');
+        var isMultipleDatePicker = $(".datepicker-here").attr("data-range")
+        console.log("minrange: " + $('#vacation-dates').datepicker().data('datepicker').selectedDates[0])
+        if ((isMultipleDatePicker == 'false' && $('#vacation-dates').datepicker().data('datepicker').selectedDates[0] == undefined) || (isMultipleDatePicker == 'true' && $('#vacation-dates').datepicker().data('datepicker').minRange == "")) {
+            $('input.selectedDate').val("");
+         
+            $('input.selectedDate').valid();
+            $('input.selectedDate').trigger("change");
+            $("#saveOffDay").attr("disabled", false);
+            return;
+        }
+        else {
+            if (isMultipleDatePicker == 'false') {
+                var dateFrom = $('#vacation-dates').datepicker().data('datepicker').selectedDates[0].toISOString();
+            }
+            else {
 
-        var dateFrom = $('#vacation-dates').datepicker().data('datepicker').minRange.toISOString()
+                var dateFrom = $('#vacation-dates').datepicker().data('datepicker').minRange.toISOString()
+            }
+            $('input.selectedDate').val(true);
+            $('input.selectedDate').trigger("change");
+            $('input.selectedDate').valid();
+            
+        }
         var dateTo = '';
         if (dateRangeToDay == undefined) {
             dateTo = null;
@@ -1478,60 +1500,67 @@ $(function () {
 
     $.fn.EnableMaterialSelect = function (selectID, dataActivates) {
         console.log("enable " + selectID)
-        var selectedElements = $('#' + dataActivates).find(".active")
-        var selectedIndex = $('#' + dataActivates).find(".active").index();
-        var dataActivatesLength = $('#' + dataActivates).children('li').length;
-        if (selectedElements.length <= 1) {
-            if ($('#' + dataActivates + " .search-wrap").length > 0 || $(selectID).children().length < dataActivatesLength) {
-                selectedIndex = selectedIndex - 1;
-            }
-            var isOptGroup = false;
-            if ($('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup') || $('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup-option')) { isOptGroup = true; }
-            if (isOptGroup) {
-                var selected = $(':selected', $(selectID));
-                console.log(selectID + "  " + selectedIndex);
-                var optgroup = selected.closest('optgroup').attr('label');
-                switch (optgroup) {
-                    case "Units":
-                        console.log("Units")
-                        selectedIndex = selectedIndex;
-                        break;
-                    case "Weight/Volume":
-                        console.log("Volume")
-                        selectedIndex = selectedIndex - 1;
-                        break;
-                    case "Test":
-                        console.log("Test")
-                        selectedIndex = selectedIndex - 2;
-                        break;
-                }
-
-            }
+        var selectedElements = $('#' + dataActivates).find(".active");
+        var shouldRemainReadonly = false;
+        if (selectedElements.parents("div").hasClass("mark-roles-readonly")) {
+            shouldRemainReadonly = true;
         }
-        $(selectID).destroyMaterialSelect();
-        $(selectID).prop("disabled", false);
-        if (selectedElements.length <= 1) {
-
-            $(selectID).prop('selectedIndex', selectedIndex);
-        }
-        else {
-            var selectedIndexes = [];
-            selectedElements.each(function (el) {
-                selectedIndexes.push(el)
-            })
-            var i = 0
-            $(selectID).children().each(function (el) {
-                if (el == selectedIndexes[i]) {
-                    el.selected = true;
-                    i++
+        console.log("shouldRemeainReadonly: " + shouldRemainReadonly);
+        if (!shouldRemainReadonly) {
+            var selectedIndex = $('#' + dataActivates).find(".active").index();
+            var dataActivatesLength = $('#' + dataActivates).children('li').length;
+            if (selectedElements.length <= 1) {
+                if ($('#' + dataActivates + " .search-wrap").length > 0 || $(selectID).children().length < dataActivatesLength) {
+                    selectedIndex = selectedIndex - 1;
                 }
-            })
+                var isOptGroup = false;
+                if ($('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup') || $('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup-option')) { isOptGroup = true; }
+                if (isOptGroup) {
+                    var selected = $(':selected', $(selectID));
+                    console.log(selectID + "  " + selectedIndex);
+                    var optgroup = selected.closest('optgroup').attr('label');
+                    switch (optgroup) {
+                        case "Units":
+                            console.log("Units")
+                            selectedIndex = selectedIndex;
+                            break;
+                        case "Weight/Volume":
+                            console.log("Volume")
+                            selectedIndex = selectedIndex - 1;
+                            break;
+                        case "Test":
+                            console.log("Test")
+                            selectedIndex = selectedIndex - 2;
+                            break;
+                    }
+
+                }
+            }
+            $(selectID).destroyMaterialSelect();
+            $(selectID).prop("disabled", false);
+            if (selectedElements.length <= 1) {
+
+                $(selectID).prop('selectedIndex', selectedIndex);
+            }
+            else {
+                var selectedIndexes = [];
+                selectedElements.each(function (el) {
+                    selectedIndexes.push(el)
+                })
+                var i = 0
+                $(selectID).children().each(function (el) {
+                    if (el == selectedIndexes[i]) {
+                        el.selected = true;
+                        i++
+                    }
+                })
+            }
+            $('[data-activates="' + dataActivates + '"]').prop('disabled', false);
+            $(selectID).materialSelect();
+            $.fn.ChangeCheckboxesToFilledInWithoutMDB();
+            $('.open-document-modal').attr("data-val", true);
         }
         $(selectID).removeAttr("disabled")
-        $('[data-activates="' + dataActivates + '"]').prop('disabled', false);
-        $(selectID).materialSelect();
-        $.fn.ChangeCheckboxesToFilledInWithoutMDB();
-        $('.open-document-modal').attr("data-val", true);
     }
 
     $("#home-btn").off('click').on('click', function () {

@@ -1,4 +1,6 @@
 ﻿@using PrototypeWithAuth.AppData.UtilityModels
+@using React.AspNet
+@using React.Router
 @{
     Layout = null;
 }
@@ -80,9 +82,65 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <div class="request_nav_body"> @RenderBody()</div>
     <div class="modals">
-        @{await Html.RenderPartialAsync("ModalLoader"); }
-    </div>
 
+        <div class="two-factor-expired"></div>
+        <div class="add-invoice"></div>
+        <div class="adjust-payments"></div>
+        <div class="confirm-edit"></div>
+        <div class="confirm-exit"></div>
+        <div class="confirm-email"></div>
+        <div class="documents-delete"></div>
+        <div class="documents"></div>
+        <div class="edit-quote"></div>
+        <div class="payments-pay"></div>
+        <div class="payments-invoice"></div>
+        <div class="received-item"></div>
+        <div class="reorder-item"></div>
+        <div class="terms"></div>
+        <div class="upload-order"></div>
+        <div class="upload-quote"></div>
+        <div class="step-1"></div>
+        <div class="step-2"></div>
+        <div class="cart-total"></div>
+        <div class="visual-zoom"></div>
+        <div class="suspend-user"></div>
+        <div class="user-picture"></div>
+        <div class="deny-approval"></div>
+        <div class="delete-item"> </div>
+        <div class="history-item"></div>
+        <div class="edits"></div>
+        <div class="add-location"></div>
+        <div class="update-time-worked"></div>
+        <div class="off-day"></div>
+        <div class="hours-awaiting-approval"></div>
+        <div class="share-request"></div>
+        <div class="add-material"></div>
+        <div class="late-order"></div>
+        <div class="add-resources"></div>
+        <div class="material-info"></div>
+        <div class="resource-notes-modal"></div>
+        <div class="share-modal"></div>
+        <div class="new-report"></div>
+        <div class="confirm-archive"></div>
+        <div class="save-report"></div>
+        <div class="protocol-details"></div>
+        <div class="add-function"></div>
+        <div class="add-change-div"></div>
+        <div class="add-participant"></div>
+        <div class="edit-participant"></div>
+        <div class="new-entry"></div>
+        <div class="save-bio-test-modal"></div>
+        <div class="move-list"></div>
+        <div class="new-list"></div>
+        <div class="delete-list-request"></div>
+        <div class="list-settings"></div>
+        <div class="delete-list"></div>
+        <div class="save-list-settings"></div>
+        <div class="products-warning-modal"></div>
+        <div class="vendor-float-modal"></div>
+        <div class="right-invalid"></div>
+        <div class="unit-warning-modal"></div>
+    </div>
 
     <!--  SCRIPTS  -->
     <!-- JQuery -->
@@ -170,8 +228,8 @@
 
 
     <script type="module" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view-renderer.js"></script>
-    <script type="text/javascript" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view.js"></script>
-    <script type="text/javascript" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select.js"></script>
+    <script type="text/babel" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view.js"></script>
+    <script type="text/babel" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select.js"></script>
 
     <script src="~/lib/bootstrap/dist/src/js/pro/buttons.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/cards.js"></script>
@@ -432,10 +490,16 @@
         function enableMarkReadonly(element) {
             console.log("in if details");
             $('.mark-readonly').attr("disabled", false);
+            $('input[type="button"].mark-readonly.mark-roles-readonly').attr("disabled", true);
+            $('button.mark-readonly.mark-roles-readonly').attr("disabled", true);
+            $('select.mark-readonly').attr("disabled", false);
             $('.mark-readonly').removeClass("disabled");
-            //TODO: add in mark-readonly fields for subunits
-            //$.fn.CheckUnitsFilled();
-            //$.fn.CheckSubUnitsFilled();
+            $('.mark-readonly.mark-roles-readonly').prop("readonly", true);
+
+            $('.mark-readonly.mark-roles-readonly.radio-button').attr("disabled", true);
+            $('.mark-readonly.mark-roles-readonly.radio-button').addClass("disabled");
+            $('select.mark-readonly').removeClass("disabled");
+
             $('.mark-edditable').data("val", true);
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
@@ -459,14 +523,25 @@
                 $.fn.EnableMaterialSelect('#unitTypeID', 'select-options-unitTypeID');
                 console.log($("#subSubUnitTypeID"))
                 if ($("#subSubUnitTypeID").hasClass('mark-readonly')) {
-                    $.fn.EnableSubSubUnits();
-                    $.fn.ChangeSubSubUnitDropdown();
+                    var onlyMS = true;
+                    if (!$("#subSubUnitTypeID").hasClass('mark-roles-readonly')) {
+                        $.fn.ChangeSubSubUnitDropdown("add-or-edit-item");
+                        onlyMS = false;
+                    }
+                    console.log("enable subsubunits with onlyms: " + onlyMS);
+                    $.fn.EnableSubSubUnits(onlyMS);
                 }
                 console.log($("#subUnitTypeID"))
                 if ($("#subUnitTypeID").hasClass('mark-readonly')) {
                     console.log('enabling');
-                    $.fn.EnableSubUnits();
-                    $.fn.ChangeSubUnitDropdown();
+                    var onlyMS = true;
+                    if (!$("#subUnitTypeID").hasClass('mark-roles-readonly')) {
+                        $.fn.ChangeSubUnitDropdown("add-or-edit-item");
+                        onlyMS = false;
+                    }
+                    console.log("enable subunits with onlyms: " + onlyMS);
+                    $.fn.EnableSubUnits(onlyMS);
+                    
                 }
                 if ($("#quoteStatus").val() == "1" || $("#quoteStatus").val() == "2") {
                     console.log("no quote")
@@ -514,11 +589,31 @@
             }
         }
 
+        $.fn.EnableSubSubUnits = function (onlyMS = false) {
+            console.log("onlyMS: EsSU: " + onlyMS);
+            $("#subSubUnit").prop("disabled", false);
+            if (onlyMS) {
+                console.log("in !ms");
+                $("#subSubUnit").prop('readonly', true);
+            }
+            $.fn.EnableMaterialSelect('#subSubUnitTypeID', 'select-options-subSubUnitTypeID');
+        };
+
+        $.fn.EnableSubUnits = function (onlyMS = false) {
+            console.log("onlyMS: ESU: " + onlyMS);
+            $("#subUnit").prop("disabled", false);
+            if (onlyMS) {
+                console.log("in !ms");
+                $("#subUnit").prop('readonly', true);
+            }
+            $.fn.EnableMaterialSelect('#subUnitTypeID', 'select-options-subUnitTypeID');
+        };
+
         $.fn.MakeLocationsEditable = function() {
             console.log('locations');
             $(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
-            $('#location .mark-readonly').removeClass("not-clickable")
-            $('#location .mark-readonly').attr("disabled", false);
+            $('#location .mark-readonly:not(.mark-roles-readonly)').removeClass("not-clickable")
+            $('#location .mark-readonly:not(.mark-roles-readonly)').attr("disabled", false);
             $(".location-icon").removeClass("d-none");
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
@@ -557,7 +652,6 @@
                             //$.fn.OnOpenModalView();
                             $("#cost").trigger('change');
                             $(".reorderModal .mdb-select").materialSelect();
-                            //$.fn.CheckCurrency();
                             break;
                         case "summary":
                             //$.fn.OnOpenModalView();
@@ -1282,12 +1376,12 @@
                     if(isReopen)
                     {
                         console.log("before fx");
-                        //if ($("._testvalues").length > 0) {
+                        if ($("._testvalues").length > 0) {
 
-                        //    if (!$("._testvalues").hasClass("changed")) {
-                        //        $("._testvalues").addClass("changed");
-                        //    }
-                        //}
+                            if (!$("._testvalues").hasClass("changed")) {
+                                $("._testvalues").addClass("changed");
+                            }
+                        }
                         //alert("._DocumentsModalData")
                         $("._DocumentsModalData").html(data);
                     }
@@ -1518,9 +1612,11 @@
             return {
                 SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation,
                 SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived, CatalogNumber: catalogNumber,
-                SelectedTypesIDs: selectedType, NumFilters: $("#NumFilters").val(), "SearchText" :searchText
+                SelectedTypesIDs: selectedType, NumFilters: $("#NumFilters").val(), "SearchText": searchText
             }
         }
+
+
 
 
 
@@ -1769,10 +1865,12 @@
 
     </script>
 
+
     @if (IsSectionDefined("requestNavScript"))
     {
         @RenderSection("requestNavScript", required: true)
     }
-
+    @Html.ReactGetScriptPaths()
+    @Html.ReactInitJavaScript()
 </body>
 </html>

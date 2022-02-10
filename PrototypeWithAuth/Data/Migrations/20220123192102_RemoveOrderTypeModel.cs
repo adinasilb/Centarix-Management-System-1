@@ -24,12 +24,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "OrderTypeID",
-                table: "Products",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+            
 
             migrationBuilder.CreateTable(
                 name: "OrderTypes",
@@ -59,6 +54,13 @@ namespace PrototypeWithAuth.Data.Migrations
                 table: "OrderTypes",
                 columns: new[] { "ID", "Description", "DescriptionEnum" },
                 values: new object[] { 3, "Standing", "Standing" });
+
+            migrationBuilder.AddColumn<int>(
+                name: "OrderTypeID",
+                table: "Products",
+                type: "int",
+                nullable: true,
+                defaultValue: 0);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_OrderTypeID",
