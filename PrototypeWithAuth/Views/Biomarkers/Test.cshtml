@@ -9,7 +9,7 @@
 <script src="~/js/validate.js"></script>
 
 @{ var listNumber = 0;}
-<form action="" method="POST" enctype="multipart/form-data" class="test-forms on-form-modal bio-form" id="myForm">
+<form action="" method="POST" enctype="multipart/form-data" class="test-forms on-form-modal " id="myForm">
     <input type="submit" class="hidden" />
     @Html.HiddenFor(m => m.ExperimentEntry.ExperimentEntryID)
     <input type="hidden" value="@Model.ExperimentEntry.ExperimentEntryID" id="CustomMainObjectID" />
@@ -119,7 +119,7 @@
 </form>
 
 <script>
-    //$(".bio-form").ready(function () {
+    //$(".Biomarkers").ready(function () {
     //    alert("in bio form ready");
     //    $(".mdb-select-entries").materialSelect();
     //});
@@ -183,7 +183,7 @@
         if (!$("._testvalues").hasClass("changed") && !$(this).hasClass("turn-edit-doc-on-off")) {
             $("._testvalues").addClass("changed");
         }
-        var valid = $(".bio-form").valid()
+        var valid = $("form").valid()
         console.log("input change "+ valid)
 
     });

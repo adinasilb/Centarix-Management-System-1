@@ -688,7 +688,7 @@ input.select-dropdown {
     border: 1px solid var(--protocols-color);
 }
 
-.users-form .form-control-file::-webkit-file-upload-button {
+.Users .form-control-file::-webkit-file-upload-button {
     background-color: var(--user-color);
     border: 1px solid var(--user-color);
 }
@@ -1252,21 +1252,21 @@ a.nav-link {
     color: var(--protocol-color);
 }
 
-.bio-form .new-button-text {
+.Biomarkers .new-button-text {
     padding-left: .5rem !important;
     padding-right: .5rem !important;
 }
 
-.bio-form .new-button.active {
+.Biomarkers .new-button.active {
     color: var(--biomarkers-color) !important;
     border-bottom: 3px solid var(--biomarkers-color);
 }
 
-.bio-form .new-button:hover {
+.Biomarkers .new-button:hover {
     color: var(--biomarkers-color);
 }
 
-.bio-form .item-table a{
+.Biomarkers .item-table a{
     padding: 0;
     margin-right: 2rem !important;
 }
@@ -1932,7 +1932,7 @@ td .btn {
     border-bottom: 0.125rem solid var(--acc-color) !important;
 }
 
-.users-form .on-form-modal-border {
+.Users .on-form-modal-border {
     border: 0.125rem solid var(--user-color);
 }
 
@@ -1940,7 +1940,7 @@ td .btn {
     border-radius: 1.25rem;
 }
 
-.users-form .new-modal-header:not(.modal-line-1-header-with-back) {
+.Users .new-modal-header:not(.modal-line-1-header-with-back) {
     border-bottom: 0.125rem solid var(--user-color) !important;
 }
 
@@ -2018,7 +2018,7 @@ td .btn {
 .Requests .select-wrapper.active span.caret, .Requests .select-wrapper.active label.mdb-main-label {
     color: var(--order-inv-color) !important;
 }
-.bio-form .select-wrapper.active span.caret, .Requests .select-wrapper.active label.mdb-main-label {
+.Biomarkers .select-wrapper.active span.caret, .Requests .select-wrapper.active label.mdb-main-label {
     color: var(--order-inv-color) !important;
 }
 /*HOVER FOR EACH SECTION*/
@@ -2051,33 +2051,33 @@ td .btn {
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
 }
 
-.bio-form .input-group:focus-within > .input-group-text {
+.Biomarkers .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var(--biomarkers-color) !important;
 }
 
-.bio-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
-.bio-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
-.bio-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus,
-.bio-form .react-mentions__input:not(.danger-box-shadow):not(.url-shown):focus {
+.Biomarkers input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
+.Biomarkers button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
+.Biomarkers .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus,
+.Biomarkers .react-mentions__input:not(.danger-box-shadow):not(.url-shown):focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--biomarkers-color) !important;
 }
 
-.bio-form .form-control-plaintext.danger-box-shadow:focus, .bio-form .react-mentions__input.danger-box-shadow:focus {
+.Biomarkers .form-control-plaintext.danger-box-shadow:focus, .Biomarkers .react-mentions__input.danger-box-shadow:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--danger-color) !important;
 }
 
-.bio-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+.Biomarkers .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
     border: 2px solid var(--biomarkers-color) !important;
 }
 
-.users-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
-.users-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
-.users-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus, .users-form .react-mentions__input:not(.danger-box-shadow):not(.url-shown):focus {
+.Users input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
+.Users button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
+.Users .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus, .Users .react-mentions__input:not(.danger-box-shadow):not(.url-shown):focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--user-color) !important;
@@ -2220,22 +2220,22 @@ span.caret {
     color: var( --operations-color) !important;
 }
 
-.users-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+.Users .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
     border: 2px solid var(--user-color) !important;
 }
 
-.users-form .form-control-plaintext:focus, .users-form input[type="text"]:focus, .users-form .react-mentions__input:focus {
+.Users .form-control-plaintext:focus, .Users input[type="text"]:focus, .Users .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --user-color) !important;
 }
 
-.users-form .input-group:focus-within > .input-group-text {
+.Users .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var(--user-color) !important;
 }
 
-.users-form .select-wrapper.active span.caret, .users-form .select-wrapper.active label.mdb-main-label {
+.Users .select-wrapper.active span.caret, .Users .select-wrapper.active label.mdb-main-label {
     color: var( --user-color) !important;
 }
 
@@ -2255,25 +2255,25 @@ span.caret {
     border-radius: .25rem;
 }
 
-.timekeeper-form .form-control-plaintext:focus, .timekeeper input[type="text"]:focus, .timekeeper-form .react-mentions__input:focus {
+.TimeKeeper .form-control-plaintext:focus, .timekeeper input[type="text"]:focus, .TimeKeeper .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --timekeeper-color) !important;
 }
 
-.timekeeper.select-wrapper input.select-dropdown:active, .timekeeper-form .select-wrapper input.select-dropdown:active {
+.timekeeper.select-wrapper input.select-dropdown:active, .TimeKeeper .select-wrapper input.select-dropdown:active {
     border: 0.063rem solid var(--timekeeper-color);
 }
 
-.timekeeper.select-wrapper input.select-dropdown:focus .timekeeper-form .select-wrapper input.select-dropdown:focus {
+.timekeeper.select-wrapper input.select-dropdown:focus .TimeKeeper .select-wrapper input.select-dropdown:focus {
     border: 0.063rem solid var(--timekeeper-color);
 }
 
-.timekeeper.select-wrapper.active span.caret, .timekeeper.select-wrapper.active label.mdb-main-label, .timekeeper-form .select-wrapper.active label.mdb-main-label, .timekeeper-form .select-wrapper.active span.caret {
+.timekeeper.select-wrapper.active span.caret, .timekeeper.select-wrapper.active label.mdb-main-label, .TimeKeeper .select-wrapper.active label.mdb-main-label, .TimeKeeper .select-wrapper.active span.caret {
     color: var( --timekeeper-color) !important;
 }
 
-.timekeeper-form .input-group:focus-within > .input-group-text {
+.TimeKeeper .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var( --timekeeper-color) !important;
 }
 
@@ -2285,7 +2285,7 @@ span.caret {
     border: 0.063rem solid var(--timekeeper-color);
 }
 
-.timekeeper.select-wrapper:not(.md-outline) .select-dropdown:focus, .timekeeper-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+.timekeeper.select-wrapper:not(.md-outline) .select-dropdown:focus, .TimeKeeper .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
     border: 2px solid var(--timekeeper-color) !important;
 }
@@ -2560,11 +2560,11 @@ span.caret {
     border: .5px solid #f3f3f3 !important;
 }
 
-.users-form .switch label input[type="checkbox"]:checked + .lever:after {
+.Users .switch label input[type="checkbox"]:checked + .lever:after {
     background-color: var(--user-color) !important;
 }
 
-.users-form .switch label input[type="checkbox"]:checked + .lever {
+.Users .switch label input[type="checkbox"]:checked + .lever {
     background-color: var(--users-25) !important;
     opacity: 50 !important;
     border: .5px solid #f3f3f3 !important;
@@ -2580,11 +2580,11 @@ span.caret {
     border: .5px solid #f3f3f3 !important;
 }
 
-.bio-form .switch label input[type="checkbox"]:checked + .lever:after {
+.Biomarkers .switch label input[type="checkbox"]:checked + .lever:after {
     background-color: var(--biomarkers-color) !important;
 }
 
-.bio-form .switch label input[type="checkbox"]:checked + .lever {
+.Biomarkers .switch label input[type="checkbox"]:checked + .lever {
     background-color: var(--biomarkers-25) !important;
     opacity: 50 !important;
     border: .5px solid #f3f3f3 !important;
@@ -2700,7 +2700,7 @@ span.caret {
     background-color: var(--lab-man-color);
 }
 
-.users-form .custom-control-input:checked ~ .custom-control-label::before {
+.Users .custom-control-input:checked ~ .custom-control-label::before {
     border-color: var(--user-color);
     background-color: var(--user-color);
 }
@@ -2781,12 +2781,12 @@ a {
     background-color: var(--operations-color);
 }
 /*Biomarkers*/
-.bio-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .bio-form label.btn input[type="checkbox"].filled-in:checked + label:after, .biomarkers .form-check-input[type="checkbox"].filled-in:checked + label:after, .biomarkers label.btn input[type="checkbox"].filled-in:checked + label:after {
+.Biomarkers .form-check-input[type="checkbox"].filled-in:checked + label:after, .Biomarkers label.btn input[type="checkbox"].filled-in:checked + label:after, .biomarkers .form-check-input[type="checkbox"].filled-in:checked + label:after, .biomarkers label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid var(--biomarkers-color);
     background-color: var(--biomarkers-color);
 }
 /*Timekeeper*/
-.timekeeper-form .form-check-input[type="checkbox"].fci-time.filled-in:checked + label:after, .timekeeper-form label.btn input[type="checkbox"].fci-time.filled-in:checked + label:after, .timekeeper .form-check-input[type="checkbox"].fci-time.filled-in:checked + label:after, .timekeeper label.btn input[type="checkbox"].fci-time.filled-in:checked + label:after {
+.TimeKeeper .form-check-input[type="checkbox"].fci-time.filled-in:checked + label:after, .TimeKeeper label.btn input[type="checkbox"].fci-time.filled-in:checked + label:after, .timekeeper .form-check-input[type="checkbox"].fci-time.filled-in:checked + label:after, .timekeeper label.btn input[type="checkbox"].fci-time.filled-in:checked + label:after {
     border: 2px solid var(--timekeeper-color);
     background-color: var(--timekeeper-color);
 }
@@ -2811,7 +2811,7 @@ a {
     background-color: var(--income-color);
 }
 /*Users*/
-.users-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .users-form label.btn input[type="checkbox"].filled-in:checked + label:after, .users .form-check-input[type="checkbox"].filled-in:checked + label:after, .users label.btn input[type="checkbox"].filled-in:checked + label:after {
+.Users .form-check-input[type="checkbox"].filled-in:checked + label:after, .Users label.btn input[type="checkbox"].filled-in:checked + label:after, .users .form-check-input[type="checkbox"].filled-in:checked + label:after, .users label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid var(--user-color);
     background-color: var(--user-color);
 }
