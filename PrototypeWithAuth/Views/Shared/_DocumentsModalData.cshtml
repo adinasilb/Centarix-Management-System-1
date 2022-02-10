@@ -16,7 +16,7 @@
     //{
     //    requestid = 0;
     //}
-    var bcColor = "order-inv-background-color";
+
     var color = "order-inv-color";
     var form = "order-inv-form";
     var deleteDocumentClass = "";
@@ -25,39 +25,34 @@
     if (Model.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
-        bcColor = "oper-background-color";
         color = "operations-filter";
         sectionType = AppUtility.MenuItems.Operations.ToString();
     }
     else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
     {
         form = "supplier-form";
-        bcColor = "lab-man-background-color";
         color = "lab-man-filter";
         sectionType = AppUtility.MenuItems.LabManagement.ToString();
     }
     else if (Model.SectionType == AppUtility.MenuItems.Accounting)
     {
         form = "accounting-form";
-        bcColor = "accounting-background-color";
         color = "accounting-filter";
         sectionType = AppUtility.MenuItems.Accounting.ToString();
     }
     else if (Model.SectionType == AppUtility.MenuItems.Protocols)
     {
         form = "protocol-form";
-        bcColor = "protocols-background-color";
         color = "protocols-color";
         sectionType = AppUtility.MenuItems.Protocols.ToString();
     }
     else if (Model.SectionType == AppUtility.MenuItems.Biomarkers)
     {
         form = "bio-form";
-        bcColor = "biomarkers-background-color";
         color = "biomarkers-color";
         sectionType = AppUtility.MenuItems.Biomarkers.ToString();
     }
-    var bcColorToUse = bcColor;
+    var bcColorToUse = "section-bg-color";
     var colorToUse = color;
     var disabled = false;
     var isChecked = "";
