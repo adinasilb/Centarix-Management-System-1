@@ -6,7 +6,7 @@ namespace PrototypeWithAuth.AppData.UtilityModels
 {
     public class IconPopoverViewModel
     {
-        public IconPopoverViewModel(string? icon = "", string? color = "" , AppUtility.PopoverDescription description = AppUtility.PopoverDescription.More , string? action = "", string? controller = "",  string? ajaxcall = "")
+        public IconPopoverViewModel(string icon = "", string color = "" , AppUtility.PopoverDescription description = AppUtility.PopoverDescription.More , string action = "", string controller = "",  string ajaxcall = "")
         {
             Icon = icon;
             Color = color;

@@ -567,6 +567,10 @@
     <Compile Remove="Data\Migrations\20220123122832_AddTimePeriodsModel.Designer.cs" />
     <Compile Remove="Data\Migrations\20220123130818_AddProductOrderTypeDiscriminator.cs" />
     <Compile Remove="Data\Migrations\20220123130818_AddProductOrderTypeDiscriminator.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220118114501_addedCBToContext.cs" />
+    <Compile Remove="Data\Migrations\20220118114501_addedCBToContext.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220119063031_addedCategoryJsons.cs" />
+    <Compile Remove="Data\Migrations\20220119063031_addedCategoryJsons.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

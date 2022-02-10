@@ -1,6 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model PrototypeWithAuth.ViewModels.SettingsInventory;
 @{
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
@@ -17,15 +15,16 @@
             </ul>
         </div>
     </div>
-    <div class="row">
-        <div class="col-2">
-
+    <div class="row category-height ">
+        <div class="col-2 border p-2 category-list-1 cat-col scrollable">
+            @{ await Html.RenderPartialAsync("_CategoryList", Model.Categories);}
         </div>
-        <div class="col-2">
+        <div class="col-2 border p-2 category-list-2 cat-col scrollable">
 
+            @{ await Html.RenderPartialAsync("_CategoryList", Model.Subcategories);}
         </div>
-        <div class="col-8">
-
+        <div class="col-8 border settings-form">
+            @{ await Html.RenderPartialAsync("_SettingsForm", Model.SettingsForm);}
         </div>
     </div>
 </form>

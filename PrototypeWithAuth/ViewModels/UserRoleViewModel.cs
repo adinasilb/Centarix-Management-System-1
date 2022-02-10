@@ -11,7 +11,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public int MenuItemsID { get; set; }
         public bool Selected { get; set; }
-        public StringWithName StringWithName { get; set; }
+        public Role Role { get; set; }
 
         //public List<UserRoleViewModel> UserRoleViewModels { get; set }
     }
