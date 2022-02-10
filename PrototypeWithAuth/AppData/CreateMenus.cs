@@ -12,7 +12,7 @@ namespace PrototypeWithAuth.AppData
     public static class CreateMenus
     {
         private static string SideBarActiveClasses = " text-dark section-filter ";
-        private static string OrigClasses = " opac87 ";
+        private static string OrigClasses = " opac87 align-text-bottom  ";
 
         public static List<MenuItems> CreateMainMenu(AppUtility.MenuItems SectionType, AppUtility.PageTypeEnum pageType)
         {
