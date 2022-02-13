@@ -34,7 +34,7 @@
 			else {
 				$.fn.OpenDocumentsModal(true, $foldername, $objectId, guid, $isEdittable, $SectionType, $showSwitch, $parentfoldername, dontAllowMultipleFiles, $CustomMainObjectID);
 			}
-			//$.fn.ChangeColorsOfDocs($foldername);
+
 			$(".document-name").text('')
 			$(".document-name#FileName").val('')
 		},
@@ -53,12 +53,8 @@ $.fn.RemoveColorsOfDocs = function ($foldername) {
 		$foldername = $foldername + "."+$("#ObjectID").val()
 	}
 	console.log("foldername: "+$foldername)
-	$("#" + $foldername + " i").removeClass('oper-filter');
-	$("#" + $foldername + " i").removeClass('order-inv-filter')
-	$("#" + $foldername + " i").removeClass('lab-man-filter')
-	$("#" + $foldername + " i").removeClass('protocols-filter')
-	$("#" + $foldername + " i").removeClass('biomarkers-filter')
-	$(".active-document-modal .material-image-icon").removeClass("protocols-filter");
+	$("#" + $foldername + " i").removeClass('section-filter')
+	$(".active-document-modal .material-image-icon").removeClass("section-filter");
 	$(".active-document-modal .material-image-icon").addClass("disabled-text");
 	$("#" + $foldername + " i").addClass('opac87');
 	$("#" + $foldername + "Input").removeClass("contains-file");

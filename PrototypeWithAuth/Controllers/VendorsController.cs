@@ -428,7 +428,7 @@ namespace PrototypeWithAuth.Controllers
                     new ComplexIncludes<Vendor, ModelBase>{ Include = v => v.Country }
                 }
             );
-            return vendor.Country.CurrencyID.ToString();
+            return vendor?.Country.CurrencyID.ToString();
         }
     }
 

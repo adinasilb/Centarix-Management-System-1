@@ -81,18 +81,7 @@
 	});
 
 	$.fn.AddBorderBySectionType = function (element) {
-		switch ($('#masterSectionType').attr('value')) {
-			case 'LabManagement': 
-				$(element).closest("tr").addClass("clicked-border-lab-man");
-				break;
-			case 'Requests':
-				$(element).closest("tr").addClass("clicked-border-orders-inv");
-				break;
-			case 'Accounting':
-				$(element).closest("tr").addClass("clicked-border-acc");
-				console.log(element)
-				break;
-        }
+		$(element).closest("tr").addClass("clicked-border");
     }
 
 	$(".remove-invoice-item").off("click").on("click", function (e) {
@@ -281,7 +270,7 @@
 				error: function (jqxhr) {
 					console.log("Error")
 					//$.fn.OpenModal("modal", "payments-pay", jqxhr.responseText);
-					$('.accounting-form .error-message').html(jqxhr.responseText);
+					$('.Accounting .error-message').html(jqxhr.responseText);
 				}
 			})
 		}

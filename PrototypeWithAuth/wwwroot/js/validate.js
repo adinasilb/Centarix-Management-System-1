@@ -56,7 +56,7 @@ $(function () {
 	
 	$.fn.AppendAsteriskToRequired();
 
-	$('#myForm').data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden, input:visible, textarea:visible), [disabled], #-error';
+	$('#myForm').data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden, input:visible, textarea:visible, .selectedDate:hidden), [disabled], #-error';
 	$('#myForm').data("validator").settings.errorPlacement = function (error, element) {
 		console.log('in error placement')
 		if (element.hasClass('select-dropdown')) {
@@ -320,6 +320,8 @@ $(function () {
 
 	$.validator.addMethod("fileRequired", function (value, element) {
 		console.log("in file required")
+		console.log(element)
+		console.log($(element).hasClass("contains-file"))
 		return $(element).hasClass("contains-file");
 	}, 'Must upload a file before submitting');
 

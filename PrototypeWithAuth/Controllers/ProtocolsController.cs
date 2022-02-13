@@ -196,9 +196,9 @@ namespace PrototypeWithAuth.Controllers
             List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--protocols-color)", "protocol-favorite", "Favorite");
             var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
-            var popoverRemoveShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
-            var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Protocols", AppUtility.PopoverEnum.None, "share-protocol-fx");
-            var popoverStart = new IconPopoverViewModel("icon-play_circle_outline-24px-1", "#4CAF50", AppUtility.PopoverDescription.Start, "StartProtocol", "Protocols", AppUtility.PopoverEnum.None, "start-protocol-fx");
+            var popoverRemoveShare = new IconPopoverViewModel("icon-share-24px-1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
+            var popoverShare = new IconPopoverViewModel("icon-share-24px-1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Protocols", "share-protocol-fx");
+            var popoverStart = new IconPopoverViewModel("icon-play_circle_outline-24px-1", "#4CAF50", AppUtility.PopoverDescription.Start, "StartProtocol", "Protocols", "start-protocol-fx");
             var updateResultsIcon = new IconColumnViewModel("UpdateResults");
             var user = await _userManager.GetUserAsync(User);
             switch (protocolsIndexObject.PageType)
@@ -806,7 +806,7 @@ namespace PrototypeWithAuth.Controllers
                 List<DocumentFolder> folders = new List<DocumentFolder>();
                 string materialId = material.MaterialID.ToString();
                 string uploadMaterialFolder2 = Path.Combine(uploadProtocolsFolder, materialId);
-                base.GetExistingFileStrings(folders, AppUtility.FolderNamesEnum.Pictures, AppUtility.ParentFolderName.Materials, uploadMaterialFolder2, materialId);
+                folders.Add(GetExistingFileStrings(AppUtility.FolderNamesEnum.Pictures, AppUtility.ParentFolderName.Materials, uploadMaterialFolder2, materialId));
                 MaterialFolders.Add(material, folders);
             }
 
@@ -1436,7 +1436,7 @@ namespace PrototypeWithAuth.Controllers
             };
 
             deleteDocumentViewModel.DocumentsInfo = new List<DocumentFolder>();
-            base.GetExistingFileStrings(deleteDocumentViewModel.DocumentsInfo, folderName, parentFolderName, uploadReportsFolder2, FunctionResultID.ToString());
+            deleteDocumentViewModel.DocumentsInfo.Add(GetExistingFileStrings(folderName, parentFolderName, uploadReportsFolder2, FunctionResultID.ToString()));
             return PartialView(deleteDocumentViewModel);
         }
 
@@ -2764,8 +2764,8 @@ namespace PrototypeWithAuth.Controllers
         {
             createProtocolsViewModel.DocumentsInfo = new List<DocumentFolder>();
 
-            base.GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, parentFolderName, uploadFolder, id);
-            base.GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, parentFolderName, uploadFolder, id);
+            createProtocolsViewModel.DocumentsInfo.Add(GetExistingFileStrings( AppUtility.FolderNamesEnum.Info, parentFolderName, uploadFolder, id));
+            createProtocolsViewModel.DocumentsInfo.Add(GetExistingFileStrings(AppUtility.FolderNamesEnum.Pictures, parentFolderName, uploadFolder, id));
         }
 
         [Authorize(Roles = "Protocols")]
@@ -2898,10 +2898,10 @@ namespace PrototypeWithAuth.Controllers
             var iconColumnViewModels = new List<IconColumnViewModel>();
             var editIcon = new IconColumnViewModel("icon-create-24px", null, "edit", "Edit");
             var favoriteIcon = new IconColumnViewModel(AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.Empty.ToString()).FirstOrDefault().StringDefinition, null, "favorite", "Favorite");
-            var shareIcon = new IconColumnViewModel("icon-share-24px1", null, "share", "Share");
+            var shareIcon = new IconColumnViewModel("icon-share-24px-1", null, "share", "Share");
             var moreIcon = new IconColumnViewModel("icon-more_vert-24px", null, "popover-more", "More");
 
-            var removeShareIcon = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
+            var removeShareIcon = new IconPopoverViewModel("icon-share-24px-1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
 
             foreach (var iconNameEnum in iconNamesEnumWithLists)
             {
@@ -2928,7 +2928,7 @@ namespace PrototypeWithAuth.Controllers
                                     break;
                             }
                         }
-                        //var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareRequest", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
+                        //var popoverShare = new IconPopoverViewModel("icon-share-24px-1", "black", AppUtility.PopoverDescription.Share, "ShareRequest", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
                         //popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare };
                         iconColumnViewModels.Add(popoverMoreIcon);
                         break;
@@ -3247,7 +3247,7 @@ namespace PrototypeWithAuth.Controllers
             };
 
             deleteDocumentViewModel.DocumentsInfo = new List<DocumentFolder>();
-            base.GetExistingFileStrings(deleteDocumentViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Files, parentFolderName, uploadReportsFolder2, FunctionReportID.ToString());
+            deleteDocumentViewModel.DocumentsInfo.Add(GetExistingFileStrings(AppUtility.FolderNamesEnum.Files, parentFolderName, uploadReportsFolder2, FunctionReportID.ToString()));
             return PartialView(deleteDocumentViewModel);
         }
 

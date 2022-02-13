@@ -2,38 +2,16 @@
 @model PrototypeWithAuth.ViewModels.RequestsSearchViewModel
 @{
     ViewData["Title"] = "Search";
-    string form = "";
-    var buttonSubmitClass = "";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
     if (AppUtility.IsAjaxRequest(this.Context.Request))
     {
         Layout = null;
     }
 
-    if (Model.SectionType == AppUtility.MenuItems.LabManagement)
-    {
-        buttonSubmitClass = "lab-man-background-color";
-        form = "supplier-form";
 
-    }
-    else if (Model.SectionType == AppUtility.MenuItems.Requests)
-    {
-        form = "order-inv-form";
-        buttonSubmitClass = "order-inv-background-color";
-    }
-    else if (Model.SectionType == AppUtility.MenuItems.Accounting)
-    {
-        form = "accounting-form";
-        buttonSubmitClass = "accounting-background-color";
-    }
-    else
-    {
-        form = "oper-form";
-        buttonSubmitClass = "oper-background-color";
-    }
 }
 
-<form action="" method="post" class="container-fluid ml-6 @form " enctype="multipart/form-data" id="search-form">
+<form action="" method="post" class="container-fluid ml-6  " enctype="multipart/form-data" id="search-form">
     <div class="row">
         <div class="col-7 create-user  on-form-modal">
             <div class="on-form-modal-border pb-4">
@@ -49,7 +27,7 @@
                                 </div>
 
                                 <div class="col-md-3 text-center">
-                                    <input type="button" value="Search" @* asp-action="Search"*@ class="@buttonSubmitClass custom-button custom-button-font search-for-request" />
+                                    <input type="button" value="Search" @* asp-action="Search"*@ class="section-bg-color custom-button custom-button-font search-for-request" />
                                 </div>
                             </div>
                             <div class="row">
@@ -63,8 +41,8 @@
                                 {
                                     <div class="col">
                                         <div class="form-group">
-                                            <label asp-for="ProductHebrewName" class="control-label">Item Hebrew Name: </label>
-                                            <input asp-for="ProductHebrewName" data-val="false" class="form-control-plaintext border-bottom" />
+                                            <label asp-for="ProductSecondaryName" class="control-label">Item Hebrew Name: </label>
+                                            <input asp-for="ProductSecondaryName" data-val="false" class="form-control-plaintext border-bottom" />
                                         </div>
                                     </div>
                                 }

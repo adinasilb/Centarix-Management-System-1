@@ -21,21 +21,23 @@ namespace PrototypeWithAuth.ViewModels
         //public ApplicationUser CurrentUser { get; set; }
         public List<Request> Requests { get; set; } // requests already include the product, we do not need to include a separate product
         public List<Request> RequestsByProduct { get; set; }
+        public List<String> RequestRoles { get; set; }
         public ParentCategory ParentCategory { get; set; }
         public IEnumerable<ParentCategory> ParentCategories { get; set; }
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
         public IEnumerable<Vendor> Vendors { get; set; }
         public IEnumerable<RequestStatus> RequestStatuses { get; set; }
         public IEnumerable<SelectListItem> UnitTypeList { get; set; }
-        public ILookup<UnitParentType, UnitType> UnitTypes { get; set; }
+        public IEnumerable<UnitType> UnitTypes { get; set; }
         public IEnumerable<Project> Projects { get; set; }
         public IEnumerable<SubProject> SubProjects { get; set; }
         public List<SelectListItem> ApplicationUsers { get; set; }
+        public IEnumerable<TimePeriod> TimePeriods { get; set; }
         public bool Paid { get; set; }
         public bool PayNow { get; set; }
         public bool PayLater { get; set; }
-        public bool IsReorder { get; set; }
-
+        public bool ShowHistory { get; set; }
+        public string bcColor { get; set; }
         public List<DocumentFolder> DocumentsInfo { get; set; }
         //public List<string> OrderFileStrings { get; set; }
         //public List<string> InvoiceFileStrings { get; set; }
@@ -89,12 +91,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<string> LastUrls { get; set; }
         public bool HasQuote { get; set; }
         public bool HasWarnings { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public bool HasEnd { get; set; }
-        public int Occurances { get; set; }
-        public int TimePeriodID { get; set; }
-        public int TimePeriodAmount { get; set; }
-
+        public AppUtility.OrderType OrderType { get; set; }
     }
 }

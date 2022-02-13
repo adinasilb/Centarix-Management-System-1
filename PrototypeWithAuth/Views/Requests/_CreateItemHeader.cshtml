@@ -1,0 +1,30 @@
+﻿@using PrototypeWithAuth.AppData;
+@model PrototypeWithAuth.ViewModels.RequestItemViewModel;
+
+@{
+    var productOrderType = Model.OrderType.ToString();
+}
+
+@{
+    var productNameRows = Model.Requests[0].Product.ProductName != null ? Math.Ceiling((float)(Model.Requests[0].Product.ProductName.Length) / 45) : 1;
+}
+<div class="form-group modal-line-1-header modal-sides row">
+<div class="heading-1 modal-title col-8">
+    <textarea asp-for="Requests[0].Product.ProductName" name="Requests[0].@(productOrderType).ProductName" class="form-control-plaintext border-bottom heading-1 item-name" placeholder="(item name)" rows="@productNameRows" cols="50" maxlength="150" style="resize:none;"></textarea>
+</div>
+<span asp-validation-for="Requests[0].Product.ProductName" class="text-danger-centarix"></span>
+@if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary)
+{
+    <div class="d-flex align-items-center col-4">
+        @*                <button type="submit" asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.Save" name="OrderType" asp-route-RequestStatusID="7" asp-route-PageType="RequestSummary" asp-route-SectionType="Requests" asp-route-SidebarType="List" class=" custom-button custom-button-font @bcColor m-auto complete-order disabled-submit">Save</button>
+        *@
+        <button type="submit" value="@AppUtility.OrderMethod.Save" name="OrderType" class=" custom-button custom-button-font @Model.bcColor m-auto complete-order disabled-submit submitOrder">Save</button>
+    </div>
+}
+@if (Model.SectionType == AppUtility.MenuItems.Operations)
+{
+    <div class="d-flex align-items-center col-4">
+        <button type="submit" class=" custom-button custom-button-font @Model.bcColor m-auto complete-order save-operations-item disabled-submit">Add To Cart</button>
+    </div>
+}
+</div>

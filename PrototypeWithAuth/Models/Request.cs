@@ -24,11 +24,12 @@ namespace PrototypeWithAuth.Models
         public string ApplicationUserCreatorID { get; set; }
         [ForeignKey("ApplicationUserCreatorID")]
         public Employee ApplicationUserCreator { get; set; }
+        public string AdditionalFieldsJson { get; set; }
         public int? SubProjectID { get; set; }
         public SubProject SubProject { get; set; }
 
         private int _RequestStatusID { get; set; }
-        public int RequestStatusID { 
+        public int RequestStatusID {
             get
             {
                 if (_RequestStatusID == 0)
@@ -40,7 +41,7 @@ namespace PrototypeWithAuth.Models
                     return _RequestStatusID;
                 }
             }
-            set { _RequestStatusID = value; } 
+            set { _RequestStatusID = value; }
         }
         public RequestStatus RequestStatus { get; set; }
 
@@ -74,13 +75,11 @@ namespace PrototypeWithAuth.Models
         public DateTime CreationDate { get; set; }
         public int? ParentQuoteID { get; set; }
         public ParentQuote ParentQuote { get; set; }
-
-
         public IEnumerable<RequestNotification> RequestNotifications { get; set; }
 
         public int OrderMethodID { get; set; }
         public OrderMethod OrderMethod { get; set; }
-        
+
         //payment info
         public uint? Installments { get; set; } //number of installments
         public ListImplementsModelBase<Payment> Payments { get; set; }
@@ -91,10 +90,10 @@ namespace PrototypeWithAuth.Models
         public bool IsPartial { get; set; }
         public bool IsClarify { get; set; }
         public string NoteForClarifyDelivery { get; set; }
-        
+
         //price info
         public string Currency { get; set; }
-        [Range(1,  (double)Decimal.MaxValue, ErrorMessage = "Field must be more than 0")]
+        [Range(1, (double)Decimal.MaxValue, ErrorMessage = "Field must be more than 0")]
         [Display(Name = "Price")]
         public decimal? Cost { get; set; } //this is always shekel no matter what currency is
         private decimal _VAT;
@@ -155,7 +154,7 @@ namespace PrototypeWithAuth.Models
             {
                 return Math.Round(VAT + Cost ?? 0, 2);
             }
-            private set { ; }
+            private set {; }
 
         }
 
@@ -188,7 +187,10 @@ namespace PrototypeWithAuth.Models
         public int SerialNumber { get; set; }
         public IEnumerable<RequestListRequest> RequestListRequests { get; set; }
         private const string SerialNumberPefix = "IL";
+        public string SerialNumberString { get { return SerialNumberPefix + SerialNumber; } }
+        public SingleOrder SingleOrder { get; set; }
+        public StandingOrder StandingOrder { get; set; }
+        public RecurringOrder RecurringOrder { get; set; }
 
-        public string SerialNumberString { get { return SerialNumberPefix+SerialNumber; } }
     }
 }

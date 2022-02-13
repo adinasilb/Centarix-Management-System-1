@@ -5,20 +5,10 @@
 @using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> UserManager
 @{ 
-    string sectionClass = "";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 
-    if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
 
-    {
-        sectionClass = "supplier-form";
-    }
-    else
-    {
-        sectionClass = "accounting-form";
-    }
-
-    <div class="col-12  mx-auto on-form-modal @sectionClass add-item-box scroll-page" @*style="width: 60%"*@>
+    <div class="col-12  mx-auto on-form-modal add-item-box scroll-page" @*style="width: 60%"*@>
         <div class="on-form-modal-border" id="addVendorModal">
             <form action="" id="myForm" class="createVendorForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 @{ await Html.RenderPartialAsync("~/Views/Vendors/_VendorTabs.cshtml", Model);}

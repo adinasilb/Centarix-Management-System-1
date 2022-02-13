@@ -4,7 +4,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading.Tasks;
+using CsvHelper;
+using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
@@ -23,10 +27,22 @@ namespace PrototypeWithAuth.Controllers
 {
     public class BiomarkersController : SharedController
     {
+        public static string BaseUrl = "";
+        public static string wwRoot = "";
         public BiomarkersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
               : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
+            string baseUrl = string.Format("{0}://{1}", httpContextAccessor.HttpContext.Request.Scheme, httpContextAccessor.HttpContext.Request.Host);
+                //string.Format("{0}://{1}", HttpContext.Request.Scheme, HttpContext.Request.Host);
+            InitializeWWRoot(baseUrl, _hostingEnvironment.WebRootPath);
         }
+
+        public static void InitializeWWRoot(string baseurl, string www)
+        {
+            BaseUrl = baseurl;
+            wwRoot = www;
+        }
+
 
         [HttpGet]
         [Authorize(Roles = "Biomarkers")]
@@ -525,7 +541,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.HumanTrials;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.BiomarkersExperiments;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Biomarkers;
-
+            
             var ee = await _experimentEntriesProc.ReadOneAsync(new List<Expression<Func<ExperimentEntry, bool>>> { e => e.ExperimentEntryID == ID },
                 new List<ComplexIncludes<ExperimentEntry, ModelBase>>
                 {
@@ -543,11 +559,13 @@ namespace PrototypeWithAuth.Controllers
             var areFilesFilled = new List<BoolIntViewModel>();
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ExperimentEntries.ToString());
 
-            var value1 = _testValuesProc.Read(new List<Expression<Func<TestValue, bool>>> { tv => tv.ExperimentEntryID == ID }).Count();
-            var value2 = tests.SelectMany(t => t.TestOuterGroups/*.Where(tog => tog.TestID == tests.FirstOrDefault().TestID)*/.SelectMany(to => to.TestGroups.SelectMany(tg => tg.TestHeaders))).Count();
-            if (value1 < value2)
+
+            var testvaluesMade = _testValuesProc.Read(new List<Expression<Func<TestValue, bool>>> { tv => tv.ExperimentEntryID == ID }).Count();
+            var testsNeedValues = tests.SelectMany(t => t.TestOuterGroups).SelectMany(tog => tog.TestGroups).SelectMany(tg => tg.TestHeaders);
+            //tests.SelectMany(t => t.TestOuterGroups/*.Where(tog => tog.TestID == tests.FirstOrDefault().TestID)*/.SelectMany(to => to.TestGroups.SelectMany(tg => tg.TestHeaders))).Count();
+            if (testvaluesMade < testsNeedValues.Count())
             {
-                testValues = await CreateTestValuesIfNoneAsync(tests, testValues, ee.ExperimentEntryID);
+                testValues = await CreateTestValuesIfNoneAsync(testsNeedValues, testValues, ee.ExperimentEntryID);
             }
             List<BoolIntViewModel> filesPrevFilled = CheckForFiles(testValues, ee.ExperimentEntryID);
             TestViewModel testViewModel = new TestViewModel()
@@ -570,38 +588,68 @@ namespace PrototypeWithAuth.Controllers
             return View(testViewModel);
         }
 
+        public string GetOuterBiomarkersFile()
+        {
+            return Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ExperimentEntries.ToString());
+        }
+
+        public static bool FindFile(int eeID, int tvID, string uploadFolder1)
+        {
+            string uploadFolder2 = Path.Combine(uploadFolder1, eeID.ToString());
+            if (Directory.Exists(uploadFolder2))
+            {
+                string uploadFolder3 = Path.Combine(uploadFolder2, tvID.ToString());
+                if (Directory.Exists(uploadFolder3))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
+                    //searching for the partial file name in the directory
+                    FileInfo[] docfilesfound = DirectoryToSearch.GetFiles("*.*");
+                    if (docfilesfound.Length > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         private List<BoolIntViewModel> CheckForFiles(List<TestValue> testValues, int eeID)
         {
             bool hasFile = false;
             List<BoolIntViewModel> FilesWithDocsSaved = new List<BoolIntViewModel>();
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ExperimentEntries.ToString());
+            string uploadFolder1 = GetOuterBiomarkersFile();
             foreach (var tv in testValues.Where(tv => tv.TestHeader.Type == AppUtility.DataTypeEnum.File.ToString()))
             {
-                string uploadFolder2 = Path.Combine(uploadFolder1, eeID.ToString());
-                if (Directory.Exists(uploadFolder2))
+                var findFile = FindFile(eeID, tv.TestValueID, uploadFolder1);
+                if (findFile)
                 {
-                    string uploadFolder3 = Path.Combine(uploadFolder2, tv.TestValueID.ToString());
-                    if (Directory.Exists(uploadFolder3))
+                    FilesWithDocsSaved.Add(new BoolIntViewModel()
                     {
-                        DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
-                        //searching for the partial file name in the directory
-                        FileInfo[] docfilesfound = DirectoryToSearch.GetFiles("*.*");
-                        if (docfilesfound.Length > 0)
-                        {
-                            FilesWithDocsSaved.Add(new BoolIntViewModel()
-                            {
-                                Bool = true,
-                                Int = tv.TestHeaderID
-                            });
-                        }
-                    }
+                        Bool = findFile,
+                        Int = tv.TestHeaderID
+                    });
                 }
             }
             return FilesWithDocsSaved;
         }
-        private async Task<List<TestValue>> CreateTestValuesIfNoneAsync(List<Test> tests, List<TestValue> testValues, int ExperimentEntryID)
+        private async Task<List<TestValue>> CreateTestValuesIfNoneAsync(IEnumerable<TestHeader> tests, List<TestValue> testValues, int ExperimentEntryID)
         {
+            foreach (var testheader in tests)
+            {
+                if (!testValues.Where(tv => tv.TestHeaderID == testheader.TestHeaderID).Any())
+                {
+                    TestValue tv = new TestValue()
+                    {
+                        TestHeaderID = testheader.TestHeaderID,
+                        TestHeader = testheader,
+                        ExperimentEntryID = ExperimentEntryID
+                    };
+                    _context.Update(tv);
 
+                    testValues.Add(tv);
+                }
+            }
+            await _context.SaveChangesAsync();
             return testValues;
         }
 
@@ -621,7 +669,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<ActionResult> SaveTests(TestViewModel testViewModel, TestValuesViewModel testValuesViewModel, List<FieldViewModel> fieldViewModels)
         {
 
-            await _testValuesProc.SaveAsync(testViewModel);
+            var save = _testValuesProc.SaveAsync(ref testViewModel);
             SaveFiles(testViewModel.Guid, testViewModel.ExperimentEntry.ExperimentEntryID);
 
             return RedirectToAction("_TestValues", new { TestID = testViewModel.FieldViewModels.FirstOrDefault().TestID, ListNumber = 0, SiteID = testViewModel.ExperimentEntry.SiteID, ExperimentID = testViewModel.ExperimentID, ExperimentEntryID = testViewModel.ExperimentEntry.ExperimentEntryID });
@@ -726,7 +774,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }).ToList();
             var testValues = GetTestValuesFromTestIDAndExperimentEntryID(TestID, ExperimentEntryID);
-            List<BoolIntViewModel> filesPrevFilled = CheckForFiles(testValues, ExperimentEntryID);
+            List<BoolIntViewModel> filesPrevFilled =  CheckForFiles(testValues, ExperimentEntryID);
             TestValuesViewModel testValuesViewModel = new TestValuesViewModel()
             {
                 ListNumber = ListNumber,
@@ -785,6 +833,74 @@ namespace PrototypeWithAuth.Controllers
         public string UploadFile(DocumentsModalViewModel documentsModalViewModel)
         {
             return base.UploadFile(documentsModalViewModel);
+        }
+        
+        public static string GetBiomarkerFileName(int eeId, int tvId)
+        {
+            //_hostingEnvironment.WebRootPath
+            var accessor = new HttpContextAccessor();
+            //var wrp = accessor.HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>();
+            string uploadFolderA = Path.Combine(wwRoot, AppUtility.ParentFolderName.ExperimentEntries.ToString());
+            var MiddleFolderNameA = eeId.ToString();
+            string uploadFolderB = Path.Combine(uploadFolderA, MiddleFolderNameA);
+            var FolderNameB = tvId.ToString();
+            string uploadFolderC = Path.Combine(uploadFolderB, FolderNameB);
+
+            if (Directory.Exists(uploadFolderC))
+            {
+                var file = System.IO.Directory.GetFiles(uploadFolderC)[0];
+                return BaseUrl + "/" + AppUtility.GetLastFiles(file, 4);
+                //documentsModalViewModel = SaveDocuments(uploadFolderC, documentsModalViewModel);
+            }
+            return "Can't Find File";
+        }
+
+        public IActionResult DownloadExcel()
+        {
+            const string NullValue = "Null";
+            var results = _testValuesProc.Read().Select(tv => new
+            {
+                UniqueID = tv.TestValueID,
+                ExperimentName = tv.ExperimentEntry.Participant.Experiment.Description,
+                Code = tv.ExperimentEntry.Participant.Experiment.ExperimentCode,
+                NumberOfParticipants = tv.ExperimentEntry.Participant.Experiment.NumberOfParticipants,
+                AmountOfVisits = tv.ExperimentEntry.Participant.Experiment.AmountOfVisits,
+                MinimumAge = tv.ExperimentEntry.Participant.Experiment.MinimumAge,
+                MaximumAge = tv.ExperimentEntry.Participant.Experiment.MaximumAge,
+                StartDate = tv.ExperimentEntry.Participant.Experiment.StartDateTime,
+                EndDate = tv.ExperimentEntry.Participant.Experiment.EndDateTime,
+                ParticipantID = tv.ExperimentEntry.Participant.CentarixID,
+                Gender = tv.ExperimentEntry.Participant.Gender.Description,
+                DOB = tv.ExperimentEntry.Participant.DOB,
+                Status = tv.ExperimentEntry.Participant.ParticipantStatus.Description,
+                EntryNumber = tv.ExperimentEntry.ExperimentEntryID,
+                CreatedBy = tv.ExperimentEntry.ApplicationUser.FirstName,
+                EntryDate = tv.ExperimentEntry.DateCreated,
+                Site = tv.ExperimentEntry.Site.Name,
+                VisitNumber = tv.ExperimentEntry.VisitNumber,
+                Test = tv.TestHeader.TestGroup.TestOuterGroup.Test.Name,
+                Title1 = tv.TestHeader.TestGroup.TestOuterGroup.Name,
+                Title2 = tv.TestHeader.TestGroup.Name,
+                FieldName = tv.TestHeader.Name,
+                Value = tv.TestHeader.Type == AppUtility.DataTypeEnum.File.ToString() ? 
+                (FindFile(tv.ExperimentEntryID, tv.TestValueID, GetOuterBiomarkersFile()) == true ? 
+                GetBiomarkerFileName(tv.ExperimentEntryID, tv.TestValueID)
+                : NullValue) 
+                : (tv.Value ?? NullValue)
+            });
+
+            var cc = new CsvConfiguration(new System.Globalization.CultureInfo("en-US"));
+            using (var ms = new MemoryStream())
+            {
+                using (var sw = new StreamWriter(stream: ms, encoding: new UTF8Encoding(true)))
+                {
+                    using (var cw = new CsvWriter(sw, cc))
+                    {
+                        cw.WriteRecords(results);
+                    }// The stream gets flushed here.
+                    return File(ms.ToArray(), "text/csv", $"BiomarkersTests_{DateTime.UtcNow.Ticks}.csv");
+                }
+            }
         }
 
     }

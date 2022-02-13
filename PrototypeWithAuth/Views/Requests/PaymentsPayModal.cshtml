@@ -11,7 +11,7 @@
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('payments-invoice')">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" class="modal-padding payModalForm accounting-form" id="myForm">
+            <form action="" method="post" enctype="multipart/form-data" class="modal-padding payModalForm " id="myForm">
                 @if (Model.Error.Bool == true)
                 {
                     <span class="text-danger-centarix">@Model.Error.String</span>
@@ -245,7 +245,7 @@
                             <div class="row">
                                 <div class="modal-footer-mt mx-auto">
                                     @*<button class="btn inv-payments-button float-right">Paid</button>*@
-                                    <input type="submit" class="  custom-button custom-button-font accounting-background-color between-button-margin" id="payPayment" asp-action="PaymentsPayModal" value="Paid" />
+                                    <input type="submit" class="  custom-button custom-button-font section-bg-color between-button-margin" id="payPayment" asp-action="PaymentsPayModal" value="Paid" />
                                     <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('payments-pay')">Cancel</button>
                                 </div>
                             </div>

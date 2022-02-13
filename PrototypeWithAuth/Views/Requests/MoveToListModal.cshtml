@@ -1,7 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.MoveListViewModel;
 
 <div class="modal modal-view moveListItemModal on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9100">
-    <div class="modal-dialog-centered elixir-modal-xs mx-auto order-inv-form" role="document">
+    <div class="modal-dialog-centered elixir-modal-xs mx-auto " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('move-list');">
                 <span aria-hidden="true">&times;</span>
@@ -57,14 +57,14 @@
                         <div class="row">
                             <div class="col text-center">
                                 @{
-                                    var newListFilter = "order-inv-filter";
+                                    var newListFilter = "section-filter";
                                     if (Model.RequestLists.Count == 5 || (Model.PreviousListID != 0 && Model.RequestLists.Count == 4))
                                     {
                                         newListFilter = "disabled disabled-filter";
                                     }
                                 }
                                 <a class="btn-link text no-hover requests add-new-list fill-list text-center @newListFilter">
-                                    <i class="icon-add_circle_outline-24px1 " style="font-size: 24px;"></i>
+                                    <i class="icon-add_circle_outline-24px-1 " style="font-size: 24px;"></i>
                                     <label class="new-button-text">New List</label>
                                 </a>
                             </div>
@@ -72,7 +72,7 @@
                     </div>
                     @*<div class="modal-footer border-0 p-0">
             <div class="mx-auto">
-                <button type="submit" class="custom-button custom-button-font mr-3 moveListItem order-inv-background-color">Move</button>
+                <button type="submit" class="custom-button custom-button-font mr-3 moveListItem section-bg-color">Move</button>
                 <button type="button" class="custom-button custom-cancel close-move-modal" onclick="$.fn.CloseModal('move-list');">Cancel</button>
             </div>
         </div>*@

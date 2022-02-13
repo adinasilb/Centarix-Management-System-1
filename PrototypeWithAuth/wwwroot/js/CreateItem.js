@@ -298,18 +298,33 @@
         $("#url-click").click();
     });
 
-    $('.ordersItemForm').on('click', "#alreadyPaid", function (e) {
-        console.log("pay")
-        if ($("#alreadyPaid:checkbox").is(":checked")) {
-            $(".paid-info").addClass("d-none")
-            $("#alreadyPaid:checkbox").prop("checked", false)
-        }
-        else {
-            $(".paid-info").removeClass("d-none")
-            $("#alreadyPaid:checkbox").prop("checked", true)
-        }
 
-    });
+    //$('.ordersItemForm').on('click', "#alreadyPaid", function (e) {
+    //    console.log("pay")
+    //    if ($("#alreadyPaid:checkbox").is(":checked")) {
+    //        $(".paid-info").addClass("d-none")
+    //        $("#alreadyPaid:checkbox").prop("checked", false)
+    //        $("#Paid").val(false)
+    //    }
+    //    else {
+    //        $(".paid-info").removeClass("d-none")
+    //        $("#alreadyPaid:checkbox").prop("checked", true)
+    //        $("#Paid").val(true)
+    //    }
+
+    //});
+    //$('.ordersItemForm').on('click', "#standingOrder", function (e) {
+    //    console.log("standing order")
+    //    if ($("#standingOrder:checkbox").is(":checked")) {
+    //        $("#standingOrder:checkbox").prop("checked", false)
+    //        $("#OrderType").val("StandingOrder")
+    //    }
+    //    else {
+    //        $("#standingOrder:checkbox").prop("checked", true)
+    //        $("#OrderType").val("StandingOrder")
+    //    }
+
+    //});
 
     
 })

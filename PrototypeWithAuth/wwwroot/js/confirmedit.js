@@ -29,6 +29,8 @@ $(function () {
             $("#loading").show();
             console.log("has class orders");
             url = "/Requests/EditModalView";
+            var selectedTab = $('.nav-tabs .active').parent().index() + 1;
+            formData.set("Tab", selectedTab)
         }
         else if ($('.turn-edit-on-off').hasClass('locations')) {
             //console.log("has class locations");
@@ -59,7 +61,7 @@ $(function () {
             alert("didn't go into any edits");
         }
         console.log("url: " + url);
-        //console.log(...formData)
+        console.log(...formData)
         $.ajax({
             processData: false,
             contentType: false,
@@ -73,6 +75,12 @@ $(function () {
                 if ($('.turn-edit-on-off').hasClass('operations') || $('.turn-edit-on-off').hasClass('orders')) {
                     $(".editModal").html(data);
                     //$.fn.OnOpenModalView();
+                    var selectTabSelector = $('.nav-tabs li:nth-child(' + selectedTab + ") a")
+                    selectTabSelector.addClass(" active ");
+                    $(".tab-pane").removeClass("show")
+                    $(".tab-pane").removeClass("active")
+                    var href = selectTabSelector.attr("href")
+                    $(href).addClass("show active");
                     $.fn.LoadEditModalDetails();
                     $("[data-toggle='tooltip']").tooltip();
                 }
@@ -306,7 +314,7 @@ $(function () {
     $(".cancel-request-edits").off("click").on("click", function (e) {
         $.fn.CloseModal("confirm-edit");
         console.log("cancel request edits");
-        $('.mark-readonly').attr("disabled", false);
+        $('.mark-readonly:not(.mark-roles-readonly)').attr("disabled", false);
         $('.mark-edditable').data("val", true);
         $('.edit-mode-switch-description').text("Edit Mode On");
         $('.turn-edit-on-off').attr('name', 'edit')
@@ -322,8 +330,8 @@ $(function () {
             $.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
             $.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
             $.fn.EnableMaterialSelect('#unitTypeID', 'select-options-unitTypeID');
-            $.fn.CheckUnitsFilled();
-            $.fn.CheckSubUnitsFilled();
+            $.fn.CheckUnitsFilled("add-or-edit-item");
+            $.fn.CheckSubUnitsFilled("add-or-edit-item");
         }
         if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
             $.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');

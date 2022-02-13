@@ -22,7 +22,7 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<Vendor> Vendors { get; set; }
         public int? VendorID { get; set; }
         public string ItemName { get; set; }
-        public string ProductHebrewName { get; set; }
+        public string ProductSecondaryName { get; set; }
         [Display(Name = "Invoice Number")]
         public string InvoiceNumber { get; set; }
         [Display(Name = "Invoice Date")]

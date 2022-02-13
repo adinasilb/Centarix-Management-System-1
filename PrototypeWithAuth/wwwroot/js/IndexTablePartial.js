@@ -32,6 +32,13 @@ $(function () {
                 }
             })
         });
+        $(".popover .change-payment-status").click(function (e) {
+            e.preventDefault();
+            //switch this to universal share request and the modelsenum send in
+            var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?newStatus=" + $(this).attr("data-route-new-status") + "&requestID=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString();
+            $.fn.ajaxPartialIndexTable($(".request-status-id").val(), url, "._IndexTableByVendor", "GET");
+            
+        });
         $(".icon-more-popover").off("click").on("click", ".remove-share", function (e) {
             var ControllersEnum = "";
             var shareNum = "";

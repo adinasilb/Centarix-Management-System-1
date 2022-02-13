@@ -19,7 +19,7 @@
 
 }
 <script src="~/js/AddResource.js"></script>
-<div class="modal modal-view fader on-form-modal add-resource-modal protocol-form" id="myModal" data-backdrop="false">
+<div class="modal modal-view fader on-form-modal add-resource-modal " id="myModal" data-backdrop="false">
     <div class=" modal-dialog-centered mx-auto" style="width:54.625rem;">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
 
@@ -70,7 +70,7 @@
                             <label asp-for="Resource.PubMedID" class="modal-control-label"></label>
                             <div class="input-group">
                                 <input asp-for="Resource.PubMedID" class="form-control-plaintext border-bottom" />
-                                <i class="icon-add_circle-24px protocols-filter get-pubmedinfo" style="font-size: 2.688rem;"></i>
+                                <i class="icon-add_circle-24px section-filter get-pubmedinfo" style="font-size: 2.688rem;"></i>
                             </div>
                             <span asp-validation-for="Resource.PubMedID" class="text-danger-centarix"></span>
                         </div>
@@ -129,7 +129,7 @@
                     <div class="col-4 form-element-border-right">
                         @*<label asp-for="ResourceImage" class="control-label"></label>*@
                         <input type="file" asp-for="ResourceImage" class="form-control-file hidden ta pt-1">
-                        <input type="button" class="AddFile full-file-btn custom-button custom-button-small-font protocols-background-color" value="Select File" />
+                        <input type="button" class="AddFile full-file-btn custom-button custom-button-small-font section-bg-color" value="Select File" />
                         <input class="control-label text-center disabled border-0 w-100" style="font-size:.75rem;" id="file-name" />
                         <span asp-validation-for="ResourceImage" class="text-danger"></span>
                     </div>
@@ -146,7 +146,7 @@
                 </div>
                 <div class="row">
                     <div class="modal-footer-mt mx-auto">
-                        <input type="submit" class="custom-button custom-cancel protocols-filter activeSubmit addResourceSubmit" @*asp-action="AddResource"*@ />
+                        <input type="submit" class="custom-button custom-cancel section-filter activeSubmit addResourceSubmit" @*asp-action="AddResource"*@ />
                         <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('add-resources')">Cancel</button>
                     </div>
                 </div>

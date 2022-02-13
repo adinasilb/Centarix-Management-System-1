@@ -11,11 +11,14 @@
 <script src="~/js/WarantySupplyDateCalc.js"></script>
 <script src="~/js/editquotemodal.js"></script>
 @*<script src="~/js/SubUnit.js"></script>*@
+@{
+    var productOrderType = Model.Requests.FirstOrDefault().Product.GetType().ToString();
+}
 <div class="modal modal-view fader on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog-centered  mx-auto elixir-modal-xl " role="document">
 
-        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow supplier-form ">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow  ">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('edit-quote');">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -67,7 +70,7 @@
                                 </div>
 
 
-                                <input type="hidden" asp-for="@Model.Requests[0].Product.ProductSubcategoryID" />
+                                <input type="hidden" asp-for="Requests[0].Product.ProductSubcategoryID" name="Requests[0].@(productOrderType).ProductSubcategoryID" />
                                 <input type="hidden" asp-for="@Model.ParentQuote.ParentQuoteID" />
                                 <div class="col-3 ">
                                     <div class="form-group d-inline-flex">
@@ -245,12 +248,12 @@
                                         </tr>
                                     }
                                     <tr class="border-0  no-hover ">
-                                        <td colspan="5" class="p-0">
+                                        <td colspan="4" class="p-0">
                                             <input type="file" asp-for="@Model.QuoteFileUpload" class="  form-control-file-lab pt-1  modal-footer-mt">
                                         </td>
-                                        <td colspan="2" class="p-0 ">
+                                        <td colspan="3" class="p-0 ">
                                             <div class="form-group text-center modal-footer-mt">
-                                                <input type="submit"  value="Save" class="custom-button between-button-margin custom-button-font lab-man-background-color save-quote-details" />
+                                                <input type="submit" @*asp-action="EditQuoteDetails" name="OrderType"*@ value="Save" class="custom-button between-button-margin custom-button-font section-bg-color save-quote-details" />
                                                 <button type="button" class="custom-cancel custom-button px-5" @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('edit-quote');">Cancel</button>
                                             </div>
                                         </td>

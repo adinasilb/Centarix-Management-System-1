@@ -15,7 +15,7 @@ namespace PrototypeWithAuth.Data.SeededData
             {
                 FunctionTypeID = 1,
                 FunctionDescription = "Add Image",
-                Icon = "icon-account_box-24px1",
+                Icon = "icon-account_box-24px-1",
                 IconActionClass = "add-image-to-line",
                 DescriptionEnum = "AddImage"
             });
@@ -55,7 +55,7 @@ namespace PrototypeWithAuth.Data.SeededData
             {
                 FunctionTypeID = 6,
                 FunctionDescription = "Add Table",
-                Icon = "icon-table_chart-24px1",
+                Icon = "icon-table_chart-24px-1",
                 IconActionClass = "add-table-to-line",
                 DescriptionEnum = "AddTable"
             });

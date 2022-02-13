@@ -13,7 +13,8 @@ namespace PrototypeWithAuth.Models
         public int TimePeriodID { get; set; }
         public TimePeriod TimePeriod { get; set; }
         public int TimePeriodAmount { get; set; }
-        public int Occurances { get; set; }
-        public bool HasEnd { get; set; }
+        public int Occurrences { get; set; }
+        public int RecurrenceEndStatusID { get; set; }
+        public RecurrenceEndStatus RecurrenceEndStatus { get; set; }
     }
 }

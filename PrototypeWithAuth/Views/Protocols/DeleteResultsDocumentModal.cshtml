@@ -9,7 +9,7 @@
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('add-function');">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form deleteFunctionForm addFunctionForm">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding  deleteFunctionForm addFunctionForm">
                 <input type="hidden" asp-for="ResultID" />
                 <input type="hidden" asp-for="FunctionResult.FunctionTypeID" />
                 <input type="hidden" asp-for="FunctionResult.ID" class="function-resultID" />
@@ -74,7 +74,7 @@
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
-                        <input type="button" class="custom-button custom-button-font protocols-background-color between-button-margin removeFunction deleteDoc" value="Remove" />
+                        <input type="button" class="custom-button custom-button-font section-bg-color between-button-margin removeFunction deleteDoc" value="Remove" />
                         <button type="button" class="custom-button custom-cancel " data-dismiss="modal" onclick="$.fn.CloseModal('add-function');">Cancel</button>
                     </div>
                 </div>

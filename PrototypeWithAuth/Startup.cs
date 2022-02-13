@@ -29,6 +29,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using JavaScriptEngineSwitcher.V8;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using React.AspNet;
+using Newtonsoft.Json.Converters;
 
 namespace PrototypeWithAuth
 {
@@ -77,7 +78,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("OperationsRedo"), sqlServerOptions => sqlServerOptions.CommandTimeout(120));
+                    Configuration.GetConnectionString("ProductsOrderTypeRedo"), sqlServerOptions => sqlServerOptions.CommandTimeout(120));
                     options.EnableSensitiveDataLogging(true);   
             });
 
@@ -174,10 +175,10 @@ namespace PrototypeWithAuth
                 config.SetLoadBabel(true)
                   .SetLoadReact(false)
                   .SetReactAppBuildPath("~/dist");
-                 
+                config.JsonSerializerSettings = new JsonSerializerSettings { Converters= new List<JsonConverter> { new StringEnumConverter() } };
             });
 
-     
+
             app.UseRouting();
 
             app.UseAuthentication();
@@ -234,15 +235,16 @@ namespace PrototypeWithAuth
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            string[] roleNames1 = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
-            string[] roleNames2 = AppUtility.RequestRoleEnums().Select(x => x.StringDefinition).ToArray();
-            string[] roleNames3 = AppUtility.OperationRoleEnums().Select(x => x.StringDefinition).ToArray();
-            string[] roleNames4 = AppUtility.ProtocolRoleEnums().Select(x => x.StringDefinition).ToArray();
-            string[] roleNames = new string[roleNames1.Length + roleNames2.Length + roleNames3.Length + roleNames4.Length];
-            roleNames1.CopyTo(roleNames, 0);
-            roleNames2.CopyTo(roleNames, roleNames1.Length);
-            roleNames3.CopyTo(roleNames, roleNames1.Length + roleNames2.Length);
-            roleNames4.CopyTo(roleNames, roleNames1.Length + roleNames2.Length + roleNames3.Length);
+            List<string> roleNames = AppUtility.RequestRoleEnums().Select(x => x.RoleDefinition).ToList();
+            roleNames.Concat(AppUtility.OperationRoleEnums().Select(x => x.RoleDefinition).ToList());
+            roleNames.Concat(AppUtility.ProtocolRoleEnums().Select(x => x.RoleDefinition).ToList());
+            roleNames.Concat(AppUtility.BiomarkerRoleEnums().Select(x => x.RoleDefinition).ToList());
+            roleNames.Concat(AppUtility.TimekeeperRoleEnums().Select(x => x.RoleDefinition).ToList());
+            roleNames.Concat(AppUtility.LabManagementRoleEnums().Select(x => x.RoleDefinition).ToList());
+            roleNames.Concat(AppUtility.AccountingRoleEnums().Select(x => x.RoleDefinition).ToList());
+            roleNames.Concat(AppUtility.ReportsRoleEnums().Select(x => x.RoleDefinition).ToList());
+            roleNames.Concat(AppUtility.IncomeRoleEnums().Select(x => x.RoleDefinition).ToList());
+            roleNames.Concat(AppUtility.UsersRoleEnums().Select(x => x.RoleDefinition).ToList());
 
             IdentityResult roleResult;
             //var roleCheck = await RoleManager.RoleExistsAsync("Admin");
@@ -284,7 +286,7 @@ namespace PrototypeWithAuth
 
             //await UserManager.AddToRoleAsync(poweruser, "Admin");
 
-            
+
 
             //var poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
             ////{

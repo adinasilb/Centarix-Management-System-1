@@ -168,7 +168,8 @@ namespace PrototypeWithAuth.Controllers
             var unpaidLeaveTaken = Convert.ToInt32(_employeeHoursProc.ReadOffDaysByYear(year, 5, user.Id).Count());
             if (year == user.StartedWorking.Year)
             {
-                int month = year == DateTime.Now.Year ? (DateTime.Now.Month - user.StartedWorking.Month + 1) : (12 - user.StartedWorking.Month + 1);
+                int month = year == DateTime.Now.Year ? (DateTime.Now.Month - user.StartedWorking.Month + 1) 
+                    : (12 - user.StartedWorking.Month + 1);
                 vacationDays = user.VacationDaysPerMonth * month;
                 sickDays = user.SickDaysPerMonth * month;
             }

@@ -26,7 +26,7 @@ namespace PrototypeWithAuth.ViewModels
         private List<Payment> payments;
         private Request partialRequest;
         public bool viewOnly;
-        private string currentCurrency ="currencyEnum";
+        private string currentCurrency = "currencyEnum";
 
         public RequestIndexPartialRowViewModel() { }
         public RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes indexTableTypes, Request request, OrderMethod orderMethod, Employee requestUser, Product product, Vendor vendor, ProductSubcategory productSubcategory,
@@ -107,7 +107,7 @@ namespace PrototypeWithAuth.ViewModels
             r.Product.UnitType = unitType;
             r.Product.SubUnitType = subUnitType;
             r.Product.SubSubUnitType = subSubUnitType;
-            if(vendor != null) //for samples
+            if (vendor != null) //for samples
             {
                 vendor.Products = null;
                 Vendor = vendor;
@@ -128,7 +128,7 @@ namespace PrototypeWithAuth.ViewModels
             this.user = user;
             this.favoriteRequest = favoriteRequest;
             this.shareRequest = shareRequest;
-            if(shareRequest != null)
+            if (shareRequest != null)
             {
                 this.shareRequest.FromApplicationUser = shareRequestFromUser;
             }
@@ -188,7 +188,10 @@ namespace PrototypeWithAuth.ViewModels
                 case AppUtility.IndexTableTypes.RequestLists:
                     Columns = GetRequestListColumns().ToList();
                     break;
+
             }
+            //nullify r for json purposes because it is not needed anymore
+            r=null;
 
         }
 
@@ -281,6 +284,12 @@ namespace PrototypeWithAuth.ViewModels
                         }
                     }
                 }
+                //var deleteIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink?.Contains("load-confirm-delete") ?? false);
+                //if (request.RequestStatusID != 3 && deleteIconIndex != -1)
+                //{
+                //    newIconList.RemoveAt(deleteIconIndex);
+                //    newIconList.Insert(deleteIconIndex, placeholder);
+                //}
                 if (viewOnly)
                 {
                     var popoverMoveList = newIconList.ElementAt(morePopoverIndex).IconPopovers.FindIndex(ni => ni.Description == AppUtility.PopoverDescription.MoveToList);
@@ -328,7 +337,7 @@ namespace PrototypeWithAuth.ViewModels
                 {
                     newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName;
                 }
-                else if(r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationTypeID == 500)
+                else if (r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationTypeID == 500)
                 {
                     newLIName = r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName;
                 }
@@ -513,7 +522,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, ValueWithError = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 9, ValueWithError = GetApplicationUserName() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, ValueWithError = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 10, ValueWithError = new List<StringWithBool>() { AppUtility.GetDateOrderedString(r.ParentRequest)  } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 10, ValueWithError = new List<StringWithBool>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
@@ -531,7 +540,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, ValueWithError = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, ValueWithError = GetVendorName(), ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, ValueWithError = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 12, ValueWithError = new List<StringWithBool>() { AppUtility.GetDateOrderedString(r.ParentRequest)  } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 12, ValueWithError = new List<StringWithBool>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetSummaryProprietaryColumns()
         {
@@ -587,7 +596,13 @@ namespace PrototypeWithAuth.ViewModels
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetCartColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = checkboxString, Bool = false } }, AjaxID = r.RequestID, AjaxLink=currentCurrency+r.Currency+" "
+            yield return new RequestIndexPartialColumnViewModel()
+            {
+                Title = "",
+                Width = 5,
+                ValueWithError = new List<StringWithBool>() { new StringWithBool { String = checkboxString, Bool = false } },
+                AjaxID = r.RequestID,
+                AjaxLink = currentCurrency + r.Currency + " "
             };
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = GetImageURL() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, ValueWithError = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
@@ -606,7 +621,7 @@ namespace PrototypeWithAuth.ViewModels
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetAccountingNotificationsColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = checkboxString, Bool = false } }, AjaxID = r.RequestID, AjaxLink=currentCurrency+r.Currency+" " };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = checkboxString, Bool = false } }, AjaxID = r.RequestID, AjaxLink = currentCurrency + r.Currency + " " };
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = GetImageURL() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, ValueWithError = GetProductName(), AjaxLink = "load-product-details-summary", AjaxID = r.RequestID, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, ValueWithError = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
@@ -619,7 +634,7 @@ namespace PrototypeWithAuth.ViewModels
                 Width = 10,
                 Icons = iconList,
                 AjaxID = r.RequestID,
-                Note = AppUtility.GetNote(requestIndexObject.SidebarType, r )
+                Note = AppUtility.GetNote(requestIndexObject.SidebarType, r)
             };
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetAccountingPaymentsDefaultColumns()
@@ -703,7 +718,7 @@ namespace PrototypeWithAuth.ViewModels
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetLabOrdersColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = checkboxString } }, AjaxID = r.RequestID, AjaxLink=currentCurrency+r.Currency+" " };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = checkboxString } }, AjaxID = r.RequestID, AjaxLink = currentCurrency + r.Currency + " " };
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 7, Image = GetImageURL() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, ValueWithError = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
             //yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, Value = GetVendorName(), ShowTooltip = true };

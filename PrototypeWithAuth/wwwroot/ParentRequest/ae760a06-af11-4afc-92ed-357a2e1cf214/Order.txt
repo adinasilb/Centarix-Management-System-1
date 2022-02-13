@@ -59,7 +59,7 @@
         display: none;">
         <img src="/images/css/Loading/centarix_loading3.gif" />
     </div>
-    <script src="/js/site.js?v=RZof9DSxZkin0Gaq7guIvvDByCrO0DwlMMUcovq-GEE"></script>
+    <script src="/js/site.js?v=8ObtNl1LURZ99toRHetOsaVqsevCEcQQRv78vlrZAH8"></script>
     <div class="request_nav_body"> 
     <!--<head>-->
         <!-- Required meta tags -->
@@ -93,20 +93,20 @@
     </header>
     <div class="row">
         <div class="col-6">
-                <span style="font-weight: 700; font-size:2rem;">Purchase Order: 157</span>
+                <span style="font-weight: 700; font-size:2rem;">Purchase Order: 178</span>
         </div>
         <div class="col-3 offset-3 text-center">
-            <span style="font-weight:500" id="date">2 Jan 2022</span>
+            <span style="font-weight:500" id="date">5 Jan 2022</span>
         </div>
     </div>
     <hr>
     <div class="row">
         <div class="col-4">
             <div class="vendor-info">
-                <span class="heading-1">Imports</span><br>
-                <span>ID: 523689</span><br>
-                <span>Tel Aviv</span><br>
-                <span>Tel: 2562653569</span>
+                <span class="heading-1">Test country</span><br>
+                <span>ID: 1234</span><br>
+                <span>London</span><br>
+                <span>Tel: 987654321</span>
             </div>
         </div>
         <div class="col-6 offset-2">
@@ -133,21 +133,13 @@
             </thead>
             <tbody>
 
-<input data-val="true" data-val-required="The RequestID field is required." id="Requests_0__RequestID" name="Requests[0].RequestID" type="hidden" value="2324" />                        <tr>
-                            <td style="font-weight: 500;">Mouse</td>
-                            <td>6523</td>
-                                <td>12</td>
-                                <td class="">$ 0.32</td>
+<input data-val="true" data-val-required="The RequestID field is required." id="Requests_0__RequestID" name="Requests[0].RequestID" type="hidden" value="2370" />                        <tr>
+                            <td style="font-weight: 500;">test order doc</td>
+                            <td>879</td>
+                                <td>1</td>
+                                <td class="">&#x20AA; 139.95</td>
                             <td class="">0%</td>
-                            <td class="">$ 3.80</td>
-                        </tr>
-<input data-val="true" data-val-required="The RequestID field is required." id="Requests_1__RequestID" name="Requests[1].RequestID" type="hidden" value="2480" />                        <tr>
-                            <td style="font-weight: 500;">MousePad</td>
-                            <td>234324</td>
-                                <td>15</td>
-                                <td class="">$ 15.00</td>
-                            <td class="">0%</td>
-                            <td class="">$ 225.00</td>
+                            <td class="">&#x20AA; 139.95</td>
                         </tr>
 
 
@@ -158,16 +150,16 @@
                 </tr>
                 <tr class="">
                     <td>Total</td>
-                    <td>$ 228.80</td>
+                    <td>&#x20AA; 139.95</td>
                 </tr>
                 <tr class="">
                     <td>VAT [17%]</td>
-                    <td>$ 38.90</td>
+                    <td>&#x20AA; 23.79</td>
                 </tr>
                 <tr class="">
                     <td class="font-weight-bold">Total To Pay</td>
 
-                    <td class="font-weight-bold">$ 267.69</td>
+                    <td class="font-weight-bold">&#x20AA; 163.74</td>
                 </tr>
             </tbody>
         </table>
@@ -183,6 +175,15 @@
     <br />
     <br />
     <br />
+<div class="m-4" style="width:25%;">
+            <span class="heading-1">
+                Payment Terms:
+            </span><br />
+            <span class="text">
+                
+                &#x2B; 30
+            </span><br />
+        </div>
 </div>
         </div>
 </div>
@@ -639,7 +640,7 @@
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
             $('.open-archive-modal').removeClass('disabled-background-color');
-            $('.open-archive-modal').addClass('order-inv-background-color');
+            $('.open-archive-modal').addClass('section-bg-color');
         }
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
@@ -776,7 +777,7 @@
             $("." + modalClass + ' .open-document-modal').attr("data-val", false);
             $("." + modalClass + ' .location-icon').addClass('d-none');
             $("." + modalClass + ' .open-archive-modal').addClass('disabled-background-color');
-            $("." + modalClass + ' .open-archive-modal').removeClass('order-inv-background-color');
+            $("." + modalClass + ' .open-archive-modal').removeClass('section-bg-color');
 
             //console.log('locations edot mode off');
             //$("." + modalClass +".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
@@ -1034,7 +1035,7 @@
         };
 
 
-        $("table tr .order-inv-form .form-check-input").click(function () {
+        $("table tr . .form-check-input").click(function () {
             if ($(this).is(':checked')) {
                 $(this).closest("tr").addClass("clicked-border-orders-inv");
             }
@@ -1419,7 +1420,7 @@
                     //    console.log("don't allow multiples")
                     //    $(".upload-file").attr('disabled', true)
                     //    $(".upload-file").addClass('disabled-background-color')
-                    //    $(".upload-file").removeClass('protocols-background-color')
+                    //    $(".upload-file").removeClass('section-bg-color')
                     //    $(".file-select").attr('disabled', true)
                     //}
                     if ($(".addFunctionForm").length >0)
@@ -1427,7 +1428,7 @@
                         if (numCards < 1) {
                             $(".upload-file").attr('disabled', false)
                             $(".upload-file").removeClass('disabled-background-color')
-                            $(".upload-file").addClass('protocols-background-color')
+                            $(".upload-file").addClass('section-bg-color')
                             $(".file-select").attr('disabled', false)
                             $(".upload-file").removeClass("d-none");
                             $(".saveFunction").addClass("d-none");
@@ -1436,7 +1437,7 @@
                         else {
                             $(".upload-file").attr('disabled', true)
                             $(".upload-file").addClass('disabled-background-color')
-                            $(".upload-file").removeClass('protocols-background-color')
+                            $(".upload-file").removeClass('section-bg-color')
                             $(".file-select").attr('disabled', true)
                             $(".upload-file").addClass("d-none");
                             $(".saveFunction").attr('disabled', false)
@@ -1721,9 +1722,9 @@
                     $('.search-by-name-in-filter').attr('value', searchText);
                     $('.search-by-catalog-number').attr('value', catalogNumber);
                     $('body').removeClass('popover-open');
-                    $('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
+                    $('#invFilterPopover').removeClass('section-bg-color custom-button-font');
                     $('#invFilterPopover').addClass('custom-order-inv');
-                    $('#protocolFilterPopover').removeClass('protocols-background-color custom-button-font');
+                    $('#protocolFilterPopover').removeClass('section-bg-color custom-button-font');
                     $('#protocolFilterPopover').addClass('custom-protocols');
                 }
             });
