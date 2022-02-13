@@ -571,6 +571,10 @@
     <Compile Remove="Data\Migrations\20220118114501_addedCBToContext.Designer.cs" />
     <Compile Remove="Data\Migrations\20220119063031_addedCategoryJsons.cs" />
     <Compile Remove="Data\Migrations\20220119063031_addedCategoryJsons.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220130114626_addedImageUrlToCategoryBase.cs" />
+    <Compile Remove="Data\Migrations\20220130114626_addedImageUrlToCategoryBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220130115403_addedImageUrlToCategoryBase.cs" />
+    <Compile Remove="Data\Migrations\20220130115403_addedImageUrlToCategoryBase.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -591,6 +595,7 @@
     <PackageReference Include="LinqToExcel" Version="1.11.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.16.0" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
@@ -636,7 +641,6 @@
 
 
   <ItemGroup>
-    <Folder Include="wwwroot\dist\" />
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />
     <Folder Include="wwwroot\Materials\" />

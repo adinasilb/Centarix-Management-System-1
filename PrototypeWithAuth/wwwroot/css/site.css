@@ -492,8 +492,13 @@ html {
     border-top: 1px solid #e5e5e5;
 }
 
+
 .border-bottom {
     border-bottom: 1px solid #e5e5e5;
+}
+
+.thick-border-top{
+    border-top: .15rem solid #e5e5e5;
 }
 
 .box-shadow {
@@ -1107,6 +1112,13 @@ a.nav-link {
     color: var(--operations-color);
 }
 
+.lab-man-form .container-fluid ul li a.active, .oper-form .container-fluid ul li a:hover {
+    background-color: transparent;
+    border-width: 0px;
+    border-bottom: 4px solid var(--lab-man-color);
+    color: var(--lab-man-color);
+}
+
 .container-fluid ul li a.user-nav-link.active, .container-fluid ul li a.user-nav-link:hover {
     background-color: transparent;
     border-width: 0px;
@@ -1184,9 +1196,36 @@ a.nav-link {
     height: 100%;
     overflow-y: auto;
 }
+.lab-man-form .new-button {
+    margin: 0 2rem 0 0 !important;
+    font-size:1.5rem !important;
+}
+
+.lab-man-form    .new-button:hover {
+        color: var(--lab-man-color);
+        background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
+    }
+
+.lab-man-form    .new-button.active {
+        /*color: var(--lab-man-form) !important;*/
+        border-bottom: .188rem solid var(--lab-man-color);
+    }
+.order-inv-form .new-button {
+    margin: 0 4rem 0 0 !important;
+}
+
+.order-inv-form .new-button:hover {
+        color: var(--order-inv-color);
+        background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
+    }
+
+    .order-inv-form .new-button.active {
+        color: var(--order-inv-color) !important;
+        border-bottom: .188rem solid var(--order-inv-color);
+    }
+
 
 .new-button {
-    margin: 0 4rem 0 0;
     background-color: transparent;
     color: var(--black-87);
     font-size: 1.25rem;
@@ -1196,16 +1235,13 @@ a.nav-link {
     .new-button:hover {
         /*background-color: #338f84;*/
         opacity: 1;
-        color: var(--order-inv-color);
         background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
         border-radius: 3px;
         text-decoration: none;
     }
 
     .new-button.active {
-        color: var(--order-inv-color) !important;
         font-weight: var(--bold-regular);
-        border-bottom: .188rem solid var(--order-inv-color);
     }
 
 .new-button-text {
@@ -1542,34 +1578,34 @@ table.table.visualzoom tr td {
         width: 0;
     }
 /* Create a custom checkbox */
-.checkmark {
+/*.checkmark {
     position: absolute;
     top: 0;
     left: 0;
     height: 25px;
     width: 25px;
     background-color: #eee;
-}
+}*/
 /* On mouse-over, add a grey background color */
-.checktainer:hover input ~ .checkmark {
+/*.checktainer:hover input ~ .checkmark {
     background-color: #ccc;
-}
+}*/
 /* When the checkbox is checked, add a blue background */
-.checktainer input:checked ~ .checkmark {
+/*.checktainer input:checked ~ .checkmark {
     background-color: var(--order-inv-color);
-}
+}*/
 /* Create the checkmark/indicator (hidden when not checked) */
-.checkmark:after {
+/*.checkmark:after {
     content: "";
     position: absolute;
     display: none;
-}
+}*/
 /* Show the checkmark when checked */
-.checktainer input:checked ~ .checkmark:after {
+/*.checktainer input:checked ~ .checkmark:after {
     display: block;
-}
+}*/
 /* Style the checkmark/indicator */
-.checktainer .checkmark:after {
+/*.checktainer .checkmark:after {
     left: 9px;
     top: 5px;
     width: 5px;
@@ -1579,7 +1615,7 @@ table.table.visualzoom tr td {
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
-}
+}*/
 
 input[type=checkbox].css-checkbox {
     display: none;
@@ -2792,6 +2828,9 @@ a {
 }
 /*LabManagements*/
 .LabManagement .form-check-input[type="checkbox"].filled-in:checked + label:after, .LabManagement label.btn input[type="checkbox"].filled-in:checked + label:after, .labmanage .form-check-input[type="checkbox"].filled-in:checked + label:after, .labmanage label.btn input[type="checkbox"].filled-in:checked + label:after {
+.supplier-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .supplier-form label.btn input[type="checkbox"].filled-in:checked + label:after, 
+.labmanage .form-check-input[type="checkbox"].filled-in:checked + label:after, .labmanage label.btn input[type="checkbox"].filled-in:checked + label:after,
+.lab-man-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .lab-man-form label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid var(--lab-man-color);
     background-color: var(--lab-man-color);
 }
@@ -3029,6 +3068,10 @@ body.modal-open .popover {
     margin: .375rem;
 }
 
+.form-element-border-xsmall {
+    border: .1rem solid #E5E5E5;
+}
+
 .form-element-border-right {
     border-right: .2rem solid #E5E5E5;
 }
@@ -3180,6 +3223,7 @@ body.modal-open .popover {
 }
 
 /*Category Settings*/
+
 .category-field {
     overflow: hidden;
     display: -webkit-box;
@@ -3215,9 +3259,25 @@ body.modal-open .popover {
 }
 
 .category-height {
-    height: 45rem;
+    height: 53rem;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.settings.new-modal-body{
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .ch-scrollable {
-    overflow-y: auto;
+}
+
+.ch-overflow{
+
+}
+/*.settings-form select[disabled] > option{
+    color: var(--black-87) !important;
+}*/
+.settings-form input[disabled], .settings-form select[disabled] > option {
+    color: var(--black-50) !important;
 }

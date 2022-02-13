@@ -93,6 +93,7 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.ParentQuotesProc _parentQuotesProc;
         protected readonly CRUD.InvoicesProc _invoicesProc;
         protected readonly CRUD.CategoryBasesProc _categoryBasesProc;
+        protected readonly CRUD.CustomDataTypesProc _customDataTypesProc;
 
         protected readonly CRUD.TestHeadersProc _testHeadersProc;
 
@@ -165,6 +166,7 @@ namespace PrototypeWithAuth.Controllers
             _parentQuotesProc = new CRUD.ParentQuotesProc(context);
             _invoicesProc = new CRUD.InvoicesProc(context);
             _categoryBasesProc = new CRUD.CategoryBasesProc(context);
+            _customDataTypesProc = new CRUD.CustomDataTypesProc(context);
             _testHeadersProc = new CRUD.TestHeadersProc(context);
         }
 

@@ -1,8 +1,8 @@
 ﻿@model PrototypeWithAuth.ViewModels.CategoryListViewModel;
 <script src="~/js/Settings.js"></script>
-<div class="row lab-man-form category-height">
+<div class="row lab-man-form">
 
-    <div class="col-12 category-cols @Model.ColumnNumber h-100">
+    <div class="col-12 category-cols ch-scrollable @Model.ColumnNumber h-100">
         @{
             var modeltypeval = "modaltypeval" + Model.ColumnNumber;
             var categoryfield = "category-field" + Model.ColumnNumber;

@@ -11,7 +11,7 @@ export default class IndexTableColumn extends Component {
 
 
     getInsideView = (col, sideBar) => {
-        var imgDangerColor = col.Image.includes("error") ? " text-danger-                          centarix " : "";
+        var imgDangerColor = col.Image.includes("error") ? " text-danger-centarix " : "";
         if (col.Image != "") {
 
             return (<img src={col.Image} alt="Image" width="75" className={"category-image " + imgDangerColor} />)

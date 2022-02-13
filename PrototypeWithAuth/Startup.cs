@@ -175,7 +175,10 @@ namespace PrototypeWithAuth
                 config.SetLoadBabel(true)
                   .SetLoadReact(false)
                   .SetReactAppBuildPath("~/dist");
-                config.JsonSerializerSettings = new JsonSerializerSettings { Converters= new List<JsonConverter> { new StringEnumConverter() } };
+                config.JsonSerializerSettings = new JsonSerializerSettings { 
+                    Converters= new List<JsonConverter> { new StringEnumConverter() },
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                };
             });
 
 
@@ -199,7 +202,6 @@ namespace PrototypeWithAuth
             //ChangePassword(serviceProvider).Wait();
 
             CreateRoles(serviceProvider).Wait();
-            //CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer");
 
 
             //AddRoles(serviceProvider).Wait();
@@ -260,6 +262,8 @@ namespace PrototypeWithAuth
                     roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
                 }
             }
+
+            await CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer");
 
             //string[] roleNames1 = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
             //string[] roleNames2 = Enum.GetNames(typeof(AppUtility.RoleItems)).Cast<string>().Select(x => x.ToString()).ToArray();

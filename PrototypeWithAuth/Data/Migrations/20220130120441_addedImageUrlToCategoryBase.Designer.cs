@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220130120441_addedImageUrlToCategoryBase")]
+    partial class addedImageUrlToCategoryBase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1149,48 +1151,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             CurrencyID = 2,
                             CurrencyName = "NIS"
-                        });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.CustomDataType", b =>
-                {
-                    b.Property<int>("CustomDataTypeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CustomDataTypeID");
-
-                    b.ToTable("CustomDataTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            CustomDataTypeID = 1,
-                            Name = "String"
-                        },
-                        new
-                        {
-                            CustomDataTypeID = 2,
-                            Name = "Double"
-                        },
-                        new
-                        {
-                            CustomDataTypeID = 3,
-                            Name = "Bool"
-                        },
-                        new
-                        {
-                            CustomDataTypeID = 4,
-                            Name = "DateTime"
-                        },
-                        new
-                        {
-                            CustomDataTypeID = 5,
-                            Name = "File"
                         });
                 });
 

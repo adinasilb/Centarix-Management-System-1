@@ -5093,6 +5093,27 @@ namespace PrototypeWithAuth.Controllers
 
             SettingsInventory settings = new SettingsInventory()
             {
+                TopTabsList = new List<TopTabWithCounts>()
+                {
+                    new TopTabWithCounts()
+                    {
+                        Name = "Main",
+                        Page = "Main",
+                        Counts = new BoolIntViewModel()
+                        {
+                            Bool = false
+                        }
+                    },
+                    new TopTabWithCounts()
+                    {
+                        Name = "Samples",
+                        Page = "Samples",
+                        Counts = new BoolIntViewModel()
+                        {
+                            Bool = false
+                        }
+                    }
+                },
                 Categories = GetCategoryList(new ParentCategory().GetType().Name, 1)
             };
             settings.Subcategories = GetCategoryList(new ProductSubcategory().GetType().Name, 2, settings.Categories.CategoryBases.FirstOrDefault().ID);
@@ -5139,16 +5160,27 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(GetSettingsFormViewModel(ModelType, CategoryID));
         }
 
+        [HttpPost]
+        public IActionResult _SettingsForm(SettingsForm SettingsForm)
+        {
+            return RedirectToAction("SettingsInventory");
+        }
+
         private SettingsForm GetSettingsFormViewModel(string ModelType, int CategoryID)
         {
             SettingsForm settingsForm = new SettingsForm();
             if (ModelType == new ParentCategory().GetType().Name)
             {
                 settingsForm.Category = _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { cb => cb.ID == CategoryID }).FirstOrDefault();
+                settingsForm.CategoryDescription = settingsForm.Category.Description;
             }
             else if (ModelType == new ProductSubcategory().GetType().Name)
             {
-                settingsForm.Category = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == CategoryID }).FirstOrDefault();
+                var category = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == CategoryID },
+                    new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory } }).FirstOrDefault();
+                settingsForm.Category = category;
+                settingsForm.CategoryDescription = category.ParentCategory.Description;
+                settingsForm.SubcategoryDescription = category.Description;
             }
             settingsForm.RequestCount = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.Product.ProductSubcategoryID == settingsForm.Category.ID }).Count();
             settingsForm.ItemCount = _productsProc.Read(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategoryID == settingsForm.Category.ID }).Count();
@@ -5166,6 +5198,18 @@ namespace PrototypeWithAuth.Controllers
         public async Task<bool> UpdateExchangeRate()
         {
             return _requestsProc.UpdateExchangeRateByHistory().Result.Bool;
+        }
+
+        public async Task<IActionResult> _CustomField(int CustomFieldCounter, string DivClass)
+        {
+            var CustomField = new CustomField()
+            {
+                CustomDataTypes = _customDataTypesProc.Read(),
+                CustomFieldCounter = CustomFieldCounter,
+                Required = new List<bool>() { new bool() },
+                DivClass = DivClass
+            };
+            return PartialView(CustomField);
         }
     }
 }
