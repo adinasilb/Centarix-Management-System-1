@@ -3,5 +3,5 @@
         number: true /*,
         other rules */
     });
-    $(".bio-form").validate()
+    $("form").validate()
 })

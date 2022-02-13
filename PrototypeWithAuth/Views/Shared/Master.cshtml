@@ -22,7 +22,6 @@
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Master.css" asp-append-version="true" />
-    <link href="~/css/forms.css" rel="stylesheet" />
     <link href="~/css/elixir-fonts/elixir-icons.css" rel="stylesheet" />
     @*load the jquery ui stylesheet*@
     <link rel="stylesheet" href="~/css/jquery-ui.min.css">
@@ -81,67 +80,7 @@
     </div>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <div class="request_nav_body"> @RenderBody()</div>
-    <div class="modals">
-
-        <div class="two-factor-expired"></div>
-        <div class="add-invoice"></div>
-        <div class="adjust-payments"></div>
-        <div class="confirm-edit"></div>
-        <div class="confirm-exit"></div>
-        <div class="confirm-email"></div>
-        <div class="documents-delete"></div>
-        <div class="documents"></div>
-        <div class="edit-quote"></div>
-        <div class="payments-pay"></div>
-        <div class="payments-invoice"></div>
-        <div class="received-item"></div>
-        <div class="reorder-item"></div>
-        <div class="terms"></div>
-        <div class="upload-order"></div>
-        <div class="upload-quote"></div>
-        <div class="step-1"></div>
-        <div class="step-2"></div>
-        <div class="cart-total"></div>
-        <div class="visual-zoom"></div>
-        <div class="suspend-user"></div>
-        <div class="user-picture"></div>
-        <div class="deny-approval"></div>
-        <div class="delete-item"> </div>
-        <div class="history-item"></div>
-        <div class="edits"></div>
-        <div class="add-location"></div>
-        <div class="update-time-worked"></div>
-        <div class="off-day"></div>
-        <div class="hours-awaiting-approval"></div>
-        <div class="share-request"></div>
-        <div class="add-material"></div>
-        <div class="late-order"></div>
-        <div class="add-resources"></div>
-        <div class="material-info"></div>
-        <div class="resource-notes-modal"></div>
-        <div class="share-modal"></div>
-        <div class="new-report"></div>
-        <div class="confirm-archive"></div>
-        <div class="save-report"></div>
-        <div class="protocol-details"></div>
-        <div class="add-function"></div>
-        <div class="add-change-div"></div>
-        <div class="add-participant"></div>
-        <div class="edit-participant"></div>
-        <div class="new-entry"></div>
-        <div class="save-bio-test-modal"></div>
-        <div class="move-list"></div>
-        <div class="new-list"></div>
-        <div class="delete-list-request"></div>
-        <div class="list-settings"></div>
-        <div class="delete-list"></div>
-        <div class="save-list-settings"></div>
-        <div class="products-warning-modal"></div>
-        <div class="vendor-float-modal"></div>
-        <div class="right-invalid"></div>
-        <div class="unit-warning-modal"></div>
-    </div>
-
+  
     <!--  SCRIPTS  -->
     <!-- JQuery -->
     @*load jquery ui*@
@@ -618,7 +557,7 @@
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
             $('.open-archive-modal').removeClass('disabled-background-color');
-            $('.open-archive-modal').addClass('order-inv-background-color');
+            $('.open-archive-modal').addClass('section-bg-color');
         }
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
@@ -754,7 +693,7 @@
             $("." + modalClass + ' .open-document-modal').attr("data-val", false);
             $("." + modalClass + ' .location-icon').addClass('d-none');
             $("." + modalClass + ' .open-archive-modal').addClass('disabled-background-color');
-            $("." + modalClass + ' .open-archive-modal').removeClass('order-inv-background-color');
+            $("." + modalClass + ' .open-archive-modal').removeClass('section-bg-color');
 
             //console.log('locations edot mode off');
             //$("." + modalClass +".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
@@ -1014,12 +953,12 @@
         };
 
 
-        $("table tr .order-inv-form .form-check-input").click(function () {
+        $(".Requests table tr .form-check-input").click(function () {
             if ($(this).is(':checked')) {
-                $(this).closest("tr").addClass("clicked-border-orders-inv");
+                $(this).closest("tr").addClass("clicked-border");
             }
             else {
-                $(this).closest("tr").removeClass("clicked-border-orders-inv");
+                $(this).closest("tr").removeClass("clicked-border");
             }
         });
 
@@ -1399,7 +1338,7 @@
                     //    console.log("don't allow multiples")
                     //    $(".upload-file").attr('disabled', true)
                     //    $(".upload-file").addClass('disabled-background-color')
-                    //    $(".upload-file").removeClass('protocols-background-color')
+                    //    $(".upload-file").removeClass('section-bg-color')
                     //    $(".file-select").attr('disabled', true)
                     //}
                     if ($(".addFunctionForm").length >0)
@@ -1407,7 +1346,7 @@
                         if (numCards < 1) {
                             $(".upload-file").attr('disabled', false)
                             $(".upload-file").removeClass('disabled-background-color')
-                            $(".upload-file").addClass('protocols-background-color')
+                            $(".upload-file").addClass('section-bg-color')
                             $(".file-select").attr('disabled', false)
                             $(".upload-file").removeClass("d-none");
                             $(".saveFunction").addClass("d-none");
@@ -1416,7 +1355,7 @@
                         else {
                             $(".upload-file").attr('disabled', true)
                             $(".upload-file").addClass('disabled-background-color')
-                            $(".upload-file").removeClass('protocols-background-color')
+                            $(".upload-file").removeClass('section-bg-color')
                             $(".file-select").attr('disabled', true)
                             $(".upload-file").addClass("d-none");
                             $(".saveFunction").attr('disabled', false)
@@ -1703,9 +1642,9 @@
                     $('.search-by-name-in-filter').attr('value', searchText);
                     $('.search-by-catalog-number').attr('value', catalogNumber);
                     $('body').removeClass('popover-open');
-                    $('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
+                    $('#invFilterPopover').removeClass('section-bg-color custom-button-font');
                     $('#invFilterPopover').addClass('custom-order-inv');
-                    $('#protocolFilterPopover').removeClass('protocols-background-color custom-button-font');
+                    $('#protocolFilterPopover').removeClass('section-bg-color custom-button-font');
                     $('#protocolFilterPopover').addClass('custom-protocols');
                 }
             });

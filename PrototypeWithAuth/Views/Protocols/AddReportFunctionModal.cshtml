@@ -9,7 +9,7 @@
             <button type="button" class="close modal-close-padding modal-close-style"  aria-label="Close" onclick="$.fn.CloseModal('add-function');">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form addFunctionForm documentModalForm on-form-modal">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding  addFunctionForm documentModalForm on-form-modal">
                 <input type="hidden" asp-for="ReportID" />
                 <input type="hidden" asp-for="Function.FunctionTypeID" />
                 <input type="hidden" asp-for="Function.ID" class="function-reportID" />
@@ -37,7 +37,7 @@
                                 break;
                                 @*case AppUtility.ProtocolFunctionTypes.AddImage:
                         <div class="col">
-                            <button type="button" class=" my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Pictures.ToString()"
+                            <button type="button" class=" my-2 section-bg-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Pictures.ToString()"
                                     data-id="@Model.FunctionLine.FunctionLineID"
                                     id="@AppUtility.FolderNamesEnum.Pictures.ToString()" parentFolder="@AppUtility.ParentFolderName.FunctionLine" data-val="@true" show-switch="@false">
                                 Select File
@@ -184,13 +184,13 @@
                                     {
                                         dnone = "d-none";
                                         <div class="upload-btn-wrapper between-button-margin">
-                                            <button class="custom-button custom-button-font protocols-background-color upload-file document-modal-buttons" data-string="@AppUtility.FolderNamesEnum.Files">Upload A File</button>
+                                            <button class="custom-button custom-button-font section-bg-color upload-file document-modal-buttons" data-string="@AppUtility.FolderNamesEnum.Files">Upload A File</button>
                                             <input type="file" name="FilesToSave" id="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls "  />
                                         </div>
                                         
                                     }
 
-                                    <input type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveFunction  @dnone" value="Add" />
+                                    <input type="button" class="custom-button custom-button-font section-bg-color between-button-margin saveFunction  @dnone" value="Add" />
                                     @if (Model.Function.ID != 0)
                                     {
                                         <input type="button" class="custom-button custom-cancel removeFunction" value="Remove" />

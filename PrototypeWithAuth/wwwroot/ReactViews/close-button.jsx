@@ -7,15 +7,7 @@ export default function CloseButton() {
     const history = useHistory();
     var back = e => {
         e.stopPropagation();
-        if (history.location == "/DeleteModal") {
-            history.goBack();
-        }
-        else {
-            ReactDOM.render(<RootComponent />,
-                document.getElementsByClassName("modals")[0]
-            );
-        }
-        console.log(history.location)
+        history.goBack();
         closeModal("delete-item");
     };
     return (<button
@@ -30,14 +22,7 @@ export function CancelButton(props) {
     const history = useHistory();
     var back = e => {
         e.stopPropagation();
-        console.log("go back")
-        if (props.history == undefined) {
-            history.goBack();
-        }
-        else {
-            props.history.goBack();
-        }
-        console.log(history.location)
+        history.goBack();
         closeModal("delete-item");
     };
     return (<button type="button" className="custom-cancel custom-button " onClick={back} > Cancel</button >

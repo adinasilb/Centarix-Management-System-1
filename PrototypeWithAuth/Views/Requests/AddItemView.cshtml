@@ -5,11 +5,7 @@
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 
-    string form = "order-inv-form";
-    if (Model.RequestItemViewModel.SectionType == AppUtility.MenuItems.Operations)
-    {
-        form = "oper-form";
-    }
+
 }
 
 @using Microsoft.AspNetCore.Identity
@@ -18,7 +14,7 @@
 @inject UserManager<ApplicationUser> _userManager
 
 <div class="outer-add-item-view scroll-page">
-    <div class="col-12 add-or-edit-item mx-auto @form on-form-modal add-item-box scroll-page" @*style="width: 60%"*@>
+    <div class="col-12 add-or-edit-item mx-auto on-form-modal add-item-box scroll-page" @*style="width: 60%"*@>
         <div class="on-form-modal-border">
             <form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style=" ">
                 <!--<input type="hidden" asp-for="TempRequestListViewModel.GUID" class="hidden-guid" />--> @*for reloading the partial view*@

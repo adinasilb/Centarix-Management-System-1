@@ -3,7 +3,7 @@
 <script src="~/js/site.js"></script>
 <script src="~/js/Validation/AddMaterialValidation.js"></script>
 <script src="~/js/validate.js"></script>
-<div class="modal modal-document fader on-form-modal protocol-form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
+<div class="modal modal-document fader on-form-modal " @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
     <div class="modal-dialog-centered mx-auto elixir-modal-md" >
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('add-material');">
@@ -50,7 +50,7 @@
                                     <input type="hidden" asp-for="FileStrings" />@*This is for reloading hte modal on error*@
                                     if (Model.FileStrings != null && Model.FileStrings.Count > 0)
                                     {
-                                        filterClass = "protocols-filter";
+                                        filterClass = "section-filter";
                                         containsFile = "contains-file";
                                         hasFileClass = "hasFile";
                                     }
@@ -84,7 +84,7 @@
 
                 <div class="modal-footer  border-0  ">
                     <div class="mx-auto text-center">
-                        <button type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin saveMaterial" value="Save">Save</button>
+                        <button type="submit" class="custom-button custom-button-font section-bg-color between-button-margin saveMaterial" value="Save">Save</button>
                         <button type="button" class="custom-cancel custom-button " onclick="$.fn.CloseModal('add-material');">Cancel</button>
                     </div>
                 </div>

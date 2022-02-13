@@ -1,7 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.UpdateHoursViewModel
 @using PrototypeWithAuth.AppData
 
-<div class="modal modal-document fader on-form-modal timekeeper-form" id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
+<div class="modal modal-document fader on-form-modal " id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
     <div class="modal-dialog-centered mx-auto elixir-modal-md">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('update-time-worked');">
@@ -62,7 +62,7 @@
 
                     <div class="modal-footer  border-0  modal-footer-mt">
                         <div class="mx-auto text-center">
-                            <button type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin update-hours" @*asp-action="UpdateHours"*@ data-val="@Model.PageType" value="Save">Save</button>
+                            <button type="submit" class="custom-button custom-button-font section-bg-color between-button-margin update-hours" @*asp-action="UpdateHours"*@ data-val="@Model.PageType" value="Save">Save</button>
                             <button type="button" class="custom-cancel custom-button cancel-email" data-dismiss="modal" onclick="$.fn.CloseModal('update-time-worked');">Cancel</button>
                         </div>
                     </div>

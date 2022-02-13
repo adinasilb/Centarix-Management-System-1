@@ -4,18 +4,18 @@
 @{
 
     Layout = null;
-    var bcColor = "order-inv-background-color";
+    var bcColor = "section-bg-color";
     if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
-        bcColor = "oper-background-color";
+        bcColor = "section-bg-color";
     }
     else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.LabManagement)
     {
-        bcColor = "lab-man-background-color";
+        bcColor = "section-bg-color";
     }
     else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Requests)
     {
-        bcColor = "order-inv-background-color";
+        bcColor = "section-bg-color";
     }
 }
 <script src="~/js/site.js" asp-append-version="true"></script>
