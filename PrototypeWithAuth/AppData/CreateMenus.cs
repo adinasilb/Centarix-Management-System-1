@@ -1058,7 +1058,7 @@ namespace PrototypeWithAuth.AppData
                 Classes = Classes,
                 IconName = "icon-centarix-icons-20"
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.StandingOrders) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.StandingOrders) { Classes += SideBarActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 MenuItemsID = 5,
@@ -1072,7 +1072,7 @@ namespace PrototypeWithAuth.AppData
                 Classes = Classes,
                 IconName = "icon-standing_orders-24px"
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.SpecifyPayment) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.SpecifyPayment) { Classes += SideBarActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 MenuItemsID = 5,
