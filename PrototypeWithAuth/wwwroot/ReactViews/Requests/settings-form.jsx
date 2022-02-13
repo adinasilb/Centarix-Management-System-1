@@ -9,6 +9,7 @@ export default class SettingsForm extends Component {
     render() {
         return (
             <div>
+                Settings Form
             </div>
         )
     }

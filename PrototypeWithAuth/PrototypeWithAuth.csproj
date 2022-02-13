@@ -640,7 +640,6 @@
 
 
   <ItemGroup>
-    <Folder Include="wwwroot\dist\" />
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />
     <Folder Include="wwwroot\Materials\" />
