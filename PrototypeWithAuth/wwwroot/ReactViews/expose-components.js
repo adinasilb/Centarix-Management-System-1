@@ -4,8 +4,8 @@ import ReactDOMServer from 'react-dom/server';
 
 //import FloatingActionBar from './floating-action-bar.jsx'
 import RootComponent from './root-component.jsx';
-import CloseButton from './close-button.jsx'
-import OpenModalButton from './open-modal-button.jsx';
+import CloseButton from './Utility/close-button.jsx'
+import OpenModalButton from './Utility/open-modal-button.jsx';
 
 global.React = React;
 global.ReactDOM = ReactDOM;

@@ -15,6 +15,7 @@ import _IndexTableData from './index-table-data.jsx';
 import _IndexTableDataByVendor from './index-table-data-by-vendor.jsx';
 import FloatingActionBar from './floating-action-bar.jsx';
 
+
 export default class RootComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -46,7 +47,7 @@ export default class RootComponent extends React.Component {
                 }
               
                 <Switch>
-                    <Route path="/DeleteModal" component={DeleteModal} />
+                    <Route path="/DeleteModal"  component={DeleteModal} />
                 </Switch>
             </div>
         );

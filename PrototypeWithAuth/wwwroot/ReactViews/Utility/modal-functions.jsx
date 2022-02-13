@@ -1,10 +1,15 @@
 ﻿
 
 var openModal = function (modalClass) {
-    var modalElement = document.getElementsByClassName(modalClass)[0];
+    var modalElements = document.getElementsByClassName(modalClass);
+    var showBackDrop = "static";
+    if (modalElements.length > 1) {
+        showBackDrop = false;
+    }
+    var modalElement = modalElements[0]
     if (modalElement != undefined) {
         var myModal = new bootstrap.Modal(modalElement, {
-            backdrop: true,
+            backdrop: showBackDrop,
             keyboard: false,
         });
         myModal.show()
@@ -19,7 +24,6 @@ var closeModal = function (modalClass) {
     var modalElements = document.getElementsByClassName("modal");
     console.log(modalElements)
     if (modalElements.length == 1) {
-        alert("here")
         document.getElementsByClassName("modal-backdrop")[0].remove();
         document.getElementsByClassName('body')[0].classList.remove('modal-open');
     }

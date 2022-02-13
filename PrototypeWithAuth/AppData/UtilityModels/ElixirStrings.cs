@@ -16,5 +16,6 @@ namespace PrototypeWithAuth.AppData.UtilityModels
         public const String ServerDifferentVendorErrorMessage = ServerSideError + DifferentVendorErrorMessage;
         public const String ServerExistingInvoiceNumberVendorErrorMessage = ServerSideError + ExistingInvoiceNumberVendorErrorMessage;
         public const String ServerMissingFile = ServerSideError + MissingFileErrorMessage;
+        public const String DeleteModalRoute = "/DeleteModal";
     }
 }
