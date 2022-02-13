@@ -7,6 +7,10 @@ export default class SettingsForm extends Component {
         this.state = { SettingsForm: this.props.SettingsForm };
     }
     render() {
-        return null
+        return (
+            <div>
+                Settings Form
+            </div>
+        )
     }
 }

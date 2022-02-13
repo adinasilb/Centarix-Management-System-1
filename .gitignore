@@ -252,5 +252,8 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+/PrototypeWithAuth/wwwroot/dist/main.js
 /PrototypeWithAuth/Models/Resource
 /PrototypeWithAuth/wwwroot/Reports/2121/Files
+/PrototypeWithAuth/wwwroot/dist
