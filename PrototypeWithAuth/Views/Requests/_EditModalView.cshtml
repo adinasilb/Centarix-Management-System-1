@@ -4,11 +4,9 @@
 @using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> _userManager
 @{
-    var form = " order-inv-form ";
 
     var summary = "";
     var disabled = "";
-    var color = "";
     var productOrderType = Model.OrderType.ToString();
     if (Model.ModalType != AppUtility.RequestModalType.Summary)
     {
@@ -18,32 +16,10 @@
     {
         disabled = "disabled";
     }
-
-    switch (Model.SectionType)
-    {
-        case AppUtility.MenuItems.Requests:
-            color = "order-inv-background-color";
-            form = "order-inv-form";
-            break;
-        case AppUtility.MenuItems.Operations:
-            color = "oper-background-color";
-            form = "oper-form";
-            break;
-        case AppUtility.MenuItems.Accounting:
-            color = "accounting-background-color";
-            form = "accounting-form";
-
-            break;
-        case AppUtility.MenuItems.LabManagement:
-            color = "lab-man-background-color";
-            form = " supplier-form ";
-
-            break;
-    }
     var requestCategoryType = Model.Requests[0].Product?.ProductSubcategory.ParentCategory.CategoryTypeID;
 }
 
-    <div class="modal-dialog modal-lg @form" role="document" style="max-height:100%; width: 50%; max-width: 100%">
+    <div class="modal-dialog modal-lg " role="document" style="max-height:100%; width: 50%; max-width: 100%">
         @*style needed here to override bootstraps modal width limitations*@
 
         <div class="modal-content d-inline-block ">
@@ -106,7 +82,7 @@
                              && Model.Requests[0].Product.UnitTypeID != -1 && !Model.Requests[0].Product.ProductSubcategory.IsOldSubCategory && !Model.IsHistory)
                             {
                             <div class="d-flex align-items-center">
-                                <button type="button" value="@Model.Requests[0].RequestID" class="load-order-details custom-button custom-button-font @color m-auto ">Request</button>
+                                <button type="button" value="@Model.Requests[0].RequestID" class="load-order-details custom-button custom-button-font section-bg-color m-auto">Request</button>
                             </div>
                             }
                             <div class="row pt-2 d-flex justify-content-center">

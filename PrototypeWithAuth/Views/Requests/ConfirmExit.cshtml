@@ -1,29 +1,7 @@
 ﻿@using PrototypeWithAuth.AppData;
 @model PrototypeWithAuth.ViewModels.ConfirmExitViewModel
 @{
-    Layout = null;
-    var bcColor = "order-inv-background-color";
-    switch (Model.SectionType)
-    {
-        case AppUtility.MenuItems.Operations:
-            bcColor = "oper-background-color";
-            break;
-        case AppUtility.MenuItems.LabManagement:
-            bcColor = "lab-man-background-color";
-            break;
-        case AppUtility.MenuItems.Accounting:
-            bcColor = "accounting-background-color";
-            break;
-        case AppUtility.MenuItems.Requests:
-            bcColor = "order-inv-background-color";
-            break;
-        case AppUtility.MenuItems.Users:
-            bcColor = "users-background-color";
-            break;
-        case AppUtility.MenuItems.Protocols:
-            bcColor = "protocols-background-color";
-            break;
-    }
+    Layout = null;   
 
 }
 <script src="~/js/site.js"></script>
@@ -51,7 +29,7 @@
                     </div>
                     <div class="row text-center">
 
-                        <button class="text custom-button custom-button-font @bcColor exit-edit-modal between-button-margin" value="@Model.URL">Yes</button>
+                        <button class="text custom-button custom-button-font section-bg-color exit-edit-modal between-button-margin" value="@Model.URL">Yes</button>
                         <button class="custom-button custom-cancel text return-edit-modal ">No</button>
 
                         @*<button class="custom-button custom-cancel float-right text cancel-request-edits">Cancel</button>*@

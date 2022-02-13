@@ -74,7 +74,7 @@
              new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Lab / Operation", @multiple = "multiple" }
             )*@
             <button type="button" onclick="$.fn.filterByCategoryType();" class="btn-save
-                    btn text-white expenses-background-color rounded-pill no-box-shadow ">
+                    btn text-white section-bg-color rounded-pill no-box-shadow ">
                 Save
             </button>
         </div>
@@ -95,7 +95,7 @@
 
              new { @class = "mdb-select custom select-dropdown form-control-plaintext parentlistMulitple", @searchable = "Search Category", @multiple = "multiple", @id = "parentlistMulitple" }
             )*@
-            <button type="button" onclick="$.fn.filterByParentCategoryType();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow  ">Save</button>
+            <button type="button" onclick="$.fn.filterByParentCategoryType();" class="btn-save  btn text-white section-bg-color rounded-pill no-box-shadow  ">Save</button>
         </div>
         <div class=" select-box-margin-bottom">
             <select asp-for="SelectedProductSubcategories" class="mdb-select custom select-dropdown form-control-plaintext" id="sublist" searchable = "Search Sub Category">
@@ -114,7 +114,7 @@
              //"Sub Category",
              new { @class = "mdb-select custom select-dropdown mdb-select-sublist form-control-plaintext", @searchable = "Search Sub Category", @multiple = "multiple", @id = "sublist", @selected = "" }
             )*@
-            <button type="button" onclick="$.fn.filterBySubCategoryType();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow  ">Save</button>
+            <button type="button" onclick="$.fn.filterBySubCategoryType();" class="btn-save  btn text-white section-bg-color rounded-pill no-box-shadow  ">Save</button>
         </div>
         <div class=" select-box-margin-bottom">
             <select asp-for="SelectedProjects" class="mdb-select custom select-dropdown form-control-plaintext" searchable = "Search Projects">
@@ -133,7 +133,7 @@
              //"Project",
              new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Projects", @multiple = "multiple" }
             )*@
-            <button type="button" onclick="$.fn.filterByProject();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow  ">Save</button>
+            <button type="button" onclick="$.fn.filterByProject();" class="btn-save  btn text-white section-bg-color rounded-pill no-box-shadow  ">Save</button>
         </div>
         <div class=" select-box-margin-bottom">
             <select asp-for="SelectedSubProjects" class="mdb-select custom select-dropdown form-control-plaintext" searchable = "Search Sub Projects">
@@ -152,7 +152,7 @@
              //"Sub Project",
              new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Sub Projects", @multiple = "multiple" }
             )*@
-            <button type="button" onclick="$.fn.filterBySubProject();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow ">Save</button>
+            <button type="button" onclick="$.fn.filterBySubProject();" class="btn-save  btn text-white section-bg-color rounded-pill no-box-shadow ">Save</button>
         </div>
      
         <div class=" select-box-margin-bottom">

@@ -48,7 +48,7 @@
                                     var folderPerMaterial = Model.Folders.Where(m => m.Key.MaterialID == material.MaterialID).SelectMany(f => f).FirstOrDefault();
                                     if (folderPerMaterial[0].FileStrings != null && folderPerMaterial[0].FileStrings.Count > 0)
                                     {
-                                        updateImageColor = "protocols-filter";
+                                        updateImageColor = "section-filter";
                                     }
                                     var deleteMaterialColor = color;
                                     var materialName = material.Name ?? material.Product.ProductName;
