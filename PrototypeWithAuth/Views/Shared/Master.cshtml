@@ -1430,23 +1430,20 @@
             return true;
         };
 
+        $.fn.ReloadDocumentCard = function (folderEnumString, requestId, section, parentFolder, modalType) {
+            $.ajax({
+                async: true,
+                url: "/Requests/_DocumentsCard?requestFolderNameEnum=" + folderEnumString + "&id=" + requestId + "&sectionType=" + section + "&parentFolderName=" + parentFolder + "&modalType=" + modalType,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $(".doc-card." + folderEnumString).html(data)
+                    $(".doc-card." + folderEnumString + " .open-document-modal").attr("showSwitch", showSwitch)
+                    $(".doc-card." + folderEnumString + " .open-document-modal").attr("data-val", isEdittable)
+                }
+            });
+        }
 
-        //$.fn.AppendModalToBody = function(data)
-        //{
-        //    $(".modal").modal('hide');
-        //    $(".modal").replaceWith('');
-        //    var modal = $(data);
-        //    $('body').append(modal);
-        //    $(".modal").modal({
-        //        backdrop: true,
-        //        keyboard: false,
-        //    });
-        //    //shows the modal
-        //    $(".modal").modal('show');
-        //    $('.modal-content a:first').tab('show');
-        //    $(".mdb-select").materialSelect();
-
-        //}
         $.fn.OpenModal = function (modalClass, modalDivClass, data) {
             console.log("open modal")
             console.log(modalClass);

@@ -34,7 +34,7 @@
 			else {
 				$.fn.OpenDocumentsModal(true, $foldername, $objectId, guid, $isEdittable, $SectionType, $showSwitch, $parentfoldername, dontAllowMultipleFiles, $CustomMainObjectID);
 			}
-			//$.fn.ChangeColorsOfDocs($foldername);
+
 			$(".document-name").text('')
 			$(".document-name#FileName").val('')
 		},

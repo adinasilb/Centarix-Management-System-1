@@ -1811,18 +1811,19 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     var request = requestItemViewModel.Requests.FirstOrDefault();
-                    if (request.SingleOrder != null)
+                    
+                    switch (requestItemViewModel.OrderType)
                     {
-                        request.Product = request.SingleOrder;
-                    }
-                    else if (request.RecurringOrder != null)
-                    {
-                        request.Product = request.RecurringOrder;
-                    }
-                    else if (request.StandingOrder != null)
-                    {
-                        request.Product = request.StandingOrder;
-                    }
+                        case AppUtility.OrderType.SingleOrder:
+                            request.Product = request.SingleOrder;
+                            break;
+                        case AppUtility.OrderType.RecurringOrder:
+                            request.Product = request.RecurringOrder;
+                            break;
+                        case AppUtility.OrderType.StandingOrder:
+                            request.Product = request.StandingOrder;
+                            break;
+                    };
                     //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
                     request.ParentRequest = null;
                     var parentQuote = await _parentQuotesProc.ReadOneAsync(new List<Expression<Func<ParentQuote, bool>>> { pq => pq.ParentQuoteID == request.ParentQuoteID });
@@ -1944,6 +1945,7 @@ namespace PrototypeWithAuth.Controllers
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
+                UnitTypes = unittypes
             };
             request.RequestStatusID =1;
             requestItemViewModel.Requests = new List<Request>() { request };
@@ -1984,6 +1986,18 @@ namespace PrototypeWithAuth.Controllers
             var userID = _userManager.GetUserId(User);
             try
             {
+                switch (requestItemViewModel.OrderType)
+                {
+                    case AppUtility.OrderType.SingleOrder:
+                        requestItemViewModel.Requests[0].Product = requestItemViewModel.Requests[0].SingleOrder;
+                        break;
+                    case AppUtility.OrderType.RecurringOrder:
+                        requestItemViewModel.Requests[0].Product = requestItemViewModel.Requests[0].RecurringOrder;
+                        break;
+                    case AppUtility.OrderType.StandingOrder:
+                        requestItemViewModel.Requests[0].Product = requestItemViewModel.Requests[0].StandingOrder;
+                        break;
+                };
                 //  ReorderViewModel reorderViewModel = JsonConvert.DeserializeObject<ReorderViewModel>(json);
                 //get the old request that we are reordering
                 var oldRequest = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestItemViewModel.Requests.FirstOrDefault().RequestID },
@@ -4193,11 +4207,23 @@ namespace PrototypeWithAuth.Controllers
             //    RequestIndexObject = requestIndexObject,
             //    TempRequestViewModels = oldJson.DeserializeJson<List<TempRequestViewModel>>()
             //};
+            uploadQuoteViewModel.DocumentsCardViewModel = new DocumentsCardViewModel()
+            {
+                SectionType = AppUtility.MenuItems.Requests,
+                DocumentInfo = new DocumentFolder()
+                {
+                    ParentFolderName = AppUtility.ParentFolderName.ParentQuote,
+                    FolderName = AppUtility.FolderNamesEnum.Quotes,
+                    Icon = "icon-centarix-icons-03"
+                }
+            };
+
             if (uploadQuoteViewModel.TempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ProductID != 0)
             {
                 foreach (var tempRequestViewModel in uploadQuoteViewModel.TempRequestListViewModel.TempRequestViewModels)
                 {
                     var oldQuote = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.ProductID == tempRequestViewModel.Request.ProductID && r.ParentQuote.ExpirationDate >= DateTime.Now.Date }).Select(r => r.ParentQuote).OrderByDescending(r => r.QuoteDate).FirstOrDefault();
+                    
                     if (oldQuote != null)
                     {
                         string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
@@ -4209,24 +4235,27 @@ namespace PrototypeWithAuth.Controllers
                             DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
                             //searching for the partial file name in the directory
                             FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                            uploadQuoteViewModel.FileStrings = new List<String>();
+                            var fileStrings = new List<String>();
                             foreach (var orderfile in orderfilesfound)
                             {
                                 string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
-                                uploadQuoteViewModel.FileStrings.Add(newFileString);
+                                fileStrings.Add(newFileString);
                             }
+                            uploadQuoteViewModel.DocumentsCardViewModel.DocumentInfo.FileStrings = fileStrings;
+                            uploadQuoteViewModel.DocumentsCardViewModel.ModalType = AppUtility.RequestModalType.Summary;
                         }
-
+                        uploadQuoteViewModel.DocumentsCardViewModel.DocumentInfo.ObjectID = oldQuote.ParentQuoteID.ToString();
+                        
                     }
                     else
                     {
                         oldQuote = new ParentQuote() { ExpirationDate = DateTime.Now };
+                        uploadQuoteViewModel.DocumentsCardViewModel.DocumentInfo.ObjectID = uploadQuoteViewModel.TempRequestListViewModel.GUID.ToString();
+                        uploadQuoteViewModel.DocumentsCardViewModel.ModalType = AppUtility.RequestModalType.Edit;
                     }
                     uploadQuoteViewModel.ParentQuote = oldQuote;
 
-
                 }
-
             }
 
             //create new sequence
@@ -4249,20 +4278,32 @@ namespace PrototypeWithAuth.Controllers
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, guid.ToString());
             string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
-
+            
+            var fileStrings = new List<String>();
             if (Directory.Exists(uploadFolderQuotes))
             {
                 DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
                 //searching for the partial file name in the directory
                 FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                uploadQuoteViewModel.FileStrings = new List<String>();
                 foreach (var orderfile in orderfilesfound)
                 {
                     string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
-                    uploadQuoteViewModel.FileStrings.Add(newFileString);
+                    fileStrings.Add(newFileString);
                 }
             }
-
+            uploadQuoteViewModel.DocumentsCardViewModel = new DocumentsCardViewModel()
+            {
+                SectionType = AppUtility.MenuItems.Requests,
+                DocumentInfo = new DocumentFolder()
+                {
+                    ParentFolderName = AppUtility.ParentFolderName.ParentQuote,
+                    FolderName = AppUtility.FolderNamesEnum.Quotes,
+                    Icon = "icon-centarix-icons-03",
+                    FileStrings = fileStrings,
+                    ObjectID = guid.ToString()
+                },
+                ModalType = AppUtility.RequestModalType.Edit
+            };
             uploadQuoteViewModel.TempRequestListViewModel = new TempRequestListViewModel()
             {
                 GUID = guid

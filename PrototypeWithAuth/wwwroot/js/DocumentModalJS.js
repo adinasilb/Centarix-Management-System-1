@@ -79,9 +79,8 @@ $(function () {
         return false;
     });
 
-    $.fn.DirectlyUploadDocFromCard = function (section) {
+    $.fn.DirectlyUploadDocFromCard = function (section, folderName) {
         console.log($(".active-document-modal"))
-        var folderEnumString = $(".active-document-modal").data("string");
         var objectID = $(".active-document-modal").data("id");
         var parentFolder = $(".active-document-modal").attr("parentFolder")
         var showSwitch = $(".active-document-modal").attr("showSwitch")
@@ -144,16 +143,17 @@ $(function () {
         console.log("in save doc files");
 
         var section = $("#masterSectionType").val();
+        var $foldername = $('.folderName').val();
 
         if ($(this).hasClass("direct-upload")) {
             console.log("direct upload")
             $(this).closest(".document-card").find(".open-document-modal").addClass("active-document-modal");
-            $.fn.DirectlyUploadDocFromCard(section)
+            var $foldername = $(".active-document-modal").data("string");
+            $.fn.DirectlyUploadDocFromCard(section, $foldername)
             $(this).val(null);
 
         }
         else {
-            var $enumString = $('.folderName').val();
             var $requestId = $('.objectID').val();
             var guid = $("#Guid").val();
             var $CustomMainObjectID = $("#CustomMainObjectID").val();
@@ -171,9 +171,13 @@ $(function () {
             }
             $(".carousel-item").remove();
             
-            $.fn.OpenDocumentsModal(true, $enumString, $requestId, guid, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
+            $.fn.OpenDocumentsModal(true, $foldername, $requestId, guid, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
         }
-
+        var folderInput = "#" + $foldername + "Input";
+        $(folderInput).addClass("contains-file");
+        if ($(folderInput).rules()) {
+            $(folderInput).valid();
+        }
         return true;
     });
 
@@ -332,17 +336,8 @@ $(function () {
         var isEdittable = $('.isEdittable').val();
         var modalType = $("#modalType").val();
 
-        $.ajax({
-            async: true,
-            url: "/Requests/_DocumentsCard?requestFolderNameEnum=" + folderEnumString + "&id=" + requestId + "&sectionType=" + section + "&parentFolderName=" + parentFolder + "&modalType=" + modalType,
-            type: 'GET',
-            cache: false,
-            success: function (data) {
-                $(".doc-card." + folderEnumString).html(data)
-                $(".doc-card." + folderEnumString + " .open-document-modal").attr("showSwitch", showSwitch)
-                $(".doc-card." + folderEnumString + " .open-document-modal").attr("data-val", isEdittable)
-            }
-        });
+        $.fn.ReloadDocumentCard(folderEnumString, requestId, section, parentFolder, modalType)
+
         $.fn.CloseModal('documents');
         
 
