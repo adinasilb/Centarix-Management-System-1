@@ -52,6 +52,7 @@
     --notifications-approved-color: #00CA72;
     --notifications-received-color: #5F79E2;
     --danger-color: #E95252;
+    --danger-filter: brightness(0) saturate(100%) invert(35%) sepia(14%) saturate(3840%) hue-rotate(320deg) brightness(122%) contrast(88%);
     --success-color: #00ca72;
     --bold-regular: 400;
     --bold-medium: 500;
@@ -97,6 +98,10 @@
 }
 .light-gray-background-color {
     background-color: var(--light-gray);
+}
+
+.danger-filter{
+    filter: var(--danger-filter);
 }
 
 .danger-color {

@@ -1152,6 +1152,48 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.CustomDataType", b =>
+                {
+                    b.Property<int>("CustomDataTypeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CustomDataTypeID");
+
+                    b.ToTable("CustomDataTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            CustomDataTypeID = 1,
+                            Name = "String"
+                        },
+                        new
+                        {
+                            CustomDataTypeID = 2,
+                            Name = "Double"
+                        },
+                        new
+                        {
+                            CustomDataTypeID = 3,
+                            Name = "Bool"
+                        },
+                        new
+                        {
+                            CustomDataTypeID = 4,
+                            Name = "DateTime"
+                        },
+                        new
+                        {
+                            CustomDataTypeID = 5,
+                            Name = "File"
+                        });
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.Degree", b =>
                 {
                     b.Property<int>("DegreeID")
@@ -3339,6 +3381,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageURL")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsProprietary")
@@ -5711,7 +5756,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("ImageURL")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsMain")
@@ -5733,7 +5778,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ID = 1,
                             CategoryJsonID = 0,
                             Description = "Rejuvenation",
-                            ImageUrl = "rejuvenation_image.svg",
+                            ImageURL = "rejuvenation_image.svg",
                             IsMain = true,
                             IsReportsCategory = true,
                             IsResourceType = false
@@ -5743,7 +5788,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ID = 2,
                             CategoryJsonID = 0,
                             Description = "Biomarkers",
-                            ImageUrl = "biomarkers_image.svg",
+                            ImageURL = "biomarkers_image.svg",
                             IsMain = true,
                             IsReportsCategory = true,
                             IsResourceType = false
@@ -5753,7 +5798,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ID = 3,
                             CategoryJsonID = 0,
                             Description = "Delivery Systems",
-                            ImageUrl = "delivery_systems_image.svg",
+                            ImageURL = "delivery_systems_image.svg",
                             IsMain = true,
                             IsReportsCategory = true,
                             IsResourceType = false
@@ -5763,7 +5808,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ID = 4,
                             CategoryJsonID = 0,
                             Description = "Clinical Trials",
-                            ImageUrl = "clinical_trials_image.svg",
+                            ImageURL = "clinical_trials_image.svg",
                             IsMain = true,
                             IsReportsCategory = false,
                             IsResourceType = false
@@ -5854,7 +5899,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ID = 14,
                             CategoryJsonID = 0,
                             Description = "Software",
-                            ImageUrl = "software_image.svg",
+                            ImageURL = "software_image.svg",
                             IsMain = false,
                             IsReportsCategory = false,
                             IsResourceType = true
@@ -5864,7 +5909,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ID = 15,
                             CategoryJsonID = 0,
                             Description = "Learning",
-                            ImageUrl = "learning_image.svg",
+                            ImageURL = "learning_image.svg",
                             IsMain = false,
                             IsReportsCategory = false,
                             IsResourceType = true
@@ -5874,7 +5919,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ID = 16,
                             CategoryJsonID = 0,
                             Description = "Companies",
-                            ImageUrl = "companies_image.svg",
+                            ImageURL = "companies_image.svg",
                             IsMain = false,
                             IsReportsCategory = false,
                             IsResourceType = true
@@ -5884,7 +5929,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ID = 17,
                             CategoryJsonID = 0,
                             Description = "News",
-                            ImageUrl = "news_image.svg",
+                            ImageURL = "news_image.svg",
                             IsMain = false,
                             IsReportsCategory = false,
                             IsResourceType = true

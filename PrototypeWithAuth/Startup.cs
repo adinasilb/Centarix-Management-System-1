@@ -26,6 +26,10 @@ using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using JavaScriptEngineSwitcher.V8;
+using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
+using React.AspNet;
+using Newtonsoft.Json.Converters;
 
 namespace PrototypeWithAuth
 {
@@ -74,12 +78,14 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DevelopersDB2"), sqlServerOptions => sqlServerOptions.CommandTimeout(120));
-                    options.EnableSensitiveDataLogging(true);   
+                    Configuration.GetConnectionString("DevelopersDB"), sqlServerOptions => sqlServerOptions.CommandTimeout(120));
+                options.EnableSensitiveDataLogging(true);
             });
 
             services.AddControllersWithViews();
-
+            services.AddReact();
+            services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
+            .AddV8();
 
             // Add framework services.
             services.AddMvc();
@@ -161,6 +167,21 @@ namespace PrototypeWithAuth
             app.UseHttpsRedirection();
 
             app.UseStaticFiles(); //may be here for other reasons but also need to download pdf files
+
+
+
+            app.UseReact(config =>
+            {
+                config.SetLoadBabel(true)
+                  .SetLoadReact(false)
+                  .SetReactAppBuildPath("~/dist");
+                config.JsonSerializerSettings = new JsonSerializerSettings { 
+                    Converters= new List<JsonConverter> { new StringEnumConverter() },
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                };
+            });
+
+
             app.UseRouting();
 
             app.UseAuthentication();
@@ -181,7 +202,6 @@ namespace PrototypeWithAuth
             //ChangePassword(serviceProvider).Wait();
 
             CreateRoles(serviceProvider).Wait();
-            //CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer");
 
 
             //AddRoles(serviceProvider).Wait();
@@ -243,6 +263,8 @@ namespace PrototypeWithAuth
                 }
             }
 
+            await CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer");
+
             //string[] roleNames1 = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
             //string[] roleNames2 = Enum.GetNames(typeof(AppUtility.RoleItems)).Cast<string>().Select(x => x.ToString()).ToArray();
             //string[] roleNames = new string[roleNames1.Length + roleNames2.Length];
@@ -268,7 +290,7 @@ namespace PrototypeWithAuth
 
             //await UserManager.AddToRoleAsync(poweruser, "Admin");
 
-            
+
 
             //var poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
             ////{

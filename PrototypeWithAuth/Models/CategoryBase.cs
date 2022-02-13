@@ -15,5 +15,6 @@ namespace PrototypeWithAuth.Models
         public string Description { get; set; }
         public int CategoryJsonID { get; set; }
         public string CategoryJson { get; set; }
+        public string ImageURL { get; set; }
     }
 }

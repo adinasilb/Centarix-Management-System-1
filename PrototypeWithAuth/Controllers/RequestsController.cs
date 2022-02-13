@@ -148,8 +148,8 @@ namespace PrototypeWithAuth.Controllers
 
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color);", "request-favorite", "Favorite");
-            var popoverMoreIcon = new IconColumnViewModel("More", "icon-more_vert-24px", "black", "More");
-            var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
+            var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
+            var popoverPartialClarifyIcon = new IconColumnViewModel("Clarify");
             var resendIcon = new IconColumnViewModel("Resend");
             string checkboxString = "Checkbox";
             string buttonText = "";
@@ -222,7 +222,7 @@ namespace PrototypeWithAuth.Controllers
                         && (notificationFilterViewModel.CentarixOrderNumber == null || r.ParentRequest.OrderNumber == notificationFilterViewModel.CentarixOrderNumber)
                         && (notificationFilterViewModel.ProductName == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.ProductName.ToLower())));
                     }
-                    iconList.Add(popoverPartialClarifyIcon);
+                  
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.DidntArrive:
@@ -238,6 +238,7 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.SidebarEnum.ForClarification:
                             wheres.Add(r => r.IsClarify);
                             checkboxString = "";
+                            iconList.Add(popoverPartialClarifyIcon);
                             break;
                         case AppUtility.SidebarEnum.NoInvoice:
                             wheres.Add(r => r.Payments.FirstOrDefault().HasInvoice == false);
@@ -291,7 +292,7 @@ namespace PrototypeWithAuth.Controllers
                             buttonText = "Pay All";
                             break;
                     }
-
+                    popoverMoreIcon.IconPopovers = AppUtility.GetPaymentsPopoverLinks(requestIndexObject.SidebarType);
                     viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(orderbyForPayments).Select(selectForPayments).ToLookup(r => r.Vendor);
                     break;
                 case AppUtility.PageTypeEnum.RequestCart:
@@ -3803,11 +3804,11 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = " Accounting")]
-        public async Task<IActionResult> ChangePaymentStatus(AppUtility.PaymentsPopoverEnum newStatus, int requestID, AppUtility.PaymentsPopoverEnum currentStatus)
+        public async Task<IActionResult> ChangePaymentStatus(RequestIndexObject requestIndexObject, int requestID, AppUtility.PaymentsPopoverEnum newStatus)
         {
             var StringWithBool = await _requestsProc.UpdatePaymentStatusAsync(newStatus, requestID);
-            var accountingPaymentsEnum = (AppUtility.SidebarEnum)Enum.Parse(typeof(AppUtility.SidebarEnum), currentStatus.ToString());
-            return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = accountingPaymentsEnum, ErrorMessage = StringWithBool.String });
+            requestIndexObject.ErrorMessage = StringWithBool.String;
+            return RedirectToAction("_IndexTableByVendor", requestIndexObject);
         }
 
         [HttpGet]
@@ -5092,6 +5093,27 @@ namespace PrototypeWithAuth.Controllers
 
             SettingsInventory settings = new SettingsInventory()
             {
+                TopTabsList = new List<TopTabWithCounts>()
+                {
+                    new TopTabWithCounts()
+                    {
+                        Name = "Main",
+                        Page = "Main",
+                        Counts = new BoolIntViewModel()
+                        {
+                            Bool = false
+                        }
+                    },
+                    new TopTabWithCounts()
+                    {
+                        Name = "Samples",
+                        Page = "Samples",
+                        Counts = new BoolIntViewModel()
+                        {
+                            Bool = false
+                        }
+                    }
+                },
                 Categories = GetCategoryList(new ParentCategory().GetType().Name, 1)
             };
             settings.Subcategories = GetCategoryList(new ProductSubcategory().GetType().Name, 2, settings.Categories.CategoryBases.FirstOrDefault().ID);
@@ -5138,16 +5160,27 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(GetSettingsFormViewModel(ModelType, CategoryID));
         }
 
+        [HttpPost]
+        public IActionResult _SettingsForm(SettingsForm SettingsForm)
+        {
+            return RedirectToAction("SettingsInventory");
+        }
+
         private SettingsForm GetSettingsFormViewModel(string ModelType, int CategoryID)
         {
             SettingsForm settingsForm = new SettingsForm();
             if (ModelType == new ParentCategory().GetType().Name)
             {
                 settingsForm.Category = _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { cb => cb.ID == CategoryID }).FirstOrDefault();
+                settingsForm.CategoryDescription = settingsForm.Category.Description;
             }
             else if (ModelType == new ProductSubcategory().GetType().Name)
             {
-                settingsForm.Category = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == CategoryID }).FirstOrDefault();
+                var category = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == CategoryID },
+                    new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory } }).FirstOrDefault();
+                settingsForm.Category = category;
+                settingsForm.CategoryDescription = category.ParentCategory.Description;
+                settingsForm.SubcategoryDescription = category.Description;
             }
             settingsForm.RequestCount = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.Product.ProductSubcategoryID == settingsForm.Category.ID }).Count();
             settingsForm.ItemCount = _productsProc.Read(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategoryID == settingsForm.Category.ID }).Count();
@@ -5166,6 +5199,17 @@ namespace PrototypeWithAuth.Controllers
         {
             return _requestsProc.UpdateExchangeRateByHistory().Result.Bool;
         }
+
+        public async Task<IActionResult> _CustomField(int CustomFieldCounter, string DivClass)
+        {
+            var CustomField = new CustomField()
+            {
+                CustomDataTypes = _customDataTypesProc.Read(),
+                CustomFieldCounter = CustomFieldCounter,
+                Required = new List<bool>() { new bool() },
+                DivClass = DivClass
+            };
+            return PartialView(CustomField);
+        }
     }
 }
-

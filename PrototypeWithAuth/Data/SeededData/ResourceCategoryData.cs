@@ -17,7 +17,7 @@ namespace PrototypeWithAuth.Data.SeededData
                 Description = "Rejuvenation",
                 IsMain = true,
                 IsResourceType = false,
-                ImageUrl = "rejuvenation_image.svg",
+                ImageURL = "rejuvenation_image.svg",
                 IsReportsCategory = true
             });
             list.Add(new ResourceCategory
@@ -26,7 +26,7 @@ namespace PrototypeWithAuth.Data.SeededData
                 Description = "Biomarkers",
                 IsMain = true,
                 IsResourceType = false,
-                ImageUrl = "biomarkers_image.svg",
+                ImageURL = "biomarkers_image.svg",
                 IsReportsCategory = true
             });
             list.Add(new ResourceCategory
@@ -35,7 +35,7 @@ namespace PrototypeWithAuth.Data.SeededData
                 Description = "Delivery Systems",
                 IsMain = true,
                 IsResourceType = false,
-                ImageUrl = "delivery_systems_image.svg",
+                ImageURL = "delivery_systems_image.svg",
                 IsReportsCategory = true
             });
             list.Add(new ResourceCategory
@@ -44,7 +44,7 @@ namespace PrototypeWithAuth.Data.SeededData
                 Description = "Clinical Trials",
                 IsMain = true,
                 IsResourceType = false,
-                ImageUrl = "clinical_trials_image.svg"
+                ImageURL = "clinical_trials_image.svg"
             });
             list.Add(new ResourceCategory
             {
@@ -115,7 +115,7 @@ namespace PrototypeWithAuth.Data.SeededData
                 Description = "Software",
                 IsMain = false,
                 IsResourceType = true,
-                ImageUrl = "software_image.svg"
+                ImageURL = "software_image.svg"
             });
             list.Add(new ResourceCategory
             {
@@ -123,7 +123,7 @@ namespace PrototypeWithAuth.Data.SeededData
                 Description = "Learning",
                 IsMain = false,
                 IsResourceType = true,
-                ImageUrl = "learning_image.svg"
+                ImageURL = "learning_image.svg"
             });
             list.Add(new ResourceCategory
             {
@@ -131,7 +131,7 @@ namespace PrototypeWithAuth.Data.SeededData
                 Description = "Companies",
                 IsMain = false,
                 IsResourceType = true,
-                ImageUrl = "companies_image.svg"
+                ImageURL = "companies_image.svg"
             });
             list.Add(new ResourceCategory
             {
@@ -139,7 +139,7 @@ namespace PrototypeWithAuth.Data.SeededData
                 Description = "News",
                 IsMain = false,
                 IsResourceType = true,
-                ImageUrl = "news_image.svg"
+                ImageURL = "news_image.svg"
             });
             return list;
         }

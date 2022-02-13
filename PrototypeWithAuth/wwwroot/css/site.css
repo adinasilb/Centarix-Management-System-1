@@ -319,7 +319,7 @@ body {
     border: .31px solid #ebebeb;
 }
 
-input.form-control-plaintext:not(.select-dropdown) {
+input.form-control-plaintext:not(.select-dropdown), .react-mentions__input {
     padding-bottom: .5rem !important;
     padding-top: .5rem !important;
 }
@@ -492,8 +492,13 @@ html {
     border-top: 1px solid #e5e5e5;
 }
 
+
 .border-bottom {
     border-bottom: 1px solid #e5e5e5;
+}
+
+.thick-border-top{
+    border-top: .15rem solid #e5e5e5;
 }
 
 .box-shadow {
@@ -591,7 +596,7 @@ body {
     line-height: 100%;
 }
 
-.form-control-plaintext, .mdb-select {
+.form-control-plaintext, .mdb-select, .react-mentions__input {
     margin-top: 0px;
     padding-top: 0px;
     line-height: 100%;
@@ -1117,6 +1122,13 @@ a.nav-link {
     color: var(--operations-color);
 }
 
+.lab-man-form .container-fluid ul li a.active, .oper-form .container-fluid ul li a:hover {
+    background-color: transparent;
+    border-width: 0px;
+    border-bottom: 4px solid var(--lab-man-color);
+    color: var(--lab-man-color);
+}
+
 .container-fluid ul li a.user-nav-link.active, .container-fluid ul li a.user-nav-link:hover {
     background-color: transparent;
     border-width: 0px;
@@ -1194,9 +1206,36 @@ a.nav-link {
     height: 100%;
     overflow-y: auto;
 }
+.lab-man-form .new-button {
+    margin: 0 2rem 0 0 !important;
+    font-size:1.5rem !important;
+}
+
+.lab-man-form    .new-button:hover {
+        color: var(--lab-man-color);
+        background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
+    }
+
+.lab-man-form    .new-button.active {
+        /*color: var(--lab-man-form) !important;*/
+        border-bottom: .188rem solid var(--lab-man-color);
+    }
+.order-inv-form .new-button {
+    margin: 0 4rem 0 0 !important;
+}
+
+.order-inv-form .new-button:hover {
+        color: var(--order-inv-color);
+        background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
+    }
+
+    .order-inv-form .new-button.active {
+        color: var(--order-inv-color) !important;
+        border-bottom: .188rem solid var(--order-inv-color);
+    }
+
 
 .new-button {
-    margin: 0 4rem 0 0;
     background-color: transparent;
     color: var(--black-87);
     font-size: 1.25rem;
@@ -1206,16 +1245,13 @@ a.nav-link {
     .new-button:hover {
         /*background-color: #338f84;*/
         opacity: 1;
-        color: var(--order-inv-color);
         background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
         border-radius: 3px;
         text-decoration: none;
     }
 
     .new-button.active {
-        color: var(--order-inv-color) !important;
         font-weight: var(--bold-regular);
-        border-bottom: .188rem solid var(--order-inv-color);
     }
 
 .new-button-text {
@@ -1552,34 +1588,34 @@ table.table.visualzoom tr td {
         width: 0;
     }
 /* Create a custom checkbox */
-.checkmark {
+/*.checkmark {
     position: absolute;
     top: 0;
     left: 0;
     height: 25px;
     width: 25px;
     background-color: #eee;
-}
+}*/
 /* On mouse-over, add a grey background color */
-.checktainer:hover input ~ .checkmark {
+/*.checktainer:hover input ~ .checkmark {
     background-color: #ccc;
-}
+}*/
 /* When the checkbox is checked, add a blue background */
-.checktainer input:checked ~ .checkmark {
+/*.checktainer input:checked ~ .checkmark {
     background-color: var(--order-inv-color);
-}
+}*/
 /* Create the checkmark/indicator (hidden when not checked) */
-.checkmark:after {
+/*.checkmark:after {
     content: "";
     position: absolute;
     display: none;
-}
+}*/
 /* Show the checkmark when checked */
-.checktainer input:checked ~ .checkmark:after {
+/*.checktainer input:checked ~ .checkmark:after {
     display: block;
-}
+}*/
 /* Style the checkmark/indicator */
-.checktainer .checkmark:after {
+/*.checktainer .checkmark:after {
     left: 9px;
     top: 5px;
     width: 5px;
@@ -1589,7 +1625,7 @@ table.table.visualzoom tr td {
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
-}
+}*/
 
 input[type=checkbox].css-checkbox {
     display: none;
@@ -2067,13 +2103,14 @@ td .btn {
 
 .bio-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
 .bio-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
-.bio-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus {
+.bio-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus,
+.bio-form .react-mentions__input:not(.danger-box-shadow):not(.url-shown):focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--biomarkers-color) !important;
 }
 
-.bio-form .form-control-plaintext.danger-box-shadow:focus {
+.bio-form .form-control-plaintext.danger-box-shadow:focus, .bio-form .react-mentions__input.danger-box-shadow:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--danger-color) !important;
@@ -2086,7 +2123,7 @@ td .btn {
 
 .users-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
 .users-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
-.users-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus {
+.users-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus, .users-form .react-mentions__input:not(.danger-box-shadow):not(.url-shown):focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--user-color) !important;
@@ -2116,11 +2153,12 @@ span.caret {
 
 .supplier-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
 .supplier-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
-.supplier-form.form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus {
+.supplier-form.form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus,
+.supplier-form.react-mentions__input:not(.danger-box-shadow):not(.url-shown):focus {
     box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
 }
 
-.form-control-plaintext:focus, input[type="text"]:focus {
+.form-control-plaintext:focus, input[type="text"]:focus, .react-mentions__input:focus{
     outline-width: 0px !important;
     outline-color: none !important;
 }
@@ -2128,7 +2166,7 @@ span.caret {
 .protocol-form .form-control-plaintext:focus, .protocol-form input[type="text"]:focus {
     box-shadow: 0 2px 0 0 var(--protocol-color) !important;
 }
-.protocol-form.createReportForm .form-control-plaintext:focus {
+.protocol-form.createReportForm .form-control-plaintext:focus, .protocol-form.createReportForm .react-mentions__input:focus {
     box-shadow: none !important;
 }
 
@@ -2152,7 +2190,7 @@ span.caret {
 }
 
 
-.supplier-form .select.form-control-plaintext:focus, .supplier-form input[type="text"]:not(.url-shown):focus {
+.supplier-form .select.form-control-plaintext:focus, .supplier-form input[type="text"]:not(.url-shown):focus, .supplier-form .select.react-mentions__input:focus {
     border-bottom: none !important;
     border: 2px solid var(--lab-man-color) !important;
 }
@@ -2194,7 +2232,7 @@ span.caret {
     color: var(--acc-color) !important;
 }
 
-.accounting-form .form-control-plaintext:focus, .accounting-form input[type="text"]:focus {
+.accounting-form .form-control-plaintext:focus, .accounting-form input[type="text"]:focus, .accounting-form .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--acc-color) !important;
@@ -2209,7 +2247,7 @@ span.caret {
     box-shadow: 0 2px 0 0 var(--acc-color) !important;
 }
 
-.oper-form .form-control-plaintext:focus, .oper-form input[type="text"]:focus {
+.oper-form .form-control-plaintext:focus, .oper-form input[type="text"]:focus, .oper-form .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --operations-color) !important;
@@ -2233,7 +2271,7 @@ span.caret {
     border: 2px solid var(--user-color) !important;
 }
 
-.users-form .form-control-plaintext:focus,  .users-form input[type="text"]:focus {
+.users-form .form-control-plaintext:focus, .users-form input[type="text"]:focus, .users-form .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --user-color) !important;
@@ -2263,7 +2301,7 @@ span.caret {
     border-radius: .25rem;
 }
 
-.timekeeper-form .form-control-plaintext:focus, .timekeeper input[type="text"]:focus {
+.timekeeper-form .form-control-plaintext:focus, .timekeeper input[type="text"]:focus, .timekeeper-form .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --timekeeper-color) !important;
@@ -2298,7 +2336,7 @@ span.caret {
     border: 2px solid var(--timekeeper-color) !important;
 }
 /*begin change to reports*/
-.expenses-form .form-control-plaintext:focus, .expenses-form input[type="text"]:focus {
+.expenses-form .form-control-plaintext:focus, .expenses-form input[type="text"]:focus, .expenses-form .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --expense-color) !important;
@@ -2799,7 +2837,9 @@ a {
     background-color: var(--timekeeper-color);
 }
 /*LabManagements*/
-.supplier-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .supplier-form label.btn input[type="checkbox"].filled-in:checked + label:after, .labmanage .form-check-input[type="checkbox"].filled-in:checked + label:after, .labmanage label.btn input[type="checkbox"].filled-in:checked + label:after {
+.supplier-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .supplier-form label.btn input[type="checkbox"].filled-in:checked + label:after, 
+.labmanage .form-check-input[type="checkbox"].filled-in:checked + label:after, .labmanage label.btn input[type="checkbox"].filled-in:checked + label:after,
+.lab-man-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .lab-man-form label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid var(--lab-man-color);
     background-color: var(--lab-man-color);
 }
@@ -3038,6 +3078,10 @@ body.modal-open .popover {
     margin: .375rem;
 }
 
+.form-element-border-xsmall {
+    border: .1rem solid #E5E5E5;
+}
+
 .form-element-border-right {
     border-right: .2rem solid #E5E5E5;
 }
@@ -3189,6 +3233,7 @@ body.modal-open .popover {
 }
 
 /*Category Settings*/
+
 .category-field {
     overflow: hidden;
     display: -webkit-box;
@@ -3224,9 +3269,25 @@ body.modal-open .popover {
 }
 
 .category-height {
-    height: 45rem;
+    height: 53rem;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.settings.new-modal-body{
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .ch-scrollable {
-    overflow-y: auto;
+}
+
+.ch-overflow{
+
+}
+/*.settings-form select[disabled] > option{
+    color: var(--black-87) !important;
+}*/
+.settings-form input[disabled], .settings-form select[disabled] > option {
+    color: var(--black-50) !important;
 }
