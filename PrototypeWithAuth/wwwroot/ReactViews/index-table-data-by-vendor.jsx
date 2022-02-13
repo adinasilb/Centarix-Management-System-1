@@ -83,7 +83,7 @@ export default class _IndexTableDataByVendor extends Component {
                                     </td>
                                     {rbv[0].ButtonText != "" ?
                                         <td colSpan="2">
-                                            <button className={"custom-button-font custom-button " + rbv[0].ButtonClasses + " float-right  cart"} type="button" value={rbv[0].Vendor.VendorID}>{rbv[0].ButtonText}</button>
+                                            <button className={"custom-button-font custom-button " + rbv[0].ButtonClasses + "section-bg-color float-right  cart"} type="button" value={rbv[0].Vendor.VendorID}>{rbv[0].ButtonText}</button>
                                         </td>
                                         : null}
                                 </tr>

@@ -120,11 +120,8 @@
     box-shadow: 0 2px 0 0 var(--danger-color) !important;
 }
 
-.operations-filter {
-    filter: var(--operations-filter);
-}
 
-.timekeeper-color {
+.TimeKeeper .section-bg-color {
     background-color: var(--timekeeper-color);
 }
 
@@ -140,7 +137,7 @@
     color: var(--timekeeper-color);
 }
 
-.timekeeper-filter {
+.TimeKeeper .section-filter {
     filter: var(--timekeeper-filter);
 }
 
@@ -152,7 +149,7 @@
     background-color: var(--user-color);
 }
 
-.users-filter {
+.Users .section-filter {
     filter: var(--users-filter);
 }
 
@@ -184,19 +181,21 @@
     color: var(--order-inv-color);
 }
 
-.order-inv-filter {
+.Requests .section-filter {
     filter: var(--order-inv-filter);
 }
 
-.oper-filter {
+.Operations .section-filter {
     filter: var(--operations-filter);
 }
 
-.order-inv-background-color {
+.Requests .section-bg-color {
     background-color: var(--order-inv-color) !important;
 }
-
-.users-background-color {
+.LabManagement .section-bg-color {
+    background-color: var(--lab-man-color) !important;
+}
+.Users .section-bg-color {
     background-color: var(--user-color) !important;
 }
 
@@ -208,11 +207,11 @@
     color: var(--biomarkers-color) !important;
 }
 
-.biomarkers-background-color{
+.Biomarkers .section-bg-color {
     background-color: var(--biomarkers-color) !important;
 }
 
-.biomarkers-filter{
+.Biomarkers .section-filter {
     filter: var(--biomarkers-filter) !important;
 }
 
@@ -226,7 +225,7 @@
 }
 
 
-.lab-man-filter {
+.LabManagement .section-filter {
     filter: var(--lab-man-filter) !important;
 }
 
@@ -234,11 +233,7 @@
     color: var(--lab-man-color) !important;
 }
 
-.lab-man-background-color {
-    background-color: var(--lab-man-color) !important;
-}
-
-.oper-background-color {
+.Operations .section-bg-color {
     background-color: var(--operations-color) !important;
 }
 
@@ -250,15 +245,15 @@
     color: var(--expense-color) !important;
 }
 
-.expenses-background-color-25 {
+.Reports .section-bg-color-25 {
     background-color: var(--expenses-25) !important;
 }
 
-.expenses-filter {
+.Reports .section-filter {
     filter: var(--expense-filter) !important;
 }
 
-.expenses-background-color {
+.Reports .section-bg-color {
     background-color: var(--expense-color) !important;
 }
 
@@ -266,11 +261,11 @@
     color: var(--protocol-color) !important;
 }
 
-.protocols-filter {
+.Protocols .section-filter {
     filter: var(--protocol-filter) !important;
 }
 
-.protocols-background-color {
+.Protocols .section-bg-color {
     background-color: var(--protocol-color) !important;
 }
 
@@ -290,11 +285,11 @@ a.yearly-monthly, input[type=button].yearly-monthly {
     color: var(--acc-color);
 }
 
-.accounting-background-color {
+.Accounting .section-bg-color {
     background-color: var(--acc-color);
 }
 
-.accounting-filter {
+.Accounting .section-filter {
     filter: var(--acc-filter);
 }
 
@@ -597,7 +592,7 @@ table td, table td .btn, .text, table th {
     border: none;
 }
 
-.bio-form .clear-custom-button{
+.Biomarkers .clear-custom-button{
     background-color: white !important;
     border: solid 2px var(--biomarkers-color) !important;
 }
@@ -783,38 +778,38 @@ table td, table td .btn, .text, table th {
             border-bottom: 0 !important;
         }
 
-.order-inv-form .document-border:hover, .order-inv-form .document-border.hasFile {
+.Requests .document-border:hover, .Requests .document-border.hasFile {
     border: 1px solid var(--order-inv-color) !important;
 }
 
-.oper-form .document-border:hover, .oper-form .document-border.hasFile {
+.Operations  .document-border:hover, .Operations  .document-border.hasFile {
     border: 1px solid var(--operations-color) !important;
 }
 
-.supplier-form .document-border:hover, .supplier-form .document-border.hasFile {
+.LabManagement .document-border:hover, .LabManagement .document-border.hasFile {
     border: 1px solid var(--lab-man-color) !important;
 }
 
-.bio-form .document-border.hasFile {
+.Biomarkers .document-border.hasFile {
     border: 2px solid var(--biomarkers-color) !important;
 }
-.accounting-form .document-border:hover, .accounting-form .document-border.hasFile {
+.Accounting .document-border:hover, .Accounting .document-border.hasFile {
     border: 1px solid var(--acc-color) !important;
 }
 
-    .accounting-form .document-border:hover i {
+    .Accounting .document-border:hover i {
         color: var(--acc-color)
     }
 
-.order-inv-form .document-border:hover i {
+.Requests .document-border:hover i {
     color: var(--order-inv-color)
 }
 
-.oper-form .document-border:hover i {
+.Operations  .document-border:hover i {
     color: var(--operations-color)
 }
 
-.supplier-form .document-border:hover i {
+.LabManagement .document-border:hover i {
     color: var(--lab-man-color)
 }
 

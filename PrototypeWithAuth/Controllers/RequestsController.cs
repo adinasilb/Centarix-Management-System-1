@@ -182,7 +182,7 @@ namespace PrototypeWithAuth.Controllers
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString)
 
                             {
-                                ButtonClasses = " load-terms-modal lab-man-background-color ",
+                                ButtonClasses = " load-terms-modal ",
                                 ButtonText = "Order"
                             };
                             orderby = r => r.CreationDate;
@@ -203,7 +203,7 @@ namespace PrototypeWithAuth.Controllers
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString, r.ParentQuote)
 
                             {
-                                ButtonClasses = " confirm-quote lab-man-background-color ",
+                                ButtonClasses = " confirm-quote  ",
                                 ButtonText = "Ask For Quote"
                             };
                             break;
@@ -252,7 +252,7 @@ namespace PrototypeWithAuth.Controllers
                     (AppUtility.IndexTableTypes.AccountingNotifications, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString, new Request())
                     {
-                        ButtonClasses = " invoice-add-all accounting-background-color ",
+                        ButtonClasses = " invoice-add-all ",
                         ButtonText = buttonText
                     };
                     viewModelByVendor.NotificationFilterViewModel = notificationFilterViewModel;
@@ -286,7 +286,7 @@ namespace PrototypeWithAuth.Controllers
                         r.Request.Product.ProductSubcategory.ParentCategory, r.Request.Product.UnitType, r.Request.Product.SubUnitType, r.Request.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
 
                             {
-                                ButtonClasses = " payments-pay-now accounting-background-color ",
+                                ButtonClasses = " payments-pay-now ",
                                 ButtonText = "Pay All"
                             };
                             buttonText = "Pay All";
@@ -305,7 +305,7 @@ namespace PrototypeWithAuth.Controllers
                     select = r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Cart, r, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString)
                     {
-                        ButtonClasses = " load-terms-modal order-inv-background-color ",
+                        ButtonClasses = " load-terms-modal  ",
                         ButtonText = "Order",
                     };
                     break;

@@ -3,24 +3,8 @@
 @{
     //ViewData["Title"] = "Search";
 }
-@{ string buttonClass = "";
-    string form = "";
-
-    if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
-
-    {
-        Layout = "~/Views/Shared/RequestNavView.cshtml";
-        buttonClass = "lab-man-background-color";
-        form = "supplier-form";
-    }
-    else
-    {
-        Layout = "~/Views/Shared/RequestNavView.cshtml";
-        buttonClass = "accounting-background-color";
-        form = "accounting-form";
-
-    }
-    <form asp-action="Search" method="post" class="container-fluid @form scroll-page" enctype="multipart/form-data">
+@{ 
+    <form asp-action="Search" method="post" class="container-fluid  scroll-page" enctype="multipart/form-data">
 
         <div class="card-body border-0 m-auto " style="max-width:60%;">
 
@@ -38,7 +22,7 @@
                                 </div>
 
                                 <div class="col-md-3 text-center">
-                                    <input type="submit" value="Search" class=" @buttonClass custom-button custom-button-font " />
+                                    <input type="submit" value="Search" class=" section-bg-color custom-button custom-button-font " />
                                 </div>
                             </div>
                             <div class="row">

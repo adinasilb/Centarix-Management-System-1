@@ -3,11 +3,11 @@
 
 @{
     string navLinkClass = "";
-    string buttonClass = "";
+
     if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
     {
         navLinkClass = "lab-man-nav-link";
-        buttonClass = "lab-man-background-color";
+ 
     }
     else if (Model.SectionType.Equals(AppUtility.MenuItems.Requests))
     {
@@ -16,7 +16,7 @@
     else if (Model.SectionType.Equals(AppUtility.MenuItems.Accounting))
     {
         navLinkClass = "supplier-nav-link";
-        buttonClass = "accounting-background-color";
+
     }
 
     var nextTab = "";
@@ -51,7 +51,7 @@
             </div>
 
             <div class="col-5 modal-line-1-header">
-                <input type="submit" id="addSupplier" value="Add Supplier" asp-action="Create" class="@buttonClass  custom-button custom-button-font disabled-submit activeSubmit" style="float: right;" />
+                <input type="submit" id="addSupplier" value="Add Supplier" asp-action="Create" class="section-bg-color custom-button custom-button-font disabled-submit activeSubmit" style="float: right;" />
             </div>
         }
         else

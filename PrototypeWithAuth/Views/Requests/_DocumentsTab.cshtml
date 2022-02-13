@@ -11,34 +11,13 @@
     var urlAction = Url.Action("DocumentsModal", "Requests");
     var fontSize = "2rem";
 
-    var color = "";
-    switch (Model.SectionType)
-    {
-        case AppUtility.MenuItems.Operations:
-            color = "oper-filter";
-            break;
-        case AppUtility.MenuItems.LabManagement:
-            color = "lab-man-filter";
-            break;
-        case AppUtility.MenuItems.Accounting:
-            color = "accounting-filter";
-            break;
-        case AppUtility.MenuItems.Requests:
-            color = "order-inv-filter";
-            break;
-        case AppUtility.MenuItems.Users:
-            color = "users-filter";
-            break;
-        case AppUtility.MenuItems.Protocols:
-            color = "protocols-filter";
-            break;
-    }
+  
 }
 <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
 <div class="row document-margin-bottom">
     @for (int i = 0; i < 4; i++)
     {
-        GetDocumentCardsRow(i, color, fontSize);
+        GetDocumentCardsRow(i, "section-filter", fontSize);
 
     }
 
@@ -48,7 +27,7 @@
     <div class="row document-margin-bottom">
         @for (int i = 4; i < Model.DocumentsInfo.Count; i++)
         {
-            GetDocumentCardsRow(i, color, fontSize);
+            GetDocumentCardsRow(i, "section-filter", fontSize);
         }
     </div>
 }

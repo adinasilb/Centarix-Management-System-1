@@ -1,7 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.NewListViewModel;
 
 <div class="modal modal-view newListModal on-form-modal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9100">
-    <div class="modal-dialog-centered elixir-modal-sm mx-auto order-inv-form" role="document">
+    <div class="modal-dialog-centered elixir-modal-sm mx-auto " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('new-list');">
                 <span aria-hidden="true">&times;</span>
@@ -28,7 +28,7 @@
                     </div>
                     <div class="modal-footer border-0 p-0">
                         <div class="mx-auto modal-footer-mt">
-                            <button type="submit" class="custom-button custom-button-font between-button-margin order-inv-background-color createList">Save</button>
+                            <button type="submit" class="custom-button custom-button-font between-button-margin section-bg-color createList">Save</button>
                             <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('new-list');">Cancel</button>
                         </div>
                     </div>

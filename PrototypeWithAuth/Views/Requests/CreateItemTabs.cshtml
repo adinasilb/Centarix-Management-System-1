@@ -5,12 +5,12 @@
 @using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> _userManager
 @{
-    var bcColor = "order-inv-background-color";
+    var bcColor = "section-bg-color";
 
     if (Model.SectionType == AppUtility.MenuItems.Operations)
     {
 
-        bcColor = "oper-background-color";
+        bcColor = "section-bg-color";
     }
     Model.bcColor = bcColor;
 }

@@ -15,7 +15,7 @@
 		//set the view:
 		var colorClass = "graduated-table-background-color";
 		var borderLeftClass = "statistics-project-selected";
-		var arrowClass = "expenses-filter";
+		var arrowClass = "section-filter";
 		$("tr").removeClass(borderLeftClass);
 		$("button").removeClass(colorClass);
 		$("i").removeClass(arrowClass);
