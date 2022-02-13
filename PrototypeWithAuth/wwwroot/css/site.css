@@ -3078,6 +3078,10 @@ body.modal-open .popover {
     margin: .375rem;
 }
 
+.form-element-border-xsmall {
+    border: .1rem solid #E5E5E5;
+}
+
 .form-element-border-right {
     border-right: .2rem solid #E5E5E5;
 }
@@ -3229,6 +3233,7 @@ body.modal-open .popover {
 }
 
 /*Category Settings*/
+
 .category-field {
     overflow: hidden;
     display: -webkit-box;

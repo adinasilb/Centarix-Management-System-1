@@ -13,7 +13,7 @@ import {
 import DeleteModal from './delete-modal.jsx';
 import _IndexTableData from './index-table-data.jsx';
 import _IndexTableDataByVendor from './index-table-data-by-vendor.jsx';
-import SettingsInventory from "./settings-inventory.jsx";
+import SettingsInventory from "./Requests/settings-inventory.jsx";
 import FloatingActionBar from './floating-action-bar.jsx';
 
 export default class RootComponent extends React.Component {

@@ -5113,11 +5113,11 @@ namespace PrototypeWithAuth.Controllers
                             Bool = false
                         }
                     }
-                }
-                //Categories = GetCategoryList(new ParentCategory().GetType().Name, 1)
+                },
+                Categories = GetCategoryList(new ParentCategory().GetType().Name, 1)
             };
-            //settings.Subcategories = GetCategoryList(new ProductSubcategory().GetType().Name, 2, settings.Categories.CategoryBases.FirstOrDefault().ID);
-            //settings.SettingsForm = GetSettingsFormViewModel(settings.Subcategories.CategoryBases.FirstOrDefault().GetType().Name, settings.Subcategories.CategoryBases.FirstOrDefault().ID);
+            settings.Subcategories = GetCategoryList(new ProductSubcategory().GetType().Name, 2, settings.Categories.CategoryBases.FirstOrDefault().ID);
+            settings.SettingsForm = GetSettingsFormViewModel(settings.Subcategories.CategoryBases.FirstOrDefault().GetType().Name, settings.Subcategories.CategoryBases.FirstOrDefault().ID);
             return View(settings);
         }
 
