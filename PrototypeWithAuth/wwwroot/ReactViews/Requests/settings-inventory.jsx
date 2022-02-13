@@ -20,7 +20,7 @@ export default class SettingsInventory extends Component {
                         <div className="col-2 form-element-border-xsmall p-2 category-list-1 cat-col category-height ">
                             <CategoryListSettings categories={this.props.viewModel.Subcategories} />
                         </div>
-                        <div className="col-8 form-element-border-xsmall p-2">
+                        <div className="col-8 form-element-border-xsmall settings-form">
                             <SettingsForm SettingsForm={this.props.viewModel.SettingsForm} />
                         </div>
                     </div>

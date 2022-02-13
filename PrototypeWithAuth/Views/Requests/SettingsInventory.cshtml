@@ -6,8 +6,8 @@
 @Html.React("RootComponent", new { viewModel = Model, viewEnum = "SettingsInventory" })
 @Html.ReactGetScriptPaths()
 @Html.ReactInitJavaScript()
-<div>Settings Inventory : Main Page</div>
-@*<form class="lab-man-form">
+@*<div>Settings Inventory : Main Page</div>*@
+<form class="lab-man-form">
         <div class="row d-flex">
             <div class="item-table h-auto mb-4">
                 <ul class="pl-0">
@@ -32,4 +32,4 @@
                 @{ await Html.RenderPartialAsync("_SettingsForm", Model.SettingsForm);}
             </div>
         </div>
-    </form>*@
+    </form>
