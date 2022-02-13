@@ -160,8 +160,8 @@
 		e.preventDefault();
 		e.stopPropagation();
 		var typeEnum = $("#masterSidebarType").val();
-		var requestid = $(this).attr("value");
-		var itemUrl = "/Requests/PaymentsPayModal/?requestid=" + requestid + "&accountingPaymentsEnum=" + typeEnum;
+		var paymentId = $(this).attr("value");
+		var itemUrl = "/Requests/PaymentsPayModal/?paymentIds=" + paymentId + "&accountingPaymentsEnum=" + typeEnum;
 		$("#loading").show();
 		$.fn.CallModal(itemUrl, "payments-pay");
 	});
@@ -174,7 +174,8 @@
 	$(".pay-selected").off("click").on("click", function (e) {
 		var typeEnum = $(this).attr("type");
 		var itemUrl = "/Requests/PaymentsPayModal/?accountingPaymentsEnum=" + typeEnum;
-		$.fn.LoadModalForSelectedItems(e, itemUrl, "payments-pay");
+		var parameterName = 'paymentIds';
+		$.fn.LoadModalForSelectedItems(e, itemUrl, "payments-pay", parameterName);
 	});
 
 	$(".invoice-add-all").off("click").on("click", function (e) {
@@ -188,7 +189,8 @@
 
 	$(".add-to-selected").off("click").on("click", function (e) {
 		var itemUrl = "/Requests/AddInvoiceModal/";
-		$.fn.LoadModalForSelectedItems(e, itemUrl, "add-invoice");
+		var parameterName = 'requestIds';
+		$.fn.LoadModalForSelectedItems(e, itemUrl, "add-invoice", parameterName);
 
 	});
 

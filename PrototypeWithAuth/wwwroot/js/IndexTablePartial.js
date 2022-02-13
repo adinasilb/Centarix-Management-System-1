@@ -407,7 +407,7 @@ $(function () {
         return false;
     });
 
-    $.fn.LoadModalForSelectedItems = function (e, itemUrl, modalClass) {
+    $.fn.LoadModalForSelectedItems = function (e, itemUrl, modalClass, parameterName) {
         e.preventDefault();
         e.stopPropagation();
         var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
@@ -415,12 +415,15 @@ $(function () {
         }).get()
         //alert('before loading');
         console.log("arrayOfSelected: " + arrayOfSelected);
+        var myData = {};
+        myData[parameterName] = arrayOfSelected;
+        console.log(myData);
         $("#loading").show();
         $.ajax({
             type: "GET",
             url: itemUrl,
             traditional: true,
-            data: { 'requestIds': arrayOfSelected },
+            data: myData,
             cache: true,
             success: function (data) {
                 //alert('success!');
@@ -432,10 +435,12 @@ $(function () {
     }
     $('.load-terms-for-selected').on('click', function (e) {
         var itemUrl = "/Requests/TermsModal/?" + $.fn.getRequestIndexString();
-        $.fn.LoadModalForSelectedItems(e, itemUrl, "terms");
+        var parameterName = 'requestIds';
+        $.fn.LoadModalForSelectedItems(e, itemUrl, "terms", parameterName);
     })
     $('.update-quote-for-selected').on('click', function (e) {
-        $.fn.LoadModalForSelectedItems(e, "/Requests/EditQuoteDetails/", "edit-quote");
+        var parameterName = 'requestIds';
+        $.fn.LoadModalForSelectedItems(e, "/Requests/EditQuoteDetails/", "edit-quote", parameterName);
     })
 
 

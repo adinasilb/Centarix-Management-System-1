@@ -3816,14 +3816,23 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var payments = _paymentsProc.Read(new List<Expression<Func<Payment, bool>>> { p => paymentIds.Contains(p.PaymentID) },
+            var payments = new List<Payment>();
+            if(vendorId != null)
+            {
+                var vm = await GetPaymentRequests(accountingPaymentsEnum);
+                payments = vm.Where(rp => rp.Request.Product.VendorID == vendorId).Select(rp => rp.Payment).ToList();
+            }
+            else
+            {
+                payments = _paymentsProc.Read(new List<Expression<Func<Payment, bool>>> { p => paymentIds.Contains(p.PaymentID) },
                 new List<ComplexIncludes<Payment, ModelBase>>
                 {
                     new ComplexIncludes<Payment, ModelBase>{ Include = p => p.Request , ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = r => ((Request)r).ParentRequest } },
-                    new ComplexIncludes<Payment, ModelBase>{ Include = p => p.Request, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{Include =  r => ((Request)r).Product } }
+                    new ComplexIncludes<Payment, ModelBase>{ Include = p => p.Request, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{Include =  r => ((Request)r).Product,
+                        ThenInclude =  new ComplexIncludes<ModelBase, ModelBase>{Include =  p => ((Product)p).Vendor  }} }
                 }).ToList();
-        
-            var requestsToPay = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r =>  payments.Select(p => p.RequestID).Contains(r.RequestID) },
+            }
+/*            var requestsToPay = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r =>  payments.Select(p => p.RequestID).Contains(r.RequestID) },
                 new List<ComplexIncludes<Request, ModelBase>>
                 {
                     //new ComplexIncludes<Request, ModelBase>{ Include =  r => r.ParentRequest},
@@ -3833,23 +3842,23 @@ namespace PrototypeWithAuth.Controllers
                     //new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.SubUnitType},
                     //new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.SubSubUnitType},
                     //new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Payments}
-                }).ToList();
+                }).ToList();*/
+
             //can you edit amount to pay? if yes, if last installment calc how much is left to pay
-            
 
             StringWithBool Error = new StringWithBool();
-            if (requestsToPay.Select(r => r.Currency).Distinct().Count() > 1)
+            if (payments.Select(p => p.Request.Currency).Distinct().Count() > 1)
             {
                 Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
             }
-            if (requestsToPay.Select(r => r.Product.Vendor).Distinct().Count() > 1)
+            if (payments.Select(p => p.Request.Product.Vendor).Distinct().Count() > 1)
             {
                 Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
             }
             PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
             {
                 Payments = payments,
-                Requests = requestsToPay,
+                //Requests = requestsToPay,
                 AccountingEnum = accountingPaymentsEnum,
                 Payment = new Payment(),
                 PaymentTypes = _paymentTypesProc.Read().Select(pt => pt).ToList(),
@@ -3860,7 +3869,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(paymentsPayModalViewModel);
         }
 
-            public async Task<List<CheckboxViewModel>> GetShippingsToPay(List<Payment> payments)
+        public async Task<List<CheckboxViewModel>> GetShippingsToPay(List<Payment> payments)
         {
             List<CheckboxViewModel> shippings = new List<CheckboxViewModel>();
             foreach (var p in payments)

@@ -30,15 +30,16 @@
                         <div class="container ">
                             <div class="row modal-header-padding">
                                 <div class="col-6">
-                                    <span class="heading-1">Pay @Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName.ToLower()</span>
+                                    <span class="heading-1">Pay @Model.Payments.FirstOrDefault().Request.Product.Vendor.VendorEnName.ToLower()</span>
                                 </div>
                                 <hr />
                                 @{
                                     var CostShekel = Model.Payments.Sum(p => p.Sum);
-                                    var VAT = Model.Requests.Sum(r => r.VAT);
+                                    //TODO when change to be able to edit vat, change this: 
+                                    var VAT = Model.Payments.Sum(p => p.Request.IncludeVAT ? p.Sum * .17m : 0);
                                     var TotalShekel = CostShekel + VAT;
-                                    var CostDollar = Model.Requests.Sum(r => r.Cost / r.ExchangeRate);
-                                    var DollarVAT = Model.Requests.Sum(r => r.VAT / r.ExchangeRate);
+                                    var CostDollar = Model.Payments.Sum(p => p.Sum / p.Request.ExchangeRate);
+                                    var DollarVAT = Model.Payments.Sum(p => (p.Request.IncludeVAT ? p.Sum * .17m : 0) / p.Request.ExchangeRate);
                                     var TotalDollar = CostDollar + DollarVAT;
 
                                 }
@@ -110,7 +111,7 @@
 
                                 var ShippingTotalShekel = TotalShekel;
                                 var ShippingTotalDollar = TotalDollar;
-                                var includeVAT = Model.Requests[0].IncludeVAT;
+                                var includeVAT = Model.Payments[0].Request.IncludeVAT;
                                 <strong>Shipping:</strong>
                                 @for (var s = 0; s < Model.ShippingToPay.Count; s++)
                                 {
