@@ -357,7 +357,7 @@ $(function () {
 
     $.fn.CheckCurrency = function (modalClass) {
         console.log('check currency')
-        var currencyType = $("." + modalClass +" #currency").val();
+        var currencyType = $("." + modalClass + " #currency").val();
         var shekelSelector = "." + modalClass +" #cost";
         var dollarSelector = "." + modalClass +" #sum-dollars";
         if ($('#masterSectionType').val() == "Operations") {
@@ -379,22 +379,22 @@ $(function () {
                 //            }
                 $(shekelSelector).prop("readonly", true);
                 $(shekelSelector).addClass('disabled-text');
-                $(dollarSelector).prop("disabled", false);
-                $(dollarSelector).removeClass("disabled");
-                $(dollarSelector).removeClass('disabled-text');
+                $(dollarSelector).not(".mark-roles-readonly").prop("disabled", false);
+                $(dollarSelector).not(".mark-roles-readonly").removeClass("disabled");
+                $(dollarSelector).not(".mark-roles-readonly").removeClass('disabled-text');
                 $(dollarSelector).addClass('requestPriceQuote');
                 $(shekelSelector).removeClass('requestPriceQuote');
 
 
-                $("." + modalClass +" #unit-price-dollars").prop("disabled", false);
-                $("." + modalClass +" #unit-price-dollars").removeClass('disabled-text');
-                $("." + modalClass +" #unit-price-dollars").prop("readonly", false);
-                $("." + modalClass +" .request-cost-dollar-icon").removeClass('disabled-text');
+                $("." + modalClass + " #unit-price-dollars").not(".mark-roles-readonly").prop("disabled", false);
+                $("." + modalClass + " #unit-price-dollars").not(".mark-roles-readonly").removeClass('disabled-text');
+                $("." + modalClass + " #unit-price-dollars").not(".mark-roles-readonly").prop("readonly", false);
+                $("." + modalClass + " .request-cost-dollar-icon").not(".mark-roles-readonly").removeClass('disabled-text');
 
-                $("." + modalClass +" #unit-price-shekel").prop("disabled", true);
-                $("." + modalClass +" #unit-price-shekel").addClass('disabled-text');
-                $("." + modalClass +" #unit-price-shekel").prop("readonly", true);
-                $("." + modalClass +" .request-cost-shekel-icon").addClass('disabled-text');
+                $("." + modalClass + " #unit-price-shekel").prop("disabled", true);
+                $("." + modalClass + " #unit-price-shekel").addClass('disabled-text');
+                $("." + modalClass + " #unit-price-shekel").prop("readonly", true);
+                $("." + modalClass + " .request-cost-shekel-icon").addClass('disabled-text');
                 break;
             case "NIS":
             case undefined: //for the reorder modal
@@ -406,23 +406,23 @@ $(function () {
                 //else {
                 //	warning = false;
                 //}
-                $(shekelSelector).prop("readonly", false);
-                $(shekelSelector).removeClass('disabled-text');
-                $(dollarSelector).prop("disabled", true);
-                $(dollarSelector).addClass('disabled-text');
-                $(shekelSelector).addClass('requestPriceQuote');
-                $(dollarSelector).removeClass('requestPriceQuote');
+                $(shekelSelector).not(".mark-roles-readonly").prop("readonly", false);
+                $(shekelSelector).not(".mark-roles-readonly").removeClass('disabled-text');
+                $(dollarSelector).not(".mark-roles-readonly").prop("disabled", true);
+                $(dollarSelector).not(".mark-roles-readonly").addClass('disabled-text');
+                $(shekelSelector).not(".mark-roles-readonly").addClass('requestPriceQuote');
+                $(dollarSelector).not(".mark-roles-readonly").removeClass('requestPriceQuote');
 
 
-                $("." + modalClass +" #unit-price-dollars").prop("disabled", true);
-                $("." + modalClass +" #unit-price-dollars").addClass('disabled-text');
-                $("." + modalClass +" #unit-price-dollars").prop("readonly", true);
-                $("." + modalClass +" .request-cost-dollar-icon").addClass('disabled-text');
+                $("." + modalClass + " #unit-price-dollars").not(".mark-roles-readonly").prop("disabled", true);
+                $("." + modalClass + " #unit-price-dollars").not(".mark-roles-readonly").addClass('disabled-text');
+                $("." + modalClass + " #unit-price-dollars").not(".mark-roles-readonly").prop("readonly", true);
+                $("." + modalClass + " .request-cost-dollar-icon").not(".mark-roles-readonly").addClass('disabled-text');
 
-                $("." + modalClass +" #unit-price-shekel").prop("disabled", false);
-                $("." + modalClass +" #unit-price-shekel").removeClass('disabled-text');
-                $("." + modalClass +" #unit-price-shekel").prop("readonly", false);
-                $("." + modalClass +" .request-cost-shekel-icon").removeClass('disabled-text');
+                $("." + modalClass + " #unit-price-shekel").not(".mark-roles-readonly").prop("disabled", false);
+                $("." + modalClass + " #unit-price-shekel").not(".mark-roles-readonly").removeClass('disabled-text');
+                $("." + modalClass + " #unit-price-shekel").not(".mark-roles-readonly").prop("readonly", false);
+                $("." + modalClass + " .request-cost-shekel-icon").not(".mark-roles-readonly").removeClass('disabled-text');
 
                 break;
         }

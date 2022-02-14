@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
@@ -12,6 +13,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<String> PriceSortEnumsList { get; set; }
 
         private AppUtility.CurrencyEnum _selectedCurrency;
+        
         public AppUtility.CurrencyEnum SelectedCurrency { 
             get {
                 if(_selectedCurrency == AppUtility.CurrencyEnum.None)

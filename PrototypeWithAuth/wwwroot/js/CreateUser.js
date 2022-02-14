@@ -37,11 +37,11 @@ $(function () {
 		switch (type) {
 			case "password":
 				passwordField.attr("type", "text");
-				$(this).removeClass("users-filter");
+				$(this).removeClass("section-filter");
 				break;
 			case "text":
 				passwordField.attr("type", "password");
-				$(this).addClass("users-filter");
+				$(this).addClass("section-filter");
 				break;
 			default:
 				passwordField.attr("type", "password");

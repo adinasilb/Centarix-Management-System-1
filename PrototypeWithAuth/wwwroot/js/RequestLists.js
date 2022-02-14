@@ -285,6 +285,14 @@
         $(this).closest(".comment-info").remove();
     });
 
+    $(".delete-share-list").off("click").on("click", function (e) {
+
+        var index = $(this).attr("value");
+        console.log("delete share " + index)
+        $(".removeShare" + index).val(true)
+        $(this).closest(".share-permissions").remove();
+    })
+
     $(".close-settings").off("click").on("click", function (e) {
         e.preventDefault();
         console.log("close settings")

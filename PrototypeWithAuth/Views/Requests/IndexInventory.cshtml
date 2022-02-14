@@ -14,6 +14,20 @@
         Layout = null;
     }
 
+    var form = "order-inv-form";
+    if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].ToString() == AppUtility.MenuItems.Operations.ToString())
+    {
+        form = "oper-form";
+    }
+    else if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].ToString() == AppUtility.MenuItems.LabManagement.ToString())
+    {
+        form = "lab-man-form";
+    }
+    else if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].ToString() == AppUtility.MenuItems.Accounting.ToString())
+    {
+        form = "acc-form";
+    }
+
 }
 @if (Model.ErrorMessage != null)
 {
@@ -24,16 +38,16 @@
 
 @if (Model.PageType != AppUtility.PageTypeEnum.OperationsInventory)
 {
-    <div class="_IndexTableWithProprietaryTabs">
+    <div class="_IndexTableWithProprietaryTabs @form">
         @{ await Html.RenderPartialAsync("_IndexTableWithProprietaryTabs", Model);}
     </div>
 }
 else
 {
-    <div>
+    <div class="@form">
         @{ await Html.RenderPartialAsync("_IndexFilter", Model.InventoryFilterViewModel);}
     </div>
-    <div class="_IndexTable">
+    <div class="_IndexTable @form">
         @{ await Html.RenderPartialAsync("_IndexTable", Model);}
     </div>
 }

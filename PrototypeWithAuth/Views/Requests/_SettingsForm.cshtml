@@ -1,4 +1,6 @@
 ﻿@using PrototypeWithAuth.ViewModels;
+@using PrototypeWithAuth.AppData.UtilityModels;
+@using PrototypeWithAuth.AppData;
 @model SettingsForm;
 
 @{
@@ -6,12 +8,17 @@
 }
 <form action="" method="get" class="lab-man-form" id="myForm">
     <input type="hidden" class="customFieldCounter" value="0" />
-    <div class="row top-bar border-bottom text-center text-justify under-row-margin">
-        <div class="col-12">
-            @Model.ItemCount Items &nbsp;&nbsp;&nbsp;&nbsp; @Model.RequestCount Requests
+    <input type="hidden" asp-for="Category.ID" />
+    <input type="hidden" asp-for="Category.Description" />
+    <div class="row top-bar border-bottom text-center text-justify under-row-margin d-flex" style="height:auto;">
+        <div class="col-12 align-items-center justify-content-center pt-3 pb-3">
+            <span class="align-items-center">
+                <span class="lab-man-color">@Model.ItemCount</span> Items &nbsp;&nbsp;&nbsp;&nbsp;
+                <span class="lab-man-color">@Model.RequestCount</span> Requests
+            </span>
         </div>
     </div>
-    <div class="new-modal-header modal-line-1-header-with-back modal-sides">
+    <div class="new-modal-header modal-line-1-header-with-back modal-sides ch-scrollable pt-0" style="height:12.2rem; overflow:hidden;">
         <div class="row modal-title-line justify-content-between under-row-margin container">
             @{
                 var source = Model.Category.ImageURL ?? "";
@@ -44,7 +51,7 @@
             </div>
         </div>
     </div>
-    <div class="new-modal-body edit-modal-outer-body ">
+    <div class="settings new-modal-body edit-modal-outer-body " style="height:33.5rem;">
         <div class="container-fluid edit-modal-body box-shadow orders partial-div" style="background: #FFF; border: 2px solid #EAEAEB;">
             <div class="container-fluid div-tabs no-box-shadow p-0">
                 <div class="tab-content">
@@ -64,14 +71,6 @@
                                     <option value="0">@subCatText</option>
                                 </select>
                             </div>
-                            <div class="col-2">
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input filled-in" asp-for="Test[0]" />
-                                        <label class="form-check-label " asp-for="Test[0]">Required</label>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
@@ -82,37 +81,80 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="control-label">Company ID (automatic)</label>
-                                <input class="form-control-plaintext border-bottom" disabled />
+                                <input class="form-control-plaintext border-bottom" value="@ElixirStrings.IntPlaceholder" disabled />
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <label class="control-label">Catalogue No.</label>
-                                <input class="form-control-plaintext border-bottom" disabled />
+                                <input class="form-control-plaintext border-bottom" value="@ElixirStrings.IntPlaceholder" disabled />
                             </div>
                             <div class="col-md-6">
                                 <label class="control-label">URL</label>
-                                <input class="form-control-plaintext border-bottom" disabled />
+                                <input class="form-control-plaintext border-bottom" value="@ElixirStrings.UrlPlaceholder" disabled />
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <label class="control-label">Expected Supply Days</label>
-                                <input class="form-control-plaintext border-bottom" disabled />
+                                <input class="form-control-plaintext border-bottom" value="@ElixirStrings.SmallIntPlaceholder" disabled />
                             </div>
                             <div class="col-md-6">
                                 <label class="control-label">Expected Supply Date</label>
-                                <input class="form-control-plaintext border-bottom" disabled />
+                                <input class="form-control-plaintext border-bottom" value="@ElixirStrings.ExpectedSupplyDate" disabled />
                             </div>
                         </div>
-                        <div class="custom-fields-details row lab-man-form">
+                        <div class="custom-fields-details lab-man-form">
+                            <div class="cf_header hidden">
+                                @{ await Html.RenderPartialAsync("_CFHeader.cshtml"); }
+                            </div>
+                        </div>
+                        <div class="cf_header hidden">
+                            @{ await Html.RenderPartialAsync("_BorderCF.cshtml");}
                         </div>
                         <div class="add-custom-fields row">
                             @{ await Html.RenderPartialAsync("_AddCustomFields.cshtml", "details-form");}
                         </div>
                     </div>
                     <div id="price" class="tab-pane fade in" value="1">
-                        Price
+
+                        <div class="row no-mb">
+                            <div class="col-md-8">
+                                <span class="heading-1 modal-tab-name">Price</span><br />
+                                <span class=" large-text text-danger-centarix font-weight-bold" id="price-warning"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Currency</label>
+                                            <select id="currency" class="mdb-select custom select-dropdown form-control-plaintext disabled">
+                                                <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Exchange Rate</label>
+                                            <input name="Requests[0].ExchangeRate" class="form-control-plaintext border-bottom " id="exchangeRate" />
+                                            <span class="text-danger-centarix"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="custom-fields-price lab-man-form">
+                            <div class="cf_header hidden">
+                                @{ await Html.RenderPartialAsync("_CFHeader.cshtml"); }
+                            </div>
+                        </div>
+                        <div class="cf_header hidden">
+                            @{ await Html.RenderPartialAsync("_BorderCF.cshtml");}
+                        </div>
+                        <div class="add-custom-fields row">
+                            @{ await Html.RenderPartialAsync("_AddCustomFields.cshtml", "price-form");}
+                        </div>
                     </div>
                     <div id="documents" class="tab-pane fade in" value="1">
                         Documents
@@ -129,5 +171,23 @@
     $(".save-settings-form").on("click", function (e) {
         e.stopPropagation();
         e.preventDefault();
+        var formData = new FormData($("#myForm")[0]);
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
+        $.ajax({
+            processData: false,
+            contentType: false,
+            data: formData,
+            url: "/Requests/_SettingsForm",
+            type: 'POST',
+            success: function (data) {
+                console.log("success");
+            },
+            error: function (jqxhr) {
+                console.log("error");
+                //$("._Lines").html(jqxhr.responseText);
+            }
+        });
     });
 </script>

@@ -1,9 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
 @using PrototypeWithAuth.AppData
 @{
-    var bcColor = "order-inv-background-color  ";
     var color = "order-inv-color";
-    var form = "order-inv-form";
     var dollarDisabled = "disabled disabled-text";
     var shekelDisabledText = "";
     var shekelReadOnly = "false";
@@ -13,8 +11,6 @@
     var submitOrderClass = " submitOrder ";
     if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].Equals(AppUtility.MenuItems.LabManagement.ToString()))
     {
-        bcColor = "lab-man-background-color";
-        form = "supplier-form";
         color = "lab-man-color";
     }
     TempData.Keep();
@@ -42,7 +38,7 @@
 <script src="~/js/Validation/ReorderFormValidation.js"></script>
 <script src="~/js/SubUnit.js"></script>
 <script src="~/js/IndexTablePartial.js"></script>
-<div class="modal modal-view reorderModal fader on-form-modal @form " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 6000;">
+<div class="modal modal-view reorderModal fader on-form-modal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 6000;">
 
     <div class="modal-dialog-centered modal-xl mx-auto" role="document">
 

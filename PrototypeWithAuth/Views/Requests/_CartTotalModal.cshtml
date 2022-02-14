@@ -3,24 +3,6 @@
 
 @{
     Layout = null;
-
-    var bcColor = "order-inv-background-color";
-    string form = "";
-    if (Model.SectionType == AppUtility.MenuItems.Operations)
-    {
-        form = "oper-form";
-        bcColor = "oper-background-color";
-    }
-    else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
-    {
-        bcColor = "lab-man-background-color";
-        form = "supplier-form";
-    }
-    else if (Model.SectionType == AppUtility.MenuItems.Requests)
-    {
-        bcColor = "order-inv-background-color";
-        form = "order-inv-form";
-    }
 }
 <script src="~/js/site.js" asp-append-version="true"></script>
 
@@ -61,7 +43,7 @@
                     </div>
                     <div class="modal-footer">
                         <div class="text-center mx-auto modal-footer-mt">
-                            <button type="button" class="custom-button custom-button-font @bcColor between-button-margin approve-cart" value="@Model.Request.RequestID">Approve</button>
+                            <button type="button" class="custom-button custom-button-font section-bg-color between-button-margin approve-cart" value="@Model.Request.RequestID">Approve</button>
                             <button type="button" class="custom-cancel custom-button " data-dismiss="modal" onclick="$.fn.CloseModal('cart-total')">Cancel</button>
                         </div>
                     </div>

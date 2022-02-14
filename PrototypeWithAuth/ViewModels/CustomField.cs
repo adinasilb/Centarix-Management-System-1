@@ -13,5 +13,6 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<CustomDataType> CustomDataTypes { get; set; }
         public List<bool> Required { get; set; }
         public int CustomFieldCounter { get; set; }
+        public string DivClass { get; set; }
     }
 }

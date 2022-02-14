@@ -2,7 +2,7 @@
     $(".edit-mode-input").on("click", function (e) {
         console.log($(this))
         if ($(this).hasClass("on")) {
-            var valid = $(".bio-form").valid()
+            var valid = $("form").valid()
             if (valid) {
                 var guid = $(".hidden-guid").val();
                 $.ajax({

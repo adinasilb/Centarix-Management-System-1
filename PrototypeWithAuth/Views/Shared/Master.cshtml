@@ -1,4 +1,7 @@
 ﻿@using PrototypeWithAuth.AppData.UtilityModels
+@using React.AspNet
+@using React.Router
+@using PrototypeWithAuth.AppData 
 @{
     Layout = null;
 }
@@ -20,7 +23,6 @@
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Master.css" asp-append-version="true" />
-    <link href="~/css/forms.css" rel="stylesheet" />
     <link href="~/css/elixir-fonts/elixir-icons.css" rel="stylesheet" />
     @*load the jquery ui stylesheet*@
     <link rel="stylesheet" href="~/css/jquery-ui.min.css">
@@ -79,10 +81,6 @@
     </div>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <div class="request_nav_body"> @RenderBody()</div>
-    <div class="modals">
-        @{await Html.RenderPartialAsync("ModalLoader"); }
-    </div>
-
 
     <!--  SCRIPTS  -->
     <!-- JQuery -->
@@ -170,8 +168,8 @@
 
 
     <script type="module" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view-renderer.js"></script>
-    <script type="text/javascript" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view.js"></script>
-    <script type="text/javascript" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select.js"></script>
+    <script type="text/babel" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view.js"></script>
+    <script type="text/babel" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select.js"></script>
 
     <script src="~/lib/bootstrap/dist/src/js/pro/buttons.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/cards.js"></script>
@@ -459,7 +457,6 @@
                 $.fn.EnableMaterialSelect('#operationsSubcategory', 'select-options-operationsSubcategory');
             }
             if ($(element).hasClass('orders')) {
-                alert("in if statement");
                 console.log("orders");
                 $.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
                 $.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
@@ -484,7 +481,7 @@
                     }
                     console.log("enable subunits with onlyms: " + onlyMS);
                     $.fn.EnableSubUnits(onlyMS);
-                    
+
                 }
                 if ($("#quoteStatus").val() == "1" || $("#quoteStatus").val() == "2") {
                     console.log("no quote")
@@ -561,7 +558,7 @@
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
             $('.open-archive-modal').removeClass('disabled-background-color');
-            $('.open-archive-modal').addClass('order-inv-background-color');
+            $('.open-archive-modal').addClass('section-bg-color');
         }
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
@@ -697,7 +694,7 @@
             $("." + modalClass + ' .open-document-modal').attr("data-val", false);
             $("." + modalClass + ' .location-icon').addClass('d-none');
             $("." + modalClass + ' .open-archive-modal').addClass('disabled-background-color');
-            $("." + modalClass + ' .open-archive-modal').removeClass('order-inv-background-color');
+            $("." + modalClass + ' .open-archive-modal').removeClass('section-bg-color');
 
             //console.log('locations edot mode off');
             //$("." + modalClass +".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
@@ -957,12 +954,12 @@
         };
 
 
-        $("table tr .order-inv-form .form-check-input").click(function () {
+        $(".Requests table tr .form-check-input").click(function () {
             if ($(this).is(':checked')) {
-                $(this).closest("tr").addClass("clicked-border-orders-inv");
+                $(this).closest("tr").addClass("clicked-border");
             }
             else {
-                $(this).closest("tr").removeClass("clicked-border-orders-inv");
+                $(this).closest("tr").removeClass("clicked-border");
             }
         });
 
@@ -1319,12 +1316,12 @@
                     if(isReopen)
                     {
                         console.log("before fx");
-                        //if ($("._testvalues").length > 0) {
+                        if ($("._testvalues").length > 0) {
 
-                        //    if (!$("._testvalues").hasClass("changed")) {
-                        //        $("._testvalues").addClass("changed");
-                        //    }
-                        //}
+                            if (!$("._testvalues").hasClass("changed")) {
+                                $("._testvalues").addClass("changed");
+                            }
+                        }
                         //alert("._DocumentsModalData")
                         $("._DocumentsModalData").html(data);
                     }
@@ -1342,7 +1339,7 @@
                     //    console.log("don't allow multiples")
                     //    $(".upload-file").attr('disabled', true)
                     //    $(".upload-file").addClass('disabled-background-color')
-                    //    $(".upload-file").removeClass('protocols-background-color')
+                    //    $(".upload-file").removeClass('section-bg-color')
                     //    $(".file-select").attr('disabled', true)
                     //}
                     if ($(".addFunctionForm").length >0)
@@ -1350,7 +1347,7 @@
                         if (numCards < 1) {
                             $(".upload-file").attr('disabled', false)
                             $(".upload-file").removeClass('disabled-background-color')
-                            $(".upload-file").addClass('protocols-background-color')
+                            $(".upload-file").addClass('section-bg-color')
                             $(".file-select").attr('disabled', false)
                             $(".upload-file").removeClass("d-none");
                             $(".saveFunction").addClass("d-none");
@@ -1359,7 +1356,7 @@
                         else {
                             $(".upload-file").attr('disabled', true)
                             $(".upload-file").addClass('disabled-background-color')
-                            $(".upload-file").removeClass('protocols-background-color')
+                            $(".upload-file").removeClass('section-bg-color')
                             $(".file-select").attr('disabled', true)
                             $(".upload-file").addClass("d-none");
                             $(".saveFunction").attr('disabled', false)
@@ -1555,9 +1552,11 @@
             return {
                 SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation,
                 SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived, CatalogNumber: catalogNumber,
-                SelectedTypesIDs: selectedType, NumFilters: $("#NumFilters").val(), "SearchText" :searchText
+                SelectedTypesIDs: selectedType, NumFilters: $("#NumFilters").val(), "SearchText": searchText
             }
         }
+
+
 
 
 
@@ -1644,9 +1643,9 @@
                     $('.search-by-name-in-filter').attr('value', searchText);
                     $('.search-by-catalog-number').attr('value', catalogNumber);
                     $('body').removeClass('popover-open');
-                    $('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
+                    $('#invFilterPopover').removeClass('section-bg-color custom-button-font');
                     $('#invFilterPopover').addClass('custom-order-inv');
-                    $('#protocolFilterPopover').removeClass('protocols-background-color custom-button-font');
+                    $('#protocolFilterPopover').removeClass('section-bg-color custom-button-font');
                     $('#protocolFilterPopover').addClass('custom-protocols');
                 }
             });
@@ -1727,7 +1726,7 @@
             });
         }
 
-        $.fn.CancelModal = function (modalClass, orderType, orderOrigin) {
+        $.fn.CancelModal = function (modalClass, orderMethod, orderOrigin) {
             var modalType = $('#RequestIndexObject_ModalType').val();
             var guid = $('#GUID').val();
             $.ajax({
@@ -1805,7 +1804,7 @@
         }
 
     </script>
-
+    @Html.GetConstants()
     @if (IsSectionDefined("requestNavScript"))
     {
         @RenderSection("requestNavScript", required: true)

@@ -543,6 +543,30 @@
     <Compile Remove="Data\Migrations\20211229131857_TestPCDesc.Designer.cs" />
     <Compile Remove="Data\Migrations\20211229132454_TestPCDesc.cs" />
     <Compile Remove="Data\Migrations\20211229132454_TestPCDesc.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220116122503_AddOrderMethods.cs" />
+    <Compile Remove="Data\Migrations\20220116122503_AddOrderMethods.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220116123435_AddOrderMethodTable.cs" />
+    <Compile Remove="Data\Migrations\20220116123435_AddOrderMethodTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220116125507_AddOrderMethodToRequestWithData.cs" />
+    <Compile Remove="Data\Migrations\20220116125507_AddOrderMethodToRequestWithData.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220116131143_AddOrderMethodToRequestWithData.cs" />
+    <Compile Remove="Data\Migrations\20220116131143_AddOrderMethodToRequestWithData.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220117110625_AddOrderTypeModel.cs" />
+    <Compile Remove="Data\Migrations\20220117110625_AddOrderTypeModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220117113558_FillOrderTypesAddForeignKeyToRequest.cs" />
+    <Compile Remove="Data\Migrations\20220117113558_FillOrderTypesAddForeignKeyToRequest.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220123084354_AddOrderTypeTable.cs" />
+    <Compile Remove="Data\Migrations\20220123084354_AddOrderTypeTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220123121007_AddTimePeriodsModel.cs" />
+    <Compile Remove="Data\Migrations\20220123121007_AddTimePeriodsModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220123121729_AddTimePeriodsModel.cs" />
+    <Compile Remove="Data\Migrations\20220123121729_AddTimePeriodsModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220123122324_AddTimePeriodsModel.cs" />
+    <Compile Remove="Data\Migrations\20220123122324_AddTimePeriodsModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220123122832_AddTimePeriodsModel.cs" />
+    <Compile Remove="Data\Migrations\20220123122832_AddTimePeriodsModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220123130818_AddProductOrderTypeDiscriminator.cs" />
+    <Compile Remove="Data\Migrations\20220123130818_AddProductOrderTypeDiscriminator.Designer.cs" />
     <Compile Remove="Data\Migrations\20220118114501_addedCBToContext.cs" />
     <Compile Remove="Data\Migrations\20220118114501_addedCBToContext.Designer.cs" />
     <Compile Remove="Data\Migrations\20220119063031_addedCategoryJsons.cs" />
@@ -553,7 +577,6 @@
     <Compile Remove="Data\Migrations\20220130115403_addedImageUrlToCategoryBase.Designer.cs" />
   </ItemGroup>
 
-
   <ItemGroup>
     <PackageReference Include="Abp" Version="5.10.1" />
     <PackageReference Include="Aspose.Slides.NET" Version="21.5.0" />
@@ -563,6 +586,9 @@
     <PackageReference Include="EmguCV" Version="3.1.0.1" />
     <PackageReference Include="EPPlus" Version="5.8.4" />
     <PackageReference Include="GoogleAuthenticator" Version="2.0.1" />
+    <PackageReference Include="JavaScriptEngineSwitcher.Extensions.MsDependencyInjection" Version="3.3.0" />
+    <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.17.1" />
+    <PackageReference Include="JavaScriptEngineSwitcher.V8.Native.win-x64" Version="3.17.1" />
     <PackageReference Include="jQuery.Fullcalendar" Version="3.9.0" />
     <PackageReference Include="jQuery.Validation" Version="1.19.2" />
     <PackageReference Include="JSZip" Version="3.1.5" />
@@ -589,9 +615,14 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.6" />
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+    <PackageReference Include="Nancy" Version="2.0.0" />
     <PackageReference Include="NCBI_localblast" Version="1.0.12" />
     <PackageReference Include="NETCore.MailKit" Version="2.0.3" />
+    <PackageReference Include="Node.js" Version="5.3.0" />
+    <PackageReference Include="Npm" Version="3.5.2" />
     <PackageReference Include="OpenCvSharp3-AnyCPU" Version="4.0.0.20181129" />
+    <PackageReference Include="React.AspNet" Version="5.2.12" />
+    <PackageReference Include="React.Router" Version="5.2.12" />
     <PackageReference Include="RestSharp" Version="106.11.7" />
     <PackageReference Include="Select.HtmlToPdf.NetCore" Version="20.1.0" />
     <PackageReference Include="Serialize.Linq" Version="2.0.0" />

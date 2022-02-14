@@ -4,13 +4,7 @@
 *@
 @model PrototypeWithAuth.ViewModels.ReceivedLocationViewModel
 @{
-    var bcColor = "order-inv-background-color";
-    var form = "order-inv-form";
-    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
-    {
-        bcColor = "oper-background-color";
-        form = "oper-form";
-    }
+
 }
 
 <script src="~/js/site.js" asp-append-version="true"></script>
@@ -26,11 +20,11 @@
             <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('received-item'); $.fn.removeOpenPopovers();">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%;" class="modal-padding @form receivedModalForm">
+            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%;" class="modal-padding  receivedModalForm">
                 @{ await Html.RenderPartialAsync("_ReceivedModal", Model);}
                 <div class="modal-footer border-0 modal-footer-mt">
                     <div class="m-auto">
-                        <input type="submit" class="submit-received custom-button custom-button-font @bcColor between-button-margin" />
+                        <input type="submit" class="submit-received custom-button custom-button-font section-bg-color between-button-margin" />
                         <input type="button" value="Cancel" @*data-dismiss="modal"*@ class="custom-cancel custom-button" onclick="$.fn.CloseModal('received-item'); $.fn.removeOpenPopovers;" />
                     </div>
 

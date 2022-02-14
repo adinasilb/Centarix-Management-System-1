@@ -3,23 +3,7 @@
 @{
     Layout = null;
 
-    var bcColor = "order-inv-background-color";
-    string form = "";
-    if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
-    {
-        form = "oper-form";
-        bcColor = "oper-background-color";
-    }
-    else if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.LabManagement)
-    {
-        bcColor = "lab-man-background-color";
-        form = "supplier-form";
-    }
-    else if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Requests)
-    {
-        //bcColor = "order-inv-background-color";
-        //form = "order-inv-form"; //switched to outer terms modal
-    }
+   
 }
 
 @{ await Html.RenderPartialAsync("_TempRequestHiddenFors", Model.TempRequestListViewModel);}
@@ -103,6 +87,7 @@
 
                         <input type="hidden" asp-for="EmailAddresses[e]" class="@supplierEmailClass" />
                     }
+                    <span class=" no-email-error text text-danger-centarix d-none">If no email is selected the order form will be sent to the vendor's default email</span>
                 </div>
             </div>
         }
@@ -115,7 +100,6 @@
 <input type="hidden" asp-for="RedirectAction" />
 <script>
     //$(document).ready(function () {
-    //    alert("in doc ready: " + $("#vendor-orders-email").val());
     //    $('.all-mail').prepend('<span class="email-ids">' + $("#vendor-orders-email").val() + '<span class="remove-email">&times;</span></span>');
     //});
 
@@ -145,16 +129,22 @@
     $.fn.CheckListLength = function () {
         //Disable if 5 emails
         var listlength = $(".email-ids").length;
+      
         if (listlength >= 5) {
             $(".enter-mail-id").attr("disabled", true);
         }
         else {
+            if (listlength == 0) {
+                $(".no-email-error").removeClass("d-none");
+            }
+            else {
+                $(".no-email-error").addClass("d-none")
+            }
             $(".enter-mail-id").attr("disabled", false);
         }
     }
 
     $.fn.RemoveFromHiddenIds = function (emailValue) {
-        alert(emailValue)
         $(".emailaddresses[value='" + emailValue + "']:first").val('');
     }
 
@@ -165,7 +155,6 @@
     $(".submitTerms").off('click').on("click", function (e) {
         e.preventDefault();
         console.log("submit reorder");
-        //alert("validate form");
         $(".termsModalForm").data("validator").settings.ignore = "";
         var valid = $(".termsModalForm").valid();
         console.log("valid form: " + valid)
@@ -181,7 +170,6 @@
             $(".submitTerms").prop('disabled', true)
             $("#loading").show();
             $("#RedirectAction").val(window.location.href);
-            //alert("window: " + window.location.href);
             console.log("$('#SectionType').val() : " + $("#masterSectionType").val())
             var formData = new FormData($(".termsModalForm")[0]);
             $.ajax({
@@ -211,7 +199,6 @@
                         }
                     }
                     else {
-                        //alert("else");
                         $('.termsModalForm .temprequesthiddenfors').html('');
                         $.fn.OpenModal('emailModal', 'confirm-email', data);
                     }
