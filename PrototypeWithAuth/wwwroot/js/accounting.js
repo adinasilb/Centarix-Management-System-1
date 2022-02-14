@@ -118,7 +118,7 @@
 		console.log("vendor: " + vendorid);
 		//console.log("payment status: " + paymentstatusid);
 		//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
-		var itemurl = "/Requests/PaymentsPayModal/?vendorid=" + vendorid + "&accountingPaymentsEnum=" + typeEnum;
+		var itemurl = "/Requests/PaymentsPayModal/?vendorId=" + vendorid + "&accountingPaymentsEnum=" + typeEnum;
 		$("#loading").show();
 		$.fn.CallModal(itemurl, "payments-pay");
 	});

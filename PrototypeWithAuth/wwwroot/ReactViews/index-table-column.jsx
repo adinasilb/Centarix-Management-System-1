@@ -123,7 +123,7 @@ export default class IndexTableColumn extends Component {
 
                         return (<div key={"value" + i}><a  className={"btn p-0 m-0 inv-link-clr " + col.AjaxLink + " no-box-shadow"} data-toggle="tooltip" data-placement="top" title={title} value={col.AjaxID} data-target="item" href="#/">
                             <div className="d-block">
-                                <p className={"m-0 text-center " + dangerColor} style={{ overflow: "hidden", textOverflow: "ellipsis", webkitLineClamp: "3", WebkitBoxDirection: "vertical", maxHeight: "5rem", display: " -webkit-box" }}>{ve.String}</p>
+                                <p className={"m-0 text-center " + dangerColor} style={{ overflow: "hidden", textOverflow: "ellipsis", WebkitLineClamp: "3", WebkitBoxDirection: "vertical", maxHeight: "5rem", display: " -webkit-box" }}>{ve.String}</p>
                             </div>
                         </a>{ i != 0 ? <br /> : null }</div>)
 
