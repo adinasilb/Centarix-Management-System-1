@@ -20,7 +20,7 @@ var openModal = function (modalClass) {
 }
 
 
-var closeModal = function (modalClass) {
+var closeModal = function () {
     var modalElements = document.getElementsByClassName("modal");
     console.log(modalElements)
     if (modalElements.length == 1) {

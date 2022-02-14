@@ -6,6 +6,8 @@ import {
 import CloseButton, { CancelButton } from './Utility/close-button.jsx'
 import { openModal } from './Utility/modal-functions.jsx'
 
+import { ajaxPartialIndexTable, getRequestIndexString } from './Utility/root-function.jsx'
+
 export default function DeleteModal() {
     const location = useLocation();
 
@@ -15,18 +17,14 @@ export default function DeleteModal() {
         openModal("modal");
     });
 
-    onSubmit = (e) => {
+    var onSubmit = (e) => {
         e.preventDefault();
         console.log("submit delete");
         document.getElementById("loading").style.display = "block";
-        //var PageType = $('#masterPageType').val();
-        var sidebarType = $('#masterSidebarType').val();
-        var viewClass = "._IndexTableData";
-        if (sidebarType == "Quotes" || sidebarType == "Orders" || sidebarType == "Cart") {
-            viewClass = "._IndexTableDataByVendor";
-        }
-        var formdata = new FormData($("#myForm")[0])
-        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/DeleteModal", viewClass, "POST", formdata, "delete-item");
+        var formdata = new FormData(e.target);
+        var url = '/Requests/DeleteModal'
+        console.log("location: " + location)
+        ajaxPartialIndexTable(url, "POST", formdata, "delete-item")
         return false;
     }
 
@@ -39,11 +37,11 @@ export default function DeleteModal() {
 
                     <div className="modal-content d-inline-block modal-border-radius modal-box-shadow ">
                         <div className="close-button"><CloseButton /></div>
-                        <form action="" method="post" encType="multipart/form-data" style={{ height: "100%", overflow: "auto" }} className="modal-padding" id="myForm">
+                        <form onSubmit={onSubmit}  method="post" encType="multipart/form-data" style={{ height: "100%", overflow: "auto" }} className="modal-padding" id="myForm">
                             <div dangerouslySetInnerHTML={{ __html: state.view }} />
                             <div className="modal-footer">
                                 <div className="text-center mx-auto modal-footer-mt">
-                                    <button type="submit" onSubmit={onSubmit} className="custom-button custom-button-font section-bg-color between-button-margin" value={location.state.requestID}>Confirm</button>
+                                    <button type="submit" className="custom-button custom-button-font section-bg-color between-button-margin" value={location.state.requestID}>Confirm</button>
                                     <CancelButton />
                                 </div>
                             </div>
@@ -57,7 +55,9 @@ export default function DeleteModal() {
     }
     else {
         console.log("in is not loaded")
-        fetch("/Requests/_DeleteModal?id=" + location.state.requestID, {
+        var url = "/Requests/_DeleteModal?id=" + location.state.requestID + "&" + getRequestIndexString();
+        alert(url)
+        fetch(url, {
             method: "GET"
         })
             .then((response) => { return response.text(); })
@@ -66,4 +66,5 @@ export default function DeleteModal() {
             });
         return null;
     }
+
 }
