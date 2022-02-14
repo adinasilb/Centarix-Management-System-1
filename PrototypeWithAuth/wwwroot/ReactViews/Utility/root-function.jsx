@@ -1,6 +1,9 @@
 ﻿import { closeModal } from "./modal-functions.jsx";
 import * as Actions from '../ReduxRelatedUtils/actions.jsx';
-export var ajaxPartialIndexTable = (url, type, formdata, modalClass = "") => {
+import React from 'react';
+
+
+export var ajaxPartialIndexTable =(store, url, type, formdata, modalClass = "") =>{
     console.log("in ajax partial index call " + url);
     //alert('before bind filter')
     if (document.getElementById('searchHiddenForsForm') !=null) {
@@ -59,7 +62,7 @@ export var ajaxPartialIndexTable = (url, type, formdata, modalClass = "") => {
         body: formdata
     }).then(response => response.json())
         .then(result => {
-            Actions.setIndexTableViewModel(result);
+            store.dispatch(Actions.setIndexTableViewModel(JSON.parse(result)));
         document.querySelectorAll(".tooltip").forEach(c => c.remove());
         document.getElementById("loading").style.display = "none";
         //workaround for price radio button not coming in when switching from nothing is here tab

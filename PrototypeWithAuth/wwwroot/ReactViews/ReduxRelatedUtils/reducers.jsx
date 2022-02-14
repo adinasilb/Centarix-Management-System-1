@@ -8,7 +8,7 @@ const reducer = (state, action) => {
             console.log("in reducer right key")
             return {
                 ...state,
-                viewmodel: action.viewmodel
+                viewModel: action.viewmodel
             };
       
         default:

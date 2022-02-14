@@ -5,12 +5,12 @@ import {
 } from 'react-router-dom';
 import CloseButton, { CancelButton } from './Utility/close-button.jsx'
 import { openModal } from './Utility/modal-functions.jsx'
-
+import { useStore } from 'react-redux';
 import { ajaxPartialIndexTable, getRequestIndexString } from './Utility/root-function.jsx'
 
 export default function DeleteModal() {
     const location = useLocation();
-
+    const store = useStore();
     const [state, setState] = useState({ isLoaded: false, view: "" });
 
     useEffect(() => {
@@ -23,8 +23,8 @@ export default function DeleteModal() {
         document.getElementById("loading").style.display = "block";
         var formdata = new FormData(e.target);
         var url = '/Requests/DeleteModal'
-        console.log("location: " + location)
-        ajaxPartialIndexTable(url, "POST", formdata, "delete-item")
+        console.dir("location: " + location)
+        ajaxPartialIndexTable(store, url, "POST", formdata, "delete-item")
         return false;
     }
 

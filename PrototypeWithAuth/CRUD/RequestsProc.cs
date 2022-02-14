@@ -110,7 +110,7 @@ namespace PrototypeWithAuth.CRUD
                         await _requestNotificationsProc.DeleteWithoutTransactionAsync(notifications);
                         //throw new Exception();
                         await UpdateModelsAsync(modelsToUpdate);
-                        //await transaction.CommitAsync();
+                        await transaction.CommitAsync();
                     }
                     catch (Exception e)
                     {

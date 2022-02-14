@@ -1453,12 +1453,14 @@ namespace PrototypeWithAuth.Controllers
                 return null ;
             }
             var viewModel = await GetIndexViewModelByVendor(deleteRequestViewModel.RequestIndexObject);
+            viewModel.ErrorMessage="sdfjsld";
             var json  = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
                new JsonSerializerSettings
                {
                    Converters= new List<JsonConverter> { new StringEnumConverter() },
                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                });
+            
             return Json( json);
 
         }
