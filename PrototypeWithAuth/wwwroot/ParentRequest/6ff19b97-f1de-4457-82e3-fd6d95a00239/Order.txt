@@ -640,7 +640,7 @@
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
             $('.open-archive-modal').removeClass('disabled-background-color');
-            $('.open-archive-modal').addClass('order-inv-background-color');
+            $('.open-archive-modal').addClass('section-bg-color');
         }
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
@@ -777,7 +777,7 @@
             $("." + modalClass + ' .open-document-modal').attr("data-val", false);
             $("." + modalClass + ' .location-icon').addClass('d-none');
             $("." + modalClass + ' .open-archive-modal').addClass('disabled-background-color');
-            $("." + modalClass + ' .open-archive-modal').removeClass('order-inv-background-color');
+            $("." + modalClass + ' .open-archive-modal').removeClass('section-bg-color');
 
             //console.log('locations edot mode off');
             //$("." + modalClass +".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
@@ -1037,7 +1037,7 @@
         };
 
 
-        $("table tr .order-inv-form .form-check-input").click(function () {
+        $("table tr . .form-check-input").click(function () {
             if ($(this).is(':checked')) {
                 $(this).closest("tr").addClass("clicked-border-orders-inv");
             }
@@ -1422,7 +1422,7 @@
                     //    console.log("don't allow multiples")
                     //    $(".upload-file").attr('disabled', true)
                     //    $(".upload-file").addClass('disabled-background-color')
-                    //    $(".upload-file").removeClass('protocols-background-color')
+                    //    $(".upload-file").removeClass('section-bg-color')
                     //    $(".file-select").attr('disabled', true)
                     //}
                     if ($(".addFunctionForm").length >0)
@@ -1430,7 +1430,7 @@
                         if (numCards < 1) {
                             $(".upload-file").attr('disabled', false)
                             $(".upload-file").removeClass('disabled-background-color')
-                            $(".upload-file").addClass('protocols-background-color')
+                            $(".upload-file").addClass('section-bg-color')
                             $(".file-select").attr('disabled', false)
                             $(".upload-file").removeClass("d-none");
                             $(".saveFunction").addClass("d-none");
@@ -1439,7 +1439,7 @@
                         else {
                             $(".upload-file").attr('disabled', true)
                             $(".upload-file").addClass('disabled-background-color')
-                            $(".upload-file").removeClass('protocols-background-color')
+                            $(".upload-file").removeClass('section-bg-color')
                             $(".file-select").attr('disabled', true)
                             $(".upload-file").addClass("d-none");
                             $(".saveFunction").attr('disabled', false)
@@ -1724,9 +1724,9 @@
                     $('.search-by-name-in-filter').attr('value', searchText);
                     $('.search-by-catalog-number').attr('value', catalogNumber);
                     $('body').removeClass('popover-open');
-                    $('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
+                    $('#invFilterPopover').removeClass('section-bg-color custom-button-font');
                     $('#invFilterPopover').addClass('custom-order-inv');
-                    $('#protocolFilterPopover').removeClass('protocols-background-color custom-button-font');
+                    $('#protocolFilterPopover').removeClass('section-bg-color custom-button-font');
                     $('#protocolFilterPopover').addClass('custom-protocols');
                 }
             });

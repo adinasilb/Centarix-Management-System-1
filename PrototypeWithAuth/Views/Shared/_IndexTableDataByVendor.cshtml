@@ -13,8 +13,7 @@
     //for button for selected items
     var btnText = "Pay Selected";
     var ajaxLink = "pay-selected";
-    var bcColor = "accounting-background-color";
-    var sectionClass = ""; //if no section class, accounting color is default
+        var sectionClass = ""; //if no section class, accounting color is default
 
     switch (Model.SidebarType)
     {
@@ -26,19 +25,16 @@
     ajaxLink = "pay-invoice-selected";
     break;
     case AppUtility.SidebarEnum.Quotes:
-    bcColor = "lab-man-background-color";
     ajaxLink = "update-quote-for-selected";
     btnText = "Add To Selected";
     sectionClass = "labmanage";
     break;
     case AppUtility.SidebarEnum.Orders:
-    bcColor = "lab-man-background-color";
     ajaxLink = "load-terms-for-selected";
     btnText = "Order Selected";
     sectionClass = "labmanage";
     break;
     case AppUtility.SidebarEnum.Cart:
-    bcColor = "order-inv-background-color";
     ajaxLink = "load-terms-for-selected";
     btnText = "Order Selected";
     sectionClass = "orders-and-inv";
@@ -47,7 +43,7 @@
     break;
     }
     }
-    @Html.React("RootComponent", new { viewModel = Model, viewEnum = "IndexTableDataByVendor", btnText = btnText, sectionClass = sectionClass, ajaxLink = ajaxLink, bcColor = bcColor })
+    @Html.React("RootComponent", new { viewModel = Model, viewEnum = "IndexTableDataByVendor", btnText = btnText, sectionClass = sectionClass, ajaxLink = ajaxLink })
     @Html.ReactGetScriptPaths()
     @Html.ReactInitJavaScript()
 

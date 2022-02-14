@@ -42,6 +42,8 @@ using System.Text;
 using LinqToExcel;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Newtonsoft.Json.Converters;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -93,6 +95,17 @@ namespace PrototypeWithAuth.Controllers
             }
 
         }
+
+        public async Task<JsonResult> GetIndexViewModelJson(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null,
+                                                                              SelectedRequestFilters selectedFilters = null, int numFilters = 0, RequestsSearchViewModel? requestsSearchViewModel = null)
+        {
+           return Json( await base.GetIndexViewModel(requestIndexObject, Months, Years, selectedFilters, requestsSearchViewModel: requestsSearchViewModel), new JsonSerializerSettings
+           {
+               Converters= new List<JsonConverter> { new StringEnumConverter() },
+               ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+           });
+        }
+
 
         [HttpGet]
         [HttpPost]
@@ -146,7 +159,7 @@ namespace PrototypeWithAuth.Controllers
             var payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-one", "Pay");
             var addInvoiceIcon = new IconColumnViewModel(" icon-cancel_presentation-24px  green-overlay ", "", "invoice-add-one", "Add Invoice");
 
-            var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
+            var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "/DeleteModal", "Delete");
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color);", "request-favorite", "Favorite");
             var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
             var popoverPartialClarifyIcon = new IconColumnViewModel("Clarify");
@@ -182,7 +195,7 @@ namespace PrototypeWithAuth.Controllers
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString)
 
                             {
-                                ButtonClasses = " load-terms-modal lab-man-background-color ",
+                                ButtonClasses = " load-terms-modal ",
                                 ButtonText = "Order"
                             };
                             orderby = r => r.CreationDate;
@@ -203,7 +216,7 @@ namespace PrototypeWithAuth.Controllers
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString, r.ParentQuote)
 
                             {
-                                ButtonClasses = " confirm-quote lab-man-background-color ",
+                                ButtonClasses = " confirm-quote  ",
                                 ButtonText = "Ask For Quote"
                             };
                             break;
@@ -252,7 +265,7 @@ namespace PrototypeWithAuth.Controllers
                     (AppUtility.IndexTableTypes.AccountingNotifications, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString, new Request())
                     {
-                        ButtonClasses = " invoice-add-all accounting-background-color ",
+                        ButtonClasses = " invoice-add-all ",
                         ButtonText = buttonText
                     };
                     viewModelByVendor.NotificationFilterViewModel = notificationFilterViewModel;
@@ -286,7 +299,7 @@ namespace PrototypeWithAuth.Controllers
                         r.Request.Product.ProductSubcategory.ParentCategory, r.Request.Product.UnitType, r.Request.Product.SubUnitType, r.Request.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
 
                             {
-                                ButtonClasses = " payments-pay-now accounting-background-color ",
+                                ButtonClasses = " payments-pay-now ",
                                 ButtonText = "Pay All"
                             };
                             buttonText = "Pay All";
@@ -305,7 +318,7 @@ namespace PrototypeWithAuth.Controllers
                     select = r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Cart, r, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString)
                     {
-                        ButtonClasses = " load-terms-modal order-inv-background-color ",
+                        ButtonClasses = " load-terms-modal  ",
                         ButtonText = "Order",
                     };
                     break;
@@ -1386,12 +1399,12 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> DeleteModal(int? id, RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> _DeleteModal(int? id, RequestIndexObject requestIndexObject)
         {
-            if (!AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView("InvalidLinkPage");
-            }
+            //if (!AppUtility.IsAjaxRequest(Request))
+            //{
+            //    return PartialView("InvalidLinkPage");
+            //}
             if (id == null)
             {
                 ViewBag.ErrorMessage = "Product not found (no id). Unable to delete.";
@@ -1422,7 +1435,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters, int numFilters = 0)
+        public async Task<JsonResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters, int numFilters = 0)
         {
             try
             {
@@ -1437,18 +1450,19 @@ namespace PrototypeWithAuth.Controllers
             {
                 Response.StatusCode = 500;
                 await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
-                return new EmptyResult();
+                return null ;
             }
-            switch (deleteRequestViewModel.RequestIndexObject.SidebarType)
-            {
-                case AppUtility.SidebarEnum.Quotes:
-                case AppUtility.SidebarEnum.Orders:
-                case AppUtility.SidebarEnum.Cart:
-                    return PartialView("_IndexTableDataByVendor", await GetIndexViewModelByVendor(deleteRequestViewModel.RequestIndexObject));
-                default:
-                    return PartialView("_IndexTableData", await GetIndexViewModel(deleteRequestViewModel.RequestIndexObject, selectedFilters: selectedFilters, numFilters: numFilters, requestsSearchViewModel: requestsSearchViewModel));
+            var viewModel = await GetIndexViewModelByVendor(deleteRequestViewModel.RequestIndexObject);
+            viewModel.ErrorMessage="sdfjsld";
+            var json  = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
+               new JsonSerializerSettings
+               {
+                   Converters= new List<JsonConverter> { new StringEnumConverter() },
+                   ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+               });
+            
+            return Json( json);
 
-            }
         }
 
 
@@ -5093,27 +5107,6 @@ namespace PrototypeWithAuth.Controllers
 
             SettingsInventory settings = new SettingsInventory()
             {
-                TopTabsList = new List<TopTabWithCounts>()
-                {
-                    new TopTabWithCounts()
-                    {
-                        Name = "Main",
-                        Page = "Main",
-                        Counts = new BoolIntViewModel()
-                        {
-                            Bool = false
-                        }
-                    },
-                    new TopTabWithCounts()
-                    {
-                        Name = "Samples",
-                        Page = "Samples",
-                        Counts = new BoolIntViewModel()
-                        {
-                            Bool = false
-                        }
-                    }
-                },
                 Categories = GetCategoryList(new ParentCategory().GetType().Name, 1)
             };
             settings.Subcategories = GetCategoryList(new ProductSubcategory().GetType().Name, 2, settings.Categories.CategoryBases.FirstOrDefault().ID);
@@ -5160,27 +5153,16 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(GetSettingsFormViewModel(ModelType, CategoryID));
         }
 
-        [HttpPost]
-        public IActionResult _SettingsForm(SettingsForm SettingsForm)
-        {
-            return RedirectToAction("SettingsInventory");
-        }
-
         private SettingsForm GetSettingsFormViewModel(string ModelType, int CategoryID)
         {
             SettingsForm settingsForm = new SettingsForm();
             if (ModelType == new ParentCategory().GetType().Name)
             {
                 settingsForm.Category = _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { cb => cb.ID == CategoryID }).FirstOrDefault();
-                settingsForm.CategoryDescription = settingsForm.Category.Description;
             }
             else if (ModelType == new ProductSubcategory().GetType().Name)
             {
-                var category = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == CategoryID },
-                    new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory } }).FirstOrDefault();
-                settingsForm.Category = category;
-                settingsForm.CategoryDescription = category.ParentCategory.Description;
-                settingsForm.SubcategoryDescription = category.Description;
+                settingsForm.Category = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == CategoryID }).FirstOrDefault();
             }
             settingsForm.RequestCount = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.Product.ProductSubcategoryID == settingsForm.Category.ID }).Count();
             settingsForm.ItemCount = _productsProc.Read(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategoryID == settingsForm.Category.ID }).Count();
@@ -5198,18 +5180,6 @@ namespace PrototypeWithAuth.Controllers
         public async Task<bool> UpdateExchangeRate()
         {
             return _requestsProc.UpdateExchangeRateByHistory().Result.Bool;
-        }
-
-        public async Task<IActionResult> _CustomField(int CustomFieldCounter, string DivClass)
-        {
-            var CustomField = new CustomField()
-            {
-                CustomDataTypes = _customDataTypesProc.Read(),
-                CustomFieldCounter = CustomFieldCounter,
-                Required = new List<bool>() { new bool() },
-                DivClass = DivClass
-            };
-            return PartialView(CustomField);
         }
     }
 }

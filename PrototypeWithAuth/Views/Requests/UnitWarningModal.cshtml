@@ -2,29 +2,6 @@
 @model AppUtility.MenuItems
 @{
     Layout = null;
-    var bcColor = "order-inv-background-color";
-    switch (Model)
-    {
-        case AppUtility.MenuItems.Operations:
-            bcColor = "oper-background-color";
-            break;
-        case AppUtility.MenuItems.LabManagement:
-            bcColor = "lab-man-background-color";
-            break;
-        case AppUtility.MenuItems.Accounting:
-            bcColor = "accounting-background-color";
-            break;
-        case AppUtility.MenuItems.Requests:
-            bcColor = "order-inv-background-color";
-            break;
-        case AppUtility.MenuItems.Users:
-            bcColor = "users-background-color";
-            break;
-        case AppUtility.MenuItems.Protocols:
-            bcColor = "protocols-background-color";
-            break;
-
-    }
 
 }
 <div class="modal modal-view unitWarningModal"  role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index:9999">
@@ -49,7 +26,7 @@
                     </div>
                     <div class="row text-center">
 
-                        <button type="button" class="text custom-button custom-button-font @bcColor   between-button-margin keep-change" >OK</button>
+                        <button type="button" class="text custom-button custom-button-font section-bg-color   between-button-margin keep-change" >OK</button>
                         <button type="button" class="custom-button custom-cancel text  cancel-change ">Cancel</button>
                     </div>
                 </div>

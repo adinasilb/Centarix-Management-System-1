@@ -22,7 +22,6 @@ using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 
-
 namespace PrototypeWithAuth.Controllers
 {
     public class HomeController : SharedController
@@ -503,6 +502,6 @@ namespace PrototypeWithAuth.Controllers
             return null;
         }
 
-
+     
     }
 }

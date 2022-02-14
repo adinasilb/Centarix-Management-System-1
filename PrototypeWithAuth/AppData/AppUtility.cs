@@ -1,4 +1,5 @@
 ﻿using Abp.Extensions;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,6 +23,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 //using System.Web.Script.Serialization;
 
 namespace PrototypeWithAuth.AppData
@@ -454,6 +456,7 @@ namespace PrototypeWithAuth.AppData
             return false;
         }
 
+   
         public static string GetLastFiles(string longFileName, int amountOfFiles)
         {
             bool lastfound = false;
@@ -1031,6 +1034,20 @@ namespace PrototypeWithAuth.AppData
             return ReturnVal;
         }
 
+        public static HtmlString GetConstants(this IHtmlHelper helper)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            sb.AppendLine("<script type=\"text/javascript\">");
+
+            foreach (var prop in typeof(ElixirStrings).GetFields())
+            {
+                sb.AppendLine(string.Format("    var {0} = '{1}'", prop.Name, prop.GetValue(null).ToString()));
+            }
+
+            sb.AppendLine("</script>");
+            return new HtmlString(sb.ToString());
+        }
     }
 
 }

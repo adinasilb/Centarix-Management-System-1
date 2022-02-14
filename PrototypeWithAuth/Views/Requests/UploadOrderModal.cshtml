@@ -4,33 +4,20 @@
     Layout = null;
     var markDisabled = "details";
 
-    var bcColor = "order-inv-background-color";
-    var color = "order-inv-color";
-    var form = "order-inv-form";
     var deleteDocumentClass = "";
     var sectionType = AppUtility.MenuItems.Requests.ToString();
     if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
-        form = "oper-form";
-        bcColor = "oper-background-color";
-        color = "operations-filter";
         sectionType = AppUtility.MenuItems.Operations.ToString();
     }
-    //else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
-    //{
 
-    //    form = "supplier-form";
-    //    bcColor = "lab-man-background-color";
-    //    color = "lab-man-filter";
-    //    sectionType = AppUtility.MenuItems.LabManagement.ToString();
-    //}
 }
 
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
 <script src="~/js/site.js"></script>
 <script src="~/js/InitializeDatePicker.js"></script>
 <script src="~/js/WarantySupplyDateCalc.js"></script>
-<div class="modal modal-document fader on-form-modal modalStep1 @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index:9000">
+<div class="modal modal-document fader on-form-modal modalStep1 " @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index:9000">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style  cancel-order" aria-label="Close" @*data-dismiss="modal"  onclick="$(this).closest('.modalStep1').modal('hide');"*@>
@@ -71,7 +58,7 @@
                                 <input type="hidden" asp-for="FileStrings" />@*This is for reloading hte modal on error*@
                                 if (Model.FileStrings != null && Model.FileStrings.Count > 0)
                                 {
-                                    filterClass = color;
+                                    filterClass = "section-filter";
                                     containsFile = "contains-file";
                                     hasFileClass = "hasFile";
                                 }
@@ -129,7 +116,7 @@
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
-                        <input type="submit" class="custom-button submit-order custom-button-font @bcColor between-button-margin" />
+                        <input type="submit" class="custom-button submit-order custom-button-font section-bg-color between-button-margin" />
                         <button type="button" class="custom-button custom-cancel cancel-order" @*data-dismiss="modal" onclick="$(this).closest('.modalStep1').modal('hide');"*@>Cancel</button>
                     </div>
                 </div>

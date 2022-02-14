@@ -79,7 +79,7 @@
 				$.each(data.parentCategories, function (i, category) {
 					$("#parentlistMulitple").append('<option value="' + category.ID + '">' + category.Description + '</option>');
 				});				
-				$("#parentlistMulitple").after('<button type="button" onclick="$.fn.filterByParentCategoryType();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow  ">Save</button>');			
+				$("#parentlistMulitple").after('<button type="button" onclick="$.fn.filterByParentCategoryType();" class="btn-save  btn text-white section-bg-color rounded-pill no-box-shadow  ">Save</button>');			
 				$("#parentlistMulitple").materialSelect();
 				$("input[data-activates='select-options-parentlistMulitple']").attr('placeholder', "Select Category")
 				$("input[data-activates='select-options-parentlistMulitple']").val('')				
@@ -185,7 +185,7 @@
 					item = '<option value="' + subproject.subProjectID + '">' + subproject.subProjectDescription + '</option>'
 					$("#SelectedSubProjects").append(item);
 				});
-				$("#SelectedSubProjects").after('<button type="button" onclick="$.fn.filterBySubProject();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow  ">Save</button>');		
+				$("#SelectedSubProjects").after('<button type="button" onclick="$.fn.filterBySubProject();" class="btn-save  btn text-white section-bg-color rounded-pill no-box-shadow  ">Save</button>');		
 				$("#SelectedSubProjects").materialSelect();
 				$("input[data-activates='select-options-SelectedSubProjects']").attr('placeholder', "Select Sub Project")
 				$("input[data-activates='select-options-SelectedSubProjects']").val('')
@@ -264,7 +264,7 @@
 		$.each(data.productSubcategories, function (i, subCategory) {
 			$("#sublist").append('<option value="' + subCategory.subCategoryID + '">' + subCategory.subCategoryDescription + '</option>');
 		});
-		$("#sublist").after('<button type="button" onclick="$.fn.filterBySubCategoryType();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow  ">Save</button>');
+		$("#sublist").after('<button type="button" onclick="$.fn.filterBySubCategoryType();" class="btn-save  btn text-white section-bg-color rounded-pill no-box-shadow  ">Save</button>');
 		$("#sublist").materialSelect();
 		$("input[data-activates='select-options-sublist']").attr('placeholder', "Select Sub Category")
 		$("input[data-activates='select-options-sublist']").val('')

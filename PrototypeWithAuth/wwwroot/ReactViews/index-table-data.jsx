@@ -1,32 +1,12 @@
 ﻿import React, { Component } from 'react';
 import IndexTableColumn from './index-table-column.jsx'
-export default class _IndexTableData extends Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = { isLoaded: this.props.viewModel != undefined, viewModel: this.props.viewModel, showView: this.props.showView };
-    }
-
-    componentDidMount() {
-        //if (this.state.showView && this.state.viewModel == undefined) {
-        //    /*        if (this.state.isLoaded == true) {*/
-        //    fetch("/Requests/_IndexTableData", {
-        //        method: "GET"
-        //    })
-        //        .then((response) => { return response.text(); })
-        //        .then(result => {
-        //            this.setState({
-        //                viewModel: result,
-        //                isLoaded: true
-        //            });
-        //        });
-        //}
-    }
+import { useSelector } from 'react-redux';
 
 
-    render() {
-        if (this.state.isLoaded == true) {
+export default function _IndexTableData() {
+    console.log("in index table data");
+    const viewModel = useSelector(state => state.viewModel);
+
             return (
                 /*       return ReactDOM.createPortal(*/
                 <div>
@@ -36,7 +16,7 @@ export default class _IndexTableData extends Component {
                         <input type="hidden" id="PageNumber" name="PageNumber" className="page-number" />
                         <table className="table table-headerspaced table-noheaderlines table-hover ">
                             <tbody className="scroll-tbody">
-                                {this.state.viewModel.PagedList.map((r, i) => (
+                                {viewModel.PagedList.map((r, i) => (
                                     <tr key={ "tr"+i} className="text-center one-row">
                                         {r.Columns.map((col,i) => (
                                             <IndexTableColumn key={"col"+i} columnData={col}/>
@@ -49,13 +29,5 @@ export default class _IndexTableData extends Component {
 
 
                 </div>);
-            //    ,
-            //    document.getElementsByClassName("_IndexTab")[0]
-            //);
-        }
-        else {
-            return null;
-        }
-
-    }
+        
 }
