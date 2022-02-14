@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization; //in order to allow for authirization policy builder
-using Microsoft.AspNetCore.Mvc.Authorization; // in order to allow for authorize filter
+using Microsoft.AspNetCore.Mvc.Authorization; // in order to allow for authorize 
 using Microsoft.AspNetCore.Diagnostics;
 using PrototypeWithAuth.AppData;
 using Microsoft.Extensions.Logging;
