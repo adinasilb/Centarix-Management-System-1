@@ -1,21 +1,38 @@
 ﻿import React, { Component } from 'react';
 import * as Constant from '../Shared/constants.js'
+import CustomFieldButton from './custom-field-button.jsx';
 
 
 export default class SettingsForm extends Component {
+    state = {
+        customFieldsCount: 0
+    }
 
     constructor(props) {
         super(props);
         this.state = { SettingsForm: this.props.SettingsForm };
     }
 
+    AddCustomField = () => {
+        return this.state.customFieldsCount.map(ticket => {
+            return <CustomField key={ticket.id} ticket={ticket} />;
+        });
+    }
+
     render() {
+        const customfields = [];
+
+        for (var i = 0; i < this.state.numCustomFields; i += 1) {
+            customfields.push(<CustomField key={i} number={i} />);
+        };
+
         var autoHeight = {
             height: 'auto'
         }
         var fontsize = {
             fontSize: 2 + 'rem'
         }
+        var showItem = " active show ";
         var categoryNameRows = this.props.SettingsForm.Category.Description != null ?
             Math.ceil(parseFloat(this.props.SettingsForm.Category.Description.length) / 30) : 1;
         var catText = this.props.SettingsForm.CategoryDescription ?? "Select A Category";
@@ -60,113 +77,118 @@ export default class SettingsForm extends Component {
                         </div>
                     </div>
                 </div>
-                <div class="settings new-modal-body edit-modal-outer-body "> {/*style="height:33.5rem;"*/}
-                    <div class="container-fluid edit-modal-body box-shadow orders partial-div"> {/*style="background: #FFF; border: 2px solid #EAEAEB;">*/}
-                        <div class="container-fluid div-tabs no-box-shadow p-0">
-                            <div class="tab-content">
-                                <div id="details" class="tab-pane fade in @showItem" value="1">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label class="control-label">Category</label>
-                                            <select class="form-control-plaintext border-bottom mdb-select" disabled>
+                <div className="settings new-modal-body edit-modal-outer-body "> {/*style="height:33.5rem;"*/}
+                    <div className="container-fluid edit-modal-body box-shadow orders partial-div"> {/*style="background: #FFF; border: 2px solid #EAEAEB;">*/}
+                        <div className="container-fluid div-tabs no-box-shadow p-0">
+                            <div className="tab-content">
+                                <div id="details" className={"tab-pane fade in" +  showItem } value="1">
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <label className="control-label">Category</label>
+                                            <select className="form-control-plaintext border-bottom mdb-select" disabled>
                                                 <option value="0">{catText}</option>
                                             </select>
                                         </div>
-                                        <div class="col-md-6">
-                                            <label class="control-label">Subcategory</label>
-                                            <select class="form-control-plaintext border-bottom mdb-select" disabled>
+                                        <div className="col-md-6">
+                                            <label className="control-label">Subcategory</label>
+                                            <select className="form-control-plaintext border-bottom mdb-select" disabled>
                                                 <option value="0">{subCatText}</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label class="control-label">Vendor</label>
-                                            <select class="form-control-plaintext border-bottom mdb-select" disabled>
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <label className="control-label">Vendor</label>
+                                            <select className="form-control-plaintext border-bottom mdb-select" disabled>
                                                 <option value="0">Select Vendor</option>
                                             </select>
                                         </div>
-                                        <div class="col-md-6">
-                                            <label class="control-label">Company ID (automatic)</label>
-                                            <input class="form-control-plaintext border-bottom" value={Constant.IntPlaceholder} disabled />
+                                        <div className="col-md-6">
+                                            <label className="control-label">Company ID (automatic)</label>
+                                            <input className="form-control-plaintext border-bottom" value={Constant.IntPlaceholder} disabled />
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label class="control-label">Catalogue No.</label>
-                                            <input class="form-control-plaintext border-bottom" value={Constant.IntPlaceholder} disabled />
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <label className="control-label">Catalogue No.</label>
+                                            <input className="form-control-plaintext border-bottom" value={Constant.IntPlaceholder} disabled />
                                         </div>
-                                        <div class="col-md-6">
-                                            <label class="control-label">URL</label>
-                                            <input class="form-control-plaintext border-bottom" value={Constant.UrlPlaceholder} disabled />
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label class="control-label">Expected Supply Days</label>
-                                            <input class="form-control-plaintext border-bottom" value={Constant.IntPlaceholder} disabled />
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="control-label">Expected Supply Date</label>
-                                            <input class="form-control-plaintext border-bottom" value={Constant.DatePlaceholder} disabled />
+                                        <div className="col-md-6">
+                                            <label className="control-label">URL</label>
+                                            <input className="form-control-plaintext border-bottom" value={Constant.UrlPlaceholder} disabled />
                                         </div>
                                     </div>
-                                    <div class="custom-fields-details lab-man-form">
-                                        <div class="cf_header hidden">
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <label className="control-label">Expected Supply Days</label>
+                                            <input className="form-control-plaintext border-bottom" value={Constant.IntPlaceholder} disabled />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label className="control-label">Expected Supply Date</label>
+                                            <input className="form-control-plaintext border-bottom" value={Constant.DatePlaceholder} disabled />
+                                        </div>
+                                    </div>
+                                    <div className="custom-fields-details lab-man-form">
+                                        <div className="cf_header hidden">
                                             {/*@{await Html.RenderPartialAsync("_CFHeader.cshtml"); }*/}
                                         </div>
+                                        {/*{props.HiddenFields}*/}
                                     </div>
-                                    <div class="cf_header hidden">
+                                    <div className="cf_header hidden">
                                         {/*@{await Html.RenderPartialAsync("_BorderCF.cshtml");}*/}
                                     </div>
-                                    <div class="add-custom-fields row">
+                                    <div className="add-custom-fields row">
+                                        <input type="button" onClick={this.AddCustomField} className={"custom-button custom-cancel text border-dark " + " details"}
+                                            value="+ Add Custom Field" />
+                                        {this.state.customFields}
+                                        {/*<CustomFieldButton tabName={"details"} />*/}
                                         {/*@{await Html.RenderPartialAsync("_AddCustomFields.cshtml", "details-form");}*/}
                                     </div>
                                 </div>
-                                <div id="price" class="tab-pane fade in" value="1">
+                                <div id="price" className="tab-pane fade in" value="1">
 
-                                    <div class="row no-mb">
-                                        <div class="col-md-8">
-                                            <span class="heading-1 modal-tab-name">Price</span><br />
-                                            <span class=" large-text text-danger-centarix font-weight-bold" id="price-warning"></span>
+                                    <div className="row no-mb">
+                                        <div className="col-md-8">
+                                            <span className="heading-1 modal-tab-name">Price</span><br />
+                                            <span className=" large-text text-danger-centarix font-weight-bold" id="price-warning"></span>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label">Currency</label>
-                                                        <select id="currency" class="mdb-select custom select-dropdown form-control-plaintext disabled">
+                                        <div className="col-md-4">
+                                            <div className="row">
+                                                <div className="col-6">
+                                                    <div className="form-group">
+                                                        <label className="control-label">Currency</label>
+                                                        <select id="currency" className="mdb-select custom select-dropdown form-control-plaintext disabled">
                                                             <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label">Exchange Rate</label>
-                                                        <input name="Requests[0].ExchangeRate" class="form-control-plaintext border-bottom " id="exchangeRate" />
-                                                        <span class="text-danger-centarix"></span>
+                                                <div className="col-6">
+                                                    <div className="form-group">
+                                                        <label className="control-label">Exchange Rate</label>
+                                                        <input name="Requests[0].ExchangeRate" className="form-control-plaintext border-bottom " id="exchangeRate" />
+                                                        <span className="text-danger-centarix"></span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="custom-fields-price lab-man-form">
-                                        <div class="cf_header hidden">
+                                    <div className="custom-fields-price lab-man-form">
+                                        <div className="cf_header hidden">
                                             {/*@{await Html.RenderPartialAsync("_CFHeader.cshtml"); }*/}
                                         </div>
                                     </div>
-                                    <div class="cf_header hidden">
+                                    <div className="cf_header hidden">
                                         {/*@{await Html.RenderPartialAsync("_BorderCF.cshtml");}*/}
                                     </div>
-                                    <div class="add-custom-fields row">
+                                    <div className="add-custom-fields row">
                                         {/*@{await Html.RenderPartialAsync("_AddCustomFields.cshtml", "price-form");}*/}
                                     </div>
                                 </div>
-                                <div id="documents" class="tab-pane fade in" value="1">
+                                <div id="documents" className="tab-pane fade in" value="1">
                                     "Documents"
                                 </div>
-                                <div id="received" class="tab-pane fade in" value="1">
+                                <div id="received" className="tab-pane fade in" value="1">
                                     "Received"
                                 </div>
                             </div>
@@ -176,4 +198,6 @@ export default class SettingsForm extends Component {
             </form>
         )
     }
+
+
 }
