@@ -5107,7 +5107,28 @@ namespace PrototypeWithAuth.Controllers
 
             SettingsInventory settings = new SettingsInventory()
             {
-                Categories = GetCategoryList(new ParentCategory().GetType().Name, 1)
+                TopTabsList = new List<TopTabWithCounts>()
+                {
+                    new TopTabWithCounts()
+                    {
+                        Name = "Main",
+                        Page = "Main",
+                        Counts = new BoolIntViewModel()
+                        {
+                            Bool = false
+                        }
+                    },
+                    new TopTabWithCounts()
+                    {
+                        Name = "Samples",
+                        Page = "Samples",
+                        Counts = new BoolIntViewModel()
+                        {
+                            Bool = false
+                        }
+                    }
+                },
+                Categories = GetCategoryList(new ParentCategory().GetType().Name, 1),
             };
             settings.Subcategories = GetCategoryList(new ProductSubcategory().GetType().Name, 2, settings.Categories.CategoryBases.FirstOrDefault().ID);
             settings.SettingsForm = GetSettingsFormViewModel(settings.Subcategories.CategoryBases.FirstOrDefault().GetType().Name, settings.Subcategories.CategoryBases.FirstOrDefault().ID);
@@ -5166,6 +5187,7 @@ namespace PrototypeWithAuth.Controllers
             }
             settingsForm.RequestCount = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.Product.ProductSubcategoryID == settingsForm.Category.ID }).Count();
             settingsForm.ItemCount = _productsProc.Read(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategoryID == settingsForm.Category.ID }).Count();
+            settingsForm.CustomFieldData = this._CustomField();
 
             return settingsForm;
         }
@@ -5180,6 +5202,15 @@ namespace PrototypeWithAuth.Controllers
         public async Task<bool> UpdateExchangeRate()
         {
             return _requestsProc.UpdateExchangeRateByHistory().Result.Bool;
+        }
+
+        public CustomField _CustomField()
+        {
+            var CustomField = new CustomField()
+            {
+                CustomDataTypes = _customDataTypesProc.Read()
+            };
+            return CustomField;
         }
     }
 }

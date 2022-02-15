@@ -1,30 +1,43 @@
 ﻿import React, { Component } from 'react';
 import * as Constant from '../Shared/constants.js'
 import CustomFieldButton from './custom-field-button.jsx';
+import CustomField from './custom-field.jsx';
+import ReactDOM from 'react-dom';
 
 
 export default class SettingsForm extends Component {
-    state = {
-        customFieldsCount: 0
-    }
+    //state = {
+    //    customFieldsCount: 0
+    //}
 
     constructor(props) {
         super(props);
-        this.state = { SettingsForm: this.props.SettingsForm };
-    }
-
-    AddCustomField = () => {
-        return this.state.customFieldsCount.map(ticket => {
-            return <CustomField key={ticket.id} ticket={ticket} />;
-        });
+        this.state = { SettingsForm: this.props.SettingsForm, customFields: [] };
     }
 
     render() {
+        var OpenNewCustomField = () => {
+            console.log("open new custom field");
+            //ReactDOM.render(<CustomField />, document.getElementsByClassName('custom-fields-details')[0])
+            var array = this.state.customFields;
+            array.push("");
+            this.setState({ ...this.state, customFields: array });
+            console.dir(this.state.customFields);
+            //switch (this.props.tabName) {
+            //    case "details":
+            //        console.log("in details");
+            //        break;
+            //}
+        }
+
+
         const customfields = [];
 
-        for (var i = 0; i < this.state.numCustomFields; i += 1) {
-            customfields.push(<CustomField key={i} number={i} />);
+        for (var i = 0; i < this.state.customFields.length; i++) {
+            console.log("in for loop");
+            customfields.push(<CustomField key={i} number={i} text={this.state.customFields[i]} CustomFieldData={this.state.SettingsForm.CustomFieldData} />);
         };
+        console.dir(customfields);
 
         var autoHeight = {
             height: 'auto'
@@ -81,7 +94,7 @@ export default class SettingsForm extends Component {
                     <div className="container-fluid edit-modal-body box-shadow orders partial-div"> {/*style="background: #FFF; border: 2px solid #EAEAEB;">*/}
                         <div className="container-fluid div-tabs no-box-shadow p-0">
                             <div className="tab-content">
-                                <div id="details" className={"tab-pane fade in" +  showItem } value="1">
+                                <div id="details" className={"tab-pane fade in" + showItem} value="1">
                                     <div className="row">
                                         <div className="col-md-6">
                                             <label className="control-label">Category</label>
@@ -138,10 +151,10 @@ export default class SettingsForm extends Component {
                                         {/*@{await Html.RenderPartialAsync("_BorderCF.cshtml");}*/}
                                     </div>
                                     <div className="add-custom-fields row">
-                                        <input type="button" onClick={this.AddCustomField} className={"custom-button custom-cancel text border-dark " + " details"}
-                                            value="+ Add Custom Field" />
-                                        {this.state.customFields}
-                                        {/*<CustomFieldButton tabName={"details"} />*/}
+                                        {/*<input type="button" onClick={this.AddCustomField} className={"custom-button custom-cancel text border-dark " + " details"}*/}
+                                        {/*    value="+ Add Custom Field" />*/}
+                                        {customfields.map(cf => cf)}
+                                        <CustomFieldButton state={this.state} tabName={"details"} clickhandler={OpenNewCustomField} />
                                         {/*@{await Html.RenderPartialAsync("_AddCustomFields.cshtml", "details-form");}*/}
                                     </div>
                                 </div>
@@ -201,3 +214,4 @@ export default class SettingsForm extends Component {
 
 
 }
+

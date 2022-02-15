@@ -1,4 +1,5 @@
 ﻿import { SET_INDEX_TABLE_VIEWMODEL } from './actions.jsx'
+import { OPEN_CUSTOM_FIELD } from './actions.jsx'
 
 const reducer = (state, action) => {
     console.log("in reducer");
@@ -10,7 +11,12 @@ const reducer = (state, action) => {
                 ...state,
                 viewModel: action.viewmodel
             };
-      
+        case OPEN_CUSTOM_FIELD:
+            console.log("in reducer open custom field");
+            return {
+                ...state,
+                viewModel: action.viewModel
+            }
         default:
             return state;
     }

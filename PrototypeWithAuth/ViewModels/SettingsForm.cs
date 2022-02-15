@@ -14,5 +14,6 @@ namespace PrototypeWithAuth.ViewModels
         public string CategoryDescription { get; set; }
         public string SubcategoryDescription { get; set; }
         public List<bool> Test { get; set; }
+        public CustomField CustomFieldData { get; set; }
     }
 }
