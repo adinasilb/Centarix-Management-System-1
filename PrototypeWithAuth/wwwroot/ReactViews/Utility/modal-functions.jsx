@@ -1,9 +1,10 @@
 ﻿
 
-var openModal = function (modalClass) {
+const openModal = function (modalClass) {
     var modalElements = document.getElementsByClassName(modalClass);
     var showBackDrop = "static";
-    if (modalElements.length > 1) {
+    console.log(document.querySelector(".modal-backdrop"))
+    if (document.querySelector(".modal-backdrop")!=null) {
         showBackDrop = false;
     }
     var modalElement = modalElements[0]
@@ -20,15 +21,19 @@ var openModal = function (modalClass) {
 }
 
 
-var closeModal = function () {
+const removeExtraModalBackDrop = function (history) {
     var modalElements = document.getElementsByClassName("modal");
-    console.log(modalElements)
-    if (modalElements.length == 1) {
-        document.getElementsByClassName("modal-backdrop")[0].remove();
+    if (modalElements.length == 0) {
+        if (document.getElementsByClassName("modal-backdrop")[0] != null) {
+            history.push("/fallback");
+        }
+        document.getElementsByClassName("modal-backdrop")[0]?.remove();
         document.getElementsByClassName('body')[0].classList.remove('modal-open');
+
+
     }
     //we will deal with this later
     //$("body, .modal").bind("click");
 }
 
-export { openModal, closeModal};
+export { openModal, removeExtraModalBackDrop};

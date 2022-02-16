@@ -191,7 +191,8 @@ namespace PrototypeWithAuth.ViewModels
             }
             //nullify r for json purposes because it is not needed anymore
             r=null;
-
+            r= new Request();
+            r.RequestID= request.RequestID;
         }
 
 

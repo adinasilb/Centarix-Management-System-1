@@ -1,9 +1,9 @@
 ﻿import React, { Component } from 'react';
 import IndexTableColumn from './index-table-column.jsx'
-import { useSelector } from 'react-redux';
-export default function _IndexTableDataByVendor() {
-    const viewModel = useSelector(state => state.viewModel);
-    console.log("in index table by vendor");
+import { connect } from 'react-redux';
+function _IndexTableDataByVendor(props) {
+    var viewModel = props.viewModel;
+
     var getExtraTds = (count) => {
         var tds = [];
         var startColumnsToSkip = 0;
@@ -51,9 +51,9 @@ export default function _IndexTableDataByVendor() {
                             <tr className="border-0 d-none vendor-warning"><td colSpan="5"><span className="text-danger-centarix">you can only select items from the same vendor</span></td></tr>
                             {
                                 rbv.map((row, i) => (
-                                    <tr key={"row" + i} className="text-center inv-list-item">
+                                    <tr key={row.r.RequestID} className="text-center inv-list-item">
                                         {row.Columns.map((col, i) => (
-                                            <IndexTableColumn key={"col" + i} columnData={col} vendorID={rbv[0].Vendor.VendorID} sideBar={viewModel.SidebarType} />
+                                            <IndexTableColumn key={i} columnData={col} vendorID={rbv[0].Vendor.VendorID} sideBar={viewModel.SidebarType} />
                                         ))}
                                     </tr>
                                 ))
@@ -86,3 +86,12 @@ export default function _IndexTableDataByVendor() {
 
     }
 
+const mapStateToProps = state => {
+    return {
+        viewModel: state.viewModel
+    };
+};
+
+export default connect(
+    mapStateToProps
+)(_IndexTableDataByVendor)

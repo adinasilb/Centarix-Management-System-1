@@ -1,9 +1,7 @@
 ﻿import { closeModal } from "./modal-functions.jsx";
 import * as Actions from '../ReduxRelatedUtils/actions.jsx';
-import React from 'react';
-
-
-export var ajaxPartialIndexTable =(store, url, type, formdata, modalClass = "") =>{
+import ReactDOM from 'react-dom';
+export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
     console.log("in ajax partial index call " + url);
     //alert('before bind filter')
     if (document.getElementById('searchHiddenForsForm') !=null) {
@@ -32,9 +30,7 @@ export var ajaxPartialIndexTable =(store, url, type, formdata, modalClass = "") 
         listString += "&listID=" + listID.value
     }
     
-    if (modalClass != "") {
-       // closeModal();
-    } else {
+    if (modals == null) {
         console.log("in else");
         
         if (!url.includes("?")) {
@@ -61,8 +57,10 @@ export var ajaxPartialIndexTable =(store, url, type, formdata, modalClass = "") 
         method: type,
         body: formdata
     }).then(response => response.json())
-        .then(result => {
-            store.dispatch(Actions.setIndexTableViewModel(JSON.parse(result)));
+        .then(result => {          
+            dispatch(Actions.setIndexTableViewModel(JSON.parse(result)));
+            dispatch(Actions.removeModals(modals));
+
         document.querySelectorAll(".tooltip").forEach(c => c.remove());
         document.getElementById("loading").style.display = "none";
         //workaround for price radio button not coming in when switching from nothing is here tab
@@ -178,11 +176,8 @@ export var addObjectToFormdata = (formdata, object) => {
      document.querySelectorAll("#priceSortContent1 .priceSort:checked").forEach(e=> {
         selectedPriceSort += "&SelectedPriceSort=" + e.getAttribute("enum");
     })
-    console.log(selectedPriceSort)
-
     var requestStatusId = document.getElementsByClassName("request-status-id")[0]?.value;
      var queryString = "PageNumber=" + document.getElementsByClassName('page-number')[0]?.value + "&RequestStatusID=" + requestStatusId + "&PageType=" + document.getElementById('masterPageType')?.value + "&SectionType=" + document.getElementById('masterSectionType')?.value + "&SidebarType=" + document.getElementById('masterSidebarType')?.value + "&SelectedCurrency=" + document.getElementById('tempCurrency')?.value + "&SidebarFilterID=" + document.getElementsByClassName('sideBarFilterID')[0]?.value + "&CategorySelected=" +( document.querySelector('#categorySortContent .select-category:checked')?.length > 0 )+ "&SubCategorySelected=" + (document.querySelector('#categorySortContent .select-subcategory:checked').length > 0 )+"&ListID=" + document.getElementById("ListID")?.value;
     queryString += selectedPriceSort;
-    console.log(queryString)
     return queryString;
 }

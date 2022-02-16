@@ -1,30 +1,27 @@
 ﻿import React from 'react';
-import { useHistory } from "react-router-dom";
-import { closeModal } from "./modal-functions.jsx"
+import {  useDispatch } from 'react-redux'
+import { removeModal, removeModals } from '../ReduxRelatedUtils/actions.jsx'
 
-export default function CloseButton() {
-
-    const history = useHistory();
-    var back = e => {
-        e.stopPropagation();
-        history.goBack();
-        closeModal("delete-item");
-    };
+export default function CloseButton(props) {
+    var dispatch = useDispatch();
     return (<button
         className="close modal-close-padding modal-close-style"
-        onClick={back}>
+        onClick={(e) => {
+            e.stopPropagation();
+            dispatch(removeModal(props.modalKey));           
+        }}>
+        
         <span aria-hidden="true">&times;</span>
     </button>
     );
 }
 
+
 export function CancelButton(props) {
-    const history = useHistory();
-    var back = e => {
+    var dispatch = useDispatch();
+    return (<button type="button" className="custom-cancel custom-button " onClick={(e) => {      
         e.stopPropagation();
-        history.goBack();
-        closeModal("delete-item");
-    };
-    return (<button type="button" className="custom-cancel custom-button " onClick={back} > Cancel</button >
+        dispatch(removeModal(props.modalKey));
+    }} > Cancel</button >
     );
 }
