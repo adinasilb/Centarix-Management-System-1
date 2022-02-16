@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
-import IndexTableColumn from './index-table-column.jsx'
 import { connect } from 'react-redux';
+import IndexTableColumn from './index-table-column.jsx'
+
 function _IndexTableDataByVendor(props) {
     var viewModel = props.viewModel;
 

@@ -1,10 +1,10 @@
-﻿import React, { Component } from 'react';
+﻿import React from 'react';
 import IndexTableColumn from './index-table-column.jsx'
 import { useSelector } from 'react-redux';
 
 
 export default function _IndexTableData() {
-    console.log("in index table data");
+
     const viewModel = useSelector(state => state.viewModel);
 
             return (

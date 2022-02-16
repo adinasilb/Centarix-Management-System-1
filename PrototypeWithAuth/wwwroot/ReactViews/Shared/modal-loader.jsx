@@ -1,13 +1,12 @@
-﻿import { connect  } from 'react-redux';
-import DeleteModal from './delete-modal.jsx';
-import * as Actions from './ReduxRelatedUtils/actions.jsx'
+﻿import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import { removeExtraModalBackDrop } from '../Utility/modal-functions.jsx';
+import DeleteModal from '../Requests/delete-modal.jsx';
+import * as Actions from '../ReduxRelatedUtils/actions.jsx'
 export const DELETE_ITEM = 'DELETE_ITEM';
 export const DELETE_ITEM_ROUTE = '/DeleteModal';
 export const REORDER = 'REORDER'
-import { removeExtraModalBackDrop } from './Utility/modal-functions.jsx';
-import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-
 
 function ModalLoader(props) {
     useEffect(() => {
@@ -42,8 +41,6 @@ const mapDispatchToProps = dispatch => (
 );
 
 const mapStateToProps = state => {
-    console.log("map state to props")
-    console.log(state.modals);
     return {
         modals: state.modals
     };

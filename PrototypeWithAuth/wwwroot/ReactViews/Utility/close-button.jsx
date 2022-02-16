@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import {  useDispatch } from 'react-redux'
-import { removeModal, removeModals } from '../ReduxRelatedUtils/actions.jsx'
+import { removeModal } from '../ReduxRelatedUtils/actions.jsx'
 
 export default function CloseButton(props) {
     var dispatch = useDispatch();

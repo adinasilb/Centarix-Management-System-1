@@ -1,28 +1,15 @@
 ﻿import React from 'react';
-import {
-    Link,
-    BrowserRouter,
-    Route,
-    Switch,
-    StaticRouter,
-    Redirect,
-    MemoryRouter,
-    Router,
-    useHistory,
-    useLocation
-} from 'react-router-dom';
-import _IndexTableData from './index-table-data.jsx';
-import _IndexTableDataByVendor from './index-table-data-by-vendor.jsx';
-import SettingsInventory from "./Requests/settings-inventory.jsx";
-import FloatingActionBar from './floating-action-bar.jsx';
-import { Provider, useDispatch, useStore } from 'react-redux';
-import { createStore,  } from 'redux';
+import { Provider } from 'react-redux';
+import { createStore, } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import reducer from './ReduxRelatedUtils/reducers.jsx';
+import { Route, Switch, MemoryRouter} from 'react-router-dom';
+import _IndexTableData from '../Requests/index-table-data.jsx';
+import _IndexTableDataByVendor from '../Requests/index-table-data-by-vendor.jsx';
+import SettingsInventory from "../Requests/settings-inventory.jsx";
+import FloatingActionBar from '../Requests/floating-action-bar.jsx';
+import reducer from '../ReduxRelatedUtils/reducers.jsx';
 import ModalLoader from './modal-loader.jsx';
-import * as Actions from './ReduxRelatedUtils/actions.jsx'
 import * as ModalKeys from './modal-loader.jsx'
-import { openModal } from './Utility/modal-functions.jsx';
 
 export default function RootComponent(props) {
     const store = createStore(reducer, { viewModel: props.viewModel, modals: [] }, composeWithDevTools());

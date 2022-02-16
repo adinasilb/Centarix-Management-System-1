@@ -3,7 +3,6 @@
 const openModal = function (modalClass) {
     var modalElements = document.getElementsByClassName(modalClass);
     var showBackDrop = "static";
-    console.log(document.querySelector(".modal-backdrop"))
     if (document.querySelector(".modal-backdrop")!=null) {
         showBackDrop = false;
     }

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 
 //import FloatingActionBar from './floating-action-bar.jsx'
-import RootComponent from './root-component.jsx';
+import RootComponent from './Shared/root-component.jsx';
 import CloseButton from './Utility/close-button.jsx'
 
 global.React = React;

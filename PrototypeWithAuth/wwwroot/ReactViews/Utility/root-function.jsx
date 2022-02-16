@@ -1,6 +1,5 @@
-﻿import { closeModal } from "./modal-functions.jsx";
-import * as Actions from '../ReduxRelatedUtils/actions.jsx';
-import ReactDOM from 'react-dom';
+﻿import * as Actions from '../ReduxRelatedUtils/actions.jsx';
+
 export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
     console.log("in ajax partial index call " + url);
     //alert('before bind filter')

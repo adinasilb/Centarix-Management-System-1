@@ -1,7 +1,6 @@
 ﻿import * as ActionKeys from './actions.jsx'
 
 const reducer = (state, action) => {
-    console.log("in reducer");
 
     switch (action.type) {
         case ActionKeys.SET_INDEX_TABLE_VIEWMODEL:
@@ -27,7 +26,6 @@ const reducer = (state, action) => {
         case ActionKeys.REMOVE_MODALS:
             var newState = state.modals;
             action.payload.map(item => {
-                console.log(item);
                 newState = newState.filter(m => m != item)
             })
             console.log("remove modals" + newState)
