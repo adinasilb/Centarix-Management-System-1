@@ -3808,15 +3808,19 @@ namespace PrototypeWithAuth.Controllers
                     new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest },
                     new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments } };
             wheres.Add(r => r.RequestStatusID != 7 && r.Payments.Where(p => !p.IsPaid).Count() > 0);
-            var requestList = new List<RequestPaymentsViewModel>();
+            var requestPaymentList = new List<RequestPaymentsViewModel>();
+            Func<Payment, bool> paymentWheres;
             switch (accountingPaymentsEnum)
             {
                 case AppUtility.SidebarEnum.MonthlyPayment:
                     wheres.Add(r => (r.PaymentStatusID == 2/*+30*/ && r.Payments.FirstOrDefault().HasInvoice && r.Payments.FirstOrDefault().IsPaid == false)
                     || (
                           (r.PaymentStatusID == 5/*installments*/ || r.PaymentStatusID == 7/*standingorder*/ || r.Product is RecurringOrder)
-                          && r.Payments.Where(p => p.PaymentDate.Month == DateTime.Today.Month && p.PaymentDate.Year == DateTime.Today.Year && p.IsPaid == false).Count() > 0)
+                          && r.Payments.Where(p => ((p.PaymentDate.Month <= DateTime.Today.Month && p.PaymentDate.Year == DateTime.Today.Year) || p.PaymentDate.Year < DateTime.Today.Year) && p.IsPaid == false).Count() > 0)
                        );
+                    paymentWheres = p => p.IsPaid == false && ((p.PaymentDate.Month <= DateTime.Today.Month && p.PaymentDate.Year == DateTime.Today.Year) || p.PaymentDate.Year < DateTime.Today.Year);
+                    requestPaymentList = GetPaymentsForEachRequest(wheres, includes, paymentWheres);
+                    return requestPaymentList;
                     break;
                 case AppUtility.SidebarEnum.PayNow:
                     wheres.Add(r => r.PaymentStatusID == 3 && r.Payments.FirstOrDefault().IsPaid == false);
@@ -3827,21 +3831,9 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.SidebarEnum.Installments:
                     wheres.Add(r => r.PaymentStatusID == 5);
                     wheres.Add(r => r.Payments.Where(p => p.IsPaid == false && p.HasInvoice && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
-
-                    var installmentRequests = _requestsProc.Read(wheres, includes);
-                    foreach (var request in installmentRequests)
-                    {
-                        var currentInstallments = request.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).ToList();
-                        requestList.Add(new RequestPaymentsViewModel { Request = request, Payment = currentInstallments.ElementAt(0) });
-                        if (currentInstallments.Count() > 0)
-                        {
-                            for (var i = 1; i < currentInstallments.Count(); i++)
-                            {
-                                requestList.Add(new RequestPaymentsViewModel { Request = request, Payment = currentInstallments.ElementAt(i) });
-                            }
-                        }
-                    }
-                    return requestList;
+                    paymentWheres = p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5);
+                    requestPaymentList = GetPaymentsForEachRequest(wheres, includes, paymentWheres);
+                    return requestPaymentList;
                     break;
                 case AppUtility.SidebarEnum.StandingOrders:
                     wheres.Add(r => r.PaymentStatusID == 7);
@@ -3852,11 +3844,30 @@ namespace PrototypeWithAuth.Controllers
                     break;
             }
 
-            var requests = _requestsProc.Read(wheres, includes).ToList();
+            var requestList = _requestsProc.Read(wheres, includes).ToList();
 
-            requests.ForEach(r => requestList.Add(new RequestPaymentsViewModel { Request = r, Payment = r.Payments.FirstOrDefault() }));
+            requestList.ForEach(r => requestPaymentList.Add(new RequestPaymentsViewModel { Request = r, Payment = r.Payments.FirstOrDefault() }));
 
-            return requestList;
+            return requestPaymentList;
+        }
+
+        private List<RequestPaymentsViewModel> GetPaymentsForEachRequest(List<Expression<Func<Request, bool>>> wheres, List<ComplexIncludes<Request, ModelBase>> includes, Func<Payment, bool> paymentWheres)
+        {
+            var requestPaymentList = new List<RequestPaymentsViewModel>();
+            var installmentRequests = _requestsProc.Read(wheres, includes).ToList();
+            foreach (var request in installmentRequests)
+            {
+                var currentInstallments = request.Payments.Where(paymentWheres).ToList();
+                requestPaymentList.Add(new RequestPaymentsViewModel { Request = request, Payment = currentInstallments.ElementAt(0) });
+                if (currentInstallments.Count() > 1)
+                {
+                    for (var i = 1; i < currentInstallments.Count(); i++)
+                    {
+                        requestPaymentList.Add(new RequestPaymentsViewModel { Request = request, Payment = currentInstallments.ElementAt(i) });
+                    }
+                }
+            }
+            return requestPaymentList;
         }
 
         [HttpGet]
@@ -3908,7 +3919,7 @@ namespace PrototypeWithAuth.Controllers
             if(vendorId != null)
             {
                 var vm = await GetPaymentRequests(accountingPaymentsEnum);
-                payments = vm.Where(rp => rp.Request.Product.VendorID == vendorId).Select(rp => rp.Payment).ToList();
+                payments = vm.Where(rp => rp.Request.Product.VendorID == vendorId).Where(rp => rp.Request.PaymentStatusID != 7/*standingorder*/).Select(rp => rp.Payment).ToList();
             }
             else
             {
