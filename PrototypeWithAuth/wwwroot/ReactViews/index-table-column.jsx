@@ -112,7 +112,7 @@ export default class IndexTableColumn extends Component {
                     var dangerColor = ve.Bool ? " text-danger-centarix " : "";
     
                     if (ve.String=="Checkbox") {
-                        return (<div key={"value" + i}><div className={"form-check accounting-select " + dangerColor}>
+                        return (<div key={"value" + i}><div className={"form-check accounting-select pl-4" + dangerColor}>
                             <input type="checkbox" className={"form-check-input fci-acc filled-in " + col.AjaxLink} id={col.AjaxID} vendorid={this.state.vendorID} />
                             <label className="form-check-label" htmlFor={col.AjaxID}></label>
                         </div>{ i != 0 ? <br /> : null }</div>
