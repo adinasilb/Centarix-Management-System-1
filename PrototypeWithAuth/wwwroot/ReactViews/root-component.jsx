@@ -18,7 +18,7 @@ import FloatingActionBar from './floating-action-bar.jsx';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import  reducer  from './ReduxRelatedUtils/reducers.jsx'
+import reducer from './ReduxRelatedUtils/reducers.jsx'
 
 export default function RootComponent (props) {
 
