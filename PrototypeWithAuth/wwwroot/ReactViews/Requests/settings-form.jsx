@@ -3,6 +3,7 @@ import * as Constant from '../Shared/constants.js'
 import CustomFieldButton from './custom-field-button.jsx';
 import CustomField from './custom-field.jsx';
 import ReactDOM from 'react-dom';
+import { MDBBtn } from 'mdbreact';
 
 
 export default class SettingsForm extends Component {
@@ -12,30 +13,52 @@ export default class SettingsForm extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { SettingsForm: this.props.SettingsForm, customFields: [] };
+        this.state = { SettingsForm: this.props.SettingsForm, customFields: [] , validationErrors: []};
     }
 
     render() {
+        var submit = (e) => {
+            e.preventDefault();
+        }
+
         var OpenNewCustomField = () => {
             console.log("open new custom field");
             var array = this.state.customFields;
-            array.push("");
+            //var lastIndex = array.length - 1;
+            var Num = array.length;
+            array.push(Num);
+            var valErrors = this.state.validationErrors;
+            let values = { dict: { 'fieldname': [false, ''], 'datatype' : [false, ''] } };
+            let Error = [[Num, values]];
+            valErrors.push(Error);
             this.setState({ ...this.state, customFields: array });
         }
 
-        var RemoveCustomField = (e, customfield) => {
+        var RemoveCustomField = (e) => {
             e.preventDefault();
-            console.dir(e);
-            console.log("in remove custom field: number: " + e.props.number);
+            var index = e.target.parentElement.attributes.number.value;
+            console.log("number: " + index);
+            var array = this.state.customFields;
+            var errors = this.state.validationErrors;
+            console.dir(array);
+            if (index - 1 !== 1) {
+                array.splice(index, 1);
+                errors.splice(index, 1);
+                console.log("spliced");
+                console.dir(array);
+                this.setState({ ...this.state, customfields: array, validationErrors: errors });
+            }
         }
 
-        const customfields = [];
+
+        const customfieldsView = [];
 
         for (var i = 0; i < this.state.customFields.length; i++) {
             console.log("in for loop");
-            customfields.push(<CustomField key={i} number={i} text={this.state.customFields[i]} CustomFieldData={this.state.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField} />);
+            customfieldsView.push(<CustomField key={this.state.customFields[i]} number={i} text={this.state.customFields[i]} CustomFieldData={this.state.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField}
+                ValidationErrors={this.state.validationErrors[i]} />);
         };
-        console.dir(customfields);
+        console.dir(customfieldsView);
 
         var autoHeight = {
             height: 'auto'
@@ -66,12 +89,14 @@ export default class SettingsForm extends Component {
                         </div>
                         <div className="col-8">
                             <div className="modal-product-title ml-2" >
-                                <textarea asp-for="Category.Description" className="form-control-plaintext border-bottom heading-1 category-name" placeholder="(category name)" rows={categoryNameRows} cols="50" maxLength="150"></textarea>
+                                <textarea asp-for="Category.Description" className="form-control-plaintext border-bottom heading-1" placeholder="(category name)" rows={categoryNameRows} cols="50" maxLength="150"></textarea>
                             </div>
-                            <span asp-validation-for="Category.Description" className="text-danger-centarix"></span>
+                            <span asp-validation-for="Category.Description" className="text-danger-centarix">
+                                {}
+                            </span>
                         </div>
                         <div className="col-2">
-                            <input type="button" className="save-settings-form custom-button custom-button-font lab-man-background-color" value="Save" />
+                            <MDBBtn onClick={submit} type="submit" className=" custom-button custom-button-font lab-man-background-color" value="Save" />
                         </div>
 
                     </div>
@@ -151,7 +176,7 @@ export default class SettingsForm extends Component {
                                     <div className="add-custom-fields row">
                                         {/*<input type="button" onClick={this.AddCustomField} className={"custom-button custom-cancel text border-dark " + " details"}*/}
                                         {/*    value="+ Add Custom Field" />*/}
-                                        {customfields.map(cf => cf)}
+                                        {customfieldsView.map(cf => cf)}
                                         <CustomFieldButton state={this.state} tabName={"details"} clickhandler={OpenNewCustomField} />
                                         {/*@{await Html.RenderPartialAsync("_AddCustomFields.cshtml", "details-form");}*/}
                                     </div>
@@ -210,6 +235,4 @@ export default class SettingsForm extends Component {
         )
     }
 
-
 }
-

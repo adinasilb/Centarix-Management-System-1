@@ -1,4 +1,4 @@
-﻿﻿const path = require('path');
+﻿const path = require('path');
 const ManifestPlugin = require('webpack-manifest-plugin');
 
 module.exports = {
@@ -69,9 +69,10 @@ module.exports = {
 			},
 		}),
 	],
-	// resolve: {
-		// alias: {
-			// react: path.resolve('./node_modules/react'),
-		// }
-	// }
+	 resolve: {
+		 alias: {
+			 react: path.resolve('./node_modules/react'),
+			'react-dom': path.resolve('./node_modules/react-dom'),
+		}
+	}
 };

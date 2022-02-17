@@ -24,6 +24,7 @@
     "react-style-loader": "^2.3.0",
     "reactstrap": "^8.0.0",
     "redux": "^4.1.2",
+    "redux-form": "^8.3.8",
     "sass": "^1.49.7",
     "sass-loader": "^10.0.0",
     "style-loader": "^3.0.0",
