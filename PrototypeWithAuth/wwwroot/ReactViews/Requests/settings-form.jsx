@@ -23,9 +23,10 @@ export default class SettingsForm extends Component {
             this.setState({ ...this.state, customFields: array });
         }
 
-        var RemoveCustomField = (customfield) => {
-            customfield.preventDefault();
-            console.log("in remove custom field");
+        var RemoveCustomField = (e, customfield) => {
+            e.preventDefault();
+            console.dir(e);
+            console.log("in remove custom field: number: " + e.props.number);
         }
 
         const customfields = [];

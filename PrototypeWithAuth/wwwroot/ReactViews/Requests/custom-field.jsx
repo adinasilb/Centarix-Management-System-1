@@ -5,7 +5,7 @@ export default class CustomField extends Component {
     constructor(props) {
         super(props);
         console.log("in custom field: " + props.text);
-        this.state = { CustomFieldData: props.CustomFieldData, RemoveCustomField: props.RemoveCustomField };
+        this.state = { CustomFieldData: props.CustomFieldData };
     }
 
 
@@ -15,10 +15,10 @@ export default class CustomField extends Component {
 
     render() {
 
-        var RemoveCustomField = (customfield) => {
-            customfield.preventDefault();
-            console.log("in remove custom field");
-        }
+        //var RemoveCustomField = (customfield) => {
+        //    customfield.preventDefault();
+        //    console.log("in remove custom field");
+        //}
 
         this.defaultProps = {
             checkedRequired: false
@@ -68,7 +68,7 @@ export default class CustomField extends Component {
                         </div>
                     </div>
                     <div className="col-1 d-flex"> {/*style="height:auto;">*/}
-                        <a href="" onClick={this.RemoveClick} className="remove-custom-field danger-filter align-items-end pb-2 d-flex" divclass="@Model.DivClass" cf="@Model.CustomFieldCounter" > {/*style="height:auto; font-size:1.75rem;">*/}
+                        <a href="" onClick={this.props.RemoveCustomField} className="remove-custom-field danger-filter align-items-end pb-2 d-flex" divclass="@Model.DivClass" number={this.props.number} > {/*style="height:auto; font-size:1.75rem;">*/}
                             <i className="icon-delete-24px align-items-end"></i>
                         </a>
                     </div>
