@@ -1,22 +1,39 @@
-﻿import { SET_INDEX_TABLE_VIEWMODEL } from './actions.jsx'
-import { OPEN_CUSTOM_FIELD } from './actions.jsx'
+﻿import * as ActionKeys from './actions.jsx'
 
 const reducer = (state, action) => {
-    console.log("in reducer");
 
     switch (action.type) {
-        case SET_INDEX_TABLE_VIEWMODEL:
-            console.log("in reducer right key")
+        case ActionKeys.SET_INDEX_TABLE_VIEWMODEL:
+       
             return {
                 ...state,
-                viewModel: action.viewmodel
+                viewModel: action.payload
             };
-        case OPEN_CUSTOM_FIELD:
-            console.log("in reducer open custom field");
+            break;
+        case ActionKeys.ADD_MODAL:
             return {
                 ...state,
-                viewModel: action.viewModel
-            }
+                modals: [...state.modals, action.payload]
+            };
+            break;
+        case ActionKeys.REMOVE_MODAL:
+
+            return {
+                ...state,
+                modals:state.modals.filter(m => m != action.payload)
+            };
+            break;
+        case ActionKeys.REMOVE_MODALS:
+            var newState = state.modals;
+            action.payload.map(item => {
+                newState = newState.filter(m => m != item)
+            })
+            console.log("remove modals" + newState)
+            return {
+                ...state,
+                modals: newState
+            };
+            break;
         default:
             return state;
     }

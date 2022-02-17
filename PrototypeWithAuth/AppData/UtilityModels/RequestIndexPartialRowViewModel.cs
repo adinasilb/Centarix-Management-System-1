@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Threading.Tasks;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
@@ -191,7 +190,8 @@ namespace PrototypeWithAuth.ViewModels
             }
             //nullify r for json purposes because it is not needed anymore
             r=null;
-
+            r= new Request();
+            r.RequestID= request.RequestID;
         }
 
 
