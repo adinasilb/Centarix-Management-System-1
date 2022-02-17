@@ -4,9 +4,6 @@ import { useHistory } from 'react-router-dom';
 import { removeExtraModalBackDrop } from '../Utility/modal-functions.jsx';
 import DeleteModal from '../Requests/delete-modal.jsx';
 import * as Actions from '../ReduxRelatedUtils/actions.jsx'
-export const DELETE_ITEM = 'DELETE_ITEM';
-export const DELETE_ITEM_ROUTE = '/DeleteModal';
-export const REORDER = 'REORDER'
 
 function ModalLoader(props) {
     useEffect(() => {

@@ -3,8 +3,9 @@ import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import CloseButton, { CancelButton } from '../Utility/close-button.jsx'
 import { openModal } from '../Utility/modal-functions.jsx'
-import { ajaxPartialIndexTable, getRequestIndexString } from '../Shared/root-function.jsx'
-import * as ModalKeys from '../Shared/modal-loader.jsx'
+import { ajaxPartialIndexTable, getRequestIndexString } from '../Utility/root-function.jsx'
+import * as ModalKeys from '../Constants/ModalKeys.jsx'
+import * as Routes from '../Constants/Routes.jsx'
 export default function DeleteModal(props) {
     const dispatch = useDispatch();
     const location = useLocation();
@@ -36,7 +37,7 @@ export default function DeleteModal(props) {
             <div className="modal-dialog-centered modal-lg mx-auto " role="document" style={{ maxHeight: "100%", overflowY: "auto" }}>
 
                 <div className="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-                    <div className="close-button"><CloseButton modalKey={ModalKeys.DELETE_ITEM} pathname={ModalKeys.DELETE_ITEM_ROUTE}  /></div>
+                    <div className="close-button"><CloseButton modalKey={ModalKeys.DELETE_ITEM} pathname={Routes.DELETE_ITEM}  /></div>
                     <form onSubmit={onSubmit} method="post" encType="multipart/form-data" style={{ height: "100%", overflow: "auto" }} className="modal-padding" id="myForm">
                         <div dangerouslySetInnerHTML={{ __html: state.view }} />
                         <div className="modal-footer">

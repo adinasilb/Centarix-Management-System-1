@@ -9,7 +9,8 @@ import SettingsInventory from "../Requests/settings-inventory.jsx";
 import FloatingActionBar from '../Requests/floating-action-bar.jsx';
 import reducer from '../ReduxRelatedUtils/reducers.jsx';
 import ModalLoader from './modal-loader.jsx';
-import * as ModalKeys from './modal-loader.jsx'
+import * as ModalKeys from '../Constants/ModalKeys.jsx'
+import * as Routes from '../Constants/Routes.jsx'
 
 export default function RootComponent(props) {
     const store = createStore(reducer, { viewModel: props.viewModel, modals: [] }, composeWithDevTools());
@@ -37,10 +38,10 @@ export default function RootComponent(props) {
                 }
 
                 <Switch>
-                    <Route path={ModalKeys.DELETE_ITEM_ROUTE} render={(props) => <ModalLoader {...props} modalKey={ModalKeys.DELETE_ITEM} />} />
-                    <Route path="/fallback" render={() => { return null;}} />
-                    <Route path="/_IndexTableData" component={_IndexTableData} />
-                    <Route path="SettingsInventory" component={SettingsInventory} />
+                    <Route path={Routes.DELETE_ITEM} render={(props) => <ModalLoader {...props} modalKey={ModalKeys.DELETE_ITEM} />} />
+                    <Route path={Routes.FALLBACK} render={() => { return null;}} />
+                    <Route path={Routes.INDEX_TABLE_DATA} component={_IndexTableData} />
+                    <Route path={Routes.SETTINGS_INVENTORY} component={SettingsInventory} />
                 </Switch>
             </div>)
     }
