@@ -32,14 +32,22 @@ module.exports = {
 				loader: 'babel-loader',
 			},
 			{
-				test: /\.css$/i,
-        			use: [
-                    			{loader: 'style-loader'},
-                    			{loader: 'css-loader',
-                    				options: { url: false } // tell css-loader to not package images referenced in css. perhaps re-activate this for base64 injection
-                    			},
-                		]
-			}
+  				test: /\.css$/,
+  				exclude: /node_modules/,
+  				loaders: ['style-loader', 'css-loader'],
+			}				
+			,{
+  				test: /\.css$/,
+  				include: /node_modules/,
+				loader: 'css-loader',
+          			options: {
+            				url: false
+          			}
+			},
+            		{
+                		test: /\.scss$/,
+                		use: ['style-loader', 'css-loader', 'sass-loader'],
+            		},
 		],
 	},
 	plugins: [

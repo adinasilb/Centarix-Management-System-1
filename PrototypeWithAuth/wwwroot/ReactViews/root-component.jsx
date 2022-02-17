@@ -10,6 +10,7 @@ import {
     Router,
     useHistory
 } from 'react-router-dom';
+//import "./assets/scss/mdb-free.scss"
 import DeleteModal from './delete-modal.jsx';
 import _IndexTableData from './index-table-data.jsx';
 import _IndexTableDataByVendor from './index-table-data-by-vendor.jsx';

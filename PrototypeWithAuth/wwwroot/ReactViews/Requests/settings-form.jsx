@@ -18,24 +18,21 @@ export default class SettingsForm extends Component {
     render() {
         var OpenNewCustomField = () => {
             console.log("open new custom field");
-            //ReactDOM.render(<CustomField />, document.getElementsByClassName('custom-fields-details')[0])
             var array = this.state.customFields;
             array.push("");
             this.setState({ ...this.state, customFields: array });
-            console.dir(this.state.customFields);
-            //switch (this.props.tabName) {
-            //    case "details":
-            //        console.log("in details");
-            //        break;
-            //}
         }
 
+        var RemoveCustomField = (customfield) => {
+            customfield.preventDefault();
+            console.log("in remove custom field");
+        }
 
         const customfields = [];
 
         for (var i = 0; i < this.state.customFields.length; i++) {
             console.log("in for loop");
-            customfields.push(<CustomField key={i} number={i} text={this.state.customFields[i]} CustomFieldData={this.state.SettingsForm.CustomFieldData} />);
+            customfields.push(<CustomField key={i} number={i} text={this.state.customFields[i]} CustomFieldData={this.state.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField} />);
         };
         console.dir(customfields);
 
