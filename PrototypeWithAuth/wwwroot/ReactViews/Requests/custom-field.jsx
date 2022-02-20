@@ -5,7 +5,7 @@ export default class CustomField extends Component {
     constructor(props) {
         super(props);
         console.log("in custom field: " + props.text);
-        this.state = { CustomFieldData: props.CustomFieldData };
+        this.state = { CustomFieldData: props.CustomFieldData, ValidationErrors: props.ValidationErrors };
     }
 
 
@@ -16,7 +16,7 @@ export default class CustomField extends Component {
     render() {
 
         console.log("validation errors");
-        console.dir(this.props.validationErrors[this.props.number].dataType);
+        console.log(this.state.ValidationErrors[1].dict["datatype"][0]);
 
         this.defaultProps = {
             checkedRequired: false

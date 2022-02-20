@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import CategoryListSettings from './category-list-settings.jsx';
 import TopTabsCount from '../Shared/top-tabs-counts.jsx';
-import SettingsForm from './settings-form.jsx';
+import { SettingsForm } from './settings-form.jsx';
 export default class SettingsInventory extends Component {
     constructor(props) {
         super(props);
