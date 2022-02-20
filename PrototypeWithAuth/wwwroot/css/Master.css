@@ -445,9 +445,9 @@ input:not(input[type=button], input[type=submit], .heading-1) {
 }
 
 .custom-button-font {
-    font-size: 1.563rem;
-    font-weight: var(--bold-regular);
-    color: var(--white);
+    font-size: 1.563rem !important;
+    font-weight: var(--bold-regular) !important;
+    color: var(--white) !important;
 }
 
 .order-inv-custom-button-font {
@@ -470,9 +470,9 @@ input:not(input[type=button], input[type=submit], .heading-1) {
 
 .custom-cancel {
     border: .0625rem solid #000000DB !important;
-    background-color: transparent;
-    font-weight: var(--bold-light);
-    font-size: 1.438rem;
+    background-color: transparent !important;
+    font-weight: var(--bold-light) !important;
+    font-size: 1.438rem !important;
 }
 
 .create-modal-submit {
@@ -562,7 +562,7 @@ table td, table td .btn, .text, table th {
 }
 
 .between-button-margin {
-    margin-right: 3.125rem;
+    margin-right: 3.125rem !important; 
 }
 
 /*body shadows*/
@@ -585,11 +585,11 @@ table td, table td .btn, .text, table th {
 
 /**custom submits*/
 .custom-button {
-    padding-left: 3.125rem;
-    padding-right: 3.125rem;
+    padding: 0 3.125rem !important;
     height: 2.875rem;
-    border-radius: 1.438rem;
-    border: none;
+    border-radius: 1.438rem !important;
+    border: none !important;
+    text-transform:capitalize !important;
 }
 
 .Biomarkers .clear-custom-button{

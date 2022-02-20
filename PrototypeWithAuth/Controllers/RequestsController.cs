@@ -1399,17 +1399,13 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _DeleteModal(int? id, RequestIndexObject requestIndexObject)
+        public async Task<JsonResult> _DeleteModal(int? id, RequestIndexObject requestIndexObject)
         {
             //if (!AppUtility.IsAjaxRequest(Request))
             //{
             //    return PartialView("InvalidLinkPage");
             //}
-            if (id == null)
-            {
-                ViewBag.ErrorMessage = "Product not found (no id). Unable to delete.";
-                return NotFound();
-            }
+    
 
             var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { m => m.RequestID == id },
                 new List<ComplexIncludes<Request, ModelBase>>{
@@ -1418,19 +1414,27 @@ namespace PrototypeWithAuth.Controllers
                             ThenInclude =  new ComplexIncludes<ModelBase, ModelBase> { Include = ps => ((ProductSubcategory)ps).ParentCategory }}},
                     new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.Vendor } });
 
-            if (request == null)
-            {
-                ViewBag.ErrorMessage = "Product not found (no request). Unable to delete";
-                return NotFound();
-            }
+        
 
             DeleteRequestViewModel deleteRequestViewModel = new DeleteRequestViewModel()
             {
                 Request = request,
                 RequestIndexObject = requestIndexObject
             };
+            if (request == null)
+            {
+                deleteRequestViewModel.ErrorMessage  = "Product not found (no request). Unable to delete";
+            }
+            if (id == null)
+            {
+                deleteRequestViewModel.ErrorMessage = "Product not found (no id). Unable to delete.";
+            }
+            return Json(JsonConvert.SerializeObject(deleteRequestViewModel, Formatting.Indented,  new JsonSerializerSettings
+            {
 
-            return PartialView(deleteRequestViewModel);
+                Converters= new List<JsonConverter> { new StringEnumConverter() },
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
         }
 
         [HttpPost]

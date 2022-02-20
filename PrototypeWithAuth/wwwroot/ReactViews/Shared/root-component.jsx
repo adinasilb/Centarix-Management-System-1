@@ -37,9 +37,10 @@ export default function RootComponent(props) {
                     renderSwitch()
                 }
 
+
                 <Switch>
-                    <Route path={Routes.DELETE_ITEM} render={(props) => <ModalLoader {...props} modalKey={ModalKeys.DELETE_ITEM} />} />
-                    <Route path={Routes.FALLBACK} render={() => { return null;}} />
+                    <Route exact path={Routes.DELETE_ITEM} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.DELETE_ITEM} uid={props.location.key} />} />
+                    <Route exact path={Routes.REORDER} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.REORDER} uid={props.location.key} />} />
                     <Route path={Routes.INDEX_TABLE_DATA} component={_IndexTableData} />
                     <Route path={Routes.SETTINGS_INVENTORY} component={SettingsInventory} />
                 </Switch>
