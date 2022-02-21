@@ -48,14 +48,14 @@
             $(id).attr("checked", !$(id).prop("checked"));
             if (($('#masterPageType').val() == "RequestCart" && $('#masterSidebarType').val() == "Cart" ) || $('#masterPageType').val() == "LabManagementQuotes" || $('#masterPageType').val() == "AccountingPayments" || $('#masterPageType').val() == "AccountingNotifications") {
 
-                $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableDataByVendor", "._IndexTableDataByVendor", "GET");
+                $.fn.ajaxPartialIndexTable("/Requests/_IndexTableDataByVendor", "._IndexTableDataByVendor", "GET");
             }
             else {
                 /*if ($('#masterPageType').val() == "AccountingGeneral") {
                     var year = $("#Years").val();
                     var month = $("#Months").val();
                 }*/
-                $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "GET"/*, undefined, "", month, year*/);
+                $.fn.ajaxPartialIndexTable("/Requests/_IndexTableData", "._IndexTableData", "GET"/*, undefined, "", month, year*/);
             }
             return false;
         })

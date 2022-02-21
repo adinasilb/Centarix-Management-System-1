@@ -36,7 +36,7 @@ $(function () {
             e.preventDefault();
             //switch this to universal share request and the modelsenum send in
             var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?newStatus=" + $(this).attr("data-route-new-status") + "&requestID=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString();
-            $.fn.ajaxPartialIndexTable($(".request-status-id").val(), url, "._IndexTableByVendor", "GET");
+            $.fn.ajaxPartialIndexTable( url, "._IndexTableByVendor", "GET");
             
         });
         $(".icon-more-popover").off("click").on("click", ".remove-share", function (e) {
@@ -243,7 +243,7 @@ $(function () {
         console.log("approving");
         e.preventDefault();
         $("#loading").show();
-        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Operations/Order/?id=" + $(this).attr("value"), "._IndexTableWithCounts", "GET");
+        $.fn.ajaxPartialIndexTable( "/Operations/Order/?id=" + $(this).attr("value"), "._IndexTableWithCounts", "GET");
         return false;
     });
 
@@ -389,7 +389,7 @@ $(function () {
         $("#loading").show();
         var pageNumber = parseInt($(this).html());
         $('.page-number').val(pageNumber);
-        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "POST");
+        $.fn.ajaxPartialIndexTable( "/Requests/_IndexTableData/", "._IndexTableData", "POST");
         return false;
     });
 
@@ -399,7 +399,7 @@ $(function () {
         var months = [];
         months = $("#Months").val();*/
         $('.page-number').val(1);
-        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTable/", "._IndexTable", "GET" /*, undefined, "", months, years*/);
+        $.fn.ajaxPartialIndexTable( "/Requests/_IndexTable/", "._IndexTable", "GET" /*, undefined, "", months, years*/);
         return false;
     });
 
@@ -451,7 +451,7 @@ $(function () {
     })
 
 
-    $.fn.ajaxPartialIndexTable = function (status, url, viewClass, type, formdata, modalClass = "", /*months, years, */) {
+    $.fn.ajaxPartialIndexTable = function (url, viewClass, type, formdata, modalClass = "", tabName="", requestStatus = -1 /*months, years, */) {
         console.log("in ajax partial index call " + url);
         //alert('before bind filter')
         if ($('#searchHiddenForsForm').length) {
@@ -518,7 +518,7 @@ $(function () {
             } else {
                 url += "&";
             }
-            url += $.fn.getRequestIndexString(status);
+            url += $.fn.getRequestIndexString(tabName, requestStatus);
             url += monthsString;
             url += yearsString;
             url += listString;
@@ -540,7 +540,7 @@ $(function () {
             processType = false;
             contentType = false; 
         }
-        
+        console.log("url: "+ url)
         $.ajax({
             contentType: contentType,
             processData: processType,

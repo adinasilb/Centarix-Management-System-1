@@ -30,6 +30,7 @@ function UploadFile(TargetFile, formData) {
     var PartCount = 0;
     // loop through, pulling the first item from the array each time and sending it
     var FilePartName = file.name;
+  
     while (chunk = FileChunk.shift()) {
         if (PartCount == 0) {
             formData.set("IsFirstPart", true);

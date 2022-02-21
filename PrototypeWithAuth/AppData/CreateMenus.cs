@@ -131,7 +131,23 @@ namespace PrototypeWithAuth.AppData
                     if (pageType == AppUtility.PageTypeEnum.OperationsInventory) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
-                        Description = "Inventory",
+                        Description = "Item List",
+                        Controller = "Requests", //redo to operations
+                        Action = "IndexInventory",
+                        RouteValues = new RouteValueDictionary()
+                        {
+                            {"PageType",  AppUtility.PageTypeEnum.OperationsInventory },
+                            { "SectionType", AppUtility.MenuItems.Operations },
+                            { "SidebarType", AppUtility.SidebarEnum.List },
+                            { "RequestStatusID", 3 },
+                        },
+                        Classes = AllClasses,
+                        ID = "inventory-link"
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.OperationsInventory) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Personal",
                         Controller = "Requests", //redo to operations
                         Action = "IndexInventory",
                         RouteValues = new RouteValueDictionary()

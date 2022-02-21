@@ -24,7 +24,8 @@
 @if (Model.SectionType == AppUtility.MenuItems.Operations)
 {
     <div class="d-flex align-items-center col-4">
-        <button type="submit" class=" custom-button custom-button-font @Model.bcColor m-auto complete-order save-operations-item disabled-submit">Add To Cart</button>
+        <button type="submit" class=" custom-button custom-button-font @Model.bcColor m-auto submitOrder additional-requests" value="@AppUtility.OrderMethod.AddToCart">Add Item</button>
     </div>
+    <input type="hidden" asp-for="AdditionalRequests"/>
 }
 </div>

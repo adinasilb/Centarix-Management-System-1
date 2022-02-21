@@ -14,8 +14,8 @@
     var disabledProperty = "";
     var changed = "false";
     var productOrderType = Model.OrderType.ToString();
-    var dynamicID = "Request_0__" + productOrderType + "_";
-    var dynamicName = "Request[0]." + productOrderType + ".";
+    var dynamicID = "Requests_0__" + productOrderType + "_";
+    var dynamicName = "Requests[0]." + productOrderType + ".";
     if (modalType == AppUtility.RequestModalType.Edit || modalType == AppUtility.RequestModalType.Summary)
     {
         disabledProperty = "disabled";
@@ -38,7 +38,7 @@
 </div>
 
 <div class="row d-flex align-content-center">
-    <button class="col-6 custom-button custom-button-font oper-background-color order-type" id="single" style="border-radius: 1.438rem 0rem 0rem 1.438rem; font-size: 1rem; height: 2.2rem">
+    <button class="col-6 custom-button custom-button-font section-bg-color order-type" id="single" style="border-radius: 1.438rem 0rem 0rem 1.438rem; font-size: 1rem; height: 2.2rem">
         <i class="icon-monetization_on-24px p-1" style="font-size: 1.2rem; vertical-align:middle"></i>
         <span class="">Single Order</span>
     </button>
@@ -162,26 +162,26 @@
         <label class="oper-color text">End</label>
         <div class="row">
             <div class="custom-control custom-radio mr-4 ml-4 ">
-                <input class="custom-control-input recurring-end-info @markReadOnlyClass" id="@(dynamicID)RecurringOrderEndStatusID1" name="@(dynamicName)RecurringOrderEndStatusID" type="radio" value="1" />
-                <label class="radio-button custom-control-label pt-1 pl-2 recurring-end-info @markReadOnlyClass" for="@(dynamicID)RecurringOrderEndStatusID1">Never</label>
+                <input class="custom-control-input recurring-end-info @markReadOnlyClass" id="@(dynamicID)RecurrenceEndStatusID1" name="@(dynamicName)RecurrenceEndStatusID" type="radio" value="1" />
+                <label class="radio-button custom-control-label pt-1 pl-2 recurring-end-id @markReadOnlyClass" for="@(dynamicID)RecurrenceEndStatusID1">Never</label>
             </div>
         </div>
         <div class="row">
             <div class="custom-control custom-radio ml-4">
-                <input class="custom-control-input recurring-end-info @markReadOnlyClass" id="@(dynamicID)RecurringOrderEndStatusID2" name="@(dynamicName)RecurringOrderEndStatusID" type="radio" value="2" />
-                <label class="radio-button custom-control-label pt-1 pl-2 recurring-end-info @markReadOnlyClass" for="@(dynamicID)RecurringOrderEndStatusID2">End Date</label>
+                <input class="custom-control-input recurring-end-info @markReadOnlyClass" id="@(dynamicID)RecurrenceEndStatusID2" name="@(dynamicName)RecurrenceEndStatusID" type="radio" value="2" />
+                <label class="radio-button custom-control-label pt-1 pl-2 recurring-end-id @markReadOnlyClass" for="@(dynamicID)RecurrenceEndStatusID2">End Date</label>
             </div>
             <div class="col-6">
-                <input id="@(dynamicID)EndDate" name="@(dynamicName)EndDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" value="@(Model.Requests[0].RecurringOrder?.EndDate.GetElixirDateFormat())" />
+                <input id="@(dynamicID)EndDate" name="@(dynamicName)EndDate" type="text" readonly class="form-control-plaintext recurring-end-info border-bottom datepicker @markReadOnlyClass" value="@(Model.Requests[0].RecurringOrder?.EndDate.GetElixirDateFormat())" />
             </div>
         </div>
         <div class="row">
             <div class="custom-control custom-radio  ml-4">
-                <input class="custom-control-input recurring-end-info @markReadOnlyClass" id="@(dynamicID)RecurringOrderEndStatusID3" name="@(dynamicName)RecurringOrderEndStatusID" type="radio" value="3" />
-                <label class="radio-button custom-control-label pt-1 pl-2 recurring-end-info @markReadOnlyClass" for="@(dynamicID)RecurringOrderEndStatusID3">After</label>
+                <input class="custom-control-input recurring-end-info @markReadOnlyClass" id="@(dynamicID)RecurrenceOrderEndStatusID3" name="@(dynamicName)RecurrenceEndStatusID" type="radio" value="3" />
+                <label class="radio-button custom-control-label pt-1 pl-2 recurring-end-id @markReadOnlyClass" for="@(dynamicID)RecurrenceOrderEndStatusID3">After</label>
             </div>
             <div class="col-6 d-flex">
-                <input type="number" id="@(dynamicID)Occurrences" name="@(dynamicName)Occurrences" value="@(Model.Requests[0].RecurringOrder?.Occurrences)" class=" form-control-plaintext border-bottom @markReadOnlyClass w-50" />
+                <input type="number" id="@(dynamicID)Occurrences" name="@(dynamicName)Occurrences" value="@(Model.Requests[0].RecurringOrder?.Occurrences)" class=" recurring-end-info form-control-plaintext border-bottom @markReadOnlyClass w-50" />
                 <label class="">Occurrences</label>
             </div>
         </div>

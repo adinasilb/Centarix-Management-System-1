@@ -92,5 +92,6 @@ namespace PrototypeWithAuth.ViewModels
         public bool HasQuote { get; set; }
         public bool HasWarnings { get; set; }
         public AppUtility.OrderType OrderType { get; set; }
+        public bool AdditionalRequests { get; set; }
     }
 }

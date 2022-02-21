@@ -55,7 +55,7 @@
                 $("#loading").hide();
                 $.fn.CloseModal('confirm-archive');
                 $('#location').html(data);
-                $.fn.ajaxPartialIndexTable($(".request-status-id").val(), '/Requests/_IndexTableWithProprietaryTabs/', "._IndexTableWithProprietaryTabs", "GET", undefined);
+                $.fn.ajaxPartialIndexTable('/Requests/_IndexTableWithProprietaryTabs/', "._IndexTableWithProprietaryTabs", "GET", undefined);
             },
             error: function (xhr) {
                 $("#location").html(xhr.responseText);

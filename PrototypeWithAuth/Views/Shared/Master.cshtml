@@ -710,7 +710,7 @@
             console.log(category)
             $("." + category).removeClass("d-none");
             $.fn.TurnToDetails("edits");
-            $('.open-document-modal').attr("showSwitch", true);
+            $('.open-document-modal').attr("show-switch", true);
             if (!$('.turn-edit-on-off').hasClass('locations')) {
                 $('.edits .mdb-select').materialSelect();
                 $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
@@ -1248,7 +1248,7 @@
                 $("label[for='Clarify']").removeClass("white-background");
             }
         };
-        $.fn.getRequestIndexString = function(status){
+        $.fn.getRequestIndexString = function(tabName, status){
             var selectedPriceSort = "";
             $("#priceSortContent1 .priceSort:checked").each(function (e) {
                 selectedPriceSort += "&SelectedPriceSort=" + $(this).attr("enum");
@@ -1270,7 +1270,8 @@
                 "&SidebarFilterID=" + $('.sideBarFilterID').val() +
                 "&CategorySelected=" + $('#categorySortContent .select-category').is(":checked") +
                 "&SubCategorySelected=" + $('#categorySortContent .select-subcategory').is(":checked") +
-                "&ListID="+$("#ListID").val();
+                "&ListID="+$("#ListID").val() +
+                "&TabName="+tabName;
             queryString += selectedPriceSort;
             console.log(queryString)
             return queryString;
@@ -1608,6 +1609,7 @@
             var catalogNumber = $('.popover .search-by-catalog-number').val()
             //reset page number
             $('.page-number').val(1);
+            var tabName = $(".countStatus.active").attr("value")
 
             var reloadDiv = '_IndexTableData';
             if ($('.' + reloadDiv).length == 0) { //if it's showing the nothing is here page. not just using indextable when don't have to, so don't lose price and category filters
@@ -1615,11 +1617,11 @@
             }
 
             if (sectionType == "Protocols") {
-                url = "/Protocols/" + reloadDiv + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
+                url = "/Protocols/" + reloadDiv + "?" + $.fn.getRequestIndexString(tabName) + "&numFilters=" + numFilters,
                     popoverID = "protocolFilterPopover";
             }
             else {
-                url = "/Requests/" + reloadDiv + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
+                url = "/Requests/" + reloadDiv + "?" + $.fn.getRequestIndexString(tabName) + "&numFilters=" + numFilters,
                     popoverID = "invFilterPopover";
             }
             //console.log(data);

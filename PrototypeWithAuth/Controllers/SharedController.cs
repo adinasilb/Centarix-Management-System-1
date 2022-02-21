@@ -948,7 +948,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
         protected async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null,
-                                                                                SelectedRequestFilters selectedFilters = null, int numFilters = 0, RequestsSearchViewModel? requestsSearchViewModel = null)
+                                                                                SelectedRequestFilters selectedFilters = null, int numFilters = 0, RequestsSearchViewModel requestsSearchViewModel = null, AppUtility.IndexTabs tabName = AppUtility.IndexTabs.None)
         {
             int categoryID = 1;
             if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
@@ -972,7 +972,7 @@ namespace PrototypeWithAuth.Controllers
             if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest || requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsRequest)
             {
 
-                if (requestIndexObject.RequestStatusID == 1 || requestIndexObject.RequestStatusID == 6)
+                if (requestIndexObject.TabName == AppUtility.IndexTabs.Requests)
                 {
                     wheres.Add(r => r.RequestStatusID == 1 || r.RequestStatusID == 6);
                 }
@@ -1021,7 +1021,11 @@ namespace PrototypeWithAuth.Controllers
                     .Select(sr => sr.ObjectID).ToList();
                 wheres.Add(frl => sharedWithMe.Contains(frl.RequestID));
             }
-
+            else if(requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsRequest && requestIndexObject.TabName == AppUtility.IndexTabs.RecurringExpenses)
+            {
+                wheres.Add(r => r.Product is RecurringOrder);
+                //wheres.Add(r => r.) reference date for recurring order requests??
+            }
             else
             {
                 //do not think it is ever supposed to get here
@@ -1114,7 +1118,7 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
             bool isProprietary = requestIndexObject.RequestStatusID == 7 ? true : false;
             requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters, requestIndexObject.SectionType, isProprietary);
-            
+            requestIndexViewModel.TabName = requestIndexObject.TabName;
             return requestIndexViewModel;
         }
 
@@ -1270,9 +1274,9 @@ namespace PrototypeWithAuth.Controllers
             switch (requestIndexObject.PageType)
             {
                 case AppUtility.PageTypeEnum.RequestRequest:
-                    switch (requestIndexObject.RequestStatusID)
+                    switch (requestIndexObject.TabName)
                     {
-                        case 6:
+                        case AppUtility.IndexTabs.Requests:
                             if (await this.IsAuthorizedAsync(requestIndexObject.SectionType, "ApproveOrders"))
                             {
                                 iconList.Add(approveIcon);
@@ -1291,7 +1295,7 @@ namespace PrototypeWithAuth.Controllers
                                     ).ToListAsync();
                             //.ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                             break;
-                        case 2:
+                        case AppUtility.IndexTabs.Ordered:
                             iconList.Add(receiveIcon);
                             popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
                             popoverMoreIcon.IconPopovers.Add(popoverDelete);
@@ -1301,7 +1305,7 @@ namespace PrototypeWithAuth.Controllers
                                             r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest)).ToListAsync();
                             //.ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
                             break;
-                        case 3:
+                        case AppUtility.IndexTabs.Received:
                             iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
 
@@ -1328,9 +1332,9 @@ namespace PrototypeWithAuth.Controllers
                     }
                     break;
                 case AppUtility.PageTypeEnum.OperationsRequest:
-                    switch (requestIndexObject.RequestStatusID)
+                    switch (requestIndexObject.TabName)
                     {
-                        case 2:
+                        case AppUtility.IndexTabs.Ordered:
                             iconList.Add(receiveIcon);
                             popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
                             popoverMoreIcon.IconPopovers.Add(popoverDelete);
@@ -1342,7 +1346,18 @@ namespace PrototypeWithAuth.Controllers
                             //.ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
 
                             break;
-                        case 3:
+                        case AppUtility.IndexTabs.Received:
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
+                            popoverMoreIcon.IconPopovers.Add(popoverDelete);
+                            iconList.Add(popoverMoreIcon);
+                            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Skip(20 * (requestIndexObject.PageNumber - 1)).Take(20).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryOperations,
+                                 r, r.OrderMethod, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
+                                              r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, user)
+                                        ).ToListAsync();
+                            //.ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
+                            break;
+                        case AppUtility.IndexTabs.RecurringExpenses:
+                            iconList.Add(receiveIcon);
                             popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
                             popoverMoreIcon.IconPopovers.Add(popoverDelete);
                             iconList.Add(popoverMoreIcon);
@@ -1367,9 +1382,9 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.PageTypeEnum.RequestSummary:
 
 
-                    switch (requestIndexObject.RequestStatusID)
+                    switch (requestIndexObject.TabName)
                     {
-                        case 7:
+                        case AppUtility.IndexTabs.Samples:
                             popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { /*popoverShare, popoverReorder,*/ popoverDelete };
                             iconList.Add(favoriteIcon);
                             iconList.Add(popoverMoreIcon);

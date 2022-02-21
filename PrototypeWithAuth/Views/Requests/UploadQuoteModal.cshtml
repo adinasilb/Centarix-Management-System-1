@@ -183,7 +183,7 @@
                             window.location.href = "/Requests/?PageType=RequestRequest&SectionType=Requests&SidebarType=List"
                         }
                         else {
-                            $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "step-1, reorder-item");
+                            $.fn.ajaxPartialIndexTable("/Requests/" + viewClass, "." + viewClass, "POST", formData, "step-1, reorder-item");
                         }
                         $(".save-item").removeClass("save-item").off('click')
                     }

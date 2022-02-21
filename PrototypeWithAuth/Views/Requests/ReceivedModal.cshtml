@@ -57,7 +57,7 @@
             $("#loading").show();
             var formData = new FormData($("#myForm")[0]);
             //console.log(...formData)
-            $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/ReceivedModal/", "._IndexTableData", "POST", formData, "received-item");
+            $.fn.ajaxPartialIndexTable("/Requests/ReceivedModal/", "._IndexTableData", "POST", formData, "received-item");
         }
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';
 
