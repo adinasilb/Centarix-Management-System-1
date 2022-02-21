@@ -518,7 +518,7 @@ $(function () {
             } else {
                 url += "&";
             }
-            url += $.fn.getRequestIndexString(tabName, requestStatus);
+            url += $.fn.getRequestIndexString(requestStatus, tabName);
             url += monthsString;
             url += yearsString;
             url += listString;

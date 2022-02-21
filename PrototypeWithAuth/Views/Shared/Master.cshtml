@@ -1248,21 +1248,23 @@
                 $("label[for='Clarify']").removeClass("white-background");
             }
         };
-        $.fn.getRequestIndexString = function(tabName, status){
+        $.fn.getRequestIndexString = function(status, tabName){
             var selectedPriceSort = "";
             $("#priceSortContent1 .priceSort:checked").each(function (e) {
                 selectedPriceSort += "&SelectedPriceSort=" + $(this).attr("enum");
             })
             console.log(selectedPriceSort)
 
-            var requestStatusId = status;
             if (status === undefined) {
-                requestStatusId = $(".request-status-id").val();
+                status = $(".request-status-id").val();
             }
-
+            if(tabName === undefined)
+            {
+                tabName = $(".countStatus.active").attr("value")
+            }
             var queryString =
                 "PageNumber=" + $('.page-number').val() +
-                "&RequestStatusID=" + requestStatusId +
+                "&RequestStatusID=" + status +
                 "&PageType=" + $('#masterPageType').val() +
                 "&SectionType=" + $('#masterSectionType').val() +
                 "&SidebarType=" + $('#masterSidebarType').val() +
@@ -1617,11 +1619,11 @@
             }
 
             if (sectionType == "Protocols") {
-                url = "/Protocols/" + reloadDiv + "?" + $.fn.getRequestIndexString(tabName) + "&numFilters=" + numFilters,
+                url = "/Protocols/" + reloadDiv + "?" + $.fn.getRequestIndexString(undefined, tabName) + "&numFilters=" + numFilters,
                     popoverID = "protocolFilterPopover";
             }
             else {
-                url = "/Requests/" + reloadDiv + "?" + $.fn.getRequestIndexString(tabName) + "&numFilters=" + numFilters,
+                url = "/Requests/" + reloadDiv + "?" + $.fn.getRequestIndexString(undefined, tabName) + "&numFilters=" + numFilters,
                     popoverID = "invFilterPopover";
             }
             //console.log(data);

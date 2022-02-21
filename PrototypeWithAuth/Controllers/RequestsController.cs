@@ -3052,7 +3052,9 @@ namespace PrototypeWithAuth.Controllers
             //_proc.SaveChanges();
             var request = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.RequestID == RequestID }).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.UnitType)
                     .FirstOrDefault();
-
+            
+            AppUtility.OrderType orderType = AppUtility.OrderType.SingleOrder;
+            Enum.TryParse(request.Product.GetType().ToString(), out orderType);
             ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
             {
                 Request = request,
@@ -3060,7 +3062,8 @@ namespace PrototypeWithAuth.Controllers
                 locationInstancesSelected = new List<LocationInstance>(),
                 //ApplicationUsers = await _proc.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync(),
                 RequestIndexObject = requestIndexObject,
-                PageRequestStatusID = request.RequestStatusID
+                PageRequestStatusID = request.RequestStatusID,
+                OrderType = orderType
             };
             receivedLocationViewModel.locationInstancesSelected.Add(new LocationInstance());
             var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
