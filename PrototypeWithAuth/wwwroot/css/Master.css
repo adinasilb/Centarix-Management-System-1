@@ -490,6 +490,14 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     color: var(--operations-color) !important;
 }
 
+.custom-acc {
+    border: .125rem solid var(--acc-color) !important;
+    background-color: transparent;
+    font-weight: var(--bold-light);
+    font-size: 1.438rem;
+    color: var(--acc-color) !important;
+}
+
 .custom-protocols {
     border: .125rem solid var(--protocols-color) !important;
     background-color: transparent;
@@ -510,6 +518,21 @@ input:not(input[type=button], input[type=submit], .heading-1) {
 
 .custom-button-font:hover {
     opacity: 0.67;
+}
+.slightly-rounded-acc {
+    border: .125rem solid var(--acc-color) !important;
+    border-radius: .6rem;
+    background-color: white;
+    color: var(--acc-color)
+    /*padding-bottom: 0.5rem !important;
+    padding-top: 0.5rem !important;*/
+}
+.slightly-rounded-gray {
+    border: .125rem solid var(--disabled-color) !important;
+    border-radius: .6rem;
+    padding-bottom: 0.5rem !important;
+    padding-top: 0.5rem !important;
+    padding-left: 0.5rem;
 }
 
 .font-weight-medium {

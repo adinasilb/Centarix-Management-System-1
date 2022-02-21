@@ -17,5 +17,6 @@ namespace PrototypeWithAuth.ViewModels
         public PricePopoverViewModel PricePopoverViewModel { get; set; }
         public CategoryPopoverViewModel CategoryPopoverViewModel { get; set; }
         public NotificationFilterViewModel NotificationFilterViewModel { get; set; }
+        public InventoryFilterViewModel InventoryFilterViewModel { get; set; }
     }
 }

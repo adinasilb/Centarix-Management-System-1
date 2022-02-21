@@ -256,10 +256,19 @@ namespace PrototypeWithAuth.Controllers
                         ButtonClasses = " invoice-add-all ",
                         ButtonText = buttonText
                     };
-                    viewModelByVendor.NotificationFilterViewModel = notificationFilterViewModel;
                     break;
                 case AppUtility.PageTypeEnum.AccountingPayments:
-                    var paymentList = await GetPaymentRequests(requestIndexObject.SidebarType);
+                    if (notificationFilterViewModel == null)
+                    {
+                        notificationFilterViewModel = new NotificationFilterViewModel() { Vendors = _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Select(v => v.CategoryTypeID).Contains(1) }).ToList() };
+                    }
+                    else
+                    {
+                        wheres.Add(r => (notificationFilterViewModel.SelectedVendor == null || r.Product.VendorID == notificationFilterViewModel.SelectedVendor)
+                        && (notificationFilterViewModel.CentarixOrderNumber == null || r.ParentRequest.OrderNumber == notificationFilterViewModel.CentarixOrderNumber)
+                        && (notificationFilterViewModel.ProductName == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.ProductName.ToLower())));
+                    }
+                    var paymentList = await GetPaymentRequests(requestIndexObject.SidebarType, wheres);
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.Installments:
@@ -319,6 +328,7 @@ namespace PrototypeWithAuth.Controllers
             }
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
+            viewModelByVendor.NotificationFilterViewModel = notificationFilterViewModel;
             viewModelByVendor.PricePopoverViewModel = new PricePopoverViewModel() { };
             viewModelByVendor.PricePopoverViewModel.PriceSortEnums = priceSorts;
             viewModelByVendor.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
@@ -326,6 +336,7 @@ namespace PrototypeWithAuth.Controllers
             viewModelByVendor.PageType = requestIndexObject.PageType;
             viewModelByVendor.SidebarType = requestIndexObject.SidebarType;
             viewModelByVendor.ErrorMessage = requestIndexObject.ErrorMessage;
+            viewModelByVendor.InventoryFilterViewModel = GetInventoryFilterViewModel();
             return viewModelByVendor;
         }
 

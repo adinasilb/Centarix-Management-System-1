@@ -11,6 +11,7 @@
 
 <input type="hidden" id="payNowCount" value="@TempData["PayNowCount"]" />
 
+
 @if (Model.RequestsByVendor.Count() == 0)
 {
     <div>
@@ -21,6 +22,10 @@
 }
 else
 {
+    <div class ="_AccountingSearchAndFilter">
+        @{ await Html.RenderPartialAsync("_AccountingSearchAndFilter", Model);}
+    </div>
+
     <div class="_IndexTableByVendor ">
         @{
             await Html.RenderPartialAsync("_IndexTableByVendor", Model);
