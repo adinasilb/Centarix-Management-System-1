@@ -38,11 +38,11 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
     }
     else if ($("#masterSidebarType").val() == "Favorites" || $("#masterSidebarType").val() == "SharedRequests" || $("#masterSidebarType").val() == "MyLists")
     {
-        $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "POST");
+        $.fn.ajaxPartialIndexTable("/Requests/_IndexTableData", "._IndexTableData", "POST");
     }
     else if ($('#masterPageType').val() == "RequestCart" || $('#masterPageType').val() == "LabManagementQuotes" || $('#masterPageType').val() == "AccountingPayments" || $('#masterPageType').val() == "AccountingNotifications") {
     
-        $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableDataByVendor", "._IndexTableDataByVendor", "POST");
+        $.fn.ajaxPartialIndexTable("/Requests/_IndexTableDataByVendor", "._IndexTableDataByVendor", "POST");
     }
     else {
         /*if ($('#masterPageType').val() == "AccountingGeneral") {
@@ -50,7 +50,7 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
             var month = $("#Months").val();
 
         }*/
-        $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "POST"/*, undefined, "", month, year*/);
+        $.fn.ajaxPartialIndexTable(  "/Requests/_IndexTableData", "._IndexTableData", "POST"/*, undefined, "", month, year*/);
     }
     return false;
 
@@ -80,7 +80,7 @@ $(".open-price-popover").off('click').click(function () {
         $(id).attr("checked", !$(id).prop("checked"));
         //  alert("In call index with new filter")
         if ($('#masterSidebarType').val() == "Cart" || $('#masterPageType').val() == "LabManagementQuotes" || $('#masterPageType').val() == "AccountingPayments" || $('#masterPageType').val() == "AccountingNotifications") {
-            $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableDataByVendor", "._IndexTableDataByVendor", "GET");
+            $.fn.ajaxPartialIndexTable(  "/Requests/_IndexTableDataByVendor", "._IndexTableDataByVendor", "GET");
         }
         else {
             /*if ($('#masterPageType').val() == "AccountingGeneral") {
@@ -88,7 +88,7 @@ $(".open-price-popover").off('click').click(function () {
                 var month = $("#Months").val();
 
             }*/
-            $.fn.ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "POST"/*, undefined, "", month, year*/);
+            $.fn.ajaxPartialIndexTable(  "/Requests/_IndexTableData", "._IndexTableData", "POST"/*, undefined, "", month, year*/);
         }
         return false;
     })

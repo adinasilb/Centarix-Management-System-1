@@ -74,7 +74,7 @@
                             <i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />Comments
                         </a>
                     </li>
-                    @if (Model.PageType != AppUtility.PageTypeEnum.RequestSummary && Model.SectionType != AppUtility.MenuItems.Operations)
+                    @if (Model.PageType != AppUtility.PageTypeEnum.RequestSummary)
                     {
                         <li class="nav-item icon order-tab">
                             <a data-toggle="tab" href="#order" class="next-tab nav-link order-tab-link">
@@ -96,6 +96,7 @@
     </div>
 </div>
 <script>
+   
     $(".submitOrder").off("click").on("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -117,59 +118,15 @@
             $('.activeSubmit').removeClass('disabled-submit')
             $("#loading").show();
             var orderMethod = $(this).attr("value");
+            console.log("orderMethod "+ orderMethod)
+            if($(this).hasClass('additional-requests')){
+                $("#AdditionalRequests").val(true)
+            }
             $.fn.SubmitOrderFromAddItemView(orderMethod);
         }
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,.location-error:hidden, input:visible, textarea:visible)';
     });
 
-    $.fn.SubmitOrderFromAddItemView = function (orderMethod) {
-        console.log("in submitorderfromadditemview");
-        var formData = new FormData($("#myForm")[0]);
-        console.log("...formData")
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ', ' + pair[1]);
-        }
-        $.ajax({
-            contentType: false,
-            processData: false,
-            async: true,
-            url: "/Requests/AddItemView?OrderMethod=" + orderMethod,
-            data: formData,
-            traditional: true,
-            type: "POST",
-            cache: false,
-            success: function (data) {
-                if (orderMethod != "Save") {
-                $(".temprequesthiddenfors").html(''); //remove hidden fors so don't conflict further down the line
-                console.log("in success of ajax call ");
-                //alert("in success of ajax call");
-                //if (orderMethod == "AddToCart") {
-                //    console.log("in add to cart try 2");
-                //    $(".save-item").removeClass("save-item");
-                //    $(".outer-add-item-view").html(data);
-                //}
-                //else {
-                $.fn.OpenModal('modalStep1', 'step-1', data)
-                $(".submitOrder").prop('disabled', false)
-                //}
-                /*$("temprequesthiddenfors").remove();*/
-                $("#loading").hide();
-                } else {
-                    $("#loading").hide();
-                    $(".submitOrder").prop('disabled', false)
-                    $(".save-item").removeClass("save-item")
-                    $('.render-body').html(data)
-                }
-                return true;
-            },
-            error: function (jqxhr) {
-                console.log("in error of ajax call ");
-                $("#loading").hide();
-                $('.error-message').html(jqxhr.responseText);
-                $(".submitOrder").prop('disabled', false)
-            }
-
-        });
-    };
+    
     
 </script>

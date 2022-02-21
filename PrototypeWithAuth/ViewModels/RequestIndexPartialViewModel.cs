@@ -31,6 +31,7 @@ namespace PrototypeWithAuth.ViewModels
         public RequestsSearchViewModel RequestsSearchViewModel { get; set; }
         public List<int> Months { get; set; }
         public List<int> Years { get; set; }
+        public AppUtility.IndexTabs TabName { get; set; }
 
     }
 }

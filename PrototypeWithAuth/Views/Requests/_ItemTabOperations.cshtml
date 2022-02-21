@@ -58,7 +58,7 @@
                         @data_stop_refresh = "true"
 
                     })
-                <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" />
+                <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" name="Requests[0].@(productOrderType).ProductSubcategory.ParentCategoryID" disabled  />
                 <span asp-validation-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
             </div>
         </div>
@@ -211,7 +211,7 @@
                 <label asp-for="Requests[0].ArrivalDate" class="control-label"></label>
                  @if (modalType == AppUtility.RequestModalType.Create)
                 {
-                    <input value="" class="form-control-plaintext border-bottom datepicker" value = "" type="text" asp-for="Requests[0].ArrivalDate" asp-format="@AppUtility.AspDateFormatString" />
+                    <input value="" class="form-control-plaintext border-bottom datepicker" disabled value = "" type="text" asp-for="Requests[0].ArrivalDate" asp-format="@AppUtility.AspDateFormatString" />
                 }
                 else
                 {
@@ -224,7 +224,7 @@
                             Model.ApplicationUsers,
                             htmlAttributes: new
                                  {
-                                     @class = " receiver mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass,
+                                     @class = " receiver mdb-select custom select-dropdown form-control-plaintext disabled " + markReadOnlyClass,
                                 @id = "receiver",
                                      @size = 1,
                                      @searchable = "Select A Receiver",
@@ -303,11 +303,15 @@
         $(".received-radio").off('click').click(function (e) {
             if ($(this).attr("id") == "Received") {
                 $(".received-info").removeClass("d-none");
+                $(".received-info input").attr("disabled", false);
                 $(".expected-supply-info").addClass("d-none");
+                $(".expected-supply-info input").attr("disabled", true);
             }
             else {
                 $(".received-info").addClass("d-none");
+                $(".received-info input").attr("disabled", true);
                 $(".expected-supply-info").removeClass("d-none");
+                $(".expected-supply-info input").attr("disabled", false);
             }
         })
 

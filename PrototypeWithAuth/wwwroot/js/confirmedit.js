@@ -109,7 +109,7 @@ $(function () {
                     else if ($('.turn-edit-on-off').attr("section-type") == "Requests") {
 
                         console.log("reloading ajax partial view...");
-                        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
+                        $.fn.ajaxPartialIndexTable( "/Requests/_IndexTableData/", "._IndexTableData", "GET");
 
                     }
                     else {
@@ -121,7 +121,7 @@ $(function () {
                     $.fn.getMenuItems();
                     //reload index pages
                     if ($('.turn-edit-on-off').hasClass('operations')) {
-                        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
+                        $.fn.ajaxPartialIndexTable( "/Requests/_IndexTableData/", "._IndexTableData", "GET");
                     }
                     else if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
                         $(".VendorData").html(data);
@@ -172,7 +172,7 @@ $(function () {
                         if ($('#masterSidebarType').val() === 'Cart') {
                             viewClass = "_IndexTableDataByVendor";
                         }
-                        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass + "/", "." + viewClass, "GET");
+                        $.fn.ajaxPartialIndexTable( "/Requests/" + viewClass + "/", "." + viewClass, "GET");
                     }
                     else if ($('.turn-edit-on-off').hasClass('protocols')) {
                         $("._IndexTable").html(data)

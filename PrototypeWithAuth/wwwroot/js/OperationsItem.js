@@ -35,6 +35,12 @@
         }
 
     });
+
+    $(".recurring-end-id").off('click').on('click', function (e) {
+        $(".recurring-end-info").attr("disabled", true)
+        $(this).closest("row").find(":input").attr("disabled", false)
+    })
+
     $('.ordersItemForm').on('click', "#standingOrder", function (e) {
         console.log("pay")
         if ($("#standingOrder:checkbox").is(":checked")) {
@@ -54,7 +60,7 @@
 
     });
     function ReplaceProductTypeNames(prevProductType, newProductType) {
-        $("input, select").each(function () {
+        $("input, select, textarea").each(function () {
             var name = $(this).attr("name")
             if (name != null) {
                 name = name.replace(prevProductType, newProductType)

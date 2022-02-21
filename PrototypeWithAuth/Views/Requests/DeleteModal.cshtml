@@ -51,7 +51,7 @@
             viewClass = "._IndexTableDataByVendor";
         }
         var formdata = new FormData($("#myForm")[0])
-        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/DeleteModal", viewClass, "POST", formdata, "delete-item");
+        $.fn.ajaxPartialIndexTable("/Requests/DeleteModal", viewClass, "POST", formdata, "delete-item");
         return false;
     });
 </script>

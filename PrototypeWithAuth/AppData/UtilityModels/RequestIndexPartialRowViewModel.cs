@@ -25,6 +25,7 @@ namespace PrototypeWithAuth.ViewModels
         private ParentRequest parentRequest;
         private List<Payment> payments;
         private Request partialRequest;
+        private TimePeriod timePeriod;
         public bool viewOnly;
         private string currentCurrency = "currencyEnum";
 
@@ -92,10 +93,19 @@ namespace PrototypeWithAuth.ViewModels
                 null, null, null, null, null, null, null, checkboxString, parentQuote, null, null, false)
         {
         }
+        public RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes indexTableTypes, Request request, OrderMethod orderMethod, Employee requestUser, Product product, Vendor vendor, ProductSubcategory productSubcategory,
+            ParentCategory parentCategory, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType, RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList,
+            string defaultImage, FavoriteRequest favoriteRequest, ShareRequest shareRequest, Employee shareRequestFromUser, ApplicationUser user, LocationInstance locationInstance,
+            LocationInstance parentLocationInstance, ParentRequest parentRequest, string checkboxString, ParentQuote parentQuote, List<Payment> payments, Request partialRequest, bool viewOnly)
+            : this(indexTableTypes, request, orderMethod, requestUser, product, vendor, productSubcategory,parentCategory, unitType, subUnitType, subSubUnitType, requestIndexObject, iconList,
+            defaultImage, favoriteRequest, shareRequest, shareRequestFromUser, user, locationInstance, parentLocationInstance, parentRequest, checkboxString, parentQuote, payments,
+            partialRequest, viewOnly, null)
+        { 
+        }
         public RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes indexTableTypes, Request request, OrderMethod orderMethod, Employee requestUser, Product product, Vendor vendor, ProductSubcategory productSubcategory, 
             ParentCategory parentCategory, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType, RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList, 
             string defaultImage, FavoriteRequest favoriteRequest, ShareRequest shareRequest, Employee shareRequestFromUser, ApplicationUser user, LocationInstance locationInstance, 
-            LocationInstance parentLocationInstance, ParentRequest parentRequest, string checkboxString, ParentQuote parentQuote, List<Payment> payments, Request partialRequest, bool viewOnly)
+            LocationInstance parentLocationInstance, ParentRequest parentRequest, string checkboxString, ParentQuote parentQuote, List<Payment> payments, Request partialRequest, bool viewOnly, TimePeriod timePeriod)
         {
             r = request;
             r.OrderMethod = orderMethod;
@@ -107,6 +117,10 @@ namespace PrototypeWithAuth.ViewModels
             r.Product.UnitType = unitType;
             r.Product.SubUnitType = subUnitType;
             r.Product.SubSubUnitType = subSubUnitType;
+            if(!(r.Product is SingleOrder))
+            {
+                this.timePeriod = timePeriod;
+            }
             if (vendor != null) //for samples
             {
                 vendor.Products = null;
@@ -188,7 +202,9 @@ namespace PrototypeWithAuth.ViewModels
                 case AppUtility.IndexTableTypes.RequestLists:
                     Columns = GetRequestListColumns().ToList();
                     break;
-
+                case AppUtility.IndexTableTypes.RecurringExpensesOperations:
+                    Columns = GetRecurringExpensesOperationsColumns().ToList();
+                    break;
             }
             //nullify r for json purposes because it is not needed anymore
             r=null;
@@ -618,6 +634,26 @@ namespace PrototypeWithAuth.ViewModels
                 AjaxID = r.RequestID,
             };
 
+        }
+        private IEnumerable<RequestIndexPartialColumnViewModel> GetRecurringExpensesOperationsColumns()
+        {
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, ValueWithError = GetProductName(), AjaxLink = "load-product-details", AjaxID = r.RequestID, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, ValueWithError = AppUtility.GetTimePeriodColumn(r, timePeriod) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, ValueWithError = GetVendorName(), ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Units", Width = 10, ValueWithError = AppUtility.GetAmountColumn(r) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, ValueWithError = AppUtility.GetTimePeriodTypeColumn(timePeriod) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, ValueWithError = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Owner", Width = 12, ValueWithError = GetApplicationUserName() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, ValueWithError = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Order Added", Width = 12, ValueWithError = new List<StringWithBool>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
+            yield return new RequestIndexPartialColumnViewModel()
+            {
+                Title = "",
+                Width = 10,
+                Icons = iconList,
+                AjaxID = r.RequestID
+            };
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetAccountingNotificationsColumns()
         {

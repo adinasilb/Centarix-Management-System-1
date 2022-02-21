@@ -85,7 +85,10 @@ namespace PrototypeWithAuth.AppData
         }
         public enum IndexTableTypes
         {
-            Approved, Ordered, ReceivedInventory, ReceivedInventoryFavorites, ReceivedInventoryShared, Summary, AccountingGeneral, SummaryProprietary, ReceivedInventoryOperations, OrderedOperations, Cart,
+            Approved, Ordered, ReceivedInventory, ReceivedInventoryFavorites, ReceivedInventoryShared, Summary, AccountingGeneral, SummaryProprietary, ReceivedInventoryOperations, 
+            OrderedOperations,
+            RecurringExpensesOperations,
+            Cart,
             AccountingNotifications,
             AccountingPaymentsDefault,
             AccountingPaymentsInstallments,
@@ -104,6 +107,7 @@ namespace PrototypeWithAuth.AppData
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
+        public enum IndexTabs { None, Requests, Ordered, Received, RecurringExpenses, Main, Samples}
         public enum FolderNamesEnum { Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details, Custom } //Listed in the site.js (if you change here must change there)
         public enum ParentFolderName { None, Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote, ExperimentEntries, ParentRequest, FunctionResults }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
@@ -1035,6 +1039,44 @@ namespace PrototypeWithAuth.AppData
             return ReturnVal;
         }
 
+        internal static List<StringWithBool> GetTimePeriodColumn(Request r, TimePeriod timePeriod)
+        {
+            var ReturnVal = new StringWithBool() { Bool = true };
+            switch (Enum.Parse(typeof(TimePeriods), timePeriod.DescriptionEnum))
+            {
+                case TimePeriods.Days:
+                    ReturnVal.String = r.CreationDate.ToString("MMM d");
+                    break;
+                case TimePeriods.Weeks:
+                    ReturnVal.String = GetWeekStartEndDates(r.CreationDate);
+                    break;
+                case TimePeriods.Months:
+                    ReturnVal.String = r.CreationDate.Month.ToString();
+                    break;
+
+            }
+            return new List<StringWithBool> { ReturnVal };
+        }
+
+        internal static List<StringWithBool> GetTimePeriodTypeColumn(TimePeriod timePeriod)
+        {
+            var ReturnVal = new StringWithBool() { Bool = true };
+            switch (Enum.Parse(typeof(TimePeriods), timePeriod.DescriptionEnum))
+            {
+                case TimePeriods.Days:
+                    ReturnVal.String = "Daily";
+                    break;
+                case TimePeriods.Weeks:
+                    ReturnVal.String = "Weekly";
+                    break;
+                case TimePeriods.Months:
+                    ReturnVal.String = "Monthly";
+                    break;
+
+            }
+            ReturnVal.String += " Expenses";
+            return new List<StringWithBool> { ReturnVal };
+        }
     }
 
 }

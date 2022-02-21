@@ -4,6 +4,7 @@
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
 @using PrototypeWithAuth.ViewModels
+@using React.AspNet
 
 <script src="~/js/site.js"></script>
 <script src="~/js/DocumentModalJS.js"></script>
@@ -12,34 +13,10 @@
 
 @{
     var urlAction = Url.Action("DocumentsModal", "Requests");
-    var fontSize = "2rem";
 
   
 }
-<input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
-<div class="row document-margin-bottom">
-    @for (int i = 0; i < 4; i++)
-    {
-        @if (i < Model.DocumentsInfo?.Count)
-        {
-       <div class=" @(i == 3 ? "" : "document-margin") doc-card @Model.DocumentsInfo[i].FolderName">
-            @{await Html.RenderPartialAsync("_DocumentsCard", new DocumentsCardViewModel { DocumentInfo = Model.DocumentsInfo[i], SectionType = Model.SectionType, ModalType = Model.ModalType}); }
-       </div>
-        }
-    }
+@Html.React("DocumentsRootComponent", new {documentsInfo=Model.DocumentsInfo, modalType=Model.ModalType})
+    @Html.ReactGetScriptPaths()
+    @Html.ReactInitJavaScript()
 
-</div>
-@if (Model.DocumentsInfo.Count > 4)
-{
-    <div class="row document-margin-bottom">
-        @for (int i = 4; i < Model.DocumentsInfo.Count; i++)
-        {
-            @if (i < Model.DocumentsInfo?.Count)
-            {
-                <div class="document-margin doc-card @Model.DocumentsInfo[i].FolderName">
-                    @{await Html.RenderPartialAsync("_DocumentsCard", new DocumentsCardViewModel { DocumentInfo = Model.DocumentsInfo[i], SectionType = Model.SectionType, ModalType= Model.ModalType}); }
-                </div>
-            }
-        }
-    </div>
-}

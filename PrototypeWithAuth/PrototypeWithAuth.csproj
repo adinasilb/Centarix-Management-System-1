@@ -606,6 +606,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\ReactViews\documents-card.jsx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Abp" Version="5.10.1" />
     <PackageReference Include="Aspose.Slides.NET" Version="21.5.0" />
     <PackageReference Include="bootstrap" Version="4.5.0" />
@@ -684,6 +688,13 @@
 
   <ItemGroup>
     <None Include="wwwroot\favicon_io\site.webmanifest" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\ReactViews\documents-card.jsx">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
   </ItemGroup>
 
 

@@ -232,7 +232,7 @@
                         //if (sidebarType = "MyLists") {
                         //    viewClass = "_IndexTableWithListTabs";
                         //}
-                        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "reorder-item");
+                        $.fn.ajaxPartialIndexTable("/Requests/" + viewClass, "." + viewClass, "POST", formData, "reorder-item");
 
                     }
                     else {
