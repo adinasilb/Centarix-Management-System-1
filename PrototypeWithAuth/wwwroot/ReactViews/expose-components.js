@@ -6,6 +6,7 @@ import ReactDOMServer from 'react-dom/server';
 import RootComponent from './root-component.jsx';
 import CloseButton from './close-button.jsx'
 import OpenModalButton from './open-modal-button.jsx';
+import DocumentsRootComponent from './documents-root-component.jsx'
 
 global.React = React;
 global.ReactDOM = ReactDOM;
@@ -15,3 +16,4 @@ global.ReactDOMServer = ReactDOMServer;
 global.RootComponent = RootComponent
 global.CloseButton = CloseButton;
 global.OpenModalButton = OpenModalButton;
+global.DocumentsRootComponent = DocumentsRootComponent;
