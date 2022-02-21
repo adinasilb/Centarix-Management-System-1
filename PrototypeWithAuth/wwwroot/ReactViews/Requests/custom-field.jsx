@@ -34,15 +34,8 @@ export default class CustomField extends Component {
                 <div className="col-4">
                     <div className="form-group">
                         <label className="control-label">Data Type</label>
-                        <MDBSelect className="form-control-plaintext border-bottom mdb-select" >
-                            <MDBSelectInput selected="Choose your option" />
-                            <MDBSelectOptions search>
-                                {this.props.CustomFieldData.CustomDataTypes.map((customField, i) => (
-                                    <MDBSelectOption onClick={this.changeSelectValue} value={customField.CustomDataTypeID} key={i}>{customField.Name}</MDBSelectOption>
-                                ))}
-                            </MDBSelectOptions>
-                            </MDBSelect>
-                            <span className="centarix-error-style" >{}</span>
+                        
+                         <span className="centarix-error-style" >{}</span>
                     </div>
                 </div>
                 <div className="col-2 d-flex ml-5"> {/*style="height:auto;">*/}

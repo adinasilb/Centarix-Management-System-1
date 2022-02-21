@@ -12,8 +12,10 @@ import ModalLoader from './modal-loader.jsx';
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import * as Routes from '../Constants/Routes.jsx'
 
+
 export default function RootComponent(props) {
     const store = createStore(reducer, { viewModel: props.viewModel, modals: [] }, composeWithDevTools());
+
 
     const renderSwitch = () => {
         switch (props.viewEnum) {
@@ -29,6 +31,7 @@ export default function RootComponent(props) {
         }
     }
     function App() {
+
         return (
             <div>
          

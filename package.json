@@ -13,6 +13,7 @@
     "mdb-react-ui-kit": "^2.3.0",
     "mdbreact": "file:MDB-React-Pro/mdbreact-4.27.0.tgz",
     "react-css-loader": "^0.0.3",
+    "react-debug-hooks": "^1.0.1",
     "react-helmet": "^6.0.0",
     "react-hook-form": "^7.27.1",
     "react-jss": "^8.6.1",

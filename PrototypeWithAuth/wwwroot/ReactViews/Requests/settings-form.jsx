@@ -1,13 +1,16 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, setState } from 'react';
 import * as Constant from '../Shared/constants.js'
 import CustomFieldButton from './custom-field-button.jsx';
 import CustomField from './custom-field.jsx';
 import ReactDOM from 'react-dom';
 import { MDBBtn } from 'mdbreact';
 import { useForm } from "react-hook-form";
+import reactDebugHooks from 'react-debug-hooks'
 
 
-export const SettingsForm = (props) => {
+function SettingsForm(props) {
+
+    //reactDebugHooks(React)
     //state = {
     //    customFieldsCount: 0
     //}
@@ -17,12 +20,20 @@ export const SettingsForm = (props) => {
     //    this.state = { SettingsForm: this.props.SettingsForm, customFields: [] , validationErrors: []};
     //}
 
-/*    this.setState = ({ SettingsForm: SettingsForm });*/
-    //const [customFields, setCustomFields] = useState(1);
+    const [customFields, setCustomFields] = useState([]);
+    const [validationErrors, setValidationErrors] = useState([]);
 
     React.useEffect(() => {
-
+        return () => { console.log("in use effect on every render") }
     });
+
+    React.useEffect(() => {
+        return () => { console.log("in use effect only once") }
+    }, []);
+
+    React.useEffect(() => {
+        return () => { console.log("in use effect of custom fields") }
+    }, [customFields]);
 
     const { register, handleSubmit } = useForm();
     const onSubmit = data => console.log(data);
@@ -35,43 +46,45 @@ export const SettingsForm = (props) => {
 
     var OpenNewCustomField = () => {
         console.log("open new custom field");
-        var array = this.customFields;
-        //var lastIndex = array.length - 1;
+        var array = customFields;
+        console.log(customFields);
+        console.log(validationErrors);
         var Num = array.length;
         array.push(Num);
-        var valErrors = this.validationErrors;
+        var valErrors = validationErrors;
         let values = { dict: { 'fieldname': [false, ''], 'datatype': [false, ''] } };
         let Error = [Num, values];
         valErrors.push(Error);
-        //this.setState({ ...this.state, customFields: array });
+        setCustomFields(array);
+        setValidationErrors(valErrors);
     }
 
-    //var RemoveCustomField = (e) => {
-    //    e.preventDefault();
-    //    var index = e.target.parentElement.attributes.number.value;
-    //    console.log("number: " + index);
-    //    var array = this.customFields;
-    //    var errors = this.validationErrors;
-    //    console.dir(array);
-    //    if (index - 1 !== 1) {
-    //        array.splice(index, 1);
-    //        errors.splice(index, 1);
-    //        console.log("spliced");
-    //        console.dir(array);
-    //        //this.setState({ ...this.state, customfields: array, validationErrors: errors });
-    //    }
-    //}
+    var RemoveCustomField = (e) => {
+        e.preventDefault();
+        var index = e.target.parentElement.attributes.number.value;
+        console.log("number: " + index);
+        var array = customFields;
+        var errors = validationErrors;
+        console.dir(array);
+        if (index - 1 !== 1) {
+            array.splice(index, 1);
+            errors.splice(index, 1);
+            console.log("spliced");
+            console.dir(array);
+            setCustomFields(array);
+            setValidationErrors(valErrors);
+            //this.setState({ ...this.state, customfields: array, validationErrors: errors });
+        }
+    }
+
+    let customfieldsView = [];
+    for (var i = 0; i < customFields.length; i++) {
+        console.log("in for loop");
+        customfieldsView.push(<CustomField key={this.customFields[i]} number={i} text={this.customFields[i]} CustomFieldData={this.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField} ValidationErrors={this.validationErrors[i]} />);
+    };
+    console.log("customfieldsview: " + customfieldsView);
 
 
-    //const customfieldsView = [];
-
-    //for (var i = 0; i < this.customFields.length; i++) {
-    //    console.log("in for loop");
-    //    customfieldsView.push(<CustomField key={this.customFields[i]} number={i} text={this.customFields[i]} CustomFieldData={this.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField} ValidationErrors={this.validationErrors[i]} />);
-    //};
-    //console.dir(customfieldsView);
-
-    
 
     var autoHeight = {
         height: 'auto'
@@ -188,8 +201,8 @@ export const SettingsForm = (props) => {
                                 <div className="add-custom-fields row">
                                     {/*<input type="button" onClick={this.AddCustomField} className={"custom-button custom-cancel text border-dark " + " details"}*/}
                                     {/*    value="+ Add Custom Field" />*/}
-                                    {/*{customfieldsView.map(cf => cf)}*/}
-                                    <CustomFieldButton tabName={"details"} /> {/*clickhandler={OpenNewCustomField} />*/}
+                                    {customfieldsView.map(cf => cf)}
+                                    <CustomFieldButton tabName={"details"} clickhandler={OpenNewCustomField} />
                                     {/*@{await Html.RenderPartialAsync("_AddCustomFields.cshtml", "details-form");}*/}
                                 </div>
                             </div>
@@ -230,7 +243,6 @@ export const SettingsForm = (props) => {
                                     {/*@{await Html.RenderPartialAsync("_BorderCF.cshtml");}*/}
                                 </div>
                                 <div className="add-custom-fields row">
-                                    {/*@{await Html.RenderPartialAsync("_AddCustomFields.cshtml", "price-form");}*/}
                                 </div>
                             </div>
                             <div id="documents" className="tab-pane fade in" value="1">
@@ -246,3 +258,5 @@ export const SettingsForm = (props) => {
         </form>
     )
 }
+
+export default SettingsForm;
