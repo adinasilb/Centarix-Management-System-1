@@ -414,9 +414,77 @@ namespace PrototypeWithAuth.ViewModels
             }
             catch (Exception ex)
             {
-                return new List<StringWithBool>() { new StringWithBool { String = "payment date has an error", Bool = false } };
+                return new List<StringWithBool>() { new StringWithBool { String = "payment date has an error", Bool = true } };
             }
         }
+        private List<StringWithBool> GetInstallmentColumn()
+        {
+            try
+            {
+                return new List<StringWithBool>() { new StringWithBool { String = payments.FirstOrDefault().InstallmentNumber + " / " + r.Installments } };
+            }
+            catch (Exception ex)
+            {
+                return new List<StringWithBool>() { new StringWithBool { String = "installment number has an error", Bool = true } };
+            }
+        }
+        private List<StringWithBool> GetStatusColumn()
+        {
+            try
+            {
+                return new List<StringWithBool>() { new StringWithBool { String = r.RequestStatusID == 3 ? "received" : "not received" } };
+            }
+            catch (Exception ex)
+            {
+                return new List<StringWithBool>() { new StringWithBool { String = "status has an error", Bool = true } };
+            }
+        }
+        private List<StringWithBool> GetOrderDetails()
+        {
+            var orderDetails = new List<StringWithBool>();
+            try
+            {
+                orderDetails.Add(new StringWithBool { String = "# " + r.ParentRequest.OrderNumber });
+            }
+            catch (Exception ex)
+            {
+                orderDetails.Add( new StringWithBool { String = "order number has an error", Bool = true } );
+            }
+            try 
+            { 
+                orderDetails.Add( AppUtility.GetDateOrderedString(r.ParentRequest) );
+            }
+            catch (Exception ex)
+            {
+                orderDetails.Add(new StringWithBool { String = "order date has an error", Bool = true } );
+            }
+            return orderDetails;
+        }
+        private List<StringWithBool> GetOrderColumn()
+        {
+            try
+            {
+                string orderType;
+                if (r.PaymentStatusID == 7)
+                {
+                    orderType = "standing order";
+                } 
+                else if (r.Product is RecurringOrder) 
+                {
+                    orderType = "recurring order";
+                } 
+                else
+                {
+                    orderType = "single order";
+                }
+                return new List<StringWithBool>() { new StringWithBool { String = orderType } };
+            }
+            catch (Exception ex)
+            {
+                return new List<StringWithBool>() { new StringWithBool { String = "order type has an error", Bool = true } };
+            }
+        }
+
         private List<StringWithBool> GetDateForFavoriteRequest()
         {
             if (r.OrderMethod.DescriptionEnum.ToString() == AppUtility.OrderMethod.Save.ToString())
@@ -675,13 +743,16 @@ namespace PrototypeWithAuth.ViewModels
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetAccountingPaymentsDefaultColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = checkboxString, Bool = false } }, AjaxID = payments.FirstOrDefault().PaymentID, AjaxLink=currentCurrency+r.Currency+" " };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 3, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = checkboxString, Bool = false } }, AjaxID = payments.FirstOrDefault().PaymentID, AjaxLink=currentCurrency+r.Currency+" " };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 6, Image = GetImageURL() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, ValueWithError = GetProductName(), AjaxLink = "load-product-details-summary", AjaxID = r.RequestID, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, ValueWithError = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, ValueWithError = AppUtility.GetAmountColumn(r) };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, ValueWithError = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 12, ValueWithError = new List<StringWithBool>() { AppUtility.GetDateOrderedString(r.ParentRequest) } };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Units", Width = 8, ValueWithError = AppUtility.GetAmountColumn(r) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Order Type", Width = 10, ValueWithError = GetOrderColumn()};
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Installment", Width = 7, ValueWithError = GetInstallmentColumn()};
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 9, ValueWithError = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Status", Width = 9, ValueWithError = GetStatusColumn() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Order Details", Width = 10, ValueWithError = GetOrderDetails() };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "",
