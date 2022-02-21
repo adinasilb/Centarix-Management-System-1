@@ -75,10 +75,10 @@ namespace PrototypeWithAuth.CRUD
                         }
                     }
                     //var paymentsList =Read(new List<Expression<Func<Payment, bool>>> { p => p.IsPaid == false }).AsEnumerable();
-                    foreach (Request request in paymentsPayModalViewModel.Requests)
+                    foreach (Payment payment in paymentsPayModalViewModel.Payments)
                     {
                         //var requestToUpdate = await _requestsProc.ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == request.RequestID });
-                        Payment payment = await _paymentsProc.ReadOneAsync( new List<Expression<Func<Payment, bool>>> { p => p.RequestID == request.RequestID });
+                        //Payment payment = await _paymentsProc.ReadOneAsync( new List<Expression<Func<Payment, bool>>> { p => p.RequestID == request.RequestID });
                         //if (requestToUpdate.PaymentStatusID == 7)
                         //{
                         //    payment = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID).FirstOrDefault();
@@ -97,9 +97,9 @@ namespace PrototypeWithAuth.CRUD
                         //}
                         //else
                         //{
-                        payment.Sum = request.Cost ?? 0;
+                        //payment.Sum = request.Cost ?? 0;
                         payment.PaymentDate = DateTime.Now.Date;
-                        payment.RequestID = request.RequestID;
+                        //payment.RequestID = request.RequestID;
                         //}
                         payment.Reference = paymentsPayModalViewModel.Payment.Reference;
                         payment.CompanyAccountID = paymentsPayModalViewModel.Payment.CompanyAccountID;

@@ -3897,15 +3897,19 @@ namespace PrototypeWithAuth.Controllers
                     new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest },
                     new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments } };
             wheres.Add(r => r.RequestStatusID != 7 && r.Payments.Where(p => !p.IsPaid).Count() > 0);
-            var requestList = new List<RequestPaymentsViewModel>();
+            var requestPaymentList = new List<RequestPaymentsViewModel>();
+            Func<Payment, bool> paymentWheres;
             switch (accountingPaymentsEnum)
             {
                 case AppUtility.SidebarEnum.MonthlyPayment:
                     wheres.Add(r => (r.PaymentStatusID == 2/*+30*/ && r.Payments.FirstOrDefault().HasInvoice && r.Payments.FirstOrDefault().IsPaid == false)
                     || (
                           (r.PaymentStatusID == 5/*installments*/ || r.PaymentStatusID == 7/*standingorder*/ || r.Product is RecurringOrder)
-                          && r.Payments.Where(p => p.PaymentDate.Month == DateTime.Today.Month && p.PaymentDate.Year == DateTime.Today.Year && p.IsPaid == false).Count() > 0)
+                          && r.Payments.Where(p => ((p.PaymentDate.Month <= DateTime.Today.Month && p.PaymentDate.Year == DateTime.Today.Year) || p.PaymentDate.Year < DateTime.Today.Year) && p.IsPaid == false).Count() > 0)
                        );
+                    paymentWheres = p => p.IsPaid == false && ((p.PaymentDate.Month <= DateTime.Today.Month && p.PaymentDate.Year == DateTime.Today.Year) || p.PaymentDate.Year < DateTime.Today.Year);
+                    requestPaymentList = GetPaymentsForEachRequest(wheres, includes, paymentWheres);
+                    return requestPaymentList;
                     break;
                 case AppUtility.SidebarEnum.PayNow:
                     wheres.Add(r => r.PaymentStatusID == 3 && r.Payments.FirstOrDefault().IsPaid == false);
@@ -3916,21 +3920,9 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.SidebarEnum.Installments:
                     wheres.Add(r => r.PaymentStatusID == 5);
                     wheres.Add(r => r.Payments.Where(p => p.IsPaid == false && p.HasInvoice && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
-
-                    var installmentRequests = _requestsProc.Read(wheres, includes);
-                    foreach (var request in installmentRequests)
-                    {
-                        var currentInstallments = request.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).ToList();
-                        requestList.Add(new RequestPaymentsViewModel { Request = request, Payment = currentInstallments.ElementAt(0) });
-                        if (currentInstallments.Count() > 0)
-                        {
-                            for (var i = 1; i < currentInstallments.Count(); i++)
-                            {
-                                requestList.Add(new RequestPaymentsViewModel { Request = request, Payment = currentInstallments.ElementAt(i) });
-                            }
-                        }
-                    }
-                    return requestList;
+                    paymentWheres = p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5);
+                    requestPaymentList = GetPaymentsForEachRequest(wheres, includes, paymentWheres);
+                    return requestPaymentList;
                     break;
                 case AppUtility.SidebarEnum.StandingOrders:
                     wheres.Add(r => r.PaymentStatusID == 7);
@@ -3941,11 +3933,30 @@ namespace PrototypeWithAuth.Controllers
                     break;
             }
 
-            var requests = _requestsProc.Read(wheres, includes).ToList();
+            var requestList = _requestsProc.Read(wheres, includes).ToList();
 
-            requests.ForEach(r => requestList.Add(new RequestPaymentsViewModel { Request = r, Payment = r.Payments.FirstOrDefault() }));
+            requestList.ForEach(r => requestPaymentList.Add(new RequestPaymentsViewModel { Request = r, Payment = r.Payments.FirstOrDefault() }));
 
-            return requestList;
+            return requestPaymentList;
+        }
+
+        private List<RequestPaymentsViewModel> GetPaymentsForEachRequest(List<Expression<Func<Request, bool>>> wheres, List<ComplexIncludes<Request, ModelBase>> includes, Func<Payment, bool> paymentWheres)
+        {
+            var requestPaymentList = new List<RequestPaymentsViewModel>();
+            var installmentRequests = _requestsProc.Read(wheres, includes).ToList();
+            foreach (var request in installmentRequests)
+            {
+                var currentInstallments = request.Payments.Where(paymentWheres).ToList();
+                requestPaymentList.Add(new RequestPaymentsViewModel { Request = request, Payment = currentInstallments.ElementAt(0) });
+                if (currentInstallments.Count() > 1)
+                {
+                    for (var i = 1; i < currentInstallments.Count(); i++)
+                    {
+                        requestPaymentList.Add(new RequestPaymentsViewModel { Request = request, Payment = currentInstallments.ElementAt(i) });
+                    }
+                }
+            }
+            return requestPaymentList;
         }
 
         [HttpGet]
@@ -3983,61 +3994,77 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
+
+
         [HttpGet]
         [Authorize(Roles = "Accounting")]
-        public async Task<IActionResult> PaymentsPayModal(int? vendorid, int? requestid, int[] requestIds, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
+        public async Task<IActionResult> PaymentsPayModal(int? vendorId, int[] paymentIds, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
                 return PartialView("InvalidLinkPage");
             }
-            StringWithBool Error = new StringWithBool();
-            var wheres = new List<Expression<Func<Request, bool>>>();
-            if (vendorid != null)
+            var payments = new List<Payment>();
+            if(vendorId != null)
             {
-                wheres.Add(r => r.Product.VendorID == vendorid);
+                var vm = await GetPaymentRequests(accountingPaymentsEnum);
+                payments = vm.Where(rp => rp.Request.Product.VendorID == vendorId).Where(rp => rp.Request.PaymentStatusID != 7/*standingorder*/).Select(rp => rp.Payment).ToList();
             }
-            else if (requestid != null)
+            else
             {
-                wheres.Add(r => r.RequestID == requestid);
+                payments = _paymentsProc.Read(new List<Expression<Func<Payment, bool>>> { p => paymentIds.Contains(p.PaymentID) },
+                new List<ComplexIncludes<Payment, ModelBase>>
+                {
+                    new ComplexIncludes<Payment, ModelBase>{ Include = p => p.Request , ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = r => ((Request)r).ParentRequest } },
+                    new ComplexIncludes<Payment, ModelBase>{ Include = p => p.Request, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{Include =  r => ((Request)r).Product,
+                        ThenInclude =  new ComplexIncludes<ModelBase, ModelBase>{Include =  p => ((Product)p).Vendor  }} }
+                }).ToList();
             }
-            else if (requestIds != null)
-            {
-                wheres.Add(r => requestIds.Contains(r.RequestID));
-            }
+/*            var requestsToPay = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r =>  payments.Select(p => p.RequestID).Contains(r.RequestID) },
+                new List<ComplexIncludes<Request, ModelBase>>
+                {
+                    //new ComplexIncludes<Request, ModelBase>{ Include =  r => r.ParentRequest},
+                    new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = p => ((Product)p).Vendor } },
+                    //new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.ProductSubcategory},
+                    //new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.UnitType},
+                    //new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.SubUnitType},
+                    //new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.SubSubUnitType},
+                    //new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Payments}
+                }).ToList();*/
 
-            var requestsToPay = GetPaymentRequests(accountingPaymentsEnum, wheres).Result.Select(r => r.Request).ToList();
-            if (requestsToPay.Select(r => r.Currency).Distinct().Count() > 1)
+            //can you edit amount to pay? if yes, if last installment calc how much is left to pay
+
+            StringWithBool Error = new StringWithBool();
+            if (payments.Select(p => p.Request.Currency).Distinct().Count() > 1)
             {
                 Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
             }
-            if (requestsToPay.Select(r => r.Product.Vendor).Distinct().Count() > 1)
+            if (payments.Select(p => p.Request.Product.Vendor).Distinct().Count() > 1)
             {
                 Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
             }
             PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
             {
-                Requests = requestsToPay,
+                Payments = payments,
+                //Requests = requestsToPay,
                 AccountingEnum = accountingPaymentsEnum,
                 Payment = new Payment(),
                 PaymentTypes = _paymentTypesProc.Read().Select(pt => pt).ToList(),
                 CompanyAccounts = _companyAccountsProc.Read().Select(ca => ca).ToList(),
-                ShippingToPay = await GetShippingsToPay(requestsToPay),
+                ShippingToPay = await GetShippingsToPay(payments),
                 Error = Error
             };
-
-            //check if payment status type is installments to show the installments in the view model
-
             return PartialView(paymentsPayModalViewModel);
         }
 
-        public async Task<List<CheckboxViewModel>> GetShippingsToPay(List<Request> requestsToPay)
+        public async Task<List<CheckboxViewModel>> GetShippingsToPay(List<Payment> payments)
         {
             List<CheckboxViewModel> shippings = new List<CheckboxViewModel>();
-            foreach (var r in requestsToPay)
+            foreach (var p in payments)
             {
-                if (r.Payments.FirstOrDefault().ShippingPaidHere && !r.ParentRequest.IsShippingPaid && r.ParentRequest.Shipping > 0)
+                if (p.ShippingPaidHere && !p.Request.ParentRequest.IsShippingPaid && p.Request.ParentRequest.Shipping > 0)
                 {
+                    var r = p.Request;
                     shippings.Add(new CheckboxViewModel()
                     {
                         ID = Convert.ToInt32(r.ParentRequestID),
@@ -4060,7 +4087,7 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsPayModalViewModel.AccountingEnum, ErrorMessage = stringWithBool.String });
 
         }
-        [HttpGet]
+/*        [HttpGet]
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> PaymentsInvoiceModal(int? vendorid, int? paymentid, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
         {
@@ -4083,8 +4110,8 @@ namespace PrototypeWithAuth.Controllers
 
             var paidSum = requestToPay.Payments.Where(p => p.IsPaid).Select(p => p.Sum).Sum();
             var amtLeftToFullPayment = (decimal)requestToPay.Cost - paidSum;
-            /*            if (payment.InstallmentNumber == requestToPay.FirstOrDefault().Installments)
-            */
+            *//*            if (payment.InstallmentNumber == requestToPay.FirstOrDefault().Installments)
+            *//*
             if (payment.Sum > amtLeftToFullPayment)
             {
                 payment.Sum = amtLeftToFullPayment;
@@ -4155,7 +4182,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
             return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsInvoiceViewModel.AccountingEnum });
-        }
+        }*/
 
         [HttpGet]
         [Authorize(Roles = "Accounting")]

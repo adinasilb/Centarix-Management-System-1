@@ -118,7 +118,7 @@
 		console.log("vendor: " + vendorid);
 		//console.log("payment status: " + paymentstatusid);
 		//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
-		var itemurl = "/Requests/PaymentsPayModal/?vendorid=" + vendorid + "&accountingPaymentsEnum=" + typeEnum;
+		var itemurl = "/Requests/PaymentsPayModal/?vendorId=" + vendorid + "&accountingPaymentsEnum=" + typeEnum;
 		$("#loading").show();
 		$.fn.CallModal(itemurl, "payments-pay");
 	});
@@ -149,8 +149,8 @@
 		e.preventDefault();
 		e.stopPropagation();
 		var typeEnum = $("#masterSidebarType").val();
-		var requestid = $(this).attr("value");
-		var itemUrl = "/Requests/PaymentsPayModal/?requestid=" + requestid + "&accountingPaymentsEnum=" + typeEnum;
+		var paymentId = $(this).attr("value");
+		var itemUrl = "/Requests/PaymentsPayModal/?paymentIds=" + paymentId + "&accountingPaymentsEnum=" + typeEnum;
 		$("#loading").show();
 		$.fn.CallModal(itemUrl, "payments-pay");
 	});
@@ -163,7 +163,8 @@
 	$(".pay-selected").off("click").on("click", function (e) {
 		var typeEnum = $(this).attr("type");
 		var itemUrl = "/Requests/PaymentsPayModal/?accountingPaymentsEnum=" + typeEnum;
-		$.fn.LoadModalForSelectedItems(e, itemUrl, "payments-pay");
+		var parameterName = 'paymentIds';
+		$.fn.LoadModalForSelectedItems(e, itemUrl, "payments-pay", parameterName);
 	});
 
 	$(".invoice-add-all").off("click").on("click", function (e) {
@@ -177,7 +178,8 @@
 
 	$(".add-to-selected").off("click").on("click", function (e) {
 		var itemUrl = "/Requests/AddInvoiceModal/";
-		$.fn.LoadModalForSelectedItems(e, itemUrl, "add-invoice");
+		var parameterName = 'requestIds';
+		$.fn.LoadModalForSelectedItems(e, itemUrl, "add-invoice", parameterName);
 
 	});
 
