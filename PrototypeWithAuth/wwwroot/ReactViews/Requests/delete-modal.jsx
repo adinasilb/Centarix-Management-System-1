@@ -8,10 +8,10 @@ import GlobalModal from '../Utility/global-modal.jsx';
 export default function DeleteModal(props) {
     const dispatch = useDispatch();
     const location = useLocation();
-    const [state, setState] = useState({ viewModel: null, requestID: location.state.requestID });
-
+    const [state, setState] = useState({ viewModel: null, requestID: location.state.ID });
+    console.log(location.state)
     useEffect(() => {
-        var url = "/Requests/_DeleteModal?id=" + state.requestID + "&" + getRequestIndexString();
+        var url = "/Requests/DeleteModalJson?id=" + state.requestID + "&" + getRequestIndexString();
         fetch(url, {
             method: "GET"
         })
@@ -33,8 +33,11 @@ export default function DeleteModal(props) {
     }
 
     return (
-        <GlobalModal value={state.viewModel?.Request?.RequestID} modalKey={props.modalKey} key={state.viewModel?.Request?.RequestID} header={"Are you sure you would like to delete " + state.viewModel?.Request?.Product?.ProductName + "?"} >
+        <GlobalModal value={state.viewModel?.Request?.RequestID}  modalKey={props.modalKey} key={state.viewModel?.Request?.RequestID} header={"Are you sure you would like to delete " + state.viewModel?.Request?.Product?.ProductName + "?"} >
             <form onSubmit={onSubmit} method="post" encType="multipart/form-data" style={{ height: "100%", overflow: "auto" }} className="" id="myForm">
+                <div class="error-message text-danger-centarix">
+                    {state.viewModel?.ErrorMessage??""}
+                </div>
                 <input  id="Request_RequestID" name="Request.RequestID" type="hidden" value={state.viewModel?.Request?.RequestID??''}/>
 
                 <input id="RequestIndexObject_PageType" name="RequestIndexObject.PageType" type="hidden" value={state.viewModel?.RequestIndexObject?.PageType ?? ''}/>
@@ -44,7 +47,7 @@ export default function DeleteModal(props) {
                 <input id="RequestIndexObject_RequestStatusID" name="RequestIndexObject.RequestStatusID" type="hidden" value={state.viewModel?.RequestIndexObject?.RequestStatusID ?? ''}/>
                 <input id="RequestIndexObject_SidebarFilterID" name="RequestIndexObject.SidebarFilterID" type="hidden" value={state.viewModel?.RequestIndexObject?.SidebarFilterID ?? ''}/>
                 <input id="RequestIndexObject_SidebarType" name="RequestIndexObject.SidebarType" type="hidden" value={state.viewModel?.RequestIndexObject?.SidebarType??''}/>
-                <div className="container-fluid ">
+                <div className="container-fluid p-0">
                     <span className="text ">Details:</span>
                     <hr />
                     <div className="row">

@@ -96,16 +96,6 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        public async Task<JsonResult> GetIndexViewModelJson(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null,
-                                                                              SelectedRequestFilters selectedFilters = null, int numFilters = 0, RequestsSearchViewModel? requestsSearchViewModel = null)
-        {
-           return Json( await base.GetIndexViewModel(requestIndexObject, Months, Years, selectedFilters, requestsSearchViewModel: requestsSearchViewModel), new JsonSerializerSettings
-           {
-               Converters= new List<JsonConverter> { new StringEnumConverter() },
-               ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-           });
-        }
-
 
         [HttpGet]
         [HttpPost]
@@ -1399,7 +1389,7 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<JsonResult> _DeleteModal(int? id, RequestIndexObject requestIndexObject)
+        public async Task<JsonResult> DeleteModalJson(int? id, RequestIndexObject requestIndexObject)
         {
             //if (!AppUtility.IsAjaxRequest(Request))
             //{
@@ -1424,10 +1414,12 @@ namespace PrototypeWithAuth.Controllers
             if (request == null)
             {
                 deleteRequestViewModel.ErrorMessage  = "Product not found (no request). Unable to delete";
+                Response.StatusCode= 500;
             }
             if (id == null)
             {
                 deleteRequestViewModel.ErrorMessage = "Product not found (no id). Unable to delete.";
+                Response.StatusCode= 500;
             }
             return Json(JsonConvert.SerializeObject(deleteRequestViewModel, Formatting.Indented,  new JsonSerializerSettings
             {
@@ -1454,22 +1446,77 @@ namespace PrototypeWithAuth.Controllers
             {
                 Response.StatusCode = 500;
                 await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
-                return null ;
+                return null;
             }
-            var viewModel = await GetIndexViewModelByVendor(deleteRequestViewModel.RequestIndexObject);
-            viewModel.ErrorMessage="sdfjsld";
-            var json  = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
-               new JsonSerializerSettings
-               {
-                   Converters= new List<JsonConverter> { new StringEnumConverter() },
-                   ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-               });
-            
-            return Json( json);
+            return await GetIndexTableJson(deleteRequestViewModel.RequestIndexObject, requestsSearchViewModel: requestsSearchViewModel, selectedFilters: selectedFilters, numFilters: numFilters);
 
         }
 
+        private async Task<JsonResult> GetIndexTableJson(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null,
+                                                                              SelectedRequestFilters selectedFilters = null, int numFilters = 0, RequestsSearchViewModel? requestsSearchViewModel = null)
+        {
+            string json = "";
+            if (CheckIfIndexTableByVendor(requestIndexObject.SectionType, requestIndexObject.PageType, requestIndexObject.SidebarType))
+            {
+                var viewModelByVendor = await GetIndexViewModelByVendor(requestIndexObject);
+                json = JsonConvert.SerializeObject(viewModelByVendor, Formatting.Indented,
+                   new JsonSerializerSettings
+                   {
+                       Converters= new List<JsonConverter> { new StringEnumConverter() },
+                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                   });
+            }
+            else
+            {
+                var viewModel = await GetIndexViewModel(requestIndexObject, Months, Years, selectedFilters: selectedFilters,  numFilters, requestsSearchViewModel: requestsSearchViewModel);
+                json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
+                   new JsonSerializerSettings
+                   {
+                       Converters= new List<JsonConverter> { new StringEnumConverter() },
+                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                   });
+            }
 
+            return Json(json);
+        }
+
+        private bool CheckIfIndexTableByVendor(AppUtility.MenuItems SectionType, AppUtility.PageTypeEnum PageType, AppUtility.SidebarEnum SidebarType)
+        {
+            bool isByVendor = false;
+            switch(SectionType)
+            {
+                case AppUtility.MenuItems.Accounting:
+                    switch(PageType)
+                    {
+                        case AppUtility.PageTypeEnum.AccountingPayments:
+                        case AppUtility.PageTypeEnum.AccountingNotifications:
+                            isByVendor = true;
+                            break;
+                    }
+                    break;
+                case AppUtility.MenuItems.LabManagement:
+                    isByVendor=true;
+                    break;
+                case AppUtility.MenuItems.Requests:
+                    switch (PageType)
+                    {
+                        case AppUtility.PageTypeEnum.RequestCart:
+                         switch(SidebarType)
+                            {
+                                case AppUtility.SidebarEnum.Orders:
+                                    isByVendor = true;
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+
+                    break;
+                case AppUtility.MenuItems.Operations:
+                    break;
+            }
+            return isByVendor;
+        }
 
 
         [HttpGet]

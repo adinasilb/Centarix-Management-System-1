@@ -445,7 +445,7 @@ input:not(input[type=button], input[type=submit], .heading-1) {
 }
 
 .custom-button-font {
-    font-size: 1.563rem !important;
+    font-size: 1.25rem !important;
     font-weight: var(--bold-regular) !important;
     color: var(--white) !important;
 }
@@ -472,7 +472,7 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     border: .0625rem solid #000000DB !important;
     background-color: transparent !important;
     font-weight: var(--bold-light) !important;
-    font-size: 1.438rem !important;
+    font-size: 1.25rem !important;
 }
 
 .create-modal-submit {
@@ -586,8 +586,8 @@ table td, table td .btn, .text, table th {
 /**custom submits*/
 .custom-button {
     padding: 0 3.125rem !important;
-    height: 2.875rem;
-    border-radius: 1.438rem !important;
+    height: 2.375rem;
+    border-radius: .5rem !important;
     border: none !important;
     text-transform:capitalize !important;
 }
@@ -622,8 +622,17 @@ table td, table td .btn, .text, table th {
     margin-bottom: 2.063rem;
 }
 
+.modal-body {
+    padding: 0 4rem !important;
+}
+
+
+.modal-header {
+    padding: 4rem !important;
+}
+
 .under-td-padding,
-.under-row-padding{
+.under-row-padding {
     padding-bottom: 2.063rem !important;
 }
 
@@ -718,14 +727,81 @@ table td, table td .btn, .text, table th {
     margin-bottom: 1.5rem;
 }
 
-.modal-close-padding {
-    margin-top: 1.375rem;
-    margin-right: 2rem;
+.LabManagement .modal-content {
+    border-left: solid .438rem var(--lab-man-color) !important;
 }
 
-.modal-close-style {
-    font-size: 2.5rem !important;
-    font-weight: 400 !important;
+.LabManagement .modal-header {
+    color: var(--lab-man-color) !important;
+}
+
+
+.Accounting .modal-content {
+    border-left: solid .438rem var(--acc-color) !important;
+}
+
+.Accounting .modal-header {
+    color: var(--acc-color) !important;
+}
+
+.Operations .modal-content {
+    border-left: solid .438rem var(--operations-color) !important;
+}
+
+.Operations .modal-header {
+    color: var(--operations-color) !important;
+}
+
+.TimeKeeper .modal-content {
+    border-left: solid .438rem var(--timekeeper-color) !important;
+}
+
+.TimeKeeper .modal-header {
+    color: var(--timekeeper-color) !important;
+}
+
+.Requests .modal-content {
+    border-left: solid .438rem var(--order-inv-color) !important;
+}
+
+.Requests .modal-header {
+    color: var(--order-inv-color) !important;
+}
+
+.Users .modal-content {
+    border-left: solid .438rem var(--user-color) !important;
+}
+
+.Users .modal-header {
+    color: var(--user-color) !important;
+}
+
+.Protocols .modal-content {
+    border-left: solid .438rem var(--protocols-color) !important;
+}
+
+.Protocols .modal-header {
+    color: var(--protocols-color) !important;
+}
+
+.Biomarkers .modal-content {
+    border-left: solid .438rem var(--biomarkers-color) !important;
+}
+
+.Biomarkers .modal-header {
+    color: var(--biomarkers-color) !important;
+}
+
+.modal-header {
+    font-size: 1.625rem !important;
+}
+
+.close {
+    font-size: 2rem !important;
+    font-weight: 200 !important;
+    position: absolute;
+    right: 4%;
+    top: 4%;
 }
 
 .modal-box-shadow {

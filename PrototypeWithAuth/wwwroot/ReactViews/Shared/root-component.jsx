@@ -27,6 +27,7 @@ export default function RootComponent(props) {
                 return (<SettingsInventory viewModel={props.viewModel} showView={true} />);
                 break;
         }
+
     }
     function App() {
         return (
@@ -37,7 +38,7 @@ export default function RootComponent(props) {
                     renderSwitch()
                 }
 
-
+                 
                 <Switch>
                     <Route exact path={Routes.DELETE_ITEM} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.DELETE_ITEM} uid={props.location.key} />} />
                     <Route exact path={Routes.REORDER} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.REORDER} uid={props.location.key} />} />

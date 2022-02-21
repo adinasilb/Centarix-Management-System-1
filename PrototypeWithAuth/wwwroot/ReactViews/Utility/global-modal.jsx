@@ -15,7 +15,7 @@ export default function GlobalModal(props) {
                 <MDBModalBody>
                     {props.children}
                 </MDBModalBody>
-                <MDBModalFooter className="justify-content-center border-0">
+                <MDBModalFooter className=" border-0">
                     <MDBBtn className="custom-button custom-button-font section-bg-color between-button-margin" value={props.value} type="submit" form="myForm">Save</MDBBtn>
                     <MDBBtn  color="white" className="custom-cancel custom-button " onClick={onClick}>Cancel</MDBBtn>                
                 </MDBModalFooter>
