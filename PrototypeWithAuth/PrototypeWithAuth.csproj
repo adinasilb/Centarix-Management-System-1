@@ -603,6 +603,8 @@
     <Compile Remove="Data\Migrations\20220201081915_RenameRecurrenceEndStatuses.Designer.cs" />
     <Compile Remove="Data\Migrations\20220201082615_UpdateRecurrenceEndStatusSeededData.cs" />
     <Compile Remove="Data\Migrations\20220201082615_UpdateRecurrenceEndStatusSeededData.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220221122210_UpdateFunctionIcons.cs" />
+    <Compile Remove="Data\Migrations\20220221122210_UpdateFunctionIcons.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

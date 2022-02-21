@@ -26,7 +26,11 @@ namespace PrototypeWithAuth.CRUD
                 base.InstantiateProcs();
             }
         }
-
+        public override IQueryable<Request> Read(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
+        {
+            wheres.Add(r => !r.IsRemoved);
+            return base.Read(wheres, includes);
+        }
         public override IQueryable<Request> ReadWithIgnoreQueryFilters(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
         {
             wheres.Add(r => !r.IsDeleted);
@@ -53,6 +57,10 @@ namespace PrototypeWithAuth.CRUD
             await _context.SaveChangesAsync();
         }
 
+        public IQueryable<Request> ReadWithIncludeRemovedRecurrences(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
+        {
+            return base.Read(wheres, includes);
+        }
 
         public async Task<StringWithBool> DeleteAsync(int requestID)
         {

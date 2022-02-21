@@ -191,6 +191,6 @@ namespace PrototypeWithAuth.Models
         public SingleOrder SingleOrder { get; set; }
         public StandingOrder StandingOrder { get; set; }
         public RecurringOrder RecurringOrder { get; set; }
-
+        public bool IsRemoved { get; set; } //for "deleted" recurring order occurrence
     }
 }
