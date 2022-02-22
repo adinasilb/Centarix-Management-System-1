@@ -192,6 +192,7 @@ namespace PrototypeWithAuth.Models
         public StandingOrder StandingOrder { get; set; }
         public RecurringOrder RecurringOrder { get; set; }
         public bool IsRemoved { get; set; } //for "deleted" recurring order occurrence
+        public int OccurenceNumber { get; set; } = 1;
         public DateTime Timestamp { get; set; }
     }
 }
