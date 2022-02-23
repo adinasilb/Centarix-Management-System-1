@@ -186,11 +186,11 @@ namespace PrototypeWithAuth.ViewModels
                 case AppUtility.IndexTableTypes.AccountingNotifications:
                     Columns = GetAccountingNotificationsColumns().ToList();
                     break;
+                case AppUtility.IndexTableTypes.AccountingPaymentsInstallments:
+                    //Columns = GetAccountingPaymentsInstallmentsColumns().ToList();
+                    //break;
                 case AppUtility.IndexTableTypes.AccountingPaymentsDefault:
                     Columns = GetAccountingPaymentsDefaultColumns().ToList();
-                    break;
-                case AppUtility.IndexTableTypes.AccountingPaymentsInstallments:
-                    Columns = GetAccountingPaymentsInstallmentsColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.LabQuotes:
                     Columns = GetLabQuotesColumns().ToList();
