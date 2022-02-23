@@ -47,7 +47,7 @@ namespace PrototypeWithAuth.AppData
             LabManagementSuppliers, LabManagementLocations, LabManagementEquipment, LabManagementQuotes, LabManagementSearch, LabManagementSettings,
             TimeKeeperReport, TimekeeperSummary,
             UsersUser, UsersWorkers,
-            OperationsRequest, OperationsInventory, OperationsSearch,
+            OperationsRequest, OperationsInventory, OperationsCart,
             ExpensesSummary, ExpensesStatistics, ExpensesCost, ExpensesWorkers,
             ProtocolsWorkflow, ProtocolsProtocols, ProtocolsCreate, ProtocolsReports, ProtocolsResources, ProtocolsSearch, ProtocolsTask,
             BiomarkersExperiments
@@ -89,6 +89,7 @@ namespace PrototypeWithAuth.AppData
             OrderedOperations,
             RecurringExpensesOperations,
             Cart,
+            CartOperations,
             AccountingNotifications,
             AccountingPaymentsDefault,
             AccountingPaymentsInstallments,

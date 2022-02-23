@@ -320,6 +320,21 @@ namespace PrototypeWithAuth.Controllers
                         ButtonText = "Order",
                     };
                     break;
+                case AppUtility.PageTypeEnum.OperationsCart:
+                    wheres.Add(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User));
+                    wheres.Add(r => r.RequestStatusID == 6 && r.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.AddToCart.ToString());
+                    wheres.Add(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2);
+                    wheres.Add(r => r.OccurenceNumber == 1);
+                    includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator });
+                    iconList.Add(deleteIcon);
+                    orderby = r => r.CreationDate;
+                    select = r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.CartOperations, r, r.OrderMethod, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                        r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString)
+                    {
+                        ButtonClasses = " load-terms-modal  ",
+                        ButtonText = "Order",
+                    };
+                    break;
 
             }
             if (requestIndexObject.PageType != AppUtility.PageTypeEnum.AccountingPayments)
@@ -960,13 +975,16 @@ namespace PrototypeWithAuth.Controllers
                 parentQuoteState.StateEnum = EntityState.Unchanged;
             }
             ModelStates.Add(parentQuoteState);
-            ModelStates.Add(new ModelAndState { Model = tempRequest.Request, StateEnum = EntityState.Added });
-            ModelStates.Add(new ModelAndState { Model = tempRequest.Request.ParentRequest, StateEnum = EntityState.Added });
             if (tempRequest.Request.Product is RecurringOrder)
             {
-                var recurringRequestsModelStates = CreateRecurringOrderRequests(tempRequest.Request);
-                ModelStates.Concat(recurringRequestsModelStates);
+                var recurringRequestsModelStates = await CreateRecurringOrderRequests(tempRequest.Request);
+                ModelStates = ModelStates.Concat(recurringRequestsModelStates).ToList();
 
+            }
+            else
+            {
+                ModelStates.Add(new ModelAndState { Model = tempRequest.Request, StateEnum = EntityState.Added });
+                ModelStates.Add(new ModelAndState { Model = tempRequest.Request.ParentRequest, StateEnum = EntityState.Added });
             }
             await _requestsProc.UpdateModelsAsync(ModelStates);
 
@@ -977,19 +995,22 @@ namespace PrototypeWithAuth.Controllers
                 await _productCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<ProductComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 2))), tempRequest.Request.ProductID, userID);
             }
         }
-        public List<ModelAndState> CreateRecurringOrderRequests(Request request)
+        public async Task<List<ModelAndState>> CreateRecurringOrderRequests(Request request)
         {
             RecurringOrder recurringOrder = (RecurringOrder)request.Product;
             var nextRequestDate = recurringOrder.StartDate;
-            var nextRequest = new Request();
-            var occurrenceCounter = 1;
+            var nextRequest = request;
+            request.CreationDate = recurringOrder.StartDate;
             var ModelStates = new List<ModelAndState>();
+            ModelStates.Add(new ModelAndState { Model = request, StateEnum = EntityState.Added });
+            var occurrenceCounter = 2;
             while (nextRequestDate.Year == DateTime.Now.Year &&
-                ((recurringOrder.RecurrenceEndStatus.DescriptionEnum == AppUtility.RecurrenceEndStatuses.EndDate.ToString() && nextRequestDate > recurringOrder.EndDate)
-                    || (recurringOrder.RecurrenceEndStatus.DescriptionEnum == AppUtility.RecurrenceEndStatuses.LimitedOccurrences.ToString() && occurrenceCounter <= recurringOrder.Occurrences)
-                    || recurringOrder.RecurrenceEndStatus.DescriptionEnum == AppUtility.RecurrenceEndStatuses.NoEnd.ToString()))
+                ((recurringOrder.RecurrenceEndStatusID == 2  && nextRequestDate > recurringOrder.EndDate)
+                    || (recurringOrder.RecurrenceEndStatusID == 3 && occurrenceCounter <= recurringOrder.Occurrences)
+                    || recurringOrder.RecurrenceEndStatusID == 1))
             {
                 nextRequest = AppUtility.DeepClone(request);
+                recurringOrder.TimePeriod = await _timePeriodProc.ReadOneAsync(new List<Expression<Func<TimePeriod, bool>>> { tp => tp.ID == recurringOrder.TimePeriodID });
                 switch (Enum.Parse(typeof(AppUtility.TimePeriods), recurringOrder.TimePeriod.DescriptionEnum))
                 {
                     case AppUtility.TimePeriods.Days:
@@ -1006,6 +1027,7 @@ namespace PrototypeWithAuth.Controllers
                 nextRequest.RequestID = 0;
                 nextRequest.CreationDate = nextRequestDate;
                 nextRequest.OccurenceNumber = occurrenceCounter;
+                nextRequest.Product = recurringOrder;
                 ModelStates.Add(new ModelAndState { Model = nextRequest, StateEnum = EntityState.Added });
                 occurrenceCounter++;
             }
@@ -1642,41 +1664,6 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                 return PartialView("_ErrorMessage", requestItemViewModel.ErrorMessage);
             }
-        }
-
-        private static List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder, FavoriteRequest favoriteRequest = null, Request request = null, ApplicationUser user = null)
-        {
-            var newIconList = AppUtility.DeepClone(iconList);
-            //favorite icon
-            var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
-
-            if (favIconIndex != -1 && favoriteRequest != null) //check these checks
-            {
-                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "var(--order-inv-color);", "request-favorite request-unlike", "Unfavorite");
-                newIconList[favIconIndex] = unLikeIcon;
-            }
-            //for approval icon
-            if (request != null)
-            {
-                var forApprovalIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("approve-order"));
-                if (request.RequestStatusID != 1 && forApprovalIconIndex != -1)
-                {
-                    newIconList.RemoveAt(forApprovalIconIndex);
-                    needsPlaceholder = true;
-                }
-                //resend icon
-                var resendIcon = new IconColumnViewModel("Resend");
-                var placeholder = new IconColumnViewModel("Placeholder");
-                if (request.QuoteStatusID == 2)
-                {
-                    newIconList.Insert(0, resendIcon);
-                }
-                else if (needsPlaceholder)
-                {
-                    newIconList.Insert(0, placeholder);
-                }
-            }
-            return newIconList;
         }
 
 
@@ -3757,18 +3744,12 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> Cart(string errorMessage)
+        public async Task<IActionResult> Cart(RequestIndexObject requestIndexObject)
         {
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Cart;
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            return View(await GetIndexViewModelByVendor(new RequestIndexObject
-            {
-                SectionType = AppUtility.MenuItems.Requests,
-                PageType = AppUtility.PageTypeEnum.RequestCart,
-                SidebarType = AppUtility.SidebarEnum.Cart,
-                ErrorMessage = errorMessage
-            }));
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
+            return View(await GetIndexViewModelByVendor(requestIndexObject));
         }
 
 

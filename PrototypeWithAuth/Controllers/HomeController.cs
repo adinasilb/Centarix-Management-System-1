@@ -527,9 +527,9 @@ namespace PrototypeWithAuth.Controllers
                 var nextRequest = new Request();
                 var occurrenceCounter = request.OccurenceNumber + 1;
                 while (nextRequestDate.Year == DateTime.Now.Year &&
-                      ((recurringOrder.RecurrenceEndStatus.DescriptionEnum == AppUtility.RecurrenceEndStatuses.EndDate.ToString() && nextRequestDate > recurringOrder.EndDate)
-                        || (recurringOrder.RecurrenceEndStatus.DescriptionEnum == AppUtility.RecurrenceEndStatuses.LimitedOccurrences.ToString() && occurrenceCounter <= recurringOrder.Occurrences)
-                        || recurringOrder.RecurrenceEndStatus.DescriptionEnum == AppUtility.RecurrenceEndStatuses.NoEnd.ToString()))
+                      ((recurringOrder.RecurrenceEndStatusID == 2 && nextRequestDate > recurringOrder.EndDate)
+                    || (recurringOrder.RecurrenceEndStatusID == 3 && occurrenceCounter <= recurringOrder.Occurrences)
+                    || recurringOrder.RecurrenceEndStatusID == 1))
                 {
                     nextRequest = AppUtility.DeepClone(request);
                     switch (Enum.Parse(typeof(AppUtility.TimePeriods), recurringOrder.TimePeriod.DescriptionEnum))

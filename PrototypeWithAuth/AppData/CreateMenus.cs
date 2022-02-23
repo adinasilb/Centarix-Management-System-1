@@ -18,12 +18,12 @@ namespace PrototypeWithAuth.AppData
         {
             List<MenuItems> MainMenuItems = new List<MenuItems>();
             string ActiveClasses = " activeNavLink ";
-  
+
             string AllClasses = OrigClasses;
             switch (SectionType)
             {
 
-                case AppUtility.MenuItems.Requests:                  
+                case AppUtility.MenuItems.Requests:
                     if (pageType == AppUtility.PageTypeEnum.RequestRequest) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
@@ -88,9 +88,12 @@ namespace PrototypeWithAuth.AppData
                         Controller = "Requests",
                         Action = "Cart",
                         RouteValues = new RouteValueDictionary()
-                {
-                    {"PageType", AppUtility.PageTypeEnum.RequestCart }
-                },
+                        {
+                            {"PageType",  AppUtility.PageTypeEnum.RequestCart },
+                            { "SectionType", AppUtility.MenuItems.Requests },
+                            { "SidebarType", AppUtility.SidebarEnum.Cart },
+                            { "RequestStatusID", 6 }
+                        },
                         Classes = AllClasses,
                         ID = "personal-link"
                     });
@@ -144,21 +147,21 @@ namespace PrototypeWithAuth.AppData
                         Classes = AllClasses,
                         ID = "inventory-link"
                     });
-                    if (pageType == AppUtility.PageTypeEnum.OperationsInventory) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    if (pageType == AppUtility.PageTypeEnum.OperationsCart) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Personal",
-                        Controller = "Requests", //redo to operations
-                        Action = "IndexInventory",
+                        Controller = "Requests",
+                        Action = "Cart",
                         RouteValues = new RouteValueDictionary()
                         {
-                            {"PageType",  AppUtility.PageTypeEnum.OperationsInventory },
+                            {"PageType",  AppUtility.PageTypeEnum.OperationsCart },
                             { "SectionType", AppUtility.MenuItems.Operations },
-                            { "SidebarType", AppUtility.SidebarEnum.List },
-                            { "RequestStatusID", 3 },
+                            { "SidebarType", AppUtility.SidebarEnum.Cart },
+                            { "RequestStatusID", 6 },
                         },
                         Classes = AllClasses,
-                        ID = "inventory-link"
+                        ID = "personal-link"
                     });
                     //    if (pageType == AppUtility.PageTypeEnum.OperationsSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     //    MainMenuItems.Add(new MenuItems()
@@ -228,7 +231,7 @@ namespace PrototypeWithAuth.AppData
                     break;
                 case AppUtility.MenuItems.Income:
                     break;
-                case AppUtility.MenuItems.Biomarkers:                    
+                case AppUtility.MenuItems.Biomarkers:
                     if (pageType == AppUtility.PageTypeEnum.BiomarkersExperiments) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
@@ -677,7 +680,7 @@ namespace PrototypeWithAuth.AppData
             });
             return SidebarMenuItems;
         }
-        public static List<MenuItems> GetOrdersAndInventorySearchSidebarMenuItems( AppUtility.PageTypeEnum pageType, AppUtility.CategoryTypeEnum categoryType)
+        public static List<MenuItems> GetOrdersAndInventorySearchSidebarMenuItems(AppUtility.PageTypeEnum pageType, AppUtility.CategoryTypeEnum categoryType)
         {
 
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
@@ -937,7 +940,7 @@ namespace PrototypeWithAuth.AppData
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
             string Classes = OrigClasses;
-            
+
             if (SidebarTitle == AppUtility.SidebarEnum.List) { Classes += SideBarActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
@@ -1337,30 +1340,56 @@ namespace PrototypeWithAuth.AppData
             return SidebarMenuItems;
         }
 
-
-        public static List<MenuItems> CreateOperationsSearchSidebar(AppUtility.SidebarEnum SidebarTitle)
+        public static List<MenuItems> CreateOperationsCartSidebar(AppUtility.SidebarEnum SidebarTitle)
         {
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
-            string CurrentClasses = OrigClasses;
-
-            if (SidebarTitle == AppUtility.SidebarEnum.Search) { CurrentClasses += SideBarActiveClasses; } else { CurrentClasses = OrigClasses; }
+            string menuClass = OrigClasses;
+            if (SidebarTitle == AppUtility.SidebarEnum.Cart) { menuClass += SideBarActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
-                Description = "Search",
+                Description = "Cart",
                 Controller = "Requests",
-                Action = "Search",
+                Action = "Cart",
                 RouteValues = new RouteValueDictionary()
                 {
-                    {"SectionType", AppUtility.MenuItems.Operations.ToString() }
+                    {"PageType",  AppUtility.PageTypeEnum.OperationsCart },
+                    { "SectionType", AppUtility.MenuItems.Operations },
+                    { "SidebarType", AppUtility.SidebarEnum.Cart },
+                    { "RequestStatusID", 6 }
                 },
-                Classes = CurrentClasses,
-                IconName = "icon-zoom_in-24px-01"
+                Classes = menuClass,
+                IconName = "icon-shopping_cart-24px"
             });
-
+            if (SidebarTitle == AppUtility.SidebarEnum.Notifications) { menuClass += SideBarActiveClasses; } else { menuClass = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Notifications",
+                Controller = "Requests",
+                Action = "NotificationsView",
+                RouteValues = new RouteValueDictionary() {
+                {"PageType",  AppUtility.PageTypeEnum.OperationsCart },
+                            { "SectionType", AppUtility.MenuItems.Operations },
+                            { "SidebarType", AppUtility.SidebarEnum.Notifications }},
+                Classes = menuClass,
+                IconName = "icon-notifications-24px"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.DidntArrive) { menuClass += SideBarActiveClasses; } else { menuClass = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Didn't Arrive",
+                Controller = "Requests",
+                Action = "NotificationsView",
+                RouteValues = new RouteValueDictionary()
+                {{"PageType",  AppUtility.PageTypeEnum.OperationsCart },
+                            { "SectionType", AppUtility.MenuItems.Operations },
+                            { "SidebarType", AppUtility.SidebarEnum.DidntArrive },
+                    {"DidntArrive", true }
+                },
+                Classes = menuClass,
+                IconName = "icon-local_shipping-24px"
+            });
             return SidebarMenuItems;
         }
-
-
         public static List<MenuItems> CreateUsersUsersSidebar(AppUtility.SidebarEnum SidebarTitle)
         {
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();

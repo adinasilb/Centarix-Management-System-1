@@ -38,7 +38,7 @@
 
     $(".recurring-end-id").off('click').on('click', function (e) {
         $(".recurring-end-info").attr("disabled", true)
-        $(this).closest("row").find(":input").attr("disabled", false)
+        $(this).closest(".row").find(".recurring-end-info").attr("disabled", false)
     })
 
     $('.ordersItemForm').on('click', "#standingOrder", function (e) {
@@ -46,7 +46,7 @@
         if ($("#standingOrder:checkbox").is(":checked")) {
             $(".paid-info").addClass("d-none")
             $("#standingOrder:checkbox").prop("checked", false)
-            $("#OrderType").val("StandingOrder")
+            $("#OrderType").val("RecurringOrder")
             ReplaceProductTypeNames("StandingOrder", "RecurringOrder")
         }
         else {

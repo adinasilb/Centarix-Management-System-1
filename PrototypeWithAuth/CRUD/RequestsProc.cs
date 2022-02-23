@@ -148,9 +148,9 @@ namespace PrototypeWithAuth.CRUD
                 categoryType = 2;
                 serialLetter = "P";
             }
-            var serialnumberList = _productsProc.ReadWithIgnoreQueryFilters(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType })
+            var serialnumberList = _productsProc.ReadWithIgnoreQueryFilters(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType })?
                 .Select(p => int.Parse(p.SerialNumber.Substring(1))).ToList();
-
+           
             lastSerialNumberInt = serialnumberList.OrderBy(s => s).LastOrDefault();
 
             return serialLetter + (lastSerialNumberInt + 1);

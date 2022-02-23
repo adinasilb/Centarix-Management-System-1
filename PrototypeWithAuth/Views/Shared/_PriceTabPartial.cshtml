@@ -232,7 +232,8 @@
             </div>
         </div>
     </div>
-    @{
+    @if(Model.SectionType != AppUtility.MenuItems.Operations)
+    {
         var cardDivDisplayNone = "d-none";
         var cardDisplayNoneSubSub = "d-none";
         var cardDisabledSubSub = "disabled";
@@ -251,7 +252,6 @@
                 //subsubdisabled = "disabled";
             }
         }
-    }
     <div class="col-4 pl-0 RequestSubsubunitCard @cardDivDisplayNone">
         <div class="border h-100">
             <button type="button" class="close subsub-close @cardDisplayNoneSubSub pr-2 pt-2 @markReadOnlyClass" aria-label="Close" style="
@@ -336,10 +336,10 @@
             </div>
         </div>
     </div>
+    }
 </div>
 
 
-@*}*@
 <div class="row requestPriceQuote @hideNoQuote">
     <div class="col-md-4 m-0 p-0">
         <div class="row m-0 p-0">
