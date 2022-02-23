@@ -1,4 +1,5 @@
-﻿import * as Actions from '../ReduxRelatedUtils/actions.jsx';
+﻿import { MDBInput } from 'mdbreact';
+import * as Actions from '../ReduxRelatedUtils/actions.jsx';
 
 export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
     console.log("in ajax partial index call " + url);
@@ -28,21 +29,20 @@ export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
     if (listID != null) {
         listString += "&listID=" + listID.value
     }
-    
-    if (modals == null) {
-        console.log("in else");
+
+    console.log("in else");
         
-        if (!url.includes("?")) {
-            url += "?"
-        } else {
-            url += "&";
-        }
-        url += getRequestIndexString();
-        url += monthsString;
-        url += yearsString;
-        url += listString;
-        
+    if (!url.includes("?")) {
+        url += "?"
+    } else {
+        url += "&";
     }
+    url += getRequestIndexString();
+    url += monthsString;
+    url += yearsString;
+    url += listString;
+        
+    
 
     if (selectedFilters != undefined/*should also somehow check if anything is chosen...*/) {
         formdata = addObjectToFormdata(formdata, selectedFilters);
@@ -55,9 +55,14 @@ export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
     fetch(url, {
         method: type,
         body: formdata
-    }).then(response => response.json())
-        .then(result => {          
-            dispatch(Actions.setIndexTableViewModel(JSON.parse(result)));
+    }).then(response => {
+        response.json();
+    })
+        .then(result => {
+            console.log("results: " + result)
+            if (result != undefined) {
+                dispatch(Actions.setIndexTableViewModel(JSON.parse(result)));
+            }
             dispatch(Actions.removeModals(modals));
 
         document.querySelectorAll(".tooltip").forEach(c => c.remove());
@@ -77,6 +82,8 @@ export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
             document.querySelectorAll('.error-message').forEach(e => e.classList.add("d-none"));
             document.querySelector('.error-message').innerHTML = jqxhr;
             document.querySelector('.error-message').classList.remove("d-none");
+            document.getElementById("loading").style.display = "none";
+            dispatch(Actions.removeModals(modals));
     });    
     return false;
 }

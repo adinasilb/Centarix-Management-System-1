@@ -12,6 +12,9 @@ import ModalLoader from './modal-loader.jsx';
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import * as Routes from '../Constants/Routes.jsx'
 
+import  '@fortawesome/fontawesome-free/css/all.min.css';
+
+
 export default function RootComponent(props) {
     const store = createStore(reducer, { viewModel: props.viewModel, modals: [] }, composeWithDevTools());
 
@@ -41,8 +44,9 @@ export default function RootComponent(props) {
                  
                 <Switch>
                     <Route exact path={Routes.DELETE_ITEM} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.DELETE_ITEM} uid={props.location.key} />} />
-                    <Route exact path={Routes.REORDER} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.REORDER} uid={props.location.key} />} />
-                    <Route path={Routes.INDEX_TABLE_DATA} component={_IndexTableData} />
+                    <Route exact path={Routes.SHARE} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.SHARE} uid={props.location.key} />} />
+                    <Route exact path={Routes.MOVE_TO_LIST} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.MOVE_TO_LIST} uid={props.location.key} />} />
+                    <Route exact path={Routes.NEW_LIST} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.NEW_LIST} uid={props.location.key} />} />
                     <Route path={Routes.SETTINGS_INVENTORY} component={SettingsInventory} />
                 </Switch>
             </div>)

@@ -9,16 +9,18 @@ export default function GlobalModal(props) {
     }
 
     return (
-        <MDBContainer>          
-            <MDBModal size="lg" id="myModal" isOpen={true} toggle={onClick}>
+        <MDBContainer>
+            <MDBModal  backdrop={props.backdrop} tabIndex="-1" size={props.size} id="myModal" isOpen={true} centered toggle={onClick}>
                 <MDBModalHeader className="border-0" toggle={onClick}> <span className="heading-1">{props.header}</span></MDBModalHeader>
                 <MDBModalBody>
                     {props.children}
                 </MDBModalBody>
-                <MDBModalFooter className=" border-0">
+                {!props.hideModalFooter?
+                <MDBModalFooter className=" border-0 justify-content-center">
                     <MDBBtn className="custom-button custom-button-font section-bg-color between-button-margin" value={props.value} type="submit" form="myForm">Save</MDBBtn>
-                    <MDBBtn  color="white" className="custom-cancel custom-button " onClick={onClick}>Cancel</MDBBtn>                
-                </MDBModalFooter>
+                    <MDBBtn  color="white" className="custom-cancel custom-button " onClick={onClick}>Cancel</MDBBtn>               
+                    </MDBModalFooter>
+                : ''}
             </MDBModal>
         </MDBContainer>
         )

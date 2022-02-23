@@ -36,7 +36,7 @@ export default class IndexTableColumn extends Component {
                                             <MDBPopoverBody>
                                                 {icon.IconPopovers.map((iconpopover, i) => (
                                                     <div key={"iconPopover" + i} className="row px-3 icon-more-popover accounting-popover">
-                                                        <Link className={"btn-link popover-text no-hover requests " + iconpopover.AjaxCall} to={{ pathname: iconpopover.AjaxCall, state: { ID: col.AjaxID, newStatus: iconpopover.Description } }} >
+                                                        <Link className={"btn-link popover-text no-hover requests " + iconpopover.AjaxCall} to={{ pathname: iconpopover.AjaxCall, state: { ID: col.AjaxID, newStatus: iconpopover.Description, modelsEnum: "Request" } }} >
                                                             <i className={iconpopover.Icon} style={{ color: iconpopover.Color + "" }}></i>
                                                             <label className="m-2 ">{iconpopover.DescriptionDisplayName}</label>
                                                         </Link>

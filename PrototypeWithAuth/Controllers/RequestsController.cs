@@ -1408,8 +1408,7 @@ namespace PrototypeWithAuth.Controllers
 
             DeleteRequestViewModel deleteRequestViewModel = new DeleteRequestViewModel()
             {
-                Request = request,
-                RequestIndexObject = requestIndexObject
+                Request = request
             };
             if (request == null)
             {
@@ -1431,7 +1430,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<JsonResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters, int numFilters = 0)
+        public async Task<JsonResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel,  RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters, int numFilters = 0)
         {
             try
             {
@@ -1448,7 +1447,7 @@ namespace PrototypeWithAuth.Controllers
                 await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                 return null;
             }
-            return await GetIndexTableJson(deleteRequestViewModel.RequestIndexObject, requestsSearchViewModel: requestsSearchViewModel, selectedFilters: selectedFilters, numFilters: numFilters);
+            return await GetIndexTableJson(requestIndexObject, requestsSearchViewModel: requestsSearchViewModel, selectedFilters: selectedFilters, numFilters: numFilters);
 
         }
 
@@ -1779,7 +1778,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var shareViewModel = base.GetShareModalViewModel(ID, ModelsEnum);
+            var shareViewModel = base.GetShareModalViewModel(ID);
             switch (ModelsEnum)
             {
                 case AppUtility.ModelsEnum.Request:
@@ -1789,8 +1788,37 @@ namespace PrototypeWithAuth.Controllers
                     shareViewModel.ObjectDescription = _requestListsProc.ReadOneAsync(new List<Expression<Func<RequestList, bool>>> { rl => rl.ListID == ID }).Result.Title;
                     break;
             }
-
+            
             return PartialView(shareViewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<JsonResult> ShareModalJson(int ID, AppUtility.ModelsEnum ModelsEnum)
+        {
+            //if (!AppUtility.IsAjaxRequest(Request))
+            //{
+            //    return PartialView("InvalidLinkPage");
+            //}
+            var shareViewModel = base.GetShareModalViewModel(ID);
+            switch (ModelsEnum)
+            {
+                case AppUtility.ModelsEnum.Request:
+                    shareViewModel.ObjectDescription = _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == ID }, new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product } }).Result.Product.ProductName;
+                    break;
+                case AppUtility.ModelsEnum.RequestLists:
+                    shareViewModel.ObjectDescription = _requestListsProc.ReadOneAsync(new List<Expression<Func<RequestList, bool>>> { rl => rl.ListID == ID }).Result.Title;
+                    break;
+            }
+           
+
+            var json = JsonConvert.SerializeObject(shareViewModel, Formatting.Indented,
+               new JsonSerializerSettings
+               {
+                   Converters= new List<JsonConverter> { new StringEnumConverter() },
+                   ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+               });
+            return Json(json);
         }
 
 
@@ -4691,8 +4719,9 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> MoveToListModal(int requestID, int prevListID = 0)
+        public async Task<JsonResult> MoveToListModalJson(int requestID, int prevListID = 0)
         {
+
             var pageType = AppUtility.PageTypeEnum.RequestCart;
             var userLists = _requestListsProc.Read(new List<Expression<Func<RequestList, bool>>> { rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User) })
                .OrderBy(rl => rl.DateCreated).ToList();
@@ -4720,7 +4749,13 @@ namespace PrototypeWithAuth.Controllers
                 RequestLists = userLists,
                 PageType = pageType
             };
-            return PartialView(viewModel);
+            var json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
+              new JsonSerializerSettings
+              {
+                  Converters= new List<JsonConverter> { new StringEnumConverter() },
+                  ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+              });
+            return Json(json);
         }
 
 
@@ -4730,31 +4765,17 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> MoveToListModal(MoveListViewModel moveListViewModel)
         {
             var success = await _requestListRequestsProc.MoveList(moveListViewModel.Request.RequestID, moveListViewModel.NewListID, moveListViewModel.PreviousListID);
-            if (moveListViewModel.PageType == AppUtility.PageTypeEnum.RequestCart)
+            if(!success.Bool)
             {
-                return RedirectToAction("_IndexTableWithListTabs", new
-                {
-                    PageType = AppUtility.PageTypeEnum.RequestCart,
-                    SidebarType = AppUtility.SidebarEnum.MyLists,
-                    ListID = moveListViewModel.PreviousListID,
-                    errorMessage = success.String
-                });
+                Response.StatusCode = 500;
+                await Response.WriteAsync(success.String);
             }
-            else
-            {
-                if (!success.Bool)
-                {
-                    Response.StatusCode = 500;
-                    await Response.WriteAsync(success.String);
-
-                }
-                return new EmptyResult();
-            }
+            return new EmptyResult();
         }
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> NewListModal(int requestToAddId = 0, int requestPreviousListID = 0)
+        public async Task<IActionResult> NewListModalJson(int requestToAddId = 0, int requestPreviousListID = 0)
         {
             NewListViewModel viewModel = new NewListViewModel()
             {
@@ -4762,22 +4783,31 @@ namespace PrototypeWithAuth.Controllers
                 RequestToAddID = requestToAddId,
                 RequestPreviousListID = requestPreviousListID
             };
-            return PartialView(viewModel);
+            var json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
+             new JsonSerializerSettings
+             {
+                 Converters= new List<JsonConverter> { new StringEnumConverter() },
+                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+             });
+            return Json(json);
         }
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> NewListModal(NewListViewModel newListViewModel)
+        public async Task<IActionResult> NewListModal(NewListViewModel newListViewModel, RequestIndexObject requestIndexObject)
         {
 
             var newList = await _requestListsProc.CreateAndGetAsync(newListViewModel);
-            RequestIndexObject indexObject = new RequestIndexObject()
+            requestIndexObject.ListID = newList.ListID;
+            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
             {
-                PageType = AppUtility.PageTypeEnum.RequestCart,
-                SidebarType = AppUtility.SidebarEnum.MyLists,
-                ListID = newList.ListID
-            };
-            return RedirectToAction("_IndexTableWithListTabs", indexObject);
+                return await GetIndexTableJson(requestIndexObject);
+            }
+            else
+            {
+                return new EmptyResult();
+            }
+
         }
 
         [HttpGet]

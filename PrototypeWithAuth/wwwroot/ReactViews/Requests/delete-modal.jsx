@@ -11,7 +11,7 @@ export default function DeleteModal(props) {
     const [state, setState] = useState({ viewModel: null, requestID: location.state.ID });
     console.log(location.state)
     useEffect(() => {
-        var url = "/Requests/DeleteModalJson?id=" + state.requestID + "&" + getRequestIndexString();
+        var url = "/Requests/DeleteModalJson?id=" + state.requestID;
         fetch(url, {
             method: "GET"
         })
@@ -24,7 +24,6 @@ export default function DeleteModal(props) {
 
     var onSubmit = (e) => {
         e.preventDefault();
-        alert("in submit")
         document.getElementById("loading").style.display = "block";
         var formdata = new FormData(e.target);
         var url = '/Requests/DeleteModal'
@@ -33,20 +32,13 @@ export default function DeleteModal(props) {
     }
 
     return (
-        <GlobalModal value={state.viewModel?.Request?.RequestID}  modalKey={props.modalKey} key={state.viewModel?.Request?.RequestID} header={"Are you sure you would like to delete " + state.viewModel?.Request?.Product?.ProductName + "?"} >
+        <GlobalModal backdrop={props.backdrop} value={state.viewModel?.Request?.RequestID} modalKey={props.modalKey} key={state.viewModel?.Request?.RequestID} size="lg" header={"Are you sure you would like to delete " + state.viewModel?.Request?.Product?.ProductName + "?"} >
             <form onSubmit={onSubmit} method="post" encType="multipart/form-data" style={{ height: "100%", overflow: "auto" }} className="" id="myForm">
-                <div class="error-message text-danger-centarix">
+                <div className="error-message text-danger-centarix">
                     {state.viewModel?.ErrorMessage??""}
                 </div>
                 <input  id="Request_RequestID" name="Request.RequestID" type="hidden" value={state.viewModel?.Request?.RequestID??''}/>
 
-                <input id="RequestIndexObject_PageType" name="RequestIndexObject.PageType" type="hidden" value={state.viewModel?.RequestIndexObject?.PageType ?? ''}/>
-                <input id="RequestIndexObject_PageNumber" name="RequestIndexObject.PageNumber" type="hidden" value={state.viewModel?.RequestIndexObject?.PageNumber ?? ''}/>
-                <input id="RequestIndexObject_SectionType" name="RequestIndexObject.SectionType" type="hidden" value={state.viewModel?.RequestIndexObject?.SectionType ?? ''}/>
-                <input id="RequestIndexObject_SelectedCurrency" name="RequestIndexObject.SelectedCurrency" type="hidden" value={state.viewModel?.RequestIndexObject?.SelectedCurrency ?? ''}/>
-                <input id="RequestIndexObject_RequestStatusID" name="RequestIndexObject.RequestStatusID" type="hidden" value={state.viewModel?.RequestIndexObject?.RequestStatusID ?? ''}/>
-                <input id="RequestIndexObject_SidebarFilterID" name="RequestIndexObject.SidebarFilterID" type="hidden" value={state.viewModel?.RequestIndexObject?.SidebarFilterID ?? ''}/>
-                <input id="RequestIndexObject_SidebarType" name="RequestIndexObject.SidebarType" type="hidden" value={state.viewModel?.RequestIndexObject?.SidebarType??''}/>
                 <div className="container-fluid p-0">
                     <span className="text ">Details:</span>
                     <hr />

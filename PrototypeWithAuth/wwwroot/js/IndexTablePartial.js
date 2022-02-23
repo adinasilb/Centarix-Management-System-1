@@ -2,36 +2,8 @@
 $(function () {
 
     $(".popover-more").off('click').click(function () {
-        var val = $(this).val();
-        $('[data-toggle="popover"]').popover('dispose');
-        $(this).popover({
-            sanitize: false,
-            placement: 'bottom',
-            html: true,
-            content: function () {
-                return $('#' + val).html();
-            }
-        });
-        $(this).popover('toggle');
-        $(".popover .share-request-fx").click(function (e) {
-            e.preventDefault();
-            //switch this to universal share request and the modelsenum send in
-            var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?ID=" + $(this).attr("data-route-request") + "&ModelsEnum=Request";
+     
 
-            $.ajax({
-                async: true,
-                url: url,
-                traditional: true,
-                type: "GET",
-                cache: false,
-                success: function (data) {
-                    $.fn.OpenModal("shared-modal", "share-modal", data)
-                    $.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs')
-                    $("#loading").hide();
-                    return false;
-                }
-            })
-        });
         $(".popover .change-payment-status").click(function (e) {
             e.preventDefault();
             //switch this to universal share request and the modelsenum send in
@@ -116,65 +88,9 @@ $(function () {
                 }
             });
         })
-        $(".popover .load-confirm-delete").click(function (e) {
-            console.log("in confirm delete");
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            var $itemurl = "/Requests/DeleteModal/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString();
-            $.fn.CallPageRequest($itemurl, "delete");
-            return false;
-        });
+       
     });
-    //$('._IndexTableData [data-toggle = "tooltip"], ._IndexTableDataByVendor [data-toggle = "tooltip"]' ).off('click').on("click", function (e) {
-    //    e.preventDefault();
-    //    console.log('prevent default')
-    //});
-    //$("body").off("click", ".share-request").on("click", ".share-request", function (e) {
-    //	alert("share request");
-    //	var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
-    //	alert("share request: " + url);
-    //	$.ajax({
-    //		async: true,
-    //		url: "/Requests/ShareRequest/?id=" + val,
-    //		traditional: true,
-    //		type: "GET",
-    //		cache: false,
-    //		success: function (data) {
-    //			$.fn.OpenModal("share-request", "share-request", data)
-    //			$("#loading").hide();
-    //		}
-    //	})
-    //});
-
-    //});
-
-    //$(document).off("click", ".popover .share-request").on("click", ".popover .share-request", function () {
-    //	alert('it works!');
-    //});
-
-    //$(".popover").on("click", function (e) {
-    //	alert("popover clicked!");
-    //});
-
-    //$("body").off("click", ".share-request").on("click", ".share-request", function (e) {
-    //	var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
-    //	alert("share request: " + url);
-    //	$.ajax({
-    //		async: true,
-    //		url: url,
-    //		traditional: true,
-    //		type: "GET",
-    //		cache: false,
-    //		success: function (data) {
-    //			$.fn.OpenModal("share-request", "share-request", data)
-    //			alert(data);
-    //			$("#loading").hide();
-    //			return false;
-    //		}
-    //	})
-    //});
-
+    
     $(".load-quote-details").on("click", function (e) {
         console.log("in order details");
         e.preventDefault();
@@ -211,8 +127,6 @@ $(function () {
         $.fn.CallPageRequest($itemurl, "details");
         return false;
     });
-
-    //$("body, .modal").off('click', ".load-product-details-summary").on("click", ".load-product-details-summary", function (e) {
 
     $(".load-product-details-summary").off('click').on("click", function (e) {
 
@@ -367,21 +281,6 @@ $(function () {
 
     };
 
-    $(".create-calibration").off('click').on("click", function (e) {
-        e.preventDefault();
-
-        $.ajax({
-            async: true,
-            url: "/Calibrations/CreateCalibration?requestid=" + $(this).attr("value"),
-            type: "GET",
-            cache: false,
-            success: function (data) {
-                $('.render-body').html(data)
-                $('#myForm a:first').tab('show');
-            }
-        });
-        return false;
-    });
 
     $(".page-item.not-active span").off('click').on("click", function (e) {
         console.log("next page");
@@ -570,15 +469,5 @@ $(function () {
 
         return false;
     }
-
-    $(".load-confirm-delete").off("click").click(function (e) {
-        console.log("in confirm delete");
-        e.preventDefault();
-        e.stopPropagation();
-        $("#loading").show();
-        var $itemurl = "/Requests/DeleteModal/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString();
-        $.fn.CallPageRequest($itemurl, "delete");
-        return false;
-    });
     
 });

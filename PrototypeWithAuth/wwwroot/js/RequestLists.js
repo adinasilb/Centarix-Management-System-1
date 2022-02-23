@@ -124,20 +124,7 @@
         $('.listSettingsForm').valid();
     })
 
-    $(".createList").off("click").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var valid = $('.newListForm').valid();
-        console.log(valid)
-        if (valid) {
-            var fromMoveModal = $("#RequestToAddID").val() != 0
-            console.log("from move "+ fromMoveModal)
-            var url = "/Requests/NewListModal";
-            var formData = new FormData($(".newListForm")[0]);
-            var viewClass = "._IndexTableListTabs"
-            $.fn.ajaxPartialIndexTable(-1, "/Requests/NewListModal", viewClass, "POST", formData, "new-list, move-list");
-        }
-    });
+ 
     $("#ListTitle").on('input', function (e) {
         var valid = $('.newListForm').valid();
     })
@@ -219,16 +206,6 @@
             contentType: false
         })
         return false;
-    });
-
-    $(".moveListItem").off("click").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var url = "/Requests/MoveToListModal";
-        $("#NewListID").val($(this).attr("listId"));
-        var formData = new FormData($(".moveListItemForm")[0]);
-        var viewClass = "._IndexTableListTabs"
-        $.fn.ajaxPartialIndexTable(-1, url, viewClass, "POST", formData, "move-list");
     });
 
     $(".delete-request").off('click').on("click", function (e) {

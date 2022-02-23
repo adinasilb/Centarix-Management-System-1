@@ -829,12 +829,11 @@ namespace PrototypeWithAuth.Controllers
 
 
         }
-        protected ShareModalViewModel GetShareModalViewModel(int ID, AppUtility.ModelsEnum ModelsEnum)
+        protected ShareModalViewModel GetShareModalViewModel(int ID)
         {
             ShareModalViewModel shareModalViewModel = new ShareModalViewModel()
             {
                 ID = ID,
-                ModelsEnum = ModelsEnum,
                 ApplicationUsers = _employeesProc.Read(new List<Expression<Func<Employee, bool>>> { u => u.Id != _userManager.GetUserId(User) })
                               .Select(
                                   u => new SelectListItem
@@ -1239,9 +1238,9 @@ namespace PrototypeWithAuth.Controllers
             //var popoverCantDelete = new IconPopoverViewModel(" icon-delete-24px  ", "grey", AppUtility.PopoverDescription.Delete, "", "", AppUtility.PopoverEnum.None, "");
             var popoverReorder = new IconPopoverViewModel(" icon-add_circle_outline-24px1 ", "#00CA72", AppUtility.PopoverDescription.Reorder, "Reorder", "Requests", "load-order-details");
             var popoverRemoveShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
-            var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Requests",  "share-request-fx");
-            var popoverAddToList = new IconPopoverViewModel("icon-centarix-icons-04", "black", AppUtility.PopoverDescription.AddToList, "MoveToListModal", "Requests",  "move-to-list");
-            var popoverMoveList = new IconPopoverViewModel("icon-entry-24px", "black", AppUtility.PopoverDescription.MoveToList, "MoveToListModal", "Requests", "move-to-list");
+            var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Requests",  "/ShareModal");
+            var popoverAddToList = new IconPopoverViewModel("icon-centarix-icons-04", "black", AppUtility.PopoverDescription.AddToList, "MoveToListModal", "Requests", "/MoveToListModal");
+            var popoverMoveList = new IconPopoverViewModel("icon-entry-24px", "black", AppUtility.PopoverDescription.MoveToList, "MoveToListModal", "Requests", "/MoveToListModal");
             var popoverDeleteFromList = new IconPopoverViewModel("icon-delete-24px", "black", AppUtility.PopoverDescription.DeleteFromList, "DeleteFromListModal", "Requests",  "remove-from-list");
 
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
