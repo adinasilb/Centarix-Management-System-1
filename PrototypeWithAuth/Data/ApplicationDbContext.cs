@@ -23,6 +23,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<CustomDataType> CustomDataTypes { get; set; }
         public DbSet<RecurrenceEndStatus> RecurringOrderEndStatuses { get; set;}
         public DbSet<TimePeriod> TimePeriods { get; set; }
         public DbSet<RecurringOrder> RecurringOrders { get; set; }

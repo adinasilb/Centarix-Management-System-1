@@ -1,6 +1,7 @@
 ﻿@using PrototypeWithAuth.AppData.UtilityModels
 @using React.AspNet
 @using React.Router
+@using PrototypeWithAuth.AppData 
 @{
     Layout = null;
 }
@@ -80,7 +81,7 @@
     </div>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <div class="request_nav_body"> @RenderBody()</div>
-  
+
     <!--  SCRIPTS  -->
     <!-- JQuery -->
     @*load jquery ui*@
@@ -480,7 +481,7 @@
                     }
                     console.log("enable subunits with onlyms: " + onlyMS);
                     $.fn.EnableSubUnits(onlyMS);
-                    
+
                 }
                 if ($("#quoteStatus").val() == "1" || $("#quoteStatus").val() == "2") {
                     console.log("no quote")
@@ -1821,8 +1822,7 @@
             //$('#inventoryFilterContent').style.display = "block";
         });
     </script>
-
-
+    @Html.GetConstants()
     @if (IsSectionDefined("requestNavScript"))
     {
         @RenderSection("requestNavScript", required: true)

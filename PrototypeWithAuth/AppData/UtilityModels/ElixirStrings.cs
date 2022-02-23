@@ -7,6 +7,7 @@ namespace PrototypeWithAuth.AppData.UtilityModels
 {
     public static class ElixirStrings
     {
+        //ERRORS
         public const String ServerSideError = "Cannot complete this action.";
         public const String DifferentCurrencyErrorMessage = "The items selected have different currency types.";
         public const String DifferentVendorErrorMessage = "The items selected have different Vendors.";
@@ -16,5 +17,12 @@ namespace PrototypeWithAuth.AppData.UtilityModels
         public const String ServerDifferentVendorErrorMessage = ServerSideError + DifferentVendorErrorMessage;
         public const String ServerExistingInvoiceNumberVendorErrorMessage = ServerSideError + ExistingInvoiceNumberVendorErrorMessage;
         public const String ServerMissingFile = ServerSideError + MissingFileErrorMessage;
+        public const String DeleteModalRoute = "/DeleteModal";
+
+        //Settings Values
+        public const string IntPlaceholder = "000000";
+        public const string SmallIntPlaceholder = "00";
+        public const string UrlPlaceholder = "Paste Link Here";
+        public const string ExpectedSupplyDate = "Date Selector";
     }
 }

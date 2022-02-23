@@ -1,14 +1,4 @@
-﻿$('.moveListItemForm').validate({
-    normalizer: function (value) {
-        return $.trim(value);
-    },
-    rules: {
-        "NewListID":{
-            selectRequired: true
-       },
-    }
-});
-
+﻿
 $('.newListForm').validate({
     normalizer: function (value) {
         return $.trim(value);

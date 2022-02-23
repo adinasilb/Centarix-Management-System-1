@@ -93,6 +93,7 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.ParentQuotesProc _parentQuotesProc;
         protected readonly CRUD.InvoicesProc _invoicesProc;
         protected readonly CRUD.CategoryBasesProc _categoryBasesProc;
+        protected readonly CRUD.CustomDataTypesProc _customDataTypesProc;
         protected readonly CRUD.OrderMethodsProc _orderMethodsProc;
         protected readonly CRUD.TimePeriodsProc _timePeriodProc;
 
@@ -167,6 +168,7 @@ namespace PrototypeWithAuth.Controllers
             _parentQuotesProc = new CRUD.ParentQuotesProc(context);
             _invoicesProc = new CRUD.InvoicesProc(context);
             _categoryBasesProc = new CRUD.CategoryBasesProc(context);
+            _customDataTypesProc = new CRUD.CustomDataTypesProc(context);
             _testHeadersProc = new CRUD.TestHeadersProc(context);
             _orderMethodsProc = new CRUD.OrderMethodsProc(context);
             _timePeriodProc = new CRUD.TimePeriodsProc(context);
@@ -844,12 +846,11 @@ namespace PrototypeWithAuth.Controllers
 
 
         }
-        protected ShareModalViewModel GetShareModalViewModel(int ID, AppUtility.ModelsEnum ModelsEnum)
+        protected ShareModalViewModel GetShareModalViewModel(int ID)
         {
             ShareModalViewModel shareModalViewModel = new ShareModalViewModel()
             {
                 ID = ID,
-                ModelsEnum = ModelsEnum,
                 ApplicationUsers = _employeesProc.Read(new List<Expression<Func<Employee, bool>>> { u => u.Id != _userManager.GetUserId(User) })
                               .Select(
                                   u => new SelectListItem
@@ -1256,13 +1257,14 @@ namespace PrototypeWithAuth.Controllers
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color);", "request-favorite", "Favorite");
 
             var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
-            var popoverDelete = new IconPopoverViewModel(" icon-delete-24px  ", "black", AppUtility.PopoverDescription.Delete, "Delete", "Requests",  "load-confirm-delete");
-            var popoverReorder = new IconPopoverViewModel(" icon-add_circle_outline-24px-1 ", "#00CA72", AppUtility.PopoverDescription.Reorder, "Reorder", "Requests",  "load-order-details");
-            var popoverRemoveShare = new IconPopoverViewModel("icon-share-24px-1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
-            var popoverShare = new IconPopoverViewModel("icon-share-24px-1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Requests", "share-request-fx");
-            var popoverAddToList = new IconPopoverViewModel("icon-centarix-icons-04", "black", AppUtility.PopoverDescription.AddToList, "MoveToListModal", "Requests",  "move-to-list");
-            var popoverMoveList = new IconPopoverViewModel("icon-entry-24px", "black", AppUtility.PopoverDescription.MoveToList, "MoveToListModal", "Requests", "move-to-list");
-            var popoverDeleteFromList = new IconPopoverViewModel("icon-delete-24px", "black", AppUtility.PopoverDescription.DeleteFromList, "DeleteFromListModal", "Requests", "remove-from-list");
+            var popoverDelete = new IconPopoverViewModel(" icon-delete-24px  ", "black", AppUtility.PopoverDescription.Delete, "Delete", "Requests", "/DeleteModal");
+            //var popoverCantDelete = new IconPopoverViewModel(" icon-delete-24px  ", "grey", AppUtility.PopoverDescription.Delete, "", "", AppUtility.PopoverEnum.None, "");
+            var popoverReorder = new IconPopoverViewModel(" icon-add_circle_outline-24px1 ", "#00CA72", AppUtility.PopoverDescription.Reorder, "Reorder", "Requests", "load-order-details");
+            var popoverRemoveShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
+            var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Requests",  "/ShareModal");
+            var popoverAddToList = new IconPopoverViewModel("icon-centarix-icons-04", "black", AppUtility.PopoverDescription.AddToList, "MoveToListModal", "Requests", "/MoveToListModal");
+            var popoverMoveList = new IconPopoverViewModel("icon-entry-24px", "black", AppUtility.PopoverDescription.MoveToList, "MoveToListModal", "Requests", "/MoveToListModal");
+            var popoverDeleteFromList = new IconPopoverViewModel("icon-delete-24px", "black", AppUtility.PopoverDescription.DeleteFromList, "DeleteFromListModal", "Requests",  "remove-from-list");
 
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
             var user = await _userManager.GetUserAsync(User);

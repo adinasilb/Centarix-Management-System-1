@@ -2809,7 +2809,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            ShareModalViewModel shareModalViewModel = base.GetShareModalViewModel(ID, ModelsEnum);
+            ShareModalViewModel shareModalViewModel = base.GetShareModalViewModel(ID);
             shareModalViewModel.MenuItem = AppUtility.MenuItems.Protocols;
             switch (ModelsEnum)
             {
@@ -2928,8 +2928,7 @@ namespace PrototypeWithAuth.Controllers
                                     break;
                             }
                         }
-                        //var popoverShare = new IconPopoverViewModel("icon-share-24px-1", "black", AppUtility.PopoverDescription.Share, "ShareRequest", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
-                        //popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare };
+                       
                         iconColumnViewModels.Add(popoverMoreIcon);
                         break;
                 };

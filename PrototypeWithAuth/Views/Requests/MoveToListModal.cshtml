@@ -40,18 +40,7 @@
                                         classes = origClasses;
                                     }
                                 </ul>
-                                @*@Html.DropDownListFor(vm => vm.NewListID,
-                    new SelectList(
-                    Model.RequestLists,
-                    "ListID",
-                    "Title", Model.PreviousListID
-                    ), "Select List",
-                    new
-                         {
-                             @class = "mdb-select custom-select-dropdown form-control-plaintext",
-                             @data_stop_refresh = "true"
-                         })*@
-
+                          
                             </div>
                         </div>
                         <div class="row">
@@ -70,12 +59,7 @@
                             </div>
                         </div>
                     </div>
-                    @*<div class="modal-footer border-0 p-0">
-            <div class="mx-auto">
-                <button type="submit" class="custom-button custom-button-font mr-3 moveListItem section-bg-color">Move</button>
-                <button type="button" class="custom-button custom-cancel close-move-modal" onclick="$.fn.CloseModal('move-list');">Cancel</button>
-            </div>
-        </div>*@
+                  
                 </div>
 
             </form>

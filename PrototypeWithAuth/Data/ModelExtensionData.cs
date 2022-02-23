@@ -185,6 +185,10 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<RecurrenceEndStatus>().HasData(
                 SeededData.RecurringOrderEndStatusData.Get()
                 );
+
+            modelBuilder.Entity<CustomDataType>().HasData(
+                SeededData.CustomDataTypeData.Get()
+                );
         }
     }
 }

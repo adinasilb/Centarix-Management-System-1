@@ -42,6 +42,7 @@ using System.Text;
 using LinqToExcel;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Newtonsoft.Json.Converters;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
@@ -95,6 +96,7 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
+
         [HttpGet]
         [HttpPost]
         [Authorize(Roles = "Requests, Operations")]
@@ -147,7 +149,7 @@ namespace PrototypeWithAuth.Controllers
             var payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-one", "Pay");
             var addInvoiceIcon = new IconColumnViewModel(" icon-cancel_presentation-24px  green-overlay ", "", "invoice-add-one", "Add Invoice");
 
-            var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
+            var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "/DeleteModal", "Delete");
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color);", "request-favorite", "Favorite");
             var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
             var popoverPartialClarifyIcon = new IconColumnViewModel("Clarify");
@@ -1539,17 +1541,13 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> DeleteModal(int? id, RequestIndexObject requestIndexObject)
+        public async Task<JsonResult> DeleteModalJson(int? id, RequestIndexObject requestIndexObject)
         {
-            if (!AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView("InvalidLinkPage");
-            }
-            if (id == null)
-            {
-                ViewBag.ErrorMessage = "Product not found (no id). Unable to delete.";
-                return NotFound();
-            }
+            //if (!AppUtility.IsAjaxRequest(Request))
+            //{
+            //    return PartialView("InvalidLinkPage");
+            //}
+    
 
             var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { m => m.RequestID == id },
                 new List<ComplexIncludes<Request, ModelBase>>{
@@ -1558,24 +1556,33 @@ namespace PrototypeWithAuth.Controllers
                             ThenInclude =  new ComplexIncludes<ModelBase, ModelBase> { Include = ps => ((ProductSubcategory)ps).ParentCategory }}},
                     new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.Vendor } });
 
-            if (request == null)
-            {
-                ViewBag.ErrorMessage = "Product not found (no request). Unable to delete";
-                return NotFound();
-            }
+        
 
             DeleteRequestViewModel deleteRequestViewModel = new DeleteRequestViewModel()
             {
-                Request = request,
-                RequestIndexObject = requestIndexObject
+                Request = request
             };
+            if (request == null)
+            {
+                deleteRequestViewModel.ErrorMessage  = "Product not found (no request). Unable to delete";
+                Response.StatusCode= 500;
+            }
+            if (id == null)
+            {
+                deleteRequestViewModel.ErrorMessage = "Product not found (no id). Unable to delete.";
+                Response.StatusCode= 500;
+            }
+            return Json(JsonConvert.SerializeObject(deleteRequestViewModel, Formatting.Indented,  new JsonSerializerSettings
+            {
 
-            return PartialView(deleteRequestViewModel);
+                Converters= new List<JsonConverter> { new StringEnumConverter() },
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
         }
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters, int numFilters = 0)
+        public async Task<JsonResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel,  RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters, int numFilters = 0)
         {
             try
             {
@@ -1590,21 +1597,77 @@ namespace PrototypeWithAuth.Controllers
             {
                 Response.StatusCode = 500;
                 await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
-                return new EmptyResult();
+                return null;
             }
-            switch (deleteRequestViewModel.RequestIndexObject.SidebarType)
-            {
-                case AppUtility.SidebarEnum.Quotes:
-                case AppUtility.SidebarEnum.Orders:
-                case AppUtility.SidebarEnum.Cart:
-                    return PartialView("_IndexTableDataByVendor", await GetIndexViewModelByVendor(deleteRequestViewModel.RequestIndexObject));
-                default:
-                    return PartialView("_IndexTableData", await GetIndexViewModel(deleteRequestViewModel.RequestIndexObject, selectedFilters: selectedFilters, numFilters: numFilters, requestsSearchViewModel: requestsSearchViewModel));
+            return await GetIndexTableJson(requestIndexObject, requestsSearchViewModel: requestsSearchViewModel, selectedFilters: selectedFilters, numFilters: numFilters);
 
-            }
         }
 
+        private async Task<JsonResult> GetIndexTableJson(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null,
+                                                                              SelectedRequestFilters selectedFilters = null, int numFilters = 0, RequestsSearchViewModel? requestsSearchViewModel = null)
+        {
+            string json = "";
+            if (CheckIfIndexTableByVendor(requestIndexObject.SectionType, requestIndexObject.PageType, requestIndexObject.SidebarType))
+            {
+                var viewModelByVendor = await GetIndexViewModelByVendor(requestIndexObject);
+                json = JsonConvert.SerializeObject(viewModelByVendor, Formatting.Indented,
+                   new JsonSerializerSettings
+                   {
+                       Converters= new List<JsonConverter> { new StringEnumConverter() },
+                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                   });
+            }
+            else
+            {
+                var viewModel = await GetIndexViewModel(requestIndexObject, Months, Years, selectedFilters: selectedFilters,  numFilters, requestsSearchViewModel: requestsSearchViewModel);
+                json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
+                   new JsonSerializerSettings
+                   {
+                       Converters= new List<JsonConverter> { new StringEnumConverter() },
+                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                   });
+            }
 
+            return Json(json);
+        }
+
+        private bool CheckIfIndexTableByVendor(AppUtility.MenuItems SectionType, AppUtility.PageTypeEnum PageType, AppUtility.SidebarEnum SidebarType)
+        {
+            bool isByVendor = false;
+            switch(SectionType)
+            {
+                case AppUtility.MenuItems.Accounting:
+                    switch(PageType)
+                    {
+                        case AppUtility.PageTypeEnum.AccountingPayments:
+                        case AppUtility.PageTypeEnum.AccountingNotifications:
+                            isByVendor = true;
+                            break;
+                    }
+                    break;
+                case AppUtility.MenuItems.LabManagement:
+                    isByVendor=true;
+                    break;
+                case AppUtility.MenuItems.Requests:
+                    switch (PageType)
+                    {
+                        case AppUtility.PageTypeEnum.RequestCart:
+                         switch(SidebarType)
+                            {
+                                case AppUtility.SidebarEnum.Orders:
+                                    isByVendor = true;
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+
+                    break;
+                case AppUtility.MenuItems.Operations:
+                    break;
+            }
+            return isByVendor;
+        }
 
 
         [HttpGet]
@@ -1845,7 +1908,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var shareViewModel = base.GetShareModalViewModel(ID, ModelsEnum);
+            var shareViewModel = base.GetShareModalViewModel(ID);
             switch (ModelsEnum)
             {
                 case AppUtility.ModelsEnum.Request:
@@ -1855,8 +1918,37 @@ namespace PrototypeWithAuth.Controllers
                     shareViewModel.ObjectDescription = _requestListsProc.ReadOneAsync(new List<Expression<Func<RequestList, bool>>> { rl => rl.ListID == ID }).Result.Title;
                     break;
             }
-
+            
             return PartialView(shareViewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<JsonResult> ShareModalJson(int ID, AppUtility.ModelsEnum ModelsEnum)
+        {
+            //if (!AppUtility.IsAjaxRequest(Request))
+            //{
+            //    return PartialView("InvalidLinkPage");
+            //}
+            var shareViewModel = base.GetShareModalViewModel(ID);
+            switch (ModelsEnum)
+            {
+                case AppUtility.ModelsEnum.Request:
+                    shareViewModel.ObjectDescription = _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == ID }, new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product } }).Result.Product.ProductName;
+                    break;
+                case AppUtility.ModelsEnum.RequestLists:
+                    shareViewModel.ObjectDescription = _requestListsProc.ReadOneAsync(new List<Expression<Func<RequestList, bool>>> { rl => rl.ListID == ID }).Result.Title;
+                    break;
+            }
+           
+
+            var json = JsonConvert.SerializeObject(shareViewModel, Formatting.Indented,
+               new JsonSerializerSettings
+               {
+                   Converters= new List<JsonConverter> { new StringEnumConverter() },
+                   ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+               });
+            return Json(json);
         }
 
 
@@ -4863,8 +4955,9 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> MoveToListModal(int requestID, int prevListID = 0)
+        public async Task<JsonResult> MoveToListModalJson(int requestID, int prevListID = 0)
         {
+
             var pageType = AppUtility.PageTypeEnum.RequestCart;
             var userLists = _requestListsProc.Read(new List<Expression<Func<RequestList, bool>>> { rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User) })
                .OrderBy(rl => rl.DateCreated).ToList();
@@ -4892,7 +4985,13 @@ namespace PrototypeWithAuth.Controllers
                 RequestLists = userLists,
                 PageType = pageType
             };
-            return PartialView(viewModel);
+            var json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
+              new JsonSerializerSettings
+              {
+                  Converters= new List<JsonConverter> { new StringEnumConverter() },
+                  ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+              });
+            return Json(json);
         }
 
 
@@ -4902,31 +5001,17 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> MoveToListModal(MoveListViewModel moveListViewModel)
         {
             var success = await _requestListRequestsProc.MoveList(moveListViewModel.Request.RequestID, moveListViewModel.NewListID, moveListViewModel.PreviousListID);
-            if (moveListViewModel.PageType == AppUtility.PageTypeEnum.RequestCart)
+            if(!success.Bool)
             {
-                return RedirectToAction("_IndexTableWithListTabs", new
-                {
-                    PageType = AppUtility.PageTypeEnum.RequestCart,
-                    SidebarType = AppUtility.SidebarEnum.MyLists,
-                    ListID = moveListViewModel.PreviousListID,
-                    errorMessage = success.String
-                });
+                Response.StatusCode = 500;
+                await Response.WriteAsync(success.String);
             }
-            else
-            {
-                if (!success.Bool)
-                {
-                    Response.StatusCode = 500;
-                    await Response.WriteAsync(success.String);
-
-                }
-                return new EmptyResult();
-            }
+            return new EmptyResult();
         }
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> NewListModal(int requestToAddId = 0, int requestPreviousListID = 0)
+        public async Task<IActionResult> NewListModalJson(int requestToAddId = 0, int requestPreviousListID = 0)
         {
             NewListViewModel viewModel = new NewListViewModel()
             {
@@ -4934,22 +5019,31 @@ namespace PrototypeWithAuth.Controllers
                 RequestToAddID = requestToAddId,
                 RequestPreviousListID = requestPreviousListID
             };
-            return PartialView(viewModel);
+            var json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
+             new JsonSerializerSettings
+             {
+                 Converters= new List<JsonConverter> { new StringEnumConverter() },
+                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+             });
+            return Json(json);
         }
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> NewListModal(NewListViewModel newListViewModel)
+        public async Task<IActionResult> NewListModal(NewListViewModel newListViewModel, RequestIndexObject requestIndexObject)
         {
 
             var newList = await _requestListsProc.CreateAndGetAsync(newListViewModel);
-            RequestIndexObject indexObject = new RequestIndexObject()
+            requestIndexObject.ListID = newList.ListID;
+            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
             {
-                PageType = AppUtility.PageTypeEnum.RequestCart,
-                SidebarType = AppUtility.SidebarEnum.MyLists,
-                ListID = newList.ListID
-            };
-            return RedirectToAction("_IndexTableWithListTabs", indexObject);
+                return await GetIndexTableJson(requestIndexObject);
+            }
+            else
+            {
+                return new EmptyResult();
+            }
+
         }
 
         [HttpGet]
@@ -5330,7 +5424,28 @@ namespace PrototypeWithAuth.Controllers
 
             SettingsInventory settings = new SettingsInventory()
             {
-                Categories = GetCategoryList(new ParentCategory().GetType().Name, 1)
+                TopTabsList = new List<TopTabWithCounts>()
+                {
+                    new TopTabWithCounts()
+                    {
+                        Name = "Main",
+                        Page = "Main",
+                        Counts = new BoolIntViewModel()
+                        {
+                            Bool = false
+                        }
+                    },
+                    new TopTabWithCounts()
+                    {
+                        Name = "Samples",
+                        Page = "Samples",
+                        Counts = new BoolIntViewModel()
+                        {
+                            Bool = false
+                        }
+                    }
+                },
+                Categories = GetCategoryList(new ParentCategory().GetType().Name, 1),
             };
             settings.Subcategories = GetCategoryList(new ProductSubcategory().GetType().Name, 2, settings.Categories.CategoryBases.FirstOrDefault().ID);
             settings.SettingsForm = GetSettingsFormViewModel(settings.Subcategories.CategoryBases.FirstOrDefault().GetType().Name, settings.Subcategories.CategoryBases.FirstOrDefault().ID);
@@ -5389,6 +5504,7 @@ namespace PrototypeWithAuth.Controllers
             }
             settingsForm.RequestCount = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.Product.ProductSubcategoryID == settingsForm.Category.ID }).Count();
             settingsForm.ItemCount = _productsProc.Read(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategoryID == settingsForm.Category.ID }).Count();
+            settingsForm.CustomFieldData = this._CustomField();
 
             return settingsForm;
         }
@@ -5403,6 +5519,15 @@ namespace PrototypeWithAuth.Controllers
         public async Task<bool> UpdateExchangeRate()
         {
             return _requestsProc.UpdateExchangeRateByHistory().Result.Bool;
+        }
+
+        public CustomField _CustomField()
+        {
+            var CustomField = new CustomField()
+            {
+                CustomDataTypes = _customDataTypesProc.Read()
+            };
+            return CustomField;
         }
     }
 }

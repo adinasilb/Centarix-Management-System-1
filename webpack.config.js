@@ -31,6 +31,23 @@ module.exports = {
 				exclude: /node_modules/,
 				loader: 'babel-loader',
 			},
+			{
+  				test: /\.css$/,
+  				exclude: /node_modules/,
+  				loaders: ['style-loader', 'css-loader'],
+			}				
+			,{
+  				test: /\.css$/,
+  				include: /node_modules/,
+				loader: 'css-loader',
+          			options: {
+            				url: false
+          			}
+			},
+            		{
+                		test: /\.scss$/,
+                		use: ['style-loader', 'css-loader', 'sass-loader'],
+            		},
 		],
 	},
 	plugins: [
@@ -52,9 +69,10 @@ module.exports = {
 			},
 		}),
 	],
-	// resolve: {
-		// alias: {
-			// react: path.resolve('./node_modules/react'),
-		// }
-	// }
+	 resolve: {
+		 alias: {
+			 react: path.resolve('./node_modules/react'),
+			 'react-dom': path.resolve('./node_modules/react-dom'),
+		},
+	}
 };

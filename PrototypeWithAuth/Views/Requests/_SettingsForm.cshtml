@@ -1,12 +1,193 @@
-﻿@model PrototypeWithAuth.ViewModels.SettingsForm;
+﻿@using PrototypeWithAuth.ViewModels;
+@using PrototypeWithAuth.AppData.UtilityModels;
+@using PrototypeWithAuth.AppData;
+@model SettingsForm;
 
+@{
+    var showItem = " active show ";
+}
 <form action="" method="get" class="lab-man-form" id="myForm">
-    <div class="row top-bar border-bottom text-center text-justify">
-        <div class="col-12">
-            @Model.ItemCount Items &nbsp;&nbsp;&nbsp;&nbsp; @Model.RequestCount Requests
+    <input type="hidden" class="customFieldCounter" value="0" />
+    <input type="hidden" asp-for="Category.ID" />
+    <input type="hidden" asp-for="Category.Description" />
+    <div class="row top-bar border-bottom text-center text-justify under-row-margin d-flex" style="height:auto;">
+        <div class="col-12 align-items-center justify-content-center pt-3 pb-3">
+            <span class="align-items-center">
+                <span class="lab-man-color">@Model.ItemCount</span> Items &nbsp;&nbsp;&nbsp;&nbsp;
+                <span class="lab-man-color">@Model.RequestCount</span> Requests
+            </span>
         </div>
     </div>
-    <div class="row">
-        @Model.Category.Description
+    <div class="new-modal-header modal-line-1-header-with-back modal-sides ch-scrollable pt-0" style="height:12.2rem; overflow:hidden;">
+        <div class="row modal-title-line justify-content-between under-row-margin container">
+            @{
+                var source = Model.Category.ImageURL ?? "";
+                var categoryNameRows = Model.Category.Description != null ? Math.Ceiling((float)(Model.Category.Description.Length) / 30) : 1;
+                <div class="col-2">
+                    <img src="@Model.Category.ImageURL" class="sub-category-image top-modal-image" alt="Alternate Text" width="75" />
+                </div>
+                <div class="col-8">
+                    <div class="modal-product-title" style=" margin-left: 2rem !important">
+
+                        <textarea asp-for="Category.Description" class="form-control-plaintext border-bottom heading-1 category-name" placeholder="(category name)" rows="@categoryNameRows" cols="50" maxlength="150" style="resize:none;"></textarea>
+                    </div>
+                    <span asp-validation-for="Category.Description" class="text-danger-centarix"></span>
+                </div>
+                <div class="col-2">
+                    <input type="button" class="save-settings-form custom-button custom-button-font lab-man-background-color" value="Save" />
+                </div>
+            }
+        </div>
+        <div class="row">
+            <div class="col-12 px-0">
+                <div class="container-fluid div-tabs pt-0 text-center pl-0">
+                    <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 pl-0 nav-tabs-icons">
+                        <li class="nav-item icon"><a data-toggle="tab" href="#details" class="nav-link current-tab next-tab active"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Details</a></li>
+                        <li class="nav-item icon"><a data-toggle="tab" href="#price" class="nav-link next-tab"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Price</a></li>
+                        <li class="nav-item icon"><a data-toggle="tab" href="#documents" class="nav-link next-tab"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Documents</a></li>
+                        <li class="nav-item icon"><a data-toggle="tab" href="#received" class="nav-link next-tab"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Received</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-</form> 
+    <div class="settings new-modal-body edit-modal-outer-body " style="height:33.5rem;">
+        <div class="container-fluid edit-modal-body box-shadow orders partial-div" style="background: #FFF; border: 2px solid #EAEAEB;">
+            <div class="container-fluid div-tabs no-box-shadow p-0">
+                <div class="tab-content">
+                    <div id="details" class="tab-pane fade in @showItem" value="1">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="control-label">Category</label>
+                                @{ var catText = Model.CategoryDescription ?? "Select A Category"; }
+                                <select class="form-control-plaintext border-bottom mdb-select" disabled>
+                                    <option value="0">@catText</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label">Subcategory</label>
+                                @{ var subCatText = Model.SubcategoryDescription ?? "Select A Subcategory"; }
+                                <select class="form-control-plaintext border-bottom mdb-select" disabled>
+                                    <option value="0">@subCatText</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="control-label">Vendor</label>
+                                <select class="form-control-plaintext border-bottom mdb-select" disabled>
+                                    <option value="0">Select Vendor</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label">Company ID (automatic)</label>
+                                <input class="form-control-plaintext border-bottom" value="@ElixirStrings.IntPlaceholder" disabled />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="control-label">Catalogue No.</label>
+                                <input class="form-control-plaintext border-bottom" value="@ElixirStrings.IntPlaceholder" disabled />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label">URL</label>
+                                <input class="form-control-plaintext border-bottom" value="@ElixirStrings.UrlPlaceholder" disabled />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="control-label">Expected Supply Days</label>
+                                <input class="form-control-plaintext border-bottom" value="@ElixirStrings.SmallIntPlaceholder" disabled />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label">Expected Supply Date</label>
+                                <input class="form-control-plaintext border-bottom" value="@ElixirStrings.ExpectedSupplyDate" disabled />
+                            </div>
+                        </div>
+                        <div class="custom-fields-details lab-man-form">
+                            <div class="cf_header hidden">
+                                @{ await Html.RenderPartialAsync("_CFHeader.cshtml"); }
+                            </div>
+                        </div>
+                        <div class="cf_header hidden">
+                            @{ await Html.RenderPartialAsync("_BorderCF.cshtml");}
+                        </div>
+                        <div class="add-custom-fields row">
+                            @{ await Html.RenderPartialAsync("_AddCustomFields.cshtml", "details-form");}
+                        </div>
+                    </div>
+                    <div id="price" class="tab-pane fade in" value="1">
+
+                        <div class="row no-mb">
+                            <div class="col-md-8">
+                                <span class="heading-1 modal-tab-name">Price</span><br />
+                                <span class=" large-text text-danger-centarix font-weight-bold" id="price-warning"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Currency</label>
+                                            <select id="currency" class="mdb-select custom select-dropdown form-control-plaintext disabled">
+                                                <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Exchange Rate</label>
+                                            <input name="Requests[0].ExchangeRate" class="form-control-plaintext border-bottom " id="exchangeRate" />
+                                            <span class="text-danger-centarix"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="custom-fields-price lab-man-form">
+                            <div class="cf_header hidden">
+                                @{ await Html.RenderPartialAsync("_CFHeader.cshtml"); }
+                            </div>
+                        </div>
+                        <div class="cf_header hidden">
+                            @{ await Html.RenderPartialAsync("_BorderCF.cshtml");}
+                        </div>
+                        <div class="add-custom-fields row">
+                            @{ await Html.RenderPartialAsync("_AddCustomFields.cshtml", "price-form");}
+                        </div>
+                    </div>
+                    <div id="documents" class="tab-pane fade in" value="1">
+                        Documents
+                    </div>
+                    <div id="received" class="tab-pane fade in" value="1">
+                        Received
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(".save-settings-form").on("click", function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var formData = new FormData($("#myForm")[0]);
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
+        $.ajax({
+            processData: false,
+            contentType: false,
+            data: formData,
+            url: "/Requests/_SettingsForm",
+            type: 'POST',
+            success: function (data) {
+                console.log("success");
+            },
+            error: function (jqxhr) {
+                console.log("error");
+                //$("._Lines").html(jqxhr.responseText);
+            }
+        });
+    });
+</script>
