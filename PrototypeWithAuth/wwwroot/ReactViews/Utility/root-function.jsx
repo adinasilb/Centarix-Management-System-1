@@ -55,7 +55,10 @@ export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
     fetch(url, {
         method: type,
         body: formdata
-    }).then(response => response.json())
+    }).then(response => {
+        console.log(response);
+        return response.json()
+    })
        .then(result => {
             console.dir(result)
             if (result != undefined) {

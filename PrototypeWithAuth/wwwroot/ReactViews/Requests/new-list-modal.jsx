@@ -29,11 +29,10 @@ export default function NewListModal(props) {
 
     }, [state.requestToAddId]);
 
-        var onSubmit = (e) => {
+    var onSubmit = (e) => {
             e.preventDefault();
             alert("in submit")
-            if (isValid) {
- 
+            if (isValid) { 
                 console.log(errors);
                 var url = "/Requests/NewListModal";
                 var formData = new FormData(e.target);
@@ -44,7 +43,7 @@ export default function NewListModal(props) {
 
     return (
         <GlobalModal backdrop={props.backdrop} size="lg" value={state.viewModel?.ID ?? ""} modalKey={props.modalKey} key={state.viewModel?.ID ?? ""} header="New List" >
-            <form action="" method="post" className=" newListForm" encType="multipart/form-data" onSubmit={onSubmit} id="myForm">
+            <form onSubmit={onSubmit} method="post" encType="multipart/form-data" style={{ height: "100%", overflow: "auto" }} className="" id={props.modalKey}>
                 <input type="hidden" value={state.viewModel?.Request?.RequestID??""} name="Request.RequestID" className="request-to-move" />
                 <input type="hidden" value={state.viewModel?.OwnerID ?? ""} name="OwnerID"  />
                 <input type="hidden" value={state.viewModel?.RequestToAddID ?? ""} name="RequestToAddID" />
