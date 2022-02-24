@@ -11,8 +11,11 @@ import NewListModal from '../Requests/new-list-modal.jsx';
 function ModalLoader(props) {
     console.log(props.modals)
     useEffect(() => {
-        console.log("props modal key update")
+        console.log("props modal key update");
+        var keyExists = props.modals.indexOf(props.modalKey) > -1;
+        if (!keyExists) {
             props.addModal(props.modalKey);
+        }
     }, [props.modalKey, props.uid]);
 
   

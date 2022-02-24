@@ -19,6 +19,7 @@ export default function RootComponent(props) {
     const store = createStore(reducer, { viewModel: props.viewModel, modals: [] }, composeWithDevTools());
 
     const renderSwitch = () => {
+        console.log(props.viewEnum)
         switch (props.viewEnum) {
             case "IndexTableDataByVendor":
                 return (<_IndexTableDataByVendor viewModel={props.viewModel} showView={true} bcColor={props.bcColor} ajaxLink={props.ajaxLink} btnText={props.btnText} sectionClass={props.sectionClass} />);
