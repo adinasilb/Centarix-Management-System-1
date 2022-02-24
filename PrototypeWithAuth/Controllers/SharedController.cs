@@ -977,6 +977,11 @@ namespace PrototypeWithAuth.Controllers
                 {
                     wheres.Add(r => r.RequestStatusID == 1 || r.RequestStatusID == 6);
                 }
+                else if(requestIndexObject.TabName == AppUtility.IndexTabs.RecurringExpenses)
+                {
+                    wheres.Add(r => r.Product is RecurringOrder);
+                    wheres.Add(r => r.RequestStatusID == 2);
+                }
                 else
                 {
                     wheres.Add(r => r.RequestStatusID == requestIndexObject.RequestStatusID);
@@ -1021,11 +1026,6 @@ namespace PrototypeWithAuth.Controllers
                 var sharedWithMe = _shareRequestsProc.Read(new List<Expression<Func<ShareRequest, bool>>> { fr => fr.ToApplicationUserID == _userManager.GetUserId(User) })
                     .Select(sr => sr.ObjectID).ToList();
                 wheres.Add(frl => sharedWithMe.Contains(frl.RequestID));
-            }
-            else if(requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsRequest && requestIndexObject.TabName == AppUtility.IndexTabs.RecurringExpenses)
-            {
-                wheres.Add(r => r.Product is RecurringOrder);
-                //wheres.Add(r => r.) reference date for recurring order requests??
             }
             else
             {
@@ -1239,8 +1239,6 @@ namespace PrototypeWithAuth.Controllers
                     && (String.IsNullOrEmpty(requestsSearchViewModel.Payment.CheckNumber) || r.Payments.Where(p => p.CheckNumber.ToLower().Contains(requestsSearchViewModel.Payment.CheckNumber.ToLower())).Any())
                     && (String.IsNullOrEmpty(requestsSearchViewModel.Payment.Reference) || r.Payments.Where(p => p.Reference.ToLower().Contains(requestsSearchViewModel.Payment.Reference.ToLower())).Any())
                     );
-
-
             }
         }
 
@@ -1336,6 +1334,25 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.PageTypeEnum.OperationsRequest:
                     switch (requestIndexObject.TabName)
                     {
+                        case AppUtility.IndexTabs.Requests:
+                            if (await this.IsAuthorizedAsync(requestIndexObject.SectionType, "ApproveOrders"))
+                            {
+                                iconList.Add(approveIcon);
+                            }
+                            else
+                            {
+                                iconList.Add(CantApproveIcon);
+                            }
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
+                            popoverMoreIcon.IconPopovers.Add(popoverDelete);
+                            iconList.Add(popoverMoreIcon);
+                            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).Skip(20 * (requestIndexObject.PageNumber - 1)).Take(20).Select(r =>
+                                        new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Approved,
+                                                 r, r.OrderMethod, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
+                                                 r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage)
+                                    ).ToListAsync();
+                            //.ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
+                            break;
                         case AppUtility.IndexTabs.Ordered:
                             iconList.Add(receiveIcon);
                             popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
