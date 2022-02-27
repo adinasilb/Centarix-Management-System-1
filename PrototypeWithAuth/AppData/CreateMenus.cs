@@ -714,7 +714,13 @@ namespace PrototypeWithAuth.AppData
                 Description = "Orders",
                 Controller = "Requests",
                 Action = "Cart",
-                RouteValues = new RouteValueDictionary(),
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType",  AppUtility.PageTypeEnum.RequestCart },
+                            { "SectionType", AppUtility.MenuItems.Requests },
+                            { "SidebarType", AppUtility.SidebarEnum.Cart },
+                            { "RequestStatusID", 6 }
+                },
                 Classes = menuClass,
                 IconName = "icon-shopping_cart-24px"
             });

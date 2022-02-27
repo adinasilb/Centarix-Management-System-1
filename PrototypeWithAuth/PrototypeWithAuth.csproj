@@ -698,12 +698,6 @@
   </ItemGroup>
 
 
-  <ItemGroup>
-    <TypeScriptCompile Include="wwwroot\ReactViews\documents-card.jsx">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-  </ItemGroup>
-
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
