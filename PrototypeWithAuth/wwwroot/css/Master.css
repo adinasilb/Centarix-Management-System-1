@@ -1,4 +1,4 @@
-﻿u;nithtml {
+﻿unithtml {
     overflow: scroll;
     overflow-x: hidden;
     scrollbar-width: none;
@@ -68,6 +68,8 @@
     --disabled-filter: invert(69%) sepia(13%) saturate(0%) hue-rotate(166deg) brightness(100%) contrast(94%);
     --light-gray: #E5E5E5;
     --warning-color: #EED202;
+    --rounded-border: 0.5rem;
+    --height: 2.375rem;
 }
 .black-87{
     color: var(--black-87);
@@ -524,21 +526,6 @@ input:not(input[type=button], input[type=submit], .heading-1) {
 .custom-button-font:hover {
     opacity: 0.67;
 }
-.slightly-rounded-acc {
-    border: .125rem solid var(--acc-color) !important;
-    border-radius: .6rem;
-    background-color: white;
-    color: var(--acc-color)
-    /*padding-bottom: 0.5rem !important;
-    padding-top: 0.5rem !important;*/
-}
-.slightly-rounded-gray {
-    border: .125rem solid var(--disabled-color) !important;
-    border-radius: .6rem;
-    padding-bottom: 0.5rem !important;
-    padding-top: 0.5rem !important;
-    padding-left: 0.5rem;
-}
 
 .font-weight-medium {
     font-weight: 600 !important;
@@ -610,7 +597,7 @@ table td, table td .btn, .text, table th {
 .custom-button {
     padding: 0 3.125rem !important;
     height: 2.375rem;
-    border-radius: .5rem !important;
+    border-radius: var(--rounded-border) !important;
     border: none !important;
     text-transform:capitalize !important;
 }
@@ -635,6 +622,55 @@ table td, table td .btn, .text, table th {
     border-radius: 1.438rem;
     border-width: .1rem;
     text-align: center !important;
+}
+.custom-input-gray, .section-custom-input, .section-custom-select {
+    border-radius: var(--rounded-border);
+    background-color: white;
+    padding-left: 1rem;
+    height: var(--height) !important;
+}
+.custom-input-gray {
+    border: .125rem solid var(--disabled-color) !important
+}
+.Accounting .section-custom-input, .Accounting .section-custom-select {
+    border: .125rem solid var(--acc-color) !important;
+    color: var(--acc-color)
+}
+.Requests .section-custom-input, .Requests .section-custom-select {
+    border: .125rem solid var(--order-inv-color) !important;
+    color: var(--order-inv-color)
+}
+.Operations .section-custom-input, .Operations .section-custom-select {
+    border: .125rem solid var(--operations-color) !important;
+    color: var(--operations-color)
+}
+.LabManagement .section-custom-input, .LabManagement .section-custom-select {
+    border: .125rem solid var(--lab-man-color) !important;
+    color: var(--lab-man-color)
+}
+.Reports .section-custom-input, .Reports .section-custom-select {
+    border: .125rem solid var(--expense-color) !important;
+    color: var(--expense-color)
+}
+.TimeKeeper .section-custom-input, .TimeKeeper .section-custom-select {
+    border: .125rem solid var(--timekeeper-color) !important;
+    color: var(--timekeeper-color)
+}
+.Protocols .section-custom-input, .Protocols .section-custom-select {
+    border: .125rem solid var(--protocols-color) !important;
+    color: var(--protocols-color)
+}
+.Biomarkers .section-custom-input, .Biomarkers .section-custom-select {
+    border: .125rem solid var(--biomarkers-color) !important;
+    color: var(--biomarkers-color)
+}
+.Users .section-custom-input, .Users .section-custom-select {
+    border: .125rem solid var(--user-color) !important;
+    color: var(--user-color)
+}
+.Income .section-custom-input, .Income .section-custom-select {
+    border: .125rem solid var(--income-color) !important;
+    color: var(--income-color)
 }
 
 .new-modal-body .row,

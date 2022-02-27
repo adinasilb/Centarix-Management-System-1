@@ -2225,7 +2225,8 @@ span.caret {
     color: var(--acc-color) !important;
 }
 
-.Accounting .form-control-plaintext:focus, .Accounting input[type="text"]:focus, .Accounting .react-mentions__input:focus {
+.Accounting .form-control-plaintext:focus, .Accounting input[type="text"]:not(.custom-input-gray):not(.section-custom-input):focus, 
+.Accounting .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--acc-color) !important;
@@ -3279,3 +3280,11 @@ body.modal-open .popover {
 .settings-form input[disabled], .settings-form select[disabled] > option {
     color: var(--black-50) !important;
 }
+/*#search:active {
+    background-image: none;
+}
+input#search {
+    background-image: url();
+    background-repeat: no-repeat;
+    text-indent: 20px;
+}*/
