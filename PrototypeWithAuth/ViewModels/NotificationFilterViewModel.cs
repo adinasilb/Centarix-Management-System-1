@@ -10,7 +10,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public List<Vendor> Vendors { get; set; }
         public int? SelectedVendor { get; set; }
-        public long? CentarixOrderNumber { get; set; }
-        public string ProductName { get; set; }
+        public string NameOrCentarixOrderNumber { get; set; }
+        //public string ProductName { get; set; }
     }
 }

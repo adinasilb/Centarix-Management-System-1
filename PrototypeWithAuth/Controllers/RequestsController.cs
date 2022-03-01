@@ -222,8 +222,8 @@ namespace PrototypeWithAuth.Controllers
                     else
                     {
                         wheres.Add(r => (notificationFilterViewModel.SelectedVendor == null || r.Product.VendorID == notificationFilterViewModel.SelectedVendor)
-                        && (notificationFilterViewModel.CentarixOrderNumber == null || r.ParentRequest.OrderNumber == notificationFilterViewModel.CentarixOrderNumber)
-                        && (notificationFilterViewModel.ProductName == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.ProductName.ToLower())));
+                        && (notificationFilterViewModel.NameOrCentarixOrderNumber == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.NameOrCentarixOrderNumber.ToLower())
+                        || r.ParentRequest.OrderNumber.ToString().Contains(notificationFilterViewModel.NameOrCentarixOrderNumber)));
                     }
 
                     switch (requestIndexObject.SidebarType)
@@ -267,8 +267,8 @@ namespace PrototypeWithAuth.Controllers
                     else
                     {
                         wheres.Add(r => (notificationFilterViewModel.SelectedVendor == null || r.Product.VendorID == notificationFilterViewModel.SelectedVendor)
-                        && (notificationFilterViewModel.CentarixOrderNumber == null || r.ParentRequest.OrderNumber == notificationFilterViewModel.CentarixOrderNumber)
-                        && (notificationFilterViewModel.ProductName == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.ProductName.ToLower())));
+                        && (notificationFilterViewModel.NameOrCentarixOrderNumber == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.NameOrCentarixOrderNumber.ToLower())
+                        || r.ParentRequest.OrderNumber.ToString().Contains(notificationFilterViewModel.NameOrCentarixOrderNumber)));
                     }
                     var paymentList = await GetPaymentRequests(requestIndexObject.SidebarType, wheres);
                     switch (requestIndexObject.SidebarType)
