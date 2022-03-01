@@ -10,6 +10,7 @@ import *as MdbReactCSS from 'mdbreact/dist/css/mdb.css';
 
 //import FloatingActionBar from './floating-action-bar.jsx'
 import RootComponent from './Shared/root-component.jsx';
+import DocumentsRootComponent from "./Shared/documents-root-component.jsx"
 import CloseButton from './Utility/close-button.jsx'
 
 global.React = React;
@@ -23,3 +24,4 @@ global.MdbReactCSS = MdbReactCSS;
 //global.FloatingActionBar = FloatingActionBar;
 global.RootComponent = RootComponent
 global.CloseButton = CloseButton;
+global.DocumentsRootComponent = DocumentsRootComponent;

@@ -3426,26 +3426,29 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(string id, Guid Guid, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
-            AppUtility.ParentFolderName parentFolderName, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+        public ActionResult DocumentsModal(string id, Guid Guid, AppUtility.FolderNamesEnum RequestFolderNameEnum,
+            AppUtility.ParentFolderName parentFolderName)
         {
-            if (!AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView("InvalidLinkPage");
-            }
+            //if (!AppUtility.IsAjaxRequest(Request))
+            //{
+            //    return PartialView("InvalidLinkPage");
+            //}
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
                 FolderName = RequestFolderNameEnum,
-                IsEdittable = IsEdittable,
                 ParentFolderName = parentFolderName,
                 ObjectID = id == "" ? "0" : id,
-                SectionType = SectionType,
-                ShowSwitch = showSwitch,
                 Guid = Guid
             };
 
             FillDocumentsViewModel(documentsModalViewModel);
-            return PartialView(documentsModalViewModel);
+            var json = JsonConvert.SerializeObject(documentsModalViewModel, Formatting.Indented,
+                   new JsonSerializerSettings
+                   {
+                       Converters = new List<JsonConverter> { new StringEnumConverter() },
+                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                   });
+            return Json(json);
         }
 
         [HttpGet]
@@ -3474,8 +3477,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public JsonResult _DocumentsCard(AppUtility.FolderNamesEnum requestFolderNameEnum, string id, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests,
-            AppUtility.RequestModalType modalType = AppUtility.RequestModalType.Create)
+        public JsonResult _DocumentsCard(AppUtility.FolderNamesEnum requestFolderNameEnum, string id, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests)
         {
             //if (!AppUtility.IsAjaxRequest(Request))
             //{
@@ -3483,15 +3485,9 @@ namespace PrototypeWithAuth.Controllers
             //}
             string requestParentFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
             var requestFolder = Path.Combine(requestParentFolder, id);
-            DocumentsCardViewModel documentsCardViewModel = new DocumentsCardViewModel()
-            {
-                DocumentInfo = GetExistingFileStrings(requestFolderNameEnum, parentFolderName, requestFolder, id),
-                SectionType = sectionType,
-                ShowSwitch = true,
-                ModalType = modalType
-            };
+            DocumentFolder DocumentInfo = GetExistingFileStrings(requestFolderNameEnum, parentFolderName, requestFolder, id);
             var options = new JsonSerializerSettings { Converters = new List<JsonConverter> { new StringEnumConverter() } };
-            var docinfo = Json(JsonConvert.SerializeObject(documentsCardViewModel.DocumentInfo, options));
+            var docinfo = Json(JsonConvert.SerializeObject(DocumentInfo, options));
             return docinfo;
         }
 

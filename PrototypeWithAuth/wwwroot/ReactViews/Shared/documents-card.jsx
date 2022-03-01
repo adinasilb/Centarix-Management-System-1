@@ -1,31 +1,35 @@
 ﻿import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { FileSelectChange } from "./document-fuctions.jsx"
+import { Link } from 'react-router-dom';
+import { FileSelectChange } from "../Utility/document-fuctions.jsx"
 import 'regenerator-runtime/runtime'
 
 export default function DocumentsCard(props) {
 
     const [documentsInfo, setDocumentsInfo] = useState(props.documentsInfo);
-    const [modalType, setModalType] = useState(props.modalType);
-
+    const [showSwitch, setShowSwitch] = useState(props.showSwitch);
+    const [isEditable, setIsEditable] = useState(props.isEditable);
+    var id = documentsInfo.ObjectID == null ? "0" : documentsInfo.ObjectID;
     async function uploadFile(e) {
-        var response = await FileSelectChange(e.target)
+        var response = await FileSelectChange(e.target, documentsInfo.FolderName, documentsInfo.ParentFolderName, id)
         setDocumentsInfo(response)
     }
 
 
-    var id = documentsInfo.ObjectID == null ? "0" : documentsInfo.ObjectID;
+    
     return (
         <div>
             <div className={"card document-border " + (documentsInfo.FileStrings?.length > 0 ? "hasFile" :"")}>
             <div className="document-card text-center pb-2" >
                 <div className="col-4 pr-0 d-flex align-items-end mb-1">
-                    <label className="control-label">{documentsInfo.FileStrings?.length} Files</label>
+                        <label className="control-label">{documentsInfo.FileStrings?.length > 0 ? documentsInfo.FileStrings.length : 0} Files</label>
                 </div>
                     <div className="col-4 d-flex align-items-center">
-                        <a href="" className=" open-document-modal mark-edditable" data-string={documentsInfo.FolderName} data-id={id} id={documentsInfo.FolderName} data-val="true" parent-folder={documentsInfo.ParentFolderName} show-switch="false" >
+                        <Link className="mark-edditable open-document-modal" to={{
+                            pathname: "/DocumentsModal",
+                            state: { ID: id, IsEditable: isEditable, ShowSwitch: showSwitch, FolderName: documentsInfo.FolderName, ParentFolderName: documentsInfo.ParentFolderName}
+                        }} >
                             <i className={documentsInfo.Icon + " document-icon m-0"} alt="order" style={{ fontSize: "1.5rem" }}></i>
-                    </a>
+                        </Link>
                 </div>
                 <div className="col-4 d-flex align-items-end mb-1 ">
                         <label>

@@ -608,7 +608,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\ReactViews\documents-card.jsx" />
     <Compile Remove="Data\Migrations\20220130114626_addedImageUrlToCategoryBase.cs" />
     <Compile Remove="Data\Migrations\20220130114626_addedImageUrlToCategoryBase.Designer.cs" />
     <Compile Remove="Data\Migrations\20220130115403_addedImageUrlToCategoryBase.cs" />

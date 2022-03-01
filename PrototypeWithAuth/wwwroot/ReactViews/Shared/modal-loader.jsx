@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { Route, useHistory } from 'react-router-dom';
 import DeleteModal from '../Requests/delete-modal.jsx';
 import ShareModal from '../Requests/share-modal.jsx';
+import DocumentsModal from '../Shared/documents-modal.jsx';
 import * as Actions from '../ReduxRelatedUtils/actions.jsx'
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import * as Routes from '../Constants/Routes.jsx'
@@ -35,6 +36,9 @@ function ModalLoader(props) {
                 break;
             case ModalKeys.NEW_LIST:
                 modalsComponents.push(<NewListModal backdrop={backdrop} key={props.modals[i]} modalKey={props.modals[i]} />)
+                break;
+            case ModalKeys.DOCUMENTS:
+                modalsComponents.push(<DocumentsModal backdrop={backdrop} key={props.modals[i]} modalKey={props.modals[i]} />)
                 break;
         }
     }

@@ -1094,8 +1094,10 @@ namespace PrototypeWithAuth.Controllers
 
             ApplySearchToRequestList(requestsSearchViewModel, wheres);
             var RequestPassedInWithInclude = _requestsProc.ReadWithIgnoreQueryFilters(wheres, includes);
-
-
+            if(requestIndexObject.TabName == AppUtility.IndexTabs.RecurringExpenses && RequestPassedInWithInclude.Count() > 0)
+            {
+                RequestPassedInWithInclude = RequestPassedInWithInclude.OrderBy(r => r.OccurenceNumber).GroupBy(r => r.ProductID).Select(r =>r.First());
+            }
 
             onePageOfProducts = await GetColumnsAndRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude);
 

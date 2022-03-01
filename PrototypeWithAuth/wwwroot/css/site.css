@@ -418,6 +418,16 @@ center-horizontally {
     left: 0;
 }
 
+.carousel-container {
+    width:100%;
+   flex-direction:row;
+}
+.carousel-slider {
+    flex-direction:row;
+}
+.carouselItem {
+    /*flex-direction: row;*/
+}
 
 /*.order-view .dropdown-content li > a, .order-view .dropdown-content li > span {
     color: #000 !important;
@@ -1151,7 +1161,7 @@ a.nav-link {
 }
 /*<<<< Modal Side Slide >>>>*/
 
-.modal.right .modal-dialog {
+.modal.right .edit-modal {
     position: fixed;
     margin: auto;
     /*width: 1200em;*/
@@ -1162,17 +1172,17 @@ a.nav-link {
     transform: translate3d(0%, 0, 0);
 }
 
-.modal.right .modal-content {
+.modal.right .edit-modal .modal-content {
     height: 100%;
     overflow-y: auto;
 }
 
-.modal.right .modal-body {
+.modal.right .edit-modal .modal-body {
     padding: 15px 15px 80px;
 }
 
 /*Right*/
-.modal.right.fader .modal-dialog {
+.modal.right.fader .edit-modal {
     right: 0;
     -webkit-transition: opacity 0.5s linear, right 0.5s ease-out;
     -moz-transition: opacity 0.5s linear, right 0.5s ease-out;
@@ -1180,7 +1190,7 @@ a.nav-link {
     transition: opacity 0.5s linear, right 0.5s ease-out;
 }
 
-.modal.right.fader.in .modal-dialog {
+.modal.right.fader.in .modal-dialog{
     right: 50px;
 }
 
