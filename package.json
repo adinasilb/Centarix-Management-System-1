@@ -7,9 +7,13 @@
     "build": "rimraf wwwroot/dist && webpack"
   },
   "dependencies": {
+    "@hookform/devtools": "^4.0.2",
+    "@hookform/resolvers": "^2.8.8",
+    "axios": "^0.26.0",
     "css-loader": "^2.0.1",
     "emotion": "^9.2.12",
     "emotion-server": "^9.2.12",
+    "lodash.compact": "^3.0.1",
     "mdb-react-ui-kit": "^2.3.0",
     "mdbreact": "file:MDB-React-Pro/mdbreact-4.27.0.tgz",
     "react-css-loader": "^0.0.3",
@@ -30,7 +34,8 @@
     "sass": "^1.49.7",
     "sass-loader": "^10.0.0",
     "style-loader": "^3.0.0",
-    "styled-components": "^4.0.0"
+    "styled-components": "^4.0.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",

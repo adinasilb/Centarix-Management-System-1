@@ -6,6 +6,9 @@ import ReactDOM from 'react-dom';
 import { MDBBtn } from 'mdbreact';
 import { useForm } from "react-hook-form";
 import reactDebugHooks from 'react-debug-hooks'
+import cloneDeep from 'lodash/cloneDeep';
+import { DevTool } from "@hookform/devtools";
+import axios from "axios";
 
 
 function SettingsForm(props) {
@@ -15,74 +18,108 @@ function SettingsForm(props) {
     //    customFieldsCount: 0
     //}
 
-    //constructor(props) {
-    //    super(props);
-    //    this.state = { SettingsForm: this.props.SettingsForm, customFields: [] , validationErrors: []};
-    //}
 
+    const [remove, setRemove] = useState({ key: false });
+    //const [index, setIndex] = useState();
+    const [countCF, setCountCF] = useState([]);
     const [customFields, setCustomFields] = useState([]);
-    const [validationErrors, setValidationErrors] = useState([]);
+
+
+    //var customFields = [];
+
+    console.log("RERENDERING");
+
+    const onSubmit = (data) => {
+        console.log(errors);
+        alert(JSON.stringify(data));
+        var formData = new FormData();
+        //alert(JSON.stringify(props.SettingsForm));
+        alert(JSON.stringify(props.SettingsForm.Category));
+        formData.set("test", true);
+        formData.set("Category", JSON.stringify(props.SettingsForm.Category ));
+        for (var value of formData.values()) {
+            console.log(value);
+        }
+        const axios = require('axios');
+        axios.post('/Requests/SettingsInventory', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then(res => console.log("hello"))
+            .catch((error) => { console.error(error) });
+
+        //var xhr = new XMLHttpRequest();
+        //xhr.open('post', '/Requests/SettingsInventory', true);
+        //xhr.setRequestHeader("Content-type", "multipart/form-data");
+        ////xhr.onreadystatechange = function () {
+        ////    if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+        ////        // Do something on success
+        ////    }
+        ////}
+        //console.dir(formData);
+        //alert(JSON.stringify(formData));
+        //xhr.send(formData);
+    };
+
 
     React.useEffect(() => {
         return () => { console.log("in use effect on every render") }
     });
 
-    React.useEffect(() => {
-        return () => { console.log("in use effect only once") }
-    }, []);
+    //React.useEffect(() => {
+    //    return () => { console.log("in use effect only once") }
+    //}, []);
 
-    React.useEffect(() => {
-        return () => { console.log("in use effect of custom fields") }
-    }, [customFields]);
-
-    const { register, handleSubmit } = useForm();
-    const onSubmit = data => console.log(data);
+    //React.useEffect(() => {
+    //    console.log("in cf use effect")
+    //}, [customFields]);
 
 
+    //React.useEffect((e) => {
+    //    console.log("in outer effect");
 
-    var submit = (e) => {
-        e.preventDefault();
-    }
+    //}, [remove, customFields, index]);
+
+
+    const { register, handleSubmit, watch, formState: { errors } } = useForm({ mode: "onChange" });
+
 
     var OpenNewCustomField = () => {
         console.log("open new custom field");
-        var array = customFields;
-        console.log(customFields);
-        console.log(validationErrors);
-        var Num = array.length;
-        array.push(Num);
-        var valErrors = validationErrors;
-        let values = { dict: { 'fieldname': [false, ''], 'datatype': [false, ''] } };
-        let Error = [Num, values];
-        valErrors.push(Error);
-        setCustomFields(array);
-        setValidationErrors(valErrors);
+        var newCount = countCF;
+        var i = newCount.length > 0 ? newCount[newCount.length - 1] + 1 : 0;
+        console.log("i key: " + i);
+        newCount.push(i);
+        setCountCF(newCount);
+        var customField = { dict: { key: newCount[i], number: i } };
+
+        /*array.push(customField);*/
+        var arr = [...customFields];
+        arr.push(customField);
+        console.log("ARRAY:")
+        console.log(arr)
+        //customFields = arr;
+        setCustomFields(arr);
+        console.log("CUSTOM FIELD VIEW:")
     }
+
 
     var RemoveCustomField = (e) => {
         e.preventDefault();
+        //console.log(e);
         var index = e.target.parentElement.attributes.number.value;
-        console.log("number: " + index);
-        var array = customFields;
-        var errors = validationErrors;
-        console.dir(array);
-        if (index - 1 !== 1) {
-            array.splice(index, 1);
-            errors.splice(index, 1);
-            console.log("spliced");
-            console.dir(array);
-            setCustomFields(array);
-            setValidationErrors(valErrors);
-            //this.setState({ ...this.state, customfields: array, validationErrors: errors });
-        }
-    }
+        console.log("custom fields in remove:");
+        //console.log(customFields);
 
-    let customfieldsView = [];
-    for (var i = 0; i < customFields.length; i++) {
-        console.log("in for loop");
-        customfieldsView.push(<CustomField key={this.customFields[i]} number={i} text={this.customFields[i]} CustomFieldData={this.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField} ValidationErrors={this.validationErrors[i]} />);
-    };
-    console.log("customfieldsview: " + customfieldsView);
+        var array = cloneDeep(customFields);
+        array.splice(index, 1);
+        var count = countCF;
+        count.splice(index, 1);
+        setCustomFields(array);
+        //customFields = array;
+        setCountCF(count);
+    }
 
 
 
@@ -115,14 +152,15 @@ function SettingsForm(props) {
                     </div>
                     <div className="col-8">
                         <div className="modal-product-title ml-2" >
-                            <textarea asp-for="Category.Description" className="form-control-plaintext border-bottom heading-1" placeholder="(category name)" rows={categoryNameRows} cols="50" maxLength="150"></textarea>
+                            <textarea asp-for="Category.Description" {...register("categoryName", { required: true, maxLength: 10 })} className="form-control-plaintext border-bottom heading-1" placeholder="(category name)" rows={categoryNameRows} cols="50" maxLength="150"></textarea>
                         </div>
-                        <span asp-validation-for="Category.Description" className="text-danger-centarix">
-                            { }
+                        <span className="text-danger-centarix">
+                            {errors.categoryName && errors.categoryName.type === "required" && <span>{Constant.Required}</span>}
+                            {errors.categoryName && errors.categoryName.type === "maxLength" && <span>{Constant.MaxLength + "10"}</span>}
                         </span>
                     </div>
                     <div className="col-2">
-                        <MDBBtn onClick={submit} type="submit" className=" custom-button custom-button-font lab-man-background-color" value="Save" />
+                        <input type="submit" className=" custom-button custom-button-font lab-man-background-color" value="Save" />
                     </div>
 
                 </div>
@@ -130,8 +168,8 @@ function SettingsForm(props) {
                     <div className="col-12 px-0">
                         <div className="container-fluid div-tabs pt-0 text-center pl-0">
                             <ul className="nav nav-tabs container-fluid pr-0 border-bottom-0 pl-0 nav-tabs-icons">
-                                <li className="nav-item icon"><a data-toggle="tab" href="#details" className="nav-link current-tab next-tab active"><i className="icon-centarix-icons-05 h2"></i><br />Details</a></li>
-                                <li className="nav-item icon"><a data-toggle="tab" href="#price" className="nav-link next-tab"><i className="icon-centarix-icons-05 h2"></i><br />Price</a></li>
+                                <li className="nav-item icon"><a data-toggle="tab" href="#details" className="nav-link current-tab active"><i className="icon-centarix-icons-05 h2"></i><br />Details</a></li>
+                                <li className="nav-item icon"><a data-toggle="tab" href="#price" className="nav-link next-tab" ><i className="icon-centarix-icons-05 h2"></i><br />Price</a></li>
                                 <li className="nav-item icon"><a data-toggle="tab" href="#documents" className="nav-link next-tab"><i className="icon-centarix-icons-05 h2"></i><br />Documents</a></li>
                                 <li className="nav-item icon"><a data-toggle="tab" href="#received" className="nav-link next-tab"><i className="icon-centarix-icons-05 h2"></i><br />Received</a></li>
                             </ul>
@@ -201,7 +239,8 @@ function SettingsForm(props) {
                                 <div className="add-custom-fields row">
                                     {/*<input type="button" onClick={this.AddCustomField} className={"custom-button custom-cancel text border-dark " + " details"}*/}
                                     {/*    value="+ Add Custom Field" />*/}
-                                    {customfieldsView.map(cf => cf)}
+                                    {customFields.map(cf => <CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField} />)}
+
                                     <CustomFieldButton tabName={"details"} clickhandler={OpenNewCustomField} />
                                     {/*@{await Html.RenderPartialAsync("_AddCustomFields.cshtml", "details-form");}*/}
                                 </div>
@@ -255,6 +294,7 @@ function SettingsForm(props) {
                     </div>
                 </div>
             </div>
+            {/*<DevTool control={control} />*/}
         </form>
     )
 }

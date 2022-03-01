@@ -5135,6 +5135,13 @@ namespace PrototypeWithAuth.Controllers
             return View(settings);
         }
 
+        [HttpPost]
+        public ActionResult SettingsInventory(bool test, String Category, SettingsForm settingsForm)
+        {
+            ProductSubcategory category = JsonConvert.DeserializeObject<ProductSubcategory>(Category, new JsonSerializerSettings());
+            return View();
+        }
+
         [HttpGet]
         public IActionResult _CategoryList(String modelType, int ColumnNumber, int? ParentCategoryID)
         {
