@@ -6,3 +6,4 @@ export const SHARE = '/ShareModal';
 export const NEW_LIST = '/NewListModal';
 export const MOVE_TO_LIST = '/MoveToListModal';
 export const DOCUMENTS = '/DocumentsModal';
+export const DELETE_DOCUMENTS = '/DeleteDocumentModal';

@@ -209,3 +209,28 @@ export function CheckEditable(modalType) {
     }
     return isEditable;
 }
+
+export function GetFileString(fileString) {
+    var newFileString = "";
+    console.log("filestring: " + fileString)
+    var ext = fileString?.split(".").pop();
+    switch (ext) {
+        case "pptx":
+        case "ppt":
+            newFileString = "images/powerpoint.png";
+            break;
+        case "doc":
+        case "docx":
+            newFileString = "images/wordicon.png";
+            break;
+        case "xlsx":
+            newFileString = "images/excel.png";
+            break;
+        case "doc":
+        case "docx":
+            newFileString = "images/wordicon.png";
+        default:
+            newFileString = fileString
+    }
+    return newFileString;
+}

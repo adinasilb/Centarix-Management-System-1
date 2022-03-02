@@ -1,21 +1,29 @@
 ﻿import React, { useState, useEffect } from 'react';
 import {
-    useLocation
+    useLocation, Link
 } from 'react-router-dom';
 import GlobalModal from '../Utility/global-modal.jsx';
-import { FileSelectChange } from "../Utility/document-fuctions.jsx"
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
-
+import { FileSelectChange, GetFileString } from "../Utility/document-fuctions.jsx";
+import * as ModalKeys from '../Constants/ModalKeys.jsx'
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 import 'regenerator-runtime/runtime'
+import * as Actions from '../ReduxRelatedUtils/actions.jsx';
+import { useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
 
 export default function DocumentsModal(props) {
     const location = useLocation();
+    const dispatch = useDispatch();
+    const { register, handleSubmit, formState: { errors } } = useForm();
     const [ID, setID] = useState(location.state.ID)
     const [isEditable, setisEditable] = useState(location.state.IsEditable)
     const [showSwitch, setshowSwitch] = useState(location.state.ShowSwitch)
     const [viewModel, setViewModel] = useState({ FileStrings: [] });
+    const [resetParentCard] = useState(() => location.state.resetDocInfo)
     const [carouselCards, setCarouselCards] = useState([])
+
+    console.log("rerender doc modal")
 
     useEffect(() => {
         var url = "/Requests/DocumentsModal?id=" + ID + "&RequestFolderNameEnum=" + location.state.FolderName + "&parentFolderName=" + location.state.ParentFolderName;
@@ -33,7 +41,6 @@ export default function DocumentsModal(props) {
     //    MapDocCarouselItems(viewModel.FileStrings)
     //}, [viewModel.FileStrings])
 
-
     var id = viewModel?.ObjectID == null ? "0" : viewModel.ObjectID;
 
     async function uploadFile(e) {
@@ -42,30 +49,39 @@ export default function DocumentsModal(props) {
         setViewModel(response)
     }
 
-    function getFileString(fileString) {
-        var newFileString = "";
-        console.log("filestring: " + fileString)
-        var ext = fileString?.split(".").pop();
-        switch (ext) {
-            case "pptx":
-            case "ppt":
-                newFileString = "images/powerpoint.png";
-                break;
-            case "doc":
-            case "docx":
-                newFileString = "images/wordicon.png";
-                break;
-            case "xlsx":
-                newFileString = "images/excel.png";
-                break;
-            case "doc":
-            case "docx":
-                newFileString = "images/wordicon.png";
-            default:
-                newFileString = fileString
+    function deleteFile(deleteFileViewModel) {
+        var url = "/Requests/DeleteDocumentModal";
+        var formData = new FormData();
+        for (let field in deleteFileViewModel) {
+            formData.append(field.toString(), deleteFileViewModel[field])
         }
-        return newFileString;
+        console.log(formData)
+        fetch(url, {
+            method: "POST",
+            body: formData
+        })
+            .then((response) => { return response.json(); })
+            .then(result => {
+                dispatch(Actions.removeModal(ModalKeys.DELETE_DOCUMENTS));
+                setViewModel(JSON.parse(result));
+            });
+
     }
+    var onSubmit = (data, e) => {
+        var url = "/Requests/DocumentsModal";
+        var formData = new FormData(e.target);
+        fetch(url, {
+            method: "POST",
+            body: formData
+        })
+            .then((response) => { return response.json(); })
+            .then(result => {
+                dispatch(Actions.removeModal(ModalKeys.DOCUMENTS));
+                var docInfo = JSON.parse(result)
+                resetParentCard(docInfo);
+            });
+    }
+    
 
     function MapDocCarouselItems(fileStrings) {
         console.log("file strings " + fileStrings)
@@ -104,7 +120,7 @@ export default function DocumentsModal(props) {
                         <div className="card iframe-container document-border m-0">
                             <div className="card-body responsive-iframe-container">
 
-                                <iframe src={getFileString(viewModel.FileStrings[i])} title="View" className="responsive-iframe" scrolling="no"></iframe>
+                                <iframe src={GetFileString(viewModel.FileStrings[i])} title="View" className="responsive-iframe" scrolling="no"></iframe>
                             </div>
                             <div className="card-body d-flex text-center align-items-center justify-content-center">
 
@@ -125,8 +141,8 @@ export default function DocumentsModal(props) {
 
     return (
 
-        <GlobalModal backdrop={props.backdrop} value={ID} modalKey={props.modalKey} key={ID} size="xl" header={location.state.FolderName + " Files"} >
-            <form action="" data-string="" method="post" encType="multipart/form-data" className="m-5 modal-padding documentModalForm" id="myForm">
+        <GlobalModal backdrop={props.backdrop} value={ID} modalKey={props.modalKey} key={ID} size="xl" header={viewModel.FolderName + " Files"} formID="documentModalForm">
+            <form action="" data-string="" method="post" encType="multipart/form-data" className="m-5 modal-padding documentModalForm" onSubmit={handleSubmit(onSubmit)} id="documentModalForm">
                 <input type="hidden" name="FolderName" id="FolderName" value={viewModel.FolderName || ""} />
                 <input type="hidden" name="DontAllowMultiple" id="DontAllowMultiple" value={viewModel.DontAllowMultiple || ""} />
                 <input type="hidden" name="ParentFolderName" id="ParentFolderName" value={viewModel.ParentFolderName || ""} />
@@ -136,7 +152,7 @@ export default function DocumentsModal(props) {
                 <div className="container">
                     <div className="row">
                         <div className="col-3 offset-9">
-                            {(location.state.ShowSwitch) ?
+                            {(showSwitch) ?
                                 <div className=" row text-right mb-0">
                                     <div className="switch col-12 switch-margin">
                                         <label>
@@ -162,122 +178,69 @@ export default function DocumentsModal(props) {
                         </div>
                     </div>
                     :
-                    <Carousel
-                        swipeable={false}
-                        draggable={false}
-                        showDots={true}
-                        responsive={responsive}
-                        ssr={true} // means to render carousel on server-side.
-                        infinite={true}
-                        autoPlay={true}
-                        autoPlaySpeed={5000}
-                        keyBoardControl={true}
-                        sliderClass="carousel-slider"
-                        containerClass="carousel-container"
-                        dotListClass="none"
-                        itemClass="carousel-item-padding-40-px"
-                        responsive={{
-                        desktop: {
-                            breakpoint: {
-                                max: 3000,
-                                min: 1024
-                            },
-                            items: 3,
-                            partialVisibilityGutter: 40
-                        }
-                    }}>
-                        <div>Item 1</div>
-                        <div>Item 2</div>
-                        <div>Item 3</div>
-                        <div>Item 4</div>
-                        {/*<div className="card iframe-container document-border m-0">*/}
-                        {/*    <div className="card-body responsive-iframe-container">*/}
-
-                        {/*    */}{/*    <iframe src={getFileString(viewModel.FileStrings[0])} title="View" className="responsive-iframe" scrolling="no"></iframe>*/}
-                        {/*    </div>*/}
-                        {/*    <div className="card-body d-flex text-center align-items-center justify-content-center">*/}
-
-                        {/*        <a href={"\\" + viewModel.FileStrings[0]} target="_blank" className="mx-3  view-img">*/}
-                        {/*            {viewModel.FileStrings[0].split('\\').pop()}*/}
-                        {/*        </a>*/}
-                        {/*        <a href="" className="delete-document mx-3">*/}
-                        {/*            <i style={{ fontSize: "2rem" }} className="icon-delete-24px documents-delete-icon hover-bold"></i>*/}
-                        {/*        </a>*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
-                        {/*<div className="card iframe-container document-border m-0">*/}
-                        {/*    <div className="card-body responsive-iframe-container">*/}
-
-                        {/*    */}{/*    <iframe src={getFileString(viewModel.FileStrings[1])} title="View" className="responsive-iframe" scrolling="no"></iframe>*/}
-                        {/*    </div>*/}
-                        {/*    <div className="card-body d-flex text-center align-items-center justify-content-center">*/}
-
-                        {/*        <a href={"\\" + viewModel.FileStrings[1]} target="_blank" className="mx-3  view-img">*/}
-                        {/*            {viewModel.FileStrings[1].split('\\').pop()}*/}
-                        {/*        </a>*/}
-                        {/*        <a href="" className="delete-document mx-3">*/}
-                        {/*            <i style={{ fontSize: "2rem" }} className="icon-delete-24px documents-delete-icon hover-bold"></i>*/}
-                        {/*        </a>*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
-                        {/*<div className="card iframe-container document-border m-0">*/}
-                        {/*    <div className="card-body responsive-iframe-container">*/}
-
-                        {/*    */}{/*    <iframe src={getFileString(viewModel.FileStrings[2])} title="View" className="responsive-iframe" scrolling="no"></iframe>*/}
-                        {/*    </div>*/}
-                        {/*    <div className="card-body d-flex text-center align-items-center justify-content-center">*/}
-
-                        {/*        <a href={"\\" + viewModel.FileStrings[2]} target="_blank" className="mx-3  view-img">*/}
-                        {/*            {viewModel.FileStrings[2].split('\\').pop()}*/}
-                        {/*        </a>*/}
-                        {/*        <a href="" className="delete-document mx-3">*/}
-                        {/*            <i style={{ fontSize: "2rem" }} className="icon-delete-24px documents-delete-icon hover-bold"></i>*/}
-                        {/*        </a>*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
-                        {/*<div className="card iframe-container document-border m-0">*/}
-                        {/*    <div className="card-body responsive-iframe-container">*/}
-
-                        {/*    */}{/*    <iframe src={getFileString(viewModel.FileStrings[3])} title="View" className="responsive-iframe" scrolling="no"></iframe>*/}
-                        {/*    </div>*/}
-                        {/*    <div className="card-body d-flex text-center align-items-center justify-content-center">*/}
-
-                        {/*        <a href={"\\" + viewModel.FileStrings[3]} target="_blank" className="mx-3  view-img">*/}
-                        {/*            {viewModel.FileStrings[3].split('\\').pop()}*/}
-                        {/*        </a>*/}
-                        {/*        <a href="" className="delete-document mx-3">*/}
-                        {/*            <i style={{ fontSize: "2rem" }} className="icon-delete-24px documents-delete-icon hover-bold"></i>*/}
-                        {/*        </a>*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
-                        {/*{carouselCards}*/}
-                        {/*{(viewModel?.FileStrings?.length > 0) ?*/}
-                        {/*    viewModel.FileStrings.map((fileString, i) => {*/}
-                        {/*        return (*/}
-                        {/*            <div key={"FileString" + i} className=" doc-card-outer-div col-12 m-0">*/}
-                        {/*                <div className="card iframe-container document-border m-0">*/}
-                        {/*                    <div className="card-body responsive-iframe-container">*/}
-
-                        {/*                        <iframe src={getFileString(fileString)} title="View" className="responsive-iframe" scrolling="no"></iframe>*/}
-                        {/*                    </div>*/}
-                        {/*                    <div className="card-body d-flex text-center align-items-center justify-content-center">*/}
-
-                        {/*                        <a href={"\\" + fileString} target="_blank" className="mx-3  view-img">*/}
-                        {/*                            {fileString.split('\\').pop()}*/}
-                        {/*                        </a>*/}
-                        {/*                        <a href="" className="delete-document mx-3">*/}
-                        {/*                            <i style={{ fontSize: "2rem" }} className="icon-delete-24px documents-delete-icon hover-bold"></i>*/}
-                        {/*                        </a>*/}
-                        {/*                    </div>*/}
-                        {/*                </div>*/}
-                        {/*            </div>*/}
-                        {/*        )*/}
-                        {/*    })*/}
-                        {/*    : <div/>*/}
+                    //<Carousel
+                    //    responsive={{
+                    //        superLargeDesktop: {
+                    //            // the naming can be any, depends on you.
+                    //            breakpoint: { max: 4000, min: 3000 },
+                    //            items: 5
+                    //        },
+                    //        desktop: {
+                    //            breakpoint: {
+                    //                max: 3000,
+                    //                min: 1024
+                    //            },
+                    //            items: 3,
+                    //        }
+                    //    }}
+                    //    deviceType ="desktop">
+                    //    <div>Item 1</div>
+                    //    <div>Item 2</div>
+                    //    <div>Item 3</div>
+                    //    <div>Item 4</div>
 
 
-                    </Carousel>
+                    //</Carousel>
+                    <div>
+                        {(isEditable || showSwitch) ?
+                            <div className=" doc-card-outer-div">
+                                <div className=" card document-border col-md-4 m-0">
+                                    <label>
+                                        <i className="icon-upload_file_black_24dp-1 opac54 m-0" alt="order" style={{ fontSize: "1rem" }}></i>
+                                        <input type="file" onChange={uploadFile} className="file-selects d-none mark-readonly" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" id="FilesToSave" name="FilesToSave" />
+                                        <span className="section-filter text">Upload File</span>
 
+                                    </label>
+
+                                </div>
+                            </div> : null}
+                        {(viewModel?.FileStrings?.length > 0) ?
+                            viewModel.FileStrings.map((fileString, i) => {
+                                return (
+                                    <div key={"FileString" + i} className=" doc-card-outer-div col-12 m-0">
+                                        <div className="card iframe-container document-border m-0">
+                                            <div className="card-body responsive-iframe-container">
+
+                                                <iframe src={GetFileString(fileString)} title="View" className="responsive-iframe" scrolling="no"></iframe>
+                                            </div>
+                                            <div className="card-body d-flex text-center align-items-center justify-content-center">
+
+                                                <a href={"\\" + fileString} target="_blank" className="mx-3  view-img">
+                                                    {fileString.split('\\').pop()}
+                                                </a>
+                                                <Link className="" to={{
+                                                    pathname: "/DeleteDocumentModal",
+                                                    state: { ID: ID, FolderName: viewModel.FolderName, ParentFolderName: viewModel.ParentFolderName, FileName: fileString, deleteFunction: deleteFile }
+                                                }} >
+                                                    <i style={{ fontSize: "2rem" }} className="icon-delete-24px documents-delete-icon hover-bold"></i>
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })
+                            : <div />}
+                        </div>
                 }
 
 

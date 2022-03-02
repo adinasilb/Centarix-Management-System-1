@@ -3494,34 +3494,40 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [RequestSizeLimit(100_000_000)]
         [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
-        public void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
+        public async Task<IActionResult> DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
         {
             base.DocumentsModal(documentsModalViewModel);
+            return RedirectToAction("_DocumentsCard", new { requestFolderNameEnum = documentsModalViewModel.FolderName, id= documentsModalViewModel.ObjectID, parentFolderName = documentsModalViewModel.ParentFolderName});
         }
 
 
         [HttpGet]
-        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests)
+        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.FolderNamesEnum RequestFolderNameEnum, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests)
         {
 
-            if (!AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView("InvalidLinkPage");
-            }
+            //if (!AppUtility.IsAjaxRequest(Request))
+            //{
+            //    return PartialView("InvalidLinkPage");
+            //}
             DeleteDocumentsViewModel deleteDocumentsViewModel = new DeleteDocumentsViewModel()
             {
                 FileName = FileString,
                 ObjectID = id,
                 ParentFolderName = parentFolderName,
                 FolderName = RequestFolderNameEnum,
-                IsEdittable = IsEdittable,
-                SectionType = SectionType,
             };
-            return PartialView(deleteDocumentsViewModel);
+
+            var json = JsonConvert.SerializeObject(deleteDocumentsViewModel, Formatting.Indented,
+                   new JsonSerializerSettings
+                   {
+                       Converters = new List<JsonConverter> { new StringEnumConverter() },
+                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                   });
+            return Json(json);
         }
 
         [HttpPost]
-        public void DeleteDocumentModal(DeleteDocumentsViewModel deleteDocumentsViewModel)
+        public async Task<IActionResult> DeleteDocumentModal(DeleteDocumentsViewModel deleteDocumentsViewModel)
         {
             string[] FileNameParts = deleteDocumentsViewModel.FileName.Split('\\');
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, deleteDocumentsViewModel.FileName);
@@ -3535,6 +3541,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                 }
             }
+            return RedirectToAction("DocumentsModal", new { id=deleteDocumentsViewModel.ObjectID, Guid=new Guid(), RequestFolderNameEnum= deleteDocumentsViewModel.FolderName, parentFolderName = deleteDocumentsViewModel.ParentFolderName });
         }
 
         [HttpGet] //send a json to that the subcategory list is filered

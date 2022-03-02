@@ -6,27 +6,36 @@ import 'regenerator-runtime/runtime'
 export default function DocumentsCard(props) {
 
     const [documentsInfo, setDocumentsInfo] = useState(props.documentsInfo);
-    const [showSwitch, setShowSwitch] = useState(props.showSwitch);
-    const [isEditable, setIsEditable] = useState(props.isEditable);
     var id = documentsInfo.ObjectID == null ? "0" : documentsInfo.ObjectID;
+
     async function uploadFile(e) {
         var response = await FileSelectChange(e.target, documentsInfo.FolderName, documentsInfo.ParentFolderName, id)
         setDocumentsInfo(response)
     }
 
+    useEffect(() => {
+        console.log("rerender doc info")
+        console.log(documentsInfo)
+    }, [documentsInfo])
 
+    function ResetDocInfo(newdocumentInfo) {
+        console.log("reset doc info")
+        console.log(newdocumentInfo)
+        setDocumentsInfo(newdocumentInfo)
+    }
     
     return (
         <div>
+            {console.log("in doc card return:" + documentsInfo.FolderName)}
             <div className={"card document-border " + (documentsInfo.FileStrings?.length > 0 ? "hasFile" :"")}>
             <div className="document-card text-center pb-2" >
                 <div className="col-4 pr-0 d-flex align-items-end mb-1">
                         <label className="control-label">{documentsInfo.FileStrings?.length > 0 ? documentsInfo.FileStrings.length : 0} Files</label>
                 </div>
                     <div className="col-4 d-flex align-items-center">
-                        <Link className="mark-edditable open-document-modal" to={{
+                        <Link className="mark-edditable" to={{
                             pathname: "/DocumentsModal",
-                            state: { ID: id, IsEditable: isEditable, ShowSwitch: showSwitch, FolderName: documentsInfo.FolderName, ParentFolderName: documentsInfo.ParentFolderName}
+                            state: { ID: id, IsEditable: props.isEditable, ShowSwitch: props.showSwitch, FolderName: documentsInfo.FolderName, ParentFolderName: documentsInfo.ParentFolderName, resetDocInfo: ResetDocInfo }
                         }} >
                             <i className={documentsInfo.Icon + " document-icon m-0"} alt="order" style={{ fontSize: "1.5rem" }}></i>
                         </Link>

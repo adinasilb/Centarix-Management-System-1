@@ -59,6 +59,7 @@ export default function DocumentsRootComponent(props) {
                 }
                 <Switch>
                     <Route exact path={Routes.DOCUMENTS} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.DOCUMENTS} uid={props.location.key} />} />
+                    <Route exact path={Routes.DELETE_DOCUMENTS} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.DELETE_DOCUMENTS} uid={props.location.key} />} />
                 </Switch>
             </div>
         )
