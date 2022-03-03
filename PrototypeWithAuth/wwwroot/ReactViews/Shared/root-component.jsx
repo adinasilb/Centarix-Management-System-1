@@ -1,4 +1,7 @@
-﻿import React from 'react';
+﻿
+
+
+import React from 'react';
 import { Provider } from 'react-redux';
 import { createStore, } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -11,8 +14,6 @@ import reducer from '../ReduxRelatedUtils/reducers.jsx';
 import ModalLoader from './modal-loader.jsx';
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import * as Routes from '../Constants/Routes.jsx'
-
-import  '@fortawesome/fontawesome-free/css/all.min.css';
 
 
 export default function RootComponent(props) {

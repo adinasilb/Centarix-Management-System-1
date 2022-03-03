@@ -10,9 +10,10 @@ import { useForm } from 'react-hook-form';
 export default function NewListModal(props) {
     const dispatch = useDispatch();
     const location = useLocation();
-    const { register, formState: { errors, isValid } } = useForm({ mode: 'onChange' });
+    const { register, handleSubmit,  formState: { errors, isValid } } = useForm({ mode: 'onChange' });
     const [state, setState] = useState({ viewModel: null, requestToAddId: location.state.requestToAddId, requestPreviousListID: location.state.requestPreviousListID });
-    console.log("isvalid:" +isValid)
+    console.log("isvalid:" + isValid)
+    console.dir(errors)
     useEffect(() => {
         var url = "/Requests/NewListModalJson/?requestToAddId=" + state.requestToAddId
         if (state.requestPreviousListID != undefined) {
@@ -32,18 +33,16 @@ export default function NewListModal(props) {
     var onSubmit = (e) => {
             e.preventDefault();
             alert("in submit")
-            if (isValid) { 
-                console.log(errors);
-                var url = "/Requests/NewListModal";
-                var formData = new FormData(e.target);
-                ajaxPartialIndexTable(dispatch, url, "POST", formData, [ModalKeys.NEW_LIST, ModalKeys.MOVE_TO_LIST]);
-            }
+            console.log(errors);
+            var url = "/Requests/NewListModal";
+            var formData = new FormData(e.target);
+            ajaxPartialIndexTable(dispatch, url, "POST", formData, [ModalKeys.NEW_LIST, ModalKeys.MOVE_TO_LIST]);
        
         };
 
     return (
         <GlobalModal backdrop={props.backdrop} size="lg" value={state.viewModel?.ID ?? ""} modalKey={props.modalKey} key={state.viewModel?.ID ?? ""} header="New List" >
-            <form onSubmit={onSubmit} method="post" encType="multipart/form-data" style={{ height: "100%", overflow: "auto" }} className="" id={props.modalKey}>
+            <form onSubmit={handleSubmit( onSubmit)} method="post" encType="multipart/form-data" style={{ height: "100%", overflow: "auto" }} className="" id={props.modalKey}>
                 <input type="hidden" value={state.viewModel?.Request?.RequestID??""} name="Request.RequestID" className="request-to-move" />
                 <input type="hidden" value={state.viewModel?.OwnerID ?? ""} name="OwnerID"  />
                 <input type="hidden" value={state.viewModel?.RequestToAddID ?? ""} name="RequestToAddID" />
@@ -64,7 +63,7 @@ export default function NewListModal(props) {
                             })}
                    
                             />
-                            {errors.ListTitle?.type === 'required' && "First name is required"}
+                            <span data-valmsg-for="ListTitle"></span>
                         </div>
                     </div>
                 </div>
