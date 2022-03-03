@@ -1030,6 +1030,9 @@ namespace PrototypeWithAuth.Controllers
                 nextRequest.CreationDate = nextRequestDate;
                 nextRequest.OccurenceNumber = occurrenceCounter;
                 nextRequest.Product = recurringOrder;
+                nextRequest.Cost = 0;
+                nextRequest.Unit = 0;
+
                 ModelStates.Add(new ModelAndState { Model = nextRequest, StateEnum = EntityState.Added });
                 occurrenceCounter++;
             }

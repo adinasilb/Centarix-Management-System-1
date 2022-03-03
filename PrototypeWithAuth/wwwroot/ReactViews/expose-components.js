@@ -9,6 +9,7 @@ import *as Bootstrap from 'bootstrap-css-only/css/bootstrap.min.css';
 import *as MdbReactCSS from 'mdbreact/dist/css/mdb.css';
 
 //import FloatingActionBar from './floating-action-bar.jsx'
+import 'react-multi-carousel/lib/styles.css';
 import RootComponent from './Shared/root-component.jsx';
 import DocumentsRootComponent from "./Shared/documents-root-component.jsx"
 import CloseButton from './Utility/close-button.jsx'

@@ -6,7 +6,7 @@ import GlobalModal from '../Utility/global-modal.jsx';
 import { FileSelectChange, GetFileString } from "../Utility/document-fuctions.jsx";
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
+
 import 'regenerator-runtime/runtime'
 import * as Actions from '../ReduxRelatedUtils/actions.jsx';
 import { useDispatch } from 'react-redux';
@@ -178,69 +178,69 @@ export default function DocumentsModal(props) {
                         </div>
                     </div>
                     :
-                    //<Carousel
-                    //    responsive={{
-                    //        superLargeDesktop: {
-                    //            // the naming can be any, depends on you.
-                    //            breakpoint: { max: 4000, min: 3000 },
-                    //            items: 5
-                    //        },
-                    //        desktop: {
-                    //            breakpoint: {
-                    //                max: 3000,
-                    //                min: 1024
-                    //            },
-                    //            items: 3,
-                    //        }
-                    //    }}
-                    //    deviceType ="desktop">
-                    //    <div>Item 1</div>
-                    //    <div>Item 2</div>
-                    //    <div>Item 3</div>
-                    //    <div>Item 4</div>
+                    <Carousel
+                        responsive={{
+                            superLargeDesktop: {
+                                // the naming can be any, depends on you.
+                                breakpoint: { max: 4000, min: 3000 },
+                                items: 5
+                            },
+                            desktop: {
+                                breakpoint: {
+                                    max: 3000,
+                                    min: 1024
+                                },
+                                items: 3,
+                            }
+                        }}
+                        deviceType ="desktop">
+                        <div>Item 1</div>
+                        <div>Item 2</div>
+                        <div>Item 3</div>
+                        <div>Item 4</div>
 
 
-                    //</Carousel>
-                    <div>
-                        {(isEditable || showSwitch) ?
-                            <div className=" doc-card-outer-div">
-                                <div className=" card document-border col-md-4 m-0">
-                                    <label>
-                                        <i className="icon-upload_file_black_24dp-1 opac54 m-0" alt="order" style={{ fontSize: "1rem" }}></i>
-                                        <input type="file" onChange={uploadFile} className="file-selects d-none mark-readonly" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" id="FilesToSave" name="FilesToSave" />
-                                        <span className="section-filter text">Upload File</span>
+                    </Carousel>
+                    //<div>
+                    //    {(isEditable || showSwitch) ?
+                    //        <div className=" doc-card-outer-div">
+                    //            <div className=" card document-border col-md-4 m-0">
+                    //                <label>
+                    //                    <i className="icon-upload_file_black_24dp-1 opac54 m-0" alt="order" style={{ fontSize: "1rem" }}></i>
+                    //                    <input type="file" onChange={uploadFile} className="file-selects d-none mark-readonly" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" id="FilesToSave" name="FilesToSave" />
+                    //                    <span className="section-filter text">Upload File</span>
 
-                                    </label>
+                    //                </label>
 
-                                </div>
-                            </div> : null}
-                        {(viewModel?.FileStrings?.length > 0) ?
-                            viewModel.FileStrings.map((fileString, i) => {
-                                return (
-                                    <div key={"FileString" + i} className=" doc-card-outer-div col-12 m-0">
-                                        <div className="card iframe-container document-border m-0">
-                                            <div className="card-body responsive-iframe-container">
+                    //            </div>
+                    //        </div> : null}
+                    //    {(viewModel?.FileStrings?.length > 0) ?
+                    //        viewModel.FileStrings.map((fileString, i) => {
+                    //            return (
+                    //                <div key={"FileString" + i} className=" doc-card-outer-div col-12 m-0">
+                    //                    <div className="card iframe-container document-border m-0">
+                    //                        <div className="card-body responsive-iframe-container">
 
-                                                <iframe src={GetFileString(fileString)} title="View" className="responsive-iframe" scrolling="no"></iframe>
-                                            </div>
-                                            <div className="card-body d-flex text-center align-items-center justify-content-center">
+                    //                            <iframe src={GetFileString(fileString)} title="View" className="responsive-iframe" scrolling="no"></iframe>
+                    //                        </div>
+                    //                        <div className="card-body d-flex text-center align-items-center justify-content-center">
 
-                                                <a href={"\\" + fileString} target="_blank" className="mx-3  view-img">
-                                                    {fileString.split('\\').pop()}
-                                                </a>
-                                                <Link className="" to={{
-                                                    pathname: "/DeleteDocumentModal",
-                                                    state: { ID: ID, FolderName: viewModel.FolderName, ParentFolderName: viewModel.ParentFolderName, FileName: fileString, deleteFunction: deleteFile }
-                                                }} >
-                                                    <i style={{ fontSize: "2rem" }} className="icon-delete-24px documents-delete-icon hover-bold"></i>
-                                                </Link>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
-                            })
-                            : <div />}
-                        </div>
+                    //                            <a href={"\\" + fileString} target="_blank" className="mx-3  view-img">
+                    //                                {fileString.split('\\').pop()}
+                    //                            </a>
+                    //                            <Link className="" to={{
+                    //                                pathname: "/DeleteDocumentModal",
+                    //                                state: { ID: ID, FolderName: viewModel.FolderName, ParentFolderName: viewModel.ParentFolderName, FileName: fileString, deleteFunction: deleteFile }
+                    //                            }} >
+                    //                                <i style={{ fontSize: "2rem" }} className="icon-delete-24px documents-delete-icon hover-bold"></i>
+                    //                            </Link>
+                    //                        </div>
+                    //                    </div>
+                    //                </div>
+                    //            )
+                    //        })
+                    //        : <div />}
+                    //    </div>
                 }
 
 

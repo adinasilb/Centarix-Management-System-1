@@ -39,7 +39,7 @@ namespace PrototypeWithAuth.AppData
             TotalVat = 4
         }
         public enum RecurrenceEndStatuses { NoEnd, EndDate, LimitedOccurrences }
-        public enum TimePeriods { Days, Weeks, Months}
+        public enum TimePeriods { Days, Weeks, Months }
         public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
         public enum RoleEnum { ApproveOrders }
         public enum PageTypeEnum
@@ -87,7 +87,7 @@ namespace PrototypeWithAuth.AppData
         }
         public enum IndexTableTypes
         {
-            Approved, Ordered, ReceivedInventory, ReceivedInventoryFavorites, ReceivedInventoryShared, Summary, AccountingGeneral, SummaryProprietary, ReceivedInventoryOperations, 
+            Approved, Ordered, ReceivedInventory, ReceivedInventoryFavorites, ReceivedInventoryShared, Summary, AccountingGeneral, SummaryProprietary, ReceivedInventoryOperations,
             OrderedOperations,
             RecurringExpensesOperations,
             Cart,
@@ -110,7 +110,7 @@ namespace PrototypeWithAuth.AppData
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
-        public enum IndexTabs { None, Requests, Ordered, Received, RecurringExpenses, Main, Samples}
+        public enum IndexTabs { None, Requests, Ordered, Received, RecurringExpenses, Main, Samples }
         public enum FolderNamesEnum { Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details, Custom } //Listed in the site.js (if you change here must change there)
         public enum ParentFolderName { None, Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote, ExperimentEntries, ParentRequest, FunctionResults }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
@@ -215,9 +215,12 @@ namespace PrototypeWithAuth.AppData
         }
 
         public enum RoleItems { Admin, CEO }
-        public enum CurrencyEnum { None,
+        public enum CurrencyEnum
+        {
+            None,
             NIS,
-            USD }
+            USD
+        }
         public enum PaymentsPopoverEnum
         {
             //Share,
@@ -239,11 +242,13 @@ namespace PrototypeWithAuth.AppData
         public enum ProtocolModalType { None, Create, CheckListMode, Summary, Edit, SummaryFloat, CreateNewVersion }
         public enum VendorModalType { Create, Edit, SummaryFloat }
         public enum OrderMethod { None, RequestPriceQuote, OrderNow, AddToCart, AlreadyPurchased, Save, ExcelUpload }
-        public enum CartStatus { None, InCart, Ordered}
-        public enum OrderType { SingleOrder, RecurringOrder, StandingOrder}
+        public enum CartStatus { None, InCart, Ordered }
+        public enum OrderType { SingleOrder, RecurringOrder, StandingOrder }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
-        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveToList, DeleteFromList, MonthlyPayment,         
-            PayNow ,           
+        public enum PopoverDescription
+        {
+            More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveToList, DeleteFromList, MonthlyPayment,
+            PayNow,
             PayLater,
             Installments,
             SpecifyPayment
@@ -465,7 +470,7 @@ namespace PrototypeWithAuth.AppData
             return false;
         }
 
-   
+
         public static string GetLastFiles(string longFileName, int amountOfFiles)
         {
             bool lastfound = false;
@@ -544,7 +549,7 @@ namespace PrototypeWithAuth.AppData
                             //    accountingPopoverLink.Icon = "icon-credit_card-24px";
                             //    break;
                             case PaymentsPopoverEnum.PayLater:
-                                accountingPopoverLink= new IconPopoverViewModel(description: Enum.Parse<PopoverDescription>(e.ToString()), color: "#5F79E2", action: "ChangePaymentStatus", controller: "Requests", icon: "icon-centarix-icons-19", ajaxcall: "change-payment-status");
+                                accountingPopoverLink = new IconPopoverViewModel(description: Enum.Parse<PopoverDescription>(e.ToString()), color: "#5F79E2", action: "ChangePaymentStatus", controller: "Requests", icon: "icon-centarix-icons-19", ajaxcall: "change-payment-status");
                                 break;
                                 //case PaymentsPopoverEnum.Installments:
                                 //    accountingPopoverLink.Action = "ChangePaymentStatus";
@@ -569,7 +574,7 @@ namespace PrototypeWithAuth.AppData
             return list;
         }
 
-        public static List<StringWithBool> GetPriceColumn(List<String> priceFilterEnums, Request request, CurrencyEnum currency)
+        public static List<StringWithBool> GetPriceColumn(List<String> priceFilterEnums, Request request, CurrencyEnum currency, bool recurringExpensesTab = false)
         {
             try
             {
@@ -613,6 +618,9 @@ namespace PrototypeWithAuth.AppData
 
             catch (Exception ex)
             {
+                if (recurringExpensesTab)
+                { 
+                    return new List<StringWithBool>() { new StringWithBool { String = "N/A"} }; }
                 return new List<StringWithBool>() { new StringWithBool { String = "price has an error", Bool = true } };
             }
         }
@@ -655,12 +663,12 @@ namespace PrototypeWithAuth.AppData
             return newCopy;
         }
 
-        public static List<StringWithBool> GetAmountColumn(Request request)
+        public static List<StringWithBool> GetAmountColumn(Request request, bool recurringExpensesTab = false)
         {
             try
             {
                 List<StringWithBool> amountColumn = new List<StringWithBool>();
-                if (request.Unit != null)
+                if (request.Unit != 0)
                 {
                     amountColumn.Add(new StringWithBool { String = TrimZeros(request.Unit) + " " + request.Product.UnitType.UnitTypeDescription, Bool = false });
                     if (request.Product.SubUnit != null)
@@ -674,6 +682,8 @@ namespace PrototypeWithAuth.AppData
                     }
 
                 }
+                else if (recurringExpensesTab)
+                { amountColumn.Add(new StringWithBool { String = "N/A" }); }
                 return amountColumn;
             }
             catch (Exception ex)
@@ -1036,7 +1046,7 @@ namespace PrototypeWithAuth.AppData
         public static bool GetPermissionsForPriceTabMarkReadonly(List<String> UserRoles, Request Request)
         {
             bool ReturnVal = false;
-            if(Request.RequestStatusID == 3 && !UserRoles.Contains("RequestEditReceived"))
+            if (Request.RequestStatusID == 3 && !UserRoles.Contains("RequestEditReceived"))
             {
                 ReturnVal = true;
             }
