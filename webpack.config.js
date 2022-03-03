@@ -31,23 +31,23 @@ module.exports = {
 				exclude: /node_modules/,
 				loader: 'babel-loader',
 			},
+				
 			{
   				test: /\.css$/,
-  				exclude: /node_modules/,
-  				loaders: ['style-loader', 'css-loader'],
-			}				
-			,{
-  				test: /\.css$/,
-  				include: /node_modules/,
-				loader: 'css-loader',
-          			options: {
-            				url: false
-          			}
+				use:[
+				{ loader: 'style-loader', options: {  }},
+				{
+					loader:'css-loader',
+					options: {
+							url: false,
+					}
+				}
+				]
 			},
-            		{
-                		test: /\.scss$/,
-                		use: ['style-loader', 'css-loader', 'sass-loader'],
-            		},
+				// {
+					// test: /\.scss$/,
+					// use: ['style-loader',  'sass-loader'],
+				// },
 		],
 	},
 	plugins: [

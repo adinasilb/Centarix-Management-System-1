@@ -6,11 +6,12 @@ import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import GlobalModal from '../Utility/global-modal.jsx';
 
 import { useForm } from 'react-hook-form';
+import { DevTool } from "@hookform/devtools";
 
 export default function NewListModal(props) {
     const dispatch = useDispatch();
     const location = useLocation();
-    const { register, handleSubmit,  formState: { errors, isValid } } = useForm({ mode: 'onChange' });
+    const { register, handleSubmit, control, formState: { errors, isValid } } = useForm({ mode: 'onChange' });
     const [state, setState] = useState({ viewModel: null, requestToAddId: location.state.requestToAddId, requestPreviousListID: location.state.requestPreviousListID });
     console.log("isvalid:" + isValid)
     console.dir(errors)
@@ -42,7 +43,8 @@ export default function NewListModal(props) {
 
     return (
         <GlobalModal backdrop={props.backdrop} size="lg" value={state.viewModel?.ID ?? ""} modalKey={props.modalKey} key={state.viewModel?.ID ?? ""} header="New List" >
-            <form onSubmit={handleSubmit( onSubmit)} method="post" encType="multipart/form-data" style={{ height: "100%", overflow: "auto" }} className="" id={props.modalKey}>
+            <form onSubmit={handleSubmit(onSubmit)} method="post" encType="multipart/form-data" style={{ height: "100%", overflow: "auto" }} className="" id={props.modalKey}>
+                {process.env.NODE_ENV !== 'production' && <DevTool control={control} />}
                 <input type="hidden" value={state.viewModel?.Request?.RequestID??""} name="Request.RequestID" className="request-to-move" />
                 <input type="hidden" value={state.viewModel?.OwnerID ?? ""} name="OwnerID"  />
                 <input type="hidden" value={state.viewModel?.RequestToAddID ?? ""} name="RequestToAddID" />

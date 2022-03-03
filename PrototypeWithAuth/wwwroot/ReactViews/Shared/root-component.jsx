@@ -1,12 +1,11 @@
 ﻿
 
-
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { createStore, } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { Route, Switch, MemoryRouter} from 'react-router-dom';
-import _IndexTableData from '../Requests/index-table-data.jsx';
+//import _IndexTableData from '../Requests/index-table-data.jsx';
 import _IndexTableDataByVendor from '../Requests/index-table-data-by-vendor.jsx';
 import SettingsInventory from "../Requests/settings-inventory.jsx";
 import FloatingActionBar from '../Requests/floating-action-bar.jsx';
@@ -15,10 +14,10 @@ import ModalLoader from './modal-loader.jsx';
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import * as Routes from '../Constants/Routes.jsx'
 
-
 export default function RootComponent(props) {
     const store = createStore(reducer, { viewModel: props.viewModel, modals: [] }, composeWithDevTools());
 
+    const _IndexTableData = lazy(() => import('../Requests/index-table-data.jsx'));
     const renderSwitch = () => {
         console.log(props.viewEnum)
         switch (props.viewEnum) {
@@ -26,7 +25,7 @@ export default function RootComponent(props) {
                 return (<_IndexTableDataByVendor viewModel={props.viewModel} showView={true} bcColor={props.bcColor} ajaxLink={props.ajaxLink} btnText={props.btnText} sectionClass={props.sectionClass} />);
                 break;
             case "IndexTableData":
-                return (<_IndexTableData viewModel={props.viewModel} showView={true} bcColor={props.bcColor} />);
+                return (<Suspense  fallback={<div>Loading...</div>}><_IndexTableData viewModel={props.viewModel} showView={true} bcColor={props.bcColor} /></Suspense>);
                 break;
             case "SettingsInventory":
                 return (<SettingsInventory viewModel={props.viewModel} showView={true} />);
@@ -34,10 +33,13 @@ export default function RootComponent(props) {
         }
 
     }
+
     function App() {
+
         return (
-            <div>
-         
+
+            <div> 
+             
                 <FloatingActionBar showFloatingActionBar={false} />
                 {
                     renderSwitch()
@@ -51,11 +53,15 @@ export default function RootComponent(props) {
                     <Route exact path={Routes.NEW_LIST} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.NEW_LIST} uid={props.location.key} />} />
                     <Route path={Routes.SETTINGS_INVENTORY} component={SettingsInventory} />
                 </Switch>
-            </div>)
+                </div>
+
+                )
     }
    
 
-    return(
-        <Provider store={store}><MemoryRouter ><App/></MemoryRouter></Provider>
+    return (
+    
+         <Provider store={store}><MemoryRouter ><App /></MemoryRouter></Provider>  
+
     );
 }

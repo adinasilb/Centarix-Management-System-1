@@ -8,6 +8,7 @@ import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import * as Routes from '../Constants/Routes.jsx'
 import MoveToListModal from '../Requests/move-to-list-modal.jsx';
 import NewListModal from '../Requests/new-list-modal.jsx';
+
 function ModalLoader(props) {
     console.log(props.modals)
     useEffect(() => {
@@ -18,7 +19,7 @@ function ModalLoader(props) {
         }
     }, [props.modalKey, props.uid]);
 
-  
+
     var modalsComponents = [];
     for (var i = 0; i < props.modals?.length; i++) {
         var backdrop = false;

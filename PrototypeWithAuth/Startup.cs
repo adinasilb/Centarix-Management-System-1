@@ -84,6 +84,7 @@ namespace PrototypeWithAuth
 
             services.AddControllersWithViews();
             services.AddReact();
+            
             services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
             .AddV8();
 
@@ -173,8 +174,9 @@ namespace PrototypeWithAuth
             app.UseReact(config =>
             {
                 config.SetLoadBabel(true)
-                  .SetLoadReact(false)
+                  .SetLoadReact(false)               
                   .SetReactAppBuildPath("~/dist");
+                config.UseServerSideRendering = false;
                 config.JsonSerializerSettings = new JsonSerializerSettings { 
                     Converters= new List<JsonConverter> { new StringEnumConverter() },
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore
