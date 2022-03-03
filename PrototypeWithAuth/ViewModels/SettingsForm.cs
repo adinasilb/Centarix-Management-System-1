@@ -15,5 +15,6 @@ namespace PrototypeWithAuth.ViewModels
         public string SubcategoryDescription { get; set; }
         public List<bool> Test { get; set; }
         public CustomField CustomFieldData { get; set; }
+        public List<UnitParentType> UnitParentTypes { get; set; }
     }
 }

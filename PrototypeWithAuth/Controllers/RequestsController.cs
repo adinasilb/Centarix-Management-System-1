@@ -5195,6 +5195,7 @@ namespace PrototypeWithAuth.Controllers
             settingsForm.RequestCount = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.Product.ProductSubcategoryID == settingsForm.Category.ID }).Count();
             settingsForm.ItemCount = _productsProc.Read(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategoryID == settingsForm.Category.ID }).Count();
             settingsForm.CustomFieldData = this._CustomField();
+            //settingsForm.UnitParentTypes = _uni.Read().ToList();
 
             return settingsForm;
         }

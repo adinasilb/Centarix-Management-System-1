@@ -1,4 +1,4 @@
-﻿import React, { useState, setState } from 'react';
+﻿ import React, { useState, setState } from 'react';
 import * as Constant from '../Shared/constants.js'
 import CustomFieldButton from './custom-field-button.jsx';
 import { MDBSelect, MDBSelectOptions, MDBSelectOption, MDBSelectInput, MDBInput } from 'mdbreact';
@@ -138,6 +138,7 @@ function SettingsForm(props) {
         <>
             <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(onSubmit)} action="" method="get" className="lab-man-form" id="myForm">
+                    {/*<DevTool control={control} />*/}
                     <div className="row top-bar border-bottom text-center text-justify under-row-margin d-flex" >
                         <div className="col-12 align-items-center justify-content-center mt-3 mb-3">
                             <span className="align-items-center">
@@ -274,6 +275,119 @@ function SettingsForm(props) {
                                             </div>
                                         </div>
 
+                                        <div className="row" id="edit">
+                                            <div className="col-md-4  RequestUnitCard ">
+                                                <div className="border h-100 pt-4">
+                                                    <div className="mx-2rem">
+                                                        <div className="row">
+                                                            <div className="col-md-4 form-group">
+                                                                <label asp-for="Requests[0].Unit" className="control-label"></label>
+                                                                <MDBInput type="number" asp-for="@Model.Requests[0].Unit" value={Constant.AmountPlaceholder} old-val="@Model.Requests[0].Unit.ToString()" className="disabled"
+                                                                    id="unit" />
+                                                                <span asp-validation-for="Requests[0].Unit" className="text-danger-centarix"></span>
+                                                            </div>
+                                                            <div className="col-md-8 form-group dropdown-select-div">
+                                                                <label asp-for="Requests[0].Product.UnitType" className="control-label"></label>
+                                                                <MDBSelect asp-for="Request.UnitTypeID" className="form-control-plaintext disabled">
+                                                                    <MDBSelectInput selected={Constant.SelectPlaceholder} />
+                                                                    {/*<MDBSelectOptions>*/}
+                                                                    {/*{props.SettingsForm.UnitTypes.map((unittype, i) => (*/}
+                                                                    {/*    <MDBSelectOption value={unittype.UnitTypeID} key={i}>{unittype.UnitTypeDescription}</MDBSelectOption>*/}
+                                                                    {/*))}*/}
+                                                                    {/*</MDBSelectOptions>*/}
+                                                                </MDBSelect>
+                                                                <span asp-validation-for="Requests[0].Product.UnitType" className="text-danger-centarix"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="form-group requestPriceQuote @hideNoQuote">
+                                                            <label className="control-label price-per-unit-label">Price Per Unit:</label>
+                                                            <div className="row">
+                                                                <div className="col-md-6">
+                                                                    <div className="input-group">
+                                                                        <span className="input-group-text border-bottom request-cost-dollar-icon @disableDollar">&#36;</span>
+                                                                        <input type="text" className="form-control-plaintext border-bottom disabled" name="unit-price-dollars"
+                                                                            value={Constant.SmallIntPlaceholder}
+                                                                            id="unit-price-dollars" />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="input-group">
+                                                                        <span className="input-group-text request-cost-shekel-icon @disableShekel">&#x20aa;</span>
+                                                                        <input type="text" className="form-control-plaintext border-bottom requestPriceQuote disabled" name="unit-price-shekel"
+                                                                            id="unit-price-shekel" value={Constant.SmallIntPlaceholder} />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-4 pl-0 RequestSubunitCard">
+                                                <div className="border h-100 ">
+                                                    <button type="button" className="close sub-close  pr-2 pt-2  disabled " aria-label="Close" >
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                    <div className="mx-2rem addSubUnitCard mt-4 @plusDisplayNoneSub">
+                                                        <div className="row " >
+                                                            <div className="col-8 offset-2 text-center font-weight-light">
+                                                                <input type="button" value="+" className=" addSubUnit btn m-0 p-0 no-box-shadow disabled " />
+                                                                <br /><span className="text-capitalize @color text">add sub unit</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+
+                                        <div className="row requestPriceQuote @hideNoQuote">
+                                              </div>
+
+                                        <div className="row requestPriceQuote @hideNoQuote">
+                                            <div className="col-md-2 vat-info @hideVat">
+                                                <div className="form-group">
+                                                    <label asp-for="Requests[0].VAT" className="control-label"></label>
+                                                    <div className="input-group">
+                                                        <span className="input-group-text disabled-text">&#36;</span>
+                                                        <input type="text" className="form-control-plaintext border-bottom vatInDollars disabled-text requestPriceQuote" id="vatInDollars" disabled
+                                                            value="@(AppUtility.ConvertIntToString(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].VAT / Model.Requests[0].ExchangeRate, 2)))" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-2 vat-info @hideVat">
+                                                <div className="form-group">
+                                                    <label className="control-label"></label>
+                                                    <div className="input-group">
+                                                        <span className="input-group-text disabled-text">&#x20aa;</span>
+                                                        <input type="text" asp-for="Requests[0].VAT" value="@AppUtility.ConvertIntToString(Model.Requests[0].VAT)" className="form-control-plaintext border-bottom disabled-text requestPriceQuote" id="vat" disabled />
+                                                        <span className="text-danger-centarix" asp-validation-for="Requests[0].VAT"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-2 vat-info @hideVat">
+                                                <div className="form-group">
+                                                    <label className="control-label">Total + VAT:</label>
+                                                    <div className="input-group">
+                                                        <span className="input-group-text disabled-text">&#36;</span>
+                                                        <input type="text" className="form-control-plaintext border-bottom disabled-text requestPriceQuote" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled
+                                                            value="@(AppUtility.ConvertIntToString(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].TotalWithVat/Model.Requests[0].ExchangeRate,2)))" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-2 vat-info @hideVat">
+                                                <div className="form-group">
+                                                    <label className="control-label"></label>
+                                                    <div className="input-group">
+                                                        <span className="input-group-text disabled-text">&#x20aa;</span>
+                                                        <input type="text" asp-for="Requests[0].TotalWithVat" value="@AppUtility.ConvertIntToString(Model.Requests[0].TotalWithVat)" className="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
                                         <div className="custom-fields-price lab-man-form">
                                             <div className="cf_header hidden">
                                                 {/*@{await Html.RenderPartialAsync("_CFHeader.cshtml"); }*/}
@@ -317,7 +431,7 @@ function CustomField(props) {
 
     return (
         <div className="w-100">
-            { console.log("in custom field")}
+            {console.log("in custom field")}
             <div className="custom-fields row">
                 <div className="col-4">
                     <div className="form-group">

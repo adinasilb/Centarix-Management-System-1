@@ -220,6 +220,11 @@ i .fas {
     border: 1px solid rgba(0, 0, 0, .54);
 }
 
+input.addSubUnit, input.addSubSubUnit {
+    font-size: 5rem;
+    line-height: normal;
+}
+
 /*MDBootstrap material select*/
 .md-form input[type="text"]:not(.browser-default).valid {
     border-bottom: 1px solid var(--order-inv-color);
@@ -2860,6 +2865,9 @@ a {
 }
 .Protocols  .addSubSubUnit, .Protocols  .addSubUnit {
     filter: var(--protocol-filter);
+}
+.LabManagement .addSubSubUnit, .LabManagement .addSubUnit {
+    filter: var(--lab-man-filter);
 }
 table.visual-locations, table.visual-locations-table {
     width: 100% !important;
