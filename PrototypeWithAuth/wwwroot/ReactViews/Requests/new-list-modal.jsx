@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { ajaxPartialIndexTable, getRequestIndexString } from '../Utility/root-function.jsx'
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
+import { ErrorMessage } from '@hookform/error-message';
 import GlobalModal from '../Utility/global-modal.jsx';
 
 import { useForm } from 'react-hook-form';
@@ -61,11 +62,16 @@ export default function NewListModal(props) {
                                 value: state.viewModel?.ListTitle ?? "",
                                 required: true,
                                 minLength: 1,
-                                maxLength: 20
+                                maxLength: 20,
+                                message:  "List title is a required feild"
                             })}
                    
                             />
-                            <span data-valmsg-for="ListTitle"></span>
+                            <ErrorMessage
+                                errors={errors}
+                                name="ListTitle"
+                                render={({ message }) => <span className="danger-text-centarix">{message}</span>}
+                            />
                         </div>
                     </div>
                 </div>

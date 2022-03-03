@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@hookform/devtools": "^4.0.2",
+    "@hookform/error-message": "^2.0.0",
     "css-loader": "^5.2.7",
     "emotion": "^9.2.12",
     "emotion-server": "^9.2.12",
