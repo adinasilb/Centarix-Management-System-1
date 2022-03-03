@@ -7,7 +7,7 @@
     "build": "rimraf wwwroot/dist && webpack"
   },
   "dependencies": {
-    "@hookform/devtools": "^4.0.2",
+    "@hookform/devtools": "3.1.0",
     "@hookform/resolvers": "^2.8.8",
     "axios": "^0.26.0",
     "css-loader": "^2.0.1",

@@ -5136,9 +5136,9 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        public ActionResult SettingsInventory(bool test, String Category, SettingsForm settingsForm)
+        public ActionResult SettingsInventory(SaveSettingsCategory settingsForm)
         {
-            ProductSubcategory category = JsonConvert.DeserializeObject<ProductSubcategory>(Category, new JsonSerializerSettings());
+            ProductSubcategory category = JsonConvert.DeserializeObject<ProductSubcategory>(settingsForm.Category, new JsonSerializerSettings());
             return View();
         }
 
