@@ -7,6 +7,7 @@
 @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
 @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
 @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
+@Html.HiddenFor(model => model.RequestIndexObject.TabName)
 @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
 @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
 @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
@@ -21,7 +22,9 @@
 @*@Html.HiddenFor(model => model.RequestStatusID)*@
 <input type="hidden" asp-for="PageRequestStatusID" value="@Model.PageRequestStatusID" />
 
-
+@{
+     var productOrderType = Model.OrderType.ToString();
+}
 
 <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
 <div class="error-message modal-header border-bottom-0 modal-header-padding">
@@ -45,7 +48,7 @@
                     }
                 </div>
                 <div class="col-10">
-                    <input asp-for="Request.Product.ProductName" class="form-control-plaintext heading-1 mt-2 center-horizontally my-auto" readonly />
+                    <input asp-for="Request.Product.ProductName" name="Request.@(productOrderType).ProductName" class="form-control-plaintext heading-1 mt-2 center-horizontally my-auto" readonly />
                 </div>
             </div>
 

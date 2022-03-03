@@ -325,7 +325,7 @@
     $('#price-in-dollars').change(function (e) {
         console.log("change price")
         var cost = $(this).val() * $('.exchange-rate').val();
-        $('.installment-sum').val(cost)
+        $('.installment-sum').val(parseFloat(cost).toFixed(2))
         $.fn.SetTotals();
     });
     $(".installment-sum").change(function (e) {

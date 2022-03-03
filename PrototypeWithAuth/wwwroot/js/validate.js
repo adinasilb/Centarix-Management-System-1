@@ -320,6 +320,8 @@ $(function () {
 
 	$.validator.addMethod("fileRequired", function (value, element) {
 		console.log("in file required")
+		console.log(element)
+		console.log($(element).hasClass("contains-file"))
 		return $(element).hasClass("contains-file");
 	}, 'Must upload a file before submitting');
 

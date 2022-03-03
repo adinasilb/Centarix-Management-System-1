@@ -38,6 +38,8 @@ namespace PrototypeWithAuth.AppData
             [Display(Name = "Total + VAT")]
             TotalVat = 4
         }
+        public enum RecurrenceEndStatuses { NoEnd, EndDate, LimitedOccurrences }
+        public enum TimePeriods { Days, Weeks, Months}
         public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
         public enum RoleEnum { ApproveOrders }
         public enum PageTypeEnum
@@ -47,7 +49,7 @@ namespace PrototypeWithAuth.AppData
             LabManagementSuppliers, LabManagementLocations, LabManagementEquipment, LabManagementQuotes, LabManagementSearch, LabManagementSettings,
             TimeKeeperReport, TimekeeperSummary,
             UsersUser, UsersWorkers,
-            OperationsRequest, OperationsInventory, OperationsSearch,
+            OperationsRequest, OperationsInventory, OperationsCart,
             ExpensesSummary, ExpensesStatistics, ExpensesCost, ExpensesWorkers,
             ProtocolsWorkflow, ProtocolsProtocols, ProtocolsCreate, ProtocolsReports, ProtocolsResources, ProtocolsSearch, ProtocolsTask,
             BiomarkersExperiments
@@ -85,7 +87,11 @@ namespace PrototypeWithAuth.AppData
         }
         public enum IndexTableTypes
         {
-            Approved, Ordered, ReceivedInventory, ReceivedInventoryFavorites, ReceivedInventoryShared, Summary, AccountingGeneral, SummaryProprietary, ReceivedInventoryOperations, OrderedOperations, Cart,
+            Approved, Ordered, ReceivedInventory, ReceivedInventoryFavorites, ReceivedInventoryShared, Summary, AccountingGeneral, SummaryProprietary, ReceivedInventoryOperations, 
+            OrderedOperations,
+            RecurringExpensesOperations,
+            Cart,
+            CartOperations,
             AccountingNotifications,
             AccountingPaymentsDefault,
             AccountingPaymentsInstallments,
@@ -104,6 +110,7 @@ namespace PrototypeWithAuth.AppData
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
+        public enum IndexTabs { None, Requests, Ordered, Received, RecurringExpenses, Main, Samples}
         public enum FolderNamesEnum { Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details, Custom } //Listed in the site.js (if you change here must change there)
         public enum ParentFolderName { None, Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote, ExperimentEntries, ParentRequest, FunctionResults }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
@@ -231,7 +238,9 @@ namespace PrototypeWithAuth.AppData
         public enum RequestModalType { Create, Edit, Summary, Reorder }
         public enum ProtocolModalType { None, Create, CheckListMode, Summary, Edit, SummaryFloat, CreateNewVersion }
         public enum VendorModalType { Create, Edit, SummaryFloat }
-        public enum OrderTypeEnum { None, RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
+        public enum OrderMethod { None, RequestPriceQuote, OrderNow, AddToCart, AlreadyPurchased, Save, ExcelUpload }
+        public enum CartStatus { None, InCart, Ordered}
+        public enum OrderType { SingleOrder, RecurringOrder, StandingOrder}
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
         public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveToList, DeleteFromList, MonthlyPayment,         
             PayNow ,           
@@ -520,7 +529,7 @@ namespace PrototypeWithAuth.AppData
                             //    accountingPopoverLink.Action = "ChangePaymentStatus";
                             //    accountingPopoverLink.Controller = "Requests";
                             //    accountingPopoverLink.Color = "#00CA72";
-                            //    accountingPopoverLink.Icon = "icon-add_circle_outline-24px1";
+                            //    accountingPopoverLink.Icon = "icon-add_circle_outline-24px-1";
                             //    break;
                             //case PaymentsPopoverEnum.MonthlyPayment:
                             //    accountingPopoverLink.Action = "ChangePaymentStatus";
@@ -1034,19 +1043,43 @@ namespace PrototypeWithAuth.AppData
             return ReturnVal;
         }
 
-        public static HtmlString GetConstants(this IHtmlHelper helper)
+        internal static List<StringWithBool> GetTimePeriodColumn(Request r, TimePeriod timePeriod)
         {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-
-            sb.AppendLine("<script type=\"text/javascript\">");
-
-            foreach (var prop in typeof(ElixirStrings).GetFields())
+            var ReturnVal = new StringWithBool() { Bool = true };
+            switch (Enum.Parse(typeof(TimePeriods), timePeriod.DescriptionEnum))
             {
-                sb.AppendLine(string.Format("    var {0} = '{1}'", prop.Name, prop.GetValue(null).ToString()));
-            }
+                case TimePeriods.Days:
+                    ReturnVal.String = r.CreationDate.ToString("MMM d");
+                    break;
+                case TimePeriods.Weeks:
+                    ReturnVal.String = GetWeekStartEndDates(r.CreationDate);
+                    break;
+                case TimePeriods.Months:
+                    ReturnVal.String = r.CreationDate.Month.ToString();
+                    break;
 
-            sb.AppendLine("</script>");
-            return new HtmlString(sb.ToString());
+            }
+            return new List<StringWithBool> { ReturnVal };
+        }
+
+        internal static List<StringWithBool> GetTimePeriodTypeColumn(TimePeriod timePeriod)
+        {
+            var ReturnVal = new StringWithBool() { Bool = true };
+            switch (Enum.Parse(typeof(TimePeriods), timePeriod.DescriptionEnum))
+            {
+                case TimePeriods.Days:
+                    ReturnVal.String = "Daily";
+                    break;
+                case TimePeriods.Weeks:
+                    ReturnVal.String = "Weekly";
+                    break;
+                case TimePeriods.Months:
+                    ReturnVal.String = "Monthly";
+                    break;
+
+            }
+            ReturnVal.String += " Expenses";
+            return new List<StringWithBool> { ReturnVal };
         }
     }
 

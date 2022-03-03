@@ -5,16 +5,15 @@
 @using PrototypeWithAuth.AppData
 
 @{
-
-
-}
-@*<div class="row">
-    @if (Model.ErrorMessage != null)
+var colorClass = "custom-order-inv";
+    if (Model.SectionType == AppUtility.MenuItems.Operations)
     {
-        <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
+        colorClass = "custom-oper";
 
     }
-</div>*@
+
+}
+
 <div class="row">
     <div class="col-12">
         <span class="heading-1 modal-tab-name">Order</span>
@@ -29,9 +28,9 @@
             <span class="small-text">If you want to process a single order immediately</span>
         </div>
         <div class="col-5">
-            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.OrderNow"
-                    class="text w-100 custom-order-inv custom-button float-right submitOrder">
-                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.OrderNow.ToString())
+            <button type="submit" name="OrderMethod" value="@AppUtility.OrderMethod.OrderNow"
+                    class="text w-100 @colorClass custom-button float-right submitOrder">
+                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.OrderNow.ToString())
             </button>
         </div>
     </div>
@@ -40,37 +39,33 @@
             <span class="small-text">If you want to order multiple items</span>
         </div>
         <div class="col-5">
-            @*<button type="submit" asp-action="AddItemView" asp-controller="Requests" asp-route-OrderType="@AppUtility.OrderTypeEnum.AddToCart.ToString()"
-                        class="text w-100 custom-order-inv custom-button float-right">
-                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
-                </button>*@
-            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart"
-                    class="text w-100 custom-order-inv custom-button float-right submitOrder ">
-                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
+            <button type="submit" name="OrderMethod" value="@AppUtility.OrderMethod.AddToCart"
+                    class="text w-100 @colorClass custom-button float-right submitOrder ">
+                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.AddToCart.ToString())
             </button>
 
         </div>
     </div>
-    <div class="row requestQuoteHide">
+    @*<div class="row requestQuoteHide">
         <div class="col-7 align-vertical-middle-col">
             <span class="small-text">Ask the secretary to get a price quote</span>
         </div>
         <div class="col-5">
-            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.RequestPriceQuote"
-                    class="text p-0 w-100 custom-order-inv custom-button create-modal-submit activeSubmit">
-                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
+            <button type="submit" name="OrderMethod" value="@AppUtility.OrderMethod.RequestPriceQuote"
+                    class="text p-0 w-100 custom-button create-modal-submit activeSubmit">
+                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.RequestPriceQuote.ToString())
             </button>
 
         </div>
-    </div>
+    </div>*@
     <div class="row requestPriceQuote">
         <div class="col-7 align-vertical-middle-col">
             <span class="small-text">Update the purchase of an item</span>
         </div>
         <div class="col-5">
-            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AlreadyPurchased"
-                    class="p-0  text w-100 custom-order-inv custom-button create-modal-submit submitOrder">
-                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AlreadyPurchased.ToString())
+            <button type="submit" name="OrderMethod" value="@AppUtility.OrderMethod.AlreadyPurchased"
+                    class="p-0 @colorClass text w-100 custom-button create-modal-submit submitOrder">
+                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.AlreadyPurchased.ToString())
             </button>
 
         </div>

@@ -13,13 +13,14 @@ namespace PrototypeWithAuth.ViewModels
     {
         public ParentQuote ParentQuote { get; set; }
         public List<string> FileStrings { get; set; }
-        public AppUtility.OrderTypeEnum OrderTypeEnum { get; set; }
+        public AppUtility.OrderMethod OrderMethodEnum { get; set; }
         //public RequestIndexObject RequestIndexObject { get; set; }
         public TempRequestListViewModel TempRequestListViewModel { get; set; }
 
         [Display(Name = "Expected Supply Days")]
         [Range(0, 2147483647, ErrorMessage = "Field must be a positive number")]
         public byte? ExpectedSupplyDays { get; set; }
+        public DocumentsCardViewModel DocumentsCardViewModel { get; set; }
         //public decimal Discount { get; set; }
 
         //public bool IsReorder { get; set; }

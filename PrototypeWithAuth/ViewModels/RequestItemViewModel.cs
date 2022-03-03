@@ -28,9 +28,11 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<Vendor> Vendors { get; set; }
         public IEnumerable<RequestStatus> RequestStatuses { get; set; }
         public IEnumerable<SelectListItem> UnitTypeList { get; set; }
-        public ILookup<UnitParentType, UnitType> UnitTypes { get; set; }
+        public IEnumerable<UnitType> UnitTypes { get; set; }
         public IEnumerable<Project> Projects { get; set; }
         public IEnumerable<SubProject> SubProjects { get; set; }
+        public List<SelectListItem> ApplicationUsers { get; set; }
+        public IEnumerable<TimePeriod> TimePeriods { get; set; }
         public bool Paid { get; set; }
         public bool PayNow { get; set; }
         public bool PayLater { get; set; }
@@ -89,5 +91,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<string> LastUrls { get; set; }
         public bool HasQuote { get; set; }
         public bool HasWarnings { get; set; }
+        public AppUtility.OrderType OrderType { get; set; }
+        public bool AdditionalRequests { get; set; }
     }
 }

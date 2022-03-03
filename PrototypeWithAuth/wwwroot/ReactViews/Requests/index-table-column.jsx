@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-
+import { MDBBtn, MDBPopover, MDBPopoverBody } from 'mdbreact';
 export default class IndexTableColumn extends Component {
 
     constructor(props) {
@@ -22,29 +22,30 @@ export default class IndexTableColumn extends Component {
                 <div className="d-inline-flex">
                     {col.Icons.map((icon, i) => {
                         if (icon.IconPopovers?.length >= 1) {
+                          
                             return (
                                 <div key={"icon" + i} className="table-icon-div">
-                                    <ul className="list-unstyled p-0 m-0">
-                                        <li>
-                                            <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" className={"btn p-0 m-0 no-box-shadow " + icon.IconAjaxLink} value={col.AjaxID + "more"}>
-                                                <i className={icon.IconClass + " hover-bold px-1"} style={{ fontSize: "2rem" }}>
-                                                </i>
-                                            </button>
-                                        </li>
-                                        <li>
-                                            <div style={{ display: "none" }} id={col.AjaxID + "more"}>
+                                    <MDBPopover
+                                        placement="bottom"
+                                        popover
+                                        clickable
+                                    >
+                                        <MDBBtn flat className={"btn p-0 m-0 no-box-shadow "} value={col.AjaxID + "more"}> <i className={icon.IconClass + " hover-bold px-1"} style={{ fontSize: "2rem" }}></i>
+                                        </MDBBtn>
+                                        <div>
+                                            <MDBPopoverBody>
                                                 {icon.IconPopovers.map((iconpopover, i) => (
                                                     <div key={"iconPopover" + i} className="row px-3 icon-more-popover accounting-popover">
-                                                        <Link className={"btn-link popover-text no-hover requests " + iconpopover.AjaxCall} to={{ pathname: iconpopover.AjaxCall, state: { ID: iconpopover.AjaxID, newStatus: iconpopover.Description } }} >
-                                                            <i className={iconpopover.Icon} style={{ color: iconpopover.Color + "" }}></i>
+                                                        <Link className={"btn-link popover-text no-hover requests " + iconpopover.AjaxCall} to={{ pathname: iconpopover.AjaxCall, state: { ID: col.AjaxID, newStatus: iconpopover.Description, modelsEnum: "Request" } }} >
+                                                            <i className={iconpopover.Icon} style={{ color : ""+iconpopover.Color }}></i>
                                                             <label className="m-2 ">{iconpopover.DescriptionDisplayName}</label>
-                                                        </Link>                                     
+                                                        </Link>
                                                     </div>
                                                 )
                                                 )}
-                                            </div>
-                                        </li>
-                                    </ul>
+                                            </MDBPopoverBody>
+                                        </div>
+                                    </MDBPopover>
                                 </div>
                             );
                         }
@@ -92,7 +93,7 @@ export default class IndexTableColumn extends Component {
                         }
                         else {
                             return (<div key={"icon" + i} className="table-icon-div">
-                                <Link className={"btn p-0 m-0 no-box-shadow requests " + icon.IconAjaxLink} to={{ pathname: icon.IconAjaxLink, state: { requestID: col.AjaxID} }} data-toggle="tooltip" data-placement="top"
+                                <Link className={"btn p-0 m-0 no-box-shadow requests " + icon.IconAjaxLink} to={{ pathname: icon.IconAjaxLink, state: { ID: col.AjaxID} }} data-toggle="tooltip" data-placement="top"
                                     title={icon.TooltipTitle} value={col.AjaxID}>
                                     <i style={{ fontSize: "2rem", color: icon.Color }} className={icon.IconClass + " hover-bold"}></i>
                                 </Link>

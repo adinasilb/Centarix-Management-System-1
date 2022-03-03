@@ -5,33 +5,17 @@ $('.ordersItemForm').validate({
     return $.trim( value );
   },
 	rules: {
-		"Requests[0].Product.ProductName": "required",
 		/*"Requests[0].Product.ProductName": "required",*/ //insert val here?? has there
-		"Requests[0].Product.CatalogNumber": {
-			required: true,
-			remote:{
-				url: '/Requests/CheckUniqueVendorAndCatalogNumber',
-				type: 'POST',
-				data: {
-					"VendorID": function () { return $("#vendorList").val() },
-					"CatalogNumber": function () { return $("#Requests_0__Product_CatalogNumber").val() },
-					"ProductID": function () {
-						if ($(".turn-edit-on-off").length > 0) {
-							return $(".turn-edit-on-off").attr("productID");
-						}else{return null}}},
-			},
-		},
-		"Requests[0].Product.ProductSubcategory.ParentCategoryID": "selectRequired",
-		"Requests[0].Product.ProductSubcategoryID": "selectRequired",
-		"Requests[0].Product.VendorID": {
-			"selectRequired" : true,				
-		},
+		
 		"Requests[0].ParentQuote.QuoteNumber": {
 			required: true
 		},
 		"Requests[0].ParentQuote.QuoteDate": {
 			required: true,
 			//mindate: new Date('1900-12-17T03:24:00')
+		},
+		"Requests[0].ArrivalDate": {
+			required: true
 		},
 		"Requests[0].ExpectedSupplyDays": {
 			min: 0,
@@ -59,16 +43,7 @@ $('.ordersItemForm').validate({
 			min: 1,
 			integer: true
 		},
-		"Requests[0].Product.SubUnit": {
-			required: true,
-			number: true,
-			greaterThan: 0
-		},
-		"Requests[0].Product.SubSubUnit": {
-			required: true,
-			number: true,
-			greaterThan: 0
-		},
+		
 		"Requests[0].Cost": {
 			required: true,
 			number: true,
@@ -79,9 +54,6 @@ $('.ordersItemForm').validate({
 			number: true,
 			min: 1
 		},
-		"Requests[0].Product.UnitTypeID": "selectRequired",
-		"Requests[0].Product.SubUnitTypeID": "selectRequired",
-		"Requests[0].Product.SubSubUnitTypeID": "selectRequired",
 		"locationTypeSelected": "locationRequired",
 		"subLocationSelected": "locationRequired",
 		"locationVisualSelected": "locationRequired"
@@ -91,12 +63,45 @@ $('.ordersItemForm').validate({
 /*		"subLocationSelected": "Please choose a location before submitting",
 		"locationVisualSelected": "Please choose a location before submitting",
 		"locationTypeSelected": "Please choose a location before submitting",*/
-        "Requests[0].Product.CatalogNumber": {
+        ".catalog-number": {
             remote: "this product has already been created"
         },
 		}
 });
 
+	$(".item-name").rules("add", "required");
+	$(".catalog-number").rules("add", {
+		required: true,
+		remote: {
+			url: '/Requests/CheckUniqueVendorAndCatalogNumber',
+			type: 'POST',
+			data: {
+				"VendorID": function () { return $("#vendorList").val() },
+				"CatalogNumber": function () { return $("#Requests_0__Product_CatalogNumber").val() },
+				"ProductID": function () {
+					if ($(".turn-edit-on-off").length > 0) {
+						return $(".turn-edit-on-off").attr("productID");
+					} else { return null }
+				}
+			},
+		},
+	});
+	$("#parentlist").rules("add", "selectRequired");
+	$("#sublist").rules("add", "selectRequired");
+	$("#unitTypeID").rules("add", "selectRequired");
+	$("#subUnitTypeID").rules("add", "selectRequired");
+	$("#subSubUnitTypeID").rules("add", "selectRequired");
+	$(".vendorList").rules("add", "selectRequired");
+	$("#subUnit").rules("add", {
+		required: true,
+		number: true,
+		greaterThan: 0
+	});
+	$("#subSubUnit").rules("add", {
+		required: true,
+		number: true,
+		greaterThan: 0
+	});
 
 	$("body, .modal").off("change", '#vendorList').on("change", '#vendorList' , function(){
 		//console.log("in change vendor")

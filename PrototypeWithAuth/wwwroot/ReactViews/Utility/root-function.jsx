@@ -1,4 +1,5 @@
-﻿import * as Actions from '../ReduxRelatedUtils/actions.jsx';
+﻿import { MDBInput } from 'mdbreact';
+import * as Actions from '../ReduxRelatedUtils/actions.jsx';
 
 export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
     console.log("in ajax partial index call " + url);
@@ -28,21 +29,20 @@ export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
     if (listID != null) {
         listString += "&listID=" + listID.value
     }
-    
-    if (modals == null) {
-        console.log("in else");
+
+    console.log("in else");
         
-        if (!url.includes("?")) {
-            url += "?"
-        } else {
-            url += "&";
-        }
-        url += getRequestIndexString();
-        url += monthsString;
-        url += yearsString;
-        url += listString;
-        
+    if (!url.includes("?")) {
+        url += "?"
+    } else {
+        url += "&";
     }
+    url += getRequestIndexString();
+    url += monthsString;
+    url += yearsString;
+    url += listString;
+        
+    
 
     if (selectedFilters != undefined/*should also somehow check if anything is chosen...*/) {
         formdata = addObjectToFormdata(formdata, selectedFilters);
@@ -55,9 +55,15 @@ export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
     fetch(url, {
         method: type,
         body: formdata
-    }).then(response => response.json())
-        .then(result => {          
-            dispatch(Actions.setIndexTableViewModel(JSON.parse(result)));
+    }).then(response => {
+        console.log(response);
+        return response.json()
+    })
+       .then(result => {
+            console.dir(result)
+            if (result != undefined) {
+                dispatch(Actions.setIndexTableViewModel(JSON.parse(result)));
+            }
             dispatch(Actions.removeModals(modals));
 
         document.querySelectorAll(".tooltip").forEach(c => c.remove());
@@ -77,6 +83,8 @@ export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
             document.querySelectorAll('.error-message').forEach(e => e.classList.add("d-none"));
             document.querySelector('.error-message').innerHTML = jqxhr;
             document.querySelector('.error-message').classList.remove("d-none");
+            document.getElementById("loading").style.display = "none";
+            dispatch(Actions.removeModals(modals));
     });    
     return false;
 }
@@ -84,36 +92,36 @@ export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
 
 export var bindSelectedFilters = (className) => {
     console.log('in bind selected filters');
-    var selectedVendor = document.querySelectorAll(className + " .vendor-col .selected button").map(e=> { return e.getAttribute("value"); }).get();
-    var selectedOwner = document.querySelectorAll(className + " .owner-col .selected button").map(e => { return e.getAttribute("value"); }).get();
-    var selectedCategory = document.querySelectorAll(className + " .category-col .selected button");
-    var selectedLocation = document.querySelectorAll(className + " .location-col .selected button").map(e => { return e.getAttribute("value"); }).get();
-    var selectedType = document.querySelector(className + " .type-col .selected button").map(e => { return e.getAttribute("value"); }).get();
-    var selectedLocation = document.querySelectorAll(className + " .location-col .selected button").map(e => { return e.getAttribute("value"); }).get();
-    var selectedSubCategory = document.querySelectorAll(className + " .subcategory-col .selected button").map(e => { return e.getAttribute("value"); }).get();
+    var selectedVendor =[... (document.querySelectorAll(className + " .vendor-col .selected button")??[])]?.map(e=> e.getAttribute("value"));
+    var selectedOwner = [...(document.querySelectorAll(className + " .owner-col .selected button")??[])]?.map(e => e.getAttribute("value"));
+    var selectedCategory = [...(document.querySelectorAll(className + " .category-col .selected button") ?? [])];
+    var selectedLocation = [...(document.querySelectorAll(className + " .location-col .selected button")??[])]?.map(e =>  e.getAttribute("value"))
+    var selectedType = [...(document.querySelector(className + " .type-col .selected button")??[])]?.map(e =>  e.getAttribute("value"))
+    var selectedLocation = [...(document.querySelectorAll(className + " .location-col .selected button")??[])]?.map(e =>  e.getAttribute("value"))
+    var selectedSubCategory = [...(document.querySelectorAll(className + " .subcategory-col .selected button")??[])]?.map(e =>  e.getAttribute("value"))
     console.log(selectedVendor);
-    var catalogNumber = document.querySelector(className + ' .search-by-catalog-number').value
+    var catalogNumber = document.querySelector(className + ' .search-by-catalog-number')?.value
     if (catalogNumber == undefined) {
         catalogNumber = "";
     }
     console.log(catalogNumber)
-    var archived = document.querySelector('.archive-check').value;
+    var archived = document.querySelector('.archive-check')?.value;
     if (archived == undefined) {
         archived = false;
     }
-    var catalogNumber = document.querySelector(className + ' .search-by-catalog-number').value
+    var catalogNumber = document.querySelector(className + ' .search-by-catalog-number')?.value
     if (catalogNumber == undefined) {
         catalogNumber = "";
     }
     console.log(catalogNumber)
-    var searchText = document.querySelector('.search-by-name').value;
+    var searchText = document.querySelector('.search-by-name')?.value;
     console.log(searchText);
     //console.log('searchtext length before if' + searchText.length)
     if (searchText == undefined || !searchText.length) {
-        searchText = document.querySelector('.popover .search-by-name-in-filter').value;
+        searchText = document.querySelector('.popover .search-by-name-in-filter')?.value;
         console.log(searchText)
         if (searchText == undefined || !searchText.length) {
-            searchText = document.querySelector('.search-by-name-in-filter').value;
+            searchText = document.querySelector('.search-by-name-in-filter')?.value;
             if (searchText == undefined || !searchText.length) {
                 searchText = "";
             }
@@ -147,11 +155,11 @@ export var combineTwoFormDatas = function (formdata1, formdata2) {
 
 
 export var addObjectToFormdata = (formdata, object) => {
-
+    console.log(object)
     if (formdata == undefined) {
         var formdata = new FormData();
     }
-    object.forEach(key => {
+    Object.keys(object).forEach(key => {
 
         if (Array.isArray(object[key])) {
             for (const val of object[key].values()) {
@@ -176,7 +184,7 @@ export var addObjectToFormdata = (formdata, object) => {
         selectedPriceSort += "&SelectedPriceSort=" + e.getAttribute("enum");
     })
     var requestStatusId = document.getElementsByClassName("request-status-id")[0]?.value;
-     var queryString = "PageNumber=" + document.getElementsByClassName('page-number')[0]?.value + "&RequestStatusID=" + requestStatusId + "&PageType=" + document.getElementById('masterPageType')?.value + "&SectionType=" + document.getElementById('masterSectionType')?.value + "&SidebarType=" + document.getElementById('masterSidebarType')?.value + "&SelectedCurrency=" + document.getElementById('tempCurrency')?.value + "&SidebarFilterID=" + document.getElementsByClassName('sideBarFilterID')[0]?.value + "&CategorySelected=" +( document.querySelector('#categorySortContent .select-category:checked')?.length > 0 )+ "&SubCategorySelected=" + (document.querySelector('#categorySortContent .select-subcategory:checked').length > 0 )+"&ListID=" + document.getElementById("ListID")?.value;
+     var queryString = "PageNumber=" + document.getElementsByClassName('page-number')[0]?.value + "&RequestStatusID=" + requestStatusId + "&PageType=" + document.getElementById('masterPageType')?.value + "&SectionType=" + document.getElementById('masterSectionType')?.value + "&SidebarType=" + document.getElementById('masterSidebarType')?.value + "&SelectedCurrency=" + document.getElementById('tempCurrency')?.value + "&SidebarFilterID=" + document.getElementsByClassName('sideBarFilterID')[0]?.value + "&CategorySelected=" + (document.querySelector('#categorySortContent .select-category:checked')?.length > 0) + "&SubCategorySelected=" + (document.querySelector('#categorySortContent .select-subcategory:checked').length > 0) + "&ListID=" + document.getElementById("ListID")?.value+"&TabName=" + document.getElementById("TabName")?.value;
     queryString += selectedPriceSort;
     return queryString;
 }

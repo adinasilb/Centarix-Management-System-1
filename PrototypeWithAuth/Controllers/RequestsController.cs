@@ -96,16 +96,6 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        public async Task<JsonResult> GetIndexViewModelJson(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null,
-                                                                              SelectedRequestFilters selectedFilters = null, int numFilters = 0, RequestsSearchViewModel? requestsSearchViewModel = null)
-        {
-           return Json( await base.GetIndexViewModel(requestIndexObject, Months, Years, selectedFilters, requestsSearchViewModel: requestsSearchViewModel), new JsonSerializerSettings
-           {
-               Converters= new List<JsonConverter> { new StringEnumConverter() },
-               ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-           });
-        }
-
 
         [HttpGet]
         [HttpPost]
@@ -155,12 +145,12 @@ namespace PrototypeWithAuth.Controllers
                 }
             };
             List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
-            var editQuoteDetailsIcon = new IconColumnViewModel(" icon-monetization_on-24px ", "var(--lab-man-color);", "load-quote-details", "Upload Quote");
+            var editQuoteDetailsIcon = new IconColumnViewModel(" icon-monetization_on-24px ", "var(--lab-man-color)", "load-quote-details", "Upload Quote");
             var payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-one", "Pay");
             var addInvoiceIcon = new IconColumnViewModel(" icon-cancel_presentation-24px  green-overlay ", "", "invoice-add-one", "Add Invoice");
 
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "/DeleteModal", "Delete");
-            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color);", "request-favorite", "Favorite");
+            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color)", "request-favorite", "Favorite");
             var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
             var popoverPartialClarifyIcon = new IconColumnViewModel("Clarify");
             var resendIcon = new IconColumnViewModel("Resend");
@@ -187,11 +177,11 @@ namespace PrototypeWithAuth.Controllers
                     {
                         case AppUtility.SidebarEnum.Orders:
                             wheres.Add(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
-                            wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
+                            wheres.Add(r => r.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.RequestPriceQuote.ToString());
                             wheres.Add(r => r.QuoteStatusID == 4 && r.RequestStatusID == 6);
                             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator });
                             select = r => new RequestIndexPartialRowViewModel
-                             (AppUtility.IndexTableTypes.LabOrders, r, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                             (AppUtility.IndexTableTypes.LabOrders, r, r.OrderMethod, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString)
 
                             {
@@ -204,7 +194,7 @@ namespace PrototypeWithAuth.Controllers
                             break;
                         case AppUtility.SidebarEnum.Quotes:
                             wheres.Add(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
-                            wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
+                            wheres.Add(r => r.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.RequestPriceQuote.ToString());
                             wheres.Add(r => (r.QuoteStatusID == 1 || r.QuoteStatusID == 2) && r.RequestStatusID == 6);
                             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote });
                             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator });
@@ -212,7 +202,7 @@ namespace PrototypeWithAuth.Controllers
                             iconList.Add(editQuoteDetailsIcon);
                             iconList.Add(deleteIcon);
                             orderby = r => r.CreationDate;
-                            select = r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.LabQuotes, r, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                            select = r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.LabQuotes, r, r.OrderMethod, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString, r.ParentQuote)
 
                             {
@@ -235,7 +225,7 @@ namespace PrototypeWithAuth.Controllers
                         && (notificationFilterViewModel.CentarixOrderNumber == null || r.ParentRequest.OrderNumber == notificationFilterViewModel.CentarixOrderNumber)
                         && (notificationFilterViewModel.ProductName == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.ProductName.ToLower())));
                     }
-                  
+
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.DidntArrive:
@@ -255,23 +245,32 @@ namespace PrototypeWithAuth.Controllers
                             break;
                         case AppUtility.SidebarEnum.NoInvoice:
                             wheres.Add(r => r.Payments.FirstOrDefault().HasInvoice == false);
-                            wheres.Add(r => (r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3));
+                            wheres.Add(r => (r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 5/*installments*/));
                             iconList.Add(addInvoiceIcon);
                             buttonText = "Add To All";
                             break;
                     }
                     orderby = r => r.ParentRequest.OrderDate;
                     select = r => new RequestIndexPartialRowViewModel
-                    (AppUtility.IndexTableTypes.AccountingNotifications, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                    (AppUtility.IndexTableTypes.AccountingNotifications, r, r.OrderMethod, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString, new Request())
                     {
                         ButtonClasses = " invoice-add-all ",
                         ButtonText = buttonText
                     };
-                    viewModelByVendor.NotificationFilterViewModel = notificationFilterViewModel;
                     break;
                 case AppUtility.PageTypeEnum.AccountingPayments:
-                    var paymentList = await GetPaymentRequests(requestIndexObject.SidebarType);
+                    if (notificationFilterViewModel == null)
+                    {
+                        notificationFilterViewModel = new NotificationFilterViewModel() { Vendors = _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Select(v => v.CategoryTypeID).Contains(1) }).ToList() };
+                    }
+                    else
+                    {
+                        wheres.Add(r => (notificationFilterViewModel.SelectedVendor == null || r.Product.VendorID == notificationFilterViewModel.SelectedVendor)
+                        && (notificationFilterViewModel.CentarixOrderNumber == null || r.ParentRequest.OrderNumber == notificationFilterViewModel.CentarixOrderNumber)
+                        && (notificationFilterViewModel.ProductName == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.ProductName.ToLower())));
+                    }
+                    var paymentList = await GetPaymentRequests(requestIndexObject.SidebarType, wheres);
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.Installments:
@@ -282,7 +281,7 @@ namespace PrototypeWithAuth.Controllers
 
                             orderbyForPayments = r => r.Request.ParentRequest.OrderDate;
                             selectForPayments = r => new RequestIndexPartialRowViewModel
-                             (AppUtility.IndexTableTypes.AccountingPaymentsInstallments, r.Request, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
+                             (AppUtility.IndexTableTypes.AccountingPaymentsInstallments, r.Request, r.Request.OrderMethod, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
                                 r.Request.Product.ProductSubcategory.ParentCategory, r.Request.Product.UnitType, r.Request.Product.SubUnitType, r.Request.Product.SubSubUnitType, requestIndexObject, iconList,
                                 defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
 
@@ -295,8 +294,9 @@ namespace PrototypeWithAuth.Controllers
                             iconList.Add(popoverMoreIcon);
                             orderbyForPayments = r => r.Request.ParentRequest.OrderDate;
                             selectForPayments = r => new RequestIndexPartialRowViewModel
-                             (AppUtility.IndexTableTypes.AccountingPaymentsDefault, r.Request, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
-                        r.Request.Product.ProductSubcategory.ParentCategory, r.Request.Product.UnitType, r.Request.Product.SubUnitType, r.Request.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
+                             (AppUtility.IndexTableTypes.AccountingPaymentsDefault, r.Request, r.Request.OrderMethod, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
+                        r.Request.Product.ProductSubcategory.ParentCategory, r.Request.Product.UnitType, r.Request.Product.SubUnitType, r.Request.Product.SubSubUnitType, requestIndexObject, iconList,
+                        defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
 
                             {
                                 ButtonClasses = " payments-pay-now ",
@@ -310,12 +310,27 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.PageTypeEnum.RequestCart:
                     wheres.Add(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User));
-                    wheres.Add(r => r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString());
+                    wheres.Add(r => r.RequestStatusID == 6 && r.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.AddToCart.ToString());
                     wheres.Add(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
                     includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator });
                     iconList.Add(deleteIcon);
                     orderby = r => r.CreationDate;
-                    select = r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Cart, r, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                    select = r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Cart, r, r.OrderMethod, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                        r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString)
+                    {
+                        ButtonClasses = " load-terms-modal  ",
+                        ButtonText = "Order",
+                    };
+                    break;
+                case AppUtility.PageTypeEnum.OperationsCart:
+                    wheres.Add(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User));
+                    wheres.Add(r => r.RequestStatusID == 6 && r.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.AddToCart.ToString());
+                    wheres.Add(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2);
+                    wheres.Add(r => r.OccurenceNumber == 1);
+                    includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserCreator });
+                    iconList.Add(deleteIcon);
+                    orderby = r => r.CreationDate;
+                    select = r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.CartOperations, r, r.OrderMethod, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
                         r.Product.ProductSubcategory.ParentCategory, r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString)
                     {
                         ButtonClasses = " load-terms-modal  ",
@@ -330,6 +345,7 @@ namespace PrototypeWithAuth.Controllers
             }
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
+            viewModelByVendor.NotificationFilterViewModel = notificationFilterViewModel;
             viewModelByVendor.PricePopoverViewModel = new PricePopoverViewModel() { };
             viewModelByVendor.PricePopoverViewModel.PriceSortEnums = priceSorts;
             viewModelByVendor.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
@@ -337,6 +353,7 @@ namespace PrototypeWithAuth.Controllers
             viewModelByVendor.PageType = requestIndexObject.PageType;
             viewModelByVendor.SidebarType = requestIndexObject.SidebarType;
             viewModelByVendor.ErrorMessage = requestIndexObject.ErrorMessage;
+            viewModelByVendor.InventoryFilterViewModel = GetInventoryFilterViewModel();
             return viewModelByVendor;
         }
 
@@ -471,14 +488,30 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests,Operations")]
-        public async Task<RedirectToActionResult> SaveAddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
+        public async Task<RedirectToActionResult> SaveAddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderMethod OrderMethod, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             try
             {
+                switch (requestItemViewModel.OrderType)
+                {
+                    case AppUtility.OrderType.SingleOrder:
+                        requestItemViewModel.Requests[0].Product = requestItemViewModel.Requests[0].SingleOrder;
+                        requestItemViewModel.Requests[0].SingleOrder = null;
+                        break;
+                    case AppUtility.OrderType.RecurringOrder:
+                        requestItemViewModel.Requests[0].Product = requestItemViewModel.Requests[0].RecurringOrder;
+                        requestItemViewModel.Requests[0].RecurringOrder = null;
+                        break;
+                    case AppUtility.OrderType.StandingOrder:
+                        requestItemViewModel.Requests[0].Product = requestItemViewModel.Requests[0].StandingOrder;
+                        requestItemViewModel.Requests[0].StandingOrder = null;
+                        break;
+                };
+
                 var vendor = await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == requestItemViewModel.Requests.FirstOrDefault().Product.VendorID });
                 var exchangeRate = requestItemViewModel.Requests.FirstOrDefault().ExchangeRate;
                 var currency = requestItemViewModel.Requests.FirstOrDefault().Currency;
-
+                var orderMethod = await _orderMethodsProc.ReadOneAsync(new List<Expression<Func<OrderMethod, bool>>> { o => o.DescriptionEnum == OrderMethod.ToString() });
                 //declared outside the if b/c it's used farther down too 
                 var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
 
@@ -486,46 +519,49 @@ namespace PrototypeWithAuth.Controllers
                 var i = 1;
                 var additionalRequests = false;
                 var trlvm = new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() };
+
                 foreach (var request in requestItemViewModel.Requests)
                 {
                     //throw new Exception();
-                    if (!request.Ignore)
+                    request.OrderMethod = orderMethod;
+                    request.ApplicationUserCreatorID = currentUser.Id;
+                    if (!requestItemViewModel.IsProprietary)
                     {
-                        request.ApplicationUserCreatorID = currentUser.Id;
-                        if (!requestItemViewModel.IsProprietary)
-                        {
-                            request.Product.VendorID = vendor.VendorID;
-                            request.Product.Vendor = vendor;
-                            request.CreationDate = DateTime.Now;
-                        }
-
-                        request.Product.ProductSubcategory = await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == request.Product.ProductSubcategoryID }, new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory } });
-                        var isInBudget = false;
-                        if (!request.Product.ProductSubcategory.ParentCategory.IsProprietary)
-                        {
-                            if (request.Currency == null)
-                            {
-                                request.Currency = AppUtility.CurrencyEnum.NIS.ToString();
-                            }
-                            isInBudget = await checkIfInBudgetAsync(request);
-                        }
-                        request.ExchangeRate = exchangeRate;
-
-
-                        request.Product.ProductName = AppUtility.TrimNewLines(request.Product.ProductName);
-                        TempRequestViewModel trvm = await AddItemAccordingToOrderType(request, OrderType, isInBudget, requestItemViewModel, requestNum: RequestNum, receivedModalVisualViewModel);
-                        if (requestItemViewModel.Comments != null)
-                        {
-                            trvm.Comments = new List<CommentBase>();
-                            foreach (var comment in requestItemViewModel.Comments)
-                            {
-                                trvm.Comments.Add(comment);
-                            }
-                        }
-
-                        trlvm.TempRequestViewModels.Add(trvm);
-                        i++;
+                        request.Product.VendorID = vendor.VendorID;
+                        request.Product.Vendor = vendor;
+                        request.CreationDate = DateTime.Now;
                     }
+
+                    request.Product.ProductSubcategory = await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == request.Product.ProductSubcategoryID }, new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory } });
+                    var isInBudget = false;
+                    if (!request.Product.ProductSubcategory.ParentCategory.IsProprietary)
+                    {
+                        if (request.Currency == null)
+                        {
+                            request.Currency = AppUtility.CurrencyEnum.NIS.ToString();
+                        }
+                        isInBudget = await checkIfInBudgetAsync(request);
+                    }
+                    request.ExchangeRate = exchangeRate;
+
+
+                    request.Product.ProductName = AppUtility.TrimNewLines(request.Product.ProductName);
+                    TempRequestViewModel trvm = await AddItemAccordingToOrderMethod(request, OrderMethod, isInBudget, requestItemViewModel, requestNum: RequestNum, receivedModalVisualViewModel);
+                    if (requestItemViewModel.SectionType == AppUtility.MenuItems.Operations && OrderMethod == AppUtility.OrderMethod.AddToCart)
+                    {
+                        break;
+                    }
+                    if (requestItemViewModel.Comments != null)
+                    {
+                        trvm.Comments = new List<CommentBase>();
+                        foreach (var comment in requestItemViewModel.Comments)
+                        {
+                            trvm.Comments.Add(comment);
+                        }
+                    }
+
+                    trlvm.TempRequestViewModels.Add(trvm);
+                    i++;
                 }
                 await _tempRequestJsonsProc.UpdateAsync(requestItemViewModel.TempRequestListViewModel.GUID, requestItemViewModel.TempRequestListViewModel.RequestIndexObject, trlvm, currentUser.Id, false); ;
             }
@@ -547,43 +583,83 @@ namespace PrototypeWithAuth.Controllers
             }
             requestItemViewModel.TempRequestListViewModel.RequestIndexObject = new RequestIndexObject()
             {
-                OrderType = OrderType,
+                OrderMethod = OrderMethod,
                 SectionType = requestItemViewModel.SectionType
             };
             requestItemViewModel.TempRequestListViewModel.RequestIndexObject.GUID = requestItemViewModel.TempRequestListViewModel.GUID;
-            switch (OrderType)
+            if (requestItemViewModel.SectionType == AppUtility.MenuItems.Requests)
             {
-                case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                    return new RedirectToActionResult("UploadOrderModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
-                case AppUtility.OrderTypeEnum.OrderNow:
-                    return new RedirectToActionResult("UploadQuoteModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
-                case AppUtility.OrderTypeEnum.AddToCart:
-                    return new RedirectToActionResult("UploadQuoteModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
-                case AppUtility.OrderTypeEnum.SaveOperations:
-                    return new RedirectToActionResult("UploadOrderModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
-                default:
-                    await _tempRequestJsonsProc.RemoveAllAsync(requestItemViewModel.TempRequestListViewModel.GUID, _userManager.GetUserId(User));
-                    if (requestItemViewModel.PageType == AppUtility.PageTypeEnum.RequestSummary)
-                    {
-                        return new RedirectToActionResult("IndexInventory", "Requests", new
+                switch (OrderMethod)
+                {
+                    case AppUtility.OrderMethod.AlreadyPurchased:
+                        return new RedirectToActionResult("UploadOrderModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
+                    case AppUtility.OrderMethod.OrderNow:
+                        return new RedirectToActionResult("UploadQuoteModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
+                    case AppUtility.OrderMethod.AddToCart:
+                        return new RedirectToActionResult("UploadQuoteModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
+                    default:
+                        await _tempRequestJsonsProc.RemoveAllAsync(requestItemViewModel.TempRequestListViewModel.GUID, _userManager.GetUserId(User));
+                        if (requestItemViewModel.PageType == AppUtility.PageTypeEnum.RequestSummary)
+                        {
+                            return new RedirectToActionResult("IndexInventory", "Requests", new
+                            {
+                                PageType = requestItemViewModel.PageType,
+                                SectionType = requestItemViewModel.SectionType,
+                                SidebarType = AppUtility.SidebarEnum.List,
+                                RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
+                            });
+                        }
+                        return new RedirectToActionResult("Index", "Requests", new
                         {
                             PageType = requestItemViewModel.PageType,
                             SectionType = requestItemViewModel.SectionType,
                             SidebarType = AppUtility.SidebarEnum.List,
                             RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
                         });
-                    }
-                    return new RedirectToActionResult("Index", "Requests", new
-                    {
-                        PageType = requestItemViewModel.PageType,
-                        SectionType = requestItemViewModel.SectionType,
-                        SidebarType = AppUtility.SidebarEnum.List,
-                        RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
-                    });
+                }
             }
+            else if (requestItemViewModel.SectionType == AppUtility.MenuItems.Operations)
+            {
+                switch (OrderMethod)
+                {
+                    case AppUtility.OrderMethod.AlreadyPurchased:
+                        return new RedirectToActionResult("UploadOrderModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
+                    case AppUtility.OrderMethod.OrderNow:
+                        return new RedirectToActionResult("UploadQuoteModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
+                    case AppUtility.OrderMethod.AddToCart:
+                        await _tempRequestJsonsProc.RemoveAllAsync(requestItemViewModel.TempRequestListViewModel.GUID, _userManager.GetUserId(User));
+                        if (requestItemViewModel.AdditionalRequests)
+                        {
+                            return new RedirectToActionResult("EmptyResult", "Requests", "");
+                        }
+                        else
+                        {
+                            return new RedirectToActionResult("Index", "Requests", new
+                            {
+                                PageType = requestItemViewModel.PageType,
+                                SectionType = requestItemViewModel.SectionType,
+                                SidebarType = AppUtility.SidebarEnum.List,
+                                RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
+                            });
+                        }
+                    default:
+                        await _tempRequestJsonsProc.RemoveAllAsync(requestItemViewModel.TempRequestListViewModel.GUID, _userManager.GetUserId(User));
+                        return new RedirectToActionResult("Index", "Requests", new
+                        {
+                            PageType = requestItemViewModel.PageType,
+                            SectionType = requestItemViewModel.SectionType,
+                            SidebarType = AppUtility.SidebarEnum.List,
+                            RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
+                        });
+                }
+            }
+            return new RedirectToActionResult("EmptyResult", "Requests", "");
         }
 
-
+        protected ActionResult EmptyResult()
+        {
+            return new EmptyResult();
+        }
         protected async Task<bool> checkIfInBudgetAsync(Request request, Product oldProduct = null)
         {
             if (oldProduct == null)
@@ -640,7 +716,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        protected async Task<TempRequestViewModel> AddItemAccordingToOrderType(Request newRequest, AppUtility.OrderTypeEnum OrderTypeEnum, bool isInBudget, RequestItemViewModel requestItemViewModel, int requestNum = 1, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
+        protected async Task<TempRequestViewModel> AddItemAccordingToOrderMethod(Request newRequest, AppUtility.OrderMethod OrderMethodEnum, bool isInBudget, RequestItemViewModel requestItemViewModel, int requestNum = 1, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             var context = new ValidationContext(newRequest, null, null);
             var results = new List<ValidationResult>();
@@ -650,25 +726,29 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    switch (OrderTypeEnum)
+                    switch (OrderMethodEnum)
                     {
-                        case AppUtility.OrderTypeEnum.AddToCart:
-                            trvm = await AddToCart(newRequest, isInBudget, requestItemViewModel.TempRequestListViewModel);
+                        case AppUtility.OrderMethod.AddToCart:
+                            if (requestItemViewModel.SectionType == AppUtility.MenuItems.Requests)
+                            {
+                                trvm = await AddToCart(newRequest, isInBudget, requestItemViewModel.TempRequestListViewModel);
+                            }
+                            else if (requestItemViewModel.SectionType == AppUtility.MenuItems.Operations)
+                            {
+                                trvm = await AddToCartOperations(newRequest, isInBudget, requestItemViewModel.TempRequestListViewModel);
+                            }
                             break;
-                        case AppUtility.OrderTypeEnum.AlreadyPurchased:
+                        case AppUtility.OrderMethod.AlreadyPurchased:
                             trvm = await AlreadyPurchased(newRequest, requestItemViewModel.TempRequestListViewModel);
                             break;
-                        case AppUtility.OrderTypeEnum.OrderNow:
+                        case AppUtility.OrderMethod.OrderNow:
                             trvm = await OrderNow(newRequest, isInBudget, requestItemViewModel.TempRequestListViewModel);
                             break;
-                        case AppUtility.OrderTypeEnum.RequestPriceQuote:
+                        case AppUtility.OrderMethod.RequestPriceQuote:
                             trvm = await RequestItem(newRequest, isInBudget);
                             break;
-                        case AppUtility.OrderTypeEnum.Save: //proprietary
+                        case AppUtility.OrderMethod.Save: //proprietary
                             trvm = await SaveItem(newRequest, requestItemViewModel, requestItemViewModel.TempRequestListViewModel.GUID, receivedModalVisualViewModel);
-                            break;
-                        case AppUtility.OrderTypeEnum.SaveOperations:
-                            trvm = await SaveOperationsItem(newRequest, requestNum, requestItemViewModel.TempRequestListViewModel);
                             break;
                     }
                 }
@@ -693,9 +773,47 @@ namespace PrototypeWithAuth.Controllers
             {
                 request.RequestStatusID = 1;
             }
-            request.OrderType = AppUtility.OrderTypeEnum.AddToCart.ToString();
+            request.OrderMethod.DescriptionEnum = AppUtility.OrderMethod.AddToCart.ToString();
 
             tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>() { new TempRequestViewModel() { Request = request } };
+
+            return tempRequestListViewModel.TempRequestViewModels.FirstOrDefault();
+        }
+        protected async Task<TempRequestViewModel> AddToCartOperations(Request request, bool isInBudget, TempRequestListViewModel tempRequestListViewModel)
+        {
+            if (isInBudget)
+            {
+                request.RequestStatusID = 6;
+            }
+            else
+            {
+                request.RequestStatusID = 1;
+            }
+            using (var transaction = _applicationDbContextTransaction.Transaction)
+            {
+                try
+                {
+                    request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(true);
+                    long lastParentRequestOrderNum = 0;
+                    if (_parentRequestsProc.Read().Any())
+                    {
+                        lastParentRequestOrderNum = _parentRequestsProc.ReadWithIgnoreQueryFilters().OrderByDescending(x => x.OrderNumber).Select(pr => pr.OrderNumber).FirstOrDefault() ?? 0;
+                    }
+                    ParentRequest pr = new ParentRequest()
+                    {
+                        ApplicationUserID = request.ApplicationUserCreatorID,
+                        OrderNumber = lastParentRequestOrderNum + 1,
+                        OrderDate = DateTime.Now
+                    };
+                    request.ParentRequest = pr;
+                    await SaveTempRequestAndCommentsAsync(new TempRequestViewModel() { Request = request });
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
 
             return tempRequestListViewModel.TempRequestViewModels.FirstOrDefault();
         }
@@ -704,7 +822,7 @@ namespace PrototypeWithAuth.Controllers
         {
             request.RequestStatusID = 2;
             request.ParentQuoteID = null;
-            request.OrderType = AppUtility.OrderTypeEnum.AlreadyPurchased.ToString();
+            request.OrderMethod.DescriptionEnum = AppUtility.OrderMethod.AlreadyPurchased.ToString();
 
             tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>() { new TempRequestViewModel() { Request = request } };
 
@@ -714,7 +832,7 @@ namespace PrototypeWithAuth.Controllers
         {
             /*try
             {*/
-            request.OrderType = AppUtility.OrderTypeEnum.OrderNow.ToString();
+            request.OrderMethod.DescriptionEnum = AppUtility.OrderMethod.OrderNow.ToString();
             if (isInBudget)
             {
                 request.RequestStatusID = 6;
@@ -756,7 +874,7 @@ namespace PrototypeWithAuth.Controllers
                     newRequest.Cost = 0;
                     //newRequest.ParentQuote = new ParentQuote();
                     newRequest.QuoteStatusID = 1;
-                    newRequest.OrderType = AppUtility.OrderTypeEnum.RequestPriceQuote.ToString();
+                    newRequest.OrderMethod.DescriptionEnum = AppUtility.OrderMethod.RequestPriceQuote.ToString();
                     //this is assuming that we only reorder request price quotes
                     var ModelStates = new List<ModelAndState>()
                     {
@@ -786,7 +904,7 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     newRequest.RequestStatusID = 7;
-                    newRequest.OrderType = AppUtility.OrderTypeEnum.Save.ToString();
+                    newRequest.OrderMethod.DescriptionEnum = AppUtility.OrderMethod.Save.ToString();
                     newRequest.Unit = 1;
                     newRequest.Product.UnitTypeID = 5;
                     newRequest.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(false);
@@ -838,26 +956,6 @@ namespace PrototypeWithAuth.Controllers
             }
             return new TempRequestViewModel() { Request = newRequest };
         }
-        private async Task<TempRequestViewModel> SaveOperationsItem(Request request, int requestNum, TempRequestListViewModel tempRequestListViewModel)
-        {
-
-            if (request.IsReceived)
-            {
-                request.RequestStatusID = 3;
-                request.ApplicationUserReceiverID = _userManager.GetUserId(User);
-                request.ArrivalDate = DateTime.Now;
-                request.IsInInventory = true;
-            }
-            else
-            {
-                request.RequestStatusID = 2;
-            }
-            request.Product.UnitTypeID = 5;
-            request.OrderType = AppUtility.OrderTypeEnum.SaveOperations.ToString();
-
-            return new TempRequestViewModel() { Request = request };
-
-        }
 
 
         public async Task SaveTempRequestAndCommentsAsync(TempRequestViewModel tempRequest)
@@ -879,8 +977,17 @@ namespace PrototypeWithAuth.Controllers
                 parentQuoteState.StateEnum = EntityState.Unchanged;
             }
             ModelStates.Add(parentQuoteState);
-            ModelStates.Add(new ModelAndState { Model = tempRequest.Request, StateEnum = EntityState.Added });
-            ModelStates.Add(new ModelAndState { Model = tempRequest.Request.ParentRequest, StateEnum = EntityState.Added });
+            if (tempRequest.Request.Product is RecurringOrder)
+            {
+                var recurringRequestsModelStates = await CreateRecurringOrderRequests(tempRequest.Request);
+                ModelStates = ModelStates.Concat(recurringRequestsModelStates).ToList();
+
+            }
+            else
+            {
+                ModelStates.Add(new ModelAndState { Model = tempRequest.Request, StateEnum = EntityState.Added });
+                ModelStates.Add(new ModelAndState { Model = tempRequest.Request.ParentRequest, StateEnum = EntityState.Added });
+            }
             await _requestsProc.UpdateModelsAsync(ModelStates);
 
             var userID = _userManager.GetUserId(User);
@@ -890,7 +997,45 @@ namespace PrototypeWithAuth.Controllers
                 await _productCommentsProc.UpdateWithoutTransactionAsync(AppData.Json.Deserialize<List<ProductComment>>(AppData.Json.Serialize(tempRequest.Comments.Where(c => c.CommentTypeID == 2))), tempRequest.Request.ProductID, userID);
             }
         }
+        public async Task<List<ModelAndState>> CreateRecurringOrderRequests(Request request)
+        {
+            RecurringOrder recurringOrder = (RecurringOrder)request.Product;
+            var nextRequestDate = recurringOrder.StartDate;
+            var nextRequest = request;
+            request.CreationDate = recurringOrder.StartDate;
+            var ModelStates = new List<ModelAndState>();
+            ModelStates.Add(new ModelAndState { Model = request, StateEnum = EntityState.Added });
+            var occurrenceCounter = 2;
+            while (nextRequestDate.Year == DateTime.Now.Year &&
+                ((recurringOrder.RecurrenceEndStatusID == 2  && nextRequestDate > recurringOrder.EndDate)
+                    || (recurringOrder.RecurrenceEndStatusID == 3 && occurrenceCounter <= recurringOrder.Occurrences)
+                    || recurringOrder.RecurrenceEndStatusID == 1))
+            {
+                nextRequest = AppUtility.DeepClone(request);
+                recurringOrder.TimePeriod = await _timePeriodProc.ReadOneAsync(new List<Expression<Func<TimePeriod, bool>>> { tp => tp.ID == recurringOrder.TimePeriodID });
+                switch (Enum.Parse(typeof(AppUtility.TimePeriods), recurringOrder.TimePeriod.DescriptionEnum))
+                {
+                    case AppUtility.TimePeriods.Days:
+                        nextRequestDate = nextRequestDate.AddDays(recurringOrder.TimePeriodAmount);
+                        break;
+                    case AppUtility.TimePeriods.Weeks:
+                        nextRequestDate = nextRequestDate.AddDays(recurringOrder.TimePeriodAmount * 7);
+                        break;
+                    case AppUtility.TimePeriods.Months:
+                        nextRequestDate = nextRequestDate.AddMonths(recurringOrder.TimePeriodAmount);
+                        break;
+                }
 
+                nextRequest.RequestID = 0;
+                nextRequest.CreationDate = nextRequestDate;
+                nextRequest.OccurenceNumber = occurrenceCounter;
+                nextRequest.Product = recurringOrder;
+                ModelStates.Add(new ModelAndState { Model = nextRequest, StateEnum = EntityState.Added });
+                occurrenceCounter++;
+            }
+
+            return ModelStates;
+        }
         public async Task<RedirectToActionResult> RollbackTempRequestHiddenFors(Guid Guid, int SequencePosition, bool isRollBack = true)
         {
             try
@@ -940,6 +1085,7 @@ namespace PrototypeWithAuth.Controllers
         {
             StringWithBool Error = new StringWithBool();
             List<ComplexIncludes<Request, ModelBase>> includes = new List<ComplexIncludes<Request, ModelBase>>();
+            includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.OrderMethod });
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote });
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Product)p).Vendor } });
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((ProductSubcategory)p).ParentCategory } });
@@ -952,14 +1098,14 @@ namespace PrototypeWithAuth.Controllers
                     List<Request> reqsFromDB = new List<Request>();
                     if (tempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Cart)
                     {
-                        wheres.Add(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString()
+                        wheres.Add(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.AddToCart.ToString()
                             && r.QuoteStatusID == 4);
                         wheres.Add(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User));
 
                     }
                     else if (tempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Orders)
                     {
-                        wheres.Add(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()
+                        wheres.Add(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.RequestPriceQuote.ToString()
                          && r.QuoteStatusID == 4);
                     }
                     tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>();
@@ -1076,7 +1222,7 @@ namespace PrototypeWithAuth.Controllers
                                 tempRequest.Request.Product = await _productsProc.ReadOneAsync(new List<Expression<Func<Product, bool>>> { p => p.ProductID == tempRequest.Request.ProductID }, new List<ComplexIncludes<Product, ModelBase>> { new ComplexIncludes<Product, ModelBase> { Include = p => p.ProductSubcategory } });
                             }
 
-                            if (tempRequest.Request.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased.ToString() || tempRequest.Request.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString() || needsToBeApproved)
+                            if (tempRequest.Request.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.AlreadyPurchased.ToString() || needsToBeApproved)
                             {
                                 SaveUsingTempRequest = false;
                             }
@@ -1090,10 +1236,6 @@ namespace PrototypeWithAuth.Controllers
                             if (!SaveUsingTempRequest)
                             {
                                 var isOperations = false;
-                                if (tempRequest.Request.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString())
-                                {
-                                    isOperations = true;
-                                }
                                 tempRequest.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(isOperations);
                                 await SaveTempRequestAndCommentsAsync(tempRequest);
 
@@ -1399,17 +1541,13 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _DeleteModal(int? id, RequestIndexObject requestIndexObject)
+        public async Task<JsonResult> DeleteModalJson(int? id, RequestIndexObject requestIndexObject)
         {
             //if (!AppUtility.IsAjaxRequest(Request))
             //{
             //    return PartialView("InvalidLinkPage");
             //}
-            if (id == null)
-            {
-                ViewBag.ErrorMessage = "Product not found (no id). Unable to delete.";
-                return NotFound();
-            }
+    
 
             var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { m => m.RequestID == id },
                 new List<ComplexIncludes<Request, ModelBase>>{
@@ -1418,24 +1556,33 @@ namespace PrototypeWithAuth.Controllers
                             ThenInclude =  new ComplexIncludes<ModelBase, ModelBase> { Include = ps => ((ProductSubcategory)ps).ParentCategory }}},
                     new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.Vendor } });
 
-            if (request == null)
-            {
-                ViewBag.ErrorMessage = "Product not found (no request). Unable to delete";
-                return NotFound();
-            }
+        
 
             DeleteRequestViewModel deleteRequestViewModel = new DeleteRequestViewModel()
             {
-                Request = request,
-                RequestIndexObject = requestIndexObject
+                Request = request
             };
+            if (request == null)
+            {
+                deleteRequestViewModel.ErrorMessage  = "Product not found (no request). Unable to delete";
+                Response.StatusCode= 500;
+            }
+            if (id == null)
+            {
+                deleteRequestViewModel.ErrorMessage = "Product not found (no id). Unable to delete.";
+                Response.StatusCode= 500;
+            }
+            return Json(JsonConvert.SerializeObject(deleteRequestViewModel, Formatting.Indented,  new JsonSerializerSettings
+            {
 
-            return PartialView(deleteRequestViewModel);
+                Converters= new List<JsonConverter> { new StringEnumConverter() },
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
         }
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<JsonResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters, int numFilters = 0)
+        public async Task<JsonResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel,  RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters, int numFilters = 0)
         {
             try
             {
@@ -1450,22 +1597,77 @@ namespace PrototypeWithAuth.Controllers
             {
                 Response.StatusCode = 500;
                 await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
-                return null ;
+                return null;
             }
-            var viewModel = await GetIndexViewModelByVendor(deleteRequestViewModel.RequestIndexObject);
-            viewModel.ErrorMessage="sdfjsld";
-            var json  = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
-               new JsonSerializerSettings
-               {
-                   Converters= new List<JsonConverter> { new StringEnumConverter() },
-                   ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-               });
-            
-            return Json( json);
+            return await GetIndexTableJson(requestIndexObject, requestsSearchViewModel: requestsSearchViewModel, selectedFilters: selectedFilters, numFilters: numFilters);
 
         }
 
+        private async Task<JsonResult> GetIndexTableJson(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null,
+                                                                              SelectedRequestFilters selectedFilters = null, int numFilters = 0, RequestsSearchViewModel? requestsSearchViewModel = null)
+        {
+            string json = "";
+            if (CheckIfIndexTableByVendor(requestIndexObject.SectionType, requestIndexObject.PageType, requestIndexObject.SidebarType))
+            {
+                var viewModelByVendor = await GetIndexViewModelByVendor(requestIndexObject);
+                json = JsonConvert.SerializeObject(viewModelByVendor, Formatting.Indented,
+                   new JsonSerializerSettings
+                   {
+                       Converters= new List<JsonConverter> { new StringEnumConverter() },
+                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                   });
+            }
+            else
+            {
+                var viewModel = await GetIndexViewModel(requestIndexObject, Months, Years, selectedFilters: selectedFilters,  numFilters, requestsSearchViewModel: requestsSearchViewModel);
+                json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
+                   new JsonSerializerSettings
+                   {
+                       Converters= new List<JsonConverter> { new StringEnumConverter() },
+                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                   });
+            }
 
+            return Json(json);
+        }
+
+        private bool CheckIfIndexTableByVendor(AppUtility.MenuItems SectionType, AppUtility.PageTypeEnum PageType, AppUtility.SidebarEnum SidebarType)
+        {
+            bool isByVendor = false;
+            switch(SectionType)
+            {
+                case AppUtility.MenuItems.Accounting:
+                    switch(PageType)
+                    {
+                        case AppUtility.PageTypeEnum.AccountingPayments:
+                        case AppUtility.PageTypeEnum.AccountingNotifications:
+                            isByVendor = true;
+                            break;
+                    }
+                    break;
+                case AppUtility.MenuItems.LabManagement:
+                    isByVendor=true;
+                    break;
+                case AppUtility.MenuItems.Requests:
+                    switch (PageType)
+                    {
+                        case AppUtility.PageTypeEnum.RequestCart:
+                         switch(SidebarType)
+                            {
+                                case AppUtility.SidebarEnum.Orders:
+                                    isByVendor = true;
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+
+                    break;
+                case AppUtility.MenuItems.Operations:
+                    break;
+            }
+            return isByVendor;
+        }
 
 
         [HttpGet]
@@ -1511,12 +1713,13 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> AddItemView(AppUtility.OrderTypeEnum OrderType, TempRequestListViewModel tempRequestListViewModel, RequestItemViewModel requestItemViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
+        public async Task<IActionResult> AddItemView(AppUtility.OrderMethod OrderMethod, TempRequestListViewModel tempRequestListViewModel, RequestItemViewModel requestItemViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             requestItemViewModel.TempRequestListViewModel = tempRequestListViewModel;
+
             try
             {
-                var redirectToActionResult = SaveAddItemView(requestItemViewModel, OrderType, receivedModalVisualViewModel).Result;
+                var redirectToActionResult = SaveAddItemView(requestItemViewModel, OrderMethod, receivedModalVisualViewModel).Result;
                 return RedirectToAction(redirectToActionResult.ActionName, redirectToActionResult.ControllerName, redirectToActionResult.RouteValues);
             }
             catch (Exception ex)
@@ -1524,41 +1727,6 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                 return PartialView("_ErrorMessage", requestItemViewModel.ErrorMessage);
             }
-        }
-
-        private static List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder, FavoriteRequest favoriteRequest = null, Request request = null, ApplicationUser user = null)
-        {
-            var newIconList = AppUtility.DeepClone(iconList);
-            //favorite icon
-            var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
-
-            if (favIconIndex != -1 && favoriteRequest != null) //check these checks
-            {
-                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "var(--order-inv-color);", "request-favorite request-unlike", "Unfavorite");
-                newIconList[favIconIndex] = unLikeIcon;
-            }
-            //for approval icon
-            if (request != null)
-            {
-                var forApprovalIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("approve-order"));
-                if (request.RequestStatusID != 1 && forApprovalIconIndex != -1)
-                {
-                    newIconList.RemoveAt(forApprovalIconIndex);
-                    needsPlaceholder = true;
-                }
-                //resend icon
-                var resendIcon = new IconColumnViewModel("Resend");
-                var placeholder = new IconColumnViewModel("Placeholder");
-                if (request.QuoteStatusID == 2)
-                {
-                    newIconList.Insert(0, resendIcon);
-                }
-                else if (needsPlaceholder)
-                {
-                    newIconList.Insert(0, placeholder);
-                }
-            }
-            return newIconList;
         }
 
 
@@ -1618,6 +1786,18 @@ namespace PrototypeWithAuth.Controllers
             {
                 requestItemViewModel.IsProprietary = true;
             }
+            if (categoryTypeId == 2)
+            {
+                requestItemViewModel.ApplicationUsers = _employeesProc.Read()
+                              .Select(
+                                  u => new SelectListItem
+                                  {
+                                      Text = u.FirstName + " " + u.LastName,
+                                      Value = u.Id,
+                                      Selected = u.Id == _userManager.GetUserId(User)
+                                  }
+                              ).ToList();
+            }
 
             requestItemViewModel.Comments = new List<CommentBase>();
 
@@ -1626,7 +1806,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Requests = new List<Request>();
             requestItemViewModel.Requests.Add(new Request());
             requestItemViewModel.Requests.FirstOrDefault().ExchangeRate = await GetExchangeRateAsync();
-            requestItemViewModel.Requests.FirstOrDefault().Product = new Product();
+            requestItemViewModel.Requests.FirstOrDefault().Product = new SingleOrder();
             requestItemViewModel.Requests.FirstOrDefault().ParentQuote = new ParentQuote();
             requestItemViewModel.Requests.FirstOrDefault().SubProject = new SubProject();
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory = productSubcategory;
@@ -1670,7 +1850,7 @@ namespace PrototypeWithAuth.Controllers
             operationsItemViewModel.Request = new Request() { IncludeVAT = true };
             if (subcategoryID > 0)
             {
-                operationsItemViewModel.Request.Product = new Product();
+                operationsItemViewModel.Request.Product = new SingleOrder();
                 operationsItemViewModel.Request.Product.ProductSubcategoryID = subcategoryID;
                 operationsItemViewModel.Request.Product.ProductSubcategory =
                   await _productSubcategoriesProc.ReadOneAsync(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == subcategoryID });
@@ -1728,7 +1908,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            var shareViewModel = base.GetShareModalViewModel(ID, ModelsEnum);
+            var shareViewModel = base.GetShareModalViewModel(ID);
             switch (ModelsEnum)
             {
                 case AppUtility.ModelsEnum.Request:
@@ -1738,8 +1918,37 @@ namespace PrototypeWithAuth.Controllers
                     shareViewModel.ObjectDescription = _requestListsProc.ReadOneAsync(new List<Expression<Func<RequestList, bool>>> { rl => rl.ListID == ID }).Result.Title;
                     break;
             }
-
+            
             return PartialView(shareViewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<JsonResult> ShareModalJson(int ID, AppUtility.ModelsEnum ModelsEnum)
+        {
+            //if (!AppUtility.IsAjaxRequest(Request))
+            //{
+            //    return PartialView("InvalidLinkPage");
+            //}
+            var shareViewModel = base.GetShareModalViewModel(ID);
+            switch (ModelsEnum)
+            {
+                case AppUtility.ModelsEnum.Request:
+                    shareViewModel.ObjectDescription = _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == ID }, new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product } }).Result.Product.ProductName;
+                    break;
+                case AppUtility.ModelsEnum.RequestLists:
+                    shareViewModel.ObjectDescription = _requestListsProc.ReadOneAsync(new List<Expression<Func<RequestList, bool>>> { rl => rl.ListID == ID }).Result.Title;
+                    break;
+            }
+           
+
+            var json = JsonConvert.SerializeObject(shareViewModel, Formatting.Indented,
+               new JsonSerializerSettings
+               {
+                   Converters= new List<JsonConverter> { new StringEnumConverter() },
+                   ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+               });
+            return Json(json);
         }
 
 
@@ -1821,6 +2030,19 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     var request = requestItemViewModel.Requests.FirstOrDefault();
+
+                    switch (requestItemViewModel.OrderType)
+                    {
+                        case AppUtility.OrderType.SingleOrder:
+                            request.Product = request.SingleOrder;
+                            break;
+                        case AppUtility.OrderType.RecurringOrder:
+                            request.Product = request.RecurringOrder;
+                            break;
+                        case AppUtility.OrderType.StandingOrder:
+                            request.Product = request.StandingOrder;
+                            break;
+                    };
                     //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
                     request.ParentRequest = null;
                     var parentQuote = await _parentQuotesProc.ReadOneAsync(new List<Expression<Func<ParentQuote, bool>>> { pq => pq.ParentQuoteID == request.ParentQuoteID });
@@ -1942,8 +2164,9 @@ namespace PrototypeWithAuth.Controllers
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
+                UnitTypes = unittypes
             };
-            request.RequestStatusID =1;
+            request.RequestStatusID = 1;
             requestItemViewModel.Requests = new List<Request>() { request };
             requestItemViewModel.ModalType = AppUtility.RequestModalType.Reorder;
             requestItemViewModel.HasWarnings = _productCommentsProc.Read(new List<Expression<Func<ProductComment, bool>>> { pc => pc.ObjectID == request.ProductID && pc.CommentTypeID == 2 }).Count() > 0;
@@ -1970,7 +2193,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, TempRequestListViewModel tempRequestListViewModel, AppUtility.OrderTypeEnum OrderTypeEnum/*, bool isCancel = false*/)
+        public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, TempRequestListViewModel tempRequestListViewModel, AppUtility.OrderMethod OrderMethod/*, bool isCancel = false*/)
         {
             /*if (isCancel)
             {
@@ -1982,6 +2205,18 @@ namespace PrototypeWithAuth.Controllers
             var userID = _userManager.GetUserId(User);
             try
             {
+                switch (requestItemViewModel.OrderType)
+                {
+                    case AppUtility.OrderType.SingleOrder:
+                        requestItemViewModel.Requests[0].Product = requestItemViewModel.Requests[0].SingleOrder;
+                        break;
+                    case AppUtility.OrderType.RecurringOrder:
+                        requestItemViewModel.Requests[0].Product = requestItemViewModel.Requests[0].RecurringOrder;
+                        break;
+                    case AppUtility.OrderType.StandingOrder:
+                        requestItemViewModel.Requests[0].Product = requestItemViewModel.Requests[0].StandingOrder;
+                        break;
+                };
                 //  ReorderViewModel reorderViewModel = JsonConvert.DeserializeObject<ReorderViewModel>(json);
                 //get the old request that we are reordering
                 var oldRequest = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestItemViewModel.Requests.FirstOrDefault().RequestID },
@@ -1989,11 +2224,13 @@ namespace PrototypeWithAuth.Controllers
                        new ComplexIncludes<Request, ModelBase> { Include = r => r.Product, ThenInclude =
                          new ComplexIncludes<ModelBase, ModelBase>{ Include = p => ((Product)p).ProductSubcategory, ThenInclude =
                          new ComplexIncludes<ModelBase, ModelBase>{ Include = ps => ((ProductSubcategory)ps).ParentCategory } } },
-                       new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor }});
+                       new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor },
+                   new ComplexIncludes<Request, ModelBase> { Include = r => r.OrderMethod }});
 
-
+                var orderMethodDB = await _orderMethodsProc.ReadOneAsync(new List<Expression<Func<OrderMethod, bool>>> { o => o.DescriptionEnum == OrderMethod.ToString() });
                 var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
                 requestItemViewModel.Requests.FirstOrDefault().RequestID = 0;
+                requestItemViewModel.Requests.FirstOrDefault().OrderMethod = orderMethodDB;
                 requestItemViewModel.Requests.FirstOrDefault().ApplicationUserCreatorID = currentUser.Id;
                 requestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;
                 requestItemViewModel.Requests.FirstOrDefault().SubProjectID = oldRequest.SubProjectID;
@@ -2011,8 +2248,8 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
                 var isInBudget = await checkIfInBudgetAsync(requestItemViewModel.Requests.FirstOrDefault(), oldRequest.Product);
                 requestItemViewModel.TempRequestListViewModel = tempRequestListViewModel;
-                TempRequestViewModel newTrvm = await AddItemAccordingToOrderType(requestItemViewModel.Requests.FirstOrDefault(), OrderTypeEnum, isInBudget, requestItemViewModel);
-                if (OrderTypeEnum != AppUtility.OrderTypeEnum.RequestPriceQuote)
+                TempRequestViewModel newTrvm = await AddItemAccordingToOrderMethod(requestItemViewModel.Requests.FirstOrDefault(), OrderMethod, isInBudget, requestItemViewModel);
+                if (OrderMethod != AppUtility.OrderMethod.RequestPriceQuote)
                 {
                     try
                     {
@@ -2034,15 +2271,15 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 var action = "UploadQuoteModal"; //for order now and add to cart
-                if (OrderTypeEnum == AppUtility.OrderTypeEnum.AlreadyPurchased)
+                if (OrderMethod == AppUtility.OrderMethod.AlreadyPurchased)
                 {
                     action = "UploadOrderModal";
                 }
-                else if (OrderTypeEnum == AppUtility.OrderTypeEnum.RequestPriceQuote)
+                else if (OrderMethod == AppUtility.OrderMethod.RequestPriceQuote)
                 {
                     return new EmptyResult();
                 }
-                tempRequestListViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
+                tempRequestListViewModel.RequestIndexObject.OrderMethod = OrderMethod;
                 tempRequestListViewModel.RequestIndexObject.IsReorder = true;
                 tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
                 //throw new Exception();
@@ -2314,7 +2551,7 @@ namespace PrototypeWithAuth.Controllers
                                     }
                                 }
 
-                                if (tempRequest.Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
+                                if (tempRequest.Request.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.OrderNow.ToString())
                                 {
                                     var additionalRequests = tr + 1 < deserializedTempRequestListViewModel.TempRequestViewModels.Count() ? true : false;
                                     MoveDocumentsOutOfTempFolder(tempRequest.Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, tempRequestListViewModel.GUID);
@@ -2409,7 +2646,7 @@ namespace PrototypeWithAuth.Controllers
 
                         // add a "To" Email
                         string ToEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails?.FirstOrDefault() != null ? deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Emails.FirstOrDefault() : vendorEmail;
-                        message.To.Add(new MailboxAddress(ToEmail ));
+                        message.To.Add(new MailboxAddress(ToEmail));
 
                         //add CC's to email
                         //TEST THIS STATEMENT IF VENDOR IS MISSING AN ORDERS EMAIL
@@ -2445,7 +2682,7 @@ namespace PrototypeWithAuth.Controllers
                         message.Body = builder.ToMessageBody();
 
                         //move docs before sending message - sending message should be last thing done
-                        if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
+                        if (deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.OrderNow.ToString())
                         {
                             MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID == null ? 0 : Convert.ToInt32(deserializedTempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID), AppUtility.ParentFolderName.ParentQuote, false, tempRequestListViewModel.GUID);
                         }
@@ -2630,7 +2867,7 @@ namespace PrototypeWithAuth.Controllers
                 includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory });
                 includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory.ParentCategory });
                 includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote });
-                wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
+                wheres.Add(r => r.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.RequestPriceQuote.ToString());
 
                 if (confirmQuoteEmail.IsResend)
                 {
@@ -2774,7 +3011,7 @@ namespace PrototypeWithAuth.Controllers
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor });
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory });
             includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory.ParentCategory });
-            wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
+            wheres.Add(r => r.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.RequestPriceQuote.ToString());
             if (isResend)
             {
                 wheres.Add(r => r.RequestID == id);
@@ -2798,7 +3035,7 @@ namespace PrototypeWithAuth.Controllers
             if (requests.Count() == 0)
             {
                 wheres.Clear();
-                wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
+                wheres.Add(r => r.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.RequestPriceQuote.ToString());
                 wheres.Add(r => r.Product.VendorID == id && r.QuoteStatusID == 2);
                 wheres.Add(r => r.RequestStatusID == 6);
                 includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote });
@@ -2947,6 +3184,8 @@ namespace PrototypeWithAuth.Controllers
             var request = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.RequestID == RequestID }).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.UnitType)
                     .FirstOrDefault();
 
+            AppUtility.OrderType orderType = AppUtility.OrderType.SingleOrder;
+            Enum.TryParse(request.Product.GetType().ToString(), out orderType);
             ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
             {
                 Request = request,
@@ -2954,7 +3193,8 @@ namespace PrototypeWithAuth.Controllers
                 locationInstancesSelected = new List<LocationInstance>(),
                 //ApplicationUsers = await _proc.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync(),
                 RequestIndexObject = requestIndexObject,
-                PageRequestStatusID = request.RequestStatusID
+                PageRequestStatusID = request.RequestStatusID,
+                OrderType = orderType
             };
             receivedLocationViewModel.locationInstancesSelected.Add(new LocationInstance());
             var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == _userManager.GetUserId(User) });
@@ -3232,7 +3472,28 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(documentsModalViewModel);
         }
 
-
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public JsonResult _DocumentsCard(AppUtility.FolderNamesEnum requestFolderNameEnum, string id, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests,
+            AppUtility.RequestModalType modalType = AppUtility.RequestModalType.Create)
+        {
+            //if (!AppUtility.IsAjaxRequest(Request))
+            //{
+            //    return PartialView("InvalidLinkPage");
+            //}
+            string requestParentFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
+            var requestFolder = Path.Combine(requestParentFolder, id);
+            DocumentsCardViewModel documentsCardViewModel = new DocumentsCardViewModel()
+            {
+                DocumentInfo = GetExistingFileStrings(requestFolderNameEnum, parentFolderName, requestFolder, id),
+                SectionType = sectionType,
+                ShowSwitch = true,
+                ModalType = modalType
+            };
+            var options = new JsonSerializerSettings { Converters = new List<JsonConverter> { new StringEnumConverter() } };
+            var docinfo = Json(JsonConvert.SerializeObject(documentsCardViewModel.DocumentInfo, options));
+            return docinfo;
+        }
 
         [HttpPost]
         [RequestSizeLimit(100_000_000)]
@@ -3336,6 +3597,7 @@ namespace PrototypeWithAuth.Controllers
                 new List<ComplexIncludes<Request, ModelBase>>
                 {
                     new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentQuote },
+                     new ComplexIncludes<Request, ModelBase> { Include = r => r.OrderMethod },
                       new ComplexIncludes<Request, ModelBase> { Include = r => r.PaymentStatus },
                     new ComplexIncludes<Request, ModelBase> {
                         Include = r => r.Product,
@@ -3350,9 +3612,9 @@ namespace PrototypeWithAuth.Controllers
                 });
             try
             {
-                switch (Enum.Parse(typeof(AppUtility.OrderTypeEnum), request.OrderType))
+                switch (Enum.Parse(typeof(AppUtility.OrderMethod), request.OrderMethod.DescriptionEnum))
                 {
-                    case AppUtility.OrderTypeEnum.OrderNow:
+                    case AppUtility.OrderMethod.OrderNow:
                         TempRequestListViewModel trlvm = new TempRequestListViewModel()
                         {
                             GUID = Guid.NewGuid(),
@@ -3367,10 +3629,10 @@ namespace PrototypeWithAuth.Controllers
                         await _tempRequestJsonsProc.UpdateAsync(trlvm.GUID, requestIndex, trlvm, _userManager.GetUserId(User), true);
                         return RedirectToAction("ConfirmEmailModal", new { id = id, Guid = trlvm.GUID });
                         break;
-                    case AppUtility.OrderTypeEnum.AlreadyPurchased:
+                    case AppUtility.OrderMethod.AlreadyPurchased:
                         break;
-                    case AppUtility.OrderTypeEnum.RequestPriceQuote:
-                    case AppUtility.OrderTypeEnum.AddToCart:
+                    case AppUtility.OrderMethod.RequestPriceQuote:
+                    case AppUtility.OrderMethod.AddToCart:
                         using (var transaction = _applicationDbContextTransaction.Transaction)
                         {
                             try
@@ -3425,7 +3687,7 @@ namespace PrototypeWithAuth.Controllers
             }
             List<Expression<Func<Request, bool>>> Wheres = new List<Expression<Func<Request, bool>>>();
             List<ComplexIncludes<Request, ModelBase>> Includes = new List<ComplexIncludes<Request, ModelBase>>();
-            Wheres.Add(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString());
+            Wheres.Add(r => r.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.RequestPriceQuote.ToString());
             Wheres.Add(r => requestIds.Contains(r.RequestID));
             Includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product });
             Includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = v => ((Vendor)v).Country } });
@@ -3465,7 +3727,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 using (var transaction = _applicationDbContextTransaction.Transaction)
                 {
-                    var requests = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString() },
+                    var requests = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.RequestPriceQuote.ToString() },
                         new List<ComplexIncludes<Request, ModelBase>>
                         {
                             new ComplexIncludes<Request, ModelBase>{ Include = x => x.ParentQuote}
@@ -3574,18 +3836,12 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> Cart(string errorMessage)
+        public async Task<IActionResult> Cart(RequestIndexObject requestIndexObject)
         {
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Cart;
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            return View(await GetIndexViewModelByVendor(new RequestIndexObject
-            {
-                SectionType = AppUtility.MenuItems.Requests,
-                PageType = AppUtility.PageTypeEnum.RequestCart,
-                SidebarType = AppUtility.SidebarEnum.Cart,
-                ErrorMessage = errorMessage
-            }));
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
+            return View(await GetIndexViewModelByVendor(requestIndexObject));
         }
 
 
@@ -3769,11 +4025,19 @@ namespace PrototypeWithAuth.Controllers
                     new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest },
                     new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments } };
             wheres.Add(r => r.RequestStatusID != 7 && r.Payments.Where(p => !p.IsPaid).Count() > 0);
-            var requestList = new List<RequestPaymentsViewModel>();
+            var requestPaymentList = new List<RequestPaymentsViewModel>();
+            Func<Payment, bool> paymentWheres;
             switch (accountingPaymentsEnum)
             {
                 case AppUtility.SidebarEnum.MonthlyPayment:
-                    wheres.Add(r => r.PaymentStatusID == 2 && r.Payments.FirstOrDefault().HasInvoice && r.Payments.FirstOrDefault().IsPaid == false);
+                    wheres.Add(r => (r.PaymentStatusID == 2/*+30*/ && r.Payments.FirstOrDefault().HasInvoice && r.Payments.FirstOrDefault().IsPaid == false)
+                    || (
+                          (r.PaymentStatusID == 5/*installments*/ || r.PaymentStatusID == 7/*standingorder*/ || r.Product is RecurringOrder)
+                          && r.Payments.Where(p => ((p.PaymentDate.Month <= DateTime.Today.Month && p.PaymentDate.Year == DateTime.Today.Year) || p.PaymentDate.Year < DateTime.Today.Year) && p.IsPaid == false).Count() > 0)
+                       );
+                    paymentWheres = p => p.IsPaid == false && ((p.PaymentDate.Month <= DateTime.Today.Month && p.PaymentDate.Year == DateTime.Today.Year) || p.PaymentDate.Year < DateTime.Today.Year);
+                    requestPaymentList = GetPaymentsForEachRequest(wheres, includes, paymentWheres);
+                    return requestPaymentList;
                     break;
                 case AppUtility.SidebarEnum.PayNow:
                     wheres.Add(r => r.PaymentStatusID == 3 && r.Payments.FirstOrDefault().IsPaid == false);
@@ -3783,22 +4047,10 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.SidebarEnum.Installments:
                     wheres.Add(r => r.PaymentStatusID == 5);
-                    wheres.Add(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
-
-                    var installmentRequests = _requestsProc.Read(wheres, includes);
-                    foreach (var request in installmentRequests)
-                    {
-                        var currentInstallments = request.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).ToList();
-                        requestList.Add(new RequestPaymentsViewModel { Request = request, Payment = currentInstallments.ElementAt(0) });
-                        if (currentInstallments.Count() > 0)
-                        {
-                            for (var i = 1; i < currentInstallments.Count(); i++)
-                            {
-                                requestList.Add(new RequestPaymentsViewModel { Request = request, Payment = currentInstallments.ElementAt(i) });
-                            }
-                        }
-                    }
-                    return requestList;
+                    wheres.Add(r => r.Payments.Where(p => p.IsPaid == false && p.HasInvoice && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
+                    paymentWheres = p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5);
+                    requestPaymentList = GetPaymentsForEachRequest(wheres, includes, paymentWheres);
+                    return requestPaymentList;
                     break;
                 case AppUtility.SidebarEnum.StandingOrders:
                     wheres.Add(r => r.PaymentStatusID == 7);
@@ -3809,11 +4061,30 @@ namespace PrototypeWithAuth.Controllers
                     break;
             }
 
-            var requests = _requestsProc.Read(wheres, includes);
+            var requestList = _requestsProc.Read(wheres, includes).ToList();
 
-            await requests.ForEachAsync(r => requestList.Add(new RequestPaymentsViewModel { Request = r, Payment = r.Payments.FirstOrDefault() }));
+            requestList.ForEach(r => requestPaymentList.Add(new RequestPaymentsViewModel { Request = r, Payment = r.Payments.FirstOrDefault() }));
 
-            return requestList;
+            return requestPaymentList;
+        }
+
+        private List<RequestPaymentsViewModel> GetPaymentsForEachRequest(List<Expression<Func<Request, bool>>> wheres, List<ComplexIncludes<Request, ModelBase>> includes, Func<Payment, bool> paymentWheres)
+        {
+            var requestPaymentList = new List<RequestPaymentsViewModel>();
+            var installmentRequests = _requestsProc.Read(wheres, includes).ToList();
+            foreach (var request in installmentRequests)
+            {
+                var currentInstallments = request.Payments.Where(paymentWheres).ToList();
+                requestPaymentList.Add(new RequestPaymentsViewModel { Request = request, Payment = currentInstallments.ElementAt(0) });
+                if (currentInstallments.Count() > 1)
+                {
+                    for (var i = 1; i < currentInstallments.Count(); i++)
+                    {
+                        requestPaymentList.Add(new RequestPaymentsViewModel { Request = request, Payment = currentInstallments.ElementAt(i) });
+                    }
+                }
+            }
+            return requestPaymentList;
         }
 
         [HttpGet]
@@ -3851,61 +4122,77 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
+
+
         [HttpGet]
         [Authorize(Roles = "Accounting")]
-        public async Task<IActionResult> PaymentsPayModal(int? vendorid, int? requestid, int[] requestIds, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
+        public async Task<IActionResult> PaymentsPayModal(int? vendorId, int[] paymentIds, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
                 return PartialView("InvalidLinkPage");
             }
-            StringWithBool Error = new StringWithBool();
-            var wheres = new List<Expression<Func<Request, bool>>>();
-            if (vendorid != null)
+            var payments = new List<Payment>();
+            if (vendorId != null)
             {
-                wheres.Add(r => r.Product.VendorID == vendorid);
+                var vm = await GetPaymentRequests(accountingPaymentsEnum);
+                payments = vm.Where(rp => rp.Request.Product.VendorID == vendorId).Where(rp => rp.Request.PaymentStatusID != 7/*standingorder*/).Select(rp => rp.Payment).ToList();
             }
-            else if (requestid != null)
+            else
             {
-                wheres.Add(r => r.RequestID == requestid);
+                payments = _paymentsProc.Read(new List<Expression<Func<Payment, bool>>> { p => paymentIds.Contains(p.PaymentID) },
+                new List<ComplexIncludes<Payment, ModelBase>>
+                {
+                    new ComplexIncludes<Payment, ModelBase>{ Include = p => p.Request , ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = r => ((Request)r).ParentRequest } },
+                    new ComplexIncludes<Payment, ModelBase>{ Include = p => p.Request, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{Include =  r => ((Request)r).Product,
+                        ThenInclude =  new ComplexIncludes<ModelBase, ModelBase>{Include =  p => ((Product)p).Vendor  }} }
+                }).ToList();
             }
-            else if (requestIds != null)
-            {
-                wheres.Add(r => requestIds.Contains(r.RequestID));
-            }
+            /*            var requestsToPay = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r =>  payments.Select(p => p.RequestID).Contains(r.RequestID) },
+                            new List<ComplexIncludes<Request, ModelBase>>
+                            {
+                                //new ComplexIncludes<Request, ModelBase>{ Include =  r => r.ParentRequest},
+                                new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = p => ((Product)p).Vendor } },
+                                //new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.ProductSubcategory},
+                                //new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.UnitType},
+                                //new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.SubUnitType},
+                                //new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.SubSubUnitType},
+                                //new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Payments}
+                            }).ToList();*/
 
-            var requestsToPay = GetPaymentRequests(accountingPaymentsEnum, wheres).Result.Select(r => r.Request).ToList();
-            if (requestsToPay.Select(r => r.Currency).Distinct().Count() > 1)
+            //can you edit amount to pay? if yes, if last installment calc how much is left to pay
+
+            StringWithBool Error = new StringWithBool();
+            if (payments.Select(p => p.Request.Currency).Distinct().Count() > 1)
             {
                 Error.SetStringAndBool(true, ElixirStrings.ServerDifferentCurrencyErrorMessage);
             }
-            if (requestsToPay.Select(r => r.Product.Vendor).Distinct().Count() > 1)
+            if (payments.Select(p => p.Request.Product.Vendor).Distinct().Count() > 1)
             {
                 Error.SetStringAndBool(true, ElixirStrings.ServerDifferentVendorErrorMessage);
             }
             PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
             {
-                Requests = requestsToPay,
+                Payments = payments,
+                //Requests = requestsToPay,
                 AccountingEnum = accountingPaymentsEnum,
                 Payment = new Payment(),
                 PaymentTypes = _paymentTypesProc.Read().Select(pt => pt).ToList(),
                 CompanyAccounts = _companyAccountsProc.Read().Select(ca => ca).ToList(),
-                ShippingToPay = await GetShippingsToPay(requestsToPay),
+                ShippingToPay = await GetShippingsToPay(payments),
                 Error = Error
             };
-
-            //check if payment status type is installments to show the installments in the view model
-
             return PartialView(paymentsPayModalViewModel);
         }
 
-        public async Task<List<CheckboxViewModel>> GetShippingsToPay(List<Request> requestsToPay)
+        public async Task<List<CheckboxViewModel>> GetShippingsToPay(List<Payment> payments)
         {
             List<CheckboxViewModel> shippings = new List<CheckboxViewModel>();
-            foreach (var r in requestsToPay)
+            foreach (var p in payments)
             {
-                if (r.Payments.FirstOrDefault().ShippingPaidHere && !r.ParentRequest.IsShippingPaid && r.ParentRequest.Shipping > 0)
+                if (p.ShippingPaidHere && !p.Request.ParentRequest.IsShippingPaid && p.Request.ParentRequest.Shipping > 0)
                 {
+                    var r = p.Request;
                     shippings.Add(new CheckboxViewModel()
                     {
                         ID = Convert.ToInt32(r.ParentRequestID),
@@ -3926,103 +4213,104 @@ namespace PrototypeWithAuth.Controllers
         {
             var stringWithBool = await _paymentsProc.UpdateAsync(paymentsPayModalViewModel);
             return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsPayModalViewModel.AccountingEnum, ErrorMessage = stringWithBool.String });
+
         }
-        [HttpGet]
-        [Authorize(Roles = "Accounting")]
-        public async Task<IActionResult> PaymentsInvoiceModal(int? vendorid, int? paymentid, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
-        {
-            if (!AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView("InvalidLinkPage");
-            }
-            var payment = await _paymentsProc.ReadOneAsync(new List<Expression<Func<Payment, bool>>> { p => p.PaymentID == paymentid });
-            var requestToPay = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == payment.RequestID },
-                new List<ComplexIncludes<Request, ModelBase>>
+        /*        [HttpGet]
+                [Authorize(Roles = "Accounting")]
+                public async Task<IActionResult> PaymentsInvoiceModal(int? vendorid, int? paymentid, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
                 {
-                    new ComplexIncludes<Request, ModelBase>{ Include =  r => r.ParentRequest},
-                    new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = p => ((Product)p).Vendor } },
-                    new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.ProductSubcategory},
-                    new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.UnitType},
-                    new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.SubUnitType},
-                    new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.SubSubUnitType},
-                    new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Payments}
-                });
-
-            var paidSum = requestToPay.Payments.Where(p => p.IsPaid).Select(p => p.Sum).Sum();
-            var amtLeftToFullPayment = (decimal)requestToPay.Cost - paidSum;
-            /*            if (payment.InstallmentNumber == requestToPay.FirstOrDefault().Installments)
-            */
-            if (payment.Sum > amtLeftToFullPayment)
-            {
-                payment.Sum = amtLeftToFullPayment;
-            }
-            PaymentsInvoiceViewModel paymentsInvoiceViewModel = new PaymentsInvoiceViewModel()
-            {
-                Request = requestToPay,
-                AccountingEnum = accountingPaymentsEnum,
-                Payment = payment,
-                PaymentTypes = _paymentTypesProc.Read().Select(pt => pt).ToList(),
-                CompanyAccounts = _companyAccountsProc.Read().Select(ca => ca).ToList(),
-                AmtLeftToPay = amtLeftToFullPayment,
-                Invoice = new Invoice()
-                {
-                    InvoiceDate = DateTime.Today
-                },
-                ShippingToPay = await GetShippingsToPay(new List<Request> { requestToPay })
-            };
-
-
-            return PartialView(paymentsInvoiceViewModel);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Accounting")]
-        public async Task<IActionResult> PaymentsInvoiceModal(PaymentsInvoiceViewModel paymentsInvoiceViewModel)
-        {
-            using (var transaction = _applicationDbContextTransaction.Transaction)
-            {
-                try
-                {
-                    await _paymentsProc.UpdateWithoutTransactionAsync(paymentsInvoiceViewModel);
-                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-                    string requestFolder = Path.Combine(uploadFolder, paymentsInvoiceViewModel.Request.RequestID.ToString());
-                    Directory.CreateDirectory(requestFolder);
-                    if (paymentsInvoiceViewModel.InvoiceImage != null)
+                    if (!AppUtility.IsAjaxRequest(Request))
                     {
-                        int x = 1;
-                        //create file
-                        string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Invoices.ToString());
-                        if (Directory.Exists(folderPath))
-                        {
-                            var filesInDirectory = Directory.GetFiles(folderPath);
-                            x = filesInDirectory.Length + 1;
-                        }
-                        else
-                        {
-                            Directory.CreateDirectory(folderPath);
-                        }
-                        string uniqueFileName = x + paymentsInvoiceViewModel.InvoiceImage.FileName;
-                        string filePath = Path.Combine(folderPath, uniqueFileName);
-                        FileStream filestream = new FileStream(filePath, FileMode.Create);
-                        paymentsInvoiceViewModel.InvoiceImage.CopyTo(filestream);
-                        filestream.Close();
+                        return PartialView("InvalidLinkPage");
                     }
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    Response.StatusCode = 500;
-                    paymentsInvoiceViewModel.Request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == paymentsInvoiceViewModel.Request.RequestID },
-                        new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product }, new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor } }
-                        );
-                    paymentsInvoiceViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                    var payment = await _paymentsProc.ReadOneAsync(new List<Expression<Func<Payment, bool>>> { p => p.PaymentID == paymentid });
+                    var requestToPay = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == payment.RequestID },
+                        new List<ComplexIncludes<Request, ModelBase>>
+                        {
+                            new ComplexIncludes<Request, ModelBase>{ Include =  r => r.ParentRequest},
+                            new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product, ThenInclude = new ComplexIncludes<ModelBase, ModelBase>{ Include = p => ((Product)p).Vendor } },
+                            new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.ProductSubcategory},
+                            new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.UnitType},
+                            new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.SubUnitType},
+                            new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Product.SubSubUnitType},
+                            new ComplexIncludes<Request, ModelBase>{ Include =  r => r.Payments}
+                        });
+
+                    var paidSum = requestToPay.Payments.Where(p => p.IsPaid).Select(p => p.Sum).Sum();
+                    var amtLeftToFullPayment = (decimal)requestToPay.Cost - paidSum;
+                    *//*            if (payment.InstallmentNumber == requestToPay.FirstOrDefault().Installments)
+                    *//*
+                    if (payment.Sum > amtLeftToFullPayment)
+                    {
+                        payment.Sum = amtLeftToFullPayment;
+                    }
+                    PaymentsInvoiceViewModel paymentsInvoiceViewModel = new PaymentsInvoiceViewModel()
+                    {
+                        Request = requestToPay,
+                        AccountingEnum = accountingPaymentsEnum,
+                        Payment = payment,
+                        PaymentTypes = _paymentTypesProc.Read().Select(pt => pt).ToList(),
+                        CompanyAccounts = _companyAccountsProc.Read().Select(ca => ca).ToList(),
+                        AmtLeftToPay = amtLeftToFullPayment,
+                        Invoice = new Invoice()
+                        {
+                            InvoiceDate = DateTime.Today
+                        },
+                        ShippingToPay = await GetShippingsToPay(new List<Request> { requestToPay })
+                    };
+
+
                     return PartialView(paymentsInvoiceViewModel);
                 }
-            }
 
-            return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsInvoiceViewModel.AccountingEnum });
-        }
+                [HttpPost]
+                [Authorize(Roles = "Accounting")]
+                public async Task<IActionResult> PaymentsInvoiceModal(PaymentsInvoiceViewModel paymentsInvoiceViewModel)
+                {
+                    using (var transaction = _applicationDbContextTransaction.Transaction)
+                    {
+                        try
+                        {
+                            await _paymentsProc.UpdateWithoutTransactionAsync(paymentsInvoiceViewModel);
+                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+                            string requestFolder = Path.Combine(uploadFolder, paymentsInvoiceViewModel.Request.RequestID.ToString());
+                            Directory.CreateDirectory(requestFolder);
+                            if (paymentsInvoiceViewModel.InvoiceImage != null)
+                            {
+                                int x = 1;
+                                //create file
+                                string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Invoices.ToString());
+                                if (Directory.Exists(folderPath))
+                                {
+                                    var filesInDirectory = Directory.GetFiles(folderPath);
+                                    x = filesInDirectory.Length + 1;
+                                }
+                                else
+                                {
+                                    Directory.CreateDirectory(folderPath);
+                                }
+                                string uniqueFileName = x + paymentsInvoiceViewModel.InvoiceImage.FileName;
+                                string filePath = Path.Combine(folderPath, uniqueFileName);
+                                FileStream filestream = new FileStream(filePath, FileMode.Create);
+                                paymentsInvoiceViewModel.InvoiceImage.CopyTo(filestream);
+                                filestream.Close();
+                            }
+                            await transaction.CommitAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            await transaction.RollbackAsync();
+                            Response.StatusCode = 500;
+                            paymentsInvoiceViewModel.Request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == paymentsInvoiceViewModel.Request.RequestID },
+                                new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product }, new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.Vendor } }
+                                );
+                            paymentsInvoiceViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                            return PartialView(paymentsInvoiceViewModel);
+                        }
+                    }
+
+                    return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsInvoiceViewModel.AccountingEnum });
+                }*/
 
         [HttpGet]
         [Authorize(Roles = "Accounting")]
@@ -4042,7 +4330,7 @@ namespace PrototypeWithAuth.Controllers
             Includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubSubUnitType });
             Includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubUnitType });
             Includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments });
-            Wheres.Add(r => r.Payments.FirstOrDefault().HasInvoice == false && ((r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3)));
+            Wheres.Add(r => r.Payments.FirstOrDefault().HasInvoice == false && ((r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 5)));
             Wheres.Add(r => r.RequestStatusID != 7);
             if (vendorid != null)
             {
@@ -4129,7 +4417,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<TempRequestListViewModel> LoadTempListFromRequestIndexObjectAsync(RequestIndexObject requestIndexObject)
         {
             var oldJsonSequenceNumber = _tempRequestJsonsProc.Read(new List<Expression<Func<TempRequestJson, bool>>> { trj => trj.GuidID == requestIndexObject.GUID }).Select(trj => trj.SequencePosition)
-                .OrderByDescending(p => p).FirstOrDefault();
+            .OrderByDescending(p => p).FirstOrDefault();
 
             var oldJson = _tempRequestJsonsProc.Read(new List<Expression<Func<TempRequestJson, bool>>>
             { trj => trj.GuidID == requestIndexObject.GUID && trj.SequencePosition==oldJsonSequenceNumber })
@@ -4155,7 +4443,7 @@ namespace PrototypeWithAuth.Controllers
             }
             var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now } };
 
-            uploadQuoteViewModel.OrderTypeEnum = requestIndexObject.OrderType;
+            uploadQuoteViewModel.OrderMethodEnum = requestIndexObject.OrderMethod;
             uploadQuoteViewModel.TempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
             //uploadQuoteViewModel.TempRequestListViewModel = new TempRequestListViewModel()
             //{
@@ -4163,11 +4451,23 @@ namespace PrototypeWithAuth.Controllers
             //    RequestIndexObject = requestIndexObject,
             //    TempRequestViewModels = oldJson.DeserializeJson<List<TempRequestViewModel>>()
             //};
+            uploadQuoteViewModel.DocumentsCardViewModel = new DocumentsCardViewModel()
+            {
+                SectionType = AppUtility.MenuItems.Requests,
+                DocumentInfo = new DocumentFolder()
+                {
+                    ParentFolderName = AppUtility.ParentFolderName.ParentQuote,
+                    FolderName = AppUtility.FolderNamesEnum.Quotes,
+                    Icon = "icon-centarix-icons-03"
+                }
+            };
+
             if (uploadQuoteViewModel.TempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ProductID != 0)
             {
                 foreach (var tempRequestViewModel in uploadQuoteViewModel.TempRequestListViewModel.TempRequestViewModels)
                 {
                     var oldQuote = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.ProductID == tempRequestViewModel.Request.ProductID && r.ParentQuote.ExpirationDate >= DateTime.Now.Date }).Select(r => r.ParentQuote).OrderByDescending(r => r.QuoteDate).FirstOrDefault();
+
                     if (oldQuote != null)
                     {
                         string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
@@ -4179,24 +4479,27 @@ namespace PrototypeWithAuth.Controllers
                             DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
                             //searching for the partial file name in the directory
                             FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                            uploadQuoteViewModel.FileStrings = new List<String>();
+                            var fileStrings = new List<String>();
                             foreach (var orderfile in orderfilesfound)
                             {
                                 string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
-                                uploadQuoteViewModel.FileStrings.Add(newFileString);
+                                fileStrings.Add(newFileString);
                             }
+                            uploadQuoteViewModel.DocumentsCardViewModel.DocumentInfo.FileStrings = fileStrings;
+                            uploadQuoteViewModel.DocumentsCardViewModel.ModalType = AppUtility.RequestModalType.Summary;
                         }
+                        uploadQuoteViewModel.DocumentsCardViewModel.DocumentInfo.ObjectID = oldQuote.ParentQuoteID.ToString();
 
                     }
                     else
                     {
                         oldQuote = new ParentQuote() { ExpirationDate = DateTime.Now };
+                        uploadQuoteViewModel.DocumentsCardViewModel.DocumentInfo.ObjectID = uploadQuoteViewModel.TempRequestListViewModel.GUID.ToString();
+                        uploadQuoteViewModel.DocumentsCardViewModel.ModalType = AppUtility.RequestModalType.Edit;
                     }
                     uploadQuoteViewModel.ParentQuote = oldQuote;
 
-
                 }
-
             }
 
             //create new sequence
@@ -4220,19 +4523,31 @@ namespace PrototypeWithAuth.Controllers
             string uploadFolder2 = Path.Combine(uploadFolder1, guid.ToString());
             string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
 
+            var fileStrings = new List<String>();
             if (Directory.Exists(uploadFolderQuotes))
             {
                 DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
                 //searching for the partial file name in the directory
                 FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                uploadQuoteViewModel.FileStrings = new List<String>();
                 foreach (var orderfile in orderfilesfound)
                 {
                     string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
-                    uploadQuoteViewModel.FileStrings.Add(newFileString);
+                    fileStrings.Add(newFileString);
                 }
             }
-
+            uploadQuoteViewModel.DocumentsCardViewModel = new DocumentsCardViewModel()
+            {
+                SectionType = AppUtility.MenuItems.Requests,
+                DocumentInfo = new DocumentFolder()
+                {
+                    ParentFolderName = AppUtility.ParentFolderName.ParentQuote,
+                    FolderName = AppUtility.FolderNamesEnum.Quotes,
+                    Icon = "icon-centarix-icons-03",
+                    FileStrings = fileStrings,
+                    ObjectID = guid.ToString()
+                },
+                ModalType = AppUtility.RequestModalType.Edit
+            };
             uploadQuoteViewModel.TempRequestListViewModel = new TempRequestListViewModel()
             {
                 GUID = guid
@@ -4275,7 +4590,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
 
-                if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderType != AppUtility.OrderTypeEnum.AddToCart.ToString())
+                if (deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderMethod.DescriptionEnum != AppUtility.OrderMethod.AddToCart.ToString())
                 {
                     tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
                     await _tempRequestJsonsProc.UpdateAsync(tempRequestListViewModel.GUID, tempRequestListViewModel.RequestIndexObject, deserializedTempRequestListViewModel, _userManager.GetUserId(User), false);
@@ -4551,7 +4866,7 @@ namespace PrototypeWithAuth.Controllers
                 new ComplexIncludes<Request, ModelBase>{ Include = r=>r.Product.Vendor } }).FirstOrDefaultAsync();
             var vendor = request.Product.Vendor;
             var vendorCartTotal = _requestsProc.Read(new List<Expression<Func<Request, bool>>>{ r => r.Product.VendorID == vendor.VendorID && r.ApplicationUserCreatorID == request.ApplicationUserCreatorID &&
-            r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString() && r.RequestStatusID != 1 })
+            r.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.AddToCart.ToString() && r.RequestStatusID != 1 })
                 .Select(r => r.Cost).Sum();
             vendorCartTotal = Math.Round(vendorCartTotal ?? 0, 2);
             CartTotalViewModel viewModel = new CartTotalViewModel()
@@ -4640,8 +4955,9 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> MoveToListModal(int requestID, int prevListID = 0)
+        public async Task<JsonResult> MoveToListModalJson(int requestID, int prevListID = 0)
         {
+
             var pageType = AppUtility.PageTypeEnum.RequestCart;
             var userLists = _requestListsProc.Read(new List<Expression<Func<RequestList, bool>>> { rl => rl.ApplicationUserOwnerID == _userManager.GetUserId(User) })
                .OrderBy(rl => rl.DateCreated).ToList();
@@ -4669,7 +4985,13 @@ namespace PrototypeWithAuth.Controllers
                 RequestLists = userLists,
                 PageType = pageType
             };
-            return PartialView(viewModel);
+            var json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
+              new JsonSerializerSettings
+              {
+                  Converters= new List<JsonConverter> { new StringEnumConverter() },
+                  ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+              });
+            return Json(json);
         }
 
 
@@ -4679,31 +5001,17 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> MoveToListModal(MoveListViewModel moveListViewModel)
         {
             var success = await _requestListRequestsProc.MoveList(moveListViewModel.Request.RequestID, moveListViewModel.NewListID, moveListViewModel.PreviousListID);
-            if (moveListViewModel.PageType == AppUtility.PageTypeEnum.RequestCart)
+            if(!success.Bool)
             {
-                return RedirectToAction("_IndexTableWithListTabs", new
-                {
-                    PageType = AppUtility.PageTypeEnum.RequestCart,
-                    SidebarType = AppUtility.SidebarEnum.MyLists,
-                    ListID = moveListViewModel.PreviousListID,
-                    errorMessage = success.String
-                });
+                Response.StatusCode = 500;
+                await Response.WriteAsync(success.String);
             }
-            else
-            {
-                if (!success.Bool)
-                {
-                    Response.StatusCode = 500;
-                    await Response.WriteAsync(success.String);
-
-                }
-                return new EmptyResult();
-            }
+            return new EmptyResult();
         }
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> NewListModal(int requestToAddId = 0, int requestPreviousListID = 0)
+        public async Task<IActionResult> NewListModalJson(int requestToAddId = 0, int requestPreviousListID = 0)
         {
             NewListViewModel viewModel = new NewListViewModel()
             {
@@ -4711,22 +5019,31 @@ namespace PrototypeWithAuth.Controllers
                 RequestToAddID = requestToAddId,
                 RequestPreviousListID = requestPreviousListID
             };
-            return PartialView(viewModel);
+            var json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
+             new JsonSerializerSettings
+             {
+                 Converters= new List<JsonConverter> { new StringEnumConverter() },
+                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+             });
+            return Json(json);
         }
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> NewListModal(NewListViewModel newListViewModel)
+        public async Task<JsonResult> NewListModal(NewListViewModel newListViewModel, RequestIndexObject requestIndexObject)
         {
 
             var newList = await _requestListsProc.CreateAndGetAsync(newListViewModel);
-            RequestIndexObject indexObject = new RequestIndexObject()
+            requestIndexObject.ListID = newList.ListID;
+            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
             {
-                PageType = AppUtility.PageTypeEnum.RequestCart,
-                SidebarType = AppUtility.SidebarEnum.MyLists,
-                ListID = newList.ListID
-            };
-            return RedirectToAction("_IndexTableWithListTabs", indexObject);
+                return await GetIndexTableJson(requestIndexObject);
+            }
+            else
+            {
+                return Json( "");
+            }
+
         }
 
         [HttpGet]

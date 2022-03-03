@@ -116,27 +116,27 @@
                                 {
                                     <span class="text d-block">&ensp;</span>
                                 }
-                                <button type="submit" name="OrderType" @*asp-action="ReOrderFloatModalView"*@ value="@AppUtility.OrderTypeEnum.RequestPriceQuote"
+                                <button type="submit" name="OrderMethod" @*asp-action="ReOrderFloatModalView"*@ value="@AppUtility.OrderMethod.RequestPriceQuote"
                                         class="p-0 custom-order-inv custom-button create-modal-submit @submitOrderClass @hasWarningClass" productID="@Model.Requests[0].ProductID">
-                                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
+                                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.RequestPriceQuote.ToString())
                                 </button>
 
                             </div>
                             <div class="col-4">
                                 <span class="text d-block">&ensp;</span>
-                                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.OrderNow"
+                                <button type="submit" name="OrderMethod" value="@AppUtility.OrderMethod.OrderNow"
                                         class="p-0 custom-order-inv custom-button create-modal-submit  @submitOrderClass  @hasWarningClass"
                                         productID="@Model.Requests[0].ProductID">
-                                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.OrderNow.ToString())
+                                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.OrderNow.ToString())
                                 </button>
 
                             </div>
                             <div class="col-4">
                                 <span class="text d-block">&ensp;</span>
-                                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart"
+                                <button type="submit" name="OrderMethod" value="@AppUtility.OrderMethod.AddToCart"
                                         class="p-0 custom-order-inv custom-button  create-modal-submit @submitOrderClass  @hasWarningClass"
                                         productID="@Model.Requests[0].ProductID">
-                                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
+                                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.AddToCart.ToString())
                                 </button>
 
                             </div>
@@ -155,10 +155,10 @@
                         </div>
                         <div class="row">
                             <div class="col-4">
-                                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AlreadyPurchased"
+                                <button type="submit" name="OrderMethod" value="@AppUtility.OrderMethod.AlreadyPurchased"
                                         class="p-0 custom-order-inv custom-button create-modal-submit  @submitOrderClass  @hasWarningClass"
                                         productID="@Model.Requests[0].ProductID">
-                                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AlreadyPurchased.ToString())
+                                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.AlreadyPurchased.ToString())
                                 </button>
 
                             </div>
@@ -186,12 +186,12 @@
 <script>
     $(".submitOrder").off('click').on("click", function (e) {
         e.preventDefault();
-        var orderType = $(this).val();
-        $.fn.SubmitOrderFunction(orderType);
+        var orderMethod = $(this).val();
+        $.fn.SubmitOrderFunction(orderMethod);
         //return false;
     });
 
-    $.fn.SubmitOrderFunction = function (orderType)
+    $.fn.SubmitOrderFunction = function (orderMethod)
     {
         console.log("submit reorder");
         //alert("validate form");
@@ -213,7 +213,7 @@
                 contentType: false,
                 processData: false,
                 async: true,
-                url: "/Requests/ReOrderFloatModalView?OrderTypeEnum=" + orderType,
+                 url: "/Requests/ReOrderFloatModalView?OrderMethod=" + orderMethod,
                 data: formData,
                 traditional: true,
                 type: "POST",
@@ -221,7 +221,7 @@
                 success: function (data) {
                     $("#loading").hide();
 
-                    if (orderType == 'RequestPriceQuote') {
+                    if (orderMethod == 'RequestPriceQuote') {
                         $('.submitOrder').prop('disabled', false)
                         //this if is not necessary right now because everythin is always _indextabledata
                         var sidebarType = $('#masterSidebarType').val();
@@ -232,12 +232,12 @@
                         //if (sidebarType = "MyLists") {
                         //    viewClass = "_IndexTableWithListTabs";
                         //}
-                        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "reorder-item");
+                        $.fn.ajaxPartialIndexTable("/Requests/" + viewClass, "." + viewClass, "POST", formData, "reorder-item");
 
                     }
                     else {
                         $(".modal .temprequesthiddenfors").html('');
-                        //if (orderType == 'AddToCart') {
+                        //if (orderMethod == 'AddToCart') {
                         //    $("_IndexTableData").html(data);
                         //    $.fn.CloseModal('reorder-item');
                         //}

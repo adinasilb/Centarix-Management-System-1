@@ -1,11 +1,8 @@
 ﻿
 var MaxFileSizeMB = 1;
-var BufferChunkSize = MaxFileSizeMB * (1024 *1024)*2;
+var BufferChunkSize = MaxFileSizeMB * (1024 * 1024) * 2;
 
-function UploadFile(TargetFile, formData)
-{
-
-   
+function UploadFile(TargetFile, formData) {
     // create array to store the buffer chunks
     var FileChunk = [];
     // the file object itself that we will work with
@@ -17,10 +14,12 @@ function UploadFile(TargetFile, formData)
     // set the initial chunk length
     var EndPos = BufferChunkSize;
     var Size = file.size;
+    console.log("target file " + file)
+    console.log(...formData)
 
+    console.log(FileStreamPos + "< " + Size)
     // add to the FileChunk array until we get to the end of the file
-    while (FileStreamPos < Size)
-    {
+    while (FileStreamPos < Size) {
         // "slice" the file from the starting position/offset, to  the required length
         FileChunk.push(file.slice(FileStreamPos, EndPos));
         FileStreamPos = EndPos; // jump by the amount read
@@ -31,8 +30,8 @@ function UploadFile(TargetFile, formData)
     var PartCount = 0;
     // loop through, pulling the first item from the array each time and sending it
     var FilePartName = file.name;
-    while (chunk = FileChunk.shift())
-    {
+  
+    while (chunk = FileChunk.shift()) {
         if (PartCount == 0) {
             formData.set("IsFirstPart", true);
         }
@@ -46,8 +45,8 @@ function UploadFile(TargetFile, formData)
 
 }
 
-function UploadFileChunk(Chunk, FileName,  formData)
-{
+function UploadFileChunk(Chunk, FileName, formData) {
+    console.log("upload file")
     formData.set('FilesToSave', Chunk, FileName);
     var fileName = FileName;
     var section = $("#masterSectionType").val();
@@ -60,12 +59,12 @@ function UploadFileChunk(Chunk, FileName,  formData)
     }
     $.ajax({
         type: "POST",
-        url: urlbeginning+'UploadFile/',
+        url: urlbeginning + 'UploadFile/',
         async: false,
         contentType: false,
         processData: false,
         data: formData,
-        success: function (data) { 
+        success: function (data) {
             console.log(data);
             fileName = data;
         }
@@ -81,7 +80,43 @@ $(function () {
         return false;
     });
 
-    $(".file-select").off("change").on("change", function (e) {
+    $.fn.DirectlyUploadDocFromCard = function (section, folderName) {
+        console.log($(".active-document-modal"))
+        var objectID = $(".active-document-modal").data("id");
+        var parentFolder = $(".active-document-modal").attr("parentFolder")
+        var showSwitch = $(".active-document-modal").attr("showSwitch")
+        var modalType = $("#modalType").val();
+        var guid = $("#GUID").val()
+
+        var targetFile = new FormData($(".ordersItemForm")[0]).getAll("FilesToSave").filter(f => f.size>0)
+        console.log(targetFile)
+
+        var uploadFileFormData = new FormData();
+        $.fn.AddObjectToFormdata(uploadFileFormData, {
+            ObjectID: objectID,
+            ParentFolderName: parentFolder,
+            FolderName: folderEnumString,
+            Guid : guid
+        })
+
+        UploadFile(targetFile[0], uploadFileFormData);
+        var folderID = objectID == "0" ? guid : objectID;
+        $.ajax({
+            async: true,
+            url: "/Requests/_DocumentsCard?requestFolderNameEnum=" + folderEnumString + "&id=" + folderID + "&sectionType=" + section + "&parentFolderName=" + parentFolder + "&modalType=" + modalType,
+            type: 'GET',
+            cache: false,
+            success: function (data) {
+                console.log("replace doc card")
+                $(".doc-card." + folderEnumString).html(data)
+                $(".doc-card." + folderEnumString + " .open-document-modal").attr("showSwitch", showSwitch)
+                $(".active-document-modal").removeClass("active-document-modal");
+            }
+        });
+
+    }
+
+    $("body, .modal").off("change", ".file-select").on("change", ".file-select", function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
 
@@ -91,74 +126,70 @@ $(function () {
             console.log("disable more files")
         }
 
-        var inputButton = $('#save-documents');
-        var filePath = $(".file-select")[0].value;
+        var filePath = $(this)[0].value;
+        console.log(filePath)
 
         var fileName = filePath.split("\\")[2]
         $(".document-name").text(fileName)
-
         $(".document-name#FileName").val(fileName)
 
+        var extn = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
+        console.log("extn: " + extn);
 
-		var extn = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
-		console.log("extn: " + extn);
-		//if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn != "ppt" && extn != "pptx" && extn !="") {
-		//	alert("invalid file extension");
-		//	return;
-		//}
+        //if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn != "ppt" && extn != "pptx" && extn !="") {
+        //	alert("invalid file extension");
+        //	return;
+        //}
 
-		//var $form = $(this).parents('form');
-		console.log("in save doc files");
-		//console.log("form: " + $form);
-		//$(this).ajaxSubmit();
-		//var url = $("#documentModalForm").data('string');
-		console.log("input button: " + inputButton);
-		var url = inputButton.attr("href");
-		var $isEdittable = $('.isEdittable').val();
-		//alert($isEdittable)
-		var $showSwitch =  $('.showSwitch').val();
-		console.log("url : " + url);
-        var formData = new FormData($(".documentModalForm")[0]);
-        var $CustomMainObjectID = $("#CustomMainObjectID").val();
-        console.log(...formData)
-        var targetFile = formData.getAll("FilesToSave")
-        console.log(targetFile)
-        for (var i = 0; i < targetFile.length; i++) {
-            console.log(targetFile[i])
-            UploadFile(targetFile[i], formData);
-        }
+        console.log("in save doc files");
 
-        $(".carousel-item").remove();
-
-
-        var $enumString = $('.folderName').val();
-        var $requestId = $('.objectID').val();
         var section = $("#masterSectionType").val();
-        var guid = $("#Guid").val();
-        var $CustomMainObjectID = $("#CustomMainObjectID").val();
+        var $foldername = $('.folderName').val();
 
+        if ($(this).hasClass("direct-upload")) {
+            console.log("direct upload")
+            $(this).closest(".document-card").find(".open-document-modal").addClass("active-document-modal");
+            var $foldername = $(".active-document-modal").data("string");
+            $.fn.DirectlyUploadDocFromCard(section, $foldername)
+            $(this).val(null);
 
-        if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
-            section = "Operations"
-        } else if ($(".open-document-modal.active-document-modal").hasClass('labManagement') || $(".open-document-modal.active-document-modal").hasClass('LabManagement')) {
-            section = "LabManagement"
         }
-        $.fn.ChangeColorsOfModal($enumString, section);
-        var parentFolder = $('.parentFolderName').val();
-        $.fn.OpenDocumentsModal(true, $enumString, $requestId, guid, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
-        return true;
+        else {
+            var $requestId = $('.objectID').val();
+            var guid = $("#Guid").val();
+            var $CustomMainObjectID = $("#CustomMainObjectID").val();
+            var $isEdittable = $('.isEdittable').val();
+            var $showSwitch = $('.showSwitch').val();
+            var parentFolder = $('.parentFolderName').val();
 
-        return true;
-					});
+            var formData = new FormData($(".documentModalForm")[0]);
 
-
-    $(".file-select").on("change", function (e) {
-        console.log("file was changed");
-        $cardDiv = $(this).closest("div.card");
-        console.log("cardDiv: " + JSON.stringify($cardDiv));
-        $cardDiv.addClass("document-border");
+            var targetFile = formData.getAll("FilesToSave")
+            console.log(targetFile)
+            for (var i = 0; i < targetFile.length; i++) {
+                console.log(targetFile[i])
+                UploadFile(targetFile[i], formData);
+            }
+            $(".carousel-item").remove();
+            
+            $.fn.OpenDocumentsModal(true, $foldername, $requestId, guid, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
+        }
+        var folderInput = "#" + $foldername + "Input";
+        $(folderInput).addClass("contains-file");
+        if ($(folderInput).rules()) {
+            $(folderInput).valid();
+        }
         return true;
     });
+
+
+    //$(".file-select").on("change", function (e) {
+    //    console.log("file was changed");
+    //    $cardDiv = $(this).closest("div.card");
+    //    console.log("cardDiv: " + JSON.stringify($cardDiv));
+    //    $cardDiv.addClass("document-border");
+    //    return true;
+    //});
 
 
     $.fn.ChangeColorsOfModal = function ($foldername, section) {
@@ -192,14 +223,14 @@ $(function () {
         }
     };
 
-	$("body, .modal").off("click", ".delete-document").on("click",".delete-document", function (e) {
+    $("body, .modal").off("click", ".delete-document").on("click", ".delete-document", function (e) {
         e.preventDefault();
-		var hasClass = $(this).hasClass("delete-file-document");
-		var reportFile = $(this).hasClass("report-file");
-		console.log(reportFile)
-		if (reportFile == true) {
-			console.log($(this).parent())
-			$(this).parent().parent(".report-file-card").addClass("delete-card");
+        var hasClass = $(this).hasClass("delete-file-document");
+        var reportFile = $(this).hasClass("report-file");
+        console.log(reportFile)
+        if (reportFile == true) {
+            console.log($(this).parent())
+            $(this).parent().parent(".report-file-card").addClass("delete-card");
         }
         if (hasClass == true) {
             console.log("delete doc clicked");
@@ -257,7 +288,7 @@ $(function () {
 
             $(".document-modal-buttons").removeClass("disabled-color");
             $(".document-modal-buttons").addClass($bcColor);
-            $(".file-select").attr("disabled", false);
+            $(".documentsModal .file-select").attr("disabled", false);
             $(".isEdittable").val(true);
             $(".document-modal-cancel").addClass("d-none");
             $(".document-modal-save").removeClass("d-none");
@@ -270,13 +301,12 @@ $(function () {
             $(this).prev('.edit-mode-switch-description').text("Edit Mode On");
         }
         else if (editBool) {
-
             $(".isEdittable").addClass("details");
             $(".isEdittable").removeClass("edit");
             $(".isEdittable").val(false);
             $(".document-modal-buttons").addClass("disabled-color");
             $(".document-modal-buttons").removeClass($bcColor);
-            $(".file-select").attr("disabled", true);
+            $(".documentsModal .file-select").attr("disabled", true);
             $(".document-modal-cancel").removeClass("d-none");
             $(".document-modal-save").addClass("d-none");
             $(".active-document-modal").attr("data-val", false);
@@ -288,6 +318,24 @@ $(function () {
             $(this).prev('.edit-mode-switch-description').text("Edit Mode Off");
         }
     });
+
+    $(".document-modal-save, .close-document-modal").off("click").on("click", function (e) {
+        e.preventDefault();
+        console.log("reload doc cards")
+        var folderEnumString = $('.folderName').val();
+        var requestId = $('.objectID').val() == 0 ? $('#GUID').val() : $('.objectID').val();
+        var section = $("#masterSectionType").val();
+        var parentFolder = $('.parentFolderName').val();
+        var showSwitch = $('.showSwitch').val();
+        var isEdittable = $('.isEdittable').val();
+        var modalType = $("#modalType").val();
+
+        $.fn.ReloadDocumentCard(folderEnumString, requestId, section, parentFolder, modalType)
+
+        $.fn.CloseModal('documents');
+        
+
+    })
     //$(".modal").on("change", ".turn-edit-doc-on-off", function () {
     //	alert("djs modal turned on or off!");
     //});

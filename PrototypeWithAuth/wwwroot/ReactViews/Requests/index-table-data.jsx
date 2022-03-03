@@ -1,23 +1,24 @@
 ﻿import React from 'react';
 import IndexTableColumn from './index-table-column.jsx'
-import { useSelector } from 'react-redux';
-
-
-export default function _IndexTableData() {
-
-    const viewModel = useSelector(state => state.viewModel);
-
+import { connect } from 'react-redux';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'bootstrap-css-only/css/bootstrap.min.css';
+import 'mdbreact/dist/css/mdb.css';
+import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+function _IndexTableData(props) {
+    var viewModel = props.viewModel;
             return (
                 /*       return ReactDOM.createPortal(*/
                 <div>
                     <div style={{ position: "absolute", left: "13rem", top: "6rem", zIndex: "1000" }}><span className="text danger-text error-msg"></span></div>
                     <br />
                     <div className="">
-                        <input type="hidden" id="PageNumber" name="PageNumber" className="page-number" />
+                        <input type="hidden" id="PageNumber" name="PageNumber" className="page-number" value={viewModel.PageNumber} />
+                        <input type="hidden" id="TabName" name="TabName" className="page-number" value={viewModel.TabName} />
                         <table className="table table-headerspaced table-noheaderlines table-hover ">
                             <tbody className="scroll-tbody">
                                 {viewModel.PagedList.map((r, i) => (
-                                    <tr key={ "tr"+i} className="text-center one-row">
+                                    <tr key={r.r.RequestID} className="text-center one-row">
                                         {r.Columns.map((col,i) => (
                                             <IndexTableColumn key={"col"+i} columnData={col}/>
                                         ))}
@@ -31,3 +32,14 @@ export default function _IndexTableData() {
                 </div>);
         
 }
+
+const mapStateToProps = state => {
+    console.log("in map state to props")
+    return {
+        viewModel: state.viewModel
+    };
+};
+
+export default connect(
+    mapStateToProps
+)(_IndexTableData)

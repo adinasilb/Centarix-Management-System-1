@@ -27,45 +27,14 @@
 }
 else
 {
-    <div class="container ">
-        <div class="row">
-            <div class="col-2 offset-5">
-                <input type="text" placeholder="Search By Name" class="mb-2 w-100 form-control-plaintext border-bottom search-by-name" />
-            </div>
-            <div class="col-2">
-                <div class="form-group">
-                    @Html.DropDownListFor(
-                            vm => vm.NotificationFilterViewModel.SelectedVendor,
-                            new SelectList(
-                            Model.NotificationFilterViewModel.Vendors,
-                            dataValueField: "VendorID",
-                            dataTextField: "VendorEnName"),
-                            //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
-                            "Select a Vendor",
-                            htmlAttributes: new
-                                 {
-                                     @class = "  mdb-select custom select-dropdown mb-2 w-100 form-control-plaintext border-bottom  search-by-vendor ",
-                                @id = "vendors",
-                                     @size = 1,
-                                     @searchable = "Search Vendor",
-                                     @data_stop_refresh = "true"
-                                 }
-                            )
-                </div>
-
-            </div>
-            <div class="col-3">
-                <input type="text" placeholder="Centarix Order Number" class="mb-2 w-100 form-control-plaintext border-bottom search-by-order-number" />
-            </div>
-        </div>
-    </div>
+     <div class="_AccountingSearchAndFilter">
+         @{
+                await Html.RenderPartialAsync("_AccountingSearchAndFilter", Model);
+         }
+     </div>
     <div class="_IndexTableByVendor">
-
-
-
         @{
             await Html.RenderPartialAsync("_IndexTableByVendor", Model);
         }
     </div>
 }
-<script src="~/js/NotificationsFilterScript.js"></script>

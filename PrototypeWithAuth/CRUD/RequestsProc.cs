@@ -26,7 +26,11 @@ namespace PrototypeWithAuth.CRUD
                 base.InstantiateProcs();
             }
         }
-
+        public override IQueryable<Request> Read(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
+        {
+            wheres.Add(r => !r.IsRemoved);
+            return base.Read(wheres, includes);
+        }
         public override IQueryable<Request> ReadWithIgnoreQueryFilters(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
         {
             wheres.Add(r => !r.IsDeleted);
@@ -53,6 +57,10 @@ namespace PrototypeWithAuth.CRUD
             await _context.SaveChangesAsync();
         }
 
+        public IQueryable<Request> ReadWithIncludeRemovedRecurrences(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
+        {
+            return base.Read(wheres, includes);
+        }
 
         public async Task<StringWithBool> DeleteAsync(int requestID)
         {
@@ -140,9 +148,9 @@ namespace PrototypeWithAuth.CRUD
                 categoryType = 2;
                 serialLetter = "P";
             }
-            var serialnumberList = _productsProc.ReadWithIgnoreQueryFilters(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType })
+            var serialnumberList = _productsProc.ReadWithIgnoreQueryFilters(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType })?
                 .Select(p => int.Parse(p.SerialNumber.Substring(1))).ToList();
-
+           
             lastSerialNumberInt = serialnumberList.OrderBy(s => s).LastOrDefault();
 
             return serialLetter + (lastSerialNumberInt + 1);
@@ -152,8 +160,11 @@ namespace PrototypeWithAuth.CRUD
         {
             var RequestToSave = await ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == request.RequestID }, new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments } });
             RequestToSave.Cost = request.Cost;
-            RequestToSave.Payments.FirstOrDefault().InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
-            RequestToSave.Payments.FirstOrDefault().HasInvoice = true;
+            foreach (var payment in RequestToSave.Payments)
+            {
+                payment.InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
+                payment.HasInvoice = true;
+            }
             _context.Update(RequestToSave);
         }
 
@@ -395,7 +406,7 @@ namespace PrototypeWithAuth.CRUD
                 {
                     try
                     {
-                        await Read(new List<Expression<Func<Request, bool>>> { r => r.OrderType == AppUtility.OrderTypeEnum.ExcelUpload.ToString() })
+                        await Read(new List<Expression<Func<Request, bool>>> { r => r.OrderMethod.DescriptionEnum.ToString() == AppUtility.OrderMethod.ExcelUpload.ToString() })
                             .ForEachAsync(r => { 
                                 var rate = AppUtility.GetExchangeRateByDate(r.CreationDate);
                                 r.ExchangeRate = rate;

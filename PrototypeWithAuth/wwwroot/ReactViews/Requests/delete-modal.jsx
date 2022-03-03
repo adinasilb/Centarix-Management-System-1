@@ -1,25 +1,24 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import CloseButton, { CancelButton } from '../Utility/close-button.jsx'
-import { openModal } from '../Utility/modal-functions.jsx'
 import { ajaxPartialIndexTable, getRequestIndexString } from '../Utility/root-function.jsx'
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
-import * as Routes from '../Constants/Routes.jsx'
+import GlobalModal from '../Utility/global-modal.jsx';
+
 export default function DeleteModal(props) {
     const dispatch = useDispatch();
     const location = useLocation();
-    const [state, setState] = useState({ view: "", requestID: location.state.requestID });
+    const [state, setState] = useState({ viewModel: null, requestID: location.state.ID });
+    console.log(location.state)
     useEffect(() => {
-        var url = "/Requests/_DeleteModal?id=" + state.requestID + "&" + getRequestIndexString();
+        var url = "/Requests/DeleteModalJson?id=" + state.requestID;
         fetch(url, {
             method: "GET"
         })
-        .then((response) => { return response.text(); })
-        .then(result => {
-            setState({ ...state, view: result });
-            openModal("modal");
-        });
+            .then((response) => { return response.json(); })
+            .then(result => {
+                setState({ ...state, viewModel: JSON.parse(result) });
+            });
 
     }, [state.requestID]);
 
@@ -31,26 +30,42 @@ export default function DeleteModal(props) {
         ajaxPartialIndexTable(dispatch, url, "POST", formdata, [ModalKeys.DELETE_ITEM])
         return false;
     }
+
     return (
-        <div className={"modal  modal-view modal"} id="myModal" role="dialog" aria-labelledby="Request" >
+        <GlobalModal  backdrop={props.backdrop} value={state.viewModel?.Request?.RequestID}  modalKey={props.modalKey} key={state.viewModel?.Request?.RequestID} size="lg" header={"Are you sure you would like to delete " + state.viewModel?.Request?.Product?.ProductName + "?"} >
+            <form onSubmit={onSubmit} method="post" encType="multipart/form-data" style={{ height: "100%", overflow: "auto" }} className="" id={props.modalKey}>
+                <div className="error-message text-danger-centarix">
+                    {state.viewModel?.ErrorMessage??""}
+                </div>
+                <input  id="Request_RequestID" name="Request.RequestID" type="hidden" value={state.viewModel?.Request?.RequestID??''}/>
 
-            <div className="modal-dialog-centered modal-lg mx-auto " role="document" style={{ maxHeight: "100%", overflowY: "auto" }}>
-
-                <div className="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-                    <div className="close-button"><CloseButton modalKey={ModalKeys.DELETE_ITEM} pathname={Routes.DELETE_ITEM}  /></div>
-                    <form onSubmit={onSubmit} method="post" encType="multipart/form-data" style={{ height: "100%", overflow: "auto" }} className="modal-padding" id="myForm">
-                        <div dangerouslySetInnerHTML={{ __html: state.view }} />
-                        <div className="modal-footer">
-                            <div className="text-center mx-auto modal-footer-mt">
-                                <button type="submit" className="custom-button custom-button-font section-bg-color between-button-margin" value={state.requestID}>Confirm</button>
-                                <CancelButton modalKey={ModalKeys.DELETE_ITEM}  />
+                <div className="container-fluid p-0">
+                    <span className="text ">Details:</span>
+                    <hr />
+                    <div className="row">
+                        <div className="col-4">
+                            <div className="form-group">
+                                <label className="control-label ">Parent Category</label>
+                                <input className="form-control-plaintext border-bottom" value={state.viewModel?.Request?.Product?.ProductSubcategory?.ParentCategory?.Description ?? ''} disabled />
+                            </div>
+                        </div>
+                        <div className="col-4">
+                            <div className="form-group">
+                                <label className="control-label" style={{ fontWeight: "500"}}>Product Subcategory</label>
+                                <input className="form-control-plaintext border-bottom" value={state.viewModel?.Request?.Product?.ProductSubcategory?.Description ?? ''} disabled />
+                            </div>
+                        </div>
+                        <div className="col-4">
+                            <div className="form-group">
+                                <label className="control-label" style={{fontWeight:"500"}}>Vendor</label>
+                                <input className="form-control-plaintext border-bottom" value={state.viewModel?.Request?.Product?.Vendor?.VendorEnName ?? ''} disabled />
                             </div>
                         </div>
 
-                    </form>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </form>
+       </GlobalModal>
     );
 
 }

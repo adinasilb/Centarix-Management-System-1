@@ -2,18 +2,12 @@
 @using PrototypeWithAuth.AppData
 @{
 
-    string nonProprietaryText = "";
-    string proprietaryText = "";
-
 
     string nonProprietaryClass = "";
     string proprietaryClass = "";
 
 
     int requestStatusID = Model.RequestStatusID;
-
-    nonProprietaryText = "Main";// [" + Model.NonProprietaryCount + "]";
-    proprietaryText = "Samples";// [" + Model.ProprietaryCount + "]";
 
 
     nonProprietaryClass = "new-button pt-4 ";
@@ -28,9 +22,9 @@
         proprietaryClass += " new-oper-button ";
     }
 
-    switch (Model.RequestStatusID)
+    switch (Model.TabName)
     {
-        case 7:
+        case AppUtility.IndexTabs.Samples:
             proprietaryClass = activeClasses;
             break;
         default:
@@ -44,10 +38,10 @@
     <div class="item-table">
         <ul class="pl-0">
             <li class="list-inline-item active m-0">
-                <a class="@nonProprietaryClass countStatus reload-filter" value="3" href="#"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@nonProprietaryText</label> </a>
+                <a class="@nonProprietaryClass countStatus reload-filter" value="AppUtility.IndexTabs.Main" data-val="3" href="#"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@AppUtility.IndexTabs.Main</label> </a>
             </li>
             <li class="list-inline-item m-0">
-                <a class="@proprietaryClass countStatus reload-filter" value="7" href="#"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@proprietaryText</label> </a>
+                <a class="@proprietaryClass countStatus reload-filter" value="AppUtility.IndexTabs.Samples" data-val="7" href="#"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@AppUtility.IndexTabs.Samples</label> </a>
             </li>
             @if ((AppUtility.SidebarEnum)TempData[AppUtility.TempDataTypes.SidebarType.ToString()] != AppUtility.SidebarEnum.Search)
             {

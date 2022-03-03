@@ -91,7 +91,7 @@
 
                     <div class="modal-footer border-0 p-0">
                         <div class="mx-auto modal-footer-mt">
-                            <input type="hidden" asp-for="OrderTypeEnum" />
+                            <input type="hidden" asp-for="OrderMethodEnum" />
                             <input type="submit" class="custom-button custom-button-font section-bg-color between-button-margin submitQuote" @*asp-action="UploadQuoteModal"*@ />
                             <button type="button" class="custom-button custom-cancel cancel-quote">Cancel</button>
                         </div>
@@ -171,7 +171,7 @@
                     //console.log(data)
                     console.log("status code" + jqxhr.status)
                     $('.modal .temprequesthiddenfors').html('');
-                    console.log($("#OrderTypeEnum").val())
+                    console.log($("#OrderMethodEnum").val())
                     $('.submitQuote').prop('disabled', false);
                     var sidebarType = $('#masterSidebarType').val();
                     var viewClass = "_IndexTableData";
@@ -183,7 +183,7 @@
                             window.location.href = "/Requests/?PageType=RequestRequest&SectionType=Requests&SidebarType=List"
                         }
                         else {
-                            $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "step-1, reorder-item");
+                            $.fn.ajaxPartialIndexTable("/Requests/" + viewClass, "." + viewClass, "POST", formData, "step-1, reorder-item");
                         }
                         $(".save-item").removeClass("save-item").off('click')
                     }

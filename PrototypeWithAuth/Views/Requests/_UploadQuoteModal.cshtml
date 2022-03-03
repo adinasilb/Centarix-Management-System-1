@@ -1,5 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.UploadQuoteViewModel
 @using PrototypeWithAuth.AppData
+@using PrototypeWithAuth.ViewModels
 @{
     var urlAction = Url.Action("DocumentsModal", "Requests");
     var fontSize = "2rem";
@@ -22,106 +23,85 @@
 
 
 
-<div class="container">
-    <div class="row">
-        <div class=" offset-4 text-center">
-            <div class="d-inline-block" style="max-width:150px">
-                <input type="text" readonly id="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" name="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" class="@containsFile"
-                       style="pointer-events:none; background:none; border:none;" />
-            </div>
-            @if (Model.ParentQuote.ParentQuoteID!=0)
-            {
-                <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-id="@Model.ParentQuote.ParentQuoteID" id="@AppUtility.FolderNamesEnum.Quotes.ToString()"
-                   name="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-val="@false" showSwitch="@false" parentfolder="@AppUtility.ParentFolderName.ParentQuote.ToString()">
-                    <div class="card document-border @hasFileClass">
-                        <div class="document-card text-center">
-                            <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                        </div>
-                    </div>
-                </a>
-            }
-            else
-            {
-                <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-id="@Model.TempRequestListViewModel.GUID" id="@AppUtility.FolderNamesEnum.Quotes.ToString()"
-                   name="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-val="@true" showSwitch="@false" parentfolder="@AppUtility.ParentFolderName.ParentQuote.ToString()">
-                    <div class="card document-border @hasFileClass">
-                        <div class="document-card text-center">
-                            <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                        </div>
-                    </div>
-                </a>
-            }
-
-
-
-            <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
-        </div>
-
-        <div class="col-4 pl-5 pt-4">
-            <div class="row">
-                <div class=" col-md-6">
-                    <div class="form-group ">
-                        <label asp-for="ParentQuote.QuoteNumber" class=" control-label m-0 mt-2" style="width:100%;"></label>
-                        @if (Model.ParentQuote.ParentQuoteID!=0)
-                        {
-                            <input asp-for="ParentQuote.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" readonly />
-                        }
-                        else
-                        {
-                            <input asp-for="ParentQuote.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" />
-                        }
-                        <span asp-validation-for="ParentQuote.QuoteNumber" class="text-danger-centarix"></span>
-                    </div>
+    <div class="container">
+        <div class="row">
+            <div class=" offset-4 text-center">
+                <div class="d-inline-block" style="max-width:150px">
+                    <input type="text" readonly id="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" name="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" class="@containsFile"
+                           style="pointer-events:none; background:none; border:none;" />
                 </div>
-                <div class="col-md-6">
-                    <label asp-for="ParentQuote.ExpirationDate" class=" control-label m-0 mt-2" style="width:100%;"></label>
-                    @if (Model.ParentQuote.ParentQuoteID!=0)
-                    {
-                        <input asp-for="ParentQuote.ExpirationDate" type="text" class="datepicker form-control-plaintext border-bottom p-0 m-0" value="@Model.ParentQuote.ExpirationDate.GetElixirDateFormat()" readonly />
+                <div class="doc-card @Model.DocumentsCardViewModel.DocumentInfo.FolderName">
+                    @{
+                        await Html.RenderPartialAsync("_DocumentsCard", Model.DocumentsCardViewModel);
                     }
-                    else
-                    {
-                        <input asp-for="ParentQuote.ExpirationDate" value="@Model.ParentQuote.ExpirationDate.GetElixirDateFormat()"  type="text" class="datepicker form-control-plaintext border-bottom p-0 m-0" />
-                    }
-                    <span asp-validation-for="ParentQuote.ExpirationDate" class="text-danger-centarix"></span>
-
                 </div>
             </div>
+            <div class="col-4 pl-5 pt-4">
+                <div class="row">
 
-            <div>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label class="control-label">Discount</label>
-
-                        <div class="input-group">
-                            @if (Model.ParentQuote.ParentQuoteID!=0)
+                    <div class=" col-md-6">
+                        <div class="form-group ">
+                            <label asp-for="ParentQuote.QuoteNumber" class=" control-label m-0 mt-2" style="width:100%;"></label>
+                            @if (Model.ParentQuote.ParentQuoteID != 0)
                             {
-                                <input asp-for="ParentQuote.Discount" class="form-control-plaintext border-bottom requestPriceQuote" value="@AppUtility.TrimZeros(Model.ParentQuote.Discount)" readonly />
+                                <input asp-for="ParentQuote.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" readonly />
                             }
                             else
                             {
-                                <input asp-for="ParentQuote.Discount" class="form-control-plaintext border-bottom requestPriceQuote" value="" />
+                                <input asp-for="ParentQuote.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" />
                             }
+                            <span asp-validation-for="ParentQuote.QuoteNumber" class="text-danger-centarix"></span>
 
-                            <div class="input-group-text">%</div>
                         </div>
-                        <span asp-validation-for="ParentQuote.Discount" />
                     </div>
+                    <div class="col-md-6">
+                        <label asp-for="ParentQuote.ExpirationDate" class=" control-label m-0 mt-2" style="width:100%;"></label>
+                        @if (Model.ParentQuote.ParentQuoteID != 0)
+                        {
+                            <input asp-for="ParentQuote.ExpirationDate" type="text" class="datepicker form-control-plaintext border-bottom p-0 m-0" value="@Model.ParentQuote.ExpirationDate.GetElixirDateFormat()" readonly />
+                        }
+                        else
+                        {
+                            <input asp-for="ParentQuote.ExpirationDate" value="@Model.ParentQuote.ExpirationDate.GetElixirDateFormat()" type="text" class="datepicker form-control-plaintext border-bottom p-0 m-0" />
+                        }
+                        <span asp-validation-for="ParentQuote.ExpirationDate" class="text-danger-centarix"></span>
+
+                    </div>
+
+                </div>
+                <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label class="control-label">Discount</label>
+
+                    <div class="input-group">
+                        @if (Model.ParentQuote.ParentQuoteID != 0)
+                        {
+                            <input asp-for="ParentQuote.Discount" class="form-control-plaintext border-bottom requestPriceQuote" value="@AppUtility.TrimZeros(Model.ParentQuote.Discount)" readonly />
+                        }
+                        else
+                        {
+                            <input asp-for="ParentQuote.Discount" class="form-control-plaintext border-bottom requestPriceQuote" value="" />
+                        }
+
+                        <div class="input-group-text">%</div>
+                    </div>
+                    <span asp-validation-for="ParentQuote.Discount" />
                 </div>
             </div>
-         
-            @*<div class="row">
-                    <div class="form-group ">
-                        <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                        <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
-                        <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
-                    </div>
-                </div>*@
         </div>
+            </div>
+        </div>
+        
+
+        @*<div class="row">
+            <div class="form-group ">
+            <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+            <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
+            <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
+            </div>
+            </div>*@
     </div>
-</div>
     <script src="~/js/InitializeDatePicker.js"></script>
-  
+
 }

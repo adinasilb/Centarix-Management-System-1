@@ -170,11 +170,20 @@ namespace PrototypeWithAuth.Data
                 SeededData.CountryData.Get()
             );
             modelBuilder.Entity<Currency>().HasData(
-           SeededData.CurrencyData.Get()
+                SeededData.CurrencyData.Get()
            );
 
             modelBuilder.Entity<CommentType>().HasData(
                 SeededData.CommentTypeData.Get()
+                );
+            modelBuilder.Entity<OrderMethod>().HasData(
+               SeededData.OrderMethodData.Get()
+               );
+            modelBuilder.Entity<TimePeriod>().HasData(
+                SeededData.TimePeriodData.Get()
+                );
+            modelBuilder.Entity<RecurrenceEndStatus>().HasData(
+                SeededData.RecurringOrderEndStatusData.Get()
                 );
 
             modelBuilder.Entity<CustomDataType>().HasData(

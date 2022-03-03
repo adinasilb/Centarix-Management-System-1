@@ -13,9 +13,11 @@ namespace PrototypeWithAuth.AppData
         public string ErrorMessage { get; set; }
         private int _PageNumber;
         private int _RequestStatusID;
+        private AppUtility.IndexTabs _TabName;
         private List<string> _SelectedPriceSort;
         private AppUtility.PageTypeEnum _PageType;
-        public int PageNumber {
+        public int PageNumber
+        {
             get
             {
                 if (_PageNumber == 0)
@@ -95,7 +97,7 @@ namespace PrototypeWithAuth.AppData
                 }
                 else
                 {
-                    if (_SelectedPriceSort[0]==null)
+                    if (_SelectedPriceSort[0] == null)
                     {
                         return new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString() };
                     }
@@ -105,7 +107,7 @@ namespace PrototypeWithAuth.AppData
             set { _SelectedPriceSort = value; }
         }
         public AppUtility.CurrencyEnum SelectedCurrency { get; set; }
-        public AppUtility.OrderTypeEnum OrderType { get; set; }
+        public AppUtility.OrderMethod OrderMethod { get; set; }
         public bool CategorySelected { get; set; }
         public bool SubcategorySelected { get; set; }
         public bool IsReorder { get; set; }
@@ -116,5 +118,24 @@ namespace PrototypeWithAuth.AppData
         public AppUtility.ModalType ModalType { get; set; }
 
         public int ListID { get; set; }
+        public AppUtility.IndexTabs TabName
+        {
+            get
+            {
+                if (_TabName == AppUtility.IndexTabs.None && PageType == AppUtility.PageTypeEnum.RequestSummary)
+                {
+                    return AppUtility.IndexTabs.Main;
+                }
+                else if (_TabName == AppUtility.IndexTabs.None)
+                {
+                    return AppUtility.IndexTabs.Requests;
+                }
+                else
+                {
+                    return _TabName;
+                }
+            }
+            set { _TabName = value; }
+        }
     }
 }

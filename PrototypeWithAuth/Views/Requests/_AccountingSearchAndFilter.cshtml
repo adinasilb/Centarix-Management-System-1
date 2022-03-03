@@ -1,0 +1,49 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
+
+
+    <div class="row">
+        <div class="col-2 offset-5">
+            <input type="text" placeholder="Search By Name" class="mb-2 w-100 text search-by-name py-2 slightly-rounded-gray"/>
+        </div>
+        <div class="col-2">
+            <input type="text" placeholder="Centarix Order Number" class="mb-2 w-100 search-by-order-number py-2 slightly-rounded-gray" />
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                @Html.DropDownListFor(
+                        vm => vm.NotificationFilterViewModel.SelectedVendor,
+                        new SelectList(
+                        Model.NotificationFilterViewModel.Vendors,
+                        dataValueField: "VendorID",
+                        dataTextField: "VendorEnName"),
+
+                        "Select a Vendor ",
+                        htmlAttributes: new
+                                {
+                                    @class = "  mdb-select custom select-dropdown mb-2 w-100 slightly-rounded-acc search-by-vendor ",
+                            @id = "vendors",
+                                    @size = 1,
+                                    @searchable = "Search Vendor",
+                                    @data_stop_refresh = "true"
+                                }
+                        )
+            </div>
+
+        </div>
+            
+        <button type="button" id="invFilterPopover" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-container="body"
+                    class="text slightly-rounded-acc"  value="Filter">
+                Filter
+            </button>
+            
+        <div style="display:none;" id="inventoryFilterContent" class="container-fluid">
+            @{
+                await Html.RenderPartialAsync("_InventoryFilterResults", Model.InventoryFilterViewModel);
+            }
+        </div>
+
+        
+        <div id="inventoryFilterContentDiv" class="container inventoryFilterDiv"></div>
+        
+    </div>
+    <script src="~/js/NotificationsFilterScript.js"></script>

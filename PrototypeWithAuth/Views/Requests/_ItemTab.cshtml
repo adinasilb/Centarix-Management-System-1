@@ -15,6 +15,7 @@
     var hiddenSummaryClass = "";
     var disabled = "";
     var vendorcurrencyid = "";
+    var productOrderType = Model.OrderType.ToString();
     if (modalType != AppUtility.RequestModalType.Create)
     {
         markReadOnlyClass = "mark-readonly";
@@ -119,21 +120,23 @@
             </div>
         </div>
     }*@
+    
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
             <label  class="control-label">Category</label>
             @if (Model.IsProprietary)
             {
-                <input asp-for="Requests[0].Product.ProductSubcategory.ParentCategory.Description" class="form-control-plaintext border-bottom" type="text" readonly />
+                <input asp-for="Requests[0].Product.ProductSubcategory.ParentCategory.Description" name="Requests[0].@(productOrderType).ParentCategory.Description" class="form-control-plaintext border-bottom" type="text" readonly />
             }
             else
             {
-                @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategory.ParentCategoryID,
+                @Html.DropDownList("Requests[0]."+productOrderType+".ProductSubcategory.ParentCategoryID",
              new SelectList(
              Model.ParentCategories,
              "ID",
-             "Description"
+             "Description",
+             Model.Requests[0].Product.ProductSubcategory.ParentCategoryID
              ), "Select Category",
              new
                   {
@@ -143,18 +146,19 @@
                       @data_stop_refresh = "true"
                   })
             }
-            <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" />
+            <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" name="Requests[0].@(productOrderType).ProductSubcategory.ParentCategoryID"/>
             <span asp-validation-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
         </div>
     </div>
     <div class="col-md-6 px-4">
         <div class="form-group sublist">
-            <label class="control-label">Product Subcategory</label>
-            @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategoryID,
+            <label asp-for="Requests[0].Product.ProductSubcategory.Description" class="control-label">Product Subcategory</label>
+            @Html.DropDownList("Requests[0]."+productOrderType+".ProductSubcategoryID",
                 new SelectList(
                 Model.ProductSubcategories,
                 "ID",
-                "Description"
+                "Description",
+                Model.Requests[0].Product.ProductSubcategoryID
                 ), "Select Sub Category",
                 new
                      {
@@ -163,49 +167,26 @@
                     @searchable = "Select Sub Category",
                          @data_stop_refresh = "true"
                      })
-            <input type="hidden" asp-for="Requests[0].Product.ProductSubcategoryID" disabled class="proprietryHidenCategory" />
+            <input type="hidden" asp-for="Requests[0].Product.ProductSubcategoryID" name="Requests[0].@(productOrderType).ProductSubcategoryID" disabled class="proprietryHidenCategory" />
             <span asp-validation-for="Requests[0].Product.ProductSubcategoryID" class="text-danger-centarix"></span>
         </div>
     </div>
-
-    @*<div class="col-md-4 @projectCategories">
-                            <div class="form-group">
-                                <label class="control-label">Project:</label>
-                                @Html.DropDownListFor(m => m.Request.SubProject.ProjectID,
-        new SelectList(
-        Model.Projects,
-        "ProjectID",
-        "ProjectDescription"
-        ), "Select a Project",
-        new { @class = "mdb-select custom select-dropdown form-control-plaintext Project " + projectCategories + " " + markReadOnlyClass, @id = "subProject", @searchable = "Select a Project" })
-                                <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger-centarix"></span>
-                            </div>
-                        </div>*@
 </div>
 
 @if (!Model.Requests[0].Product.ProductSubcategory.ParentCategory.IsProprietary)
 {
     <div class="row">
-        <!--<div class="col-md-4 @subProjectCategories">
-                                <div class="form-group SubProject">
-                                    <label class="control-label">Sub Project:</label>
-                                    @Html.DropDownListFor(vm => vm.Requests[0].SubProjectID,
-        Enumerable.Empty<SelectListItem>(), "Select Sub Project",
-        new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext " + subProjectCategories + " " + markReadOnlyClass, @id = "SubProject", @searchable = "Select Sub Project", @data_stop_refresh = "true" })-->
-        @*<select asp-for="Request.SubProjectID" id="SubProject" class="mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext" searchable="Select Sub Project">
-            </select>*@
-        <!--<span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
-            </div>
-        </div>-->
+        
         <div class="col-md-6 @vendorCategories">
             <div class="form-group">
                 <label asp-for="Requests[0].Product.Vendor" class="control-label"></label>
-                @Html.DropDownListFor(
-                        vm => vm.Requests[0].Product.VendorID,
+                @Html.DropDownList(
+                        "Requests[0]."+productOrderType+".VendorID",
                         new SelectList(
                         Model.Vendors,
                         dataValueField: "VendorID",
-                        dataTextField: "VendorEnName"),
+                        dataTextField: "VendorEnName",
+                        Model.Requests[0].Product.VendorID),
                         //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
                         "Select a Vendor",
                         htmlAttributes: new
@@ -227,14 +208,14 @@
             <div class="form-group">
                 @* IN MIDDLE *@
                 <label asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="control-label"></label>
-                <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " disabled />
+                <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID"  name="Requests[0].@(productOrderType).Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " disabled/>
                 @*don't need a validation here because you it's not saving*@
             </div>
         </div>
         <div class="col-md-2 @vendorCategories">
             <div class="form-group h-100 d-flex" style="flex-direction: column;text-align: center;justify-content: center;">
                 <a href="#" class="open-vendor-float-details btn-link text no-hover" value="@Model.Requests[0].Product.VendorID" disabled>
-                    <i class="icon-account_box-24px1 heading-1"></i>
+                    <i class="icon-account_box-24px-1 heading-1"></i>
                 </a>
             </div>
         </div>
@@ -245,7 +226,7 @@
     <div class="row">
         <div class="col-md-6 @catalogCategories">
             <label asp-for="Requests[0].Product.CatalogNumber" class="control-label"></label>
-            <input asp-for="Requests[0].Product.CatalogNumber" class="form-control-plaintext border-bottom catalog-number @catalogCategories @markReadOnlyClass" />
+            <input asp-for="Requests[0].Product.CatalogNumber" name="Requests[0].@(productOrderType).CatalogNumber" class="form-control-plaintext border-bottom catalog-number @catalogCategories @markReadOnlyClass" />
             <span asp-validation-for="Requests[0].Product.CatalogNumber" class="text-danger-centarix"></span>
         </div>
         <div class="col-md-3 @warrantyCategories ">
@@ -393,23 +374,7 @@
 }
 else //isProprietary
 {
-    @*<div class="row">
-            <div class="col-md-4 form-group">
-                <label asp-for="Requests[0].Unit" class="control-label"></label>
-                @Html.EditorFor(vm => vm.Requests[0].Unit, new { htmlAttributes = new { @class = "form-control-plaintext border-bottom " + @markReadOnlyClass, @min = "1", @id = "unit" } })
-                <span asp-validation-for="Requests[0].Unit" class="text-danger-centarix"></span>
-            </div>
-            <div class="col-md-8 form-group dropdown-select-div">
-                <label asp-for="Requests[0].UnitType" class="control-label"></label>
-                @Html.DropDownListFor(
-                    vm => vm.Requests[0].UnitTypeID,
-                    Model.UnitTypeList,
-                    "",
-                    htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @id = "unitTypeID" }
-                    )
-                <span asp-validation-for="Requests[0].UnitType" class="text-danger-centarix"></span>
-            </div>
-        </div>*@
+    
     if (request.Product.ProductSubcategory.Description == "Cells")
     {
         <div class="row">

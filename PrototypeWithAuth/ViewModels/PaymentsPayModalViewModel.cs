@@ -11,6 +11,7 @@ namespace PrototypeWithAuth.ViewModels
     public class PaymentsPayModalViewModel : ViewModelBase
     {
         public List<Request> Requests { get; set; }
+        public List<Payment> Payments { get; set; }
         public Payment Payment { get; set; }
         public List<CompanyAccount> CompanyAccounts {get; set;}
         public AppUtility.SidebarEnum AccountingEnum { get; set; }

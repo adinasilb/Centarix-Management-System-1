@@ -185,6 +185,10 @@ span.choose {
     border-radius: 18px;
     border-color: var(--order-inv-color) !important;
 }
+    .Operations .RequestUnitCard div:first-child, .LabManagement .RequestSubunitCard div:first-child, .LabManagement .RequestSubsubunitCard div:first-child {
+        border-radius: 18px;
+        border-color: var(--oper-color) !important;
+    }
     .LabManagement .RequestUnitCard div:first-child, .LabManagement .RequestSubunitCard div:first-child, .LabManagement .RequestSubsubunitCard div:first-child {
         border-radius: 18px;
         border-color: var(--lab-man-color) !important;
@@ -1215,19 +1219,19 @@ a.nav-link {
         /*color: var(--lab-man-form) !important;*/
         border-bottom: .188rem solid var(--lab-man-color);
     }
-.order-inv-form .new-button {
+.Requests .new-button {
     margin: 0 4rem 0 0 !important;
 }
 
-.order-inv-form .new-button:hover {
-        color: var(--order-inv-color);
-        background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
-    }
+.Requests .new-button:hover {
+    color: var(--order-inv-color);
+    background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
+}
 
-    .order-inv-form .new-button.active {
-        color: var(--order-inv-color) !important;
-        border-bottom: .188rem solid var(--order-inv-color);
-    }
+.Requests .new-button.active {
+    color: var(--order-inv-color) !important;
+    border-bottom: .188rem solid var(--order-inv-color);
+}
 
 
 .new-button {
@@ -1709,7 +1713,6 @@ input.bigger-box {
 
 .notification-line {
     MAX-WIDTH: 99%;
-    */ display: inline-block;
     float: left;
     width: 9%;
     MARGIN-LEFT: 1.4%;
@@ -2643,9 +2646,7 @@ span.caret {
     background: #F6F7F8;
 }
 
-.modal-dialog {
-    box-shadow: 6px 0px 10px #0000008C;
-}
+
 
 .elixir-modal-xl {
     width: 93.31rem;
@@ -2833,9 +2834,6 @@ a {
 }
 /*LabManagements*/
 .LabManagement .form-check-input[type="checkbox"].filled-in:checked + label:after, .LabManagement label.btn input[type="checkbox"].filled-in:checked + label:after, .labmanage .form-check-input[type="checkbox"].filled-in:checked + label:after, .labmanage label.btn input[type="checkbox"].filled-in:checked + label:after {
-.supplier-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .supplier-form label.btn input[type="checkbox"].filled-in:checked + label:after, 
-.labmanage .form-check-input[type="checkbox"].filled-in:checked + label:after, .labmanage label.btn input[type="checkbox"].filled-in:checked + label:after,
-.lab-man-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .lab-man-form label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid var(--lab-man-color);
     background-color: var(--lab-man-color);
 }

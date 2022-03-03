@@ -70,7 +70,13 @@ namespace PrototypeWithAuth.Controllers
                         lastUpdateToBirthdayNotifications = new GlobalInfo { GlobalInfoType = AppUtility.GlobalInfoType.BirthdayNotificationUpdated.ToString(), Date = lastLoginUpdate.Date };
                         updateBirthdayNotifications =  (_globalInfosProc.UpdateWithoutSaving(lastUpdateToBirthdayNotifications)).Bool;
                     }
-
+                    if(lastLoginUpdate.Date < DateTime.Now.Date)
+                    {
+                        if (DateTime.Now.DayOfYear == 1)
+                        {
+                            CreateRecurringRequestsYearly();
+                        }
+                    }
                     if (lastUpdateToBirthdayNotifications.Date.Date < DateTime.Today || lastUpdateToTimekeeperNotifications.Date.Date < DateTime.Today)
                     {
                         
@@ -134,6 +140,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                         }
                     }
+                    _globalInfosProc.UpdateWithoutSaving(new GlobalInfo { GlobalInfoType = AppUtility.GlobalInfoType.LoginUpdates.ToString(), Date = DateTime.Now });
                     await _globalInfosProc.SaveDbChangesAsync();
                     await transaction.CommitAsync();
                }
@@ -496,6 +503,56 @@ namespace PrototypeWithAuth.Controllers
             return ReturnVal;
         }
 
+        private void CreateRecurringRequestsYearly()
+        {
+            var recurringOrderProducts = _productsProc.Read(new List<Expression<Func<Product, bool>>> { p => p is RecurringOrder || p is StandingOrder });
+            var recurringOrderRequests = new List<Request>();
+            foreach (var product in recurringOrderProducts)
+            {
+                var firstRequests = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.ProductID == product.ProductID }, new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product } })
+                    .OrderBy(r => r.OccurenceNumber)
+                    .GroupBy(r => r.ParentRequestID)
+                    .Select(r => r.Last());
+                foreach (var request in firstRequests)
+                {
+                    recurringOrderRequests.Add(request);
+                }
+            }
+            var ModelStates = new List<ModelAndState>();
+            foreach(var request in recurringOrderRequests)
+            {
+                var nextRequestDate = request.CreationDate;
+                var recurringOrder = (RecurringOrder)request.Product;
+                var nextRequest = new Request();
+                var occurrenceCounter = request.OccurenceNumber + 1;
+                while (nextRequestDate.Year == DateTime.Now.Year &&
+                      ((recurringOrder.RecurrenceEndStatusID == 2 && nextRequestDate > recurringOrder.EndDate)
+                    || (recurringOrder.RecurrenceEndStatusID == 3 && occurrenceCounter <= recurringOrder.Occurrences)
+                    || recurringOrder.RecurrenceEndStatusID == 1))
+                {
+                    nextRequest = AppUtility.DeepClone(request);
+                    switch (Enum.Parse(typeof(AppUtility.TimePeriods), recurringOrder.TimePeriod.DescriptionEnum))
+                    {
+                        case AppUtility.TimePeriods.Days:
+                            nextRequestDate = nextRequestDate.AddDays(recurringOrder.TimePeriodAmount);
+                            break;
+                        case AppUtility.TimePeriods.Weeks:
+                            nextRequestDate = nextRequestDate.AddDays(recurringOrder.TimePeriodAmount * 7);
+                            break;
+                        case AppUtility.TimePeriods.Months:
+                            nextRequestDate = nextRequestDate.AddMonths(recurringOrder.TimePeriodAmount);
+                            break;
+                    }
+
+                    nextRequest.RequestID = 0;
+                    nextRequest.CreationDate = nextRequestDate;
+                    nextRequest.OccurenceNumber = occurrenceCounter;
+                    occurrenceCounter++;
+                    ModelStates.Add(new ModelAndState { Model = nextRequest, StateEnum = EntityState.Added });
+                }
+            }
+            _requestsProc.UpdateModelsAsync(ModelStates);
+        }
 
         public async Task<IActionResult> WebCam()
         {

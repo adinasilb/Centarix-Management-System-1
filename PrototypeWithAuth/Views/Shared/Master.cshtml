@@ -65,7 +65,9 @@
                 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/addons/datatables.min.css" />*@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    @*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">*@
+
+    <link href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     @*<link href="~/css/datepicker.min.css" rel="stylesheet" type="text/css">*@
 
@@ -711,7 +713,7 @@
             console.log(category)
             $("." + category).removeClass("d-none");
             $.fn.TurnToDetails("edits");
-            $('.open-document-modal').attr("showSwitch", true);
+            $('.open-document-modal').attr("show-switch", true);
             if (!$('.turn-edit-on-off').hasClass('locations')) {
                 $('.edits .mdb-select').materialSelect();
                 $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
@@ -1249,21 +1251,23 @@
                 $("label[for='Clarify']").removeClass("white-background");
             }
         };
-        $.fn.getRequestIndexString = function(status){
+        $.fn.getRequestIndexString = function(status, tabName){
             var selectedPriceSort = "";
             $("#priceSortContent1 .priceSort:checked").each(function (e) {
                 selectedPriceSort += "&SelectedPriceSort=" + $(this).attr("enum");
             })
             console.log(selectedPriceSort)
 
-            var requestStatusId = status;
             if (status === undefined) {
-                requestStatusId = $(".request-status-id").val();
+                status = $(".request-status-id").val();
             }
-
+            if(tabName === undefined)
+            {
+                tabName = $(".countStatus.active").attr("value")
+            }
             var queryString =
                 "PageNumber=" + $('.page-number').val() +
-                "&RequestStatusID=" + requestStatusId +
+                "&RequestStatusID=" + status +
                 "&PageType=" + $('#masterPageType').val() +
                 "&SectionType=" + $('#masterSectionType').val() +
                 "&SidebarType=" + $('#masterSidebarType').val() +
@@ -1271,7 +1275,8 @@
                 "&SidebarFilterID=" + $('.sideBarFilterID').val() +
                 "&CategorySelected=" + $('#categorySortContent .select-category').is(":checked") +
                 "&SubCategorySelected=" + $('#categorySortContent .select-subcategory').is(":checked") +
-                "&ListID="+$("#ListID").val();
+                "&ListID="+$("#ListID").val() +
+                "&TabName="+tabName;
             queryString += selectedPriceSort;
             console.log(queryString)
             return queryString;
@@ -1370,23 +1375,20 @@
             return true;
         };
 
+        $.fn.ReloadDocumentCard = function (folderEnumString, requestId, section, parentFolder, modalType) {
+            $.ajax({
+                async: true,
+                url: "/Requests/_DocumentsCard?requestFolderNameEnum=" + folderEnumString + "&id=" + requestId + "&sectionType=" + section + "&parentFolderName=" + parentFolder + "&modalType=" + modalType,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $(".doc-card." + folderEnumString).html(data)
+                    $(".doc-card." + folderEnumString + " .open-document-modal").attr("showSwitch", showSwitch)
+                    $(".doc-card." + folderEnumString + " .open-document-modal").attr("data-val", isEdittable)
+                }
+            });
+        }
 
-        //$.fn.AppendModalToBody = function(data)
-        //{
-        //    $(".modal").modal('hide');
-        //    $(".modal").replaceWith('');
-        //    var modal = $(data);
-        //    $('body').append(modal);
-        //    $(".modal").modal({
-        //        backdrop: true,
-        //        keyboard: false,
-        //    });
-        //    //shows the modal
-        //    $(".modal").modal('show');
-        //    $('.modal-content a:first').tab('show');
-        //    $(".mdb-select").materialSelect();
-
-        //}
         $.fn.OpenModal = function (modalClass, modalDivClass, data) {
             console.log("open modal")
             console.log(modalClass);
@@ -1612,6 +1614,7 @@
             var catalogNumber = $('.popover .search-by-catalog-number').val()
             //reset page number
             $('.page-number').val(1);
+            var tabName = $(".countStatus.active").attr("value")
 
             var reloadDiv = '_IndexTableData';
             if ($('.' + reloadDiv).length == 0) { //if it's showing the nothing is here page. not just using indextable when don't have to, so don't lose price and category filters
@@ -1619,11 +1622,11 @@
             }
 
             if (sectionType == "Protocols") {
-                url = "/Protocols/" + reloadDiv + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
+                url = "/Protocols/" + reloadDiv + "?" + $.fn.getRequestIndexString(undefined, tabName) + "&numFilters=" + numFilters,
                     popoverID = "protocolFilterPopover";
             }
             else {
-                url = "/Requests/" + reloadDiv + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
+                url = "/Requests/" + reloadDiv + "?" + $.fn.getRequestIndexString(undefined, tabName) + "&numFilters=" + numFilters,
                     popoverID = "invFilterPopover";
             }
             //console.log(data);
@@ -1802,13 +1805,29 @@
                 vendorPriceWarning.html(vendorWarningText);
             }
         }
-
+    
+        $("#invFilterPopover").click(function () {
+            $('[data-toggle="popover"]').popover('dispose');
+            $('#invFilterPopover').popover({
+                sanitize: false,
+                placement: 'bottom',
+                container: '#inventoryFilterContentDiv',
+                html: true,
+                trigger: 'manual',
+                content: function () {
+                    return $('#inventoryFilterContent').html();
+                }
+            });
+            $('#invFilterPopover').popover('toggle');
+            $('#invFilterPopover').addClass('section-bg-color custom-button-font');
+            $('#invFilterPopover').removeClass('custom-order-inv');
+            //$('#inventoryFilterContent').style.display = "block";
+        });
     </script>
-    @Html.GetConstants()
+    
     @if (IsSectionDefined("requestNavScript"))
     {
         @RenderSection("requestNavScript", required: true)
     }
-
 </body>
 </html>

@@ -68,7 +68,7 @@
             </div>
 
         </div>
-        @if (Model.TempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderType != AppUtility.OrderTypeEnum.AlreadyPurchased.ToString() && Model.TempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderType != AppUtility.OrderTypeEnum.SaveOperations.ToString())
+        @if (Model.TempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.OrderMethod.DescriptionEnum.ToString() != AppUtility.OrderMethod.AlreadyPurchased.ToString())
         {
             <div class="row">
                 <div class="col-12">
@@ -195,7 +195,7 @@
                             window.location.href = "/Requests/?PageType=RequestRequest&SectionType=Requests&SidebarType=List"
                         }
                         else {
-                            $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "terms, step-1, reorder-item");
+                            $.fn.ajaxPartialIndexTable( "/Requests/" + viewClass, "." + viewClass, "POST", formData, "terms, step-1, reorder-item");
                         }
                     }
                     else {

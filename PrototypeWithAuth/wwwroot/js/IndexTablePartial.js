@@ -2,41 +2,13 @@
 $(function () {
 
     $(".popover-more").off('click').click(function () {
-        var val = $(this).val();
-        $('[data-toggle="popover"]').popover('dispose');
-        $(this).popover({
-            sanitize: false,
-            placement: 'bottom',
-            html: true,
-            content: function () {
-                return $('#' + val).html();
-            }
-        });
-        $(this).popover('toggle');
-        $(".popover .share-request-fx").click(function (e) {
-            e.preventDefault();
-            //switch this to universal share request and the modelsenum send in
-            var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?ID=" + $(this).attr("data-route-request") + "&ModelsEnum=Request";
+     
 
-            $.ajax({
-                async: true,
-                url: url,
-                traditional: true,
-                type: "GET",
-                cache: false,
-                success: function (data) {
-                    $.fn.OpenModal("shared-modal", "share-modal", data)
-                    $.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs')
-                    $("#loading").hide();
-                    return false;
-                }
-            })
-        });
         $(".popover .change-payment-status").click(function (e) {
             e.preventDefault();
             //switch this to universal share request and the modelsenum send in
             var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?newStatus=" + $(this).attr("data-route-new-status") + "&requestID=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString();
-            $.fn.ajaxPartialIndexTable($(".request-status-id").val(), url, "._IndexTableByVendor", "GET");
+            $.fn.ajaxPartialIndexTable( url, "._IndexTableByVendor", "GET");
             
         });
         $(".icon-more-popover").off("click").on("click", ".remove-share", function (e) {
@@ -116,65 +88,9 @@ $(function () {
                 }
             });
         })
-        $(".popover .load-confirm-delete").click(function (e) {
-            console.log("in confirm delete");
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            var $itemurl = "/Requests/DeleteModal/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString();
-            $.fn.CallPageRequest($itemurl, "delete");
-            return false;
-        });
+       
     });
-    //$('._IndexTableData [data-toggle = "tooltip"], ._IndexTableDataByVendor [data-toggle = "tooltip"]' ).off('click').on("click", function (e) {
-    //    e.preventDefault();
-    //    console.log('prevent default')
-    //});
-    //$("body").off("click", ".share-request").on("click", ".share-request", function (e) {
-    //	alert("share request");
-    //	var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
-    //	alert("share request: " + url);
-    //	$.ajax({
-    //		async: true,
-    //		url: "/Requests/ShareRequest/?id=" + val,
-    //		traditional: true,
-    //		type: "GET",
-    //		cache: false,
-    //		success: function (data) {
-    //			$.fn.OpenModal("share-request", "share-request", data)
-    //			$("#loading").hide();
-    //		}
-    //	})
-    //});
-
-    //});
-
-    //$(document).off("click", ".popover .share-request").on("click", ".popover .share-request", function () {
-    //	alert('it works!');
-    //});
-
-    //$(".popover").on("click", function (e) {
-    //	alert("popover clicked!");
-    //});
-
-    //$("body").off("click", ".share-request").on("click", ".share-request", function (e) {
-    //	var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
-    //	alert("share request: " + url);
-    //	$.ajax({
-    //		async: true,
-    //		url: url,
-    //		traditional: true,
-    //		type: "GET",
-    //		cache: false,
-    //		success: function (data) {
-    //			$.fn.OpenModal("share-request", "share-request", data)
-    //			alert(data);
-    //			$("#loading").hide();
-    //			return false;
-    //		}
-    //	})
-    //});
-
+    
     $(".load-quote-details").on("click", function (e) {
         console.log("in order details");
         e.preventDefault();
@@ -212,8 +128,6 @@ $(function () {
         return false;
     });
 
-    //$("body, .modal").off('click', ".load-product-details-summary").on("click", ".load-product-details-summary", function (e) {
-
     $(".load-product-details-summary").off('click').on("click", function (e) {
 
         e.preventDefault();
@@ -243,7 +157,7 @@ $(function () {
         console.log("approving");
         e.preventDefault();
         $("#loading").show();
-        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Operations/Order/?id=" + $(this).attr("value"), "._IndexTableWithCounts", "GET");
+        $.fn.ajaxPartialIndexTable( "/Operations/Order/?id=" + $(this).attr("value"), "._IndexTableWithCounts", "GET");
         return false;
     });
 
@@ -367,21 +281,6 @@ $(function () {
 
     };
 
-    $(".create-calibration").off('click').on("click", function (e) {
-        e.preventDefault();
-
-        $.ajax({
-            async: true,
-            url: "/Calibrations/CreateCalibration?requestid=" + $(this).attr("value"),
-            type: "GET",
-            cache: false,
-            success: function (data) {
-                $('.render-body').html(data)
-                $('#myForm a:first').tab('show');
-            }
-        });
-        return false;
-    });
 
     $(".page-item.not-active span").off('click').on("click", function (e) {
         console.log("next page");
@@ -389,7 +288,7 @@ $(function () {
         $("#loading").show();
         var pageNumber = parseInt($(this).html());
         $('.page-number').val(pageNumber);
-        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "POST");
+        $.fn.ajaxPartialIndexTable( "/Requests/_IndexTableData/", "._IndexTableData", "POST");
         return false;
     });
 
@@ -399,7 +298,7 @@ $(function () {
         var months = [];
         months = $("#Months").val();*/
         $('.page-number').val(1);
-        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTable/", "._IndexTable", "GET" /*, undefined, "", months, years*/);
+        $.fn.ajaxPartialIndexTable( "/Requests/_IndexTable/", "._IndexTable", "GET" /*, undefined, "", months, years*/);
         return false;
     });
 
@@ -414,7 +313,7 @@ $(function () {
         return false;
     });
 
-    $.fn.LoadModalForSelectedItems = function (e, itemUrl, modalClass) {
+    $.fn.LoadModalForSelectedItems = function (e, itemUrl, modalClass, parameterName) {
         e.preventDefault();
         e.stopPropagation();
         var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
@@ -422,12 +321,15 @@ $(function () {
         }).get()
         //alert('before loading');
         console.log("arrayOfSelected: " + arrayOfSelected);
+        var myData = {};
+        myData[parameterName] = arrayOfSelected;
+        console.log(myData);
         $("#loading").show();
         $.ajax({
             type: "GET",
             url: itemUrl,
             traditional: true,
-            data: { 'requestIds': arrayOfSelected },
+            data: myData,
             cache: true,
             success: function (data) {
                 //alert('success!');
@@ -439,14 +341,16 @@ $(function () {
     }
     $('.load-terms-for-selected').on('click', function (e) {
         var itemUrl = "/Requests/TermsModal/?" + $.fn.getRequestIndexString();
-        $.fn.LoadModalForSelectedItems(e, itemUrl, "terms");
+        var parameterName = 'requestIds';
+        $.fn.LoadModalForSelectedItems(e, itemUrl, "terms", parameterName);
     })
     $('.update-quote-for-selected').on('click', function (e) {
-        $.fn.LoadModalForSelectedItems(e, "/Requests/EditQuoteDetails/", "edit-quote");
+        var parameterName = 'requestIds';
+        $.fn.LoadModalForSelectedItems(e, "/Requests/EditQuoteDetails/", "edit-quote", parameterName);
     })
 
 
-    $.fn.ajaxPartialIndexTable = function (status, url, viewClass, type, formdata, modalClass = "", /*months, years, */) {
+    $.fn.ajaxPartialIndexTable = function (url, viewClass, type, formdata, modalClass = "", tabName="", requestStatus = -1 /*months, years, */) {
         console.log("in ajax partial index call " + url);
         //alert('before bind filter')
         if ($('#searchHiddenForsForm').length) {
@@ -513,7 +417,7 @@ $(function () {
             } else {
                 url += "&";
             }
-            url += $.fn.getRequestIndexString(status);
+            url += $.fn.getRequestIndexString(requestStatus, tabName);
             url += monthsString;
             url += yearsString;
             url += listString;
@@ -535,7 +439,7 @@ $(function () {
             processType = false;
             contentType = false; 
         }
-        
+        console.log("url: "+ url)
         $.ajax({
             contentType: contentType,
             processData: processType,
@@ -570,15 +474,5 @@ $(function () {
 
         return false;
     }
-
-    $(".load-confirm-delete").off("click").click(function (e) {
-        console.log("in confirm delete");
-        e.preventDefault();
-        e.stopPropagation();
-        $("#loading").show();
-        var $itemurl = "/Requests/DeleteModal/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString();
-        $.fn.CallPageRequest($itemurl, "delete");
-        return false;
-    });
     
 });

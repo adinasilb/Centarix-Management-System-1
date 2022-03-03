@@ -81,7 +81,7 @@
                 
                 else {
                     var url = "/Requests/" + viewClass + "?" + $.fn.getRequestIndexString($(".request-status-id").val());
-                    $.fn.ajaxPartialIndexTable($(".request-status-id").val(),url, "." + viewClass, "POST", undefined, "terms, step-1, reorder-item, confirm-email");
+                    $.fn.ajaxPartialIndexTable(url, "." + viewClass, "POST", undefined, "terms, step-1, reorder-item, confirm-email");
 
                 }
                                          

@@ -1,53 +1,31 @@
 ﻿@using PrototypeWithAuth.AppData;
-@model PrototypeWithAuth.ViewModels.RequestItemViewModel; 
+@model PrototypeWithAuth.ViewModels.RequestItemViewModel;
 
+@{
+    var productOrderType = Model.OrderType.ToString();
+}
+
+@{
+    var productNameRows = Model.Requests[0].Product.ProductName != null ? Math.Ceiling((float)(Model.Requests[0].Product.ProductName.Length) / 45) : 1;
+}
 <div class="form-group modal-line-1-header modal-sides row">
-    @if (Model.SectionType != AppUtility.MenuItems.Operations)
-    {
-        var productNameRows = Model.Requests[0].Product.ProductName != null ? Math.Ceiling((float)(Model.Requests[0].Product.ProductName.Length) / 45) : 1;
-        <div class="heading-1 modal-title col-8">
-            <textarea asp-for="Requests[0].Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name" placeholder="(item name)" rows="@productNameRows" cols="50" maxlength="150" style="resize:none;"></textarea>
-        </div>
-        <span asp-validation-for="Requests[0].Product.ProductName" class="text-danger-centarix"></span>
-    }
-    else
-    {
-        <div class="col-md-4 ">
-            <div class="form-group">
-                @Html.DropDownListFor(
-    vm => vm.Requests[0].Product.VendorID,
-    new SelectList(
-    Model.Vendors,
-    dataValueField: "VendorID",
-    dataTextField: "VendorEnName"),
-    //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
-    "Select a Vendor",
-    htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext vendor  " + " ", @id = "vendorList", @size = 1, @searchable = "Select A Vendor", @data_stop_refresh = "true" }
-    )
-                <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
-            </div>
-        </div>
-        <input class="" type="hidden" value="" id="vendor-primary-email" />
-        <div class="col-md-4">
-            <div class="form-group">
-                <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " readonly />
-            </div>
-        </div>
-        <input type="hidden" id="VendorCurrencyID" />
-        <div class="col-8"><span class=" large-text text-danger-centarix font-weight-bold" id="vendor-price-warning"></span></div>
-    }
-    @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary)
-    {
-        <div class="d-flex align-items-center col-4">
-            @*                <button type="submit" asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.Save" name="OrderType" asp-route-RequestStatusID="7" asp-route-PageType="RequestSummary" asp-route-SectionType="Requests" asp-route-SidebarType="List" class=" custom-button custom-button-font @bcColor m-auto complete-order disabled-submit">Save</button>
-            *@
-            <button type="submit" value="@AppUtility.OrderTypeEnum.Save" name="OrderType" class=" custom-button custom-button-font @Model.bcColor m-auto complete-order disabled-submit submitOrder">Save</button>
-        </div>
-    }
-    @if (Model.SectionType == AppUtility.MenuItems.Operations)
-    {
-        <div class="d-flex align-items-center col-4">
-            <button type="submit" @*asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.SaveOperations" name="OrderType" asp-route-RequestStatusID="2" asp-route-PageType="OperationsRequest" asp-route-SectionType="Operations" asp-route-SidebarType="List"*@ class=" custom-button custom-button-font @Model.bcColor m-auto complete-order save-operations-item disabled-submit">Save</button>
-        </div>
-    }
+<div class="heading-1 modal-title col-8">
+    <textarea asp-for="Requests[0].Product.ProductName" name="Requests[0].@(productOrderType).ProductName" class="form-control-plaintext border-bottom heading-1 item-name" placeholder="(item name)" rows="@productNameRows" cols="50" maxlength="150" style="resize:none;"></textarea>
+</div>
+<span asp-validation-for="Requests[0].Product.ProductName" class="text-danger-centarix"></span>
+@if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary)
+{
+    <div class="d-flex align-items-center col-4">
+        @*                <button type="submit" asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.Save" name="OrderType" asp-route-RequestStatusID="7" asp-route-PageType="RequestSummary" asp-route-SectionType="Requests" asp-route-SidebarType="List" class=" custom-button custom-button-font @bcColor m-auto complete-order disabled-submit">Save</button>
+        *@
+        <button type="submit" value="@AppUtility.OrderMethod.Save" name="OrderType" class=" custom-button custom-button-font @Model.bcColor m-auto complete-order disabled-submit submitOrder">Save</button>
+    </div>
+}
+@if (Model.SectionType == AppUtility.MenuItems.Operations)
+{
+    <div class="d-flex align-items-center col-4">
+        <button type="submit" class=" custom-button custom-button-font @Model.bcColor m-auto submitOrder additional-requests " value="@AppUtility.OrderMethod.AddToCart">Add Item</button>
+    </div>
+    <input type="hidden" asp-for="AdditionalRequests"/>
+}
 </div>

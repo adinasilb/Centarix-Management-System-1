@@ -45,17 +45,7 @@ $(function () {
         console.log("in parent list");
         var parentCategoryId = $(this).val();
         var sublistSelector = "#sublist";
-        var requestIndex = "";
-        if ($("#masterSectionType").val() == "Operations") {
-            console.log("operations")
-            parentCategoryId = $(this).val();
-            requestIndex = $(this).attr("request-index");
-            sublistSelector = "select.mdb-select" + requestIndex;
-            console.log("requestIndex " + requestIndex)
-        }
-        else {
-            //parentCategoryId = $("#parentlist").val();
-        }
+        console.log($(sublistSelector))
         console.log("parentcategoryid: " + parentCategoryId);
         var url = "/Requests/GetSubCategoryList";
         console.log("url: " + url);
@@ -65,15 +55,15 @@ $(function () {
             $(sublistSelector).children("option").each(function (i, option) {
                 option.remove();
             });
-            var firstitem1 = '<option value=""> Select Subcategory</option>';
+            var firstitem1 = '<option value=""> Select Sub Category</option>';
 
             $(sublistSelector).append(firstitem1);
 
-            console.log(data);
+            //console.log(data);
             $.each(data, function (i, subCategory) {
-                console.log(subCategory.description)
+                //console.log(subCategory.description)
                 var newitem1 = '<option value="' + subCategory.id + '">' + subCategory.description + '</option>';
-                console.log("newitem1: " + newitem1);
+                //console.log("newitem1: " + newitem1);
                 $(sublistSelector).append(newitem1);
             });
             $(sublistSelector).materialSelect();
@@ -333,12 +323,11 @@ $(function () {
         e.preventDefault();
         e.stopPropagation();
         console.log("clicked open doc modal 2");
-        $(".open-document-modal").removeClass("active-document-modal");
         var section = $("#masterSectionType").val();
-        $(this).addClass("active-document-modal");
-        var enumString = $(this).data("string");
+        $(this).closest(".open-document-modal").addClass("active-document-modal");
+        var enumString = $(".active-document-modal").data("string");
         console.log("enumString: " + enumString);
-        var requestId = $(this).data("id");
+        var requestId = $(".active-document-modal").data("id");
         console.log("requestId: " + requestId);
         var guid = $(".hidden-guid").val();
         console.log("guid: " + guid);
@@ -358,13 +347,13 @@ $(function () {
     });
 
 
-    $(".file-select").on("change", function (e) {
-        console.log("file was changed");
-        $cardDiv = $(this).closest("div.card");
-        console.log("cardDiv: " + JSON.stringify($cardDiv));
-        $cardDiv.addClass("document-border");
-        return true;
-    });
+    //$(".file-select").on("change", function (e) {
+    //    console.log("file was changed");
+    //    $cardDiv = $(this).closest("div.card");
+    //    console.log("cardDiv: " + JSON.stringify($cardDiv));
+    //    $cardDiv.addClass("document-border");
+    //    return true;
+    //});
 
     $(".load-location-index-view").off("click").on("click", function (e) {
         //clear the div to restart filling with new children
@@ -1643,10 +1632,6 @@ $(function () {
         $.fn.CallPageRequest($itemurl, "delete");
     })
 
-    $('.close-document-modal').off("click").click(function (e) {
-        console.log("click 1")
-        $.fn.CloseModal("documents");
-    })
 });
 
 
