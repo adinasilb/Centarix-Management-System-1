@@ -57,7 +57,7 @@ export default function MoveToListModal(props) {
 
         return (
             <GlobalModal backdrop={props.backdrop} hideModalFooter={true} size="" value={state.viewModel?.ID} modalKey={props.modalKey} key={state.viewModel?.ID} header={"Move " + state.viewModel?.Request?.Product?.ProductName + " To List"} >
-                <form action="" method="post" className=" moveListItemForm" encType="multipart/form-data"  id="myForm">
+                <form action="" method="post" className=" moveListItemForm" encType="multipart/form-data" id={props.modalKey}>
                     <input type="hidden" value={state.viewModel?.Request?.RequestID??""} name="Request.RequestID" className="request-to-move" />
                     <input type="hidden" value={state.viewModel?.PreviousListID??""} name="PreviousListID" />
                     <input type="hidden" value={state.viewModel?.PageType??""} name="PageType" />

@@ -56,10 +56,11 @@ export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
         method: type,
         body: formdata
     }).then(response => {
-        response.json();
+        console.log(response);
+        return response.json()
     })
-        .then(result => {
-            console.log("results: " + result)
+       .then(result => {
+            console.dir(result)
             if (result != undefined) {
                 dispatch(Actions.setIndexTableViewModel(JSON.parse(result)));
             }
@@ -183,7 +184,7 @@ export var addObjectToFormdata = (formdata, object) => {
         selectedPriceSort += "&SelectedPriceSort=" + e.getAttribute("enum");
     })
     var requestStatusId = document.getElementsByClassName("request-status-id")[0]?.value;
-     var queryString = "PageNumber=" + document.getElementsByClassName('page-number')[0]?.value + "&RequestStatusID=" + requestStatusId + "&PageType=" + document.getElementById('masterPageType')?.value + "&SectionType=" + document.getElementById('masterSectionType')?.value + "&SidebarType=" + document.getElementById('masterSidebarType')?.value + "&SelectedCurrency=" + document.getElementById('tempCurrency')?.value + "&SidebarFilterID=" + document.getElementsByClassName('sideBarFilterID')[0]?.value + "&CategorySelected=" +( document.querySelector('#categorySortContent .select-category:checked')?.length > 0 )+ "&SubCategorySelected=" + (document.querySelector('#categorySortContent .select-subcategory:checked').length > 0 )+"&ListID=" + document.getElementById("ListID")?.value;
+     var queryString = "PageNumber=" + document.getElementsByClassName('page-number')[0]?.value + "&RequestStatusID=" + requestStatusId + "&PageType=" + document.getElementById('masterPageType')?.value + "&SectionType=" + document.getElementById('masterSectionType')?.value + "&SidebarType=" + document.getElementById('masterSidebarType')?.value + "&SelectedCurrency=" + document.getElementById('tempCurrency')?.value + "&SidebarFilterID=" + document.getElementsByClassName('sideBarFilterID')[0]?.value + "&CategorySelected=" + (document.querySelector('#categorySortContent .select-category:checked')?.length > 0) + "&SubCategorySelected=" + (document.querySelector('#categorySortContent .select-subcategory:checked').length > 0) + "&ListID=" + document.getElementById("ListID")?.value+"&TabName=" + document.getElementById("TabName")?.value;
     queryString += selectedPriceSort;
     return queryString;
 }

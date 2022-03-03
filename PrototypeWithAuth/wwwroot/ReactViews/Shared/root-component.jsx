@@ -1,4 +1,7 @@
-﻿import React from 'react';
+﻿
+
+
+import React from 'react';
 import { Provider } from 'react-redux';
 import { createStore, } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -12,13 +15,12 @@ import ModalLoader from './modal-loader.jsx';
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import * as Routes from '../Constants/Routes.jsx'
 
-import  '@fortawesome/fontawesome-free/css/all.min.css';
-
 
 export default function RootComponent(props) {
     const store = createStore(reducer, { viewModel: props.viewModel, modals: [] }, composeWithDevTools());
 
     const renderSwitch = () => {
+        console.log(props.viewEnum)
         switch (props.viewEnum) {
             case "IndexTableDataByVendor":
                 return (<_IndexTableDataByVendor viewModel={props.viewModel} showView={true} bcColor={props.bcColor} ajaxLink={props.ajaxLink} btnText={props.btnText} sectionClass={props.sectionClass} />);

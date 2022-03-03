@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { ajaxPartialIndexTable, getRequestIndexString } from '../Utility/root-function.jsx'
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import GlobalModal from '../Utility/global-modal.jsx';
-import { MDBSelect, MDBSelectInput, MDBSelectOptions, MDBSelectOption } from 'mdbreact';
+import { MDBSelect, MDBSelectInput, MDBSelectOptions, MDBSelectOption, MDBContainer } from 'mdbreact';
 
 export default function ShareModal(props) {
     const dispatch = useDispatch();
@@ -47,12 +47,22 @@ export default function ShareModal(props) {
     return (
         <GlobalModal backdrop={props.backdrop} size="" value={state.viewModel?.ID} modalKey={props.modalKey} key={state.viewModel?.ID} header={"Share " + state.viewModel?.ObjectDescription + " With"} >
             <form action="" method="post" className="sharemodal" encType="multipart/form-data" onSubmit={onSubmit} id="myForm">
-                <input type="hidden" id="ID" name="ID" value={state.viewModel?.ID} />
+                <input type="hidden" id="ID" name="ID" value={state.viewModel?.ID??""} />
                 <div className="contaner-fluid p-0">
                     <div className="row ">
                         <div className="col-10 offset-1">
-                            <MDBSelect options={state.viewModel?.ApplicationUsers.map((u) => ({ value:u.Value, text:u.Text }))} className="" name="ApplicationUserIDs" id="ApplicationUserIDs" selectAll  multiple >
-                        </MDBSelect>
+                            <MDBContainer className="filters-container" >
+                                <MDBSelect>
+                                    <MDBSelectInput selected="Choose your option" />
+                                    <MDBSelectOptions>
+                                        <MDBSelectOption disabled>Choose your option</MDBSelectOption>
+                                        <MDBSelectOption value="1">Option nr 1</MDBSelectOption>
+                                        <MDBSelectOption value="2">Option nr 2</MDBSelectOption>
+                                        <MDBSelectOption value="3">Option nr 3</MDBSelectOption>
+                                    </MDBSelectOptions>
+                                </MDBSelect>
+                                <label>Material Select</label>
+                            </MDBContainer>
                         </div>
                     </div>
                 </div>

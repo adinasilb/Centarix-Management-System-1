@@ -5036,7 +5036,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> NewListModal(NewListViewModel newListViewModel, RequestIndexObject requestIndexObject)
+        public async Task<JsonResult> NewListModal(NewListViewModel newListViewModel, RequestIndexObject requestIndexObject)
         {
 
             var newList = await _requestListsProc.CreateAndGetAsync(newListViewModel);
@@ -5047,7 +5047,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                return new EmptyResult();
+                return Json( "");
             }
 
         }

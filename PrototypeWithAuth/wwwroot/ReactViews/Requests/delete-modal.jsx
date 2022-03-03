@@ -32,8 +32,8 @@ export default function DeleteModal(props) {
     }
 
     return (
-        <GlobalModal backdrop={props.backdrop} value={state.viewModel?.Request?.RequestID} modalKey={props.modalKey} key={state.viewModel?.Request?.RequestID} size="lg" header={"Are you sure you would like to delete " + state.viewModel?.Request?.Product?.ProductName + "?"} >
-            <form onSubmit={onSubmit} method="post" encType="multipart/form-data" style={{ height: "100%", overflow: "auto" }} className="" id="myForm">
+        <GlobalModal  backdrop={props.backdrop} value={state.viewModel?.Request?.RequestID}  modalKey={props.modalKey} key={state.viewModel?.Request?.RequestID} size="lg" header={"Are you sure you would like to delete " + state.viewModel?.Request?.Product?.ProductName + "?"} >
+            <form onSubmit={onSubmit} method="post" encType="multipart/form-data" style={{ height: "100%", overflow: "auto" }} className="" id={props.modalKey}>
                 <div className="error-message text-danger-centarix">
                     {state.viewModel?.ErrorMessage??""}
                 </div>
