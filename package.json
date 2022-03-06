@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@hookform/devtools": "^4.0.2",
+    "axios": "^0.26.0",
     "css-loader": "^5.2.7",
     "emotion": "^9.2.12",
     "emotion-server": "^9.2.12",

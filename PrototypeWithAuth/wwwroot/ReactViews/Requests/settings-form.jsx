@@ -1,11 +1,10 @@
-﻿ import React, { useState, setState } from 'react';
+﻿ import React, { useState, setState, useEffect } from 'react';
 import * as Constant from '../Shared/constants.js'
 import CustomFieldButton from './custom-field-button.jsx';
 import { MDBSelect, MDBSelectOptions, MDBSelectOption, MDBSelectInput, MDBInput } from 'mdbreact';
 import ReactDOM from 'react-dom';
 import { MDBBtn } from 'mdbreact';
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
-import reactDebugHooks from 'react-debug-hooks'
 import cloneDeep from 'lodash/cloneDeep';
 import { DevTool } from "@hookform/devtools";
 import axios from "axios";
@@ -15,7 +14,7 @@ import axios from "axios";
 
 
 
-function SettingsForm(props) {
+const SettingsForm = (props) => {
 
 
     const [remove, setRemove] = useState({ key: false });
@@ -80,8 +79,7 @@ function SettingsForm(props) {
 
     //}, [remove, customFields, index]);
 
-    const { ...methods } = useForm({ mode: "onChange" });
-    const { register, control, handleSubmit, watch, formState: { errors } } = useForm({ mode: "onChange" });
+    const methods = useForm({ mode: "onChange" });
 
 
     var OpenNewCustomField = () => {
@@ -137,8 +135,8 @@ function SettingsForm(props) {
     return (
         <>
             <FormProvider {...methods}>
-                <form onSubmit={handleSubmit(onSubmit)} action="" method="get" className="lab-man-form" id="myForm">
-                    {/*<DevTool control={control} />*/}
+                <form onSubmit={methods.handleSubmit(onSubmit)} action="" method="get" className="lab-man-form" id="myForm">
+                    <DevTool control={methods.control} />
                     <div className="row top-bar border-bottom text-center text-justify under-row-margin d-flex" >
                         <div className="col-12 align-items-center justify-content-center mt-3 mb-3">
                             <span className="align-items-center">
@@ -154,11 +152,11 @@ function SettingsForm(props) {
                             </div>
                             <div className="col-8">
                                 <div className="modal-product-title ml-2" >
-                                    <textarea asp-for="Category.Description" {...register("categoryName", { required: true, maxLength: 10 })} className="form-control-plaintext border-bottom heading-1" placeholder="(category name)" rows={categoryNameRows} cols="50" maxLength="150"></textarea>
+                                    <textarea asp-for="Category.Description" {...methods.register("categoryName", { required: true, maxLength: 10 })} className="form-control-plaintext border-bottom heading-1" placeholder="(category name)" rows={categoryNameRows} cols="50" maxLength="150"></textarea>
                                 </div>
                                 <span className="text-danger-centarix">
-                                    {errors.categoryName && errors.categoryName.type === "required" && <span>{Constant.Required}</span>}
-                                    {errors.categoryName && errors.categoryName.type === "maxLength" && <span>{Constant.MaxLength + "10"}</span>}
+                                    {methods.formState.errors.categoryName && methods.formState.errors.categoryName.type === "required" && <span>{Constant.Required}</span>}
+                                    {methods.formState.errors.categoryName && methods.formState.errors.categoryName.type === "maxLength" && <span>{Constant.MaxLength + "10"}</span>}
                                 </span>
                             </div>
                             <div className="col-2">
@@ -425,9 +423,12 @@ export default SettingsForm;
 function CustomField(props) {
 
     console.log("RENDERING CUSTOM FIELD");
-    const { register, errors } = useFormContext();
+    const { register, formState: { errors } } = useFormContext();
 
-    console.log(register);
+
+    const onChangeFieldName = (e) => {
+        //setInput(e.currentTarget.value);
+    };
 
     return (
         <div className="w-100">
@@ -436,9 +437,9 @@ function CustomField(props) {
                 <div className="col-4">
                     <div className="form-group">
                         <label className="control-label" >{"Field Name"}</label>
-                        <input className="form-control-plaintext border-bottom" {...register("random", { required: true, maxLength: 10 })} />
+                        <input onChange={onChangeFieldName} className="form-control-plaintext border-bottom" {...register("fieldName[" + props.number + "]", { required: true, maxLength: 10 })} />
                         <span className="text-danger-centarix">
-                            {errors.random && <span>{Constant.MaxLength + "10"}</span>}
+                            {errors.fieldName.[props.number] && <span>{Constant.MaxLength + "10"}</span>}
                         </span>
                     </div>
                 </div>
