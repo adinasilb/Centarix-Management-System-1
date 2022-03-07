@@ -12,6 +12,7 @@ import *as MdbReactCSS from 'mdbreact/dist/css/mdb.css';
 import RootComponent from './Shared/root-component.jsx';
 import DocumentsRootComponent from "./Shared/documents-root-component.jsx"
 import CloseButton from './Utility/close-button.jsx'
+import OrderTabRootComponent from './Requests/order-operations-modal.jsx'
 
 global.React = React;
 global.ReactDOM = ReactDOM;
@@ -25,3 +26,4 @@ global.MdbReactCSS = MdbReactCSS;
 global.RootComponent = RootComponent
 global.CloseButton = CloseButton;
 global.DocumentsRootComponent = DocumentsRootComponent;
+global.OrderTabRootComponent = OrderTabRootComponent;

@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
+@using React.AspNet
 @inject UserManager<ApplicationUser> _userManager
 
 @{ string showItem = "";
@@ -101,9 +102,20 @@
         }
         @if (Model.ModalType.Equals(AppUtility.RequestModalType.Create))
         {
-            <div id="order" class="tab-pane fade order-tab @showOrder" value="7">
-                @{await Html.RenderPartialAsync("~/Views/Requests/_OrderTab.cshtml", Model); }
-            </div>
+            if(Model.SectionType == AppUtility.MenuItems.Operations)
+            {
+                <div id="order" class="tab-pane fade order-tab @showOrder" value="7">
+                    @Html.React("OrderTabRootComponent", new{rid=5})
+                    @Html.ReactGetScriptPaths()
+                    @Html.ReactInitJavaScript()
+                </div>
+            }
+            else
+            {
+                <div id="order" class="tab-pane fade order-tab @showOrder" value="7">
+                    @{await Html.RenderPartialAsync("~/Views/Requests/_OrderTab.cshtml", Model); }
+                </div>
+            }
         }
     </div>
 </div>
