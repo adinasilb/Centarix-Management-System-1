@@ -8,9 +8,7 @@ import { createStore, } from 'redux';
 import reducer from '../ReduxRelatedUtils/reducers.jsx';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-export default function OrderTabRootComponent(props) {
-        const store = createStore(reducer, { /*viewModel: props.viewModel,*/ modals: [] }, composeWithDevTools());
-    function App() {
+export default function OrderTab(props) {
 
         return (
             <div>
@@ -65,13 +63,6 @@ export default function OrderTabRootComponent(props) {
                     </div>
                 </div>
 
-                    <Switch>
-                        <Route exact path={Routes.ORDER_TAB} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.ORDER_OPERATIONS} uid={props.location.key} />} />
-                    </Switch>
             </div>
         )
-    }
-    return (
-        <Provider store={store}></Provider>
-    );
 }
