@@ -2,9 +2,9 @@
 import { Route, Switch, MemoryRouter, Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore, } from 'redux';
-import * as ModalKeys from '../Constants/ModalKeys.jsx'
-import * as Routes from '../Constants/Routes.jsx'
-import ModalLoader from './modal-loader.jsx';
+//import * as ModalKeys from '../Constants/ModalKeys.jsx'
+//import * as Routes from '../Constants/Routes.jsx'
+//import ModalLoader from './modal-loader.jsx';
 import reducer from '../ReduxRelatedUtils/reducers.jsx';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
@@ -27,7 +27,7 @@ export default function OrderTabRootComponent(props) {
                         <div class="col-5">
                             <button type="submit" name="OrderMethod" value="OrderNow"
                                 class="text w-100 @colorClass custom-button float-right submitOrder">
-                                Order Now /* figure out how to use get enum display name func here...*/
+                Order Now /* figure out how to use get enum display name func here...
                             </button>
                         </div>
                     </div>
@@ -67,6 +67,6 @@ export default function OrderTabRootComponent(props) {
         )
     }
     return (
-        <Provider store={store}><MemoryRouter><App /></MemoryRouter></Provider>
+        <Provider store={store}></Provider>
     );
 }
