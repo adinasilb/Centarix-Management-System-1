@@ -8,7 +8,7 @@ import ReactDOMServer from 'react-dom/server';
 import RootComponent from './Shared/root-component.jsx';
 import DocumentsRootComponent from "./Shared/documents-root-component.jsx"
 import CloseButton from './Utility/close-button.jsx'
-import OrderTabRootComponent from './Shared/order-tab-root-component.jsx'
+import OrderTabRootComponent from './Shared/order-tab.jsx'
 
 global.React = React;
 global.ReactDOM = ReactDOM;
