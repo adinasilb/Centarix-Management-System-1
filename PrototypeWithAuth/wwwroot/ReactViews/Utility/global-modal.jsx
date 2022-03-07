@@ -13,7 +13,7 @@ export default function GlobalModal(props) {
             <MDBModal staticBackdrop backdrop={props.backdrop} tabIndex="-1" size={props.size} id="myModal" show={true} >
                 <MDBModalDialog size={props.size} centered>
                     <MDBModalContent>
-                        <MDBModalHeader className="border-0" ><MDBModalTitle className="heading-1">{props.header}</MDBModalTitle>  <MDBBtn className=' btn-close'  onClick={onClick}></MDBBtn> </MDBModalHeader>
+                        <MDBModalHeader className="border-0" ><MDBModalTitle className="heading-1">{props.header}</MDBModalTitle>  <MDBBtn className=' modal-close-padding close modal-close-style btn-link no-box-shadow' color="transparent" onClick={onClick}>   <span aria-hidden="true">&times;</span></MDBBtn> </MDBModalHeader>
                 <MDBModalBody>
                     {props.children}
                 </MDBModalBody>

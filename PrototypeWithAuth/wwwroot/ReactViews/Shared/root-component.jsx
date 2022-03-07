@@ -1,11 +1,10 @@
 ﻿
 
-
-import React from 'react';
+import React, { lazy, Suspense, useEffect, useState} from 'react';
 import { Provider } from 'react-redux';
 import { createStore, } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { Route, Switch, MemoryRouter} from 'react-router-dom';
+import { Route, Switch, MemoryRouter, useHistory, useLocation } from 'react-router-dom';
 import _IndexTableData from '../Requests/index-table-data.jsx';
 import _IndexTableDataByVendor from '../Requests/index-table-data-by-vendor.jsx';
 import SettingsInventory from "../Requests/settings-inventory.jsx";
@@ -14,56 +13,40 @@ import reducer from '../ReduxRelatedUtils/reducers.jsx';
 import ModalLoader from './modal-loader.jsx';
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import * as Routes from '../Constants/Routes.jsx'
-
-//import 'mdb-react-ui-kit/dist/css/mdb.min.css'
-//import '@fortawesome/fontawesome-free/css/all.min.css';
-//import 'bootstrap-css-only/css/bootstrap.min.css';
-//import 'mdbreact/dist/css/mdb.css';
-
+import PageLoader from './page-loader.jsx'
 
 export default function RootComponent(props) {
     const store = createStore(reducer, { viewModel: props.viewModel, modals: [] }, composeWithDevTools());
-
-    const renderSwitch = () => {
-        console.log(props.viewEnum)
-        switch (props.viewEnum) {
-            case "IndexTableDataByVendor":
-                return (<_IndexTableDataByVendor viewModel={props.viewModel} showView={true} bcColor={props.bcColor} ajaxLink={props.ajaxLink} btnText={props.btnText} sectionClass={props.sectionClass} />);
-                break;
-            case "IndexTableData":
-                return (<_IndexTableData viewModel={props.viewModel} showView={true} bcColor={props.bcColor} />);
-                break;
-            case "SettingsInventory":
-                return (<SettingsInventory viewModel={props.viewModel} showView={true} />);
-                break;
-
-        }
-
-    }
+    const Scripts = lazy(() => import('../scripts.jsx')); 
     function App() {
+        const location = useLocation();
+        const history = useHistory();
+        
+        useEffect(() => {
+            history.push(props.viewEnum);
+        }, [props.viewEnum]);
+        var view = props.viewEnum
         return (
+            
             <div>
-         
+                <Suspense fallback={<div></div>}><Scripts/></Suspense>
                 <FloatingActionBar showFloatingActionBar={false} />
-                {
-                    renderSwitch()
-                }
 
-                 
-                <Switch>
-                    <Route exact path={Routes.DELETE_ITEM} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.DELETE_ITEM} uid={props.location.key} />} />
-                    <Route exact path={Routes.SHARE} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.SHARE} uid={props.location.key} />} />
-                    <Route exact path={Routes.MOVE_TO_LIST} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.MOVE_TO_LIST} uid={props.location.key} />} />
-                    <Route exact path={Routes.NEW_LIST} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.NEW_LIST} uid={props.location.key} />} />
-                    <Route exact path={Routes.UPLOAD_QUOTE} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.UPLOAD_QUOTE} uid={props.location.key} />} />
-
-                    <Route path={Routes.SETTINGS_INVENTORY} component={SettingsInventory} />
+                <Switch >
+                    <Route path={Routes.INDEX_TABLE_DATA} render={(props) => <PageLoader {...props} viewModel={props.viewModel} pageNumber={location.state?.pageNumber ?? "1"} viewEnum={view} />} />
+                    <Route path={Routes.INDEX_TABLE_DATA_BY_VENDOR} render={(props) => <PageLoader {...props} viewModel={props.viewModel} viewEnum={view} />} />
+                    <Route path={Routes.SETTINGS_INVENTORY} render={(props) => <PageLoader {...props} viewModel={props.viewModel} viewEnum={props.viewEnum} />} />                
                 </Switch>
-            </div>)
+               
+                </div>
+
+                )
     }
    
 
-    return(
+    return (
+    
         <Provider store={store}><MemoryRouter ><App/></MemoryRouter></Provider>
+
     );
 }

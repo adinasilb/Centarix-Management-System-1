@@ -30,8 +30,6 @@ export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
         listString += "&listID=" + listID.value
     }
 
-    console.log("in else");
-        
     if (!url.includes("?")) {
         url += "?"
     } else {
@@ -63,10 +61,9 @@ export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
             console.dir(result)
             if (result != undefined) {
                 dispatch(Actions.setIndexTableViewModel(JSON.parse(result)));
-            }
-            dispatch(Actions.removeModals(modals));
+           }
+           if (modals != undefined) { dispatch(Actions.removeModals(modals)); }
 
-        document.querySelectorAll(".tooltip").forEach(c => c.remove());
         document.getElementById("loading").style.display = "none";
         //workaround for price radio button not coming in when switching from nothing is here tab
         var id = "nis";
