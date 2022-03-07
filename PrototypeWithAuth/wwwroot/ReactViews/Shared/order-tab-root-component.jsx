@@ -14,41 +14,46 @@ export default function OrderTabRootComponent(props) {
 
         return (
             <div>
-                <div class="row">
-                    <div class="col-12">
-                        <span class="heading-1 modal-tab-name">Order</span>
+                <div className="row">
+                    <div className="col-12">
+                        <span className="heading-1 modal-tab-name">Order</span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="row ">
-                        <div class="col-7 align-vertical-middle-col">
-                            <span class="small-text">If you want to process a single order immediately</span>
+                <div className="form-group">
+                    <div className="row ">
+                        <div className="col-7 align-vertical-middle-col">
+                            <span className="small-text">If you want to process a single order immediately</span>
                         </div>
-                        <div class="col-5">
+                        <div className="col-5">
+                            <Link className="p-0 @colorClass text w-100 custom-button create-modal-submit submitOrder" to={{
+                                pathname: "/OrderOperationsModalJson",
+                                state: { ID: 2 }
+                            }} >
+                            </Link>
                             <button type="submit" name="OrderMethod" value="OrderNow"
-                                class="text w-100 @colorClass custom-button float-right submitOrder">
+                                className="text w-100 @colorClass custom-button float-right submitOrder">
                 Order Now /* figure out how to use get enum display name func here...
                             </button>
                         </div>
                     </div>
-                    <div class="row ">
-                        <div class="col-7 align-vertical-middle-col">
-                            <span class="small-text">If you want to order multiple items</span>
+                    <div className="row ">
+                        <div className="col-7 align-vertical-middle-col">
+                            <span className="small-text">If you want to order multiple items</span>
                         </div>
-                        <div class="col-5">
+                        <div className="col-5">
                             <button type="submit" name="OrderMethod" value="AddToCart"
-                                class="text w-100 @colorClass custom-button float-right submitOrder ">
+                                className="text w-100 @colorClass custom-button float-right submitOrder ">
                                 Add To Cart
                             </button>
                         </div>
                     </div>
-                    <div class="row ">
-                        <div class="col-7 align-vertical-middle-col">
-                            <span class="small-text">Update the purchase of an item</span>
+                    <div className="row ">
+                        <div className="col-7 align-vertical-middle-col">
+                            <span className="small-text">Update the purchase of an item</span>
                         </div>
-                        <div class="col-5">
+                        <div className="col-5">
                             <button type="submit" name="OrderMethod" value="AlreadyPurchased"
-                                class="p-0 @colorClass text w-100 custom-button create-modal-submit submitOrder">
+                                className="p-0 @colorClass text w-100 custom-button create-modal-submit submitOrder">
                                 Already Purchased
                             </button>
                             <Link className="p-0 @colorClass text w-100 custom-button create-modal-submit submitOrder" to={{
