@@ -1,9 +1,9 @@
 ﻿import { connect } from 'react-redux';
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { Route, useHistory } from 'react-router-dom';
 import DeleteModal from '../Requests/delete-modal.jsx';
 import ShareModal from '../Requests/share-modal.jsx';
-import DocumentsModal from '../Shared/documents-modal.jsx';
+/*import DocumentsModal from '../Shared/documents-modal.jsx';*/
 import DeleteDocumentModal from '../Shared/delete-document-modal.jsx';
 import * as Actions from '../ReduxRelatedUtils/actions.jsx'
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
@@ -19,7 +19,7 @@ function ModalLoader(props) {
             props.addModal(props.modalKey);
         }
     }, [props.modalKey, props.uid]);
-
+    const DocumentsModal = lazy(() => import('../Shared/documents-modal.jsx'));
   
     var modalsComponents = [];
     for (var i = 0; i < props.modals?.length; i++) {
@@ -42,11 +42,12 @@ function ModalLoader(props) {
                 modalsComponents.push(<NewListModal backdrop={backdrop} key={props.modals[i]} modalKey={props.modals[i]} />)
                 break;
             case ModalKeys.DOCUMENTS:
-                modalsComponents.push(<DocumentsModal backdrop={backdrop} key={props.modals[i]} modalKey={props.modals[i]} />)
+                modalsComponents.push(<Suspense key={props.modals[i]} fallback={<div>Loading...</div>}><DocumentsModal backdrop={backdrop} key={props.modals[i]} modalKey={props.modals[i]} /></Suspense>)
                 break;
             case ModalKeys.DELETE_DOCUMENTS:
                 modalsComponents.push(<DeleteDocumentModal backdrop={backdrop} key={props.modals[i]} modalKey={props.modals[i]} />)
                 break;
+
         }
     }
    

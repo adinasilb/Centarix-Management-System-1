@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -14,6 +16,7 @@ namespace PrototypeWithAuth.ViewModels
         public ParentQuote ParentQuote { get; set; }
         public List<string> FileStrings { get; set; }
         public AppUtility.OrderMethod OrderMethodEnum { get; set; }
+        public List<Request> Requests { get; set; }
         //public RequestIndexObject RequestIndexObject { get; set; }
         public TempRequestListViewModel TempRequestListViewModel { get; set; }
 

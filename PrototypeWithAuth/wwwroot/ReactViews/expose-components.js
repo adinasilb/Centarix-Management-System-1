@@ -1,14 +1,12 @@
-﻿import 'mdb-react-ui-kit/dist/css/mdb.min.css'
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import 'bootstrap-css-only/css/bootstrap.min.css';
-import 'mdbreact/dist/css/mdb.css';
+﻿
+
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 
 //import FloatingActionBar from './floating-action-bar.jsx'
-import 'react-multi-carousel/lib/styles.css';
+
 import RootComponent from './Shared/root-component.jsx';
 import DocumentsRootComponent from "./Shared/documents-root-component.jsx"
 import CloseButton from './Utility/close-button.jsx'

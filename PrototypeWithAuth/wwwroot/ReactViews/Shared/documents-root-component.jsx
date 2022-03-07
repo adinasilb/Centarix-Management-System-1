@@ -15,6 +15,11 @@ import reducer from '../ReduxRelatedUtils/reducers.jsx';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { CheckEditable } from '../Utility/document-fuctions.jsx'
 
+//import 'mdb-react-ui-kit/dist/css/mdb.min.css'
+//import '@fortawesome/fontawesome-free/css/all.min.css';
+//import 'bootstrap-css-only/css/bootstrap.min.css';
+//import 'mdbreact/dist/css/mdb.css';
+
 
 
 export default function DocumentsRootComponent(props) {

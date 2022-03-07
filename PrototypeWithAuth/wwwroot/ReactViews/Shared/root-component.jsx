@@ -15,6 +15,11 @@ import ModalLoader from './modal-loader.jsx';
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import * as Routes from '../Constants/Routes.jsx'
 
+//import 'mdb-react-ui-kit/dist/css/mdb.min.css'
+//import '@fortawesome/fontawesome-free/css/all.min.css';
+//import 'bootstrap-css-only/css/bootstrap.min.css';
+//import 'mdbreact/dist/css/mdb.css';
+
 
 export default function RootComponent(props) {
     const store = createStore(reducer, { viewModel: props.viewModel, modals: [] }, composeWithDevTools());
@@ -31,6 +36,7 @@ export default function RootComponent(props) {
             case "SettingsInventory":
                 return (<SettingsInventory viewModel={props.viewModel} showView={true} />);
                 break;
+
         }
 
     }
@@ -49,6 +55,8 @@ export default function RootComponent(props) {
                     <Route exact path={Routes.SHARE} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.SHARE} uid={props.location.key} />} />
                     <Route exact path={Routes.MOVE_TO_LIST} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.MOVE_TO_LIST} uid={props.location.key} />} />
                     <Route exact path={Routes.NEW_LIST} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.NEW_LIST} uid={props.location.key} />} />
+                    <Route exact path={Routes.UPLOAD_QUOTE} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.UPLOAD_QUOTE} uid={props.location.key} />} />
+
                     <Route path={Routes.SETTINGS_INVENTORY} component={SettingsInventory} />
                 </Switch>
             </div>)

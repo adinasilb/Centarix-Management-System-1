@@ -6,11 +6,13 @@ import GlobalModal from '../Utility/global-modal.jsx';
 import { FileSelectChange, GetFileString } from "../Utility/document-fuctions.jsx";
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 
 import 'regenerator-runtime/runtime'
 import * as Actions from '../ReduxRelatedUtils/actions.jsx';
 import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
+
 
 export default function DocumentsModal(props) {
     const location = useLocation();
@@ -21,7 +23,6 @@ export default function DocumentsModal(props) {
     const [showSwitch, setshowSwitch] = useState(location.state.ShowSwitch)
     const [viewModel, setViewModel] = useState({ FileStrings: [] });
     const [resetParentCard] = useState(() => location.state.resetDocInfo)
-    const [carouselCards, setCarouselCards] = useState([])
 
     console.log("rerender doc modal")
 
@@ -81,68 +82,12 @@ export default function DocumentsModal(props) {
                 resetParentCard(docInfo);
             });
     }
-    
 
-    function MapDocCarouselItems(fileStrings) {
-        console.log("file strings " + fileStrings)
-        var ModelCount = fileStrings?.length;
-        var carouselCardsLocal = [];
-        var EndCount = ModelCount;
-        //switch (ModelCount % 3) {
-        //    case 1:
-        //        EndCount += 2;
-        //        break;
-        //    case 2:
-        //        EndCount += 1;
-        //        break;
-        //}
-        if (isEditable || showSwitch) {
-            carouselCardsLocal.push(
-                <div key="upload" >
-                    <div className=" card document-border col-md-4 m-0">
-                        <label>
-                            <i className="icon-upload_file_black_24dp-1 opac54 m-0" alt="order" style={{ fontSize: "1rem" }}></i>
-                            <input type="file" onChange={uploadFile} className="file-selects d-none mark-readonly" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" id="FilesToSave" name="FilesToSave" />
-                            <span className="section-filter text">Upload File</span>
-
-                        </label>
-
-                    </div>
-                </div>
-            )
-        }
-        for (var i = 0; i < EndCount; i++) {
-            console.log("i: " + i)
-
-            if (ModelCount > i) {
-                carouselCardsLocal.push(
-                    <div key={"File" + i} >
-                        <div className="card iframe-container document-border m-0">
-                            <div className="card-body responsive-iframe-container">
-
-                                <iframe src={GetFileString(viewModel.FileStrings[i])} title="View" className="responsive-iframe" scrolling="no"></iframe>
-                            </div>
-                            <div className="card-body d-flex text-center align-items-center justify-content-center">
-
-                                <a href={"\\" + viewModel.FileStrings[i]} target="_blank" className="mx-3  view-img">
-                                    {viewModel.FileStrings[i].split('\\').pop()}
-                                </a>
-                                <a href="" className="delete-document mx-3">
-                                    <i style={{ fontSize: "2rem" }} className="icon-delete-24px documents-delete-icon hover-bold"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>)
-            }
-        }
-        console.log()
-        setCarouselCards(carouselCardsLocal)
-    }
 
     return (
 
-        <GlobalModal backdrop={props.backdrop} value={ID} modalKey={props.modalKey} key={ID} size="xl" header={viewModel.FolderName + " Files"} formID="documentModalForm">
-            <form action="" data-string="" method="post" encType="multipart/form-data" className="m-5 modal-padding documentModalForm" onSubmit={handleSubmit(onSubmit)} id="documentModalForm">
+        <GlobalModal backdrop={props.backdrop} value={ID} modalKey={props.modalKey} key={ID} size="xl" header={viewModel.FolderName + " Files"}>
+            <form action="" data-string="" method="post" encType="multipart/form-data" className="m-5 modal-padding documentModalForm" onSubmit={handleSubmit(onSubmit)} id={props.modalKey}>
                 <input type="hidden" name="FolderName" id="FolderName" value={viewModel.FolderName || ""} />
                 <input type="hidden" name="DontAllowMultiple" id="DontAllowMultiple" value={viewModel.DontAllowMultiple || ""} />
                 <input type="hidden" name="ParentFolderName" id="ParentFolderName" value={viewModel.ParentFolderName || ""} />
@@ -150,6 +95,7 @@ export default function DocumentsModal(props) {
                 <input type="hidden" name="Guid" id="Guid" value={viewModel.Guid || ""} />
 
                 <div className="container">
+                    <hr />
                     <div className="row">
                         <div className="col-3 offset-9">
                             {(showSwitch) ?
@@ -178,112 +124,65 @@ export default function DocumentsModal(props) {
                         </div>
                     </div>
                     :
-                    <Carousel
-                        responsive={{
-                            superLargeDesktop: {
-                                // the naming can be any, depends on you.
-                                breakpoint: { max: 4000, min: 3000 },
-                                items: 5
-                            },
-                            desktop: {
-                                breakpoint: {
-                                    max: 3000,
-                                    min: 1024
-                                },
-                                items: 3,
-                            }
-                        }}
-                        deviceType ="desktop">
-                        <div>Item 1</div>
-                        <div>Item 2</div>
-                        <div>Item 3</div>
-                        <div>Item 4</div>
+                    <div>
+                        {(isEditable || showSwitch) ?
+                            <div className=" col-4 doc-card-outer-div m-0 text-center h-100">
+                                <div className=" card document-border h-100">
+                                    <div className=" d-flex align-items-center justify-content-center flex-column">
+                                        <label>
+                                            <i className="icon-upload_file_black_24dp-1 section-filter m-0" alt="order" style={{ fontSize: "2rem" }}></i>
+                                            <input type="file" onChange={uploadFile} className="file-selects d-none mark-readonly" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" id="FilesToSave" name="FilesToSave" />
 
 
-                    </Carousel>
-                    //<div>
-                    //    {(isEditable || showSwitch) ?
-                    //        <div className=" doc-card-outer-div">
-                    //            <div className=" card document-border col-md-4 m-0">
-                    //                <label>
-                    //                    <i className="icon-upload_file_black_24dp-1 opac54 m-0" alt="order" style={{ fontSize: "1rem" }}></i>
-                    //                    <input type="file" onChange={uploadFile} className="file-selects d-none mark-readonly" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" id="FilesToSave" name="FilesToSave" />
-                    //                    <span className="section-filter text">Upload File</span>
+                                        </label>
 
-                    //                </label>
-
-                    //            </div>
-                    //        </div> : null}
-                    //    {(viewModel?.FileStrings?.length > 0) ?
-                    //        viewModel.FileStrings.map((fileString, i) => {
-                    //            return (
-                    //                <div key={"FileString" + i} className=" doc-card-outer-div col-12 m-0">
-                    //                    <div className="card iframe-container document-border m-0">
-                    //                        <div className="card-body responsive-iframe-container">
-
-                    //                            <iframe src={GetFileString(fileString)} title="View" className="responsive-iframe" scrolling="no"></iframe>
-                    //                        </div>
-                    //                        <div className="card-body d-flex text-center align-items-center justify-content-center">
-
-                    //                            <a href={"\\" + fileString} target="_blank" className="mx-3  view-img">
-                    //                                {fileString.split('\\').pop()}
-                    //                            </a>
-                    //                            <Link className="" to={{
-                    //                                pathname: "/DeleteDocumentModal",
-                    //                                state: { ID: ID, FolderName: viewModel.FolderName, ParentFolderName: viewModel.ParentFolderName, FileName: fileString, deleteFunction: deleteFile }
-                    //                            }} >
-                    //                                <i style={{ fontSize: "2rem" }} className="icon-delete-24px documents-delete-icon hover-bold"></i>
-                    //                            </Link>
-                    //                        </div>
-                    //                    </div>
-                    //                </div>
-                    //            )
-                    //        })
-                    //        : <div />}
-                    //    </div>
-                }
-
-
-
-
-                {/*<div id="carousel-example-multi" className="carousel slide carousel-multi-item" data-ride="carousel">
-                        <div className="row">
-                            <div className="col-1">
-                                {(viewModel?.FileStrings.length > 3) ?
-                                    <a className="heading-1" href="#carousel-example-multi" data-slide="prev">
-                                        <i className="fas fa-chevron-left section-filter"></i>
-                                    </a>
-                                    :
-                                    null
-                                }
+                                        <span className="section-filter text">Upload File</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="col-10">
-                                <div className="carousel-inner v-2" role="listbox">
-                                    {/*{(isEditable || showSwitch) ?*/}
-                {/*    <div className={"carousel-item col-4 active"}>*/}
-                {/*        <div className=" doc-card-outer-div">*/}
-                {/*            <div className=" card document-border col-md-4 m-0">*/}
-                {/*                <label>*/}
-                {/*                    <i className="icon-upload_file_black_24dp-1 opac54 m-0" alt="order" style={{ fontSize: "1rem" }}></i>*/}
-                {/*                    <input type="file" onChange={uploadFile} className="file-selects d-none mark-readonly" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" id="FilesToSave" name="FilesToSave" />*/}
-                {/*                    <span className="section-filter text">Upload File</span>*/}
+                            : null}
+                        <Carousel
+                            infinite
+                            renderButtonGroupOutside
+                            responsive={{
+                                desktop: {
+                                    breakpoint: {
+                                        max: 3000,
+                                        min: 1024
+                                    },
+                                    items: 3
+                                }
+                            }}
+                            deviceType="desktop">
 
-                {/*                </label>*/}
+                            {viewModel.FileStrings.map((fileString, i) => {
+                                return (
+                                    <div key={"FileString" + i} className=" doc-card-outer-div col-12 m-0">
+                                        <div className="card iframe-container document-border m-0">
+                                            <div className="card-body responsive-iframe-container">
 
-                {/*            </div>*/}
-                {/*        </div>*/}
-                {/*    </div> : null}*/}
-                {/*{(viewModel?.FileStrings?.length > 0) ?*/}
-                {/*    MapDocCarouselItems(viewModel?.FileStrings).map(carouselItem => carouselItem) : null}*/}
-                {/*                </div>*/}
-                {/*</div> */}
-                {/*<div className="col-1">*/}
-                {/*    <a className="heading-1" href="#carousel-example-multi" data-slide="next">*/}
-                {/*        <i className="fas fa-chevron-right section-filter"></i>*/}
-                {/*    </a>*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*</div>}*/}
+                                                <iframe src={GetFileString(fileString)} title="View" className="responsive-iframe" scrolling="no"></iframe>
+                                            </div>
+                                            <div className="card-body d-flex text-center align-items-center justify-content-center">
+
+                                                <a href={"\\" + fileString} target="_blank" className="mx-3  view-img">
+                                                    {fileString.split('\\').pop()}
+                                                </a>
+                                                <Link className="" to={{
+                                                    pathname: "/DeleteDocumentModal",
+                                                    state: { ID: ID, FolderName: viewModel.FolderName, ParentFolderName: viewModel.ParentFolderName, FileName: fileString, deleteFunction: deleteFile }
+                                                }}>
+                                                    <i style={{ fontSize: "2rem" }} className="icon-delete-24px documents-delete-icon hover-bold"></i>
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+
+                        </Carousel>
+                    </div>}
+
             </form>
         </GlobalModal>
     );

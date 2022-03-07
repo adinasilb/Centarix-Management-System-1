@@ -988,7 +988,7 @@ namespace PrototypeWithAuth.Controllers
                 }
 
             }
-            else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
+            else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary || requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsInventory)
             {
                 if (requestIndexObject.RequestStatusID == 7)
                 {

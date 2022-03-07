@@ -789,6 +789,10 @@ namespace PrototypeWithAuth.Controllers
             {
                 request.RequestStatusID = 1;
             }
+            if (!request.IsReceived)
+            {
+                request.ApplicationUserReceiverID = null;
+            }
             using (var transaction = _applicationDbContextTransaction.Transaction)
             {
                 try
@@ -4441,16 +4445,16 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject, List<Request> Requests)
         {
-            if (!AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView("InvalidLinkPage");
-            }
+            //if (!AppUtility.IsAjaxRequest(Request))
+            //{
+            //    return PartialView("InvalidLinkPage");
+            //}
             var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now } };
 
             uploadQuoteViewModel.OrderMethodEnum = requestIndexObject.OrderMethod;
-            uploadQuoteViewModel.TempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
+            //uploadQuoteViewModel.TempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
             //uploadQuoteViewModel.TempRequestListViewModel = new TempRequestListViewModel()
             //{
             //    GUID = requestIndexObject.GUID,
@@ -4459,7 +4463,6 @@ namespace PrototypeWithAuth.Controllers
             //};
             uploadQuoteViewModel.DocumentsCardViewModel = new DocumentsCardViewModel()
             {
-                SectionType = AppUtility.MenuItems.Requests,
                 DocumentInfo = new DocumentFolder()
                 {
                     ParentFolderName = AppUtility.ParentFolderName.ParentQuote,
@@ -4567,6 +4570,8 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadQuoteModal(UploadQuoteViewModel uploadQuoteOrderViewModel, TempRequestListViewModel tempRequestListViewModel, bool isCancel = false)
         {
+
+            
             var tempRequestJson = await _tempRequestJsonsProc.GetTempRequest(tempRequestListViewModel.GUID, _userManager.GetUserId(User)).FirstOrDefaultAsync();
             try
             {

@@ -34,6 +34,12 @@ const reducer = (state, action) => {
                 modals: newState
             };
             break;
+        case ActionKeys.SET_TEMP_REQUEST_JSON:
+            return {
+                ...state,
+                tempRequestJson: [...state.tempRequestJson, action.payload]
+            };
+            break;
         default:
             return state;
     }

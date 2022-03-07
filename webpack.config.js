@@ -1,6 +1,7 @@
 ﻿﻿const path = require('path');
 const ManifestPlugin = require('webpack-manifest-plugin');
 
+
 module.exports = {
 	entry: './PrototypeWithAuth/wwwroot/ReactViews/expose-components.js',
 	output: {
@@ -28,21 +29,11 @@ module.exports = {
 		rules: [
 			{
 				test: /\.jsx?$/,
-				exclude: /node_modules/,
 				loader: 'babel-loader',
-			},
+			},				
 			{
-  				test: /\.css$/,
-  				exclude: /node_modules/,
-  				loaders: ['style-loader', 'css-loader'],
-			}				
-			,{
-  				test: /\.css$/,
-  				include: /node_modules/,
-				loader: 'css-loader',
-          			options: {
-            				url: false
-          			}
+  				test: /\.css$/,	
+				use: [{loader:'style-loader'}, { loader: 'css-loader' , options:{url:false }}]		
 			},
             		{
                 		test: /\.scss$/,
@@ -67,7 +58,7 @@ module.exports = {
 					entrypoints: entrypointFiles,
 				};
 			},
-		}),
+		})
 	],
 	 resolve: {
 		 alias: {
