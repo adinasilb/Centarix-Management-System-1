@@ -1,15 +1,12 @@
-﻿import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+﻿import React, { useState } from 'react';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { MDBBtn, MDBPopover, MDBPopoverBody } from 'mdbreact';
-export default class IndexTableColumn extends Component {
+import * as Routes from '../Constants/Routes.jsx'
+export default function IndexTableColumn(props) {
+    const history = useHistory();
+    const [state, setState] = useState({ col: props.columnData, vendorID: props.vendorID, sideBar: props.sideBar });
 
-    constructor(props) {
-        super(props);
-        this.state = { col: this.props.columnData, vendorID: this.props.vendorID, sideBar: this.props.sideBar };
-    }
-
-
-    getInsideView = (col, sideBar) => {
+    const getInsideView=(col, sideBar)=> {
         var imgDangerColor = col.Image.includes("error") ? " text-danger-centarix " : "";
         if (col.Image != "") {
 
@@ -36,7 +33,7 @@ export default class IndexTableColumn extends Component {
                                             <MDBPopoverBody>
                                                 {icon.IconPopovers.map((iconpopover, i) => (
                                                     <div key={"iconPopover" + i} className="row px-3 icon-more-popover accounting-popover">
-                                                        <Link className={"btn-link popover-text no-hover requests " + iconpopover.AjaxCall} to={{ pathname: iconpopover.AjaxCall, state: { ID: col.AjaxID, newStatus: iconpopover.Description, modelsEnum: "Request" } }} >
+                                                        <Link className={"btn-link popover-text no-hover requests " + iconpopover.AjaxCall} to={{ pathname: history.location.pathname + iconpopover.AjaxCall, state: { ID: col.AjaxID, newStatus: iconpopover.Description, modelsEnum: "Request" } }} >
                                                             <i className={iconpopover.Icon} style={{ color : ""+iconpopover.Color }}></i>
                                                             <label className="m-2 ">{iconpopover.DescriptionDisplayName}</label>
                                                         </Link>
@@ -114,7 +111,7 @@ export default class IndexTableColumn extends Component {
 
                     if (ve.String == "Checkbox") {
                         return (<div key={"value" + i}><div className={"form-check accounting-select " + dangerColor}>
-                            <input type="checkbox" className={"form-check-input fci-acc filled-in " + col.AjaxLink} id={col.AjaxID} vendorid={this.state.vendorID} />
+                            <input type="checkbox" className={"form-check-input fci-acc filled-in " + col.AjaxLink} id={col.AjaxID} vendorid={state.vendorID} />
                             <label className="form-check-label" htmlFor={col.AjaxID}></label>
                         </div>{i != 0 ? <br /> : null}</div>
                         )
@@ -141,12 +138,12 @@ export default class IndexTableColumn extends Component {
         }
     }
 
-    render() {
+
         return (
-            <td width={this.state.col.Width + "%"} className={this.state.col.Width == 0 ? "p-0" : ""} >
-                {this.getInsideView(this.state.col, this.state.sideBar)}
+            <td width={state.col.Width + "%"} className={state.col.Width == 0 ? "p-0" : ""} >
+                {console.log("in render of index table data")}
+                {getInsideView(state.col, state.sideBar)}
             </td>
         )
 
-    }
 }
