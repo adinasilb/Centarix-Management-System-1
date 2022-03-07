@@ -1,7 +1,7 @@
-﻿ import React, { useState, setState, useEffect } from 'react';
+﻿import React, { useState, setState, useEffect } from 'react';
 import * as Constant from '../Shared/constants.js'
 import CustomFieldButton from './custom-field-button.jsx';
-import { MDBSelect, MDBSelectOptions, MDBSelectOption, MDBSelectInput, MDBInput } from 'mdbreact';
+import { MDBSelect, MDBSelectOptions, MDBSelectOption, MDBSelectInput, MDBInput, MDBContainer } from 'mdbreact';
 import ReactDOM from 'react-dom';
 import { MDBBtn } from 'mdbreact';
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
@@ -19,8 +19,13 @@ const SettingsForm = (props) => {
 
     const [remove, setRemove] = useState({ key: false });
     //const [index, setIndex] = useState();
-    const [countCF, setCountCF] = useState([]);
-    const [customFields, setCustomFields] = useState([]);
+    const [countDetailsCF, setCountDetailsCF] = useState([]);
+    const [customFieldsDetails, setCustomFieldsDetails] = useState([]);
+
+    var detailsCFStyle = {};
+    if (!(countDetailsCF.length >= 1)) {
+        detailsCFStyle.display = 'none';
+    }
 
 
     //var customFields = [];
@@ -84,20 +89,20 @@ const SettingsForm = (props) => {
 
     var OpenNewCustomField = () => {
         console.log("open new custom field");
-        var newCount = countCF;
+        var newCount = countDetailsCF;
         var i = newCount.length > 0 ? newCount[newCount.length - 1] + 1 : 0;
         console.log("i key: " + i);
         newCount.push(i);
-        setCountCF(newCount);
+        setCountDetailsCF(newCount);
         var customField = { dict: { key: newCount[i], number: i } };
 
         /*array.push(customField);*/
-        var arr = [...customFields];
+        var arr = [...customFieldsDetails];
         arr.push(customField);
         console.log("ARRAY:")
         console.log(arr)
         //customFields = arr;
-        setCustomFields(arr);
+        setCustomFieldsDetails(arr);
         console.log("CUSTOM FIELD VIEW:")
     }
 
@@ -109,13 +114,13 @@ const SettingsForm = (props) => {
         console.log("custom fields in remove:");
         //console.log(customFields);
 
-        var array = cloneDeep(customFields);
+        var array = cloneDeep(customFieldsDetails);
         array.splice(index, 1);
-        var count = countCF;
+        var count = countDetailsCF;
         count.splice(index, 1);
-        setCustomFields(array);
+        setCustomFieldsDetails(array);
         //customFields = array;
-        setCountCF(count);
+        setCountDetailsCF(count);
     }
 
 
@@ -160,7 +165,7 @@ const SettingsForm = (props) => {
                                 </span>
                             </div>
                             <div className="col-2">
-                                <input type="submit" className=" custom-button custom-button-font lab-man-background-color" value="Save" />
+                                <input type="submit" className="section-bg-color custom-button custom-button-font" value="Save" />
                             </div>
 
                         </div>
@@ -228,21 +233,20 @@ const SettingsForm = (props) => {
                                                 <input className="form-control-plaintext border-bottom" value={Constant.DatePlaceholder} disabled />
                                             </div>
                                         </div>
-                                        <div className="custom-fields-details lab-man-form">
-                                            <div className="cf_header hidden">
-                                                {/*@{await Html.RenderPartialAsync("_CFHeader.cshtml"); }*/}
-                                            </div>
+                                        <div className="" style={detailsCFStyle}>
+                                            <BorderCF />
+                                            <CustomFieldsHeader />
                                         </div>
-                                        <div className="cf_header hidden">
-                                            {/*@{await Html.RenderPartialAsync("_BorderCF.cshtml");}*/}
-                                        </div>
-                                        <div className="add-custom-fields row">
+                                        <div className="">
                                             {/*<input type="button" onClick={this.AddCustomField} className={"custom-button custom-cancel text border-dark " + " details"}*/}
                                             {/*    value="+ Add Custom Field" />*/}
-                                            {customFields.map(cf => <CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField} />)}
+                                            {customFieldsDetails.map(cf => <CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField} />)}
 
                                             <CustomFieldButton tabName={"details"} clickhandler={OpenNewCustomField} />
                                             {/*@{await Html.RenderPartialAsync("_AddCustomFields.cshtml", "details-form");}*/}
+                                        </div>
+                                        <div className="" style={detailsCFStyle}>
+                                            <BorderCF />
                                         </div>
                                     </div>
                                     <div id="price" className="tab-pane fade in" value="1">
@@ -258,7 +262,7 @@ const SettingsForm = (props) => {
                                                         <div className="form-group">
                                                             <label className="control-label">Currency</label>
                                                             <select id="currency" className="mdb-select custom select-dropdown form-control-plaintext disabled">
-                                                                <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
+                                                                <option value="">&#8362; NIS</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -280,7 +284,7 @@ const SettingsForm = (props) => {
                                                         <div className="row">
                                                             <div className="col-md-4 form-group">
                                                                 <label asp-for="Requests[0].Unit" className="control-label"></label>
-                                                                <MDBInput type="number" asp-for="@Model.Requests[0].Unit" value={Constant.AmountPlaceholder} old-val="@Model.Requests[0].Unit.ToString()" className="disabled"
+                                                                <MDBInput type="number" value={Constant.AmountPlaceholder} old-val="@Model.Requests[0].Unit.ToString()" className="disabled"
                                                                     id="unit" />
                                                                 <span asp-validation-for="Requests[0].Unit" className="text-danger-centarix"></span>
                                                             </div>
@@ -288,21 +292,16 @@ const SettingsForm = (props) => {
                                                                 <label asp-for="Requests[0].Product.UnitType" className="control-label"></label>
                                                                 <MDBSelect asp-for="Request.UnitTypeID" className="form-control-plaintext disabled">
                                                                     <MDBSelectInput selected={Constant.SelectPlaceholder} />
-                                                                    {/*<MDBSelectOptions>*/}
-                                                                    {/*{props.SettingsForm.UnitTypes.map((unittype, i) => (*/}
-                                                                    {/*    <MDBSelectOption value={unittype.UnitTypeID} key={i}>{unittype.UnitTypeDescription}</MDBSelectOption>*/}
-                                                                    {/*))}*/}
-                                                                    {/*</MDBSelectOptions>*/}
                                                                 </MDBSelect>
-                                                                <span asp-validation-for="Requests[0].Product.UnitType" className="text-danger-centarix"></span>
+                                                                <span className="text-danger-centarix"></span>
                                                             </div>
                                                         </div>
-                                                        <div className="form-group requestPriceQuote @hideNoQuote">
+                                                        <div className="form-group">
                                                             <label className="control-label price-per-unit-label">Price Per Unit:</label>
                                                             <div className="row">
                                                                 <div className="col-md-6">
                                                                     <div className="input-group">
-                                                                        <span className="input-group-text border-bottom request-cost-dollar-icon @disableDollar">&#36;</span>
+                                                                        <span className="input-group-text border-bottom request-cost-dollar-icon">&#36;</span>
                                                                         <input type="text" className="form-control-plaintext border-bottom disabled" name="unit-price-dollars"
                                                                             value={Constant.SmallIntPlaceholder}
                                                                             id="unit-price-dollars" />
@@ -310,8 +309,8 @@ const SettingsForm = (props) => {
                                                                 </div>
                                                                 <div className="col-md-6">
                                                                     <div className="input-group">
-                                                                        <span className="input-group-text request-cost-shekel-icon @disableShekel">&#x20aa;</span>
-                                                                        <input type="text" className="form-control-plaintext border-bottom requestPriceQuote disabled" name="unit-price-shekel"
+                                                                        <span className="input-group-text request-cost-shekel-icon">&#x20aa;</span>
+                                                                        <input type="text" className="form-control-plaintext border-bottom  disabled" name="unit-price-shekel"
                                                                             id="unit-price-shekel" value={Constant.SmallIntPlaceholder} />
                                                                     </div>
                                                                 </div>
@@ -325,11 +324,11 @@ const SettingsForm = (props) => {
                                                     <button type="button" className="close sub-close  pr-2 pt-2  disabled " aria-label="Close" >
                                                         <span aria-hidden="true">×</span>
                                                     </button>
-                                                    <div className="mx-2rem addSubUnitCard mt-4 @plusDisplayNoneSub">
+                                                    <div className="mx-2rem addSubUnitCard mt-4">
                                                         <div className="row " >
                                                             <div className="col-8 offset-2 text-center font-weight-light">
                                                                 <input type="button" value="+" className=" addSubUnit btn m-0 p-0 no-box-shadow disabled " />
-                                                                <br /><span className="text-capitalize @color text">add sub unit</span>
+                                                                <br /><span className="text-capitalize text">add sub unit</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -339,18 +338,53 @@ const SettingsForm = (props) => {
                                         </div>
 
 
-
-                                        <div className="row requestPriceQuote @hideNoQuote">
-                                              </div>
-
-                                        <div className="row requestPriceQuote @hideNoQuote">
-                                            <div className="col-md-2 vat-info @hideVat">
+                                        <div className="row">
+                                            <div className="col-md-2">
                                                 <div className="form-group">
-                                                    <label asp-for="Requests[0].VAT" className="control-label"></label>
+                                                    <label className="control-label">Total</label>
                                                     <div className="input-group">
                                                         <span className="input-group-text disabled-text">&#36;</span>
-                                                        <input type="text" className="form-control-plaintext border-bottom vatInDollars disabled-text requestPriceQuote" id="vatInDollars" disabled
-                                                            value="@(AppUtility.ConvertIntToString(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].VAT / Model.Requests[0].ExchangeRate, 2)))" />
+                                                        <input type="text" className="form-control-plaintext border-bottom disabled-text" id="vatInDollars" disabled
+                                                            value={Constant.SmallIntPlaceholder} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-2 vat-info">
+                                                <div className="form-group">
+                                                    <label className="control-label"></label>
+                                                    <div className="input-group">
+                                                        <span className="input-group-text disabled-text">&#x20aa;</span>
+                                                        <input type="text" value={Constant.SmallIntPlaceholder} className="form-control-plaintext border-bottom disabled-text" id="vat" disabled />
+                                                        <span className="text-danger-centarix"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/*<MDBContainer className="mr-0">*/}
+                                            <div className="col-md-2">
+                                                <div className="form-group">
+                                                    <label className="control-label"></label>
+                                                    <MDBInput checked={true} label={Constant.VAT} type="radio" disabled
+                                                        id="radio1" />
+                                                </div>
+                                            </div>
+                                            <div className="col-md-2">
+                                                <div className="form-group">
+                                                    <label className="control-label"></label>
+                                                    <MDBInput checked={false} label={Constant.NoVAT} type="radio" disabled
+                                                        id="radio1" />
+                                                </div>
+                                            </div>
+                                            {/*</MDBContainer>*/}
+                                        </div>
+                                        <div className="row requestPriceQuote ">
+
+                                            <div className="col-md-2 ">
+                                                <div className="form-group">
+                                                    <label className="control-label">VAT</label>
+                                                    <div className="input-group">
+                                                        <span className="input-group-text disabled-text">&#36;</span>
+                                                        <input type="text" className="form-control-plaintext border-bottom disabled-text " id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled
+                                                            value={Constant.SmallIntPlaceholder} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -359,18 +393,17 @@ const SettingsForm = (props) => {
                                                     <label className="control-label"></label>
                                                     <div className="input-group">
                                                         <span className="input-group-text disabled-text">&#x20aa;</span>
-                                                        <input type="text" asp-for="Requests[0].VAT" value="@AppUtility.ConvertIntToString(Model.Requests[0].VAT)" className="form-control-plaintext border-bottom disabled-text requestPriceQuote" id="vat" disabled />
-                                                        <span className="text-danger-centarix" asp-validation-for="Requests[0].VAT"></span>
+                                                        <input type="text" value={Constant.SmallIntPlaceholder} className="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="col-md-2 vat-info @hideVat">
+                                            <div className="col-md-2 ">
                                                 <div className="form-group">
-                                                    <label className="control-label">Total + VAT:</label>
+                                                    <label className="control-label">Total + VAT</label>
                                                     <div className="input-group">
                                                         <span className="input-group-text disabled-text">&#36;</span>
-                                                        <input type="text" className="form-control-plaintext border-bottom disabled-text requestPriceQuote" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled
-                                                            value="@(AppUtility.ConvertIntToString(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].TotalWithVat/Model.Requests[0].ExchangeRate,2)))" />
+                                                        <input type="text" className="form-control-plaintext border-bottom disabled-text " id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled
+                                                            value={Constant.SmallIntPlaceholder} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -379,7 +412,7 @@ const SettingsForm = (props) => {
                                                     <label className="control-label"></label>
                                                     <div className="input-group">
                                                         <span className="input-group-text disabled-text">&#x20aa;</span>
-                                                        <input type="text" asp-for="Requests[0].TotalWithVat" value="@AppUtility.ConvertIntToString(Model.Requests[0].TotalWithVat)" className="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
+                                                        <input type="text" value={Constant.SmallIntPlaceholder} className="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
                                                     </div>
                                                 </div>
                                             </div>
@@ -420,6 +453,8 @@ const SettingsForm = (props) => {
 export default SettingsForm;
 
 
+
+
 function CustomField(props) {
 
     console.log("RENDERING CUSTOM FIELD");
@@ -431,42 +466,63 @@ function CustomField(props) {
     };
 
     return (
-        <div className="w-100">
+        <div className="row">
             {console.log("in custom field")}
-            <div className="custom-fields row">
-                <div className="col-4">
-                    <div className="form-group">
-                        <label className="control-label" >{"Field Name"}</label>
-                        <input onChange={onChangeFieldName} className="form-control-plaintext border-bottom" {...register("fieldName[" + props.number + "]", { required: true, maxLength: 10 })} />
-                        <span className="text-danger-centarix">
-                            {errors.fieldName.[props.number] && <span>{Constant.MaxLength + "10"}</span>}
-                        </span>
-                    </div>
+            {/*<div className="custom-fields row">*/}
+            <div className="col-4">
+                <div className="form-group">
+                    <label className="control-label" >{"Field Name"}</label>
+                    <MDBInput onChange={onChangeFieldName} className="form-control-plaintext border-bottom" {...register("fieldName." + props.number, { required: true, maxLength: 10 })} />
+                    <span className="text-danger-centarix">
+                        {errors.fieldName?.num && <span>{Constant.MaxLength + "10"}</span>}
+                    </span>
                 </div>
-                <div className="col-4">
-                    <div className="form-group">
-                        <label className="control-label">Data Type</label>
-                        <MDBSelect className="form-control-plaintext border-bottom mdb-select" >
-                            <MDBSelectInput selected="Choose your option" />
-                            <MDBSelectOptions search>
-                                {props.CustomFieldData.CustomDataTypes.map((customField, i) => (
-                                    <MDBSelectOption value={customField.CustomDataTypeID} key={i}>{customField.Name}</MDBSelectOption>
-                                ))}
-                            </MDBSelectOptions>
-                        </MDBSelect>
-                        <span className="centarix-error-style" >{ }</span>
-                    </div>
+            </div>
+            <div className="col-4">
+                <div className="form-group">
+                    <label className="control-label">Data Type</label>
+                    <MDBSelect className="form-control-plaintext border-bottom mdb-select" >
+                        <MDBSelectInput selected="Choose your option" />
+                        <MDBSelectOptions search>
+                            {props.CustomFieldData.CustomDataTypes.map((customField, i) => (
+                                <MDBSelectOption value={customField.CustomDataTypeID} key={i}>{customField.Name}</MDBSelectOption>
+                            ))}
+                        </MDBSelectOptions>
+                    </MDBSelect>
+                    <span className="centarix-error-style" >{ }</span>
                 </div>
-                <div className="col-2 d-flex ml-5"> {/*style="height:auto;">*/}
-                    <div className="form-check d-flex align-items-end pb-2">{/* style="height:auto;">*/}
-                        <MDBInput label="Required" type="checkbox" id={"checkbox" + props.number} />
-                        {/*<label className="form-check-label align-items-end"  >Required</label>*/}
-                    </div>
+            </div>
+            <div className="col-2 d-flex ml-5 h-100 mt-4"> {/*style="height:auto;">*/}
+                <div className="form-check d-flex align-items-end pb-2 mt-3">{/* style="height:auto;">*/}
+                    <MDBInput label="Required" type="checkbox" id={"checkbox" + props.number} className="" />
+                    {/*<label className="form-check-label align-items-end"  >Required</label>*/}
                 </div>
-                <div className="col-1 d-flex"> {/*style="height:auto;">*/}
-                    <a href="" onClick={props.RemoveCustomField} className="remove-custom-field danger-filter align-items-end pb-2 d-flex" number={props.number} > {/*style="height:auto; font-size:1.75rem;">*/}
-                        <i className="icon-delete-24px align-items-end"></i>
-                    </a>
+            </div>
+            <div className="col-1 mt-4 h-auto"> {/*style="height:auto;">*/}
+                <a href="" onClick={props.RemoveCustomField} className="remove-custom-field danger-filter align-items-end pb-2 d-flex mt-3 h-auto icon-font-size" number={props.number} > {/*style="height:auto; font-size:1.75rem;">*/}
+                    <i className="icon-delete-24px align-items-end"></i>
+                </a>
+            </div>
+            {/*</div>*/}
+        </div>
+    )
+}
+
+function BorderCF() {
+    return (
+        <div class="row pb-5 mb-0">
+            <div class="col-12 thick-border-top ">
+            </div>
+        </div>
+    )
+}
+
+function CustomFieldsHeader() {
+    return (
+        <div className="cf_header">
+            <div className="row under-row-margin">
+                <div className=" col-5 top-menu lab-man-color mb-2">
+                    Custom Fields
                 </div>
             </div>
         </div>

@@ -8,7 +8,7 @@ export default function CustomFieldButton(props) {
     //}
 
     return (
-        <input type="button" onClick={props.clickhandler} className={"custom-button custom-cancel text border-dark "}
+        <input type="button" onClick={props.clickhandler} className={"section-bg-color custom-button custom-button-font mb-5"}
             value="+ Add Custom Field" />
     )
 }
