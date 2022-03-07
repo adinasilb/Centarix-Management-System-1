@@ -105,7 +105,7 @@
             if(Model.SectionType == AppUtility.MenuItems.Operations)
             {
                 <div id="order" class="tab-pane fade order-tab @showOrder" value="7">
-                    @Html.React("OrderTabRootComponent", new{rid=5})
+                    @Html.React("RootComponent", new { viewModel = Model, viewEnum = "/OrderTab" })
                     @Html.ReactGetScriptPaths()
                     @Html.ReactInitJavaScript()
                 </div>
