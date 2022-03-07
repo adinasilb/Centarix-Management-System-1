@@ -47,7 +47,8 @@ function ModalLoader(props) {
             case ModalKeys.DELETE_DOCUMENTS:
                 modalsComponents.push(<DeleteDocumentModal backdrop={backdrop} key={props.modals[i]} modalKey={props.modals[i]} />)
                 break;
-
+            case ModalKeys.ORDER_OPERATIONS:
+                modalsComponents.push(<OrderOperationsModal backdrop={backdrop} key={props.modals[i]} modalKey={props.modals[i]} />)
         }
     }
    

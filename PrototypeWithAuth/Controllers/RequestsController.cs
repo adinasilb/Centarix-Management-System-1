@@ -1011,7 +1011,7 @@ namespace PrototypeWithAuth.Controllers
             ModelStates.Add(new ModelAndState { Model = request, StateEnum = EntityState.Added });
             var occurrenceCounter = 2;
             while (nextRequestDate.Year == DateTime.Now.Year &&
-                ((recurringOrder.RecurrenceEndStatusID == 2  && nextRequestDate > recurringOrder.EndDate)
+                ((recurringOrder.RecurrenceEndStatusID == 2 && nextRequestDate > recurringOrder.EndDate)
                     || (recurringOrder.RecurrenceEndStatusID == 3 && occurrenceCounter <= recurringOrder.Occurrences)
                     || recurringOrder.RecurrenceEndStatusID == 1))
             {
@@ -1554,7 +1554,7 @@ namespace PrototypeWithAuth.Controllers
             //{
             //    return PartialView("InvalidLinkPage");
             //}
-    
+
 
             var request = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { m => m.RequestID == id },
                 new List<ComplexIncludes<Request, ModelBase>>{
@@ -1563,7 +1563,7 @@ namespace PrototypeWithAuth.Controllers
                             ThenInclude =  new ComplexIncludes<ModelBase, ModelBase> { Include = ps => ((ProductSubcategory)ps).ParentCategory }}},
                     new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.Vendor } });
 
-        
+
 
             DeleteRequestViewModel deleteRequestViewModel = new DeleteRequestViewModel()
             {
@@ -1571,25 +1571,25 @@ namespace PrototypeWithAuth.Controllers
             };
             if (request == null)
             {
-                deleteRequestViewModel.ErrorMessage  = "Product not found (no request). Unable to delete";
-                Response.StatusCode= 500;
+                deleteRequestViewModel.ErrorMessage = "Product not found (no request). Unable to delete";
+                Response.StatusCode = 500;
             }
             if (id == null)
             {
                 deleteRequestViewModel.ErrorMessage = "Product not found (no id). Unable to delete.";
-                Response.StatusCode= 500;
+                Response.StatusCode = 500;
             }
-            return Json(JsonConvert.SerializeObject(deleteRequestViewModel, Formatting.Indented,  new JsonSerializerSettings
+            return Json(JsonConvert.SerializeObject(deleteRequestViewModel, Formatting.Indented, new JsonSerializerSettings
             {
 
-                Converters= new List<JsonConverter> { new StringEnumConverter() },
+                Converters = new List<JsonConverter> { new StringEnumConverter() },
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             }));
         }
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<JsonResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel,  RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters, int numFilters = 0)
+        public async Task<JsonResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel, RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters, int numFilters = 0)
         {
             try
             {
@@ -1620,17 +1620,17 @@ namespace PrototypeWithAuth.Controllers
                 json = JsonConvert.SerializeObject(viewModelByVendor, Formatting.Indented,
                    new JsonSerializerSettings
                    {
-                       Converters= new List<JsonConverter> { new StringEnumConverter() },
+                       Converters = new List<JsonConverter> { new StringEnumConverter() },
                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                    });
             }
             else
             {
-                var viewModel = await GetIndexViewModel(requestIndexObject, Months, Years, selectedFilters: selectedFilters,  numFilters, requestsSearchViewModel: requestsSearchViewModel);
+                var viewModel = await GetIndexViewModel(requestIndexObject, Months, Years, selectedFilters: selectedFilters, numFilters, requestsSearchViewModel: requestsSearchViewModel);
                 json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
                    new JsonSerializerSettings
                    {
-                       Converters= new List<JsonConverter> { new StringEnumConverter() },
+                       Converters = new List<JsonConverter> { new StringEnumConverter() },
                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                    });
             }
@@ -1641,10 +1641,10 @@ namespace PrototypeWithAuth.Controllers
         private bool CheckIfIndexTableByVendor(AppUtility.MenuItems SectionType, AppUtility.PageTypeEnum PageType, AppUtility.SidebarEnum SidebarType)
         {
             bool isByVendor = false;
-            switch(SectionType)
+            switch (SectionType)
             {
                 case AppUtility.MenuItems.Accounting:
-                    switch(PageType)
+                    switch (PageType)
                     {
                         case AppUtility.PageTypeEnum.AccountingPayments:
                         case AppUtility.PageTypeEnum.AccountingNotifications:
@@ -1653,13 +1653,13 @@ namespace PrototypeWithAuth.Controllers
                     }
                     break;
                 case AppUtility.MenuItems.LabManagement:
-                    isByVendor=true;
+                    isByVendor = true;
                     break;
                 case AppUtility.MenuItems.Requests:
                     switch (PageType)
                     {
                         case AppUtility.PageTypeEnum.RequestCart:
-                         switch(SidebarType)
+                            switch (SidebarType)
                             {
                                 case AppUtility.SidebarEnum.Orders:
                                     isByVendor = true;
@@ -1925,7 +1925,7 @@ namespace PrototypeWithAuth.Controllers
                     shareViewModel.ObjectDescription = _requestListsProc.ReadOneAsync(new List<Expression<Func<RequestList, bool>>> { rl => rl.ListID == ID }).Result.Title;
                     break;
             }
-            
+
             return PartialView(shareViewModel);
         }
 
@@ -1947,12 +1947,12 @@ namespace PrototypeWithAuth.Controllers
                     shareViewModel.ObjectDescription = _requestListsProc.ReadOneAsync(new List<Expression<Func<RequestList, bool>>> { rl => rl.ListID == ID }).Result.Title;
                     break;
             }
-           
+
 
             var json = JsonConvert.SerializeObject(shareViewModel, Formatting.Indented,
                new JsonSerializerSettings
                {
-                   Converters= new List<JsonConverter> { new StringEnumConverter() },
+                   Converters = new List<JsonConverter> { new StringEnumConverter() },
                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                });
             return Json(json);
@@ -4770,6 +4770,43 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
+        [HttpGet]
+        [Authorize(Roles = "Operations")]
+        public async Task<IActionResult> OrderOperationsModalJson(RequestIndexObject requestIndexObject)
+        {
+            var userID = _userManager.GetUserId(User);
+            var orderOperationsViewModel = new OrderOperationsViewModel();
+
+            orderOperationsViewModel.TempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
+
+            long lastParentRequestOrderNum = 0;
+            if (_parentRequestsProc.Read().Any())
+            {
+                lastParentRequestOrderNum = _parentRequestsProc.ReadWithIgnoreQueryFilters().OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber ?? 0;
+            }
+            ParentRequest pr = new ParentRequest()
+            {
+                ApplicationUserID = userID,
+                OrderNumber = lastParentRequestOrderNum + 1,
+                OrderDate = DateTime.Now
+            };
+            orderOperationsViewModel.TempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
+            orderOperationsViewModel.ParentRequest = pr;
+
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentRequest.ToString());
+            string uploadFolder2 = Path.Combine(uploadFolder1, requestIndexObject.GUID.ToString());
+            string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Orders.ToString());
+
+            await _tempRequestJsonsProc.UpdateAsync(requestIndexObject.GUID, requestIndexObject, orderOperationsViewModel.TempRequestListViewModel, userID, true);
+
+            return Json(JsonConvert.SerializeObject(orderOperationsViewModel, Formatting.Indented, new JsonSerializerSettings
+            {
+
+                Converters = new List<JsonConverter> { new StringEnumConverter() },
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
+        }
+
 
 
         [HttpGet]
@@ -4999,7 +5036,7 @@ namespace PrototypeWithAuth.Controllers
             var json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
               new JsonSerializerSettings
               {
-                  Converters= new List<JsonConverter> { new StringEnumConverter() },
+                  Converters = new List<JsonConverter> { new StringEnumConverter() },
                   ReferenceLoopHandling = ReferenceLoopHandling.Ignore
               });
             return Json(json);
@@ -5012,7 +5049,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> MoveToListModal(MoveListViewModel moveListViewModel)
         {
             var success = await _requestListRequestsProc.MoveList(moveListViewModel.Request.RequestID, moveListViewModel.NewListID, moveListViewModel.PreviousListID);
-            if(!success.Bool)
+            if (!success.Bool)
             {
                 Response.StatusCode = 500;
                 await Response.WriteAsync(success.String);
@@ -5033,7 +5070,7 @@ namespace PrototypeWithAuth.Controllers
             var json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
              new JsonSerializerSettings
              {
-                 Converters= new List<JsonConverter> { new StringEnumConverter() },
+                 Converters = new List<JsonConverter> { new StringEnumConverter() },
                  ReferenceLoopHandling = ReferenceLoopHandling.Ignore
              });
             return Json(json);
