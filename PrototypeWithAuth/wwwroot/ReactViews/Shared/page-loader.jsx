@@ -21,10 +21,10 @@ export default function PageLoader(props) {
             case Routes.INDEX_TABLE_DATA:
                 return (<_IndexTableData key={"indexTableData"} viewModel={props.viewModel} pageNumber={props.pageNumber} />);
                 break;
-            case Route.SettingsInventory:
+            case Routes.SETTINGS_INVENTORY:
                 return (<SettingsInventory key={"settingsInventory"} viewModel={props.viewModel} showView={true} />);
                 break;
-            case Route.ORDER_TAB:
+            case Routes.ORDER_TAB:
                 return (<OrderTab key={"orderTab"} viewModel={props.viewModel} />);
                 break;
         }
