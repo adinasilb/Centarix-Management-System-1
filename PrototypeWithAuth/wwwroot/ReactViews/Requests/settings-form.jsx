@@ -19,12 +19,24 @@ const SettingsForm = (props) => {
 
     const [remove, setRemove] = useState({ key: false });
     //const [index, setIndex] = useState();
-    const [countDetailsCF, setCountDetailsCF] = useState([]);
-    const [customFieldsDetails, setCustomFieldsDetails] = useState([]);
+    const [countCF, setCountCF] = useState([]);
+    const [customFields, setCustomFields] = useState([]);
 
     var detailsCFStyle = {};
-    if (!(countDetailsCF.length >= 1)) {
+    var priceCFStyle = {};
+    var documentsCFStyle = {};
+    var receivedCFStyle = {};
+    if (!(customFields.some(item => item.dict.tabName == "details"))) {
         detailsCFStyle.display = 'none';
+    }
+    if (!(customFields.some(item => item.dict.tabName == "price"))) {
+        priceCFStyle.display = 'none';
+    }
+    if (!(customFields.some(item => item.dict.tabName == "documents"))) {
+        documentsCFStyle.display = 'none';
+    }
+    if (!(customFields.some(item => item.dict.tabName == "received"))) {
+        receivedCFStyle.display = 'none';
     }
 
 
@@ -87,40 +99,41 @@ const SettingsForm = (props) => {
     const methods = useForm({ mode: "onChange" });
 
 
-    var OpenNewCustomField = () => {
+    var OpenNewCustomField = (e) => {
+        var tabName = e.target.getAttribute('tabName');
+        console.log("tabName: " + tabName);
         console.log("open new custom field");
-        var newCount = countDetailsCF;
+        var newCount = countCF;
         var i = newCount.length > 0 ? newCount[newCount.length - 1] + 1 : 0;
-        console.log("i key: " + i);
         newCount.push(i);
-        setCountDetailsCF(newCount);
-        var customField = { dict: { key: newCount[i], number: i } };
+        setCountCF(newCount);
+        var index = newCount.indexOf(parseFloat(i));
+        var customField = { dict: { key: newCount[index], number: i, tabName: tabName } };
 
         /*array.push(customField);*/
-        var arr = [...customFieldsDetails];
+        var arr = [...customFields];
         arr.push(customField);
-        console.log("ARRAY:")
-        console.log(arr)
         //customFields = arr;
-        setCustomFieldsDetails(arr);
-        console.log("CUSTOM FIELD VIEW:")
+        setCustomFields(arr);
+        if (newCount[i] > highestDetailsCount) {
+            setHighestDetailsCount(newCount[i]);
+        }
     }
 
 
     var RemoveCustomField = (e) => {
         e.preventDefault();
-        //console.log(e);
-        var index = e.target.parentElement.attributes.number.value;
-        console.log("custom fields in remove:");
+        var place = e.target.parentElement.attributes.number.value;
+        var index = countCF.indexOf(parseFloat(place));
         //console.log(customFields);
 
-        var array = cloneDeep(customFieldsDetails);
+        var array = cloneDeep(customFields);
         array.splice(index, 1);
-        var count = countDetailsCF;
+        var count = countCF;
         count.splice(index, 1);
-        setCustomFieldsDetails(array);
+        setCustomFields(array);
         //customFields = array;
-        setCountDetailsCF(count);
+        setCountCF(count);
     }
 
 
@@ -233,17 +246,15 @@ const SettingsForm = (props) => {
                                                 <input className="form-control-plaintext border-bottom" value={Constant.DatePlaceholder} disabled />
                                             </div>
                                         </div>
-                                        <div className="" style={detailsCFStyle}>
+                                        <div className="mb-0" style={detailsCFStyle}>
                                             <BorderCF />
                                             <CustomFieldsHeader />
                                         </div>
                                         <div className="">
-                                            {/*<input type="button" onClick={this.AddCustomField} className={"custom-button custom-cancel text border-dark " + " details"}*/}
-                                            {/*    value="+ Add Custom Field" />*/}
-                                            {customFieldsDetails.map(cf => <CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField} />)}
-
+                                            {customFields.map(cf =>
+                                                cf.dict.tabName == "details" ? < CustomField key = { cf.dict.key } number = { cf.dict.number } CustomFieldData = { props.SettingsForm.CustomFieldData } RemoveCustomField = { RemoveCustomField } /> : ""
+                                            )}
                                             <CustomFieldButton tabName={"details"} clickhandler={OpenNewCustomField} />
-                                            {/*@{await Html.RenderPartialAsync("_AddCustomFields.cshtml", "details-form");}*/}
                                         </div>
                                         <div className="" style={detailsCFStyle}>
                                             <BorderCF />
@@ -418,23 +429,52 @@ const SettingsForm = (props) => {
                                             </div>
                                         </div>
 
-
-                                        <div className="custom-fields-price lab-man-form">
-                                            <div className="cf_header hidden">
-                                                {/*@{await Html.RenderPartialAsync("_CFHeader.cshtml"); }*/}
-                                            </div>
+                                        <div className="mb-0" style={priceCFStyle}>
+                                            <BorderCF />
+                                            <CustomFieldsHeader />
                                         </div>
-                                        <div className="cf_header hidden">
-                                            {/*@{await Html.RenderPartialAsync("_BorderCF.cshtml");}*/}
+                                        <div className="">
+                                            {/*<input type="button" onClick={this.AddCustomField} className={"custom-button custom-cancel text border-dark " + " details"}*/}
+                                            {/*    value="+ Add Custom Field" />*/}
+                                            {customFields.map(cf =>
+                                                cf.dict.tabName == "price" ? < CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField} /> : ""
+                                            )}
+                                            <CustomFieldButton tabName={"price"} clickhandler={OpenNewCustomField} />
+                                            {/*@{await Html.RenderPartialAsync("_AddCustomFields.cshtml", "details-form");}*/}
                                         </div>
-                                        <div className="add-custom-fields row">
+                                        <div className="" style={priceCFStyle}>
+                                            <BorderCF />
                                         </div>
                                     </div>
                                     <div id="documents" className="tab-pane fade in" value="1">
-                                        "Documents"
+                                        <div className="mb-0" style={documentsCFStyle}>
+                                            <BorderCF />
+                                            <CustomFieldsHeader />
+                                        </div>
+                                        <div className="">
+                                            {customFields.map(cf =>
+                                                cf.dict.tabName == "documents" ? < CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField} /> : ""
+                                            )}
+                                            <CustomFieldButton tabName={"documents"} clickhandler={OpenNewCustomField} />
+                                        </div>
+                                        <div className="" style={documentsCFStyle}>
+                                            <BorderCF />
+                                        </div>
                                 </div>
                                     <div id="received" className="tab-pane fade in" value="1">
-                                        "Received"
+                                        <div className="mb-0" style={receivedCFStyle}>
+                                            <BorderCF />
+                                            <CustomFieldsHeader />
+                                        </div>
+                                        <div className="">
+                                            {customFields.map(cf =>
+                                                cf.dict.tabName == "received" ? < CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField} /> : ""
+                                            )}
+                                            <CustomFieldButton tabName={"received"} clickhandler={OpenNewCustomField} />
+                                        </div>
+                                        <div className="" style={receivedCFStyle}>
+                                            <BorderCF />
+                                        </div>
                                 </div>
                                 </div>
                             </div>
@@ -510,21 +550,17 @@ function CustomField(props) {
 
 function BorderCF() {
     return (
-        <div class="row pb-5 mb-0">
-            <div class="col-12 thick-border-top ">
-            </div>
+        <div className="col-12 thick-border-top pb-5">
         </div>
     )
 }
 
 function CustomFieldsHeader() {
     return (
-        <div className="cf_header">
-            <div className="row under-row-margin">
-                <div className=" col-5 top-menu lab-man-color mb-2">
-                    Custom Fields
+        <div className="row under-row-margin">
+            <div className=" col-12 top-menu lab-man-color mb-2">
+                Custom Fields
                 </div>
-            </div>
         </div>
     )
 }
