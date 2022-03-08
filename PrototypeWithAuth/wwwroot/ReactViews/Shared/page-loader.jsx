@@ -39,7 +39,7 @@ export default function PageLoader(props) {
                 <Route exact path={props.match.url + Routes.SHARE} exact render={(props) => <ModalLoader  {...props} key={"modalloader"} modalKey={ModalKeys.SHARE} uid={props.location.key} />} />
                 <Route exact path={props.match.url + Routes.MOVE_TO_LIST} exact render={(props) => <ModalLoader   {...props} key={"modalloader"} modalKey={ModalKeys.MOVE_TO_LIST} uid={props.location.key}  />} />
                 <Route exact path={props.match.url + Routes.NEW_LIST} exact render={(props) => <ModalLoader   {...props} key={"modalloader"} modalKey={ModalKeys.NEW_LIST} uid={props.location.key} />} />
-                <Route exact path={props.match.url + Routes.ORDER_OPERATIONS_MODAL} exact render={(props) => <ModalLoader   {...props} key={"modalloader"} modalKey={ModalKeys.ORDER_OPERATIONS} uid={props.location.key} />} />
+                <Route exact path={props.match.url + Routes.ORDER_OPERATIONS_MODAL} exact render={(props) => <ModalLoader   {...props} key={"modalloader"} modalKey={ModalKeys.ORDER_OPERATIONS_MODAL} uid={props.location.key} />} />
             </Switch>
             </div>
 

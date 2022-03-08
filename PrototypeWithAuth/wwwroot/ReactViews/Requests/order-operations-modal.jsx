@@ -25,13 +25,20 @@ export default function OrderOperationsModal(props) {
 
     }, [ID]); 
 
-    var exchangeRate = viewModel?.TempRequestListViewModel?.TempRequestViewModel?.Request?.ExchangeRate;
+/*    var exchangeRate = viewModel?.TempRequestListViewModel?.TempRequestViewModel?.Request?.ExchangeRate;
     var costShekel = viewModel?.TempRequestListViewModel?.TempRequestViewModel?.Request?.Cost;
     var vatShekel = viewModel?.TempRequestListViewModel?.TempRequestViewModel?.Request?.VAT
     var totalShekel = costShekel + vatShekel;
     var costDollar = costShekel / exchangeRate;
     var vatDollar = vatShekel / exchangeRate;
-    var totalDollar = costDollar + vatDollar;
+    var totalDollar = costDollar + vatDollar;*/
+
+    var costShekel = 12;
+    var vatShekel = 12;
+    var totalShekel = 12;
+    var costDollar = 12;
+    var vatDollar = 12;
+    var totalDollar = 12;
 
     var onSubmit = (e) => {
         e.preventDefault();
@@ -67,59 +74,45 @@ export default function OrderOperationsModal(props) {
                     <div className="row">
                         <div className="col-3 input-group">
                             <label className="control-label" style={{ fontWeight: "500" }}>Sum</label>
-                            <span class="input-group-text disabled-text">&#x20aa;</span>
+                            <span className="input-group-text disabled-text">&#x20aa;</span>
                             <input className="form-control-plaintext border-bottom" value={costShekel} disabled />
                         </div>
                         <div className="col-3 input-group">
-                            <span class="input-group-text disabled-text">&#36;</span>
+                            <span className="input-group-text disabled-text">&#36;</span>
                             <input className="form-control-plaintext border-bottom" value={costDollar} disabled />
                         </div>
                         <div className="col-3 input-group">
                             <label className="control-label" style={{ fontWeight: "500" }}>VAT</label>
-                            <span class="input-group-text disabled-text">&#x20aa;</span>
+                            <span className="input-group-text disabled-text">&#x20aa;</span>
                             <input className="form-control-plaintext border-bottom" value={vatShekel} disabled />
                         </div>
                         <div className="col-3 input-group">
-                            <span class="input-group-text disabled-text">&#36;</span>
+                            <span className="input-group-text disabled-text">&#36;</span>
                             <input className="form-control-plaintext border-bottom" value={vatDollar} disabled />
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-3 input-group">
                             <label className="control-label" style={{ fontWeight: "500" }}>Total+VAT</label>
-                            <span class="input-group-text disabled-text">&#x20aa;</span>
+                            <span className="input-group-text disabled-text">&#x20aa;</span>
                             <input className="form-control-plaintext border-bottom" value={totalShekel} disabled />
                         </div>
                         <div className="col-3 input-group">
-                            <span class="input-group-text disabled">&#36;</span>
+                            <span className="input-group-text disabled">&#36;</span>
                             <input className="form-control-plaintext border-bottom" value={totalDollar} disabled />
                         </div>
                     </div>
+                   
                     <div className="row">
                         <div className="col-3 input-group">
                             <button className="custom-button custom-button-font section-bg-color">Select Order</button>
                         </div>
                         <div className="col-3 order-file section-filter">
-                        </div>
-                        <div className="col-3 input-group">
-                            <label className="control-label" style={{ fontWeight: "500" }}>Supplier Order Number</label>
-                            <input className="form-control-plaintext border-bottom" name="ParentRequest.SupplierOrderNumber" id="ParentRequest_SupplierOrderNumber"/>
-                        </div>
-                        <div className="col-3 input-group">
-                            <label className="control-label" style={{ fontWeight: "500" }}>Order Date</label>
-                            <input className="form-control-plaintext border-bottom" name="ParentRequest.OrderDate" id="ParentReqeust_OrderDate"/>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-3 input-group">
-                            <button className="custom-button custom-button-font section-bg-color">Select Order</button>
-                        </div>
-                        <div className="col-3 order-file section-filter">
-                            <a href="\@Model.FileStrings[i]" target="_blank" class="mx-3  view-img d-none" disabled>
-                                <i class="icon-centarix-icons-09 section-filter " style="font-size:2rem"></i>
+                            <a href="\@Model.FileStrings[i]" target="_blank" className="mx-3  view-img d-none" disabled>
+                                <i className="icon-centarix-icons-09 section-filter " style={{fontSize: "2rem"}}></i>
                             </a>
-                            <a href="" class="d-none delete-document delete-file-perm @deleteDocumentClass @Model.SectionType.ToString() mx-3" disabled>
-                                <i style="font-size:2rem;" class="icon-delete-24px documents-delete-icon hover-bold @colorToUse"></i>
+                            <a href="" className="d-none delete-document delete-file-perm @deleteDocumentClass @Model.SectionType.ToString() mx-3" disabled>
+                                <i style={{ fontSize: "2rem" }} className="icon-delete-24px documents-delete-icon hover-bold @colorToUse"></i>
                             </a>
                         </div>
                         <div className="col-3 input-group">

@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { Route, Switch, MemoryRouter, Router, Link } from 'react-router-dom';
+import { Route, Switch, MemoryRouter, Router, useHistory, Link } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore, } from 'redux';
 //import * as ModalKeys from '../Constants/ModalKeys.jsx'
@@ -10,7 +10,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import * as Routes from '../Constants/Routes.jsx'
 
 export default function OrderTab(props) {
-
+    const history = useHistory();
         return (
             <div>
                 <div className="row">
@@ -46,13 +46,13 @@ export default function OrderTab(props) {
                             <span className="small-text">Update the purchase of an item</span>
                         </div>
                         <div className="col-5">
-                            <button className="text w-100 float-right section-custom-input" >Already Purchased
+                            
                                 <Link to={{
-                                    pathname: Routes.ORDER_OPERATIONS_MODAL,
+                                    pathname: history.location.pathname + Routes.ORDER_OPERATIONS_MODAL,
                                     state: { ID: 2 }
-                                }} >
+                                }} >Already Purchased
                                 </Link>
-                            </button>
+                           
                         </div>
                     </div>
                 </div>

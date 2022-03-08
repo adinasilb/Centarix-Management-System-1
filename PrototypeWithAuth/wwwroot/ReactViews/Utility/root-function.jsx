@@ -114,12 +114,12 @@ export var bindSelectedFilters = (className) => {
     var searchText = document.querySelector('.search-by-name')?.value;
     console.log(searchText);
     //console.log('searchtext length before if' + searchText.length)
-    if (searchText == undefined || !searchText.length) {
+    if (searchText == undefined || !searchText?.length) {
         searchText = document.querySelector('.popover .search-by-name-in-filter')?.value;
         console.log(searchText)
-        if (searchText == undefined || !searchText.length) {
+        if (searchText == undefined || !searchText?.length) {
             searchText = document.querySelector('.search-by-name-in-filter')?.value;
-            if (searchText == undefined || !searchText.length) {
+            if (searchText == undefined || !searchText?.length) {
                 searchText = "";
             }
         }
@@ -181,7 +181,7 @@ export var addObjectToFormdata = (formdata, object) => {
         selectedPriceSort += "&SelectedPriceSort=" + e.getAttribute("enum");
     })
     var requestStatusId = document.getElementsByClassName("request-status-id")[0]?.value;
-     var queryString = "PageNumber=" + document.getElementsByClassName('page-number')[0]?.value + "&RequestStatusID=" + requestStatusId + "&PageType=" + document.getElementById('masterPageType')?.value + "&SectionType=" + document.getElementById('masterSectionType')?.value + "&SidebarType=" + document.getElementById('masterSidebarType')?.value + "&SelectedCurrency=" + document.getElementById('tempCurrency')?.value + "&SidebarFilterID=" + document.getElementsByClassName('sideBarFilterID')[0]?.value + "&CategorySelected=" + (document.querySelector('#categorySortContent .select-category:checked')?.length > 0) + "&SubCategorySelected=" + (document.querySelector('#categorySortContent .select-subcategory:checked').length > 0) + "&ListID=" + document.getElementById("ListID")?.value+"&TabName=" + document.getElementById("TabName")?.value;
+     var queryString = "PageNumber=" + document.getElementsByClassName('page-number')[0]?.value + "&RequestStatusID=" + requestStatusId + "&PageType=" + document.getElementById('masterPageType')?.value + "&SectionType=" + document.getElementById('masterSectionType')?.value + "&SidebarType=" + document.getElementById('masterSidebarType')?.value + "&SelectedCurrency=" + document.getElementById('tempCurrency')?.value + "&SidebarFilterID=" + document.getElementsByClassName('sideBarFilterID')[0]?.value + "&CategorySelected=" + (document.querySelector('#categorySortContent .select-category:checked')?.length > 0) + "&SubCategorySelected=" + (document.querySelector('#categorySortContent .select-subcategory:checked')?.length > 0) + "&ListID=" + document.getElementById("ListID")?.value+"&TabName=" + document.getElementById("TabName")?.value;
     queryString += selectedPriceSort;
     return queryString;
 }
