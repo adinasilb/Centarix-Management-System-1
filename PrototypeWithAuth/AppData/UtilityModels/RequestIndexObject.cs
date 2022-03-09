@@ -110,6 +110,7 @@ namespace PrototypeWithAuth.AppData
         public AppUtility.OrderMethod OrderMethod { get; set; }
         public bool CategorySelected { get; set; }
         public bool SubcategorySelected { get; set; }
+        public bool SourceSelected { get; set; }
         public bool IsReorder { get; set; }
         public bool IsArchive { get; set; }
         public Guid GUID { get; set; } //THIS IS ONLY FOR PASSING BETWEEN CONTROLLERS ---> NOT FOR USE IN REMEMBERING DATA/REFERENCING ETC.

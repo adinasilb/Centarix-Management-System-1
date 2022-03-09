@@ -1,4 +1,4 @@
-﻿import { MDBInput } from 'mdbreact';
+﻿
 import * as Actions from '../ReduxRelatedUtils/actions.jsx';
 
 export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{

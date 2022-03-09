@@ -625,7 +625,7 @@ namespace PrototypeWithAuth.AppData
             }
         }
 
-        public static List<StringWithBool> GetCategoryColumn(bool categorySelected, bool subcategorySelected, Product p)
+        public static List<StringWithBool> GetCategoryColumn(bool categorySelected, bool subcategorySelected, Product p, bool sourceSelected = false)
         {
             try
             {
@@ -633,6 +633,7 @@ namespace PrototypeWithAuth.AppData
                 List<StringWithBool> categoryColumn = new List<StringWithBool>();
                 var category = p.ProductSubcategory.ParentCategory.Description;
                 var subcategory = p.ProductSubcategory.Description;
+                var source = p.ProductSubcategory.ParentCategory.CategoryType.CategoryTypeDescription;
                 if (categorySelected)
                 {
                     categoryColumn.Add(new StringWithBool { String = category, Bool = false });
@@ -640,6 +641,10 @@ namespace PrototypeWithAuth.AppData
                 if (subcategorySelected)
                 {
                     categoryColumn.Add(new StringWithBool { String = subcategory, Bool = false });
+                }
+                if (subcategorySelected)
+                {
+                    categoryColumn.Add(new StringWithBool { String = source, Bool = false });
                 }
                 return categoryColumn;
             }

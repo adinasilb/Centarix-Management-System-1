@@ -103,14 +103,13 @@
         @if (Model.ModalType.Equals(AppUtility.RequestModalType.Create))
         {
                 <div id="order" class="tab-pane fade order-tab @showOrder" value="7">
-                    @Html.React("RootComponent", new { viewModel = Model, viewEnum = "/OrderTab" })
-       
+                    @Html.React("RootComponent", new { viewModel = Model, viewEnum = "/OrderTab" })       
                 </div>
         }
     </div>
 </div>
-    @Html.ReactGetScriptPaths()
-    @Html.ReactInitJavaScript()
+@Html.ReactGetScriptPaths()
+@Html.ReactInitJavaScript()
 <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
 <script src="~/js/site.js"></script>

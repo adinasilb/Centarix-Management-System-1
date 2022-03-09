@@ -860,7 +860,7 @@ namespace PrototypeWithAuth.Controllers
                                   }
                               ).ToList()
             };
-            shareModalViewModel.ApplicationUsers.Insert(0, new SelectListItem() { Selected = true, Disabled = true, Text = "Select User" });
+       //     shareModalViewModel.ApplicationUsers.Insert(0, new SelectListItem() { Selected = true, Disabled = true, Text = "Select User" });
 
             return shareModalViewModel;
         }
@@ -1066,7 +1066,8 @@ namespace PrototypeWithAuth.Controllers
                 SelectedCategoryOption = new List<bool>()
                 {
                     requestIndexObject.CategorySelected,
-                    requestIndexObject.SubcategorySelected
+                    requestIndexObject.SubcategorySelected,
+                    requestIndexObject.SourceSelected
                 }
             };
             requestIndexViewModel.PageNumber = requestIndexObject.PageNumber;
