@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { Route, Switch, MemoryRouter, Router } from 'react-router-dom';
+import { Route, Switch, MemoryRouter, Router, useHistory, Link } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore, } from 'redux';
 //import * as ModalKeys from '../Constants/ModalKeys.jsx'
@@ -7,9 +7,10 @@ import { createStore, } from 'redux';
 //import ModalLoader from './modal-loader.jsx';
 import reducer from '../ReduxRelatedUtils/reducers.jsx';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import * as Routes from '../Constants/Routes.jsx'
 
 export default function OrderTab(props) {
-
+    const history = useHistory();
         return (
             <div>
                 <div className="row">
@@ -23,14 +24,9 @@ export default function OrderTab(props) {
                             <span className="small-text">If you want to process a single order immediately</span>
                         </div>
                         <div className="col-5">
-                            <Link className="p-0 @colorClass text w-100 custom-button create-modal-submit submitOrder" to={{
-                                pathname: "/OrderOperationsModalJson",
-                                state: { ID: 2 }
-                            }} >
-                            </Link>
                             <button type="submit" name="OrderMethod" value="OrderNow"
-                                className="text w-100 @colorClass custom-button float-right submitOrder">
-                Order Now /* figure out how to use get enum display name func here...
+                                className="text w-100 float-right section-custom-input">
+                                Order Now {/* figure out how to use get enum display name func here...*/}
                             </button>
                         </div>
                     </div>
@@ -40,7 +36,7 @@ export default function OrderTab(props) {
                         </div>
                         <div className="col-5">
                             <button type="submit" name="OrderMethod" value="AddToCart"
-                                className="text w-100 @colorClass custom-button float-right submitOrder ">
+                                className="text w-100  float-right section-custom-input">
                                 Add To Cart
                             </button>
                         </div>
@@ -50,15 +46,13 @@ export default function OrderTab(props) {
                             <span className="small-text">Update the purchase of an item</span>
                         </div>
                         <div className="col-5">
-                            <button type="submit" name="OrderMethod" value="AlreadyPurchased"
-                                className="p-0 @colorClass text w-100 custom-button create-modal-submit submitOrder">
-                                Already Purchased
-                            </button>
-                            <Link className="p-0 @colorClass text w-100 custom-button create-modal-submit submitOrder" to={{
-                                pathname: "/OrderOperationsModalJson",
-                                state: { ID: 2 }
-                            }} >
-                            </Link>
+                            
+                                <Link to={{
+                                    pathname: history.location.pathname + Routes.ORDER_OPERATIONS_MODAL,
+                                    state: { ID: 2 }
+                                }} >Already Purchased
+                                </Link>
+                           
                         </div>
                     </div>
                 </div>

@@ -105,9 +105,8 @@
             if(Model.SectionType == AppUtility.MenuItems.Operations)
             {
                 <div id="order" class="tab-pane fade order-tab @showOrder" value="7">
-@Html.React("RootComponent", new { viewModel = Model, viewEnum = "/OrderTab" })
-                    @Html.ReactGetScriptPaths()
-                    @Html.ReactInitJavaScript()
+                    @Html.React("RootComponent", new { viewModel = Model, viewEnum = "/OrderTab" })
+       
                 </div>
             }
             else
@@ -119,6 +118,8 @@
         }
     </div>
 </div>
+    @Html.ReactGetScriptPaths()
+    @Html.ReactInitJavaScript()
 <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
 <script src="~/js/site.js"></script>

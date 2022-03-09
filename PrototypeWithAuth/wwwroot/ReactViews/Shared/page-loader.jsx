@@ -21,10 +21,10 @@ export default function PageLoader(props) {
             case Routes.INDEX_TABLE_DATA:
                 return (<_IndexTableData key={"indexTableData"} viewModel={props.viewModel} pageNumber={props.pageNumber} />);
                 break;
-            case Route.SettingsInventory:
+            case Routes.SETTINGS_INVENTORY:
                 return (<SettingsInventory key={"settingsInventory"} viewModel={props.viewModel} showView={true} />);
                 break;
-            case Route.ORDER_TAB:
+            case Routes.ORDER_TAB:
                 return (<OrderTab key={"orderTab"} viewModel={props.viewModel} />);
                 break;
         }
@@ -39,7 +39,7 @@ export default function PageLoader(props) {
                 <Route exact path={props.match.url + Routes.SHARE} exact render={(props) => <ModalLoader  {...props} key={"modalloader"} modalKey={ModalKeys.SHARE} uid={props.location.key} />} />
                 <Route exact path={props.match.url + Routes.MOVE_TO_LIST} exact render={(props) => <ModalLoader   {...props} key={"modalloader"} modalKey={ModalKeys.MOVE_TO_LIST} uid={props.location.key}  />} />
                 <Route exact path={props.match.url + Routes.NEW_LIST} exact render={(props) => <ModalLoader   {...props} key={"modalloader"} modalKey={ModalKeys.NEW_LIST} uid={props.location.key} />} />
-                <Route exact path={props.match.url + Routes.ORDER_OPERATIONS_MODAL} exact render={(props) => <ModalLoader   {...props} key={"modalloader"} modalKey={ModalKeys.ORDER_OPERATIONS} uid={props.location.key} />} />
+                <Route exact path={props.match.url + Routes.ORDER_OPERATIONS_MODAL} exact render={(props) => <ModalLoader   {...props} key={"modalloader"} modalKey={ModalKeys.ORDER_OPERATIONS_MODAL} uid={props.location.key} />} />
             </Switch>
             </div>
 

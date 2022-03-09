@@ -5,6 +5,7 @@ import DeleteModal from '../Requests/delete-modal.jsx';
 import ShareModal from '../Requests/share-modal.jsx';
 /*import DocumentsModal from '../Shared/documents-modal.jsx';*/
 import DeleteDocumentModal from '../Shared/delete-document-modal.jsx';
+import OrderOperationsModal from '../Requests/order-operations-modal.jsx';
 import * as Actions from '../ReduxRelatedUtils/actions.jsx'
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import * as Routes from '../Constants/Routes.jsx'
@@ -48,7 +49,7 @@ function ModalLoader(props) {
             case ModalKeys.DELETE_DOCUMENTS:
                 modalsComponents.push(<DeleteDocumentModal backdrop={backdrop} key={props.modals[i]} modalKey={props.modals[i]} />)
                 break;
-            case ModalKeys.ORDER_OPERATIONS:
+            case ModalKeys.ORDER_OPERATIONS_MODAL:
                 modalsComponents.push(<OrderOperationsModal backdrop={backdrop} key={props.modals[i]} modalKey={props.modals[i]} />)
         }
     }
