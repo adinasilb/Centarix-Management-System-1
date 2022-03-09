@@ -1066,7 +1066,8 @@ namespace PrototypeWithAuth.Controllers
                 SelectedCategoryOption = new List<bool>()
                 {
                     requestIndexObject.CategorySelected,
-                    requestIndexObject.SubcategorySelected
+                    requestIndexObject.SubcategorySelected,
+                    requestIndexObject.SourceSelected
                 }
             };
             requestIndexViewModel.PageNumber = requestIndexObject.PageNumber;
