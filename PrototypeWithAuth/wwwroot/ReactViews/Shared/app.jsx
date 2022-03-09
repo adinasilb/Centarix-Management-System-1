@@ -22,6 +22,8 @@ export default function App(props) {
                 <Route path={Routes.INDEX_TABLE_DATA} render={(props) => <PageLoader {...props} viewModel={props.viewModel} pageNumber={location.state?.pageNumber ?? "1"} viewEnum={view} />} />
                 <Route path={Routes.INDEX_TABLE_DATA_BY_VENDOR} render={(props) => <PageLoader {...props} viewModel={props.viewModel} viewEnum={view} />} />
                 <Route path={Routes.SETTINGS_INVENTORY} render={(props) => <PageLoader {...props} viewModel={props.viewModel} viewEnum={props.viewEnum} />} />
+                <Route path={Routes.ORDER_TAB} render={(props) => <PageLoader  {...props} viewModel={props.viewModel} viewEnum={view} />} />
+
             </Switch>
 
         </div>
