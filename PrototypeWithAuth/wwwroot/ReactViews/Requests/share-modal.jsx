@@ -5,7 +5,8 @@ import { ajaxPartialIndexTable, getRequestIndexString } from '../Utility/root-fu
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import GlobalModal from '../Utility/global-modal.jsx';
 
-import { MDBSelect, MDBSelectInput, MDBSelectOptions, MDBSelectOption, MDBContainer } from 'mdbreact';
+
+import { MDBSelect } from 'mdbreact';
 
 
 
@@ -42,6 +43,8 @@ export default function ShareModal(props) {
                 document.getElementById("loading").style.display = "none";                
 
             }).catch(jqxhr => {
+                dispatch(Actions.removeModals(modals));
+                document.getElementById("loading").style.display = "none";
                 document.querySelectorAll('.error-message').forEach(e => e.classList.add("d-none"));
                 document.querySelector('.error-message').innerHTML = jqxhr;
                 document.querySelector('.error-message').classList.remove("d-none");
@@ -51,13 +54,16 @@ export default function ShareModal(props) {
     return (
         <GlobalModal backdrop={props.backdrop} size="" value={state.viewModel?.ID} modalKey={props.modalKey} key={state.viewModel?.ID} header={"Share " + state.viewModel?.ObjectDescription + " With"} >
             
-            <form action="" method="post" className="sharemodal" encType="multipart/form-data" onSubmit={onSubmit} id="myForm">
-                <input type="hidden" id="ID" name="ID" value={state.viewModel?.ID??""} />
+            <form action="" method="post" className="sharemodal" encType="multipart/form-data" onSubmit={onSubmit} id={props.modalKey }>
+                <input type="hidden" id="ID" name="ID" value={state.viewModel?.ID ?? ""} />
                 <div className="contaner-fluid p-0">
                     <div className="row ">
                         <div className="col-10 offset-1">
-                            <MDBSelect options={state.viewModel?.ApplicationUsers.map((u) => ({ value: u.Value, text: u.Text }))} className="" name="ApplicationUserIDs" id="ApplicationUserIDs" selectAll multiple >
-                            </MDBSelect>
+                            <MDBSelect  options={state.viewModel?.ApplicationUsers?.map((u) => (
+                                { text: u.Text, value: u.Value}
+                            )) ?? []}  name="ApplicationUserIDs" id="ApplicationUserIDs" multiple/>
+                                      
+                  
         
                         </div>
                     </div>

@@ -44,12 +44,13 @@ module.exports = {
 				}
 				]
 			},
-				// {
-					// test: /\.scss$/,
-					// use: ['style-loader',  'sass-loader'],
-				// },
+				 {
+					test: /\.scss$/,
+					use: ['style-loader',  'sass-loader'],
+				 },
 		],
 	},
+
 	plugins: [
 
 		new ManifestPlugin({
