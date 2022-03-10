@@ -96,38 +96,6 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-
-        [HttpGet]
-        [HttpPost]
-        [Authorize(Roles = "Requests, Operations")]
-        public async Task<IActionResult> IndexInventory(RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel)
-        {
-            if (await base.IsAuthorizedAsync(requestIndexObject.SectionType))
-            {
-
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
-
-                var viewmodel = await base.GetIndexViewModel(requestIndexObject, requestsSearchViewModel: requestsSearchViewModel);
-                //  SetViewModelProprietaryCounts(requestIndexObject, viewmodel);
-                //viewmodel.InventoryFilterViewModel = GetInventoryFilterViewModel();
-
-                if (ViewBag.ErrorMessage != null)
-                {
-                    ViewBag.ErrorMessage = ViewBag.ErrorMessage;
-                }
-
-                return View(viewmodel);
-            }
-            else
-            {
-                return Redirect(base.AccessDeniedPath);
-            }
-        }
-
-
-
         [Authorize(Roles = "Requests, LabManagement, Operations")]
         private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject, NotificationFilterViewModel notificationFilterViewModel = null)
         {
@@ -422,71 +390,20 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            RequestIndexPartialViewModel viewModel = await GetSharedRequestIndexObjectAsync();
-            return PartialView(viewModel);
-        }
-
-        [Authorize(Roles = "Requests")]
-        public async Task<RequestIndexPartialViewModel> GetSharedRequestIndexObjectAsync()
-        {
-
             RequestIndexObject requestIndexObject = new RequestIndexObject()
             {
                 PageType = AppUtility.PageTypeEnum.RequestCart,
                 SidebarType = AppUtility.SidebarEnum.SharedRequests
             };
             RequestIndexPartialViewModel viewModel = await base.GetIndexViewModel(requestIndexObject);
-            return viewModel;
+            return PartialView(viewModel);
         }
 
-        [Authorize(Roles = "Requests")]
-        public async Task<RequestListIndexViewModel> GetRequestListIndexObjectAsync(RequestIndexObject requestIndexObject)
-        {
-            var userLists = _requestListsProc.Read(new List<Expression<Func<RequestList, bool>>> { l => l.ApplicationUserOwnerID == _userManager.GetUserId(User) }).OrderBy(l => l.DateCreated).ToList();
-
-            if (userLists.Count == 0)
-            {
-                RequestList requestList = await _requestListsProc.CreateAndGetDefaultListAsync(_userManager.GetUserId(User));
-                requestIndexObject.ListID = requestList.ListID;
-                userLists.Add(requestList);
-            }
-
-            if (requestIndexObject.ListID == 0)
-            {
-                requestIndexObject.ListID = userLists.Where(l => l.IsDefault).FirstOrDefault().ListID;
-            }
-            RequestIndexPartialViewModel requestIndexViewModel = await base.GetIndexViewModel(requestIndexObject);
-            RequestListIndexViewModel viewModel = new RequestListIndexViewModel
-            {
-                RequestIndexPartialViewModel = requestIndexViewModel,
-                ListID = requestIndexObject.ListID,
-                Lists = userLists,
-                SidebarType = AppUtility.SidebarEnum.MyLists
-            };
-            return viewModel;
-        }
+ 
 
 
 
-        [Authorize(Roles = "Requests")]
-        public async Task<RequestListIndexViewModel> GetSharedRequestListIndexObjectAsync(RequestIndexObject requestIndexObject)
-        {
-            var userLists = _shareRequestListsProc.Read(new List<Expression<Func<ShareRequestList, bool>>> { l => l.ToApplicationUserID == _userManager.GetUserId(User) }, new List<ComplexIncludes<ShareRequestList, ModelBase>> { new ComplexIncludes<ShareRequestList, ModelBase> { Include = l => l.RequestList } }).OrderBy(l => l.TimeStamp).Select(l => l.RequestList).ToList();
-            if (userLists.Count > 0 && requestIndexObject.ListID == 0)
-            {
-                requestIndexObject.ListID = userLists.FirstOrDefault().ListID;
-            }
-            RequestIndexPartialViewModel requestIndexViewModel = await base.GetIndexViewModel(requestIndexObject);
-            RequestListIndexViewModel viewModel = new RequestListIndexViewModel
-            {
-                RequestIndexPartialViewModel = requestIndexViewModel,
-                ListID = requestIndexObject.ListID,
-                Lists = userLists,
-                SidebarType = AppUtility.SidebarEnum.SharedLists
-            };
-
-            return viewModel;
-        }
+      
 
         [Authorize(Roles = "Requests,Operations")]
         public async Task<RedirectToActionResult> SaveAddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderMethod OrderMethod, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
@@ -576,7 +493,7 @@ namespace PrototypeWithAuth.Controllers
                 //Response.WriteAsync(ex.Message?.ToString());
                 if (requestItemViewModel.RequestStatusID == 7)
                 {
-                    return RedirectToAction("IndexInventory", new { ErrorMessage = AppUtility.GetExceptionMessage(ex) });
+                    return RedirectToAction("Index", new { ErrorMessage = AppUtility.GetExceptionMessage(ex) });
                 }
                 /* return new RedirectToActionResult(actionName: "_OrderTab", controllerName: "Requests", routeValues: requestItemViewModel );*/
 
@@ -602,7 +519,7 @@ namespace PrototypeWithAuth.Controllers
                         await _tempRequestJsonsProc.RemoveAllAsync(requestItemViewModel.TempRequestListViewModel.GUID, _userManager.GetUserId(User));
                         if (requestItemViewModel.PageType == AppUtility.PageTypeEnum.RequestSummary)
                         {
-                            return new RedirectToActionResult("IndexInventory", "Requests", new
+                            return new RedirectToActionResult("Index", "Requests", new
                             {
                                 PageType = requestItemViewModel.PageType,
                                 SectionType = requestItemViewModel.SectionType,
@@ -1444,73 +1361,7 @@ namespace PrototypeWithAuth.Controllers
             return View(viewModel);
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> IndexShared()
-        {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SharedRequests;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            //RequestIndexObject requestIndexObject = new RequestIndexObject()
-            //{
-            //    PageType = AppUtility.PageTypeEnum.RequestCart,
-            //    SidebarType = AppUtility.SidebarEnum.SharedRequests
-            //};
-            RequestIndexPartialViewModel viewModel = await GetSharedRequestIndexObjectAsync();
-            return View(viewModel);
-        }
 
-        [HttpGet]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> IndexLists()
-        {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.MyLists;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            RequestIndexObject requestIndexObject = new RequestIndexObject()
-            {
-                PageType = AppUtility.PageTypeEnum.RequestCart,
-                SidebarType = AppUtility.SidebarEnum.MyLists
-            };
-
-            RequestListIndexViewModel viewModel = await GetRequestListIndexObjectAsync(requestIndexObject);
-            return View(viewModel);
-        }
-        [HttpGet]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> IndexSharedLists()
-        {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SharedLists;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            RequestIndexObject requestIndexObject = new RequestIndexObject()
-            {
-                PageType = AppUtility.PageTypeEnum.RequestCart,
-                SidebarType = AppUtility.SidebarEnum.SharedLists
-            };
-
-            RequestListIndexViewModel viewModel = await GetSharedRequestListIndexObjectAsync(requestIndexObject);
-            return View(viewModel);
-        }
-        [HttpGet]
-        [HttpPost]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTableWithListTabs(RequestIndexObject requestIndexObject, String errorMessage)
-        {
-            RequestListIndexViewModel viewModel = new RequestListIndexViewModel();
-            if (requestIndexObject.SidebarType == AppUtility.SidebarEnum.MyLists)
-            {
-                viewModel = await GetRequestListIndexObjectAsync(requestIndexObject);
-            }
-            else
-            {
-                viewModel = await GetSharedRequestListIndexObjectAsync(requestIndexObject);
-            }
-            viewModel.ErrorMessage = errorMessage;
-            return PartialView(viewModel);
-        }
-
-        [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ItemTableType(RequestIndexObject requestIndexObject)
         {

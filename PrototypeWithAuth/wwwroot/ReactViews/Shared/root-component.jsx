@@ -6,7 +6,7 @@ import { MemoryRouter} from 'react-router-dom';
 import reducer from '../ReduxRelatedUtils/reducers.jsx';
 
 export default function RootComponent(props) {
-    const store = createStore(reducer, { viewModel: props.viewModel, modals: [] }, composeWithDevTools());
+    const store = createStore(reducer, { viewModel: props.viewModel, modals: [], selectedTab: props.viewModel.TabName }, composeWithDevTools());
     const Scripts = lazy(() => import('../scripts.jsx'));  
     const App = lazy(() => import('./app.jsx'));
 

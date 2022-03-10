@@ -1284,21 +1284,21 @@ a.nav-link {
     border-bottom: 4px solid var(--expense-color);
 }
 
-.new-oper-button:hover {
+.Operations .new-button:hover {
     color: var(--operations-color);
 }
 
-.new-oper-button.active {
+.Operations .new-button.active {
     color: var(--operations-color) !important;
     border-bottom: 4px solid var(--operations-color);
 }
 
-.new-protocols-button.active {
+ .Protocols .new-button.active {
     color: var(--protocol-color) !important;
     border-bottom: 4px solid var(--protocol-color);
 }
 
-.new-protocols-button:hover {
+.Protocols .new-button:hover {
     color: var(--protocol-color);
 }
 

@@ -2,6 +2,7 @@
 
 import { Route, Switch, MemoryRouter } from 'react-router-dom';
 import _IndexTableData from '../Requests/index-table-data.jsx';
+import _IndexTableTabs from '../Requests/index-table-data.jsx';
 import _IndexTableDataByVendor from '../Requests/index-table-data-by-vendor.jsx';
 import SettingsInventory from "../Requests/settings-inventory.jsx";
 import OrderTab from "../Shared/order-tab.jsx"
@@ -20,6 +21,9 @@ export default function PageLoader(props) {
                 break;
             case Routes.INDEX_TABLE_DATA:
                 return (<_IndexTableData key={"indexTableData"} viewModel={props.viewModel} pageNumber={props.pageNumber} />);
+                break;
+            case Routes.INDEX_TABLE_TABS:
+                return (<_IndexTableTabs key={"indexTableTabs"} pageNumber={props.pageNumber}  />);
                 break;
             case Routes.SETTINGS_INVENTORY:
                 return (<SettingsInventory key={"settingsInventory"} viewModel={props.viewModel} showView={true} />);
