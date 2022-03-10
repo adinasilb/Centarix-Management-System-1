@@ -216,7 +216,10 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.PageTypeEnum.AccountingNotifications:
                     wheres.Add(r => r.RequestStatusID != 7);
                     includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest });
-                    if (notificationFilterViewModel == null)
+                    includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Payment)p).Invoice } });
+                    includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((ProductSubcategory)p).ParentCategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = pc => ((ParentCategory)pc).CategoryType } } });
+
+            if (notificationFilterViewModel == null)
                     {
                         notificationFilterViewModel = new NotificationFilterViewModel() { Vendors = _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Select(v => v.CategoryTypeID).Contains(1) }).ToList() };
                     }
@@ -4029,12 +4032,12 @@ namespace PrototypeWithAuth.Controllers
 
             var includes = new List<ComplexIncludes<Request, ModelBase>> {
                     new ComplexIncludes<Request, ModelBase> { Include = r => r.Product, ThenInclude= new ComplexIncludes<ModelBase, ModelBase> { Include =p => ((Product)p).Vendor } },
-                    new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude= new ComplexIncludes<ModelBase, ModelBase> { Include =p => ((ProductSubcategory)p).ParentCategory } },
+                    new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude= new ComplexIncludes<ModelBase, ModelBase> { Include =p => ((ProductSubcategory)p).ParentCategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = pc=> ((ParentCategory)pc).CategoryType } } },
                     new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.UnitType },
                     new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubUnitType },
                     new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubSubUnitType },
                     new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest },
-                    new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments } };
+                    new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments, ThenInclude= new ComplexIncludes<ModelBase, ModelBase> { Include =p => ((Payment)p).Invoice } } };
             wheres.Add(r => r.RequestStatusID != 7 && r.Payments.Where(p => !p.IsPaid).Count() > 0);
             var requestPaymentList = new List<RequestPaymentsViewModel>();
             Func<Payment, bool> paymentWheres;

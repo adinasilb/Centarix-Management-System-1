@@ -1001,10 +1001,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.AccountingGeneral)
             {
-                //ignore all the wheres got so far HERE it used to take from context so i reinstantiated the wheres list
-
-
-                ///REMEMBER TO IGNORE QUERY FILTERS
+                 ///REMEMBER TO IGNORE QUERY FILTERS
                 wheres.Clear();
                 //we need both categories
                 wheres.Add(r => r.RequestStatusID == 3);
@@ -1014,6 +1011,8 @@ namespace PrototypeWithAuth.Controllers
                 {
                     wheres.Add(r => Months.Contains(r.ParentRequest.OrderDate.Month));
                 }
+                includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Payment)p).Invoice } });
+                includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((ProductSubcategory)p).ParentCategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = pc => ((ParentCategory)pc).CategoryType } } });
             }
             else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart && requestIndexObject.SidebarType == AppUtility.SidebarEnum.Favorites)
             {
