@@ -1529,7 +1529,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Requests[0].IncludeVAT = true;
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.SectionType = SectionType;
-            requestItemViewModel.GUID = Guid.NewGuid();
+            
             TempRequestListViewModel tempRequestListViewModel = new TempRequestListViewModel()
             {
                 GUID = Guid.NewGuid(),
@@ -4296,7 +4296,8 @@ namespace PrototypeWithAuth.Controllers
                 {
                     ParentFolderName = AppUtility.ParentFolderName.ParentQuote,
                     FolderName = AppUtility.FolderNamesEnum.Quotes,
-                    Icon = "icon-centarix-icons-03"
+                    Icon = "icon-centarix-icons-03",
+                    ObjectID = id
                 }
             };
 
@@ -4341,9 +4342,9 @@ namespace PrototypeWithAuth.Controllers
             }
 
             //create new sequence
-           // await _tempRequestJsonsProc.UpdateAsync(uploadQuoteViewModel.TempRequestListViewModel.GUID, requestIndexObject, uploadQuoteViewModel.TempRequestListViewModel, _userManager.GetUserId(User), true);
-
-            return PartialView(uploadQuoteViewModel);
+            // await _tempRequestJsonsProc.UpdateAsync(uploadQuoteViewModel.TempRequestListViewModel.GUID, requestIndexObject, uploadQuoteViewModel.TempRequestListViewModel, _userManager.GetUserId(User), true);
+            return EmptyResult();
+            //return PartialView(uploadQuoteViewModel);
         }
 
 
