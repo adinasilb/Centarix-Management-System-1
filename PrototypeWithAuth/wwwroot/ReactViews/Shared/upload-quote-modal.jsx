@@ -31,13 +31,13 @@ function UploadQuoteModal(props) {
         })
             .then((response) => { return response.json(); })
             .then(result => {
-                setViewModel(JSON.parse(result));
+                var updatedViewModel = JSON.parse(result);
+                setViewModel(updatedViewModel);
+                setTempRequestJson(updatedViewModel.TempRequestListViewModel)
             });
 
     }, [ID]);
 
-
-    var id = viewModel?.ObjectID == null ? "0" : viewModel.ObjectID;
 
     var onSubmit = (data, e) => {
         
@@ -73,7 +73,7 @@ function UploadQuoteModal(props) {
     return (
 
         <GlobalModal backdrop={props.backdrop} value={ID} modalKey={props.modalKey} key={ID} size="sm" header={viewModel.FolderName + " Files"}>
-            <form action="" data-string="" method="post" encType="multipart/form-data" className="m-5 modal-padding documentModalForm" onSubmit={handleSubmit(onSubmit)} id={props.modalKey}>
+            <form action="" data-string="" method="post" encType="multipart/form-data" className="m-5 modal-padding" onSubmit={handleSubmit(onSubmit)} id={props.modalKey}>
                 <input type="hidden" name="ParentQuote.ParentQuoteID" id="ParentQuote_ParentQuoteID" value={viewModel.ParentQuote.ParentQuoteID} />
                 <div className="container">
                     <div className="row">
@@ -128,10 +128,15 @@ function UploadQuoteModal(props) {
         </GlobalModal>
     );
 }
+const mapDispatchToProps = dispatch => (
+    {
+        setTempRequestJson: (tempRequestJson) => dispatch(Actions.setTempRequestJson(tempRequestJson))
+    }
+);
 
 const mapStateToProps = state => {
     return {
         tempRequestJson: state.tempRequestJson
     };
 };
-export default connect(mapStateToProps)(UploadQuoteModal);
+export default connect(mapStateToProps, mapDispatchToProps)(UploadQuoteModal);
