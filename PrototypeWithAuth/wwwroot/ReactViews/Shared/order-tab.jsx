@@ -12,20 +12,23 @@ import * as Routes from '../Constants/Routes.jsx'
 export default function OrderTab(props) {
     const history = useHistory();
     const [viewModel, setViewModel] = useState(props.viewModel)
-        return (
-            <div>
+    
+    return (
+
+        <div>
                 <div className="row">
                     <div className="col-12">
                         <span className="heading-1 modal-tab-name">Order</span>
                     </div>
                 </div>
-                <div className="form-group">
+            <div className="form-group">
                     <div className="row ">
                         <div className="col-7 align-vertical-middle-col">
                             <span className="small-text">If you want to process a single order immediately</span>
                         </div>
-                        <div className="col-5">
-                            <Link to={{
+                    <div className="col-5">
+                        {console.log("guid: " + viewModel.GUID)}
+                        <Link className="submitOrder" to={{
                                 pathname: history.location.pathname + Routes.UPLOAD_QUOTE,
                                 state: { ID: viewModel.GUID}
                             }} >Order Now
@@ -50,7 +53,7 @@ export default function OrderTab(props) {
                         <div className="col-5">
                             
                                 <Link to={{
-                                    pathname: history.location.pathname + Routes.ORDER_OPERATIONS_MODAL,
+                                    pathname: Routes.ORDER_OPERATIONS_MODAL,
                                     state: { ID: 2 }
                                 }} >Already Purchased
                                 </Link>

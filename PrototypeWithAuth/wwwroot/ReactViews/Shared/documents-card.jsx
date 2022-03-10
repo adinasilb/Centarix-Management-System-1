@@ -6,7 +6,7 @@ import 'regenerator-runtime/runtime'
 export default function DocumentsCard(props) {
 
     const [documentsInfo, setDocumentsInfo] = useState(props.documentsInfo);
-    var id = documentsInfo.ObjectID == null ? "0" : documentsInfo.ObjectID;
+    var id = documentsInfo?.ObjectID == null ? "0" : documentsInfo.ObjectID;
 
     async function uploadFile(e) {
         var response = await FileSelectChange(e.target, documentsInfo.FolderName, documentsInfo.ParentFolderName, id)

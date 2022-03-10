@@ -10,9 +10,8 @@ import 'react-multi-carousel/lib/styles.css';
 
 import 'regenerator-runtime/runtime'
 import * as Actions from '../ReduxRelatedUtils/actions.jsx';
-import { useDispatch,  } from 'react-redux';
+import { useDispatch, connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import DocumentsCard from './documents-card.jsx';
 
 
 function UploadQuoteModal(props) {
@@ -25,6 +24,7 @@ function UploadQuoteModal(props) {
     const [expectedSupplyDate, setExpectedSupplyDate] = useState(new Date())
 
     useEffect(() => {
+        console.log("ID " + ID)
         var url = "/Requests/UploadQuoteModal?id=" + ID;
         fetch(url, {
             method: "GET"
@@ -74,26 +74,28 @@ function UploadQuoteModal(props) {
 
         <GlobalModal backdrop={props.backdrop} value={ID} modalKey={props.modalKey} key={ID} size="sm" header={viewModel.FolderName + " Files"}>
             <form action="" data-string="" method="post" encType="multipart/form-data" className="m-5 modal-padding" onSubmit={handleSubmit(onSubmit)} id={props.modalKey}>
-                <input type="hidden" name="ParentQuote.ParentQuoteID" id="ParentQuote_ParentQuoteID" value={viewModel.ParentQuote.ParentQuoteID} />
+                <input type="hidden" name="ParentQuote.ParentQuoteID" id="ParentQuote_ParentQuoteID" defaultValue={viewModel.ParentQuote?.ParentQuoteID} />
                 <div className="container">
                     <div className="row">
                         <div className=" col-4 doc-card-outer-div m-0 text-center h-100">
-                            <DocumentsCard documentsInfo={viewModel?.DocumentsCardViewModel} modalType={'Summary'} />
+                            {viewModel.DocumentsCardViewModel &&
+                                <DocumentsCard documentsInfo={viewModel.DocumentsCardViewModel} modalType={'Summary'} />
+                            }
                         </div>
                         <div className="col-4 pl-5 pt-4">
                             <div className="row">
 
                                 <div className=" col-md-6">
                                     <div className="form-group ">
-                                        <label className=" control-label m-0 mt-2" style="width:100%;">Quote Number</label>
-                                        <input id="ParentQuote.QuoteNumber" name="ParentQuote_QuoteNumber" value={viewModel.ParentQuote.QuoteNumber} className="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" {...register("quoteNumber", { required: true })} />
+                                        <label className=" control-label m-0 mt-2" style={{ width: "100%" }}>Quote Number</label>
+                                        <input id="ParentQuote.QuoteNumber" name="ParentQuote_QuoteNumber" defaultValue={viewModel.ParentQuote?.QuoteNumber} className="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" {...register("quoteNumber", { required: true })} />
                                         {errors.quoteNumber && <span>This field is required</span>}
 
                                     </div>
                                 </div>
                                 <div className="col-md-6">
-                                    <label className=" control-label m-0 mt-2" style="width:100%;">Quote Date</label>
-                                    <input id="ParentQuote.ExpirationDate" name="ParentQuote_ExpirationDate" value={viewModel.ParentQuote.QuoteDate} type="text" className="datepicker form-control-plaintext border-bottom p-0 m-0" {...register("quoteDate", { required: true })} />
+                                    <label className=" control-label m-0 mt-2" style={{ width: "100%" }}>Quote Date</label>
+                                    <input id="ParentQuote.ExpirationDate" name="ParentQuote_ExpirationDate" defaultValue={viewModel.ParentQuote?.QuoteDate} type="text" className="datepicker form-control-plaintext border-bottom p-0 m-0" {...register("quoteDate", { required: true })} />
                                     {errors.quoteDate && <span>This field is required</span>}
 
                                 </div>
@@ -103,21 +105,21 @@ function UploadQuoteModal(props) {
                     </div>
                     <div className="row ">
                         <div className=" offset-4 text-center">
-                            <input type="button" className="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-4 pl-4 text-capitalize change-quote" value="Change Quote" />
+                            <input type="button" className="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-4 pl-4 text-capitalize change-quote" defaultValue="Change Quote" />
                         </div>
                         <div className=" col-6 pl-5 ">
                             <div className="row">
                                 <div className=" col-4 ">
                                     <div className="form-group ">
-                                        <label className=" control-label m-0 mt-2" style="width:100%;"></label>
-                                        <input id="ExpectedSupplyDays" name="ExpectedSupplyDays" value={viewModel.ExpectedSupplyDays} onChange={ updateExpectedSupplyDate } className="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0 expected-supply-days" min="1" />
+                                        <label className=" control-label m-0 mt-2"></label>
+                                        <input id="ExpectedSupplyDays" name="ExpectedSupplyDays" defaultValue={viewModel.ExpectedSupplyDays} onChange={ updateExpectedSupplyDate } className="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0 expected-supply-days" min="1" />
                                     </div>
                                 </div>
 
                                 <div className=" col-6">
                                     <div className="form-group">
                                         <label className="control-label">Expected supply date</label>
-                                        <input value={expectedSupplyDate} className="form-control-plaintext border-bottom datepicker expected-supply-date" type="text"  />
+                                        <input defaultValue={expectedSupplyDate} className="form-control-plaintext border-bottom datepicker expected-supply-date" type="text"  />
                                     </div>
                                 </div>
                             </div>
