@@ -14,6 +14,7 @@ export default function App(props) {
     return (
 
         <div>
+            
             {console.log("app view Model")}
             {console.log(props.viewModel)}
             <FloatingActionBar showFloatingActionBar={false} />

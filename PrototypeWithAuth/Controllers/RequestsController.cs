@@ -1675,7 +1675,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Requests[0].IncludeVAT = true;
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.SectionType = SectionType;
-            requestItemViewModel.GUID = Guid.NewGuid();
+            
             TempRequestListViewModel tempRequestListViewModel = new TempRequestListViewModel()
             {
                 GUID = Guid.NewGuid(),

@@ -27,10 +27,9 @@ export default function OrderTab(props) {
                             <span className="small-text">If you want to process a single order immediately</span>
                         </div>
                     <div className="col-5">
-                        {console.log("guid: " + viewModel.GUID)}
                         <Link className="submitOrder" to={{
                                 pathname: history.location.pathname + Routes.UPLOAD_QUOTE,
-                                state: { ID: viewModel.GUID}
+                            state: { ID: viewModel.TempRequestListViewModel.GUID}
                             }} >Order Now
                             </Link>
                         </div>
