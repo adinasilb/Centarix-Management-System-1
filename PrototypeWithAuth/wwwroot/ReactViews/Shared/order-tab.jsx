@@ -11,6 +11,7 @@ import * as Routes from '../Constants/Routes.jsx'
 
 export default function OrderTab(props) {
     const history = useHistory();
+    const [viewModel, setViewModel] = useState(props.viewModel)
         return (
             <div>
                 <div className="row">
@@ -24,10 +25,11 @@ export default function OrderTab(props) {
                             <span className="small-text">If you want to process a single order immediately</span>
                         </div>
                         <div className="col-5">
-                            <button type="submit" name="OrderMethod" value="OrderNow"
-                                className="text w-100 float-right section-custom-input">
-                                Order Now {/* figure out how to use get enum display name func here...*/}
-                            </button>
+                            <Link to={{
+                                pathname: history.location.pathname + Routes.UPLOAD_QUOTE,
+                                state: { ID: viewModel.GUID}
+                            }} >Order Now
+                            </Link>
                         </div>
                     </div>
                     <div className="row ">

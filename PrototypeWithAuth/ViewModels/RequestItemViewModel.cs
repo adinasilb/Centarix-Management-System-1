@@ -95,5 +95,6 @@ namespace PrototypeWithAuth.ViewModels
         public bool AdditionalRequests { get; set; }
 
         public List<UploadDocumentInfoViewModel> UploadDocuments { get; set; }
+        public Guid GUID { get; set; }
     }
 }
