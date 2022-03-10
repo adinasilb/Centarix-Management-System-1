@@ -487,18 +487,17 @@ namespace PrototypeWithAuth.ViewModels
             var orderTypeColumn =  new List<StringWithBool>();
             try
             {
-                string orderType;
                 if (r.PaymentStatusID == 7)
                 {
-                    orderType = "standing order";
+                    orderTypeColumn.Add(new StringWithBool { String = "standing order" });
                 } 
                 else if (r.Product is RecurringOrder) 
                 {
-                    orderType = "recurring order";
+                    orderTypeColumn.Add(new StringWithBool { String = "recurring order" });
                 } 
                 else if (r.PaymentStatusID == 5)
                 {
-                    orderType = "installments";
+                    orderTypeColumn.Add(new StringWithBool { String = "installments" });
                     try
                     {
                         orderTypeColumn.Add(new StringWithBool { String = payments.FirstOrDefault().InstallmentNumber + " / " + r.Installments });
@@ -510,9 +509,8 @@ namespace PrototypeWithAuth.ViewModels
                 }
                 else
                 {
-                    orderType = "single order";
+                    orderTypeColumn.Add(new StringWithBool { String = "single order" });
                 }
-                orderTypeColumn.Add(new StringWithBool { String = orderType });
             }
             catch (Exception ex)
             {
@@ -522,11 +520,12 @@ namespace PrototypeWithAuth.ViewModels
         }
         private List<StringWithBool> GetInvoiceColumn()
         {
+            var payment = payments ?? r.Payments;
             var invoiceColumn = new List<StringWithBool>();
             try
             {
-                invoiceColumn.Add(new StringWithBool { String = payments.FirstOrDefault().Invoice.InvoiceNumber });
-                invoiceColumn.Add(new StringWithBool { String = payments.FirstOrDefault().Invoice.InvoiceDate.GetElixirDateFormat() });
+                invoiceColumn.Add(new StringWithBool { String = "# " + payment.FirstOrDefault().Invoice.InvoiceNumber });
+                invoiceColumn.Add(new StringWithBool { String = payment.FirstOrDefault().Invoice.InvoiceDate.GetElixirDateFormat() });
             }
             catch(Exception ex)
             {

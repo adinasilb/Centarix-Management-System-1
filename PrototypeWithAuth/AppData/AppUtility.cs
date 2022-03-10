@@ -631,20 +631,21 @@ namespace PrototypeWithAuth.AppData
             {
 
                 List<StringWithBool> categoryColumn = new List<StringWithBool>();
-                var category = p.ProductSubcategory.ParentCategory.Description;
-                var subcategory = p.ProductSubcategory.Description;
-                var source = p.ProductSubcategory.ParentCategory.CategoryType.CategoryTypeDescription;
+                                
+                if (sourceSelected)
+                {
+                    var source = p.ProductSubcategory.ParentCategory.CategoryType.CategoryTypeDescription;
+                    categoryColumn.Add(new StringWithBool { String = source, Bool = false });
+                }
                 if (categorySelected)
                 {
+                    var category = p.ProductSubcategory.ParentCategory.Description;
                     categoryColumn.Add(new StringWithBool { String = category, Bool = false });
                 }
                 if (subcategorySelected)
                 {
+                    var subcategory = p.ProductSubcategory.Description;
                     categoryColumn.Add(new StringWithBool { String = subcategory, Bool = false });
-                }
-                if (subcategorySelected)
-                {
-                    categoryColumn.Add(new StringWithBool { String = source, Bool = false });
                 }
                 return categoryColumn;
             }
