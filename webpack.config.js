@@ -2,7 +2,7 @@
 const ManifestPlugin = require('webpack-manifest-plugin');
 
 module.exports = {
-	entry: './PrototypeWithAuth/wwwroot/ReactViews/expose-components.js',
+	entry:  './PrototypeWithAuth/wwwroot/ReactViews/expose-components.js',
 	output: {
 		filename: '[name].js',
 		globalObject: 'this',
@@ -35,19 +35,25 @@ module.exports = {
 			{
   				test: /\.css$/,
 				use:[
-				{ loader: 'style-loader', options: {  }},
+					{ loader: 'style-loader', options: {} },
+
 				{
 					loader:'css-loader',
 					options: {
-							url: false,
+							//url: false,
 					}
-				}
+					},
+
 				]
 			},
 				 {
 					test: /\.scss$/,
 					use: ['style-loader',  'sass-loader'],
-				 },
+			},
+			{
+				test: /.(png|woff(2)?|eot|ttf|svg|gif)/,
+				loader: "url-loader?limit=100000",
+			},
 		],
 	},
 
