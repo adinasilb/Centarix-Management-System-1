@@ -1,18 +1,32 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { Route, Switch, MemoryRouter, Router, useHistory, Link } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { createStore, } from 'redux';
-//import * as ModalKeys from '../Constants/ModalKeys.jsx'
-//import * as Routes from '../Constants/Routes.jsx'
-//import ModalLoader from './modal-loader.jsx';
+import { Provider, connect } from 'react-redux';
+import { createStore } from 'redux';
+import * as Actions from '../ReduxRelatedUtils/actions.jsx'
 import reducer from '../ReduxRelatedUtils/reducers.jsx';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import * as Routes from '../Constants/Routes.jsx'
 
-export default function OrderTab(props) {
+function OrderTab(props) {
     const history = useHistory();
     const [viewModel, setViewModel] = useState(props.viewModel)
-    
+
+    function submitOrder(orderMethod) {
+        console.log("submit order from _ordertab");
+        document.getElementById("loading").style.display = "block";
+        console.log("orderMethod " + orderMethod)
+        var formData = new FormData(document.getElementById("myForm"))
+        fetch("/Requests/AddItemView?OrderMethod=" + orderMethod,
+            {
+                method: "POST",
+                body: formData
+            }
+        )
+            .then(response => response.json())
+            .then(result => props.setTempRequestJson(JSON.parse(result)))
+        document.getElementById("loading").style.display = "none";
+    }
+
     return (
 
         <div>
@@ -27,9 +41,9 @@ export default function OrderTab(props) {
                             <span className="small-text">If you want to process a single order immediately</span>
                         </div>
                     <div className="col-5">
-                        <Link className="submitOrder" to={{
+                        <Link onClick={()=>submitOrder("OrderNow")} to={{
                                 pathname: history.location.pathname + Routes.UPLOAD_QUOTE,
-                            state: { ID: viewModel.TempRequestListViewModel.GUID}
+                            state: { ID: viewModel.GUID}
                             }} >Order Now
                             </Link>
                         </div>
@@ -64,3 +78,16 @@ export default function OrderTab(props) {
             </div>
         )
 }
+
+const mapDispatchToProps = dispatch => (
+    {
+        setTempRequestJson: (tempRequestJson) => dispatch(Actions.setTempRequestJson(tempRequestJson))
+    }
+);
+
+const mapStateToProps = state => {
+    return {
+        tempRequestJson: state.tempRequestJson.present
+    };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(OrderTab);
