@@ -74,6 +74,7 @@ namespace PrototypeWithAuth.CRUD
                             throw new Exception("Something went wrong while updating shipping paid - "+AppUtility.GetExceptionMessage(ex));
                         }
                     }
+                    
                     //var paymentsList =Read(new List<Expression<Func<Payment, bool>>> { p => p.IsPaid == false }).AsEnumerable();
                     foreach (Payment payment in paymentsPayModalViewModel.Payments)
                     {

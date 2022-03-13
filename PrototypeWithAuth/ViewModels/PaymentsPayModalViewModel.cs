@@ -18,6 +18,8 @@ namespace PrototypeWithAuth.ViewModels
         public List<PaymentType> PaymentTypes { get; set; }
         public List<CheckboxViewModel> ShippingToPay { get; set; }
         public StringWithBool Error { get; set; }
-
+        public bool PartialPayment { get; set; }
+        public decimal PartialAmtToPay { get; set; }
+        public decimal PercentageToPay { get; set; }
     }
 }
