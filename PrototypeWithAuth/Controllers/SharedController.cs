@@ -980,15 +980,19 @@ namespace PrototypeWithAuth.Controllers
                     wheres.Add(r => r.Product is RecurringOrder);
                     wheres.Add(r => r.RequestStatusID == 2);
                 }
-                else
+                else if (requestIndexObject.TabName == AppUtility.IndexTabs.Ordered)
                 {
-                    wheres.Add(r => r.RequestStatusID == requestIndexObject.RequestStatusID);
+                    wheres.Add(r => r.RequestStatusID == 2);
+                }
+                else if (requestIndexObject.TabName == AppUtility.IndexTabs.Received)
+                {
+                    wheres.Add(r => r.RequestStatusID == 3);
                 }
 
             }
             else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary || requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsInventory)
             {
-                if (requestIndexObject.RequestStatusID == 7)
+                if (requestIndexObject.TabName == AppUtility.IndexTabs.Samples)
                 {
                     wheres.Add(r => r.RequestStatus.RequestStatusID == 7);
                 }
@@ -1127,7 +1131,7 @@ namespace PrototypeWithAuth.Controllers
         private async Task<List<IndexTab>> GetTabsAsync(RequestIndexObject requestIndexObject)
         {
             List<IndexTab> tabs = null;
-            if (requestIndexObject.PageType==AppUtility.PageTypeEnum.RequestInventory)
+            if (requestIndexObject.PageType==AppUtility.PageTypeEnum.RequestSummary)
             {
                 tabs= new List<IndexTab> {
                    new IndexTab{ TabName = AppUtility.IndexTabs.Main.ToString(), TabValue=AppUtility.IndexTabs.Main.ToString() } ,

@@ -25,7 +25,7 @@ const reducer = (state, action) => {
             break;
         case ActionKeys.REMOVE_MODALS:
             var newState = state.modals;
-            action.payload.map(item => {
+            action.payload?.map(item => {
                 newState = newState.filter(m => m != item)
             })
             console.log("remove modals" + newState)

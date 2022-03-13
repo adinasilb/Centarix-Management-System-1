@@ -176,7 +176,6 @@ namespace PrototypeWithAuth
                 config.SetLoadBabel(true)
                   .SetLoadReact(false)               
                   .SetReactAppBuildPath("~/dist");
-                config.UseServerSideRendering = false;
                 config.JsonSerializerSettings = new JsonSerializerSettings { 
                     Converters= new List<JsonConverter> { new StringEnumConverter() },
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore

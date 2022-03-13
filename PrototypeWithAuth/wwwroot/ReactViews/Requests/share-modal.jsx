@@ -5,8 +5,8 @@ import { ajaxPartialIndexTable, getRequestIndexString } from '../Utility/root-fu
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import GlobalModal from '../Utility/global-modal.jsx';
 
-
-import { MDBSelect } from 'mdbreact';
+import { Select } from '@mui/material'
+//import { MDBSelect } from 'mdbreact';
 
 
 
@@ -63,7 +63,18 @@ export default function ShareModal(props) {
                                 { text: u.Text, value: u.Value}
                             )) ?? []}  name="ApplicationUserIDs" id="ApplicationUserIDs" multiple/>
                                       
-                  
+                            <Select                   
+                                name="ApplicationUserIDs" id="ApplicationUserIDs"
+                                multiple
+                                value=""
+                                label="Select User">{
+                                    state.viewModel?.ApplicationUsers?.map((u) => (
+                                        <MenuItem key={u.Value} value={u.Value}>
+                                            <Checkbox />
+                                            <ListItemText primary={u.Text} />
+                                        </MenuItem>
+                                    ))}
+                            </Select>
         
                         </div>
                     </div>
