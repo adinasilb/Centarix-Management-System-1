@@ -11,7 +11,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 
 export default function DocumentsRootComponent(props) {
-    const store = createStore(reducer, { viewModel: props.viewModel, modals: [] }, composeWithDevTools());
+    const store = createStore(reducer, { viewModel: props.viewModel, modals: [], tempRequestJson: {} }, composeWithDevTools());
     const App = lazy(() => import('./document-app.jsx'));
       
    

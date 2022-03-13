@@ -1632,6 +1632,36 @@ $(function () {
         $.fn.CallPageRequest($itemurl, "delete");
     })
 
+    $(".submitOrder").off("click").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("submit order from _ordertab");
+        //alert("validate form");
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+
+        $(".submitOrder").prop('disabled', true)
+        if (!valid) {
+
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
+            }
+
+        }
+        else {
+            $('.activeSubmit').removeClass('disabled-submit')
+            $("#loading").show();
+            var orderMethod = $(this).attr("id");
+            console.log("orderMethod " + orderMethod)
+            if ($(this).hasClass('additional-requests')) {
+                $("#AdditionalRequests").val(true)
+            }
+            $.fn.SubmitOrderFromAddItemView(orderMethod);
+        }
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,.location-error:hidden, input:visible, textarea:visible)';
+    });
+
 });
 
 

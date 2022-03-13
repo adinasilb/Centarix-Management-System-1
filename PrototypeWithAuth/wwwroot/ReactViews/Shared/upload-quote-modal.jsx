@@ -33,7 +33,7 @@ function UploadQuoteModal(props) {
             .then(result => {
                 var updatedViewModel = JSON.parse(result);
                 setViewModel(updatedViewModel);
-                setTempRequestJson(updatedViewModel.TempRequestListViewModel)
+                //setTempRequestJson(updatedViewModel.TempRequestListViewModel)
             });
 
     }, [ID]);
@@ -47,7 +47,7 @@ function UploadQuoteModal(props) {
             newTempRequestJson.Request.ParentQuote = formData.get("ParentQuote")
             newTempRequestJson.Request.ParentQuoteID = formData.get("ParentQuoteID")
             newTempRequestJson.Request.QuoteStatusID = '4'
-            dispatch(Actions.setTempRequestJson(newTempRequestJson))
+           props.setTempRequestJson(newTempRequestJson)
         }
         else {
             var url = "/Requests/UploadQuoteModal";
@@ -72,7 +72,7 @@ function UploadQuoteModal(props) {
 
     return (
 
-        <GlobalModal backdrop={props.backdrop} value={ID} modalKey={props.modalKey} key={ID} size="sm" header={viewModel.FolderName + " Files"}>
+        <GlobalModal backdrop={props.backdrop} value={ID} modalKey={props.modalKey} key={ID} size="sm" header="Upload Quote">
             <form action="" data-string="" method="post" encType="multipart/form-data" className="m-5 modal-padding" onSubmit={handleSubmit(onSubmit)} id={props.modalKey}>
                 <input type="hidden" name="ParentQuote.ParentQuoteID" id="ParentQuote_ParentQuoteID" defaultValue={viewModel.ParentQuote?.ParentQuoteID} />
                 <div className="container">
