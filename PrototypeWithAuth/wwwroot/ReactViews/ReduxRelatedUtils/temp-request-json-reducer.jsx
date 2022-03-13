@@ -6,15 +6,12 @@ const tempRequestJsonReducer = (state = [], action, ...slices) => {
     switch (action.type) {
         case ActionKeys.SET_TEMP_REQUEST_JSON:
             console.log("set temp request Json")
-            return {
-                ...state,
-                tempRequestJson: action.payload
-            };
+            console.log(action.payload)
+            return action.payload;
             break;
         default:
-            return {
-                ...state
-            }
+            console.log("return default")
+            return state;
     }
 };
 
