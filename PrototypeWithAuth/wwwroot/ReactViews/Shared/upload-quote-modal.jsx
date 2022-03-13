@@ -72,7 +72,7 @@ function UploadQuoteModal(props) {
 
     return (
 
-        <GlobalModal backdrop={props.backdrop} value={ID} modalKey={props.modalKey} key={ID} size="sm" header="Upload Quote">
+        <GlobalModal backdrop={props.backdrop} value={ID} modalKey={props.modalKey} key={ID} size="md" header="Upload Quote">
             <form action="" data-string="" method="post" encType="multipart/form-data" className="m-5 modal-padding" onSubmit={handleSubmit(onSubmit)} id={props.modalKey}>
                 <input type="hidden" name="ParentQuote.ParentQuoteID" id="ParentQuote_ParentQuoteID" defaultValue={viewModel.ParentQuote?.ParentQuoteID} />
                 <div className="container">
