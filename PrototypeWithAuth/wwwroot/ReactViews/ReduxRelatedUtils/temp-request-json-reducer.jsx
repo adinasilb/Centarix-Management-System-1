@@ -1,7 +1,7 @@
 ﻿import * as ActionKeys from './actions.jsx'
 import undoable from 'redux-undo'
 
-const tempRequestJsonReducer = (state = [], action) => {
+const tempRequestJsonReducer = (state = [], action, ...slices) => {
 
     switch (action.type) {
         case ActionKeys.SET_TEMP_REQUEST_JSON:
@@ -12,7 +12,9 @@ const tempRequestJsonReducer = (state = [], action) => {
             };
             break;
         default:
-            return state;
+            return {
+                ...state
+            }
     }
 };
 
