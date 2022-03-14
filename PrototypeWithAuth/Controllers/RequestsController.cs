@@ -4172,7 +4172,7 @@ namespace PrototypeWithAuth.Controllers
                 Payments = payments,
                 //Requests = requestsToPay,
                 AccountingEnum = accountingPaymentsEnum,
-                Payment = new Payment(),
+                Payment = payments.FirstOrDefault(), //so if has payment details, will show up
                 PaymentTypes = _paymentTypesProc.Read().Select(pt => pt).ToList(),
                 CompanyAccounts = _companyAccountsProc.Read().Select(ca => ca).ToList(),
                 ShippingToPay = await GetShippingsToPay(payments),
