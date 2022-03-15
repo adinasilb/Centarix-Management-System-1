@@ -30,9 +30,9 @@
                     <input type="text" readonly id="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" name="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" class="@containsFile"
                            style="pointer-events:none; background:none; border:none;" />
                 </div>
-                <div class="doc-card @Model.DocumentsCardViewModel.DocumentInfo.FolderName">
+                <div class="doc-card @Model.DocumentsInfo.FolderName">
                     @{
-                        await Html.RenderPartialAsync("_DocumentsCard", Model.DocumentsCardViewModel);
+                        await Html.RenderPartialAsync("_DocumentsCard", Model.DocumentsInfo);
                     }
                 </div>
             </div>

@@ -495,6 +495,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<TempRequestListViewModel> SaveAddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderMethod OrderMethod, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             var trlvm = new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() };
+            trlvm.GUID = requestItemViewModel.TempRequestListViewModel.GUID;
             try
             {
                 switch (requestItemViewModel.OrderType)
@@ -3489,13 +3490,13 @@ namespace PrototypeWithAuth.Controllers
         [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
         public async Task<IActionResult> DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
         {
-            base.DocumentsModal(documentsModalViewModel);
+            //base.DocumentsModal(documentsModalViewModel);
             return RedirectToAction("_DocumentsCard", new { requestFolderNameEnum = documentsModalViewModel.FolderName, id= documentsModalViewModel.ObjectID, parentFolderName = documentsModalViewModel.ParentFolderName});
         }
 
 
         [HttpGet]
-        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.FolderNamesEnum RequestFolderNameEnum, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests)
+        public ActionResult DeleteDocumentModal(String FileString, string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests)
         {
 
             //if (!AppUtility.IsAjaxRequest(Request))
@@ -4440,15 +4441,12 @@ namespace PrototypeWithAuth.Controllers
             
 
             var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now } };
-            uploadQuoteViewModel.DocumentsCardViewModel = new DocumentsCardViewModel()
-            {
-                DocumentInfo = new DocumentFolder()
+            uploadQuoteViewModel.DocumentsInfo = new DocumentFolder()
                 {
                     ParentFolderName = AppUtility.ParentFolderName.ParentQuote,
                     FolderName = AppUtility.FolderNamesEnum.Quotes,
                     Icon = "icon-centarix-icons-03",
                     ObjectID = id
-                }
             };
 
             if (requests != null)
@@ -4474,17 +4472,15 @@ namespace PrototypeWithAuth.Controllers
                                 string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
                                 fileStrings.Add(newFileString);
                             }
-                            uploadQuoteViewModel.DocumentsCardViewModel.DocumentInfo.FileStrings = fileStrings;
-                            uploadQuoteViewModel.DocumentsCardViewModel.ModalType = AppUtility.RequestModalType.Summary;
+                            uploadQuoteViewModel.DocumentsInfo.FileStrings = fileStrings;
                         }
-                        uploadQuoteViewModel.DocumentsCardViewModel.DocumentInfo.ObjectID = oldQuote.ParentQuoteID.ToString();
+                        uploadQuoteViewModel.DocumentsInfo.ObjectID = oldQuote.ParentQuoteID.ToString();
 
                     }
                     else
                     {
                         oldQuote = new ParentQuote() { ExpirationDate = DateTime.Now };
-                        uploadQuoteViewModel.DocumentsCardViewModel.DocumentInfo.ObjectID = id.ToString();
-                        uploadQuoteViewModel.DocumentsCardViewModel.ModalType = AppUtility.RequestModalType.Edit;
+                        uploadQuoteViewModel.DocumentsInfo.ObjectID = id.ToString();
                     }
                     uploadQuoteViewModel.ParentQuote = oldQuote;
 
@@ -4503,52 +4499,50 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
+
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _UploadQuoteModal(Guid guid)
+        public async Task<IActionResult> ClearQuote(Guid guid)
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
                 return PartialView("InvalidLinkPage");
             }
             var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now } };
+            DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, guid);
 
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
-            string uploadFolder2 = Path.Combine(uploadFolder1, guid.ToString());
-            string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
+            //string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
+            //string uploadFolder2 = Path.Combine(uploadFolder1, guid.ToString());
+            //string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
 
-            var fileStrings = new List<String>();
-            if (Directory.Exists(uploadFolderQuotes))
-            {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
-                //searching for the partial file name in the directory
-                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                foreach (var orderfile in orderfilesfound)
-                {
-                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
-                    fileStrings.Add(newFileString);
-                }
-            }
-            uploadQuoteViewModel.DocumentsCardViewModel = new DocumentsCardViewModel()
-            {
-                SectionType = AppUtility.MenuItems.Requests,
-                DocumentInfo = new DocumentFolder()
+            //var fileStrings = new List<String>();
+            //if (Directory.Exists(uploadFolderQuotes))
+            //{
+            //    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
+            //    //searching for the partial file name in the directory
+            //    FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
+            //    foreach (var orderfile in orderfilesfound)
+            //    {
+            //        string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
+            //        fileStrings.Add(newFileString);
+            //    }
+            //}
+            uploadQuoteViewModel.DocumentsInfo = new DocumentFolder()
                 {
                     ParentFolderName = AppUtility.ParentFolderName.ParentQuote,
                     FolderName = AppUtility.FolderNamesEnum.Quotes,
                     Icon = "icon-centarix-icons-03",
-                    FileStrings = fileStrings,
                     ObjectID = guid.ToString()
-                },
-                ModalType = AppUtility.RequestModalType.Edit
-            };
-            uploadQuoteViewModel.TempRequestListViewModel = new TempRequestListViewModel()
-            {
-                GUID = guid
             };
 
 
-            return PartialView(uploadQuoteViewModel);
+            var json = JsonConvert.SerializeObject(uploadQuoteViewModel, Formatting.Indented,
+                   new JsonSerializerSettings
+                   {
+                       Converters = new List<JsonConverter> { new StringEnumConverter() },
+                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                   });
+            return Json(json);
         }
 
         [HttpPost]
@@ -4658,7 +4652,6 @@ namespace PrototypeWithAuth.Controllers
             catch (Exception ex)
             {
                 await _tempRequestJsonsProc.RollbackAsync(tempRequestListViewModel.GUID, tempRequestJson.SequencePosition);
-                uploadQuoteOrderViewModel.TempRequestListViewModel = tempRequestListViewModel;
                 uploadQuoteOrderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 return PartialView("_ErrorMessage", uploadQuoteOrderViewModel.ErrorMessage);
