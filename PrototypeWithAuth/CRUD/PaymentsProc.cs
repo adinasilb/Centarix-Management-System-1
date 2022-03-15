@@ -74,7 +74,9 @@ namespace PrototypeWithAuth.CRUD
                             throw new Exception("Something went wrong while updating shipping paid - "+AppUtility.GetExceptionMessage(ex));
                         }
                     }
+
                     //var paymentsList =Read(new List<Expression<Func<Payment, bool>>> { p => p.IsPaid == false }).AsEnumerable();
+                    var totalPaidSoFar = 0m;
                     foreach (Payment payment in paymentsPayModalViewModel.Payments)
                     {
                         //var requestToUpdate = await _requestsProc.ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == request.RequestID });
@@ -98,9 +100,9 @@ namespace PrototypeWithAuth.CRUD
                         //else
                         //{
                         //payment.Sum = request.Cost ?? 0;
-                        payment.PaymentDate = DateTime.Now.Date;
                         //payment.RequestID = request.RequestID;
                         //}
+                        payment.PaymentDate = DateTime.Now.Date;
                         payment.Reference = paymentsPayModalViewModel.Payment.Reference;
                         payment.CompanyAccountID = paymentsPayModalViewModel.Payment.CompanyAccountID;
                         payment.PaymentReferenceDate = paymentsPayModalViewModel.Payment.PaymentReferenceDate;
@@ -108,8 +110,27 @@ namespace PrototypeWithAuth.CRUD
                         payment.CreditCardID = paymentsPayModalViewModel.Payment.CreditCardID;
                         payment.CheckNumber = paymentsPayModalViewModel.Payment.CheckNumber;
                         payment.IsPaid = true;
-
-
+                        if(paymentsPayModalViewModel.PartialPayment == true)
+                        {
+                            var fullCost = payment.Sum;
+                            var paymentSum = fullCost * paymentsPayModalViewModel.PercentageToPay;
+                            payment.Sum = Math.Round(paymentSum, 2);
+                            totalPaidSoFar += payment.Sum;
+                            if(payment.PaymentID == paymentsPayModalViewModel.Payments.LastOrDefault().PaymentID)
+                            {
+                                var amtLeftToPay = paymentsPayModalViewModel.PartialAmtToPay - totalPaidSoFar; //if lost a cent or two by rounding, add it here
+                                payment.Sum += amtLeftToPay;
+                            }
+                            var newPayment = new Payment()
+                            {
+                                Sum = fullCost - paymentSum,
+                                PaymentDate = DateTime.Today,
+                                InstallmentNumber = 2, //what if already an installment?
+                                RequestID = payment.RequestID
+                            };
+                            _context.Add(newPayment);
+                            await _requestsProc.UpdatePaymentStatusAsync(AppUtility.PaymentsPopoverEnum.Installments, payment.RequestID);
+                        }
                         _context.Update(payment);
                     }
                     await _context.SaveChangesAsync();

@@ -3,6 +3,13 @@
 	"plugins": [
 		"@babel/proposal-object-rest-spread",
 		"@babel/plugin-syntax-dynamic-import",
-		"@babel/proposal-class-properties"
+		"@babel/proposal-class-properties",
+		[
+			"babel-plugin-direct-import",
+			{
+				"modules": [ "@mui/system", "@mui/material", "@mui/icons-material" ]
+			}
+		]
+	
 	]
 }

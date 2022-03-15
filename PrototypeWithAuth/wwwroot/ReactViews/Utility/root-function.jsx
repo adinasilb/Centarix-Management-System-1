@@ -68,18 +68,22 @@ export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
         //workaround for price radio button not coming in when switching from nothing is here tab
         var id = "nis";
         //alert($(id).prop('checked'))
-        if (document.getElementById('tempCurrency').value === "USD") {
+        if (document.getElementById('tempCurrency')?.value === "USD") {
             id = "usd";
         }
-        if (document.getElementById(id).getAttribute("checked") !== "checked") {
+        if (document.getElementById(id)?.getAttribute("checked") !== "checked") {
             console.log('checking button')
-            document.getElementById(id).setAttribute("checked", "checked");
+            document.getElementById(id)?.setAttribute("checked", "checked");
         }
 
         }).catch(jqxhr => {
             document.querySelectorAll('.error-message').forEach(e => e.classList.add("d-none"));
-            document.querySelector('.error-message').innerHTML = jqxhr;
-            document.querySelector('.error-message').classList.remove("d-none");
+            if (document.querySelector('.error-message') == null) {
+                console.log(jqxhr)
+            } else {
+                document.querySelector('.error-message').innerHTML = jqxhr;
+                document.querySelector('.error-message').classList.remove("d-none");
+            }
             document.getElementById("loading").style.display = "none";
             dispatch(Actions.removeModals(modals));
     });    
