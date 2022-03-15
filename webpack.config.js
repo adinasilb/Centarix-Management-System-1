@@ -27,11 +27,17 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.jsx?$/,
+				test: /\.(ts|js)x?$/,
 				exclude: /node_modules/,
 				loader: 'babel-loader',
+				options: {
+					presets: [
+						'@babel/preset-env',
+						['@babel/preset-react', { runtime: 'automatic' }],
+						'@babel/preset-typescript',
+					],
+				},
 			},
-				
 			{
   				test: /\.css$/,
 				use:[
@@ -40,7 +46,7 @@ module.exports = {
 				{
 					loader:'css-loader',
 					options: {
-							//url: false,
+						url: false,
 					}
 					},
 
@@ -51,10 +57,11 @@ module.exports = {
 					test: /\.scss$/,
 					use: ['style-loader',  'sass-loader'],
 			},
-			{
-				test: /.(png|woff(2)?|eot|ttf|svg|gif)/,
-				loader: "url-loader?limit=100000",
-			},
+			//{
+			//	test: /.(png|woff(2)?|eot|ttf|gif)/,
+			//	loader: "url-loader",
+			//},
+			
 		],
 	},
 
@@ -77,10 +84,13 @@ module.exports = {
 			},
 		}),
 	],
-	 resolve: {
+	resolve: {
+		modules: ['node_modules'],
 		 alias: {
 			 react: path.resolve('./node_modules/react'),
-			 'react-dom': path.resolve('./node_modules/react-dom'),
+			'react-dom': path.resolve('./node_modules/react-dom'),
+			"@mui/styles": path.resolve('./node_modules/@mui/styles'),
+			"@mui/material": path.resolve('./node_modules/@mui/material'),
 		},
 	}
 };

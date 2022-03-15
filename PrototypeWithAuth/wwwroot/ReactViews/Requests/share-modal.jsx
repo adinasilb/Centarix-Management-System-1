@@ -4,17 +4,14 @@ import { useDispatch } from 'react-redux';
 import { ajaxPartialIndexTable, getRequestIndexString } from '../Utility/root-function.jsx'
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import GlobalModal from '../Utility/global-modal.jsx';
-
-//import { Select } from '@mui/material'
-import { MDBSelect } from 'mdbreact';
-
-
+import { Select, MenuItem, ListItemText, Checkbox, FormControl, InputLabel , OutlinedInput} from '@mui/material';
+//import { MDBSelect } from 'mdbreact';
 
 export default function ShareModal(props) {
     const dispatch = useDispatch();
     const location = useLocation();
 
-    const [state, setState] = useState({ viewModel: null, requestID: location.state.ID, modelsEnum : location.state.modelsEnum });
+    const [state, setState] = useState({ viewModel: null, requestID: location.state.ID, modelsEnum : location.state.modelsEnum, users:[]});
     console.log(location.state)
     useEffect(() => {
         var url = "/Requests/ShareModalJson?id=" + state.requestID + "& modelsEnum=" + state.modelsEnum+"&" + getRequestIndexString();
@@ -27,13 +24,29 @@ export default function ShareModal(props) {
             });
 
     }, [state.requestID]);
+    const handleChange = (event) => {
 
+        // On autofill we get a stringified value.
+        const {
+            target: { value },
+        } = event;
+        setState({
+            ...state,
+            users: value,
+        });
+    };
     var onSubmit = (e) => {
         e.preventDefault();
         e.stopPropagation();
         var url = "/" + document.getElementById('masterSectionType')?.value + "/ShareModal";
         document.getElementById("loading").style.display = "block";
         var formData = new FormData(e.target);
+
+        for (var i = 0; i < state.users.length; i++) {
+            formData.append('ApplicationUserIDs', state.users[i]);
+        }
+
+        formData
         fetch(url, {
             method: "POST",
             body: formData
@@ -49,6 +62,8 @@ export default function ShareModal(props) {
                 document.querySelector('.error-message').innerHTML = jqxhr;
                 document.querySelector('.error-message').classList.remove("d-none");
             });
+
+     
     }
 
     return (
@@ -59,23 +74,33 @@ export default function ShareModal(props) {
                 <div className="contaner-fluid p-0">
                     <div className="row ">
                         <div className="col-10 offset-1">
-                            <MDBSelect  options={state.viewModel?.ApplicationUsers?.map((u) => (
-                                { text: u.Text, value: u.Value}
-                            )) ?? []}  name="ApplicationUserIDs" id="ApplicationUserIDs" multiple/>
-                                      
-                            {/*<Select                   */}
-                            {/*    name="ApplicationUserIDs" id="ApplicationUserIDs"*/}
-                            {/*    multiple*/}
-                            {/*    value=""*/}
-                            {/*    label="Select User">{*/}
-                            {/*        state.viewModel?.ApplicationUsers?.map((u) => (*/}
-                            {/*            <MenuItem key={u.Value} value={u.Value}>*/}
-                            {/*                <Checkbox />*/}
-                            {/*                <ListItemText primary={u.Text} />*/}
-                            {/*            </MenuItem>*/}
-                            {/*        ))}*/}
-                            {/*</Select>*/}
-        
+                            {/*<MDBSelect  options={state.viewModel?.ApplicationUsers?.map((u) => (*/}
+                            {/*    { text: u.Text, value: u.Value}*/}
+                            {/*)) ?? []}  name="ApplicationUserIDs" id="ApplicationUserIDs" multiple/>*/}
+                            <FormControl fullWidth>
+                                <InputLabel id="users-label">Users</InputLabel>
+                                <Select
+                                    onChange={handleChange}
+                                    labelId="users-label"                                 
+                                    multiple
+                                    value={state.users}
+                                    renderValue={(selected) => {
+                                        var text = [];
+                                        for (var i = 0; i < selected.length; i++) {
+                                            text.push(state.viewModel?.ApplicationUsers?.filter(u => u.Value == selected[i])[0]?.Text);
+                                        }
+                                        return text.join(",")
+                                    }}
+                                    input={<OutlinedInput label="Tag" />}>{
+                                    state.viewModel?.ApplicationUsers?.map((u) => (
+                                        <MenuItem key={u.Value} value={u.Value}>
+                                            <Checkbox checked={state.users.indexOf(u.Value) > -1} />
+                                            <ListItemText primary={u.Text} />
+                                        </MenuItem>
+                                    ))}
+                            </Select>
+                            </FormControl>
+                          
                         </div>
                     </div>
                 </div>
