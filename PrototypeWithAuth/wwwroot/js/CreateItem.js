@@ -8,13 +8,14 @@
             var sectionType = $("#masterSectionType").val()
             var modalType = $("#modalType").val();
             var requestID = $("#Requests_0__RequestID").val()
+            var guid  = $(".hidden-guid").val()
             if (modalType == "Create") {
                 var itemName = $("#Requests_0__Product_ProductName").val()
                 console.log("name " + itemName);
                 var isRequestQuote = false; //always false until put back in //$(".isRequest").is(":checked")
                 console.log(isRequestQuote)
                 console.log("subcategory " + subcategoryID)
-                var url = "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&PageType=" + pageType + "&itemName=" + itemName + "&isRequestQuote=" + isRequestQuote;
+                var url = "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&guid=" + guid + "&PageType=" + pageType + "&itemName=" + itemName + "&isRequestQuote=" + isRequestQuote;
                 console.log(url);
                 if (subcategoryID != "") {
                     $.ajax({

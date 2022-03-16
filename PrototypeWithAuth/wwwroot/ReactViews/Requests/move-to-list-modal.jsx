@@ -1,15 +1,16 @@
 ﻿import { useState, useEffect } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { ajaxPartialIndexTable, getRequestIndexString } from '../Utility/root-function.jsx'
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
-import { NEW_LIST} from '../Constants/Routes.jsx'
+import { NEW_LIST } from '../Constants/Routes.jsx'
 import GlobalModal from '../Utility/global-modal.jsx';
 
 
 export default function MoveToListModal(props) {
     const dispatch = useDispatch();
     const location = useLocation();
+    const history = useHistory();
     const [state, setState] = useState({ viewModel: null, requestID: location.state.ID, modelsEnum: location.state.modelsEnum });
 
     var origClasses = "list-name  list-group-item mb-2";
@@ -89,7 +90,7 @@ export default function MoveToListModal(props) {
                         <div className="row">
                             <div className="col text-center">     
                                 <Link className={"btn-link text no-hover requests add-new-list fill-list text-center " + newListFilter} to={{
-                                    pathname: NEW_LIST, state: { requestToAddId: state.viewModel?.Request.RequestID, requestPreviousListID: state.viewModel?.PreviousListID }
+                                    pathname: history.entries[1].pathname + NEW_LIST, state: { requestToAddId: state.viewModel?.Request.RequestID, requestPreviousListID: state.viewModel?.PreviousListID }
                                 }}>
                                     <i className="icon-add_circle_outline-24px1 " style={{fontSize: "24px"}}></i>
                                     <label className="new-button-text">New List</label>

@@ -11,7 +11,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public string FullFileName { get; set; }
         public string FileName { get; set; }
-        public int ObjectID { get; set; }
+        public string ObjectID { get; set; }
         public AppUtility.FolderNamesEnum FolderName { get; set; }
         public AppUtility.ParentFolderName ParentFolderName { get; set; }
         public bool IsEdittable { get; set; }

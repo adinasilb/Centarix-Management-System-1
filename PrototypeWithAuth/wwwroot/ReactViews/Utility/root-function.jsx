@@ -1,4 +1,4 @@
-﻿import { MDBInput } from 'mdbreact';
+﻿
 import * as Actions from '../ReduxRelatedUtils/actions.jsx';
 
 export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
@@ -30,8 +30,6 @@ export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
         listString += "&listID=" + listID.value
     }
 
-    console.log("in else");
-        
     if (!url.includes("?")) {
         url += "?"
     } else {
@@ -63,26 +61,29 @@ export var ajaxPartialIndexTable =(dispatch, url, type, formdata, modals) =>{
             console.dir(result)
             if (result != undefined) {
                 dispatch(Actions.setIndexTableViewModel(JSON.parse(result)));
-            }
-            dispatch(Actions.removeModals(modals));
+           }
+           if (modals != undefined) { dispatch(Actions.removeModals(modals)); }
 
-        document.querySelectorAll(".tooltip").forEach(c => c.remove());
         document.getElementById("loading").style.display = "none";
         //workaround for price radio button not coming in when switching from nothing is here tab
         var id = "nis";
         //alert($(id).prop('checked'))
-        if (document.getElementById('tempCurrency').value === "USD") {
+        if (document.getElementById('tempCurrency')?.value === "USD") {
             id = "usd";
         }
-        if (document.getElementById(id).getAttribute("checked") !== "checked") {
+        if (document.getElementById(id)?.getAttribute("checked") !== "checked") {
             console.log('checking button')
-            document.getElementById(id).setAttribute("checked", "checked");
+            document.getElementById(id)?.setAttribute("checked", "checked");
         }
 
         }).catch(jqxhr => {
             document.querySelectorAll('.error-message').forEach(e => e.classList.add("d-none"));
-            document.querySelector('.error-message').innerHTML = jqxhr;
-            document.querySelector('.error-message').classList.remove("d-none");
+            if (document.querySelector('.error-message') == null) {
+                console.log(jqxhr)
+            } else {
+                document.querySelector('.error-message').innerHTML = jqxhr;
+                document.querySelector('.error-message').classList.remove("d-none");
+            }
             document.getElementById("loading").style.display = "none";
             dispatch(Actions.removeModals(modals));
     });    
@@ -117,12 +118,12 @@ export var bindSelectedFilters = (className) => {
     var searchText = document.querySelector('.search-by-name')?.value;
     console.log(searchText);
     //console.log('searchtext length before if' + searchText.length)
-    if (searchText == undefined || !searchText.length) {
+    if (searchText == undefined || !searchText?.length) {
         searchText = document.querySelector('.popover .search-by-name-in-filter')?.value;
         console.log(searchText)
-        if (searchText == undefined || !searchText.length) {
+        if (searchText == undefined || !searchText?.length) {
             searchText = document.querySelector('.search-by-name-in-filter')?.value;
-            if (searchText == undefined || !searchText.length) {
+            if (searchText == undefined || !searchText?.length) {
                 searchText = "";
             }
         }
@@ -184,7 +185,7 @@ export var addObjectToFormdata = (formdata, object) => {
         selectedPriceSort += "&SelectedPriceSort=" + e.getAttribute("enum");
     })
     var requestStatusId = document.getElementsByClassName("request-status-id")[0]?.value;
-     var queryString = "PageNumber=" + document.getElementsByClassName('page-number')[0]?.value + "&RequestStatusID=" + requestStatusId + "&PageType=" + document.getElementById('masterPageType')?.value + "&SectionType=" + document.getElementById('masterSectionType')?.value + "&SidebarType=" + document.getElementById('masterSidebarType')?.value + "&SelectedCurrency=" + document.getElementById('tempCurrency')?.value + "&SidebarFilterID=" + document.getElementsByClassName('sideBarFilterID')[0]?.value + "&CategorySelected=" + (document.querySelector('#categorySortContent .select-category:checked')?.length > 0) + "&SubCategorySelected=" + (document.querySelector('#categorySortContent .select-subcategory:checked').length > 0) + "&ListID=" + document.getElementById("ListID")?.value+"&TabName=" + document.getElementById("TabName")?.value;
+     var queryString = "PageNumber=" + document.getElementsByClassName('page-number')[0]?.value + "&RequestStatusID=" + requestStatusId + "&PageType=" + document.getElementById('masterPageType')?.value + "&SectionType=" + document.getElementById('masterSectionType')?.value + "&SidebarType=" + document.getElementById('masterSidebarType')?.value + "&SelectedCurrency=" + document.getElementById('tempCurrency')?.value + "&SidebarFilterID=" + document.getElementsByClassName('sideBarFilterID')[0]?.value + "&CategorySelected=" + (document.querySelector('#categorySortContent .select-category:checked')?.length > 0) + "&SubCategorySelected=" + (document.querySelector('#categorySortContent .select-subcategory:checked')?.length > 0) + "&ListID=" + document.getElementById("ListID")?.value+"&TabName=" + document.getElementById("TabName")?.value;
     queryString += selectedPriceSort;
     return queryString;
 }

@@ -2,7 +2,7 @@
 const ManifestPlugin = require('webpack-manifest-plugin');
 
 module.exports = {
-	entry: './PrototypeWithAuth/wwwroot/ReactViews/expose-components.js',
+	entry:  './PrototypeWithAuth/wwwroot/ReactViews/expose-components.js',
 	output: {
 		filename: '[name].js',
 		globalObject: 'this',
@@ -27,29 +27,44 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.jsx?$/,
+				test: /\.(ts|js)x?$/,
 				exclude: /node_modules/,
 				loader: 'babel-loader',
+				options: {
+					presets: [
+						'@babel/preset-env',
+						['@babel/preset-react', { runtime: 'automatic' }],
+						'@babel/preset-typescript',
+					],
+				},
 			},
-				
 			{
   				test: /\.css$/,
 				use:[
-				{ loader: 'style-loader', options: {  }},
+					{ loader: 'style-loader', options: {} },
+
 				{
 					loader:'css-loader',
 					options: {
-							url: false,
+						url: false,
 					}
-				}
+					},
+
 				]
 			},
-				// {
-					// test: /\.scss$/,
-					// use: ['style-loader',  'sass-loader'],
-				// },
+
+				 {
+					test: /\.scss$/,
+					use: ['style-loader',  'sass-loader'],
+			},
+			//{
+			//	test: /.(png|woff(2)?|eot|ttf|gif)/,
+			//	loader: "url-loader",
+			//},
+			
 		],
 	},
+
 	plugins: [
 
 		new ManifestPlugin({
@@ -69,10 +84,13 @@ module.exports = {
 			},
 		}),
 	],
-	 resolve: {
+	resolve: {
+		modules: ['node_modules'],
 		 alias: {
 			 react: path.resolve('./node_modules/react'),
-			 'react-dom': path.resolve('./node_modules/react-dom'),
+			'react-dom': path.resolve('./node_modules/react-dom'),
+			"@mui/styles": path.resolve('./node_modules/@mui/styles'),
+			"@mui/material": path.resolve('./node_modules/@mui/material'),
 		},
 	}
 };

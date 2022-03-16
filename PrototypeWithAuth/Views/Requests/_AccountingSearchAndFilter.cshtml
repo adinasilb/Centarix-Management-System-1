@@ -2,12 +2,11 @@
 
 
     <div class="row">
-        <div class="col-2 offset-5">
-            <input type="text" placeholder="Search By Name" class="mb-2 w-100 text search-by-name py-2 slightly-rounded-gray"/>
+        <div class="input-group col-3 offset-6">
+@*            <span class="input-group-text "><i class=" icon-zoom_in-24px-01"></i></span>
+*@            <input type="text" placeholder="Search by name/order no." class="mb-2 w-100 text search-by-name-or-order-num py-2 custom-input-gray " id="search"/>
         </div>
-        <div class="col-2">
-            <input type="text" placeholder="Centarix Order Number" class="mb-2 w-100 search-by-order-number py-2 slightly-rounded-gray" />
-        </div>
+        
         <div class="col-2">
             <div class="form-group">
                 @Html.DropDownListFor(
@@ -20,7 +19,7 @@
                         "Select a Vendor ",
                         htmlAttributes: new
                                 {
-                                    @class = "  mdb-select custom select-dropdown mb-2 w-100 slightly-rounded-acc search-by-vendor ",
+                                    @class = "  mdb-select custom select-dropdown mb-2 w-100 section-custom-select search-by-vendor ",
                             @id = "vendors",
                                     @size = 1,
                                     @searchable = "Search Vendor",
@@ -30,11 +29,13 @@
             </div>
 
         </div>
-            
-        <button type="button" id="invFilterPopover" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-container="body"
-                    class="text slightly-rounded-acc"  value="Filter">
-                Filter
+        <div class="col-1">
+            <button type="button" id="invFilterPopover" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-container="body"
+                    class="text section-custom-input"  value="Filter">
+                Filter <icon class=" pl-3 icon-filter_list_black_24dp" style="font-size: 24px;"></icon>
             </button>
+        </div>    
+        
             
         <div style="display:none;" id="inventoryFilterContent" class="container-fluid">
             @{

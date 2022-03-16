@@ -423,6 +423,16 @@ center-horizontally {
     left: 0;
 }
 
+.carousel-container {
+    width:100%;
+   flex-direction:row;
+}
+.carousel-slider {
+    flex-direction:row;
+}
+.carouselItem {
+    /*flex-direction: row;*/
+}
 
 /*.order-view .dropdown-content li > a, .order-view .dropdown-content li > span {
     color: #000 !important;
@@ -1156,7 +1166,7 @@ a.nav-link {
 }
 /*<<<< Modal Side Slide >>>>*/
 
-.modal.right .modal-dialog {
+.modal.right .edit-modal {
     position: fixed;
     margin: auto;
     /*width: 1200em;*/
@@ -1167,17 +1177,17 @@ a.nav-link {
     transform: translate3d(0%, 0, 0);
 }
 
-.modal.right .modal-content {
+.modal.right .edit-modal .modal-content {
     height: 100%;
     overflow-y: auto;
 }
 
-.modal.right .modal-body {
+.modal.right .edit-modal .modal-body {
     padding: 15px 15px 80px;
 }
 
 /*Right*/
-.modal.right.fader .modal-dialog {
+.modal.right.fader .edit-modal {
     right: 0;
     -webkit-transition: opacity 0.5s linear, right 0.5s ease-out;
     -moz-transition: opacity 0.5s linear, right 0.5s ease-out;
@@ -1185,7 +1195,7 @@ a.nav-link {
     transition: opacity 0.5s linear, right 0.5s ease-out;
 }
 
-.modal.right.fader.in .modal-dialog {
+.modal.right.fader.in .modal-dialog{
     right: 50px;
 }
 
@@ -1279,21 +1289,21 @@ a.nav-link {
     border-bottom: 4px solid var(--expense-color);
 }
 
-.new-oper-button:hover {
+.Operations .new-button:hover {
     color: var(--operations-color);
 }
 
-.new-oper-button.active {
+.Operations .new-button.active {
     color: var(--operations-color) !important;
     border-bottom: 4px solid var(--operations-color);
 }
 
-.new-protocols-button.active {
+ .Protocols .new-button.active {
     color: var(--protocol-color) !important;
     border-bottom: 4px solid var(--protocol-color);
 }
 
-.new-protocols-button:hover {
+.Protocols .new-button:hover {
     color: var(--protocol-color);
 }
 
@@ -2230,7 +2240,8 @@ span.caret {
     color: var(--acc-color) !important;
 }
 
-.Accounting .form-control-plaintext:focus, .Accounting input[type="text"]:focus, .Accounting .react-mentions__input:focus {
+.Accounting .form-control-plaintext:focus, .Accounting input[type="text"]:not(.custom-input-gray):not(.section-custom-input):focus, 
+.Accounting .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--acc-color) !important;
@@ -3298,4 +3309,14 @@ body.modal-open .popover {
 }*/
 .settings-form input[disabled], .settings-form select[disabled] > option {
     color: var(--black-50) !important;
+}
+/*#search:focus {
+    background-image: none;
+}*/
+input[type=text]#search {
+    background-image: url('../images/css/accounting/icons/search_selected.png');
+    background-repeat: no-repeat;
+    /*text-indent: 20px;*/
+    background-position: 95%;
+    filter: grayscale(100%)
 }

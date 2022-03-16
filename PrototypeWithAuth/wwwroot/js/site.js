@@ -319,32 +319,32 @@ $(function () {
         //});
     });
 
-    $("body, .modal").off("click", ".open-document-modal").on("click", ".open-document-modal", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("clicked open doc modal 2");
-        var section = $("#masterSectionType").val();
-        $(this).closest(".open-document-modal").addClass("active-document-modal");
-        var enumString = $(".active-document-modal").data("string");
-        console.log("enumString: " + enumString);
-        var requestId = $(".active-document-modal").data("id");
-        console.log("requestId: " + requestId);
-        var guid = $(".hidden-guid").val();
-        console.log("guid: " + guid);
-        var isEdittable = $(".active-document-modal").attr("data-val");
-        console.log($("#masterSidebarType").val())
-        var showSwitch = $(".active-document-modal").attr("showSwitch");
-        console.log("showSwitch: " + showSwitch);
-        var parentFolder = $(".active-document-modal").attr("parentfolder");
-        console.log('parentfolder' + parentFolder)
-        var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
-        console.log(dontAllowMultipleFiles)
-        var $CustomMainObjectID = $("#CustomMainObjectID").val();
-        console.log("CustomMainObjectID " + $("#CustomMainObjectID").val());
-        //alert("before open doc modal");
-        $.fn.OpenDocumentsModal(false, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
-        return true;
-    });
+    //$("body, .modal").off("click", ".open-document-modal").on("click", ".open-document-modal", function (e) {
+    //    e.preventDefault();
+    //    e.stopPropagation();
+    //    console.log("clicked open doc modal 2");
+    //    var section = $("#masterSectionType").val();
+    //    $(this).closest(".open-document-modal").addClass("active-document-modal");
+    //    var enumString = $(".active-document-modal").data("string");
+    //    console.log("enumString: " + enumString);
+    //    var requestId = $(".active-document-modal").data("id");
+    //    console.log("requestId: " + requestId);
+    //    var guid = $(".hidden-guid").val();
+    //    console.log("guid: " + guid);
+    //    var isEdittable = $(".active-document-modal").attr("data-val");
+    //    console.log($("#masterSidebarType").val())
+    //    var showSwitch = $(".active-document-modal").attr("showSwitch");
+    //    console.log("showSwitch: " + showSwitch);
+    //    var parentFolder = $(".active-document-modal").attr("parentfolder");
+    //    console.log('parentfolder' + parentFolder)
+    //    var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
+    //    console.log(dontAllowMultipleFiles)
+    //    var $CustomMainObjectID = $("#CustomMainObjectID").val();
+    //    console.log("CustomMainObjectID " + $("#CustomMainObjectID").val());
+    //    //alert("before open doc modal");
+    //    $.fn.OpenDocumentsModal(false, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
+    //    return true;
+    //});
 
 
     //$(".file-select").on("change", function (e) {
@@ -1631,6 +1631,36 @@ $(function () {
         $itemurl = "/Timekeeper/DeleteHourModal/?id=" + $(this).attr('value') + "&sectionType=" + $('#masterSectionType').val();
         $.fn.CallPageRequest($itemurl, "delete");
     })
+
+    $(".submitOrder").off("click").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("submit order from _ordertab");
+        //alert("validate form");
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+
+        $(".submitOrder").prop('disabled', true)
+        if (!valid) {
+
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
+            }
+
+        }
+        else {
+            $('.activeSubmit').removeClass('disabled-submit')
+            $("#loading").show();
+            var orderMethod = $(this).attr("id");
+            console.log("orderMethod " + orderMethod)
+            if ($(this).hasClass('additional-requests')) {
+                $("#AdditionalRequests").val(true)
+            }
+            $.fn.SubmitOrderFromAddItemView(orderMethod);
+        }
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,.location-error:hidden, input:visible, textarea:visible)';
+    });
 
 });
 

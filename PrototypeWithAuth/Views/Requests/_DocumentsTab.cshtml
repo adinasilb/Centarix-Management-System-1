@@ -14,9 +14,6 @@
 @{
     var urlAction = Url.Action("DocumentsModal", "Requests");
 
-  
-}
-@Html.React("DocumentsRootComponent", new {documentsInfo=Model.DocumentsInfo, modalType=Model.ModalType})
-    @Html.ReactGetScriptPaths()
-    @Html.ReactInitJavaScript()
 
+}
+@Html.React("DocumentsRootComponent", new { documentsInfo = Model.DocumentsInfo, modalType = Model.ModalType })

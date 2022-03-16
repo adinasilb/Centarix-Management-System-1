@@ -1,7 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { ajaxPartialIndexTable, getRequestIndexString } from '../Utility/root-function.jsx'
+import { ajaxPartialIndexTable } from '../Utility/root-function.jsx'
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import GlobalModal from '../Utility/global-modal.jsx';
 

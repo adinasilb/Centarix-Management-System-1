@@ -93,5 +93,8 @@ namespace PrototypeWithAuth.ViewModels
         public bool HasWarnings { get; set; }
         public AppUtility.OrderType OrderType { get; set; }
         public bool AdditionalRequests { get; set; }
+
+        public List<UploadDocumentInfoViewModel> UploadDocuments { get; set; }
+        public Guid GUID { get; set; }
     }
 }

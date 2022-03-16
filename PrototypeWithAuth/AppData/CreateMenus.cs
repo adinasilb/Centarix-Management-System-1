@@ -44,7 +44,7 @@ namespace PrototypeWithAuth.AppData
                     {
                         Description = "Inventory",
                         Controller = "Requests",
-                        Action = "IndexInventory",
+                        Action = "Index",
                         RouteValues = new RouteValueDictionary()
                         {
                             {"PageType",  AppUtility.PageTypeEnum.RequestSummary },
@@ -136,7 +136,7 @@ namespace PrototypeWithAuth.AppData
                     {
                         Description = "Item List",
                         Controller = "Requests", //redo to operations
-                        Action = "IndexInventory",
+                        Action = "Index",
                         RouteValues = new RouteValueDictionary()
                         {
                             {"PageType",  AppUtility.PageTypeEnum.OperationsInventory },
@@ -582,7 +582,7 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Last Item",
                 Controller = "Requests",
-                Action = "IndexInventory",
+                Action = "Index",
                 RouteValues = new RouteValueDictionary()
                 {
                     {"PageType",  pageType },
@@ -714,7 +714,13 @@ namespace PrototypeWithAuth.AppData
                 Description = "Orders",
                 Controller = "Requests",
                 Action = "Cart",
-                RouteValues = new RouteValueDictionary(),
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType",  AppUtility.PageTypeEnum.RequestCart },
+                            { "SectionType", AppUtility.MenuItems.Requests },
+                            { "SidebarType", AppUtility.SidebarEnum.Cart },
+                            { "RequestStatusID", 6 }
+                },
                 Classes = menuClass,
                 IconName = "icon-shopping_cart-24px"
             });
@@ -738,7 +744,13 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Shared",
                 Controller = "Requests",
-                Action = "IndexShared",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType",  AppUtility.PageTypeEnum.RequestCart },
+                    { "SectionType", AppUtility.MenuItems.Requests },
+                    { "SidebarType", AppUtility.SidebarEnum.SharedRequests }
+                },
                 Classes = menuClass,
                 IconName = "icon-notification_shared-24px"
             });
@@ -770,7 +782,13 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "My Lists",
                 Controller = "Requests",
-                Action = "IndexLists",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType",  AppUtility.PageTypeEnum.RequestCart },
+                    { "SectionType", AppUtility.MenuItems.Requests },
+                    { "SidebarType", AppUtility.SidebarEnum.MyLists }
+                },
                 Classes = menuClass,
                 IconName = "icon-library_books-24px"
             });
@@ -779,7 +797,13 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Shared Lists",
                 Controller = "Requests",
-                Action = "IndexSharedLists",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType",  AppUtility.PageTypeEnum.RequestCart },
+                    { "SectionType", AppUtility.MenuItems.Requests },
+                    { "SidebarType", AppUtility.SidebarEnum.SharedLists },
+                },
                 Classes = menuClass,
                 IconName = "icon-centarix-icons-04"
             });

@@ -29,7 +29,7 @@ export default class SettingsInventory extends Component {
         }
         else {
             return (
-                <div> Settings Inventory == States is not loaded</div>
+                <div></div>
             )
         }
     }

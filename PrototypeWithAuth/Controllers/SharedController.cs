@@ -860,7 +860,7 @@ namespace PrototypeWithAuth.Controllers
                                   }
                               ).ToList()
             };
-            shareModalViewModel.ApplicationUsers.Insert(0, new SelectListItem() { Selected = true, Disabled = true, Text = "Select User" });
+       //     shareModalViewModel.ApplicationUsers.Insert(0, new SelectListItem() { Selected = true, Disabled = true, Text = "Select User" });
 
             return shareModalViewModel;
         }
@@ -963,7 +963,6 @@ namespace PrototypeWithAuth.Controllers
 
             wheres.Add(r => r.Product.ProductName.Contains(selectedFilters == null ? "" : selectedFilters.SearchText));
             wheres.Add(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
-
             int sideBarID = 0;
             if (requestIndexObject.SidebarType != AppUtility.SidebarEnum.Owner)
             {
@@ -972,20 +971,28 @@ namespace PrototypeWithAuth.Controllers
 
             if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest || requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsRequest)
             {
-
                 if (requestIndexObject.TabName == AppUtility.IndexTabs.Requests)
                 {
                     wheres.Add(r => r.RequestStatusID == 1 || r.RequestStatusID == 6);
                 }
-                else
+                else if(requestIndexObject.TabName == AppUtility.IndexTabs.RecurringExpenses)
                 {
-                    wheres.Add(r => r.RequestStatusID == requestIndexObject.RequestStatusID);
+                    wheres.Add(r => r.Product is RecurringOrder);
+                    wheres.Add(r => r.RequestStatusID == 2);
+                }
+                else if (requestIndexObject.TabName == AppUtility.IndexTabs.Ordered)
+                {
+                    wheres.Add(r => r.RequestStatusID == 2);
+                }
+                else if (requestIndexObject.TabName == AppUtility.IndexTabs.Received)
+                {
+                    wheres.Add(r => r.RequestStatusID == 3);
                 }
 
             }
-            else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
+            else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary || requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsInventory)
             {
-                if (requestIndexObject.RequestStatusID == 7)
+                if (requestIndexObject.TabName == AppUtility.IndexTabs.Samples)
                 {
                     wheres.Add(r => r.RequestStatus.RequestStatusID == 7);
                 }
@@ -996,10 +1003,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.AccountingGeneral)
             {
-                //ignore all the wheres got so far HERE it used to take from context so i reinstantiated the wheres list
-
-
-                ///REMEMBER TO IGNORE QUERY FILTERS
+                 ///REMEMBER TO IGNORE QUERY FILTERS
                 wheres.Clear();
                 //we need both categories
                 wheres.Add(r => r.RequestStatusID == 3);
@@ -1009,6 +1013,8 @@ namespace PrototypeWithAuth.Controllers
                 {
                     wheres.Add(r => Months.Contains(r.ParentRequest.OrderDate.Month));
                 }
+                includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Payment)p).Invoice } });
+                includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((ProductSubcategory)p).ParentCategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = pc => ((ParentCategory)pc).CategoryType } } });
             }
             else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart && requestIndexObject.SidebarType == AppUtility.SidebarEnum.Favorites)
             {
@@ -1021,11 +1027,6 @@ namespace PrototypeWithAuth.Controllers
                 var sharedWithMe = _shareRequestsProc.Read(new List<Expression<Func<ShareRequest, bool>>> { fr => fr.ToApplicationUserID == _userManager.GetUserId(User) })
                     .Select(sr => sr.ObjectID).ToList();
                 wheres.Add(frl => sharedWithMe.Contains(frl.RequestID));
-            }
-            else if(requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsRequest && requestIndexObject.TabName == AppUtility.IndexTabs.RecurringExpenses)
-            {
-                wheres.Add(r => r.Product is RecurringOrder);
-                //wheres.Add(r => r.) reference date for recurring order requests??
             }
             else
             {
@@ -1066,7 +1067,8 @@ namespace PrototypeWithAuth.Controllers
                 SelectedCategoryOption = new List<bool>()
                 {
                     requestIndexObject.CategorySelected,
-                    requestIndexObject.SubcategorySelected
+                    requestIndexObject.SubcategorySelected,
+                    requestIndexObject.SourceSelected
                 }
             };
             requestIndexViewModel.PageNumber = requestIndexObject.PageNumber;
@@ -1094,8 +1096,10 @@ namespace PrototypeWithAuth.Controllers
 
             ApplySearchToRequestList(requestsSearchViewModel, wheres);
             var RequestPassedInWithInclude = _requestsProc.ReadWithIgnoreQueryFilters(wheres, includes);
-
-
+            if(requestIndexObject.TabName == AppUtility.IndexTabs.RecurringExpenses && RequestPassedInWithInclude.Count() > 0)
+            {
+                RequestPassedInWithInclude = RequestPassedInWithInclude.OrderBy(r => r.OccurenceNumber).GroupBy(r => r.ProductID).Select(r =>r.First());
+            }
 
             onePageOfProducts = await GetColumnsAndRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude);
 
@@ -1107,7 +1111,8 @@ namespace PrototypeWithAuth.Controllers
                                .Select(rlr => rlr.Request).Count() / 20.0));
             }
             requestIndexViewModel.PageNumbersToShow = new LinkedList<PageNumbers>();
-            GetListOfPageNumbers(requestIndexObject, requestIndexViewModel, amountPages);
+            requestIndexViewModel.Tabs = await GetTabsAsync(requestIndexObject);
+                     GetListOfPageNumbers(requestIndexObject, requestIndexViewModel, amountPages);
             //if page number less than 7  than show first 10 and only 3 dots on right not left
             //if pagenumber greater than = to    7 then 5 before page number and 4 after until page amount ends 
             //if pagenumber is greater than amount pages -5 then show three dots only on right and show last 10 pages
@@ -1121,6 +1126,66 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters, requestIndexObject.SectionType, isProprietary);
             requestIndexViewModel.TabName = requestIndexObject.TabName;
             return requestIndexViewModel;
+        }
+
+        private async Task<List<IndexTab>> GetTabsAsync(RequestIndexObject requestIndexObject)
+        {
+            List<IndexTab> tabs = null;
+            if (requestIndexObject.PageType==AppUtility.PageTypeEnum.RequestSummary)
+            {
+                tabs= new List<IndexTab> {
+                   new IndexTab{ TabName = AppUtility.IndexTabs.Main.ToString(), TabValue=AppUtility.IndexTabs.Main.ToString() } ,
+                   new IndexTab{ TabName = AppUtility.IndexTabs.Samples.ToString(), TabValue=AppUtility.IndexTabs.Samples.ToString() }
+                };
+            }
+            else if(requestIndexObject.PageType==AppUtility.PageTypeEnum.RequestRequest)
+            {
+
+                tabs= new List<IndexTab> {
+                   new IndexTab{ TabName = AppUtility.IndexTabs.Requests.ToString(), TabValue=AppUtility.IndexTabs.Requests.ToString() } ,
+                   new IndexTab{ TabName = AppUtility.IndexTabs.Ordered.ToString(), TabValue=AppUtility.IndexTabs.Ordered.ToString() },
+                   new IndexTab{ TabName = AppUtility.IndexTabs.Received.ToString(), TabValue=AppUtility.IndexTabs.Received.ToString() }
+                };
+            }
+            else if (requestIndexObject.PageType==AppUtility.PageTypeEnum.OperationsRequest)
+            {
+                tabs= new List<IndexTab> {
+                   new IndexTab{ TabName = AppUtility.IndexTabs.Requests.ToString(), TabValue=AppUtility.IndexTabs.Requests.ToString() } ,
+                   new IndexTab{ TabName = AppUtility.IndexTabs.Ordered.ToString(), TabValue=AppUtility.IndexTabs.Ordered.ToString() },
+                   new IndexTab{ TabName = AppUtility.IndexTabs.Received.ToString(), TabValue=AppUtility.IndexTabs.Received.ToString() },
+                   new IndexTab{ TabName = AppUtility.IndexTabs.RecurringExpenses.ToString(), TabValue=AppUtility.IndexTabs.RecurringExpenses.ToString() }
+                };
+            }
+            else if(requestIndexObject.PageType==AppUtility.PageTypeEnum.RequestCart && requestIndexObject.SidebarType == AppUtility.SidebarEnum.SharedLists)
+            {
+                tabs= new List<IndexTab> { };
+                
+                var userLists = _shareRequestListsProc.Read(new List<Expression<Func<ShareRequestList, bool>>> { l => l.ToApplicationUserID == _userManager.GetUserId(User) }, new List<ComplexIncludes<ShareRequestList, ModelBase>> { new ComplexIncludes<ShareRequestList, ModelBase> { Include = l => l.RequestList } }).OrderBy(l => l.TimeStamp).Select(l => l.RequestList).ToList();
+                if (userLists.Count > 0 && requestIndexObject.ListID == 0)
+                {
+                    requestIndexObject.ListID = userLists.FirstOrDefault().ListID;
+                }
+                userLists.ForEach(l => tabs.Add(new IndexTab { TabName = l.Title, TabValue = l.ListID.ToString() }));
+            }
+            else if (requestIndexObject.PageType==AppUtility.PageTypeEnum.RequestCart && requestIndexObject.SidebarType == AppUtility.SidebarEnum.List)
+            {
+                var userLists = _requestListsProc.Read(new List<Expression<Func<RequestList, bool>>> { l => l.ApplicationUserOwnerID == _userManager.GetUserId(User) }).OrderBy(l => l.DateCreated).ToList();
+
+                if (userLists.Count == 0)
+                {
+                    RequestList requestList = await _requestListsProc.CreateAndGetDefaultListAsync(_userManager.GetUserId(User));
+                    requestIndexObject.ListID = requestList.ListID;
+                    userLists.Add(requestList);
+                }
+
+                if (requestIndexObject.ListID == 0)
+                {
+                    requestIndexObject.ListID = userLists.Where(l => l.IsDefault).FirstOrDefault().ListID;
+                }
+                userLists.ForEach(l => tabs.Add(new IndexTab { TabName = l.Title, TabValue = l.ListID.ToString() }));
+            }
+
+            return tabs;
         }
 
         private static void GetListOfPageNumbers(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel requestIndexViewModel, int amountPages)
@@ -1239,8 +1304,6 @@ namespace PrototypeWithAuth.Controllers
                     && (String.IsNullOrEmpty(requestsSearchViewModel.Payment.CheckNumber) || r.Payments.Where(p => p.CheckNumber.ToLower().Contains(requestsSearchViewModel.Payment.CheckNumber.ToLower())).Any())
                     && (String.IsNullOrEmpty(requestsSearchViewModel.Payment.Reference) || r.Payments.Where(p => p.Reference.ToLower().Contains(requestsSearchViewModel.Payment.Reference.ToLower())).Any())
                     );
-
-
             }
         }
 
@@ -1254,7 +1317,7 @@ namespace PrototypeWithAuth.Controllers
             var approveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#00CA72", "approve-order", "Approve");
             var CantApproveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#E5E5E5", "", "Needs Approval");
             var equipmentIcon = new IconColumnViewModel(" icon-settings-24px-1 ", "var(--lab-man-color);", "create-calibration", "Create Calibration");
-            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color);", "request-favorite", "Favorite");
+            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color)", "request-favorite", "Favorite");
 
             var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
             var popoverDelete = new IconPopoverViewModel(" icon-delete-24px  ", "black", AppUtility.PopoverDescription.Delete, "Delete", "Requests", "/DeleteModal");
@@ -1336,6 +1399,25 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.PageTypeEnum.OperationsRequest:
                     switch (requestIndexObject.TabName)
                     {
+                        case AppUtility.IndexTabs.Requests:
+                            if (await this.IsAuthorizedAsync(requestIndexObject.SectionType, "ApproveOrders"))
+                            {
+                                iconList.Add(approveIcon);
+                            }
+                            else
+                            {
+                                iconList.Add(CantApproveIcon);
+                            }
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
+                            popoverMoreIcon.IconPopovers.Add(popoverDelete);
+                            iconList.Add(popoverMoreIcon);
+                            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).Skip(20 * (requestIndexObject.PageNumber - 1)).Take(20).Select(r =>
+                                        new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Approved,
+                                                 r, r.OrderMethod, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
+                                                 r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage)
+                                    ).ToListAsync();
+                            //.ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
+                            break;
                         case AppUtility.IndexTabs.Ordered:
                             iconList.Add(receiveIcon);
                             popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();

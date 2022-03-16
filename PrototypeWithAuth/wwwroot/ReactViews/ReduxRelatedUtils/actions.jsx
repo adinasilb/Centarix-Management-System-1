@@ -2,6 +2,7 @@
 export const ADD_MODAL = 'ADD_MODAL'
 export const REMOVE_MODAL = 'REMOVE_MODAL'
 export const REMOVE_MODALS = 'REMOVE_MODALS'
+export const SET_TEMP_REQUEST_JSON = 'SET_TEMP_REQUEST_JSON'
 
 export const setIndexTableViewModel = (viewmodel ) => {
     return ({
@@ -33,5 +34,13 @@ export const removeModals = (modals) => {
 
         type: REMOVE_MODALS,
         payload:  modals 
+    })
+};
+
+export const setTempRequestJson = (json) => {
+    return ({
+
+        type: SET_TEMP_REQUEST_JSON,
+        payload: json
     })
 };

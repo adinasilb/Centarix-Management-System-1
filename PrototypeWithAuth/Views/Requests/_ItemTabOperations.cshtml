@@ -207,20 +207,22 @@
                     </div>
                 </div>
             }
-            <div class="col-md-3 received-info d-none ">
-                <label asp-for="Requests[0].ArrivalDate" class="control-label"></label>
-                 @if (modalType == AppUtility.RequestModalType.Create)
-                {
-                    <input value="" class="form-control-plaintext border-bottom datepicker" disabled value = "" type="text" asp-for="Requests[0].ArrivalDate" asp-format="@AppUtility.AspDateFormatString" />
-                }
-                else
-                {
-                    <input asp-for="Requests[0].ArrivalDate" class="form-control-plaintext datepicker border-bottom" disabled asp-format="@AppUtility.AspDateFormatString"  type="text" />
-                }
-            </div>
-            <div class="col-4 received-info d-none">
-                <label class="control-label">Received By</label>
-                    @Html.DropDownListFor(vm => vm.Requests[0].ApplicationUserReceiverID,
+            @if (Model.Requests[0].ApplicationUserReceiver != null)
+            {
+        <div class="col-md-3 received-info d-none ">
+            <label asp-for="Requests[0].ArrivalDate" class="control-label"></label>
+            @if (modalType == AppUtility.RequestModalType.Create)
+            {
+                <input value="" class="form-control-plaintext border-bottom datepicker" disabled value = "" type="text" asp-for="Requests[0].ArrivalDate" asp-format="@AppUtility.AspDateFormatString" />
+            }
+            else
+            {
+                <input asp-for="Requests[0].ArrivalDate" class="form-control-plaintext datepicker border-bottom" disabled asp-format="@AppUtility.AspDateFormatString"  type="text" />
+            }
+        </div>
+        <div class="col-4 received-info d-none">
+            <label class="control-label">Received By</label>
+            @Html.DropDownListFor(vm => vm.Requests[0].ApplicationUserReceiverID,
                             Model.ApplicationUsers,
                             htmlAttributes: new
                                  {
@@ -231,8 +233,9 @@
                                      @data_stop_refresh = "true"
                                  }
                             )
-            </div>
-            <input type="hidden" asp-for="Requests[0].ApplicationUserReceiverID" />
+        </div>
+        <input type="hidden" asp-for="Requests[0].ApplicationUserReceiverID" />
+    }
 
         </div>
         @if (modalType != AppUtility.RequestModalType.Create && Model.Requests[0].ParentQuote?.QuoteNumber != null)

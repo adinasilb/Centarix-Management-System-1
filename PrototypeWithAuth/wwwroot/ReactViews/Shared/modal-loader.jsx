@@ -8,18 +8,18 @@ import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import * as Routes from '../Constants/Routes.jsx'
 import MoveToListModal from '../Requests/move-to-list-modal.jsx';
 import NewListModal from '../Requests/new-list-modal.jsx';
-
+import DocumentsModal from '../Shared/documents-modal.jsx';
+import DeleteDocumentModal from '../Shared/delete-document-modal.jsx';
+import OrderOperationsModal from '../Requests/order-operations-modal.jsx';
+import UploadQuoteModal from '../Shared/upload-quote-modal.jsx';
 function ModalLoader(props) {
     console.log(props.modals)
     useEffect(() => {
-        console.log("props modal key update");
-        var keyExists = props.modals.indexOf(props.modalKey) > -1;
-        if (!keyExists) {
+        console.log("props modal key update")
             props.addModal(props.modalKey);
-        }
     }, [props.modalKey, props.uid]);
 
-
+  
     var modalsComponents = [];
     for (var i = 0; i < props.modals?.length; i++) {
         var backdrop = false;
@@ -40,6 +40,16 @@ function ModalLoader(props) {
             case ModalKeys.NEW_LIST:
                 modalsComponents.push(<NewListModal backdrop={backdrop} key={props.modals[i]} modalKey={props.modals[i]} />)
                 break;
+            case ModalKeys.DOCUMENTS:
+                modalsComponents.push(<DocumentsModal backdrop={backdrop} key={props.modals[i]} modalKey={props.modals[i]} />)
+                break;
+            case ModalKeys.DELETE_DOCUMENTS:
+                modalsComponents.push(<DeleteDocumentModal backdrop={backdrop} key={props.modals[i]} modalKey={props.modals[i]} />)
+                break;
+            case ModalKeys.ORDER_OPERATIONS_MODAL:
+                modalsComponents.push(<OrderOperationsModal backdrop={backdrop} key={props.modals[i]} modalKey={props.modals[i]} />)
+            case ModalKeys.UPLOAD_QUOTE:
+                modalsComponents.push(<UploadQuoteModal backdrop={backdrop} key={props.modals[i]} modalKey={props.modals[i]} />)
         }
     }
    

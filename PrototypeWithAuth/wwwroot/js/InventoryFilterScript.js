@@ -103,7 +103,7 @@ $("body").on("click", "#inventoryFilterContentDiv .popover-close", function (e) 
 	$('[data-toggle="popover"]').popover('dispose');
 	$('body').removeClass('popover-open');
 	$('#invFilterPopover').removeClass('section-bg-color custom-button-font');
-	$('#invFilterPopover').addClass('custom-order-inv');
+	//$('#invFilterPopover').addClass('custom-order-inv');
 }); 
 
 $('body').on('click', '.clear-filters', function () {

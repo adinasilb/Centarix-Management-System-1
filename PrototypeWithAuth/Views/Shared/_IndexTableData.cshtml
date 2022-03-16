@@ -4,38 +4,9 @@
 @using Microsoft.AspNetCore.Identity
 @using React.AspNet
 @inject SignInManager<ApplicationUser> SignInManager
-@Html.React("RootComponent", new { viewModel = Model, viewEnum = "IndexTableData" })
+@Html.React("RootComponent", new { viewModel = Model, viewEnum = "/_IndexTableData" })
 @Html.ReactGetScriptPaths()
 @Html.ReactInitJavaScript()
-<div class="row">
-    <div class="col-12 justify-content-center d-flex">
-        <div class="row">
-            <div class="col-12 justify-content-center d-flex">
-                <div class="pagination-container">
-                    <ul class="pagination">
-                        @foreach (var p in Model.PageNumbersToShow)
-                        {
-                            <li class="@p.Classes">
-                                <span class="page-link">@p.Value</span>
-                            </li>
-                        }
 
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
 <script src="~/js/IndexTablePartial.js"></script>
-@*<script src="~/js/accounting.js"></script>*@
-@if (AppUtility.IsAjaxRequest(this.Context.Request))
-{
-    <script>$('[data-toggle="tooltip"]').tooltip()</script>
-}
 
-@*<script>
-        $(".share-request").on('click', function (e) {
-            alert("hi");
-        });
-    </script>*@
