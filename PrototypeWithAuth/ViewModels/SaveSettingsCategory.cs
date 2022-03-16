@@ -9,5 +9,9 @@ namespace PrototypeWithAuth.ViewModels
     {
         public string Category { get; set; }
         public bool Test { get; set; }
+        public List<CustomField> DetailsCustomFields { get; set; }
+        public List<CustomField> PriceCustomFields { get; set; }
+        public List<CustomField> DocumentsCustomFields { get; set; }
+        public List<CustomField> ReceivedCustomFields { get; set; }
     }
 }
