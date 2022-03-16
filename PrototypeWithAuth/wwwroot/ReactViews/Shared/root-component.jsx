@@ -16,7 +16,7 @@ export default function RootComponent(props) {
            
             <Suspense fallback={<div></div>}><Scripts key="scripts" /></Suspense>
             <MemoryRouter >
-                <Suspense fallback={<div></div>}><App viewEnum={props.viewEnum} viewModel={props.viewModel} /></Suspense>
+                <Suspense fallback={<div></div>}><App viewEnum={props.viewEnum} /></Suspense>
                 </MemoryRouter>
 
         </Provider>
