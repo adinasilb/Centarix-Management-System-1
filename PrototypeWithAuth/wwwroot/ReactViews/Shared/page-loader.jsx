@@ -2,6 +2,7 @@
 
 import { Route, Switch, MemoryRouter } from 'react-router-dom';
 import _IndexTableData from '../Requests/index-table-data.jsx';
+import _IndexTableTabs from '../Requests/index-table-tabs.jsx';
 import _IndexTableDataByVendor from '../Requests/index-table-data-by-vendor.jsx';
 import SettingsInventory from "../Requests/settings-inventory.jsx";
 import OrderTab from "../Shared/order-tab.jsx"
@@ -17,10 +18,15 @@ export default function PageLoader(props) {
        
         switch (props.viewEnum) {
             case Routes.INDEX_TABLE_DATA_BY_VENDOR:
-                return (<_IndexTableDataByVendor key={"indexTableDataByVendor"} viewModel={props.viewModel} showView={true} bcColor={props.bcColor} ajaxLink={props.ajaxLink} btnText={props.btnText} sectionClass={props.sectionClass} />);
+                return (<_IndexTableDataByVendor key={"indexTableDataByVendor"}  showView={true} bcColor={props.bcColor} ajaxLink={props.ajaxLink} btnText={props.btnText} sectionClass={props.sectionClass} />);
                 break;
             case Routes.INDEX_TABLE_DATA:
-                return (<_IndexTableData key={"indexTableData"} viewModel={props.viewModel} pageNumber={props.pageNumber} />);
+                return (<_IndexTableData key={"indexTableData"} pageNumber={props.pageNumber} />);
+                break;
+            case Routes.INDEX_TABLE_TABS:
+                console.log(props.selectedTab)
+
+                return (<_IndexTableTabs key={"indexTableTabs"} pageNumber={props.pageNumber} tabs={props.tabs} selectedTab={props.selectedTab} />);
                 break;
             case Routes.SETTINGS_INVENTORY:
                 return (<SettingsInventory key={"settingsInventory"} viewModel={props.viewModel} showView={true} />);
@@ -43,7 +49,8 @@ export default function PageLoader(props) {
                 <Route exact path={props.match.url + Routes.NEW_LIST} exact render={(props) => <ModalLoader   {...props} key={"modalloader"} modalKey={ModalKeys.NEW_LIST} uid={props.location.key} />} />
                 <Route exact path={props.match.url + Routes.ORDER_OPERATIONS_MODAL} exact render={(props) => <ModalLoader   {...props} key={"modalloader"} modalKey={ModalKeys.ORDER_OPERATIONS_MODAL} uid={props.location.key} />} />
                 <Route exact path={props.match.url + Routes.UPLOAD_QUOTE} exact render={(props) => <ModalLoader   {...props} key={"modalloader"} modalKey={ModalKeys.UPLOAD_QUOTE} uid={props.location.key} />} />
-
+                <Route exact path={props.match.url + Routes.DOCUMENTS} exact render={(props) => <ModalLoader {...props} key={"modalloader"} modalKey={ModalKeys.DOCUMENTS} uid={props.location.key} />} />
+                <Route exact path={props.match.url + Routes.DELETE_DOCUMENTS} exact render={(props) => <ModalLoader {...props} key={"modalloader"} modalKey={ModalKeys.DELETE_DOCUMENTS} uid={props.location.key} />} />
             </Switch>
             </div>
 

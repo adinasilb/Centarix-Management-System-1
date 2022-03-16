@@ -27,7 +27,12 @@ html.wf-loading * {
     box-shadow: none !important;
     border-radius: 0 !important;
 }
-
+ .MuiTooltip-tooltip {
+    background-color: var(--black-87) !important
+}
+.MuiTooltip-arrow {
+    color: var(--black-87) !important
+}
 /*#custom-document-indicator {
     border: 0 !important;
     box-shadow: none !important;
@@ -1284,21 +1289,21 @@ a.nav-link {
     border-bottom: 4px solid var(--expense-color);
 }
 
-.new-oper-button:hover {
+.Operations .new-button:hover {
     color: var(--operations-color);
 }
 
-.new-oper-button.active {
+.Operations .new-button.active {
     color: var(--operations-color) !important;
     border-bottom: 4px solid var(--operations-color);
 }
 
-.new-protocols-button.active {
+ .Protocols .new-button.active {
     color: var(--protocol-color) !important;
     border-bottom: 4px solid var(--protocol-color);
 }
 
-.new-protocols-button:hover {
+.Protocols .new-button:hover {
     color: var(--protocol-color);
 }
 

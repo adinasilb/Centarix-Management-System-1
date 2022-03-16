@@ -40,7 +40,7 @@ export default function DeleteDocumentModal(props) {
 
             <form action="" method="post" encType="multipart/form-data" id="myForm" className="modal-padding DeleteDocumentModalForm">
                 <div asp-validation-summary="ModelOnly" className="text-danger-centarix"></div>
-                <input id="ObjectID" name="ObjectID" type="hidden" value={viewModel.ID} />
+                <input id="ObjectID" name="ObjectID" type="hidden" value={viewModel.ObjectID} />
                 <input id="FileName" name="FileName" type="hidden" value={viewModel.FileName} />
                 <input id="FolderName" name="FolderName" type="hidden" value={viewModel.FolderName} />
                 <input id="ParentFolderName" name="ParentFolderName" type="hidden" value={viewModel.ParentFolderName} />

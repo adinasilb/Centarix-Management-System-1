@@ -174,16 +174,15 @@ namespace PrototypeWithAuth
             app.UseReact(config =>
             {
                 config.SetLoadBabel(true)
-                  .SetLoadReact(false)               
+                  .SetLoadReact(false)
                   .SetReactAppBuildPath("~/dist");
                 config.UseServerSideRendering = false;
-                config.JsonSerializerSettings = new JsonSerializerSettings { 
+                config.JsonSerializerSettings = new JsonSerializerSettings
+                {
                     Converters= new List<JsonConverter> { new StringEnumConverter() },
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                 };
             });
-
-
             app.UseRouting();
 
             app.UseAuthentication();

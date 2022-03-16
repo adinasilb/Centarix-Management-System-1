@@ -96,38 +96,6 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-
-        [HttpGet]
-        [HttpPost]
-        [Authorize(Roles = "Requests, Operations")]
-        public async Task<IActionResult> IndexInventory(RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel)
-        {
-            if (await base.IsAuthorizedAsync(requestIndexObject.SectionType))
-            {
-
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
-
-                var viewmodel = await base.GetIndexViewModel(requestIndexObject, requestsSearchViewModel: requestsSearchViewModel);
-                //  SetViewModelProprietaryCounts(requestIndexObject, viewmodel);
-                //viewmodel.InventoryFilterViewModel = GetInventoryFilterViewModel();
-
-                if (ViewBag.ErrorMessage != null)
-                {
-                    ViewBag.ErrorMessage = ViewBag.ErrorMessage;
-                }
-
-                return View(viewmodel);
-            }
-            else
-            {
-                return Redirect(base.AccessDeniedPath);
-            }
-        }
-
-
-
         [Authorize(Roles = "Requests, LabManagement, Operations")]
         private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject, NotificationFilterViewModel notificationFilterViewModel = null)
         {
@@ -425,76 +393,26 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            RequestIndexPartialViewModel viewModel = await GetSharedRequestIndexObjectAsync();
-            return PartialView(viewModel);
-        }
-
-        [Authorize(Roles = "Requests")]
-        public async Task<RequestIndexPartialViewModel> GetSharedRequestIndexObjectAsync()
-        {
-
             RequestIndexObject requestIndexObject = new RequestIndexObject()
             {
                 PageType = AppUtility.PageTypeEnum.RequestCart,
                 SidebarType = AppUtility.SidebarEnum.SharedRequests
             };
             RequestIndexPartialViewModel viewModel = await base.GetIndexViewModel(requestIndexObject);
-            return viewModel;
+            return PartialView(viewModel);
         }
 
-        [Authorize(Roles = "Requests")]
-        public async Task<RequestListIndexViewModel> GetRequestListIndexObjectAsync(RequestIndexObject requestIndexObject)
-        {
-            var userLists = _requestListsProc.Read(new List<Expression<Func<RequestList, bool>>> { l => l.ApplicationUserOwnerID == _userManager.GetUserId(User) }).OrderBy(l => l.DateCreated).ToList();
-
-            if (userLists.Count == 0)
-            {
-                RequestList requestList = await _requestListsProc.CreateAndGetDefaultListAsync(_userManager.GetUserId(User));
-                requestIndexObject.ListID = requestList.ListID;
-                userLists.Add(requestList);
-            }
-
-            if (requestIndexObject.ListID == 0)
-            {
-                requestIndexObject.ListID = userLists.Where(l => l.IsDefault).FirstOrDefault().ListID;
-            }
-            RequestIndexPartialViewModel requestIndexViewModel = await base.GetIndexViewModel(requestIndexObject);
-            RequestListIndexViewModel viewModel = new RequestListIndexViewModel
-            {
-                RequestIndexPartialViewModel = requestIndexViewModel,
-                ListID = requestIndexObject.ListID,
-                Lists = userLists,
-                SidebarType = AppUtility.SidebarEnum.MyLists
-            };
-            return viewModel;
-        }
+ 
 
 
 
-        [Authorize(Roles = "Requests")]
-        public async Task<RequestListIndexViewModel> GetSharedRequestListIndexObjectAsync(RequestIndexObject requestIndexObject)
-        {
-            var userLists = _shareRequestListsProc.Read(new List<Expression<Func<ShareRequestList, bool>>> { l => l.ToApplicationUserID == _userManager.GetUserId(User) }, new List<ComplexIncludes<ShareRequestList, ModelBase>> { new ComplexIncludes<ShareRequestList, ModelBase> { Include = l => l.RequestList } }).OrderBy(l => l.TimeStamp).Select(l => l.RequestList).ToList();
-            if (userLists.Count > 0 && requestIndexObject.ListID == 0)
-            {
-                requestIndexObject.ListID = userLists.FirstOrDefault().ListID;
-            }
-            RequestIndexPartialViewModel requestIndexViewModel = await base.GetIndexViewModel(requestIndexObject);
-            RequestListIndexViewModel viewModel = new RequestListIndexViewModel
-            {
-                RequestIndexPartialViewModel = requestIndexViewModel,
-                ListID = requestIndexObject.ListID,
-                Lists = userLists,
-                SidebarType = AppUtility.SidebarEnum.SharedLists
-            };
-
-            return viewModel;
-        }
+      
 
         [Authorize(Roles = "Requests,Operations")]
         public async Task<TempRequestListViewModel> SaveAddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderMethod OrderMethod, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             var trlvm = new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() };
+            trlvm.GUID = requestItemViewModel.TempRequestListViewModel.GUID;
             try
             {
                 switch (requestItemViewModel.OrderType)
@@ -579,7 +497,7 @@ namespace PrototypeWithAuth.Controllers
                 //Response.WriteAsync(ex.Message?.ToString());
                 if (requestItemViewModel.RequestStatusID == 7)
                 {
-                    //return RedirectToAction("IndexInventory", new { ErrorMessage = AppUtility.GetExceptionMessage(ex) });
+                   // return RedirectToAction("Index", new { ErrorMessage = AppUtility.GetExceptionMessage(ex) });
                 }
                 /* return new RedirectToActionResult(actionName: "_OrderTab", controllerName: "Requests", routeValues: requestItemViewModel );*/
 
@@ -1421,73 +1339,7 @@ namespace PrototypeWithAuth.Controllers
             return View(viewModel);
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> IndexShared()
-        {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SharedRequests;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            //RequestIndexObject requestIndexObject = new RequestIndexObject()
-            //{
-            //    PageType = AppUtility.PageTypeEnum.RequestCart,
-            //    SidebarType = AppUtility.SidebarEnum.SharedRequests
-            //};
-            RequestIndexPartialViewModel viewModel = await GetSharedRequestIndexObjectAsync();
-            return View(viewModel);
-        }
 
-        [HttpGet]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> IndexLists()
-        {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.MyLists;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            RequestIndexObject requestIndexObject = new RequestIndexObject()
-            {
-                PageType = AppUtility.PageTypeEnum.RequestCart,
-                SidebarType = AppUtility.SidebarEnum.MyLists
-            };
-
-            RequestListIndexViewModel viewModel = await GetRequestListIndexObjectAsync(requestIndexObject);
-            return View(viewModel);
-        }
-        [HttpGet]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> IndexSharedLists()
-        {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SharedLists;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            RequestIndexObject requestIndexObject = new RequestIndexObject()
-            {
-                PageType = AppUtility.PageTypeEnum.RequestCart,
-                SidebarType = AppUtility.SidebarEnum.SharedLists
-            };
-
-            RequestListIndexViewModel viewModel = await GetSharedRequestListIndexObjectAsync(requestIndexObject);
-            return View(viewModel);
-        }
-        [HttpGet]
-        [HttpPost]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTableWithListTabs(RequestIndexObject requestIndexObject, String errorMessage)
-        {
-            RequestListIndexViewModel viewModel = new RequestListIndexViewModel();
-            if (requestIndexObject.SidebarType == AppUtility.SidebarEnum.MyLists)
-            {
-                viewModel = await GetRequestListIndexObjectAsync(requestIndexObject);
-            }
-            else
-            {
-                viewModel = await GetSharedRequestListIndexObjectAsync(requestIndexObject);
-            }
-            viewModel.ErrorMessage = errorMessage;
-            return PartialView(viewModel);
-        }
-
-        [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ItemTableType(RequestIndexObject requestIndexObject)
         {
@@ -3489,13 +3341,13 @@ namespace PrototypeWithAuth.Controllers
         [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
         public async Task<IActionResult> DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
         {
-            base.DocumentsModal(documentsModalViewModel);
+            //base.DocumentsModal(documentsModalViewModel);
             return RedirectToAction("_DocumentsCard", new { requestFolderNameEnum = documentsModalViewModel.FolderName, id= documentsModalViewModel.ObjectID, parentFolderName = documentsModalViewModel.ParentFolderName});
         }
 
 
         [HttpGet]
-        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.FolderNamesEnum RequestFolderNameEnum, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests)
+        public ActionResult DeleteDocumentModal(String FileString, string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests)
         {
 
             //if (!AppUtility.IsAjaxRequest(Request))
@@ -4440,15 +4292,12 @@ namespace PrototypeWithAuth.Controllers
             
 
             var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now } };
-            uploadQuoteViewModel.DocumentsCardViewModel = new DocumentsCardViewModel()
-            {
-                DocumentInfo = new DocumentFolder()
+            uploadQuoteViewModel.DocumentsInfo = new DocumentFolder()
                 {
                     ParentFolderName = AppUtility.ParentFolderName.ParentQuote,
                     FolderName = AppUtility.FolderNamesEnum.Quotes,
                     Icon = "icon-centarix-icons-03",
                     ObjectID = id
-                }
             };
 
             if (requests != null)
@@ -4474,17 +4323,15 @@ namespace PrototypeWithAuth.Controllers
                                 string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
                                 fileStrings.Add(newFileString);
                             }
-                            uploadQuoteViewModel.DocumentsCardViewModel.DocumentInfo.FileStrings = fileStrings;
-                            uploadQuoteViewModel.DocumentsCardViewModel.ModalType = AppUtility.RequestModalType.Summary;
+                            uploadQuoteViewModel.DocumentsInfo.FileStrings = fileStrings;
                         }
-                        uploadQuoteViewModel.DocumentsCardViewModel.DocumentInfo.ObjectID = oldQuote.ParentQuoteID.ToString();
+                        uploadQuoteViewModel.DocumentsInfo.ObjectID = oldQuote.ParentQuoteID.ToString();
 
                     }
                     else
                     {
                         oldQuote = new ParentQuote() { ExpirationDate = DateTime.Now };
-                        uploadQuoteViewModel.DocumentsCardViewModel.DocumentInfo.ObjectID = id.ToString();
-                        uploadQuoteViewModel.DocumentsCardViewModel.ModalType = AppUtility.RequestModalType.Edit;
+                        uploadQuoteViewModel.DocumentsInfo.ObjectID = id.ToString();
                     }
                     uploadQuoteViewModel.ParentQuote = oldQuote;
 
@@ -4503,52 +4350,50 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
+
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _UploadQuoteModal(Guid guid)
+        public async Task<IActionResult> ClearQuote(Guid guid)
         {
             if (!AppUtility.IsAjaxRequest(Request))
             {
                 return PartialView("InvalidLinkPage");
             }
             var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now } };
+            DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, guid);
 
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
-            string uploadFolder2 = Path.Combine(uploadFolder1, guid.ToString());
-            string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
+            //string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuote.ToString());
+            //string uploadFolder2 = Path.Combine(uploadFolder1, guid.ToString());
+            //string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
 
-            var fileStrings = new List<String>();
-            if (Directory.Exists(uploadFolderQuotes))
-            {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
-                //searching for the partial file name in the directory
-                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                foreach (var orderfile in orderfilesfound)
-                {
-                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
-                    fileStrings.Add(newFileString);
-                }
-            }
-            uploadQuoteViewModel.DocumentsCardViewModel = new DocumentsCardViewModel()
-            {
-                SectionType = AppUtility.MenuItems.Requests,
-                DocumentInfo = new DocumentFolder()
+            //var fileStrings = new List<String>();
+            //if (Directory.Exists(uploadFolderQuotes))
+            //{
+            //    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
+            //    //searching for the partial file name in the directory
+            //    FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
+            //    foreach (var orderfile in orderfilesfound)
+            //    {
+            //        string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
+            //        fileStrings.Add(newFileString);
+            //    }
+            //}
+            uploadQuoteViewModel.DocumentsInfo = new DocumentFolder()
                 {
                     ParentFolderName = AppUtility.ParentFolderName.ParentQuote,
                     FolderName = AppUtility.FolderNamesEnum.Quotes,
                     Icon = "icon-centarix-icons-03",
-                    FileStrings = fileStrings,
                     ObjectID = guid.ToString()
-                },
-                ModalType = AppUtility.RequestModalType.Edit
-            };
-            uploadQuoteViewModel.TempRequestListViewModel = new TempRequestListViewModel()
-            {
-                GUID = guid
             };
 
 
-            return PartialView(uploadQuoteViewModel);
+            var json = JsonConvert.SerializeObject(uploadQuoteViewModel, Formatting.Indented,
+                   new JsonSerializerSettings
+                   {
+                       Converters = new List<JsonConverter> { new StringEnumConverter() },
+                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                   });
+            return Json(json);
         }
 
         [HttpPost]
@@ -4658,7 +4503,6 @@ namespace PrototypeWithAuth.Controllers
             catch (Exception ex)
             {
                 await _tempRequestJsonsProc.RollbackAsync(tempRequestListViewModel.GUID, tempRequestJson.SequencePosition);
-                uploadQuoteOrderViewModel.TempRequestListViewModel = tempRequestListViewModel;
                 uploadQuoteOrderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 return PartialView("_ErrorMessage", uploadQuoteOrderViewModel.ErrorMessage);

@@ -656,7 +656,6 @@
     <PackageReference Include="Nancy" Version="2.0.0" />
     <PackageReference Include="NCBI_localblast" Version="1.0.12" />
     <PackageReference Include="NETCore.MailKit" Version="2.0.3" />
-    <PackageReference Include="Node.js" Version="5.3.0" />
     <PackageReference Include="Npm" Version="3.5.2" />
     <PackageReference Include="OpenCvSharp3-AnyCPU" Version="4.0.0.20181129" />
     <PackageReference Include="React.AspNet" Version="5.2.12" />
@@ -695,7 +694,6 @@
   <ItemGroup>
     <None Include="wwwroot\favicon_io\site.webmanifest" />
   </ItemGroup>
-
 
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

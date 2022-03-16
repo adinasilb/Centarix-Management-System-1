@@ -1,6 +1,6 @@
 ﻿import React, { useEffect, useRef, useState} from 'react';
 import IndexTableRow from './index-table-row.jsx'
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, connect } from 'react-redux';
 import { ajaxPartialIndexTable } from '../Utility/root-function.jsx'
 
@@ -11,7 +11,7 @@ function _IndexTableData(props) {
     var viewModel = props.viewModel;
     const dispatch = useDispatch();
     const didMount = useRef(false);
-
+    const history = useHistory();
     useEffect(() => {
         if (didMount.current) {
             alert("in pagenumber use effect");
@@ -29,7 +29,7 @@ function _IndexTableData(props) {
                 <br />
                 <div className="">
                     <input type="hidden" id="PageNumber" name="PageNumber" className="page-number" value={viewModel.PageNumber} />
-                    <input type="hidden" id="TabName" name="TabName" className="page-number" value={viewModel.TabName} />
+                    <input type="hidden" id="TabName" name="TabName" className="tab-name" value={viewModel.TabName} />
                     <table className="table table-headerspaced table-noheaderlines table-hover ">
                         <tbody className="scroll-tbody">                          
                             {viewModel.PagedList.map((r, i) => (
@@ -48,7 +48,7 @@ function _IndexTableData(props) {
                                     <ul className="pagination">
                                         {viewModel.PageNumbersToShow.map((v, i) => (
                                             <li key={v.Value} className={v.Classes}>
-                                                <Link className="page-link" to={{ pathname: Routes.INDEX_TABLE_DATA, state: { pageNumber: v.Value } }} > {v.Value}</Link>
+                                                <Link className="page-link" to={{ pathname: history.location.pathname, state: { pageNumber: v.Value } }} > {v.Value}</Link>
                                             </li>
                                                 ))
                                         }
