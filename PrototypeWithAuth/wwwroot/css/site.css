@@ -27,7 +27,12 @@ html.wf-loading * {
     box-shadow: none !important;
     border-radius: 0 !important;
 }
-
+ .MuiTooltip-tooltip {
+    background-color: var(--black-87) !important
+}
+.MuiTooltip-arrow {
+    color: var(--black-87) !important
+}
 /*#custom-document-indicator {
     border: 0 !important;
     box-shadow: none !important;
