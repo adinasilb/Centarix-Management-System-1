@@ -1,4 +1,5 @@
 ﻿import 'regenerator-runtime/runtime'
+import * as ModalKeys from '../Constants/ModalKeys.jsx'
 
 
 var MaxFileSizeMB = 1;
@@ -129,7 +130,7 @@ export async function FileSelectChange(element, folderName, parentFolderName, ob
     else {
         var CustomMainObjectID = document.getElementById(".CustomMainObjectID")?.value;
 
-        var formData = new FormData(document.querySelector(".documentModalForm"));
+        var formData = new FormData(document.getElementById(ModalKeys.DOCUMENTS));
 
         var targetFile = formData.getAll("FilesToSave")
         console.log(targetFile)

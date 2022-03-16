@@ -1,53 +1,59 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import {
-    useLocation, Link
+    useLocation, Link, useHistory
 } from 'react-router-dom';
 import GlobalModal from '../Utility/global-modal.jsx';
 import { FileSelectChange, GetFileString } from "../Utility/document-fuctions.jsx";
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
+import * as Routes from '../Constants/Routes.jsx'
 
 import 'regenerator-runtime/runtime'
 import * as Actions from '../ReduxRelatedUtils/actions.jsx';
 import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
+import { MDBBtn} from 'mdb-react-ui-kit';
+
 
 
 export default function DocumentsModal(props) {
     const location = useLocation();
     const dispatch = useDispatch();
+    const history = useHistory();
+    const inputFileRef = useRef();
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const [ID, setID] = useState(location.state.ID)
-    const [isEditable, setisEditable] = useState(location.state.IsEditable)
-    const [showSwitch, setshowSwitch] = useState(location.state.ShowSwitch)
-    const [viewModel, setViewModel] = useState({ FileStrings: [] });
-    const [resetParentCard] = useState(() => location.state.resetDocInfo)
+    const [state, setState] = useState({
+        ID: location.state.ID,
+        isEditable: location.state.IsEditable,
+        showSwitch: location.state.ShowSwitch,
+        viewModel: {},
+        resetParentCard: (location.state.resetDocInfo)
+    })
 
     console.log("rerender doc modal")
 
     useEffect(() => {
-        var url = "/Requests/DocumentsModal?id=" + ID + "&RequestFolderNameEnum=" + location.state.FolderName + "&parentFolderName=" + location.state.ParentFolderName;
+        var url = "/Requests/DocumentsModal?id=" + state.ID + "&RequestFolderNameEnum=" + location.state.FolderName + "&parentFolderName=" + location.state.ParentFolderName;
         fetch(url, {
             method: "GET"
         })
             .then((response) => { return response.json(); })
             .then(result => {
-                setViewModel(JSON.parse(result));
+                setState({ ...state, viewModel: JSON.parse(result) });
             });
 
-    }, [ID]);
+    }, [state.ID]);
 
     //useEffect(() => {
     //    MapDocCarouselItems(viewModel.FileStrings)
     //}, [viewModel.FileStrings])
 
-    var id = viewModel?.ObjectID == null ? "0" : viewModel.ObjectID;
+    var id = state.viewModel?.ObjectID == null ? "0" : state.viewModel.ObjectID;
 
     async function uploadFile(e) {
-        var response = await FileSelectChange(e.target, viewModel.FolderName, viewModel.ParentFolderName, id)
-        console.log(response)
-        setViewModel(response)
+        var response = await FileSelectChange(e.target, state.viewModel.FolderName, state.viewModel.ParentFolderName, id)
+        setState({ ...state, viewModel: response })
     }
 
     function deleteFile(deleteFileViewModel) {
@@ -56,7 +62,7 @@ export default function DocumentsModal(props) {
         for (let field in deleteFileViewModel) {
             formData.append(field.toString(), deleteFileViewModel[field])
         }
-        console.log(formData)
+        console.dir(formData)
         fetch(url, {
             method: "POST",
             body: formData
@@ -64,46 +70,55 @@ export default function DocumentsModal(props) {
             .then((response) => { return response.json(); })
             .then(result => {
                 dispatch(Actions.removeModal(ModalKeys.DELETE_DOCUMENTS));
-                setViewModel(JSON.parse(result));
+                setState({ ...state, viewModel: JSON.parse(result) })
             });
 
     }
-    var onSubmit = (data, e) => {
+    var onSubmit = (e) => {
+        e.target && e.preventDefault()
+        console.log(e)
         var url = "/Requests/DocumentsModal";
-        var formData = new FormData(e.target);
+        var formData = new FormData(document.getElementById(props.modalKey));
         fetch(url, {
             method: "POST",
             body: formData
         })
             .then((response) => { return response.json(); })
             .then(result => {
-                dispatch(Actions.removeModal(ModalKeys.DOCUMENTS));
                 var docInfo = JSON.parse(result)
-                resetParentCard(docInfo);
+                state.resetParentCard(docInfo);
+                dispatch(Actions.removeModal(ModalKeys.DOCUMENTS));
+                
             });
     }
+    function handleFileBtnClick() {
+        console.log("file button click")
+        inputFileRef.current.click();
+    }
 
+    var pathname = (history.entries[1] && history.entries[1].pathname != Routes.DELETE_DOCUMENTS) ? history.entries[1].pathname : ""
+    console.log("pathname " + pathname)
 
     return (
 
-        <GlobalModal backdrop={props.backdrop} value={ID} modalKey={props.modalKey} key={ID} size="xl" header={viewModel.FolderName + " Files"}>
-            <form action="" data-string="" method="post" encType="multipart/form-data" className="m-5 modal-padding documentModalForm" onSubmit={handleSubmit(onSubmit)} id={props.modalKey}>
-                <input type="hidden" name="FolderName" id="FolderName" value={viewModel.FolderName || ""} />
-                <input type="hidden" name="DontAllowMultiple" id="DontAllowMultiple" value={viewModel.DontAllowMultiple || ""} />
-                <input type="hidden" name="ParentFolderName" id="ParentFolderName" value={viewModel.ParentFolderName || ""} />
-                <input type="hidden" name="ObjectID" id="ObjectID" value={viewModel.ObjectID || ""} />
-                <input type="hidden" name="Guid" id="Guid" value={viewModel.Guid || ""} />
+        <GlobalModal backdrop={props.backdrop} value={state.ID} modalKey={props.modalKey} key={state.ID} size="xl" hideModalFooter={true} closeClick={onSubmit} header={state.viewModel.FolderName + " Files"}>
+            <form action="" data-string="" method="post" encType="multipart/form-data" className="m-5 modal-padding" onSubmit={handleSubmit(onSubmit)} id={props.modalKey}>
+                <input type="hidden" name="FolderName" id="FolderName" value={state.viewModel.FolderName || ""} />
+                <input type="hidden" name="DontAllowMultiple" id="DontAllowMultiple" value={state.viewModel.DontAllowMultiple || ""} />
+                <input type="hidden" name="ParentFolderName" id="ParentFolderName" value={state.viewModel.ParentFolderName || ""} />
+                <input type="hidden" name="ObjectID" id="ObjectID" value={state.viewModel.ObjectID || ""} />
+                <input type="hidden" name="Guid" id="Guid" value={state.viewModel.Guid || ""} />
 
                 <div className="container">
                     <hr />
                     <div className="row">
                         <div className="col-3 offset-9">
-                            {(showSwitch) ?
+                            {(state.showSwitch) ?
                                 <div className=" row text-right mb-0">
                                     <div className="switch col-12 switch-margin">
                                         <label>
-                                            <label className="edit-mode-switch-description "> {isEditable ? "Edit Mode On" : "Edit Mode Off"}</label>
-                                            <input type="checkbox" className={"turn-edit-doc-on-off" + (isEditable ? " checked" : "")} value={ID} />
+                                            <label className="edit-mode-switch-description "> {state.isEditable ? "Edit Mode On" : "Edit Mode Off"}</label>
+                                            <input type="checkbox" className={"turn-edit-doc-on-off" + (state.isEditable ? " checked" : "")} value={state.ID} />
                                             <span className="lever"></span>
                                         </label>
                                     </div>
@@ -113,34 +128,18 @@ export default function DocumentsModal(props) {
                         </div>
                     </div>
                 </div>
-                {console.log("view model file strings: " + viewModel?.FileStrings)}
-                {!isEditable && viewModel?.FileStrings?.length == 0 ?
+                {console.log("view model file strings: " + state.viewModel?.FileStrings)}
+                {(state.viewModel.FileStrings == null || state.viewModel?.FileStrings.length == 0 )?
                     <div className="text-center text-lowercase">
                         <div className="mt-6">
                             <img src="/images/document_empty_image.png" />
                         </div>
                         <div className="mt-4" style={{ fontSize: "2rem", color: "1.125rem", fontWeight: "400" }} >
-                            <span className="text-capitalize">No</span> {viewModel?.FolderName} have been uploaded
+                            <span className="text-capitalize">No</span> {state.viewModel?.FolderName} have been uploaded
                         </div>
                     </div>
                     :
                     <div>
-                        {(isEditable || showSwitch) ?
-                            <div className=" col-4 doc-card-outer-div m-0 text-center h-100">
-                                <div className=" card document-border h-100">
-                                    <div className=" d-flex align-items-center justify-content-center flex-column">
-                                        <label>
-                                            <i className="icon-upload_file_black_24dp-1 section-filter m-0" alt="order" style={{ fontSize: "2rem" }}></i>
-                                            <input type="file" onChange={uploadFile} className="file-selects d-none mark-readonly" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" id="FilesToSave" name="FilesToSave" />
-
-
-                                        </label>
-
-                                        <span className="section-filter text">Upload File</span>
-                                    </div>
-                                </div>
-                            </div>
-                            : null}
                         <Carousel
                             infinite
                             renderButtonGroupOutside
@@ -155,7 +154,7 @@ export default function DocumentsModal(props) {
                             }}
                             deviceType="desktop">
 
-                            {viewModel.FileStrings.map((fileString, i) => {
+                            {state.viewModel.FileStrings.map((fileString, i) => {
                                 return (
                                     <div key={"FileString" + i} className=" doc-card-outer-div col-12 m-0">
                                         <div className="card iframe-container document-border m-0">
@@ -169,8 +168,8 @@ export default function DocumentsModal(props) {
                                                     {fileString.split('\\').pop()}
                                                 </a>
                                                 <Link className="" to={{
-                                                    pathname: "/DeleteDocumentModal",
-                                                    state: { ID: ID, FolderName: viewModel.FolderName, ParentFolderName: viewModel.ParentFolderName, FileName: fileString, deleteFunction: deleteFile }
+                                                    pathname: pathname+ "/DeleteDocumentModal",
+                                                    state: { ID: state.ID, FolderName: state.viewModel.FolderName, ParentFolderName: state.viewModel.ParentFolderName, FileName: fileString, deleteFunction: deleteFile }
                                                 }}>
                                                     <i style={{ fontSize: "2rem" }} className="icon-delete-24px documents-delete-icon hover-bold"></i>
                                                 </Link>
@@ -182,7 +181,15 @@ export default function DocumentsModal(props) {
 
                         </Carousel>
                     </div>}
-
+                <div className="row">
+                    {(state.isEditable || state.showSwitch) &&
+                        <div>
+                        <MDBBtn type="button" className="custom-button custom-button-font section-bg-color between-button-margin" onClick={handleFileBtnClick} >Upload File</MDBBtn>
+                        <input type="file" ref={inputFileRef} onChange={uploadFile} className="file-selects d-none mark-readonly" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" id="FilesToSave" name="FilesToSave" />
+                    </div>
+                }
+                    <MDBBtn type="submit" color="white" className="custom-cancel custom-button " >Cancel</MDBBtn>
+            </div>
             </form>
         </GlobalModal>
     );

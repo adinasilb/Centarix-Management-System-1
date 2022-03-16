@@ -10,7 +10,6 @@ const tempRequestJsonReducer = (state = [], action, ...slices) => {
             return action.payload;
             break;
         default:
-            console.log("return default")
             return state;
     }
 };

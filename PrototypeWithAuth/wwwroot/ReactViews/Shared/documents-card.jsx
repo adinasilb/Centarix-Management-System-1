@@ -1,10 +1,11 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { FileSelectChange } from "../Utility/document-fuctions.jsx"
+import * as Routes from '../Constants/Routes.jsx'
 import 'regenerator-runtime/runtime'
 
 export default function DocumentsCard(props) {
-
+    const history = useHistory();
     const [documentsInfo, setDocumentsInfo] = useState(props.documentsInfo);
     var id = documentsInfo?.ObjectID == null ? document.querySelector("hidden-guid") : documentsInfo.ObjectID;
 
@@ -23,6 +24,10 @@ export default function DocumentsCard(props) {
         console.log(newdocumentInfo)
         setDocumentsInfo(newdocumentInfo)
     }
+
+    console.log(history.entries[1])
+    var pathname = (history.entries[1] && history.entries[1].pathname != Routes.DOCUMENTS) ? history.entries[1].pathname : ""
+    console.log("pathname " + pathname)
     
     return (
         <div>
@@ -34,7 +39,7 @@ export default function DocumentsCard(props) {
                 </div>
                     <div className="col-4 d-flex align-items-center">
                         <Link className="mark-edditable" to={{
-                            pathname: "/DocumentsModal",
+                            pathname: pathname + "/DocumentsModal",
                             state: { ID: id, IsEditable: props.isEditable, ShowSwitch: props.showSwitch, FolderName: documentsInfo.FolderName, ParentFolderName: documentsInfo.ParentFolderName, resetDocInfo: ResetDocInfo }
                         }} >
                             <i className={documentsInfo.Icon + " document-icon m-0"} alt="order" style={{ fontSize: "1.5rem" }}></i>

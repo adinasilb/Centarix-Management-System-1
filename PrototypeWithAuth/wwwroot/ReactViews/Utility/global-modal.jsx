@@ -1,11 +1,19 @@
 ﻿import { MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter, MDBModalDialog, MDBModalContent, MDBModalTitle } from 'mdb-react-ui-kit';
-import { useDispatch } from 'react-redux'
+import { useDispatch, connect } from 'react-redux'
+import * as ModalKeys from '../Constants/ModalKeys.jsx'
+
+
 import { removeModal} from '../ReduxRelatedUtils/actions.jsx'
 export default function GlobalModal(props) {
     var dispatch = useDispatch();
     const onClick = (e) => {
-        e.stopPropagation();
-        dispatch(removeModal(props.modalKey));
+        if (props.closeClick) {
+            props.closeClick(e)
+        }
+        else {
+            e.stopPropagation();
+            dispatch(removeModal(props.modalKey));
+        }
     }
 
     return (
